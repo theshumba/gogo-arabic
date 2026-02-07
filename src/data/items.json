@@ -1,0 +1,104 @@
+[
+  {
+    "id": "thobe_white",
+    "name": "White Thobe",
+    "nameArabic": "ثَوْب أَبْيَض",
+    "type": "clothing",
+    "slot": "outfit",
+    "price": 0,
+    "description": "A simple white thobe — the starting outfit.",
+    "sprite": "outfit_thobe_white",
+    "unlockLevel": 1
+  },
+  {
+    "id": "thobe_blue",
+    "name": "Blue Thobe",
+    "nameArabic": "ثَوْب أَزْرَق",
+    "type": "clothing",
+    "slot": "outfit",
+    "price": 50,
+    "description": "A cool blue thobe for the desert.",
+    "sprite": "outfit_thobe_blue",
+    "unlockLevel": 1
+  },
+  {
+    "id": "thobe_green",
+    "name": "Green Thobe",
+    "nameArabic": "ثَوْب أَخْضَر",
+    "type": "clothing",
+    "slot": "outfit",
+    "price": 75,
+    "description": "A green thobe, color of the oasis.",
+    "sprite": "outfit_thobe_green",
+    "unlockLevel": 2
+  },
+  {
+    "id": "thobe_black",
+    "name": "Black Thobe",
+    "nameArabic": "ثَوْب أَسْوَد",
+    "type": "clothing",
+    "slot": "outfit",
+    "price": 100,
+    "description": "An elegant black thobe.",
+    "sprite": "outfit_thobe_black",
+    "unlockLevel": 3
+  },
+  {
+    "id": "keffiyeh_white",
+    "name": "White Keffiyeh",
+    "nameArabic": "كوفِيَّة بَيْضاء",
+    "type": "clothing",
+    "slot": "headwear",
+    "price": 40,
+    "description": "A traditional white keffiyeh headcover.",
+    "sprite": "head_keffiyeh_white",
+    "unlockLevel": 1
+  },
+  {
+    "id": "imamah_green",
+    "name": "Green Imamah",
+    "nameArabic": "عِمامَة خَضْراء",
+    "type": "clothing",
+    "slot": "headwear",
+    "price": 120,
+    "description": "A scholar's green turban — sign of knowledge.",
+    "sprite": "head_imamah_green",
+    "unlockLevel": 4
+  },
+  {
+    "id": "boost_xp",
+    "name": "Scholar's Ink",
+    "nameArabic": "حِبْر العالِم",
+    "type": "boost",
+    "effect": "xp_multiplier_1.5",
+    "duration": 10,
+    "price": 60,
+    "description": "Earn 1.5x XP for the next 10 quizzes.",
+    "sprite": "item_ink",
+    "unlockLevel": 2
+  },
+  {
+    "id": "boost_hint",
+    "name": "Merchant's Wisdom",
+    "nameArabic": "حِكْمَة التّاجِر",
+    "type": "boost",
+    "effect": "hint_3",
+    "duration": 3,
+    "price": 30,
+    "description": "Get 3 free hints in quizzes.",
+    "sprite": "item_wisdom",
+    "unlockLevel": 1
+  },
+  {
+    "id": "boost_streak",
+    "name": "Desert Shield",
+    "nameArabic": "دِرْع الصَّحْراء",
+    "type": "boost",
+    "effect": "streak_protect_1",
+    "duration": 1,
+    "price": 100,
+    "description": "Protects your streak if you miss one day.",
+    "sprite": "item_shield",
+    "unlockLevel": 3
+  }
+]

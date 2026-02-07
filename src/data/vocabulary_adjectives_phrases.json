@@ -1,0 +1,737 @@
+[
+  {
+    "id": "big_1",
+    "arabic": "كَبِيرٌ",
+    "english": "big",
+    "transliteration": "kabiir",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/big_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا بَيْتٌ كَبِيرٌ",
+      "english": "This is a big house",
+      "transliteration": "haadha baytun kabiir"
+    }
+  },
+  {
+    "id": "small_1",
+    "arabic": "صَغِيرٌ",
+    "english": "small",
+    "transliteration": "saghiir",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/small_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا كِتَابٌ صَغِيرٌ",
+      "english": "This is a small book",
+      "transliteration": "haadha kitaabun saghiir"
+    }
+  },
+  {
+    "id": "new_1",
+    "arabic": "جَدِيدٌ",
+    "english": "new",
+    "transliteration": "jadiid",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/new_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "عِنْدِي قَلَمٌ جَدِيدٌ",
+      "english": "I have a new pen",
+      "transliteration": "'indii qalamun jadiid"
+    }
+  },
+  {
+    "id": "old_1",
+    "arabic": "قَدِيمٌ",
+    "english": "old",
+    "transliteration": "qadiim",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/old_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا مَسْجِدٌ قَدِيمٌ",
+      "english": "This is an old mosque",
+      "transliteration": "haadha masjidun qadiim"
+    }
+  },
+  {
+    "id": "beautiful_1",
+    "arabic": "جَمِيلٌ",
+    "english": "beautiful",
+    "transliteration": "jamiil",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/beautiful_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا مَنْظَرٌ جَمِيلٌ",
+      "english": "This is a beautiful view",
+      "transliteration": "haadha mandharun jamiil"
+    }
+  },
+  {
+    "id": "ugly_1",
+    "arabic": "قَبِيحٌ",
+    "english": "ugly",
+    "transliteration": "qabiih",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/ugly_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا شَيْءٌ قَبِيحٌ",
+      "english": "This is an ugly thing",
+      "transliteration": "haadha shay'un qabiih"
+    }
+  },
+  {
+    "id": "hot_1",
+    "arabic": "حَارٌّ",
+    "english": "hot",
+    "transliteration": "haar",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/hot_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "اَلطَّقْسُ حَارٌّ الْيَوْمَ",
+      "english": "The weather is hot today",
+      "transliteration": "at-taqsu haar al-yawm"
+    }
+  },
+  {
+    "id": "cold_1",
+    "arabic": "بَارِدٌ",
+    "english": "cold",
+    "transliteration": "baarid",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/cold_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "اَلْمَاءُ بَارِدٌ",
+      "english": "The water is cold",
+      "transliteration": "al-maa'u baarid"
+    }
+  },
+  {
+    "id": "fast_1",
+    "arabic": "سَرِيعٌ",
+    "english": "fast",
+    "transliteration": "sarii'",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/fast_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا حِصَانٌ سَرِيعٌ",
+      "english": "This is a fast horse",
+      "transliteration": "haadha hisaanun sarii'"
+    }
+  },
+  {
+    "id": "slow_1",
+    "arabic": "بَطِيءٌ",
+    "english": "slow",
+    "transliteration": "batii'",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/slow_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا سَيْرٌ بَطِيءٌ",
+      "english": "This is a slow pace",
+      "transliteration": "haadha sayrun batii'"
+    }
+  },
+  {
+    "id": "strong_1",
+    "arabic": "قَوِيٌّ",
+    "english": "strong",
+    "transliteration": "qawii",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/strong_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هُوَ رَجُلٌ قَوِيٌّ",
+      "english": "He is a strong man",
+      "transliteration": "huwa rajulun qawii"
+    }
+  },
+  {
+    "id": "weak_1",
+    "arabic": "ضَعِيفٌ",
+    "english": "weak",
+    "transliteration": "da'iif",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/weak_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا حَبْلٌ ضَعِيفٌ",
+      "english": "This is a weak rope",
+      "transliteration": "haadha hablun da'iif"
+    }
+  },
+  {
+    "id": "happy_1",
+    "arabic": "سَعِيدٌ",
+    "english": "happy",
+    "transliteration": "sa'iid",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/happy_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "أَنَا سَعِيدٌ بِلِقَائِكَ",
+      "english": "I am happy to meet you",
+      "transliteration": "ana sa'iid bi-liqaa'ik"
+    }
+  },
+  {
+    "id": "sad_1",
+    "arabic": "حَزِينٌ",
+    "english": "sad",
+    "transliteration": "haziiin",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/sad_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هُوَ حَزِينٌ الْيَوْمَ",
+      "english": "He is sad today",
+      "transliteration": "huwa haziinun al-yawm"
+    }
+  },
+  {
+    "id": "clean_1",
+    "arabic": "نَظِيفٌ",
+    "english": "clean",
+    "transliteration": "nadhiif",
+    "category": "adjectives",
+    "difficulty": 3,
+    "audioRef": "words/clean_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا ثَوْبٌ نَظِيفٌ",
+      "english": "This is a clean garment",
+      "transliteration": "haadha thawbun nadhiif"
+    }
+  },
+  {
+    "id": "dirty_1",
+    "arabic": "وَسِخٌ",
+    "english": "dirty",
+    "transliteration": "wasikh",
+    "category": "adjectives",
+    "difficulty": 3,
+    "audioRef": "words/dirty_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا الطَّرِيقُ وَسِخٌ",
+      "english": "This road is dirty",
+      "transliteration": "haadha at-tariiq wasikh"
+    }
+  },
+  {
+    "id": "easy_1",
+    "arabic": "سَهْلٌ",
+    "english": "easy",
+    "transliteration": "sahl",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/easy_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا دَرْسٌ سَهْلٌ",
+      "english": "This is an easy lesson",
+      "transliteration": "haadha darsun sahl"
+    }
+  },
+  {
+    "id": "difficult_1",
+    "arabic": "صَعْبٌ",
+    "english": "difficult",
+    "transliteration": "sa'b",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/difficult_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا سُؤَالٌ صَعْبٌ",
+      "english": "This is a difficult question",
+      "transliteration": "haadha su'aalun sa'b"
+    }
+  },
+  {
+    "id": "long_tall_1",
+    "arabic": "طَوِيلٌ",
+    "english": "long/tall",
+    "transliteration": "tawiil",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/long_tall_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا طَرِيقٌ طَوِيلٌ",
+      "english": "This is a long road",
+      "transliteration": "haadha tariiqun tawiil"
+    }
+  },
+  {
+    "id": "short_1",
+    "arabic": "قَصِيرٌ",
+    "english": "short",
+    "transliteration": "qasiir",
+    "category": "adjectives",
+    "difficulty": 2,
+    "audioRef": "words/short_1.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "هٰذَا رَجُلٌ قَصِيرٌ",
+      "english": "This is a short man",
+      "transliteration": "haadha rajulun qasiir"
+    }
+  },
+  {
+    "id": "what_is_your_name_1",
+    "arabic": "مَا اسْمُكَ؟",
+    "english": "What is your name?",
+    "transliteration": "ma ismuk?",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/what_is_your_name_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "مَرْحَبًا، مَا اسْمُكَ؟",
+      "english": "Hello, what is your name?",
+      "transliteration": "marhaban, ma ismuk?"
+    }
+  },
+  {
+    "id": "my_name_is_1",
+    "arabic": "اِسْمِي...",
+    "english": "My name is...",
+    "transliteration": "ismii...",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/my_name_is_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "اِسْمِي أَحْمَدُ",
+      "english": "My name is Ahmad",
+      "transliteration": "ismii Ahmad"
+    }
+  },
+  {
+    "id": "how_are_you_1",
+    "arabic": "كَيْفَ حَالُكَ؟",
+    "english": "How are you?",
+    "transliteration": "kayfa haaluk?",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/how_are_you_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "أَهْلًا، كَيْفَ حَالُكَ الْيَوْمَ؟",
+      "english": "Hello, how are you today?",
+      "transliteration": "ahlan, kayfa haaluk al-yawm?"
+    }
+  },
+  {
+    "id": "i_am_fine_1",
+    "arabic": "أَنَا بِخَيْرٍ",
+    "english": "I am fine",
+    "transliteration": "ana bi-khayr",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/i_am_fine_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "أَنَا بِخَيْرٍ، اَلْحَمْدُ لِلَّهِ",
+      "english": "I am fine, praise be to God",
+      "transliteration": "ana bi-khayr, al-hamdu lillaah"
+    }
+  },
+  {
+    "id": "where_is_1",
+    "arabic": "أَيْنَ...؟",
+    "english": "Where is...?",
+    "transliteration": "ayna...?",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/where_is_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "أَيْنَ الْمَسْجِدُ؟",
+      "english": "Where is the mosque?",
+      "transliteration": "ayna al-masjid?"
+    }
+  },
+  {
+    "id": "i_want_1",
+    "arabic": "أُرِيدُ",
+    "english": "I want",
+    "transliteration": "uriidu",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/i_want_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "أُرِيدُ مَاءً مِنْ فَضْلِكَ",
+      "english": "I want water please",
+      "transliteration": "uriidu maa'an min fadlik"
+    }
+  },
+  {
+    "id": "i_dont_want_1",
+    "arabic": "لَا أُرِيدُ",
+    "english": "I don't want",
+    "transliteration": "laa uriidu",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/i_dont_want_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "لَا أُرِيدُ شَيْئًا، شُكْرًا",
+      "english": "I don't want anything, thanks",
+      "transliteration": "laa uriidu shay'an, shukran"
+    }
+  },
+  {
+    "id": "i_dont_know_1",
+    "arabic": "لَا أَعْرِفُ",
+    "english": "I don't know",
+    "transliteration": "laa a'rif",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/i_dont_know_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "لَا أَعْرِفُ الْجَوَابَ",
+      "english": "I don't know the answer",
+      "transliteration": "laa a'rif al-jawaab"
+    }
+  },
+  {
+    "id": "please_1",
+    "arabic": "مِنْ فَضْلِكَ",
+    "english": "Please",
+    "transliteration": "min fadlak",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/please_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "سَاعِدْنِي مِنْ فَضْلِكَ",
+      "english": "Help me please",
+      "transliteration": "saa'idnii min fadlak"
+    }
+  },
+  {
+    "id": "excuse_me_1",
+    "arabic": "لَوْ سَمَحْتَ",
+    "english": "Excuse me",
+    "transliteration": "law samaht",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/excuse_me_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "لَوْ سَمَحْتَ، أَيْنَ الطَّرِيقُ؟",
+      "english": "Excuse me, where is the road?",
+      "transliteration": "law samaht, ayna at-tariiq?"
+    }
+  },
+  {
+    "id": "im_sorry_1",
+    "arabic": "أَنَا آسِفٌ",
+    "english": "I'm sorry",
+    "transliteration": "ana aasif",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/im_sorry_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "أَنَا آسِفٌ عَلَى التَّأْخِيرِ",
+      "english": "I'm sorry for the delay",
+      "transliteration": "ana aasif 'alaa at-ta'khiir"
+    }
+  },
+  {
+    "id": "congratulations_1",
+    "arabic": "مَبْرُوكٌ",
+    "english": "Congratulations",
+    "transliteration": "mabruuk",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/congratulations_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "مَبْرُوكٌ عَلَى النَّجَاحِ!",
+      "english": "Congratulations on the success!",
+      "transliteration": "mabruuk 'alaa an-najaah!"
+    }
+  },
+  {
+    "id": "welcome_1",
+    "arabic": "أَهْلًا وَسَهْلًا",
+    "english": "Welcome",
+    "transliteration": "ahlan wa sahlan",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/welcome_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "أَهْلًا وَسَهْلًا فِي مَدِينَتِنَا",
+      "english": "Welcome to our city",
+      "transliteration": "ahlan wa sahlan fii madiinatinaa"
+    }
+  },
+  {
+    "id": "good_morning_1",
+    "arabic": "صَبَاحُ الْخَيْرِ",
+    "english": "Good morning",
+    "transliteration": "sabaah al-khayr",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/good_morning_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "صَبَاحُ الْخَيْرِ، كَيْفَ حَالُكَ؟",
+      "english": "Good morning, how are you?",
+      "transliteration": "sabaah al-khayr, kayfa haaluk?"
+    }
+  },
+  {
+    "id": "good_evening_1",
+    "arabic": "مَسَاءُ الْخَيْرِ",
+    "english": "Good evening",
+    "transliteration": "masaa' al-khayr",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/good_evening_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "مَسَاءُ الْخَيْرِ يَا أَصْدِقَائِي",
+      "english": "Good evening, my friends",
+      "transliteration": "masaa' al-khayr yaa asdiqaa'ii"
+    }
+  },
+  {
+    "id": "goodbye_1",
+    "arabic": "مَعَ السَّلَامَةِ",
+    "english": "Goodbye",
+    "transliteration": "ma'a as-salaama",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/goodbye_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "مَعَ السَّلَامَةِ، إِلَى اللِّقَاءِ",
+      "english": "Goodbye, until we meet again",
+      "transliteration": "ma'a as-salaama, ilaa al-liqaa'"
+    }
+  },
+  {
+    "id": "see_you_later_1",
+    "arabic": "أَرَاكَ لَاحِقًا",
+    "english": "See you later",
+    "transliteration": "araaka laahiqan",
+    "category": "phrases",
+    "difficulty": 3,
+    "audioRef": "words/see_you_later_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "أَرَاكَ لَاحِقًا إِنْ شَاءَ اللَّهُ",
+      "english": "See you later, God willing",
+      "transliteration": "araaka laahiqan in shaa' Allaah"
+    }
+  },
+  {
+    "id": "how_much_1",
+    "arabic": "بِكَمْ؟",
+    "english": "How much?",
+    "transliteration": "bi-kam?",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/how_much_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "بِكَمْ هٰذَا الْكِتَابُ؟",
+      "english": "How much is this book?",
+      "transliteration": "bi-kam haadha al-kitaab?"
+    }
+  },
+  {
+    "id": "i_understand_1",
+    "arabic": "أَنَا أَفْهَمُ",
+    "english": "I understand",
+    "transliteration": "ana afham",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/i_understand_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "نَعَمْ، أَنَا أَفْهَمُ الْعَرَبِيَّةَ",
+      "english": "Yes, I understand Arabic",
+      "transliteration": "na'am, ana afham al-'arabiyya"
+    }
+  },
+  {
+    "id": "i_dont_understand_1",
+    "arabic": "لَا أَفْهَمُ",
+    "english": "I don't understand",
+    "transliteration": "laa afham",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/i_dont_understand_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "عَفْوًا، لَا أَفْهَمُ، أَعِدْ مِنْ فَضْلِكَ",
+      "english": "Sorry, I don't understand, repeat please",
+      "transliteration": "'afwan, laa afham, a'id min fadlik"
+    }
+  },
+  {
+    "id": "can_you_help_me_1",
+    "arabic": "هَلْ يُمْكِنُكَ مُسَاعَدَتِي؟",
+    "english": "Can you help me?",
+    "transliteration": "hal yumkinuka musaa'adatii?",
+    "category": "phrases",
+    "difficulty": 3,
+    "audioRef": "words/can_you_help_me_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "لَوْ سَمَحْتَ، هَلْ يُمْكِنُكَ مُسَاعَدَتِي؟",
+      "english": "Excuse me, can you help me?",
+      "transliteration": "law samaht, hal yumkinuka musaa'adatii?"
+    }
+  },
+  {
+    "id": "where_is_the_market_1",
+    "arabic": "أَيْنَ السُّوقُ؟",
+    "english": "Where is the market?",
+    "transliteration": "ayna as-suuq?",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/where_is_the_market_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "لَوْ سَمَحْتَ، أَيْنَ السُّوقُ الْقَدِيمُ؟",
+      "english": "Excuse me, where is the old market?",
+      "transliteration": "law samaht, ayna as-suuq al-qadiim?"
+    }
+  },
+  {
+    "id": "i_am_learning_arabic_1",
+    "arabic": "أَنَا أَتَعَلَّمُ الْعَرَبِيَّةَ",
+    "english": "I am learning Arabic",
+    "transliteration": "ana ata'allam al-'arabiyya",
+    "category": "phrases",
+    "difficulty": 3,
+    "audioRef": "words/i_am_learning_arabic_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "أَنَا أَتَعَلَّمُ الْعَرَبِيَّةَ مُنْذُ سَنَةٍ",
+      "english": "I have been learning Arabic for a year",
+      "transliteration": "ana ata'allam al-'arabiyya mundhu sana"
+    }
+  },
+  {
+    "id": "what_is_this_1",
+    "arabic": "مَا هٰذَا؟",
+    "english": "What is this?",
+    "transliteration": "maa haadha?",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/what_is_this_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "مَا هٰذَا الشَّيْءُ؟",
+      "english": "What is this thing?",
+      "transliteration": "maa haadha ash-shay'?"
+    }
+  },
+  {
+    "id": "this_is_1",
+    "arabic": "هٰذَا...",
+    "english": "This is...",
+    "transliteration": "haadha...",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/this_is_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "هٰذَا كِتَابٌ مُفِيدٌ",
+      "english": "This is a useful book",
+      "transliteration": "haadha kitaabun mufiid"
+    }
+  },
+  {
+    "id": "thank_god_1",
+    "arabic": "اَلْحَمْدُ لِلَّهِ",
+    "english": "Thank God / Praise be to God",
+    "transliteration": "al-hamdu lillaah",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/thank_god_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "اَلْحَمْدُ لِلَّهِ عَلَى السَّلَامَةِ",
+      "english": "Thank God for the safety",
+      "transliteration": "al-hamdu lillaah 'alaa as-salaama"
+    }
+  },
+  {
+    "id": "god_willing_1",
+    "arabic": "إِنْ شَاءَ اللَّهُ",
+    "english": "God willing",
+    "transliteration": "in shaa' Allaah",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/god_willing_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "سَأَذْهَبُ غَدًا إِنْ شَاءَ اللَّهُ",
+      "english": "I will go tomorrow, God willing",
+      "transliteration": "sa'adhhabu ghadan in shaa' Allaah"
+    }
+  },
+  {
+    "id": "what_god_has_willed_1",
+    "arabic": "مَا شَاءَ اللَّهُ",
+    "english": "What God has willed",
+    "transliteration": "maa shaa' Allaah",
+    "category": "phrases",
+    "difficulty": 3,
+    "audioRef": "words/what_god_has_willed_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "مَا شَاءَ اللَّهُ، هٰذَا عَمَلٌ رَائِعٌ!",
+      "english": "What God has willed, this is wonderful work!",
+      "transliteration": "maa shaa' Allaah, haadha 'amalun raa'i'!"
+    }
+  },
+  {
+    "id": "in_the_name_of_god_1",
+    "arabic": "بِسْمِ اللَّهِ",
+    "english": "In the name of God",
+    "transliteration": "bismillaah",
+    "category": "phrases",
+    "difficulty": 2,
+    "audioRef": "words/in_the_name_of_god_1.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيمِ",
+      "english": "In the name of God, the Most Gracious, the Most Merciful",
+      "transliteration": "bismillaah ar-rahmaan ar-rahiim"
+    }
+  }
+]

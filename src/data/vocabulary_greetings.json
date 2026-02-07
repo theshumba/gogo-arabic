@@ -1,0 +1,302 @@
+[
+  {
+    "id": "salaam",
+    "arabic": "السَّلَامُ عَلَيْكُمْ",
+    "english": "Peace be upon you",
+    "transliteration": "as-salaamu alaykum",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/salaam.mp3",
+    "npcSource": "scholar",
+    "exampleSentence": {
+      "arabic": "السَّلَامُ عَلَيْكُمْ يَا أَصْدِقَائِي",
+      "english": "Peace be upon you, my friends",
+      "transliteration": "as-salaamu alaykum yaa asdiqaa'ii"
+    }
+  },
+  {
+    "id": "ahlan",
+    "arabic": "أَهْلًا",
+    "english": "Welcome / Hello",
+    "transliteration": "ahlan",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/ahlan.mp3",
+    "npcSource": "merchant",
+    "exampleSentence": {
+      "arabic": "أَهْلًا وَسَهْلًا بِكَ فِي مَدِينَتِنَا",
+      "english": "Welcome to our city",
+      "transliteration": "ahlan wa sahlan bika fii madiinatinaa"
+    }
+  },
+  {
+    "id": "marhaba",
+    "arabic": "مَرْحَبًا",
+    "english": "Hello",
+    "transliteration": "marhaban",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/marhaba.mp3",
+    "npcSource": "merchant",
+    "exampleSentence": {
+      "arabic": "مَرْحَبًا، كَيْفَ حَالُكَ؟",
+      "english": "Hello, how are you?",
+      "transliteration": "marhaban, kayfa haaluka?"
+    }
+  },
+  {
+    "id": "shukran",
+    "arabic": "شُكْرًا",
+    "english": "Thank you",
+    "transliteration": "shukran",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/shukran.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "شُكْرًا جَزِيلًا عَلَى مُسَاعَدَتِكَ",
+      "english": "Thank you very much for your help",
+      "transliteration": "shukran jaziilan alaa musaa'adatika"
+    }
+  },
+  {
+    "id": "afwan",
+    "arabic": "عَفْوًا",
+    "english": "You're welcome / Excuse me",
+    "transliteration": "afwan",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/afwan.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "عَفْوًا، هَلْ يُمْكِنُكَ مُسَاعَدَتِي؟",
+      "english": "Excuse me, can you help me?",
+      "transliteration": "afwan, hal yumkinuka musaa'adatii?"
+    }
+  },
+  {
+    "id": "ma_a_salama",
+    "arabic": "مَعَ السَّلَامَةِ",
+    "english": "Goodbye",
+    "transliteration": "ma'a as-salaama",
+    "category": "greetings",
+    "difficulty": 2,
+    "audioRef": "words/ma_a_salama.mp3",
+    "npcSource": "merchant",
+    "exampleSentence": {
+      "arabic": "مَعَ السَّلَامَةِ، أَرَاكَ غَدًا",
+      "english": "Goodbye, see you tomorrow",
+      "transliteration": "ma'a as-salaama, araaka ghadan"
+    }
+  },
+  {
+    "id": "sabah_al_khayr",
+    "arabic": "صَبَاحُ الْخَيْرِ",
+    "english": "Good morning",
+    "transliteration": "sabaah al-khayr",
+    "category": "greetings",
+    "difficulty": 2,
+    "audioRef": "words/sabah_al_khayr.mp3",
+    "npcSource": "merchant",
+    "exampleSentence": {
+      "arabic": "صَبَاحُ الْخَيْرِ، كَيْفَ أَصْبَحْتَ؟",
+      "english": "Good morning, how did you wake up?",
+      "transliteration": "sabaah al-khayr, kayfa asbahta?"
+    }
+  },
+  {
+    "id": "masa_al_khayr",
+    "arabic": "مَسَاءُ الْخَيْرِ",
+    "english": "Good evening",
+    "transliteration": "masaa' al-khayr",
+    "category": "greetings",
+    "difficulty": 2,
+    "audioRef": "words/masa_al_khayr.mp3",
+    "npcSource": "merchant",
+    "exampleSentence": {
+      "arabic": "مَسَاءُ الْخَيْرِ يَا جَارِي",
+      "english": "Good evening, my neighbor",
+      "transliteration": "masaa' al-khayr yaa jaarii"
+    }
+  },
+  {
+    "id": "kayfa_haluk",
+    "arabic": "كَيْفَ حَالُكَ؟",
+    "english": "How are you?",
+    "transliteration": "kayfa haaluka?",
+    "category": "greetings",
+    "difficulty": 2,
+    "audioRef": "words/kayfa_haluk.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "مَرْحَبًا يَا صَدِيقِي، كَيْفَ حَالُكَ الْيَوْمَ؟",
+      "english": "Hello my friend, how are you today?",
+      "transliteration": "marhaban yaa sadiiqii, kayfa haaluka al-yawma?"
+    }
+  },
+  {
+    "id": "bi_khayr",
+    "arabic": "بِخَيْرٍ",
+    "english": "I'm fine / Well",
+    "transliteration": "bi-khayr",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/bi_khayr.mp3",
+    "npcSource": "student",
+    "exampleSentence": {
+      "arabic": "أَنَا بِخَيْرٍ، الْحَمْدُ لِلَّهِ",
+      "english": "I am fine, praise be to God",
+      "transliteration": "ana bi-khayr, al-hamdu lillaah"
+    }
+  },
+  {
+    "id": "min_fadlak",
+    "arabic": "مِنْ فَضْلِكَ",
+    "english": "Please",
+    "transliteration": "min fadlika",
+    "category": "greetings",
+    "difficulty": 2,
+    "audioRef": "words/min_fadlak.mp3",
+    "npcSource": "scholar",
+    "exampleSentence": {
+      "arabic": "مِنْ فَضْلِكَ، أَعْطِنِي كَأْسَ مَاءٍ",
+      "english": "Please, give me a glass of water",
+      "transliteration": "min fadlika, a'tinii ka'sa maa'"
+    }
+  },
+  {
+    "id": "la",
+    "arabic": "لَا",
+    "english": "No",
+    "transliteration": "laa",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/la.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "لَا، شُكْرًا",
+      "english": "No, thank you",
+      "transliteration": "laa, shukran"
+    }
+  },
+  {
+    "id": "na_am",
+    "arabic": "نَعَمْ",
+    "english": "Yes",
+    "transliteration": "na'am",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/na_am.mp3",
+    "npcSource": null,
+    "exampleSentence": {
+      "arabic": "نَعَمْ، أَنَا مُوَافِقٌ",
+      "english": "Yes, I agree",
+      "transliteration": "na'am, ana muwaafiq"
+    }
+  },
+  {
+    "id": "inshallah",
+    "arabic": "إِنْ شَاءَ اللَّهُ",
+    "english": "God willing",
+    "transliteration": "in shaa'a Allaah",
+    "category": "greetings",
+    "difficulty": 3,
+    "audioRef": "words/inshallah.mp3",
+    "npcSource": "scholar",
+    "exampleSentence": {
+      "arabic": "سَأَزُورُكَ غَدًا إِنْ شَاءَ اللَّهُ",
+      "english": "I will visit you tomorrow, God willing",
+      "transliteration": "sa'azuuruka ghadan in shaa'a Allaah"
+    }
+  },
+  {
+    "id": "mashallah",
+    "arabic": "مَا شَاءَ اللَّهُ",
+    "english": "What God has willed (expression of appreciation)",
+    "transliteration": "maa shaa'a Allaah",
+    "category": "greetings",
+    "difficulty": 3,
+    "audioRef": "words/mashallah.mp3",
+    "npcSource": "scholar",
+    "exampleSentence": {
+      "arabic": "مَا شَاءَ اللَّهُ، بَيْتُكَ جَمِيلٌ",
+      "english": "What God has willed, your house is beautiful",
+      "transliteration": "maa shaa'a Allaah, baytuka jamiil"
+    }
+  },
+  {
+    "id": "alhamdulillah",
+    "arabic": "الْحَمْدُ لِلَّهِ",
+    "english": "Praise be to God",
+    "transliteration": "al-hamdu lillaah",
+    "category": "greetings",
+    "difficulty": 2,
+    "audioRef": "words/alhamdulillah.mp3",
+    "npcSource": "scholar",
+    "exampleSentence": {
+      "arabic": "الْحَمْدُ لِلَّهِ، أَنَا بِصِحَّةٍ جَيِّدَةٍ",
+      "english": "Praise be to God, I am in good health",
+      "transliteration": "al-hamdu lillaah, ana bi-sihhatin jayyida"
+    }
+  },
+  {
+    "id": "bismillah",
+    "arabic": "بِسْمِ اللَّهِ",
+    "english": "In the name of God",
+    "transliteration": "bismi Allaah",
+    "category": "greetings",
+    "difficulty": 2,
+    "audioRef": "words/bismillah.mp3",
+    "npcSource": "scholar",
+    "exampleSentence": {
+      "arabic": "بِسْمِ اللَّهِ، نَبْدَأُ رِحْلَتَنَا",
+      "english": "In the name of God, we begin our journey",
+      "transliteration": "bismi Allaah, nabda'u rihlatanaa"
+    }
+  },
+  {
+    "id": "jazakallah",
+    "arabic": "جَزَاكَ اللَّهُ خَيْرًا",
+    "english": "May God reward you with goodness",
+    "transliteration": "jazaaka Allaahu khayran",
+    "category": "greetings",
+    "difficulty": 4,
+    "audioRef": "words/jazakallah.mp3",
+    "npcSource": "scholar",
+    "exampleSentence": {
+      "arabic": "جَزَاكَ اللَّهُ خَيْرًا عَلَى كَرَمِكَ",
+      "english": "May God reward you with goodness for your generosity",
+      "transliteration": "jazaaka Allaahu khayran alaa karamika"
+    }
+  },
+  {
+    "id": "tayyib",
+    "arabic": "طَيِّبْ",
+    "english": "Okay / Good / Alright",
+    "transliteration": "tayyib",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/tayyib.mp3",
+    "npcSource": "merchant",
+    "exampleSentence": {
+      "arabic": "طَيِّبْ، سَنَذْهَبُ الْآنَ",
+      "english": "Alright, we will go now",
+      "transliteration": "tayyib, sanadh-habu al-aan"
+    }
+  },
+  {
+    "id": "yalla",
+    "arabic": "يَلَّا",
+    "english": "Let's go / Come on",
+    "transliteration": "yallaa",
+    "category": "greetings",
+    "difficulty": 1,
+    "audioRef": "words/yalla.mp3",
+    "npcSource": "merchant",
+    "exampleSentence": {
+      "arabic": "يَلَّا نَذْهَبُ إِلَى السُّوقِ",
+      "english": "Let's go to the market",
+      "transliteration": "yallaa nadh-habu ilaa as-suuq"
+    }
+  }
+]

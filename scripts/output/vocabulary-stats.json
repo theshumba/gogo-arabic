@@ -1,0 +1,36 @@
+{
+  "totalWords": 2318,
+  "bySource": {
+    "common": 739,
+    "quran": 1500,
+    "supplementary": 79
+  },
+  "byZone": {
+    "oasis_village": 288,
+    "ancient_library": 290,
+    "desert_marketplace": 290,
+    "farmland": 290,
+    "bedouin_camp": 290,
+    "mountain_village": 290,
+    "coastal_port": 290,
+    "royal_palace": 290
+  },
+  "byDifficulty": {
+    "1": 265,
+    "2": 465,
+    "3": 688,
+    "4": 400,
+    "5": 500
+  },
+  "byPartOfSpeech": {
+    "unknown": 818,
+    "noun": 795,
+    "verb": 585,
+    "adverb": 14,
+    "adjective": 106
+  },
+  "wordsWithRoots": 82,
+  "wordsWithQuranRef": 1500,
+  "wordsWithEnglish": 970,
+  "wordsWithTransliteration": 104
+}
