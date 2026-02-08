@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Planning next milestone (v3.0)
+**Current focus:** v3.0 Infrastructure & Polish
 
 ## Current Position
 
-Phase: v2.0 complete. Next milestone not started.
-Plan: Not started
-Status: Ready for `/gsd:new-milestone`
-Last activity: 2026-02-08 — v2.0 milestone archived
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-08 — Milestone v3.0 started
 
-Progress: [##########] 100% (v2.0: 9 phases, 14 plans)
+Progress: ░░░░░░░░░░ 0%
 
 ## Performance Metrics
 
@@ -36,16 +36,16 @@ None.
 
 ### Blockers/Concerns
 
-- 3 visual polish requirements (VPOL-01/02/04) need pixel art assets
-- Test coverage at 1.85% — significant investment needed for v3.0
-- GameLayout god component (523 lines) still needs refactoring
+- 3 visual polish requirements (VPOL-01/02/04) — pixel art assets exist, need integration
+- Test coverage at 1.85% — primary v3.0 target
+- GameLayout god component (523 lines) — primary refactor target
 
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: v2.0 milestone archived
-Resume: `/gsd:new-milestone` for v3.0
+Stopped at: Defining v3.0 requirements
+Resume: Continue requirements definition
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-08 — v2.0 milestone archived*
+*Last updated: 2026-02-08 — v3.0 milestone started*

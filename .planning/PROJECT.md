@@ -39,7 +39,18 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
-(See next milestone's REQUIREMENTS.md)
+See `.planning/REQUIREMENTS.md` for v3.0 scope.
+
+## Current Milestone: v3.0 Infrastructure & Polish
+
+**Goal:** Pay down technical debt with comprehensive testing (~80%+ coverage), architecture cleanup, backend hardening, performance optimization, and visual polish using existing pixel art assets.
+
+**Target features:**
+- Comprehensive test suite (unit, component, integration, E2E)
+- GameLayout refactor + CSS Modules migration + ESLint/Prettier
+- Backend hardening (DB indexes, atomic sync, auth improvements)
+- Performance tuning (memoization, chunk optimization, memoized selectors)
+- Visual polish (consistent sprites, pixel HUD icons, idle animations)
 
 ### Out of Scope
 
@@ -87,4 +98,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Random dev JWT secret | Avoid hardcoded secrets in dev mode | Good — better security posture |
 
 ---
-*Last updated: 2026-02-08 after v2.0 milestone*
+*Last updated: 2026-02-08 after v3.0 milestone initialization*
