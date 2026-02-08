@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import { closeSign } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { COLORS, FONTS, pixelBtnGold, pixelPanel } from '../../styles/theme.js';
@@ -53,12 +54,26 @@ export default function SignOverlay() {
   const dispatch = useDispatch();
   const signData = useSelector((s) => s.ui.signData);
 
-  if (!signData) return null;
-
   const handleClose = () => {
     dispatch(closeSign());
     EventBus.emit('unfreeze-player');
   };
+
+  // Escape key handler
+  useEffect(() => {
+    if (!signData) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [signData]);
+
+  if (!signData) return null;
 
   return (
     <div style={styles.overlay} onClick={handleClose}>

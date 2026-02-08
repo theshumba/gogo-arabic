@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, memo } from 'react';
+import { useState, useMemo, useCallback, useEffect, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
@@ -182,6 +182,18 @@ function ShopOverlay() {
     EventBus.emit('unfreeze-player');
   }, [dispatch]);
 
+  // Escape key handler
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleClose]);
+
   const handleBuy = useCallback((item) => {
     if (player.dirhams < item.price) return;
     if (inventoryIds.includes(item.id)) return;
@@ -228,6 +240,7 @@ function ShopOverlay() {
   return (
     <motion.div
       style={styles.overlay}
+      onClick={handleClose}
       variants={overlayVariants}
       initial="hidden"
       animate="visible"
@@ -236,6 +249,7 @@ function ShopOverlay() {
     >
       <motion.div
         style={styles.card}
+        onClick={(e) => e.stopPropagation()}
         variants={cardVariants}
         initial="hidden"
         animate="visible"

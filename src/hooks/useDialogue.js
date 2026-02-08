@@ -12,6 +12,7 @@ import { shuffle } from '../utils/shuffle.js';
 import { selectWordsByDifficulty } from '../utils/wordSelection.js';
 import vocabulary from '../data/vocabularyAll.js';
 import questsData from '../data/quests.json';
+import { getCulturalDialoguesForNPC } from '../data/culturalDialogues.js';
 
 /**
  * Selects the correct dialogue tree for this NPC based on the player's
@@ -81,6 +82,7 @@ export function useDialogue(npc) {
 
   const [currentTree, setCurrentTree] = useState(initialTree);
   const [lineIndex, setLineIndex] = useState(0);
+  const [showCulturalMenu, setShowCulturalMenu] = useState(false);
 
   // Reset tree + line when a new NPC dialogue opens
   useEffect(() => {
@@ -88,6 +90,7 @@ export function useDialogue(npc) {
       const tree = pickDialogueTree(npc, dialogueState);
       setCurrentTree(tree);
       setLineIndex(0);
+      setShowCulturalMenu(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [npc?.id]);
@@ -232,6 +235,26 @@ export function useDialogue(npc) {
       } else {
         close();
       }
+    } else if (choice.action === 'cultural_dialogue') {
+      // Load a cultural dialogue tree
+      const culturalDialogue = choice.culturalDialogueData;
+      if (culturalDialogue) {
+        // Convert cultural dialogue to dialogue tree format
+        const culturalTree = {
+          id: culturalDialogue.id,
+          trigger: 'cultural',
+          lines: culturalDialogue.lines,
+        };
+        setCurrentTree(culturalTree);
+        setLineIndex(0);
+        setShowCulturalMenu(false);
+      }
+    } else if (choice.action === 'show_cultural_menu') {
+      // Show cultural dialogue menu
+      setShowCulturalMenu(true);
+    } else if (choice.action === 'hide_cultural_menu') {
+      // Hide cultural menu and return to dialogue
+      setShowCulturalMenu(false);
     } else if (choice.next) {
       // Jump to a different tree by id
       const nextTree = npc.dialogueTrees.find((t) => t.id === choice.next);
@@ -253,5 +276,7 @@ export function useDialogue(npc) {
     close,
     advance,
     handleChoice,
+    showCulturalMenu,
+    setShowCulturalMenu,
   };
 }

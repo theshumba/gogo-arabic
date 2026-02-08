@@ -9,6 +9,7 @@ import {
   toggleMenu,
   showNotification,
 } from '../../store/slices/uiSlice.js';
+import { startSession, endSession, updateSessionTime } from '../../store/slices/dailyGoalsSlice.js';
 import {
   setCurrentZone,
   unlockZone,
@@ -17,9 +18,17 @@ import {
   incrementWordsLearned,
   markChestOpened,
   markBookRead,
+  completeOnboarding,
 } from '../../store/slices/playerSlice.js';
 import { addFsrsCard } from '../../store/slices/vocabularySlice.js';
-import { updateQuestProgress, completeQuest, checkPrerequisites } from '../../store/slices/questSlice.js';
+import {
+  updateQuestProgress,
+  completeQuest,
+  checkPrerequisites,
+  visitNpc,
+  visitZone,
+  recordChestOpened,
+} from '../../store/slices/questSlice.js';
 import { createNewCard } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import vocabulary from '../../data/vocabularyAll.js';
@@ -31,11 +40,16 @@ import { useAudio } from '../../hooks/useAudio.js';
 
 import { PhaserGame } from '../../game/PhaserGame.jsx';
 import HUD from '../HUD/HUD.jsx';
+import MiniMap from '../HUD/MiniMap.jsx';
 import NotificationToast from '../HUD/NotificationToast.jsx';
 import DialogueOverlay from '../NPC/DialogueOverlay.jsx';
 import QuizOverlay from '../Quiz/QuizOverlay.jsx';
 import QuestLog from '../Quest/QuestLog.jsx';
 import SignOverlay from '../World/SignOverlay.jsx';
+import OnboardingFlow from '../Onboarding/OnboardingFlow.jsx';
+import LevelUpModal from '../UI/LevelUpModal.jsx';
+import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
+import AchievementToast from '../Achievements/AchievementToast.jsx';
 import styles from './GameLayout.module.css';
 
 function PauseMenu({ onResume, onMainMenu }) {
@@ -73,6 +87,7 @@ export default function GameLayout() {
   const signOpen = useSelector((state) => state.ui.signOpen);
   const fsrsCards = useSelector((state) => state.vocabulary.fsrsCards);
   const quests = useSelector((state) => state.quests.quests);
+  const onboardingComplete = useSelector((state) => state.player.onboardingComplete ?? true);
 
   // Track word learned for quest progress
   const trackWordLearned = (category) => {
@@ -127,10 +142,69 @@ export default function GameLayout() {
     const handleNpcInteract = ({ npcId, npcName }) => {
       playSFX('click');
       dispatch(openDialogue({ npcId, npcName }));
+
+      // Track NPC visit for exploration quests
+      dispatch(visitNpc(npcId));
+
+      // Check exploration quests
+      for (const qd of questsData) {
+        if (qd.type === 'exploration' && quests[qd.id]?.status === 'active') {
+          // Count unique NPCs visited for this quest
+          const state = store.getState();
+          const npcsVisited = state.quests.npcsVisited || [];
+
+          if (qd.requirements?.npcsVisited) {
+            // Specific NPCs required
+            const requiredNpcs = qd.requirements.npcsVisited;
+            const visitedCount = requiredNpcs.filter(npc => npcsVisited.includes(npc)).length;
+            dispatch(updateQuestProgress({ questId: qd.id, amount: 0 })); // Update progress display
+            if (quests[qd.id]) {
+              quests[qd.id].progress = visitedCount;
+            }
+            if (visitedCount >= qd.target) {
+              dispatch(completeQuest(qd.id));
+              dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
+              dispatch(checkPrerequisites(questsData));
+            }
+          } else if (qd.requirements?.zone) {
+            // NPCs in specific zone
+            const currentZone = state.player.currentZone;
+            if (currentZone === qd.requirements.zone) {
+              dispatch(updateQuestProgress({ questId: qd.id, amount: 1 }));
+              const current = (quests[qd.id]?.progress || 0) + 1;
+              if (current >= qd.target) {
+                dispatch(completeQuest(qd.id));
+                dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
+                dispatch(checkPrerequisites(questsData));
+              }
+            }
+          }
+        }
+      }
     };
 
     const handleZoneChange = ({ zone }) => {
       dispatch(setCurrentZone(zone));
+
+      // Track zone visit for exploration quests
+      dispatch(visitZone(zone));
+
+      // Check zone exploration quests
+      for (const qd of questsData) {
+        if (qd.type === 'exploration' && qd.trackEvent === 'zones_visited' && quests[qd.id]?.status === 'active') {
+          const state = store.getState();
+          const zonesVisited = state.quests.zonesVisited || [];
+          const visitedCount = zonesVisited.length;
+          if (quests[qd.id]) {
+            quests[qd.id].progress = visitedCount;
+          }
+          if (visitedCount >= qd.target) {
+            dispatch(completeQuest(qd.id));
+            dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
+            dispatch(checkPrerequisites(questsData));
+          }
+        }
+      }
     };
 
     const handleOpenQuiz = (quizConfig) => {
@@ -191,6 +265,26 @@ export default function GameLayout() {
           type: 'dirhams',
         })
       );
+
+      // Track chest opened for treasure hunter quest
+      dispatch(recordChestOpened(id));
+
+      // Check treasure hunter quest
+      for (const qd of questsData) {
+        if (qd.trackEvent === 'chest_opened' && quests[qd.id]?.status === 'active') {
+          const state = store.getState();
+          const chestsOpened = state.quests.chestsOpened || [];
+          const chestsCount = chestsOpened.length;
+          if (quests[qd.id]) {
+            quests[qd.id].progress = chestsCount;
+          }
+          if (chestsCount >= qd.target) {
+            dispatch(completeQuest(qd.id));
+            dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
+            dispatch(checkPrerequisites(questsData));
+          }
+        }
+      }
     };
 
     const handleChestEmpty = () => {
@@ -276,7 +370,12 @@ export default function GameLayout() {
     const handleSfxQuest = () => playSFX('quest');
     const handleSfxClick = () => playSFX('click');
 
+    const handleOpenWorldMap = () => {
+      navigate('/game/map');
+    };
+
     EventBus.on('npc-interact', handleNpcInteract);
+    EventBus.on('open-world-map', handleOpenWorldMap);
     EventBus.on('zone-change', handleZoneChange);
     EventBus.on('open-quiz', handleOpenQuiz);
     EventBus.on('open-alphabet', handleOpenAlphabet);
@@ -306,6 +405,7 @@ export default function GameLayout() {
       EventBus.off('check-zone-unlock', handleCheckZoneUnlock);
       EventBus.off('zone-transition', handleZoneTransition);
       EventBus.off('fast-travel', handleFastTravel);
+      EventBus.off('open-world-map', handleOpenWorldMap);
       EventBus.off('sfx-correct', handleSfxCorrect);
       EventBus.off('sfx-wrong', handleSfxWrong);
       EventBus.off('sfx-wordlearned', handleSfxWordlearned);
@@ -313,7 +413,59 @@ export default function GameLayout() {
       EventBus.off('sfx-quest', handleSfxQuest);
       EventBus.off('sfx-click', handleSfxClick);
     };
-  }, [dispatch, fsrsCards, quests, playSFX]);
+  }, [dispatch, fsrsCards, quests, playSFX, navigate]);
+
+  // Onboarding handlers
+  const handleOnboardingComplete = () => {
+    dispatch(completeOnboarding());
+    dispatch(showNotification({ message: 'Welcome to GoGo Arabic!', type: 'quest' }));
+  };
+
+  const handleOnboardingSkip = () => {
+    dispatch(completeOnboarding());
+  };
+
+  // Track session time for daily goals
+  useEffect(() => {
+    // Start session when component mounts
+    dispatch(startSession());
+
+    // Update session time every minute
+    const sessionTimer = setInterval(() => {
+      dispatch(updateSessionTime());
+    }, 60000); // Every 60 seconds
+
+    // End session when component unmounts
+    return () => {
+      clearInterval(sessionTimer);
+      dispatch(endSession());
+    };
+  }, [dispatch]);
+
+  // Keyboard shortcuts (M for map, L for alphabet)
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      // Don't trigger if user is typing in an input field
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      // Don't trigger if a modal/overlay is open
+      if (dialogueOpen || quizOpen || menuOpen || signOpen) return;
+
+      if (e.key === 'm' || e.key === 'M') {
+        e.preventDefault();
+        navigate('/game/map');
+      } else if (e.key === 'l' || e.key === 'L') {
+        e.preventDefault();
+        navigate('/alphabet');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [navigate, dialogueOpen, quizOpen, menuOpen, signOpen]);
 
   return (
     <div className={styles.container}>
@@ -323,8 +475,28 @@ export default function GameLayout() {
       {/* HUD overlay bar */}
       <HUD onMenu={() => dispatch(toggleMenu())} />
 
+      {/* MiniMap - bottom right corner */}
+      {location.pathname === '/game' && <MiniMap />}
+
       {/* Toast notifications */}
       <NotificationToast />
+
+      {/* Achievement toast */}
+      <AchievementToast />
+
+      {/* Streak reward toast */}
+      <StreakRewardToast />
+
+      {/* Level up modal */}
+      <LevelUpModal />
+
+      {/* Onboarding overlay (highest priority) */}
+      {!onboardingComplete && (
+        <OnboardingFlow
+          onComplete={handleOnboardingComplete}
+          onSkip={handleOnboardingSkip}
+        />
+      )}
 
       {/* Conditional overlays */}
       {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}

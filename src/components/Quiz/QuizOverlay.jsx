@@ -62,6 +62,16 @@ const styles = {
     textTransform: 'uppercase',
     letterSpacing: '1px',
   },
+  quitBtn: {
+    fontFamily: FONTS.pixel,
+    fontSize: '9px',
+    padding: '6px 12px',
+    background: COLORS.gray,
+    color: COLORS.white,
+    border: `2px solid ${COLORS.dark}`,
+    cursor: 'pointer',
+    textTransform: 'uppercase',
+  },
   score: {
     fontFamily: FONTS.pixel,
     fontSize: '12px',
@@ -138,6 +148,26 @@ export default function QuizOverlay() {
   const [showSummary, setShowSummary] = useState(false);
   const [localFeedback, setLocalFeedback] = useState(null);
 
+  // Escape key handler - only close on summary screen or if no feedback showing
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        // Allow closing on summary screen, or warn on active quiz
+        if (showSummary) {
+          close();
+        } else if (!feedback) {
+          // No answer given yet, allow closing
+          if (window.confirm('Quit quiz? Progress will be lost.')) {
+            close();
+          }
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showSummary, feedback, close]);
+
   useEffect(() => {
     if (!quiz.active) {
       const words = overlayData?.words || getRandomWords(5, playerLevel, wordsLearned);
@@ -207,6 +237,7 @@ export default function QuizOverlay() {
     return (
       <motion.div
         style={styles.overlay}
+        onClick={close}
         variants={overlayVariants}
         initial="hidden"
         animate="visible"
@@ -215,6 +246,7 @@ export default function QuizOverlay() {
       >
         <motion.div
           style={styles.card}
+          onClick={(e) => e.stopPropagation()}
           variants={cardVariants}
           initial="hidden"
           animate="visible"
@@ -244,6 +276,12 @@ export default function QuizOverlay() {
     );
   }
 
+  const handleQuit = useCallback(() => {
+    if (window.confirm('Quit quiz? Progress will be lost.')) {
+      close();
+    }
+  }, [close]);
+
   // Match Pairs mode: show all 4 words at once
   if (quiz.active && quiz.quizType === 'match') {
     const matchWords = quiz.sessionWords.slice(0, 4);
@@ -258,6 +296,7 @@ export default function QuizOverlay() {
       >
         <motion.div
           style={styles.card}
+          onClick={(e) => e.stopPropagation()}
           variants={cardVariants}
           initial="hidden"
           animate="visible"
@@ -265,7 +304,9 @@ export default function QuizOverlay() {
           transition={transition}
         >
           <div style={styles.header}>
+            <button style={styles.quitBtn} onClick={handleQuit}>Quit</button>
             <span>{QUIZ_TYPE_LABELS['match']}</span>
+            <div style={{ width: '50px' }} />
           </div>
           <MatchPairs
             words={matchWords}
@@ -299,6 +340,7 @@ export default function QuizOverlay() {
     >
       <motion.div
         style={styles.card}
+        onClick={(e) => e.stopPropagation()}
         variants={cardVariants}
         initial="hidden"
         animate="visible"
@@ -306,6 +348,7 @@ export default function QuizOverlay() {
         transition={transition}
       >
         <div style={styles.header}>
+          <button style={styles.quitBtn} onClick={handleQuit}>Quit</button>
           <span>{QUIZ_TYPE_LABELS[quiz.quizType] || quiz.quizType}</span>
           <span style={styles.score}>
             {quiz.sessionScore}/{quiz.sessionTotal}

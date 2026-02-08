@@ -40,6 +40,30 @@ export function useGameNavigation() {
     navigate('/stats');
   }, [navigate]);
 
+  const goToGrammar = useCallback(() => {
+    navigate('/grammar');
+  }, [navigate]);
+
+  const goToBattle = useCallback((bossId) => {
+    navigate(`/battle?boss=${bossId}`);
+  }, [navigate]);
+
+  const goToMiniGames = useCallback(() => {
+    navigate('/mini-games');
+  }, [navigate]);
+
+  const goToWordSearch = useCallback(() => {
+    navigate('/mini-games/word-search');
+  }, [navigate]);
+
+  const goToReading = useCallback(() => {
+    navigate('/mini-games/reading');
+  }, [navigate]);
+
+  const goToRoots = useCallback(() => {
+    navigate('/roots');
+  }, [navigate]);
+
   const goBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
@@ -59,6 +83,12 @@ export function useGameNavigation() {
     goToSettings,
     goToWorldMap,
     goToStats,
+    goToGrammar,
+    goToBattle,
+    goToMiniGames,
+    goToWordSearch,
+    goToReading,
+    goToRoots,
     goBack,
     goTo,
   };

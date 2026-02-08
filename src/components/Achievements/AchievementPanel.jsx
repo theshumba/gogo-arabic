@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, memo } from 'react';
+import { useState, useCallback, useMemo, useEffect, memo } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import {
@@ -266,6 +266,18 @@ function AchievementPanel({ onClose }) {
   const achievementProgress = useSelector(selectAchievementProgress);
   const unlockedCount = useSelector(selectUnlockedCount);
   const totalXP = useSelector(selectTotalAchievementXP);
+
+  // Escape key handler
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const tabs = useMemo(() => [
     { id: 'all', label: 'All' },

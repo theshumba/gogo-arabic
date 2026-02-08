@@ -4,11 +4,13 @@ import { motion } from 'framer-motion';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { useDialogue } from '../../hooks/useDialogue.js';
+import { getEnhancedDialogueChoices } from '../../utils/culturalDialogueHelper.js';
 import npcsData from '../../data/npcs.json';
 import DialoguePortrait from './DialoguePortrait.jsx';
 import DialogueBox from './DialogueBox.jsx';
 import DialogueChoices from './DialogueChoices.jsx';
 import TeacherWordCard from './TeacherWordCard.jsx';
+import CulturalDialogueMenu from './CulturalDialogueMenu.jsx';
 import styles from './DialogueOverlay.module.css';
 
 /* ---- animation variants ---- */
@@ -36,7 +38,7 @@ export default function DialogueOverlay() {
   const npcId = overlayData?.npcId;
   const npc = npcsData.find((n) => n.id === npcId);
 
-  const { currentTree, lineIndex, close, advance, handleChoice } = useDialogue(npc);
+  const { currentTree, lineIndex, close, advance, handleChoice, showCulturalMenu, setShowCulturalMenu } = useDialogue(npc);
 
   // Early return if invalid data
   if (!npc || !currentTree) {
@@ -107,13 +109,77 @@ export default function DialogueOverlay() {
     ? { duration: 0.2 }
     : { duration: 0.3, ease: 'easeOut' };
 
+  /* ---- cultural menu rendering ---- */
+  if (showCulturalMenu) {
+    const handleCulturalSelect = (culturalDialogue) => {
+      handleChoice({
+        action: 'cultural_dialogue',
+        culturalDialogueData: culturalDialogue,
+      });
+    };
+
+    const handleBackFromCultural = () => {
+      setShowCulturalMenu(false);
+    };
+
+    return (
+      <div className={styles.overlay} role="dialog" aria-label="Cultural dialogue menu">
+        <motion.div
+          className={styles.backdrop}
+          onClick={close}
+          role="button"
+          tabIndex={0}
+          aria-label="Close cultural menu"
+          onKeyDown={(e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              close();
+            }
+          }}
+          variants={backdropVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={transition}
+        />
+        <motion.div
+          variants={dialogueBoxVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={transition}
+          style={{ width: '100%' }}
+        >
+          <CulturalDialogueMenu
+            npc={npc}
+            onCulturalSelect={handleCulturalSelect}
+            onBack={handleBackFromCultural}
+            portrait={<DialoguePortrait npc={npc} />}
+          />
+        </motion.div>
+      </div>
+    );
+  }
+
   /* ---- choice line rendering ---- */
   if (line.choices) {
+    // Enhance choices with cultural dialogue option if available
+    const enhancedChoices = getEnhancedDialogueChoices(npc, line);
+
     return (
       <div className={styles.overlay} role="dialog" aria-label="Dialogue choices">
         <motion.div
           className={styles.backdrop}
-          aria-hidden="true"
+          onClick={close}
+          role="button"
+          tabIndex={0}
+          aria-label="Close dialogue"
+          onKeyDown={(e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              close();
+            }
+          }}
           variants={backdropVariants}
           initial="hidden"
           animate="visible"
@@ -129,7 +195,7 @@ export default function DialogueOverlay() {
           style={{ width: '100%' }}
         >
           <DialogueChoices
-            choices={line.choices}
+            choices={enhancedChoices || line.choices}
             onChoiceSelect={handleChoice}
             portrait={<DialoguePortrait npc={npc} />}
           />

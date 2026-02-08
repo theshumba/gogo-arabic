@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { showNotification } from '../../store/slices/uiSlice.js';
@@ -34,6 +34,18 @@ export default function WorldMap({ onBack }) {
   const currentZone = useSelector((s) => s.player.currentZone);
   const completedQuests = useSelector((s) => s.quests.quests);
   const [hoveredZone, setHoveredZone] = useState(null);
+
+  // Escape key handler
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onBack();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onBack]);
 
   // Calculate zone statistics
   const getZoneStats = (zoneId) => {
@@ -201,6 +213,7 @@ export default function WorldMap({ onBack }) {
   return (
     <motion.div
       className={styles.overlay}
+      onClick={onBack}
       role="dialog"
       aria-label="World Map"
       variants={overlayVariants}
@@ -211,6 +224,7 @@ export default function WorldMap({ onBack }) {
     >
       <motion.div
         className={styles.card}
+        onClick={(e) => e.stopPropagation()}
         variants={cardVariants}
         initial="hidden"
         animate="visible"

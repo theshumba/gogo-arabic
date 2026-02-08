@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { store } from '../../store/store.js';
+import { EventBus } from '../../utils/eventBus.js';
 
 /**
  * Player sprite with 2-layer compositing (body + head covering).
@@ -80,8 +81,25 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setOffset(44, 90);
 
     this.speed = 200;
+    this.sprintSpeed = 400; // 2x normal speed
     this.isFrozen = false;
     this.lastDir = 'down';
+
+    // Sprint mechanics
+    this.isSprinting = false;
+    this.stamina = 100;
+    this.maxStamina = 100;
+    this.staminaDrainRate = 20; // Points per second while sprinting
+    this.staminaRechargeRate = 33.33; // Points per second (full recharge in 3s)
+    this.canSprint = true;
+
+    // Double-tap sprint boost
+    this.lastTapTime = { left: 0, right: 0, up: 0, down: 0 };
+    this.prevKeyState = { left: false, right: false, up: false, down: false };
+    this.doubleTapWindow = 300; // ms
+    this.speedBoostActive = false;
+    this.speedBoostEndTime = 0;
+    this.speedBoostMultiplier = 1.5;
 
     // Apply skin tone tint to body
     this.setTint(skinTint);
@@ -111,6 +129,29 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       left: Phaser.Input.Keyboard.KeyCodes.A,
       right: Phaser.Input.Keyboard.KeyCodes.D,
     });
+    this.shiftKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+
+    // Create dust particle texture if it doesn't exist
+    if (!scene.textures.exists('particle-dust')) {
+      const graphics = scene.make.graphics({ x: 0, y: 0, add: false });
+      graphics.fillStyle(0xD4A843, 1);
+      graphics.fillCircle(4, 4, 4);
+      graphics.generateTexture('particle-dust', 8, 8);
+      graphics.destroy();
+    }
+
+    // Dust particles for sprint visual feedback
+    this.dustParticles = scene.add.particles(x, y, 'particle-dust', {
+      speed: { min: 20, max: 40 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.3, end: 0 },
+      alpha: { start: 0.6, end: 0 },
+      lifespan: 300,
+      frequency: 100,
+      maxParticles: 10,
+      on: false, // Start disabled
+    });
+    this.dustParticles.setDepth(this.depth - 1);
   }
 
   _createAnims(scene, textureKey, prefix) {
@@ -201,27 +242,108 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   update() {
     if (this.isFrozen) return;
 
+    const delta = this.scene.game.loop.delta / 1000; // Delta time in seconds
+
+    // Check for speed boost expiry
+    if (this.speedBoostActive && Date.now() > this.speedBoostEndTime) {
+      this.speedBoostActive = false;
+    }
+
     const left = this.cursors.left.isDown || this.wasd.left.isDown;
     const right = this.cursors.right.isDown || this.wasd.right.isDown;
     const up = this.cursors.up.isDown || this.wasd.up.isDown;
     const down = this.cursors.down.isDown || this.wasd.down.isDown;
 
+    // Detect double-tap for speed boost (key pressed -> released -> pressed again)
+    const now = Date.now();
+
+    // Left key
+    if (left && !this.prevKeyState.left) {
+      if (now - this.lastTapTime.left < this.doubleTapWindow) {
+        this._activateSpeedBoost();
+      }
+      this.lastTapTime.left = now;
+    }
+    this.prevKeyState.left = left;
+
+    // Right key
+    if (right && !this.prevKeyState.right) {
+      if (now - this.lastTapTime.right < this.doubleTapWindow) {
+        this._activateSpeedBoost();
+      }
+      this.lastTapTime.right = now;
+    }
+    this.prevKeyState.right = right;
+
+    // Up key
+    if (up && !this.prevKeyState.up) {
+      if (now - this.lastTapTime.up < this.doubleTapWindow) {
+        this._activateSpeedBoost();
+      }
+      this.lastTapTime.up = now;
+    }
+    this.prevKeyState.up = up;
+
+    // Down key
+    if (down && !this.prevKeyState.down) {
+      if (now - this.lastTapTime.down < this.doubleTapWindow) {
+        this._activateSpeedBoost();
+      }
+      this.lastTapTime.down = now;
+    }
+    this.prevKeyState.down = down;
+
+    // Sprint logic (Shift key held + has stamina)
+    const wantsToSprint = this.shiftKey.isDown && (left || right || up || down);
+
+    if (wantsToSprint && this.stamina > 0) {
+      this.isSprinting = true;
+      this.stamina = Math.max(0, this.stamina - this.staminaDrainRate * delta);
+
+      // Disable sprinting when stamina depletes
+      if (this.stamina <= 0) {
+        this.canSprint = false;
+      }
+    } else {
+      this.isSprinting = false;
+      // Recharge stamina when not sprinting
+      this.stamina = Math.min(this.maxStamina, this.stamina + this.staminaRechargeRate * delta);
+
+      // Re-enable sprinting when stamina is above 20%
+      if (this.stamina >= this.maxStamina * 0.2) {
+        this.canSprint = true;
+      }
+    }
+
+    // Prevent sprinting if stamina system locked it
+    if (!this.canSprint) {
+      this.isSprinting = false;
+    }
+
+    // Calculate effective speed
+    let effectiveSpeed = this.speed;
+    if (this.speedBoostActive) {
+      effectiveSpeed *= this.speedBoostMultiplier;
+    } else if (this.isSprinting) {
+      effectiveSpeed = this.sprintSpeed;
+    }
+
     this.setVelocity(0, 0);
 
     if (left) {
-      this.setVelocityX(-this.speed);
+      this.setVelocityX(-effectiveSpeed);
       this._playAnim('walk-left');
       this.lastDir = 'left';
     } else if (right) {
-      this.setVelocityX(this.speed);
+      this.setVelocityX(effectiveSpeed);
       this._playAnim('walk-right');
       this.lastDir = 'right';
     } else if (up) {
-      this.setVelocityY(-this.speed);
+      this.setVelocityY(-effectiveSpeed);
       this._playAnim('walk-up');
       this.lastDir = 'up';
     } else if (down) {
-      this.setVelocityY(this.speed);
+      this.setVelocityY(effectiveSpeed);
       this._playAnim('walk-down');
       this.lastDir = 'down';
     } else {
@@ -230,7 +352,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     // Normalize diagonal movement
     if ((left || right) && (up || down)) {
-      this.body.velocity.normalize().scale(this.speed);
+      this.body.velocity.normalize().scale(effectiveSpeed);
+    }
+
+    // Update dust particles
+    if (this.dustParticles) {
+      this.dustParticles.setPosition(this.x, this.y + 20);
+
+      // Enable particles when sprinting or boosting
+      if (this.isSprinting || this.speedBoostActive) {
+        if (!this.dustParticles.emitting) {
+          this.dustParticles.start();
+        }
+      } else {
+        if (this.dustParticles.emitting) {
+          this.dustParticles.stop();
+        }
+      }
     }
 
     // Keep head sprite in sync with body position and depth
@@ -238,6 +376,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.headSprite.setPosition(this.x, this.y);
       this.headSprite.setDepth(this.depth + 1);
     }
+
+    // Emit stamina update for HUD (only when sprinting to avoid spam)
+    if (this.isSprinting || this.stamina < this.maxStamina) {
+      EventBus.emit('player-stamina-update', {
+        stamina: this.stamina,
+        maxStamina: this.maxStamina,
+        isSprinting: this.isSprinting
+      });
+    }
+  }
+
+  _activateSpeedBoost() {
+    this.speedBoostActive = true;
+    this.speedBoostEndTime = Date.now() + 500; // 500ms boost duration
   }
 
   destroy(fromScene) {
@@ -245,7 +397,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.headSprite.destroy();
       this.headSprite = null;
     }
+    if (this.dustParticles) {
+      this.dustParticles.destroy();
+      this.dustParticles = null;
+    }
     super.destroy(fromScene);
+  }
+
+  /**
+   * Get stamina info for HUD display
+   */
+  getStaminaInfo() {
+    return {
+      stamina: this.stamina,
+      maxStamina: this.maxStamina,
+      isSprinting: this.isSprinting,
+      canSprint: this.canSprint
+    };
   }
 }
 

@@ -18,6 +18,14 @@ const AlphabetModule = lazy(() => import('./components/Alphabet/AlphabetModule.j
 const ReviewSession = lazy(() => import('./components/Review/ReviewSession.jsx'));
 const SettingsMenu = lazy(() => import('./components/Menu/SettingsMenu.jsx'));
 const WorldMap = lazy(() => import('./components/World/WorldMap.jsx'));
+const WordDuel = lazy(() => import('./components/Battle/WordDuel.jsx'));
+const GrammarModule = lazy(() => import('./components/Grammar/GrammarModule.jsx'));
+
+// Mini-games lazy imports
+const MiniGamesHub = lazy(() => import('./components/MiniGames/MiniGamesHub.jsx'));
+const WordSearch = lazy(() => import('./components/MiniGames/WordSearch.jsx'));
+const ReadingExercise = lazy(() => import('./components/Reading/ReadingExercise.jsx'));
+const RootExplorer = lazy(() => import('./components/Roots/RootExplorer.jsx'));
 
 // Stats component (placeholder for now)
 function Stats() {
@@ -63,7 +71,7 @@ function Stats() {
 
 // Route handlers that use the custom hook
 function MainMenuRoute() {
-  const { goToGame, goToAlphabet, goToReview, goToSettings, goToCharacterCreation } = useGameNavigation();
+  const { goToGame, goToAlphabet, goToReview, goToSettings, goToCharacterCreation, goToGrammar } = useGameNavigation();
 
   return (
     <PageTransition>
@@ -73,6 +81,7 @@ function MainMenuRoute() {
         onReview={goToReview}
         onSettings={goToSettings}
         onCharacterCreation={goToCharacterCreation}
+        onGrammar={goToGrammar}
       />
     </PageTransition>
   );
@@ -147,6 +156,78 @@ function WorldMapRoute() {
   );
 }
 
+function GrammarRoute() {
+  const { goToMenu } = useGameNavigation();
+
+  return (
+    <PageTransition>
+      <Suspense fallback={<LoadingScreen />}>
+        <GrammarModule onBack={goToMenu} />
+      </Suspense>
+    </PageTransition>
+  );
+}
+
+function BattleRoute() {
+  const { goBack } = useGameNavigation();
+  // Get bossId from URL params
+  const params = new URLSearchParams(window.location.search);
+  const bossId = params.get('boss') || 'oasis_spirit';
+
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <WordDuel bossId={bossId} onClose={goBack} />
+    </Suspense>
+  );
+}
+
+// Mini-games routes
+function MiniGamesHubRoute() {
+  return (
+    <PageTransition>
+      <Suspense fallback={<LoadingScreen />}>
+        <MiniGamesHub />
+      </Suspense>
+    </PageTransition>
+  );
+}
+
+function WordSearchRoute() {
+  const { goBack } = useGameNavigation();
+
+  return (
+    <PageTransition>
+      <Suspense fallback={<LoadingScreen />}>
+        <WordSearch onBack={goBack} />
+      </Suspense>
+    </PageTransition>
+  );
+}
+
+function ReadingExerciseRoute() {
+  const { goBack } = useGameNavigation();
+
+  return (
+    <PageTransition>
+      <Suspense fallback={<LoadingScreen />}>
+        <ReadingExercise onBack={goBack} />
+      </Suspense>
+    </PageTransition>
+  );
+}
+
+function RootExplorerRoute() {
+  const { goToMenu } = useGameNavigation();
+
+  return (
+    <PageTransition>
+      <Suspense fallback={<LoadingScreen />}>
+        <RootExplorer onBack={goToMenu} />
+      </Suspense>
+    </PageTransition>
+  );
+}
+
 /**
  * Route configuration using React Router v6
  * Code splitting applied to all routes except MainMenu
@@ -180,6 +261,36 @@ export const router = createBrowserRouter([
   {
     path: '/stats',
     element: <Stats />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/grammar',
+    element: <GrammarRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/battle',
+    element: <BattleRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/mini-games',
+    element: <MiniGamesHubRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/mini-games/word-search',
+    element: <WordSearchRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/mini-games/reading',
+    element: <ReadingExerciseRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/roots',
+    element: <RootExplorerRoute />,
     errorElement: <RouteErrorBoundary />,
   },
   {

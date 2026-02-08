@@ -68,6 +68,20 @@
   color: var(--color-xp-gold);
 }
 
+.staminaBarOuter {
+  width: 90px;
+  height: 8px;
+  background: var(--color-dark);
+  border: 2px solid var(--color-light);
+  overflow: hidden;
+}
+
+.staminaBarFill {
+  height: 100%;
+  background: var(--color-cyan);
+  transition: width 0.2s;
+}
+
 .streakText {
   font-family: var(--font-pixel);
   font-size: 12px;
@@ -128,6 +142,47 @@
   outline-offset: var(--focus-ring-offset);
 }
 
+.mapBtn {
+  background: var(--color-blue);
+  font-weight: bold;
+}
+
+.lettersBtn {
+  background: var(--color-green);
+  font-weight: bold;
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: 14px;
+  position: relative;
+}
+
+.lettersBadge {
+  background: var(--color-xp-gold);
+  color: var(--color-dark);
+  font-family: var(--font-pixel);
+  font-size: 9px;
+}
+
+/* Pulse animation to attract attention when no letters learned */
+.lettersPulse {
+  animation: lettersPulse 2s infinite;
+}
+
+@keyframes lettersPulse {
+  0%, 100% {
+    box-shadow:
+      inset -2px -2px 0px 0px rgba(0, 0, 0, 0.3),
+      inset 2px 2px 0px 0px rgba(255, 255, 255, 0.1),
+      0 2px 0 0 #1a191b;
+  }
+  50% {
+    box-shadow:
+      inset -2px -2px 0px 0px rgba(0, 0, 0, 0.3),
+      inset 2px 2px 0px 0px rgba(255, 255, 255, 0.1),
+      0 2px 0 0 #1a191b,
+      0 0 20px rgba(103, 193, 103, 0.8);
+  }
+}
+
 .badge {
   position: absolute;
   top: -6px;
@@ -154,6 +209,11 @@
 
 .achievementBadge {
   background: var(--color-xp-gold);
+  color: var(--color-dark);
+}
+
+.goalBadge {
+  background: var(--color-cyan);
   color: var(--color-dark);
 }
 

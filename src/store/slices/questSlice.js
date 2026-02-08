@@ -1,7 +1,17 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
-  quests: {},       // { [questId]: { status, progress, rewardClaimed } }
+  quests: {},       // { [questId]: { status, progress, rewardClaimed, tracking } }
+  npcsVisited: [],  // Array of NPC IDs visited
+  zonesVisited: [],  // Array of zone names visited
+  dialoguesCompleted: [],  // Array of dialogue IDs completed
+  reviewSessionsCompleted: [],  // Array of review session records { accuracy, timestamp }
+  quizzesPassed: [],  // Array of quiz records { accuracy, timestamp }
+  chestsOpened: [],  // Array of chest IDs opened
+  wordsLearnedToday: 0,  // Count of words learned today
+  lastResetDate: null,  // Date string for daily reset
+  lettersMastered: [],  // Array of letter IDs mastered
+  sentenceQuizzesCompleted: 0,  // Count of sentence quizzes completed
 };
 
 const questSlice = createSlice({
@@ -69,6 +79,71 @@ const questSlice = createSlice({
         entry.rewardClaimed = true;
       }
     },
+
+    // New tracking actions for diverse quest types
+    visitNpc(state, action) {
+      // payload: npcId
+      const npcId = action.payload;
+      if (!state.npcsVisited.includes(npcId)) {
+        state.npcsVisited.push(npcId);
+      }
+    },
+
+    visitZone(state, action) {
+      // payload: zoneName
+      const zoneName = action.payload;
+      if (!state.zonesVisited.includes(zoneName)) {
+        state.zonesVisited.push(zoneName);
+      }
+    },
+
+    completeDialogue(state, action) {
+      // payload: dialogueId
+      const dialogueId = action.payload;
+      if (!state.dialoguesCompleted.includes(dialogueId)) {
+        state.dialoguesCompleted.push(dialogueId);
+      }
+    },
+
+    recordReviewSession(state, action) {
+      // payload: { accuracy, timestamp }
+      state.reviewSessionsCompleted.push(action.payload);
+    },
+
+    recordQuizPassed(state, action) {
+      // payload: { accuracy, timestamp }
+      state.quizzesPassed.push(action.payload);
+    },
+
+    recordChestOpened(state, action) {
+      // payload: chestId
+      const chestId = action.payload;
+      if (!state.chestsOpened.includes(chestId)) {
+        state.chestsOpened.push(chestId);
+      }
+    },
+
+    incrementWordsLearnedToday(state) {
+      // Check if we need to reset the daily counter
+      const today = new Date().toDateString();
+      if (state.lastResetDate !== today) {
+        state.wordsLearnedToday = 0;
+        state.lastResetDate = today;
+      }
+      state.wordsLearnedToday += 1;
+    },
+
+    masterLetter(state, action) {
+      // payload: letterId
+      const letterId = action.payload;
+      if (!state.lettersMastered.includes(letterId)) {
+        state.lettersMastered.push(letterId);
+      }
+    },
+
+    incrementSentenceQuizzes(state) {
+      state.sentenceQuizzesCompleted += 1;
+    },
   },
 });
 
@@ -78,6 +153,15 @@ export const {
   updateQuestProgress,
   completeQuest,
   claimReward,
+  visitNpc,
+  visitZone,
+  completeDialogue,
+  recordReviewSession,
+  recordQuizPassed,
+  recordChestOpened,
+  incrementWordsLearnedToday,
+  masterLetter,
+  incrementSentenceQuizzes,
 } = questSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========

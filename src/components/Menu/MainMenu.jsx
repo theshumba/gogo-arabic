@@ -3,7 +3,7 @@ import { getDueCards } from '../../services/fsrs.js';
 import { audioManager } from '../../services/audio.js';
 import styles from './MainMenu.module.css';
 
-export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings, onCharacterCreation }) {
+export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings, onCharacterCreation, onGrammar }) {
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
   const player = useSelector((s) => s.player);
 
@@ -55,6 +55,14 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
           aria-label="Learn the Arabic alphabet"
         >
           Alphabet
+        </button>
+
+        <button
+          className={styles.btnDark}
+          onClick={() => { audioManager.playSFX('click'); onGrammar(); }}
+          aria-label="Learn Arabic grammar"
+        >
+          Grammar
         </button>
 
         <button

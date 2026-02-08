@@ -93,6 +93,26 @@ export default function ReviewSession({ onBack }) {
     };
   }, []);
 
+  // Escape key handler - only on summary/empty states
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        // Only allow escape on summary or no reviews screen
+        if (done || sessionCards.length === 0) {
+          onBack();
+        } else if (!answered) {
+          // No answer given yet, allow quitting with confirmation
+          if (window.confirm('Quit review session? Progress will be saved.')) {
+            onBack();
+          }
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [done, sessionCards.length, answered, onBack]);
+
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const containerVariants = {

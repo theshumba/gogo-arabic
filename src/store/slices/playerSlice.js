@@ -1,5 +1,7 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { getXPForLevel } from '../../utils/xpCalculator.js';
+import { getLevelReward } from '../../data/levelRewards.js';
+import { getStreakReward } from '../../data/streakRewards.js';
 
 const initialState = {
   name: '',
@@ -13,6 +15,10 @@ const initialState = {
   wordsLearned: 0,
   streak: 0,
   lastPlayedDate: null,
+  maxStreak: 0, // Highest streak ever achieved
+  streakRewardsEarned: [], // Array of streak milestones already rewarded
+  titles: [], // Array of earned titles
+  currentTitle: null, // Currently equipped title
   currentZone: 'oasis_village',
   unlockedZones: ['oasis_village'],
   inventory: [], // { itemId, equipped }
@@ -20,6 +26,9 @@ const initialState = {
   boosts: [], // { type, expiresAt }
   openedChests: [], // array of chest IDs that have been opened
   readBooks: [], // array of bookshelf IDs that have been read
+  levelUpRewards: null, // Pending level-up reward to display
+  streakRewardPending: null, // Pending streak reward to display
+  onboardingComplete: false, // Whether the player has completed the onboarding flow
 };
 
 const playerSlice = createSlice({
@@ -47,13 +56,38 @@ const playerSlice = createSlice({
 
       // Auto level-up: keep levelling while XP exceeds the threshold for next level
       let nextLevelThreshold = getXPForLevel(state.level + 1);
+      const levelsGained = [];
+
       while (state.xp >= nextLevelThreshold) {
         state.level += 1;
+        levelsGained.push(state.level);
         nextLevelThreshold = getXPForLevel(state.level + 1);
       }
 
       // xpToNextLevel = how much total XP is needed for the next level
       state.xpToNextLevel = nextLevelThreshold;
+
+      // Award level-up rewards for the highest level gained
+      if (levelsGained.length > 0) {
+        const highestLevel = levelsGained[levelsGained.length - 1];
+        const reward = getLevelReward(highestLevel);
+
+        // Add dirhams reward
+        state.dirhams += reward.dirhams;
+
+        // Add title if provided
+        if (reward.title && !state.titles.includes(reward.title)) {
+          state.titles.push(reward.title);
+        }
+
+        // Store reward for modal display
+        state.levelUpRewards = {
+          level: highestLevel,
+          dirhams: reward.dirhams,
+          title: reward.title,
+          message: reward.message,
+        };
+      }
     },
 
     addDirhams(state, action) {
@@ -79,6 +113,36 @@ const playerSlice = createSlice({
         state.streak = 1;
       }
       state.lastPlayedDate = today;
+
+      // Update max streak
+      if (state.streak > state.maxStreak) {
+        state.maxStreak = state.streak;
+      }
+
+      // Check for streak milestone rewards
+      const streakReward = getStreakReward(state.streak);
+      if (streakReward && !state.streakRewardsEarned.includes(state.streak)) {
+        // Mark this streak milestone as earned
+        state.streakRewardsEarned.push(state.streak);
+
+        // Award XP bonus (will be added via middleware)
+        // Award dirhams
+        state.dirhams += streakReward.dirhams;
+
+        // Award title if provided
+        if (streakReward.title && !state.titles.includes(streakReward.title)) {
+          state.titles.push(streakReward.title);
+        }
+
+        // Store reward for toast display
+        state.streakRewardPending = {
+          days: streakReward.days,
+          xp: streakReward.xp,
+          dirhams: streakReward.dirhams,
+          title: streakReward.title,
+          message: streakReward.message,
+        };
+      }
     },
 
     setCurrentZone(state, action) {
@@ -142,6 +206,34 @@ const playerSlice = createSlice({
         state.readBooks.push(bookId);
       }
     },
+
+    dismissLevelUpReward(state) {
+      state.levelUpRewards = null;
+    },
+
+    dismissStreakReward(state) {
+      state.streakRewardPending = null;
+    },
+
+    setCurrentTitle(state, action) {
+      // payload: title string or null
+      const title = action.payload;
+      if (title === null || state.titles.includes(title)) {
+        state.currentTitle = title;
+      }
+    },
+
+    addTitle(state, action) {
+      // payload: title string
+      const title = action.payload;
+      if (title && !state.titles.includes(title)) {
+        state.titles.push(title);
+      }
+    },
+
+    completeOnboarding(state) {
+      state.onboardingComplete = true;
+    },
   },
 });
 
@@ -164,6 +256,11 @@ export const {
   removeExpiredBoosts,
   markChestOpened,
   markBookRead,
+  dismissLevelUpReward,
+  dismissStreakReward,
+  setCurrentTitle,
+  addTitle,
+  completeOnboarding,
 } = playerSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -205,5 +302,23 @@ export const selectUnlockedZones = (state) => state.player.unlockedZones;
 
 // Select current zone
 export const selectCurrentZone = (state) => state.player.currentZone;
+
+// Select titles
+export const selectTitles = (state) => state.player.titles;
+export const selectCurrentTitle = (state) => state.player.currentTitle;
+
+// Select pending rewards
+export const selectLevelUpReward = (state) => state.player.levelUpRewards;
+export const selectStreakReward = (state) => state.player.streakRewardPending;
+
+// Select streak info
+export const selectStreakInfo = createSelector(
+  [(state) => state.player],
+  (player) => ({
+    current: player.streak,
+    max: player.maxStreak,
+    lastPlayed: player.lastPlayedDate,
+  })
+);
 
 export default playerSlice.reducer;
