@@ -20,11 +20,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Player Guidance** - NPC quest markers, active objective display, quest compass ✓ Complete
 - [x] **Phase 3: Feature Discoverability** - Expose hidden features through in-game UI ✓ Complete
 - [x] **Phase 4: Onboarding & HUD** - Contextual tooltips, streamlined HUD, bundle splitting ✓ Complete
-- [ ] **Phase 5: Daily Dashboard** - Startup screen with streak, reviews, goals, suggested activity
-- [ ] **Phase 6: World Map Upgrade** - Fast travel, zone completion %, locked zone teasers
-- [ ] **Phase 7: Player Profile & Stats** - Stats page, achievement showcase, streak history
-- [ ] **Phase 8: Visual Polish & Sprites** - Consistent sprite style, pixel-art icons, tashkeel fading
-- [ ] **Phase 9: Outfit System** - Wardrobe UI, outfit shop, AI-generated sprite outfits
+- [x] **Phase 5: Daily Dashboard** - Startup screen with streak, reviews, goals, suggested activity ✓ Complete
+- [x] **Phase 6: World Map Upgrade** - Fast travel, zone completion %, locked zone teasers ✓ Complete
+- [x] **Phase 7: Player Profile & Stats** - Stats page, achievement showcase, streak history ✓ Complete
+- [x] **Phase 8: Visual Polish & Sprites** - Progressive tashkeel fading based on FSRS mastery ✓ Complete
+- [x] **Phase 9: Outfit System** - Wardrobe UI, outfit shop, equip system ✓ Complete
 
 ## Phase Details
 
@@ -103,7 +103,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 05-01: TBD
+- [x] 05-01: Daily Dashboard component with streak, reviews, goals, suggestions ✓
 
 ### Phase 6: World Map Upgrade
 **Goal**: Transform the world map from a simple zone selector into an informative navigation hub with fast travel
@@ -113,10 +113,10 @@ Plans:
   1. Players can fast-travel to any previously visited zone from the world map
   2. World map shows completion percentage for each zone (quests done, words learned, NPCs talked to)
   3. Locked zones show teaser info (zone name, difficulty, what's needed to unlock)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 06-01: TBD
+- [x] 06-01: WorldMap fast travel, completion stats, locked zone teasers ✓
 
 ### Phase 7: Player Profile & Stats
 **Goal**: Give players a dedicated space to see their learning journey, achievements, and progress over time
@@ -127,10 +127,10 @@ Plans:
   2. Profile displays achievement showcase with pinned achievements
   3. Profile shows learning streak history and best streak record
   4. Profile is accessible from the game HUD or pause menu
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 07-01: TBD
+- [x] 07-01: PlayerProfile page with stats, streak calendar, achievements ✓
 
 ### Phase 8: Visual Polish & Sprites
 **Goal**: Unify the visual style and add polish that makes the game feel professionally crafted
@@ -141,10 +141,10 @@ Plans:
   2. HUD uses custom pixel-art icons instead of emoji/text
   3. Learned words progressively fade diacritics (tashkeel) as mastery increases
   4. Idle animations added to player and key NPCs
-**Plans**: TBD
+**Plans**: 1 plan (VPOL-03 only; VPOL-01/02/04 require pixel art assets)
 
 Plans:
-- [ ] 08-01: TBD
+- [x] 08-01: TashkeelText component + useFormatArabic getTashkeelOpacity (VPOL-03) ✓
 
 ### Phase 9: Outfit System
 **Goal**: Add character customization through purchasable outfits, giving players a rewarding way to spend dirhams
@@ -155,10 +155,10 @@ Plans:
   2. Players can purchase outfits using in-game currency (dirhams) from shop
   3. Player sprite updates in real-time when outfit is changed
   4. At least 5 distinct outfit options available at launch (AI-generated pixel art)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 09-01: TBD
+- [x] 09-01: Wardrobe UI + outfits data + equip system + EventBus integration ✓
 
 ## Progress
 
@@ -171,12 +171,12 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 | 2. Player Guidance | 2/2 | ✓ Complete | 2026-02-08 |
 | 3. Feature Discoverability | 2/2 | ✓ Complete | 2026-02-08 |
 | 4. Onboarding & HUD | 3/3 | ✓ Complete | 2026-02-08 |
-| 5. Daily Dashboard | 0/0 | Not started | - |
-| 6. World Map Upgrade | 0/0 | Not started | - |
-| 7. Player Profile & Stats | 0/0 | Not started | - |
-| 8. Visual Polish & Sprites | 0/0 | Not started | - |
-| 9. Outfit System | 0/0 | Not started | - |
+| 5. Daily Dashboard | 1/1 | ✓ Complete | 2026-02-08 |
+| 6. World Map Upgrade | 1/1 | ✓ Complete | 2026-02-08 |
+| 7. Player Profile & Stats | 1/1 | ✓ Complete | 2026-02-08 |
+| 8. Visual Polish & Sprites | 1/1 | ✓ Complete | 2026-02-08 |
+| 9. Outfit System | 1/1 | ✓ Complete | 2026-02-08 |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 — Phase 4 complete (custom Framer Motion onboarding)*
+*Last updated: 2026-02-08 — All 9 phases complete (v2.0 milestone done)*
