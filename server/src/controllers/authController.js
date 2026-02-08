@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { randomBytes } from 'crypto';
 import User from '../models/User.js';
 import { AppError } from '../utils/AppError.js';
 
@@ -45,6 +46,15 @@ export async function register(req, res, next) {
     // Generate JWT and set cookie
     const token = setAuthCookie(res, user._id);
 
+    // Generate and set CSRF token cookie
+    const csrfToken = randomBytes(32).toString('hex');
+    res.cookie('csrf-token', csrfToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(201).json({
       message: 'Registration successful',
       token, // Return token for backward compatibility with header-based auth
@@ -77,6 +87,15 @@ export async function login(req, res, next) {
     // Generate JWT and set cookie
     const token = setAuthCookie(res, user._id);
 
+    // Generate and set CSRF token cookie
+    const csrfToken = randomBytes(32).toString('hex');
+    res.cookie('csrf-token', csrfToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     // Remove password from response
     user.password = undefined;
 
@@ -97,6 +116,13 @@ export async function logout(req, res, next) {
   try {
     res.clearCookie('jwt', {
       httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+    });
+
+    // Also clear CSRF cookie on logout
+    res.clearCookie('csrf-token', {
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
     });

@@ -44,7 +44,7 @@ export const COLORS = {
 
 export const FONTS = {
   pixel: "'Press Start 2P', cursive",
-  arabic: "'Noto Naskh Arabic', serif",
+  arabic: "'Noto Kufi Arabic', sans-serif",
   pixeloid: "'PixeloidSans', sans-serif",
 };
 

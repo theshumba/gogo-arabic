@@ -17,15 +17,6 @@ const ReviewSession = lazy(() => import('./components/Review/ReviewSession.jsx')
 const SettingsMenu = lazy(() => import('./components/Menu/SettingsMenu.jsx'));
 const WorldMap = lazy(() => import('./components/World/WorldMap.jsx'));
 
-// Lazy wrapper with suspense and error boundary
-function LazyRoute({ Component }) {
-  return (
-    <Suspense fallback={<LoadingScreen />}>
-      <Component />
-    </Suspense>
-  );
-}
-
 // Stats component (placeholder for now)
 function Stats() {
   const { goToMenu } = useGameNavigation();
@@ -86,7 +77,9 @@ function CharacterCreationRoute() {
 
   return (
     <CharacterCreationGuard>
-      <LazyRoute Component={() => <CharacterCreation onDone={goToGame} />} />
+      <Suspense fallback={<LoadingScreen />}>
+        <CharacterCreation onDone={goToGame} />
+      </Suspense>
     </CharacterCreationGuard>
   );
 }
@@ -94,19 +87,31 @@ function CharacterCreationRoute() {
 function AlphabetRoute() {
   const { goToMenu } = useGameNavigation();
 
-  return <LazyRoute Component={() => <AlphabetModule onBack={goToMenu} />} />;
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <AlphabetModule onBack={goToMenu} />
+    </Suspense>
+  );
 }
 
 function ReviewRoute() {
   const { goToMenu } = useGameNavigation();
 
-  return <LazyRoute Component={() => <ReviewSession onBack={goToMenu} />} />;
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <ReviewSession onBack={goToMenu} />
+    </Suspense>
+  );
 }
 
 function SettingsRoute() {
   const { goToMenu } = useGameNavigation();
 
-  return <LazyRoute Component={() => <SettingsMenu onBack={goToMenu} />} />;
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <SettingsMenu onBack={goToMenu} />
+    </Suspense>
+  );
 }
 
 function WorldMapRoute() {
@@ -121,7 +126,9 @@ function WorldMapRoute() {
         background: 'rgba(0, 0, 0, 0.3)',
       }}
     >
-      <LazyRoute Component={() => <WorldMap onBack={goBack} />} />
+      <Suspense fallback={<LoadingScreen />}>
+        <WorldMap onBack={goBack} />
+      </Suspense>
     </div>
   );
 }

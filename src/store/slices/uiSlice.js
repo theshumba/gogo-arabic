@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  currentScreen: 'menu', // menu, character-creation, game, alphabet, review, settings, world-map, stats
   dialogueOpen: false,
   quizOpen: false,
   menuOpen: false,
@@ -16,10 +15,6 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    setScreen(state, action) {
-      state.currentScreen = action.payload;
-    },
-
     openDialogue(state, action) {
       // payload: { npcId, npcName }
       state.dialogueOpen = true;
@@ -69,7 +64,6 @@ const uiSlice = createSlice({
 });
 
 export const {
-  setScreen,
   openDialogue,
   closeDialogue,
   openQuiz,

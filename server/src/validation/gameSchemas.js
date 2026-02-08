@@ -27,9 +27,9 @@ const playerSchema = z.object({
     skinTone: z.string().optional(),
     outfit: z.string().optional(),
     headwear: z.string().optional().nullable(),
-  }).optional(),
+  }).strict().optional(),
   inventory: z.array(inventoryItemSchema).max(500).optional(),
-}).optional();
+}).strict().optional();
 
 const settingsSchema = z.object({
   volumeAmbience: z.number().min(0).max(1).optional(),
@@ -39,10 +39,18 @@ const settingsSchema = z.object({
   showDiacritics: z.boolean().optional(),
   keyboardMode: z.enum(['standard', 'advanced']).optional(),
   difficulty: z.enum(['easy', 'normal', 'hard']).optional(),
-}).optional();
+}).strict().optional();
+
+const questSchema = z.object({
+  id: z.string(),
+  status: z.enum(['active', 'completed', 'failed', 'available']),
+  progress: z.number().int().min(0).optional(),
+  target: z.number().int().min(1).optional(),
+  completedAt: z.string().datetime().optional().nullable(),
+}).strict();
 
 export const saveGameSchema = z.object({
   player: playerSchema,
-  quests: z.any().optional(), // Handled by quest sync endpoint
+  quests: z.record(z.string(), questSchema).optional(),
   settings: settingsSchema,
-});
+}).strict();

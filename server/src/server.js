@@ -17,6 +17,36 @@ process.on('uncaughtException', (err) => {
 
 async function start() {
   try {
+    // Validate JWT_SECRET before starting
+    const jwtSecret = process.env.JWT_SECRET;
+    const isDev = process.env.NODE_ENV !== 'production';
+
+    if (!jwtSecret || jwtSecret.trim() === '') {
+      if (isDev) {
+        logger.warn(
+          'JWT_SECRET is not set. Using default for local development. ' +
+          'DO NOT use this in production!'
+        );
+        process.env.JWT_SECRET = 'dev-default-secret-do-not-use-in-production!!';
+      } else {
+        logger.error('JWT_SECRET environment variable is required in production');
+        process.exit(1);
+      }
+    } else if (jwtSecret.length < 32) {
+      if (isDev) {
+        logger.warn(
+          `JWT_SECRET is only ${jwtSecret.length} characters. ` +
+          'Use at least 32 characters for adequate security.'
+        );
+      } else {
+        logger.error(
+          'JWT_SECRET must be at least 32 characters long in production ' +
+          `(current length: ${jwtSecret.length})`
+        );
+        process.exit(1);
+      }
+    }
+
     // Connect to MongoDB
     await mongoose.connect(MONGODB_URI);
     logger.info('Connected to MongoDB', { uri: MONGODB_URI.replace(/:[^:@]+@/, ':****@') });

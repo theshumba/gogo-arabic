@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
 import { spendDirhams, addToInventory, setOutfit, setHeadCovering } from '../../store/slices/playerSlice.js';
+import { recordShopPurchase } from '../../store/slices/achievementSlice.js';
 import { EventBus } from '../../game/EventBus.js';
 import itemsData from '../../data/items.json';
 import { COLORS, FONTS, pixelPanel, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
@@ -183,6 +184,8 @@ export default function ShopOverlay() {
     if (player.inventory.includes(item.id)) return;
     dispatch(spendDirhams(item.price));
     dispatch(addToInventory(item.id));
+    // Track shop purchase for achievement progress
+    dispatch(recordShopPurchase(item.price));
     setToast(`Purchased ${item.name}!`);
     setTimeout(() => setToast(null), 2000);
   };

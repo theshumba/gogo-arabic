@@ -43,6 +43,6 @@
 
   /* Fonts */
   --font-pixel: 'Press Start 2P', cursive;
-  --font-arabic: 'Noto Naskh Arabic', serif;
+  --font-arabic: 'Noto Kufi Arabic', sans-serif;
   --font-pixeloid: 'PixeloidSans', sans-serif;
 }

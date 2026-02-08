@@ -1,7 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  setScreen,
   openDialogue,
   openQuiz,
   openSign,
@@ -20,13 +19,7 @@ import { store } from './store/store.js';
 import { ZONES } from './data/zones.js';
 import { useAudio } from './hooks/useAudio.js';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx';
-
-// Screen components
-import MainMenu from './components/Menu/MainMenu.jsx';
-import CharacterCreation from './components/Character/CharacterCreation.jsx';
-import AlphabetModule from './components/Alphabet/AlphabetModule.jsx';
-import ReviewSession from './components/Review/ReviewSession.jsx';
-import SettingsMenu from './components/Menu/SettingsMenu.jsx';
+import styles from './App.module.css';
 
 // Game screen components
 import { PhaserGame } from './game/PhaserGame.jsx';
@@ -36,82 +29,18 @@ import AchievementToast from './components/Achievements/AchievementToast.jsx';
 import DialogueOverlay from './components/NPC/DialogueOverlay.jsx';
 import QuizOverlay from './components/Quiz/QuizOverlay.jsx';
 import QuestLog from './components/Quest/QuestLog.jsx';
-import ShopOverlay from './components/Shop/ShopOverlay.jsx';
 import SignOverlay from './components/World/SignOverlay.jsx';
-import WorldMap from './components/World/WorldMap.jsx';
-
-const appStyle = {
-  width: '100vw',
-  height: '100vh',
-  position: 'relative',
-  overflow: 'hidden',
-};
-
-function Stats({ onBack }) {
-  return (
-    <div style={{
-      ...appStyle,
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      background: '#1A1A2E', color: '#D4A843',
-      fontFamily: "'Press Start 2P', cursive",
-    }}>
-      <div style={{ fontSize: '18px', marginBottom: '16px' }}>Stats</div>
-      <div style={{ fontSize: '22px', fontFamily: "'Amiri', serif", marginBottom: '32px' }}>
-        {'\u0627\u0644\u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A'}
-      </div>
-      <button
-        onClick={onBack}
-        style={{
-          fontFamily: "'Press Start 2P', cursive",
-          fontSize: '11px', padding: '12px 24px',
-          background: '#D4A843', color: '#1A1A2E',
-          border: 'none', cursor: 'pointer',
-        }}
-      >
-        Back
-      </button>
-    </div>
-  );
-}
 
 // Minimal pause menu overlay
 function PauseMenu({ onResume, onMainMenu }) {
   return (
-    <div style={{
-      position: 'absolute', inset: 0, zIndex: 20,
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      background: 'rgba(26, 26, 46, 0.85)',
-    }}>
-      <div style={{
-        fontFamily: "'Press Start 2P', cursive",
-        fontSize: '18px', color: '#D4A843',
-        marginBottom: '32px',
-      }}>
-        Paused
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <button
-          onClick={onResume}
-          style={{
-            fontFamily: "'Press Start 2P', cursive",
-            fontSize: '11px', padding: '14px 28px',
-            background: '#D4A843', color: '#1A1A2E',
-            border: 'none', cursor: 'pointer',
-          }}
-        >
+    <div className={styles.pauseMenuOverlay}>
+      <div className={styles.pauseMenuTitle}>Paused</div>
+      <div className={styles.pauseMenuButtons}>
+        <button onClick={onResume} className={styles.pauseMenuBtnResume}>
           Resume
         </button>
-        <button
-          onClick={onMainMenu}
-          style={{
-            fontFamily: "'Press Start 2P', cursive",
-            fontSize: '11px', padding: '14px 28px',
-            background: 'transparent', color: '#D4A843',
-            border: '2px solid #D4A843', cursor: 'pointer',
-          }}
-        >
+        <button onClick={onMainMenu} className={styles.pauseMenuBtnMenu}>
           Main Menu
         </button>
       </div>
@@ -124,8 +53,7 @@ export default function App() {
   const dispatch = useDispatch();
   const { playSFX } = useAudio();
 
-  // Read current screen and overlay state from Redux
-  const currentScreen = useSelector((state) => state.ui.currentScreen);
+  // Read overlay state from Redux
   const dialogueOpen = useSelector((state) => state.ui.dialogueOpen);
   const dialogueConfig = useSelector((state) => state.ui.dialogueConfig);
   const quizOpen = useSelector((state) => state.ui.quizOpen);
@@ -133,11 +61,6 @@ export default function App() {
   const signOpen = useSelector((state) => state.ui.signOpen);
   const fsrsCards = useSelector((state) => state.vocabulary.fsrsCards);
   const quests = useSelector((state) => state.quests.quests);
-
-  // Navigation helpers that dispatch to Redux
-  const goTo = (screen) => dispatch(setScreen(screen));
-  const goToMenu = () => dispatch(setScreen('menu'));
-  const goToGame = () => dispatch(setScreen('game'));
 
   // Track word learned for quest progress
   const trackWordLearned = (category) => {
@@ -214,7 +137,8 @@ export default function App() {
     };
 
     const handleOpenAlphabet = () => {
-      dispatch(setScreen('alphabet'));
+      // Legacy: alphabet navigation now handled by React Router
+      // This handler remains as a no-op for backward compatibility with EventBus
     };
 
     const handleShowSign = ({ arabic, english }) => {
@@ -390,94 +314,37 @@ export default function App() {
     };
   }, [dispatch, fsrsCards, quests, playSFX]);
 
+  // Legacy: This component is no longer the app entry point.
+  // Navigation is handled by React Router (see src/routes.jsx and src/main.jsx).
+  // This component is kept for backward compatibility with EventBus listeners
+  // that bridge Phaser <-> React communication.
   return (
-    <div id="app" style={appStyle}>
-      {/* ---------- Menu Screen ---------- */}
-      {currentScreen === 'menu' && (
-        <ErrorBoundary>
-          <MainMenu
-            onStartGame={goToGame}
-            onAlphabet={() => goTo('alphabet')}
-            onReview={() => goTo('review')}
-            onSettings={() => goTo('settings')}
-            onCharacterCreation={() => goTo('character-creation')}
-          />
-        </ErrorBoundary>
-      )}
+    <div id="app" className={styles.appContainer}>
+      <ErrorBoundary>
+        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+          {/* Phaser canvas - full screen, lowest z-index */}
+          <PhaserGame ref={phaserRef} />
 
-      {/* ---------- Character Creation Screen ---------- */}
-      {currentScreen === 'character-creation' && (
-        <ErrorBoundary>
-          <CharacterCreation onDone={goToGame} />
-        </ErrorBoundary>
-      )}
+          {/* HUD overlay bar */}
+          <HUD onMenu={() => dispatch(toggleMenu())} />
 
-      {/* ---------- Game Screen (Phaser + HUD + Overlays) ---------- */}
-      {currentScreen === 'game' && (
-        <ErrorBoundary>
-          <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-            {/* Phaser canvas - full screen, lowest z-index */}
-            <PhaserGame ref={phaserRef} />
+          {/* Toast notifications (appears below HUD) */}
+          <NotificationToast />
+          <AchievementToast />
 
-            {/* HUD overlay bar */}
-            <HUD onMenu={() => dispatch(toggleMenu())} />
-
-            {/* Toast notifications (appears below HUD) */}
-            <NotificationToast />
-            <AchievementToast />
-
-            {/* Conditional overlays */}
-            {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}
-            {dialogueOpen && dialogueConfig?.type !== 'quest-log' && <DialogueOverlay />}
-            {quizOpen && <QuizOverlay />}
-            {signOpen && <SignOverlay />}
-            {menuOpen && (
-              <PauseMenu
-                onResume={() => dispatch(toggleMenu())}
-                onMainMenu={() => {
-                  dispatch(toggleMenu());
-                  goToMenu();
-                }}
-              />
-            )}
-          </div>
-        </ErrorBoundary>
-      )}
-
-      {/* ---------- Alphabet Module Screen ---------- */}
-      {currentScreen === 'alphabet' && (
-        <ErrorBoundary>
-          <AlphabetModule onBack={goToMenu} />
-        </ErrorBoundary>
-      )}
-
-      {/* ---------- Review Session Screen ---------- */}
-      {currentScreen === 'review' && (
-        <ErrorBoundary>
-          <ReviewSession onBack={goToMenu} />
-        </ErrorBoundary>
-      )}
-
-      {/* ---------- Settings Screen ---------- */}
-      {currentScreen === 'settings' && (
-        <ErrorBoundary>
-          <SettingsMenu onBack={goToMenu} />
-        </ErrorBoundary>
-      )}
-
-      {/* ---------- World Map Screen (placeholder) ---------- */}
-      {currentScreen === 'world-map' && (
-        <ErrorBoundary>
-          <WorldMap onBack={goToMenu} />
-        </ErrorBoundary>
-      )}
-
-      {/* ---------- Stats Screen (placeholder) ---------- */}
-      {currentScreen === 'stats' && (
-        <ErrorBoundary>
-          <Stats onBack={goToMenu} />
-        </ErrorBoundary>
-      )}
+          {/* Conditional overlays */}
+          {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}
+          {dialogueOpen && dialogueConfig?.type !== 'quest-log' && <DialogueOverlay />}
+          {quizOpen && <QuizOverlay />}
+          {signOpen && <SignOverlay />}
+          {menuOpen && (
+            <PauseMenu
+              onResume={() => dispatch(toggleMenu())}
+              onMainMenu={() => dispatch(toggleMenu())}
+            />
+          )}
+        </div>
+      </ErrorBoundary>
     </div>
   );
 }

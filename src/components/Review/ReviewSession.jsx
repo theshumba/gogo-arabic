@@ -1,244 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { addXP, updateStreak } from '../../store/slices/playerSlice.js';
+import { incrementReviews } from '../../store/slices/achievementSlice.js';
+import { checkPerfectQuiz } from '../../store/middleware/achievementMiddleware.js';
 import { reviewCard, getDueCards, Rating } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { shuffle } from '../../utils/shuffle.js';
-import { prepareSentenceQuiz } from '../../utils/sentenceParser.js';
+import { prepareSentenceQuiz, removeDiacritics } from '../../utils/sentenceParser.js';
 import ArabicKeyboard from '../Keyboard/ArabicKeyboard.jsx';
 import ProgressBar from '../Quiz/ProgressBar.jsx';
 import SentenceBuilder from './SentenceBuilder.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
-import { COLORS, FONTS, pixelPanel, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
+import styles from './ReviewSession.module.css';
 
 const QUIZ_TYPES = ['ar-to-en', 'en-to-ar', 'en-to-type-ar', 'sentence-building'];
-
-const styles = {
-  container: {
-    width: '100%',
-    height: '100%',
-    background: COLORS.dark,
-    color: COLORS.white,
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
-    fontFamily: FONTS.pixel,
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 16px',
-    borderBottom: `4px solid ${COLORS.gray}`,
-    background: COLORS.dark,
-  },
-  quitBtn: {
-    ...pixelBtnDark,
-    padding: '5px 12px',
-    fontSize: '8px',
-  },
-  headerTitle: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.beige,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  headerProgress: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.lightGray,
-  },
-  body: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px',
-  },
-  progressContainer: {
-    width: '100%',
-    maxWidth: '400px',
-    marginBottom: '16px',
-  },
-  scoreText: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.lightGray,
-    marginBottom: '16px',
-  },
-  arabicWord: {
-    fontSize: '48px',
-    fontFamily: FONTS.arabic,
-    direction: 'rtl',
-    color: COLORS.xpGold,
-    marginBottom: '8px',
-  },
-  englishWord: {
-    fontFamily: FONTS.pixel,
-    fontSize: '14px',
-    color: COLORS.beige,
-    marginBottom: '16px',
-  },
-  transliteration: {
-    fontFamily: FONTS.pixel,
-    fontSize: '8px',
-    color: COLORS.lightGray,
-    fontStyle: 'italic',
-    marginBottom: '16px',
-  },
-  choicesGrid: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-    width: '100%',
-    maxWidth: '400px',
-  },
-  choice: {
-    ...pixelPanel,
-    padding: '10px 16px',
-    background: COLORS.beige,
-    border: `4px solid ${COLORS.dark}`,
-    color: COLORS.dark,
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    cursor: 'pointer',
-    textAlign: 'center',
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.08),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.4),
-      0 4px 0 0 ${COLORS.brown}
-    `,
-  },
-  choiceArabic: {
-    fontFamily: FONTS.arabic,
-    fontSize: '20px',
-    direction: 'rtl',
-  },
-  choiceCorrect: {
-    borderColor: COLORS.green,
-    background: '#eafaf1',
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.08),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.4),
-      0 4px 0 0 #1fa855
-    `,
-  },
-  choiceWrong: {
-    borderColor: COLORS.red,
-    background: '#fdeaea',
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.08),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.4),
-      0 4px 0 0 #c02020
-    `,
-  },
-  ratingRow: {
-    display: 'flex',
-    gap: '8px',
-    marginTop: '20px',
-  },
-  ratingBtn: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    padding: '8px 16px',
-    border: 'none',
-    cursor: 'pointer',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    color: COLORS.white,
-  },
-  ratingAgain: {
-    background: COLORS.red,
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.2),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.2),
-      0 4px 0 0 #c02020
-    `,
-  },
-  ratingHard: {
-    background: '#e67e22',
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.2),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.2),
-      0 4px 0 0 #b56510
-    `,
-  },
-  ratingGood: {
-    background: COLORS.green,
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.2),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.2),
-      0 4px 0 0 #1fa855
-    `,
-  },
-  ratingEasy: {
-    background: '#3498db',
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.2),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.2),
-      0 4px 0 0 #2178b0
-    `,
-  },
-  summaryScore: {
-    fontFamily: FONTS.pixel,
-    fontSize: '32px',
-    color: COLORS.xpGold,
-    margin: '16px 0',
-  },
-  summaryMsg: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.lightGray,
-  },
-  doneBtn: {
-    ...pixelBtnGold,
-    marginTop: '24px',
-    padding: '10px 28px',
-    fontSize: '10px',
-  },
-  noReviewMsg: {
-    fontFamily: FONTS.pixel,
-    fontSize: '14px',
-    color: COLORS.beige,
-    marginBottom: '12px',
-  },
-  noReviewSub: {
-    fontFamily: FONTS.pixel,
-    fontSize: '8px',
-    color: COLORS.lightGray,
-    marginBottom: '20px',
-  },
-  inputDisplay: {
-    direction: 'rtl',
-    fontSize: '32px',
-    fontFamily: FONTS.arabic,
-    padding: '10px 16px',
-    minHeight: '52px',
-    background: COLORS.dark,
-    border: `4px solid ${COLORS.gray}`,
-    color: COLORS.white,
-    textAlign: 'center',
-    marginBottom: '4px',
-    width: '100%',
-    maxWidth: '400px',
-  },
-  inputCorrect: {
-    borderColor: COLORS.green,
-  },
-  inputWrong: {
-    borderColor: COLORS.red,
-  },
-  correctAnswer: {
-    fontFamily: FONTS.arabic,
-    fontSize: '18px',
-    direction: 'rtl',
-    color: COLORS.green,
-    marginTop: '4px',
-  },
-};
 
 function generateChoices(correctWord) {
   const others = shuffle(
@@ -305,20 +81,30 @@ export default function ReviewSession({ onBack }) {
     return w ? prepareSentenceQuiz(w, vocabulary) : null;
   });
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+  const autoAdvanceTimerRef = useRef(null);
+
+  // Clear auto-advance timer on unmount to prevent dispatching after navigation
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+      }
+    };
+  }, []);
 
   /* ---------- No reviews due ---------- */
   if (sessionCards.length === 0) {
     return (
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <button style={styles.quitBtn} onClick={onBack}>Back</button>
-          <div style={styles.headerTitle}>Daily Review</div>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <button className={styles.quitBtn} onClick={onBack}>Back</button>
+          <div className={styles.headerTitle}>Daily Review</div>
           <div />
         </div>
-        <div style={styles.body}>
-          <div style={styles.noReviewMsg}>No reviews due!</div>
-          <p style={styles.noReviewSub}>Learn more words and come back later.</p>
-          <button style={styles.doneBtn} onClick={onBack}>Back to Menu</button>
+        <div className={styles.body}>
+          <div className={styles.noReviewMsg}>No reviews due!</div>
+          <p className={styles.noReviewSub}>Learn more words and come back later.</p>
+          <button className={styles.doneBtn} onClick={onBack}>Back to Menu</button>
         </div>
       </div>
     );
@@ -327,18 +113,18 @@ export default function ReviewSession({ onBack }) {
   /* ---------- Summary screen ---------- */
   if (done) {
     return (
-      <div style={styles.container}>
-        <div style={styles.header}>
+      <div className={styles.container}>
+        <div className={styles.header}>
           <div />
-          <div style={styles.headerTitle}>Review Complete</div>
+          <div className={styles.headerTitle}>Review Complete</div>
           <div />
         </div>
-        <div style={styles.body}>
-          <div style={styles.summaryScore}>{score}/{total}</div>
-          <p style={styles.summaryMsg}>
+        <div className={styles.body}>
+          <div className={styles.summaryScore}>{score}/{total}</div>
+          <p className={styles.summaryMsg}>
             {score === total ? 'Perfect review!' : 'Keep it up!'}
           </p>
-          <button style={styles.doneBtn} onClick={onBack}>Back to Menu</button>
+          <button className={styles.doneBtn} onClick={onBack}>Back to Menu</button>
         </div>
       </div>
     );
@@ -380,12 +166,20 @@ export default function ReviewSession({ onBack }) {
       log: result.log,
     }));
 
+    // Track review for achievement progress
+    dispatch(incrementReviews());
+
     // Auto-advance after a short delay to show feedback
-    setTimeout(() => {
+    autoAdvanceTimerRef.current = setTimeout(() => {
       const nextIdx = index + 1;
       if (nextIdx >= sessionCards.length) {
         dispatch(addXP(XP_REWARDS.DAILY_REVIEW_COMPLETE));
         dispatch(updateStreak());
+        // Check for perfect review session achievement
+        // score/total are stale closures; compute final values from current call
+        const finalScore = score + (correct ? 1 : 0);
+        const finalTotal = total + 1;
+        checkPerfectQuiz(finalScore, finalTotal, dispatch);
         setDone(true);
       } else {
         setIndex(nextIdx);
@@ -421,8 +215,7 @@ export default function ReviewSession({ onBack }) {
 
   const handleTypingSubmit = () => {
     if (typingDone) return;
-    const normalize = (s) => s.replace(/[\u064B-\u065F\u0670]/g, '').trim();
-    const correct = normalize(typingInput) === normalize(currentWord.arabic);
+    const correct = removeDiacritics(typingInput) === removeDiacritics(currentWord.arabic);
     setIsCorrect(correct);
     setTypingDone(true);
     setAnswered(true);
@@ -460,35 +253,35 @@ export default function ReviewSession({ onBack }) {
 
   /* ---------- Active review ---------- */
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <button style={styles.quitBtn} onClick={onBack}>Quit</button>
-        <div style={styles.headerTitle}>Daily Review</div>
-        <div style={styles.headerProgress}>{index + 1}/{sessionCards.length}</div>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <button className={styles.quitBtn} onClick={onBack}>Quit</button>
+        <div className={styles.headerTitle}>Daily Review</div>
+        <div className={styles.headerProgress}>{index + 1}/{sessionCards.length}</div>
       </div>
 
-      <div style={styles.body}>
-        <div style={styles.progressContainer}>
+      <div className={styles.body}>
+        <div className={styles.progressContainer}>
           <ProgressBar current={index + 1} total={sessionCards.length} />
         </div>
-        <div style={styles.scoreText}>{score}/{total} correct</div>
+        <div className={styles.scoreText}>{score}/{total} correct</div>
 
         {/* Arabic -> English */}
         {quizType === 'ar-to-en' && (
           <>
-            <div style={styles.arabicWord}>{currentWord.arabic}</div>
+            <div className={styles.arabicWord}>{currentWord.arabic}</div>
             {settings.showTransliteration && (
-              <div style={styles.transliteration}>{currentWord.transliteration}</div>
+              <div className={styles.transliteration}>{currentWord.transliteration}</div>
             )}
-            <div style={styles.choicesGrid}>
+            <div className={styles.choicesGrid}>
               {choices.map((w) => {
-                let extra = {};
+                let extraClass = '';
                 if (answered) {
-                  if (w.id === currentWord.id) extra = styles.choiceCorrect;
-                  else if (w.english === selected && w.id !== currentWord.id) extra = styles.choiceWrong;
+                  if (w.id === currentWord.id) extraClass = styles.choiceCorrect;
+                  else if (w.english === selected && w.id !== currentWord.id) extraClass = styles.choiceWrong;
                 }
                 return (
-                  <button key={w.id} style={{ ...styles.choice, ...extra }}
+                  <button key={w.id} className={`${styles.choice} ${extraClass}`}
                     onClick={() => handleAnswer(w.english)} disabled={answered}>
                     {w.english}
                   </button>
@@ -501,16 +294,16 @@ export default function ReviewSession({ onBack }) {
         {/* English -> Arabic */}
         {quizType === 'en-to-ar' && (
           <>
-            <div style={styles.englishWord}>{currentWord.english}</div>
-            <div style={styles.choicesGrid}>
+            <div className={styles.englishWord}>{currentWord.english}</div>
+            <div className={styles.choicesGrid}>
               {choices.map((w) => {
-                let extra = {};
+                let extraClass = '';
                 if (answered) {
-                  if (w.id === currentWord.id) extra = styles.choiceCorrect;
-                  else if (w.arabic === selected && w.id !== currentWord.id) extra = styles.choiceWrong;
+                  if (w.id === currentWord.id) extraClass = styles.choiceCorrect;
+                  else if (w.arabic === selected && w.id !== currentWord.id) extraClass = styles.choiceWrong;
                 }
                 return (
-                  <button key={w.id} style={{ ...styles.choice, ...styles.choiceArabic, ...extra }}
+                  <button key={w.id} className={`${styles.choice} ${styles.choiceArabic} ${extraClass}`}
                     onClick={() => handleAnswer(w.arabic)} disabled={answered}>
                     {w.arabic}
                   </button>
@@ -523,15 +316,12 @@ export default function ReviewSession({ onBack }) {
         {/* English -> Type Arabic */}
         {quizType === 'en-to-type-ar' && (
           <>
-            <div style={styles.englishWord}>{currentWord.english}</div>
-            <div style={{
-              ...styles.inputDisplay,
-              ...(typingDone ? (isCorrect ? styles.inputCorrect : styles.inputWrong) : {}),
-            }}>
+            <div className={styles.englishWord}>{currentWord.english}</div>
+            <div className={`${styles.inputDisplay} ${typingDone ? (isCorrect ? styles.inputCorrect : styles.inputWrong) : ''}`}>
               {typingInput || '\u200B'}
             </div>
             {typingDone && !isCorrect && (
-              <div style={styles.correctAnswer}>
+              <div className={styles.correctAnswer}>
                 {currentWord.arabic}
               </div>
             )}

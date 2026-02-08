@@ -381,8 +381,7 @@ export default function GameLayout() {
           onResume={() => dispatch(toggleMenu())}
           onMainMenu={() => {
             dispatch(toggleMenu());
-            // Use EventBus to navigate to prevent circular dependencies
-            window.location.href = '/';
+            navigate('/');
           }}
         />
       )}

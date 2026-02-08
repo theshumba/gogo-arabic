@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { setScreen, showNotification } from '../../store/slices/uiSlice.js';
+import { showNotification } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { ZONES, ZONE_ORDER } from '../../data/zones.js';
 import styles from './WorldMap.module.css';

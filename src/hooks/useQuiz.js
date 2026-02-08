@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFsrsCard, updateFsrsCard } from '../store/slices/vocabularySlice.js';
 import { addXP, incrementWordsLearned } from '../store/slices/playerSlice.js';
+import { incrementReviews, recordPerfectQuiz } from '../store/slices/achievementSlice.js';
 import { closeQuiz } from '../store/slices/uiSlice.js';
 import { createNewCard, reviewCard, Rating } from '../services/fsrs.js';
 import { EventBus } from '../game/EventBus.js';
@@ -125,6 +126,9 @@ export function useQuiz() {
     const result = reviewCard(currentCard, rating);
     dispatch(updateFsrsCard({ wordId: word.id, card: result.card, log: result.log }));
 
+    // Track review for achievement progress
+    dispatch(incrementReviews());
+
     if (correct) {
       dispatch(addXP(XP_REWARDS.CORRECT_ANSWER));
     }
@@ -141,6 +145,8 @@ export function useQuiz() {
     if (nextIdx >= words.length) {
       if (quizState.sessionScore === quizState.sessionTotal && quizState.sessionTotal > 0) {
         dispatch(addXP(XP_REWARDS.PERFECT_QUIZ));
+        // Track perfect quiz for achievement progress
+        dispatch(recordPerfectQuiz());
       }
       return true;
     }

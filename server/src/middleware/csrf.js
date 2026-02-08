@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto';
+import { randomBytes, timingSafeEqual } from 'crypto';
 import { AppError } from '../utils/AppError.js';
 
 /**
@@ -54,7 +54,17 @@ export function validateCsrfToken(req, res, next) {
     return next(AppError.forbidden('CSRF token missing'));
   }
 
-  if (tokenFromHeader !== tokenFromCookie) {
+  // Use timing-safe comparison to prevent timing attacks.
+  // Both tokens must be the same length for timingSafeEqual.
+  // Our cookie token is always 64 hex chars (32 bytes as hex).
+  if (tokenFromHeader.length !== tokenFromCookie.length) {
+    return next(AppError.forbidden('CSRF token validation failed'));
+  }
+
+  const headerBuf = Buffer.from(tokenFromHeader, 'utf8');
+  const cookieBuf = Buffer.from(tokenFromCookie, 'utf8');
+
+  if (!timingSafeEqual(headerBuf, cookieBuf)) {
     return next(AppError.forbidden('CSRF token validation failed'));
   }
 

@@ -113,13 +113,13 @@ export const achievementMiddleware = (store) => (next) => (action) => {
   // Pass the action through first
   const result = next(action);
 
-  // Get the updated state
-  const state = store.getState();
-  const unlockedAchievements = state.achievements?.unlockedAchievements || {};
-
-  // Check if this action type should trigger achievement checks
+  // Early return for actions that don't affect achievements
   const typesToCheck = ACTION_TO_ACHIEVEMENT_TYPES[action.type];
   if (!typesToCheck) return result;
+
+  // Get the updated state only for relevant actions
+  const state = store.getState();
+  const unlockedAchievements = state.achievements?.unlockedAchievements || {};
 
   // Find achievements that match the types to check
   const relevantAchievements = ACHIEVEMENTS.filter((achievement) =>
@@ -139,8 +139,8 @@ export const achievementMiddleware = (store) => (next) => (action) => {
       // Award XP
       store.dispatch(addXP(achievement.xpReward));
 
-      // Check for completionist achievement (recursive check)
-      setTimeout(() => {
+      // Check for completionist achievement after dispatches settle
+      queueMicrotask(() => {
         const newState = store.getState();
         const completionist = ACHIEVEMENTS.find((a) => a.requirement.type === 'all_achievements');
         if (completionist && !newState.achievements.unlockedAchievements[completionist.id]) {
@@ -149,7 +149,7 @@ export const achievementMiddleware = (store) => (next) => (action) => {
             store.dispatch(addXP(completionist.xpReward));
           }
         }
-      }, 100);
+      });
     }
   });
 
