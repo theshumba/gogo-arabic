@@ -17,7 +17,7 @@ Transform GoGo Arabic from a feature-rich but hard-to-navigate experience into a
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Critical Fixes** - Fix z-index bugs, mobile overflow, focus traps, HUD review button ✓ Complete
-- [ ] **Phase 2: Player Guidance** - NPC quest markers, active objective display, quest compass
+- [x] **Phase 2: Player Guidance** - NPC quest markers, active objective display, quest compass ✓ Complete
 - [ ] **Phase 3: Feature Discoverability** - Expose hidden features through in-game UI
 - [ ] **Phase 4: Onboarding & HUD** - Contextual tooltips, streamlined HUD, bundle splitting
 - [ ] **Phase 5: Daily Dashboard** - Startup screen with streak, reviews, goals, suggested activity
@@ -55,8 +55,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Quest markers (!/?) on NPCs + activeQuestId state + QuestLog tracking (GUID-01, GUID-02)
-- [ ] 02-02-PLAN.md — HUD quest tracker + compass arrow (GUID-03, GUID-04)
+- [x] 02-01-PLAN.md — Quest markers (!/?) on NPCs + activeQuestId state + QuestLog tracking (GUID-01, GUID-02) ✓ 7 min
+- [x] 02-02-PLAN.md — HUD quest tracker + compass arrow (GUID-03, GUID-04) ✓ 1 min
 
 ### Phase 3: Feature Discoverability
 **Goal**: Surface hidden features so players discover Grammar, Roots, Reading, Battles, and Reviews
@@ -165,7 +165,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Critical Fixes | 2/2 | ✓ Complete | 2026-02-08 |
-| 2. Player Guidance | 0/0 | Not started | - |
+| 2. Player Guidance | 2/2 | ✓ Complete | 2026-02-08 |
 | 3. Feature Discoverability | 0/0 | Not started | - |
 | 4. Onboarding & HUD | 0/0 | Not started | - |
 | 5. Daily Dashboard | 0/0 | Not started | - |
@@ -176,4 +176,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 — Phase 1 complete*
+*Last updated: 2026-02-08 — Phase 2 complete*

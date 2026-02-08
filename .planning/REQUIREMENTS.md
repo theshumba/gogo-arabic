@@ -17,10 +17,10 @@ Player-facing UX overhaul with new features. Infrastructure work deferred to v3.
 
 ### Player Guidance
 
-- [ ] **GUID-01**: NPCs with available quests show exclamation mark (!) above their head
-- [ ] **GUID-02**: NPCs with completable quests show question mark (?) above their head
-- [ ] **GUID-03**: HUD shows active quest name and current objective with progress
-- [ ] **GUID-04**: Player sees directional indicator pointing toward quest objective
+- [x] **GUID-01**: NPCs with available quests show exclamation mark (!) above their head
+- [x] **GUID-02**: NPCs with completable quests show question mark (?) above their head
+- [x] **GUID-03**: HUD shows active quest name and current objective with progress
+- [x] **GUID-04**: Player sees directional indicator pointing toward quest objective
 
 ### Feature Discoverability
 
@@ -135,10 +135,10 @@ Deferred to future milestone. Infrastructure + content expansion.
 | CRIT-02 | Phase 1 | Pending |
 | CRIT-03 | Phase 1 | Pending |
 | CRIT-04 | Phase 1 | Pending |
-| GUID-01 | Phase 2 | Pending |
-| GUID-02 | Phase 2 | Pending |
-| GUID-03 | Phase 2 | Pending |
-| GUID-04 | Phase 2 | Pending |
+| GUID-01 | Phase 2 | ✓ Complete |
+| GUID-02 | Phase 2 | ✓ Complete |
+| GUID-03 | Phase 2 | ✓ Complete |
+| GUID-04 | Phase 2 | ✓ Complete |
 | DISC-01 | Phase 3 | Pending |
 | DISC-02 | Phase 3 | Pending |
 | DISC-03 | Phase 3 | Pending |
