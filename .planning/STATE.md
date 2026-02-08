@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 3 - Feature Discoverability (COMPLETE)
+**Current focus:** Phase 4 - Onboarding & HUD (IN PROGRESS)
 
 ## Current Position
 
-Phase: 3 of 9 (Feature Discoverability) — COMPLETE
-Plan: 3 of 3 completed
-Status: Phase 3 complete - all feature discoverability systems implemented
-Last activity: 2026-02-08 — Completed 03-01-PLAN.md (Activities menu + boss nodes)
+Phase: 4 of 9 (Onboarding & HUD) — IN PROGRESS
+Plan: 1 of 2 completed
+Status: Bundle splitting and z-index standardization complete
+Last activity: 2026-02-08 — Completed 04-01-PLAN.md (Bundle splitting + z-index tokens)
 
-Progress: [██████░░░░] 60% (6/10 plans complete across all phases)
+Progress: [███████░░░] 70% (7/10 plans complete across all phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 4 minutes
-- Total execution time: 0.42 hours
+- Total plans completed: 7
+- Average duration: 4.1 minutes
+- Total execution time: 0.48 hours
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [██████░░░░] 60% (6/10 plans complete across all p
 | 01 - Critical Fixes | 2/2 | 9 min | 4.5 min |
 | 02 - Player Guidance | 2/2 | 8 min | 4 min |
 | 03 - Feature Discoverability | 3/3 | 8 min | 2.7 min |
+| 04 - Onboarding & HUD | 1/2 | 5 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (7 min), 02-02 (1 min), 03-02 (2 min), 03-01 (6 min)
-- Trend: Phase 3 complete with excellent velocity, average 2.7 min/plan
+- Last 5 plans: 02-02 (1 min), 03-02 (2 min), 03-01 (6 min), 04-01 (5 min)
+- Trend: Consistent velocity, Phase 4 in progress
 
 *Updated after each plan completion*
 
@@ -88,6 +89,13 @@ Recent decisions affecting current work:
 - NPC hint selection based on thematic fit: scholar=grammar, librarian=roots, storyteller=reading, merchant=mini-games
 - 3-line hint structure: introduction → benefit → explicit access instructions (pause menu → Activities)
 
+**From 04-01 execution:**
+- Large data files (vocabulary-final.json 932KB, npcs.json 220KB) extracted to separate chunks for better caching
+- Scheduler package assigned to react-vendor chunk to avoid circular dependencies
+- QuestTracker z-index: 99 kept literal (intentionally 1 below HUD, not a separate layer token)
+- Internal component z-index values remain literals (avoid over-engineering)
+- Main bundle reduced from ~2.9MB to 264KB (91% reduction)
+
 ### Pending Todos
 
 None yet.
@@ -99,9 +107,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Phase 3 complete - verified, docs updated, committed
-Resume file: Ready for Phase 4 (Onboarding & HUD) — `/gsd:plan-phase 4`
+Stopped at: Phase 4 Plan 1 complete - bundle splitting and z-index standardization done
+Resume file: Ready for 04-02 (Interactive Tooltips)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-08 19:35 UTC*
+*Last updated: 2026-02-08 21:11 UTC*
