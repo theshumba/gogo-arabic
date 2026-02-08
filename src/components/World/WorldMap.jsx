@@ -7,6 +7,7 @@ import { EventBus } from '../../utils/eventBus.js';
 import { ZONES, ZONE_ORDER } from '../../data/zones.js';
 import { BOSSES } from '../../data/bosses.js';
 import quests from '../../data/quests.json';
+import vocabularyAll from '../../data/vocabularyAll.js';
 import styles from './WorldMap.module.css';
 
 const ZONE_POSITIONS = {
@@ -41,6 +42,9 @@ export default function WorldMap({ onBack }) {
   const unlockedZones = useSelector((s) => s.player.unlockedZones);
   const currentZone = useSelector((s) => s.player.currentZone);
   const completedQuests = useSelector((s) => s.quests.quests);
+  const npcsVisited = useSelector((s) => s.quests.npcsVisited || []);
+  const zonesVisited = useSelector((s) => s.quests.zonesVisited || []);
+  const fsrsCards = useSelector((s) => s.vocabulary.fsrsCards || {});
   const [hoveredZone, setHoveredZone] = useState(null);
 
   // Escape key handler
@@ -55,15 +59,35 @@ export default function WorldMap({ onBack }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onBack]);
 
-  // Calculate zone statistics
+  // Calculate zone statistics (WMAP-02: completion based on quests, NPCs, and words)
   const getZoneStats = (zoneId) => {
+    const zone = ZONES[zoneId];
+
+    // 1. Quests completed in zone
     const zoneQuests = quests.filter((q) => q.zone === zoneId);
-    const completed = zoneQuests.filter((q) => completedQuests[q.id]?.status === 'completed').length;
-    const total = zoneQuests.length;
-    const completionPercent = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const questsCompleted = zoneQuests.filter((q) => completedQuests[q.id]?.status === 'completed').length;
+    const questsTotal = zoneQuests.length;
+    const questProgress = questsTotal > 0 ? questsCompleted / questsTotal : 0;
+
+    // 2. NPCs talked to in zone
+    const zoneNpcs = zone.npcs || [];
+    const npcsMetCount = zoneNpcs.filter((npc) => npcsVisited.includes(npc.id)).length;
+    const npcsTotal = zoneNpcs.length;
+    const npcProgress = npcsTotal > 0 ? npcsMetCount / npcsTotal : 0;
+
+    // 3. Words learned from zone categories
+    const zoneCategories = zone.vocabCategories || [];
+    const zoneCategoryWords = vocabularyAll.filter((w) => zoneCategories.includes(w.category));
+    const wordsLearnedCount = zoneCategoryWords.filter((w) => fsrsCards[w.id]).length;
+    const wordsTotal = zoneCategoryWords.length;
+    const wordProgress = wordsTotal > 0 ? wordsLearnedCount / wordsTotal : 0;
+
+    // Weighted average: 40% quests, 30% NPCs, 30% words
+    const completionPercent = Math.round(
+      (questProgress * 0.4 + npcProgress * 0.3 + wordProgress * 0.3) * 100
+    );
 
     // Determine difficulty based on unlock requirements
-    const zone = ZONES[zoneId];
     let difficulty = 'Beginner';
     if (zone.unlock) {
       if (zone.unlock.minLevel >= 15) difficulty = 'Advanced';
@@ -71,25 +95,43 @@ export default function WorldMap({ onBack }) {
     }
 
     return {
-      questsCompleted: completed,
-      questsTotal: total,
+      questsCompleted,
+      questsTotal,
+      npcsMetCount,
+      npcsTotal,
+      wordsLearnedCount,
+      wordsTotal,
       completionPercent,
       difficulty,
     };
   };
 
   const handleZoneClick = (zoneId) => {
+    // Locked zone - show notification with unlock requirements
     if (!unlockedZones.includes(zoneId)) {
       dispatch(showNotification({ message: 'Zone locked!', type: 'quest' }));
       return;
     }
+
+    // Current zone - just close the map
     if (zoneId === currentZone) {
       onBack();
       return;
     }
-    // Fast travel
+
+    // WMAP-01: Fast travel to unlocked, previously-visited zone
+    const hasVisited = zonesVisited.includes(zoneId);
+    if (!hasVisited) {
+      dispatch(showNotification({
+        message: 'You must visit this zone on foot before fast traveling!',
+        type: 'quest'
+      }));
+      return;
+    }
+
+    // Emit fast-travel event and close map
     EventBus.emit('fast-travel', { zoneName: zoneId });
-    onBack();
+    navigate('/game');
   };
 
   const renderConnection = ([fromId, toId], idx) => {
@@ -167,7 +209,7 @@ export default function WorldMap({ onBack }) {
         <div className={styles.zoneLabelArabic} lang="ar" aria-hidden="true">{zone.nameArabic}</div>
         <div className={styles.zoneLabel} aria-hidden="true">{zone.name}</div>
 
-        {/* Zone Info Tooltip */}
+        {/* Zone Info Tooltip (WMAP-02: Enhanced with NPCs and Words) */}
         {isHovered && isUnlocked && (
           <div className={styles.zoneTooltip}>
             <div className={styles.tooltipHeader}>
@@ -180,7 +222,15 @@ export default function WorldMap({ onBack }) {
                 <span className={styles.tooltipValue}>{stats.questsCompleted}/{stats.questsTotal}</span>
               </div>
               <div className={styles.tooltipRow}>
-                <span className={styles.tooltipLabel}>Progress:</span>
+                <span className={styles.tooltipLabel}>NPCs Met:</span>
+                <span className={styles.tooltipValue}>{stats.npcsMetCount}/{stats.npcsTotal}</span>
+              </div>
+              <div className={styles.tooltipRow}>
+                <span className={styles.tooltipLabel}>Words:</span>
+                <span className={styles.tooltipValue}>{stats.wordsLearnedCount}/{stats.wordsTotal}</span>
+              </div>
+              <div className={styles.tooltipRow}>
+                <span className={styles.tooltipLabel}>Completion:</span>
                 <span className={styles.tooltipValue}>{stats.completionPercent}%</span>
               </div>
               <div className={styles.tooltipRow}>
@@ -195,6 +245,64 @@ export default function WorldMap({ onBack }) {
                 className={styles.tooltipProgressFill}
                 style={{ width: `${stats.completionPercent}%` }}
               />
+            </div>
+            {!isCurrent && zonesVisited.includes(zoneId) && (
+              <button
+                className={styles.tooltipTravelBtn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleZoneClick(zoneId);
+                }}
+              >
+                Fast Travel
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Locked Zone Teaser (WMAP-03: Show unlock requirements) */}
+        {isHovered && !isUnlocked && (
+          <div className={styles.zoneTooltipLocked}>
+            <div className={styles.tooltipHeader}>
+              <span className={styles.tooltipTitle}>{zone.name}</span>
+              <span className={styles.tooltipTitleArabic}>{zone.nameArabic}</span>
+            </div>
+            <div className={styles.tooltipBody}>
+              <div className={styles.tooltipRow}>
+                <span className={styles.tooltipLabel}>Difficulty:</span>
+                <span className={`${styles.tooltipValue} ${styles[`difficulty${stats.difficulty}`]}`}>
+                  {stats.difficulty}
+                </span>
+              </div>
+              {zone.unlock && (
+                <div className={styles.tooltipUnlockSection}>
+                  <div className={styles.tooltipUnlockTitle}>Unlock Requirements:</div>
+                  {zone.unlock.quest && (
+                    <div className={styles.tooltipUnlockItem}>
+                      <span className={styles.tooltipUnlockIcon}>📜</span>
+                      <span className={styles.tooltipUnlockText}>
+                        {quests.find(q => q.id === zone.unlock.quest)?.title || zone.unlock.quest}
+                      </span>
+                    </div>
+                  )}
+                  {zone.unlock.minLevel && (
+                    <div className={styles.tooltipUnlockItem}>
+                      <span className={styles.tooltipUnlockIcon}>⭐</span>
+                      <span className={styles.tooltipUnlockText}>
+                        Reach Level {zone.unlock.minLevel}
+                      </span>
+                    </div>
+                  )}
+                  {zone.unlock.minWords && (
+                    <div className={styles.tooltipUnlockItem}>
+                      <span className={styles.tooltipUnlockIcon}>📚</span>
+                      <span className={styles.tooltipUnlockText}>
+                        Learn {zone.unlock.minWords} words
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
