@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 
 ## Current Position
 
-Phase: 3 of 9 (Feature Discoverability) — IN PROGRESS
-Plan: 2 of 3 completed
-Status: Phase 3 in progress - NPC feature hints implemented
-Last activity: 2026-02-08 — Completed 03-02-PLAN.md (NPC feature hints)
+Phase: 3 of 9 (Feature Discoverability) — COMPLETE
+Plan: 3 of 3 completed
+Status: Phase 3 complete - all feature discoverability systems implemented
+Last activity: 2026-02-08 — Completed 03-01-PLAN.md (Activities menu + boss nodes)
 
-Progress: [█████░░░░░] 50% (5/10 plans complete across all phases)
+Progress: [██████░░░░] 60% (6/10 plans complete across all phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 3.8 minutes
-- Total execution time: 0.32 hours
+- Total plans completed: 6
+- Average duration: 4 minutes
+- Total execution time: 0.42 hours
 
 **By Phase:**
 
@@ -29,11 +29,11 @@ Progress: [█████░░░░░] 50% (5/10 plans complete across all p
 |-------|-------|-------|----------|
 | 01 - Critical Fixes | 2/2 | 9 min | 4.5 min |
 | 02 - Player Guidance | 2/2 | 8 min | 4 min |
-| 03 - Feature Discoverability | 2/3 | 2 min | 2 min |
+| 03 - Feature Discoverability | 3/3 | 8 min | 2.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (7 min), 02-01 (7 min), 02-02 (1 min), 03-02 (2 min)
-- Trend: Consistent execution speed, Phase 3 maintaining velocity
+- Last 5 plans: 02-01 (7 min), 02-02 (1 min), 03-02 (2 min), 03-01 (6 min)
+- Trend: Phase 3 complete with excellent velocity, average 2.7 min/plan
 
 *Updated after each plan completion*
 
@@ -77,6 +77,12 @@ Recent decisions affecting current work:
 - Phaser EventBus throttling pattern: Frame counter % N for controlled update rate
 - Distance-based UI visibility: Show compass only when objective is far enough to need guidance
 
+**From 03-01 execution:**
+- Inline sub-component pattern for simple single-use UI (ActivitiesMenu in GameLayout)
+- Boss node offset positioning to avoid zone overlap (+6x, -3y from zone center)
+- Responsive label hiding strategy: hide text at 480px, preserve key info (sprite + difficulty)
+- Sub-menu navigation pattern: useState toggle with Back button returns to parent view
+
 **From 03-02 execution:**
 - Hint dialogue trees use trigger "hint" (never auto-selected by pickDialogueTree, only reachable via player choice)
 - NPC hint selection based on thematic fit: scholar=grammar, librarian=roots, storyteller=reading, merchant=mini-games
@@ -93,9 +99,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 03-02-PLAN.md (NPC feature hints)
-Resume file: .planning/phases/03-feature-discoverability/03-02-SUMMARY.md
+Stopped at: Phase 3 complete - all feature discoverability systems verified
+Resume file: Ready for Phase 4 (Onboarding & HUD)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-08 18:18 UTC*
+*Last updated: 2026-02-08 18:20 UTC*
