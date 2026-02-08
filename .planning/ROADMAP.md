@@ -67,10 +67,11 @@ Plans:
   2. Word Duel boss battles are accessible through zone NPCs or world map interface
   3. Review sessions can be started by clicking the review badge in game HUD
   4. At least 3 NPCs mention hidden features through contextual dialogue hints
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: TBD
+- [ ] 03-01-PLAN.md — Activities menu in pause menu + WorldMap boss nodes + review badge verify (DISC-01, DISC-02, DISC-03)
+- [ ] 03-02-PLAN.md — NPC contextual dialogue hints for hidden features (DISC-04)
 
 ### Phase 4: Onboarding & HUD
 **Goal**: Replace static onboarding slideshow with contextual guidance, reduce HUD clutter, and split the bundle
@@ -166,7 +167,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 |-------|----------------|--------|-----------|
 | 1. Critical Fixes | 2/2 | ✓ Complete | 2026-02-08 |
 | 2. Player Guidance | 2/2 | ✓ Complete | 2026-02-08 |
-| 3. Feature Discoverability | 0/0 | Not started | - |
+| 3. Feature Discoverability | 0/2 | Planning complete | - |
 | 4. Onboarding & HUD | 0/0 | Not started | - |
 | 5. Daily Dashboard | 0/0 | Not started | - |
 | 6. World Map Upgrade | 0/0 | Not started | - |
