@@ -1,7 +1,10 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
+import questsData from '../../data/quests.json';
+import { ZONES } from '../../data/zones.js';
 
 const initialState = {
   quests: {},       // { [questId]: { status, progress, rewardClaimed, tracking } }
+  activeQuestId: null,  // ID of the quest currently being tracked
   npcsVisited: [],  // Array of NPC IDs visited
   zonesVisited: [],  // Array of zone names visited
   dialoguesCompleted: [],  // Array of dialogue IDs completed
@@ -13,6 +16,20 @@ const initialState = {
   lettersMastered: [],  // Array of letter IDs mastered
   sentenceQuizzesCompleted: 0,  // Count of sentence quizzes completed
 };
+
+// Map quest npcGiver roles to full NPC IDs from zones data
+const NPC_GIVER_TO_ID = {};
+for (const qd of questsData) {
+  if (qd.npcGiver && qd.zone) {
+    const zone = ZONES[qd.zone];
+    if (zone) {
+      const npc = zone.npcs.find(n => n.id.startsWith(qd.npcGiver));
+      if (npc) {
+        NPC_GIVER_TO_ID[`${qd.npcGiver}_${qd.zone}`] = npc.id;
+      }
+    }
+  }
+}
 
 const questSlice = createSlice({
   name: 'quests',
@@ -29,6 +46,16 @@ const questSlice = createSlice({
             progress: 0,
             rewardClaimed: false,
           };
+        }
+      }
+
+      // Auto-set active quest if none selected or current selection is invalid
+      if (!state.activeQuestId || state.quests[state.activeQuestId]?.status !== 'active') {
+        const firstActiveId = Object.keys(state.quests).find(
+          id => state.quests[id].status === 'active'
+        );
+        if (firstActiveId) {
+          state.activeQuestId = firstActiveId;
         }
       }
     },
@@ -68,6 +95,14 @@ const questSlice = createSlice({
       if (entry && entry.status === 'active') {
         entry.status = 'completed';
         entry.completedAt = Date.now();
+
+        // If the completed quest was the active one, auto-select next active quest
+        if (state.activeQuestId === questId) {
+          const nextActiveId = Object.keys(state.quests).find(
+            id => state.quests[id].status === 'active'
+          );
+          state.activeQuestId = nextActiveId || null;
+        }
       }
     },
 
@@ -144,6 +179,16 @@ const questSlice = createSlice({
     incrementSentenceQuizzes(state) {
       state.sentenceQuizzesCompleted += 1;
     },
+
+    setActiveQuest(state, action) {
+      // payload: questId (string) or null
+      const questId = action.payload;
+      if (questId === null) {
+        state.activeQuestId = null;
+      } else if (state.quests[questId]?.status === 'active') {
+        state.activeQuestId = questId;
+      }
+    },
   },
 });
 
@@ -162,6 +207,7 @@ export const {
   incrementWordsLearnedToday,
   masterLetter,
   incrementSentenceQuizzes,
+  setActiveQuest,
 } = questSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -189,6 +235,89 @@ export const selectCompletedQuests = createSelector(
   (quests) => Object.entries(quests)
     .filter(([, quest]) => quest.status === 'completed')
     .reduce((acc, [id, quest]) => ({ ...acc, [id]: quest }), {})
+);
+
+// Select NPC quest markers (! for available, ? for turn-in)
+export const selectNpcQuestMarkers = createSelector(
+  [selectAllQuests],
+  (quests) => {
+    const markers = {};
+
+    for (const qd of questsData) {
+      if (!qd.npcGiver || !qd.zone) continue;
+
+      const questState = quests[qd.id];
+      if (!questState) continue;
+
+      const npcId = NPC_GIVER_TO_ID[`${qd.npcGiver}_${qd.zone}`];
+      if (!npcId) continue;
+
+      // Priority 1: Turn-in (green ?)
+      if (questState.status === 'completed' && !questState.rewardClaimed) {
+        markers[npcId] = 'question';
+        continue;
+      }
+
+      // Priority 2: Available (golden !) - only if not already marked for turn-in
+      if (questState.status === 'locked' && !markers[npcId]) {
+        const allPrerequisitesMet = qd.prerequisites.every((preId) => {
+          const pre = quests[preId];
+          return pre && pre.status === 'completed';
+        });
+        if (allPrerequisitesMet) {
+          markers[npcId] = 'exclamation';
+        }
+      }
+    }
+
+    return markers;
+  }
+);
+
+// Select active quest (full quest object with definition data)
+export const selectActiveQuest = createSelector(
+  [selectAllQuests, (state) => state.quests.activeQuestId],
+  (quests, activeQuestId) => {
+    if (!activeQuestId) return null;
+
+    const questState = quests[activeQuestId];
+    if (!questState || questState.status !== 'active') return null;
+
+    const questDef = questsData.find(q => q.id === activeQuestId);
+    if (!questDef) return null;
+
+    return {
+      id: activeQuestId,
+      status: questState.status,
+      progress: questState.progress,
+      rewardClaimed: questState.rewardClaimed,
+      title: questDef.title,
+      description: questDef.description,
+      target: questDef.target,
+      zone: questDef.zone,
+      npcGiver: questDef.npcGiver,
+      trackEvent: questDef.trackEvent,
+    };
+  }
+);
+
+// Select active quest objective location (for compass/HUD)
+export const selectActiveQuestObjectiveLocation = createSelector(
+  [selectActiveQuest],
+  (activeQuest) => {
+    if (!activeQuest || !activeQuest.npcGiver || !activeQuest.zone) return null;
+
+    const zone = ZONES[activeQuest.zone];
+    if (!zone) return null;
+
+    const npc = zone.npcs.find(n => n.id.startsWith(activeQuest.npcGiver));
+    if (!npc) return null;
+
+    return {
+      x: npc.x * 64,
+      y: npc.y * 64,
+    };
+  }
 );
 
 export default questSlice.reducer;
