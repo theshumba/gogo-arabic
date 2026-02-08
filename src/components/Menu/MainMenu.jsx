@@ -17,34 +17,54 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
   const hasCharacter = player.name !== '';
 
   return (
-    <div className={styles.container}>
-      <div className={styles.title}>Gogo Arabic</div>
-      <div className={styles.titleArabic}>يلا عربي</div>
+    <div className={styles.container} role="main">
+      <h1 className={styles.title}>Gogo Arabic</h1>
+      <div className={styles.titleArabic} lang="ar" aria-hidden="true">يلا عربي</div>
 
-      <div className={styles.btnGroup}>
+      <nav className={styles.btnGroup} aria-label="Main menu">
         {hasCharacter ? (
-          <button className={styles.btnGold} onClick={() => { audioManager.playSFX('click'); onStartGame(); }}>
+          <button
+            className={styles.btnGold}
+            onClick={() => { audioManager.playSFX('click'); onStartGame(); }}
+            aria-label="Continue your saved game"
+          >
             Continue Game
           </button>
         ) : (
-          <button className={styles.btnGold} onClick={() => { audioManager.playSFX('click'); onCharacterCreation(); }}>
+          <button
+            className={styles.btnGold}
+            onClick={() => { audioManager.playSFX('click'); onCharacterCreation(); }}
+            aria-label="Start a new game"
+          >
             New Game
           </button>
         )}
 
-        <button className={styles.btnDark} onClick={() => { audioManager.playSFX('click'); onReview(); }}>
+        <button
+          className={styles.btnDark}
+          onClick={() => { audioManager.playSFX('click'); onReview(); }}
+          aria-label={`Daily vocabulary reviews${dueCount > 0 ? `, ${dueCount} due` : ''}`}
+        >
           Daily Reviews
-          {dueCount > 0 && <span className={styles.badge}>{dueCount}</span>}
+          {dueCount > 0 && <span className={styles.badge} aria-hidden="true">{dueCount}</span>}
         </button>
 
-        <button className={styles.btnDark} onClick={() => { audioManager.playSFX('click'); onAlphabet(); }}>
+        <button
+          className={styles.btnDark}
+          onClick={() => { audioManager.playSFX('click'); onAlphabet(); }}
+          aria-label="Learn the Arabic alphabet"
+        >
           Alphabet
         </button>
 
-        <button className={styles.btnDark} onClick={() => { audioManager.playSFX('click'); onSettings(); }}>
+        <button
+          className={styles.btnDark}
+          onClick={() => { audioManager.playSFX('click'); onSettings(); }}
+          aria-label="Open settings"
+        >
           Settings
         </button>
-      </div>
+      </nav>
     </div>
   );
 }

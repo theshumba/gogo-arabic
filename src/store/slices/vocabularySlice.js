@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
   words: [], // loaded from vocabulary-final.json
@@ -62,5 +62,28 @@ export const {
   updateStats,
   markWordLearned,
 } = vocabularySlice.actions;
+
+// ========== MEMOIZED SELECTORS ==========
+
+// Select FSRS cards
+export const selectFsrsCards = (state) => state.vocabulary.fsrsCards;
+
+// Select review queue
+export const selectReviewQueue = (state) => state.vocabulary.reviewQueue;
+
+// Select review queue count (memoized)
+export const selectReviewQueueCount = createSelector(
+  [selectReviewQueue],
+  (queue) => queue.length
+);
+
+// Select learned word count (memoized)
+export const selectLearnedWordCount = createSelector(
+  [selectFsrsCards],
+  (cards) => Object.keys(cards).length
+);
+
+// Select vocabulary stats
+export const selectVocabularyStats = (state) => state.vocabulary.stats;
 
 export default vocabularySlice.reducer;

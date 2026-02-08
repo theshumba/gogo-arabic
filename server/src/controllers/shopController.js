@@ -9,6 +9,15 @@ const ITEMS_CATALOG = require('../../../src/data/items.json');
 // Build a lookup map for O(1) price verification
 const itemsById = Object.fromEntries(ITEMS_CATALOG.map((item) => [item.id, item]));
 
+/**
+ * Purchase an item from the shop
+ *
+ * @route POST /api/v1/shop/buy
+ * @body {Object} { itemId: string }
+ * @auth Required - JWT token
+ * @returns {Object} { success: true, data: User }
+ * @description Validates price server-side, checks requirements, deducts dirhams, adds to inventory
+ */
 export async function buyItem(req, res, next) {
   try {
     const { itemId } = req.body;
@@ -50,7 +59,10 @@ export async function buyItem(req, res, next) {
       price: catalogItem.price,
     });
 
-    res.json({ user });
+    res.json({
+      success: true,
+      data: user,
+    });
   } catch (err) {
     logger.error('buyItem error:', { error: err.message, userId: req.userId });
     next(err);

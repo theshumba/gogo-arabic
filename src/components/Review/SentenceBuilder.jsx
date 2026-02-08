@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { COLORS, FONTS } from '../../styles/theme.js';
 import { validateSentence } from '../../utils/sentenceParser.js';
 
@@ -161,7 +161,7 @@ const injectAnimations = () => {
   document.head.appendChild(styleSheet);
 };
 
-export default function SentenceBuilder({
+function SentenceBuilder({
   quizData,
   onComplete,
   disabled = false,
@@ -382,3 +382,6 @@ export default function SentenceBuilder({
     </div>
   );
 }
+
+// Memoize to prevent re-renders when parent re-renders
+export default memo(SentenceBuilder);

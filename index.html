@@ -6,7 +6,7 @@
     <title>Gogo Arabic - يلا عربي</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet" />
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
@@ -21,18 +21,36 @@
         image-rendering: crisp-edges;
         -webkit-font-smoothing: none;
         -moz-osx-font-smoothing: unset;
+        /* Mobile optimizations */
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        -webkit-touch-callout: none;
+        touch-action: manipulation;
       }
       #root {
         width: 100vw;
         height: 100vh;
         position: relative;
+        /* Prevent mobile bounce scroll */
+        overscroll-behavior: none;
       }
       /* Arabic font classes */
       .arabic-title { font-family: 'Amiri', serif; direction: rtl; }
-      .arabic-body { font-family: 'Noto Kufi Arabic', sans-serif; direction: rtl; }
+      .arabic-display { font-family: 'Noto Kufi Arabic', sans-serif; direction: rtl; }
+      .arabic-body { font-family: 'Noto Naskh Arabic', serif; direction: rtl; }
       .pixel-font { font-family: 'Press Start 2P', cursive; }
       /* Phaser canvas fills container */
-      canvas { image-rendering: pixelated !important; display: block; }
+      canvas {
+        image-rendering: pixelated !important;
+        display: block;
+        /* Prevent canvas touch issues on mobile */
+        touch-action: none;
+      }
+      /* Smooth scrolling for mobile */
+      @media (max-width: 768px) {
+        * {
+          -webkit-overflow-scrolling: touch;
+        }
+      }
     </style>
   </head>
   <body>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo, memo } from 'react';
 import { useSelector } from 'react-redux';
 import {
   selectUnlockedAchievements,
@@ -199,10 +199,14 @@ const styles = {
   },
 };
 
-function AchievementCard({ achievement, isUnlocked, unlockedDate, progress }) {
+// Memoize achievement card to prevent re-renders
+const AchievementCard = memo(function AchievementCard({ achievement, isUnlocked, unlockedDate, progress }) {
   const rarityColor = RARITY_COLORS[achievement.rarity] || COLORS.white;
   const { current, target } = progress;
-  const progressPercent = target > 0 ? Math.min((current / target) * 100, 100) : 0;
+  const progressPercent = useMemo(
+    () => (target > 0 ? Math.min((current / target) * 100, 100) : 0),
+    [current, target]
+  );
 
   return (
     <div
@@ -253,16 +257,16 @@ function AchievementCard({ achievement, isUnlocked, unlockedDate, progress }) {
       </div>
     </div>
   );
-}
+});
 
-export default function AchievementPanel({ onClose }) {
+function AchievementPanel({ onClose }) {
   const [activeTab, setActiveTab] = useState('all');
   const unlockedAchievements = useSelector(selectUnlockedAchievements);
   const achievementProgress = useSelector(selectAchievementProgress);
   const unlockedCount = useSelector(selectUnlockedCount);
   const totalXP = useSelector(selectTotalAchievementXP);
 
-  const tabs = [
+  const tabs = useMemo(() => [
     { id: 'all', label: 'All' },
     { id: ACHIEVEMENT_CATEGORIES.VOCABULARY, label: 'Vocabulary' },
     { id: ACHIEVEMENT_CATEGORIES.ALPHABET, label: 'Alphabet' },
@@ -273,12 +277,16 @@ export default function AchievementPanel({ onClose }) {
     { id: ACHIEVEMENT_CATEGORIES.REVIEW, label: 'Review' },
     { id: ACHIEVEMENT_CATEGORIES.ECONOMY, label: 'Economy' },
     { id: ACHIEVEMENT_CATEGORIES.SPECIAL, label: 'Special' },
-  ];
+  ], []);
 
-  const filteredAchievements =
-    activeTab === 'all'
-      ? ACHIEVEMENTS
-      : getAchievementsByCategory(activeTab);
+  const filteredAchievements = useMemo(
+    () => (activeTab === 'all' ? ACHIEVEMENTS : getAchievementsByCategory(activeTab)),
+    [activeTab]
+  );
+
+  const handleTabClick = useCallback((tabId) => {
+    setActiveTab(tabId);
+  }, []);
 
   return (
     <div style={styles.overlay} onClick={onClose}>
@@ -310,7 +318,7 @@ export default function AchievementPanel({ onClose }) {
                 ...styles.tab,
                 ...(activeTab === tab.id ? styles.tabActive : {}),
               }}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
             >
               {tab.label}
             </button>
@@ -341,3 +349,6 @@ export default function AchievementPanel({ onClose }) {
     </div>
   );
 }
+
+// Memoize component
+export default memo(AchievementPanel);

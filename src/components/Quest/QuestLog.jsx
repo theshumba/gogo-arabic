@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { closeDialogue, showNotification } from '../../store/slices/uiSlice.js';
 import { claimReward } from '../../store/slices/questSlice.js';
 import { addXP, addDirhams } from '../../store/slices/playerSlice.js';
-import { EventBus } from '../../game/EventBus.js';
+import { EventBus } from '../../utils/eventBus.js';
 import questsData from '../../data/quests.json';
 import { ZONES, ZONE_ORDER } from '../../data/zones.js';
 import { COLORS, FONTS, pixelPanel, pixelBtnDark, pixelBtnGold } from '../../styles/theme.js';

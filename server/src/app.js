@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import { createRequire } from 'module';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import reviewRoutes from './routes/review.js';
@@ -13,6 +14,9 @@ import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { validateCsrfToken } from './middleware/csrf.js';
 import logger from './utils/logger.js';
+
+const require = createRequire(import.meta.url);
+const packageJson = require('../../package.json');
 
 const app = express();
 
@@ -78,21 +82,29 @@ app.use('/api/quest', questRoutes);
 app.use('/api/shop', shopRoutes);
 app.use('/api/game', gameRoutes);
 
-// Health check
+// Health check endpoints
 app.get('/api/health', (_req, res) => {
   res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
+    success: true,
+    data: {
+      status: 'ok',
+      version: packageJson.version,
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    },
   });
 });
 
 app.get(`${API_VERSION}/health`, (_req, res) => {
   res.json({
-    status: 'ok',
-    version: 'v1',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
+    success: true,
+    data: {
+      status: 'ok',
+      version: packageJson.version,
+      apiVersion: 'v1',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    },
   });
 });
 

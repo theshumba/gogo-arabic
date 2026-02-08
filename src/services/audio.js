@@ -1,6 +1,56 @@
 import { Howl } from 'howler';
 
 /**
+ * Simple LRU cache implementation for managing Howl instances.
+ * Automatically unloads oldest entries when cache exceeds max size.
+ */
+class LRUCache {
+  constructor(maxSize = 50) {
+    this.maxSize = maxSize;
+    this.cache = new Map(); // key -> { howl, lastUsed }
+  }
+
+  get(key) {
+    const entry = this.cache.get(key);
+    if (entry) {
+      entry.lastUsed = Date.now();
+      return entry.howl;
+    }
+    return null;
+  }
+
+  set(key, howl) {
+    // If cache is full, remove oldest entry
+    if (this.cache.size >= this.maxSize) {
+      let oldestKey = null;
+      let oldestTime = Infinity;
+
+      for (const [k, v] of this.cache.entries()) {
+        if (v.lastUsed < oldestTime) {
+          oldestTime = v.lastUsed;
+          oldestKey = k;
+        }
+      }
+
+      if (oldestKey) {
+        const oldEntry = this.cache.get(oldestKey);
+        oldEntry.howl.unload();
+        this.cache.delete(oldestKey);
+      }
+    }
+
+    this.cache.set(key, { howl, lastUsed: Date.now() });
+  }
+
+  clear() {
+    for (const [, entry] of this.cache.entries()) {
+      entry.howl.unload();
+    }
+    this.cache.clear();
+  }
+}
+
+/**
  * AudioManager singleton
  * Three independent volume channels: ambient, sfx, pronunciation
  * Each channel has its own volume control (0-1 internally)
@@ -19,6 +69,12 @@ class AudioManager {
 
     /** @type {Object<string, Howl>} Cached SFX Howl objects keyed by name */
     this.sfxCache = {};
+
+    /** @type {LRUCache} LRU cache for word pronunciations (prevents memory leak) */
+    this.wordCache = new LRUCache(50);
+
+    /** @type {LRUCache} LRU cache for letter pronunciations */
+    this.letterCache = new LRUCache(28);
   }
 
   // ---------------------------------------------------------------------------
@@ -162,37 +218,82 @@ class AudioManager {
   /**
    * Play Arabic word pronunciation.
    * Files at: /assets/audio/words/{wordId}.mp3
+   * Uses LRU cache to prevent memory leaks from creating unlimited Howl instances.
    * @param {string} wordId - Word identifier matching the vocabulary data
    */
   playWord(wordId) {
     if (!wordId) return;
 
-    const howl = new Howl({
-      src: [`/assets/audio/words/${wordId}.mp3`],
-      volume: this.pronunciationVolume,
-      onloaderror: () => {
-        console.warn(`[AudioManager] Missing word audio: ${wordId}`);
-      },
-    });
+    // Check cache first
+    let howl = this.wordCache.get(wordId);
+
+    if (!howl) {
+      // Create new Howl and add to cache
+      howl = new Howl({
+        src: [`/assets/audio/words/${wordId}.mp3`],
+        volume: this.pronunciationVolume,
+        onloaderror: () => {
+          console.warn(`[AudioManager] Missing word audio: ${wordId}`);
+        },
+      });
+      this.wordCache.set(wordId, howl);
+    } else {
+      // Update volume in case it changed
+      howl.volume(this.pronunciationVolume);
+    }
+
     howl.play();
   }
 
   /**
    * Play Arabic letter pronunciation.
    * Files at: /assets/audio/letters/{letter}.mp3
+   * Uses LRU cache to prevent memory leaks.
    * @param {string} letter - Arabic letter character or transliterated name
    */
   playLetter(letter) {
     if (!letter) return;
 
-    const howl = new Howl({
-      src: [`/assets/audio/letters/${letter}.mp3`],
-      volume: this.pronunciationVolume,
-      onloaderror: () => {
-        console.warn(`[AudioManager] Missing letter audio: ${letter}`);
-      },
-    });
+    // Check cache first
+    let howl = this.letterCache.get(letter);
+
+    if (!howl) {
+      // Create new Howl and add to cache
+      howl = new Howl({
+        src: [`/assets/audio/letters/${letter}.mp3`],
+        volume: this.pronunciationVolume,
+        onloaderror: () => {
+          console.warn(`[AudioManager] Missing letter audio: ${letter}`);
+        },
+      });
+      this.letterCache.set(letter, howl);
+    } else {
+      // Update volume in case it changed
+      howl.volume(this.pronunciationVolume);
+    }
+
     howl.play();
+  }
+
+  /**
+   * Clean up all cached audio resources.
+   * Call this when the app is being unmounted or reset.
+   */
+  cleanup() {
+    // Clean up ambient
+    if (this.ambient) {
+      this.ambient.unload();
+      this.ambient = null;
+      this.ambientZone = null;
+    }
+
+    // Clean up SFX cache
+    Object.values(this.sfxCache).forEach(howl => howl.unload());
+    this.sfxCache = {};
+
+    // Clean up LRU caches
+    this.wordCache.clear();
+    this.letterCache.clear();
   }
 }
 

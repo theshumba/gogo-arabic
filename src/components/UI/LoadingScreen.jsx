@@ -1,79 +1,10 @@
 import { useEffect, useState } from 'react';
+import styles from './LoadingScreen.module.css';
 
-const containerStyle = {
-  width: '100vw',
-  height: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  background: '#1A1A2E',
-  color: '#D4A843',
-  fontFamily: "'Press Start 2P', cursive",
-};
-
-const bookStyle = {
-  width: '80px',
-  height: '64px',
-  position: 'relative',
-  marginBottom: '40px',
-};
-
-const bookPageStyle = (delay) => ({
-  position: 'absolute',
-  width: '40px',
-  height: '60px',
-  background: '#D4A843',
-  border: '3px solid #B8941C',
-  transformOrigin: 'left center',
-  left: '50%',
-  top: '2px',
-  animation: `pageFlip 1.2s ${delay}s infinite ease-in-out`,
-});
-
-const dotsContainerStyle = {
-  display: 'flex',
-  gap: '12px',
-  marginTop: '24px',
-};
-
-const dotStyle = (delay) => ({
-  width: '8px',
-  height: '8px',
-  background: '#D4A843',
-  animation: `bounce 1.4s ${delay}s infinite ease-in-out`,
-});
-
-const textStyle = {
-  fontSize: '14px',
-  marginBottom: '8px',
-  letterSpacing: '2px',
-};
-
-const arabicTextStyle = {
-  fontSize: '20px',
-  fontFamily: "'Amiri', serif",
-  marginTop: '16px',
-  direction: 'rtl',
-};
-
-const progressBarContainerStyle = {
-  width: '200px',
-  height: '12px',
-  background: '#0F0F1E',
-  border: '2px solid #D4A843',
-  marginTop: '32px',
-  position: 'relative',
-  overflow: 'hidden',
-};
-
-const progressBarFillStyle = (progress) => ({
-  height: '100%',
-  background: '#D4A843',
-  width: `${progress}%`,
-  transition: 'width 0.3s ease-in-out',
-});
-
+/**
+ * Arabic-themed loading screen with skeleton layout and animations
+ * Used as Suspense fallback for lazy-loaded routes
+ */
 export default function LoadingScreen() {
   const [dots, setDots] = useState(1);
   const [progress, setProgress] = useState(0);
@@ -99,65 +30,40 @@ export default function LoadingScreen() {
   }, []);
 
   return (
-    <div style={containerStyle}>
-      <style>
-        {`
-          @keyframes pageFlip {
-            0%, 100% {
-              transform: rotateY(0deg);
-            }
-            50% {
-              transform: rotateY(-180deg);
-            }
-          }
+    <div className={styles.container}>
+      {/* Animated Arabic Book Icon */}
+      <div className={styles.book}>
+        <div className={styles.bookCover} />
+        <div className={`${styles.bookPage} ${styles.page1}`} />
+        <div className={`${styles.bookPage} ${styles.page2}`} />
+        <div className={`${styles.bookPage} ${styles.page3}`} />
+      </div>
 
-          @keyframes bounce {
-            0%, 80%, 100% {
-              transform: translateY(0);
-            }
-            40% {
-              transform: translateY(-16px);
-            }
-          }
-        `}
-      </style>
-
-      {/* Animated Book */}
-      <div style={bookStyle}>
-        <div
-          style={{
-            position: 'absolute',
-            width: '40px',
-            height: '60px',
-            background: '#A67C2C',
-            border: '3px solid #8B6520',
-            left: '0',
-            top: '2px',
-          }}
-        />
-        <div style={bookPageStyle('0s')} />
-        <div style={bookPageStyle('0.4s')} />
-        <div style={bookPageStyle('0.8s')} />
+      {/* Arabic calligraphy decoration */}
+      <div className={styles.decoration}>
+        <div className={styles.decorLine} />
+        <div className={styles.decorCircle} />
+        <div className={styles.decorLine} />
       </div>
 
       {/* Loading Text */}
-      <div style={textStyle}>
+      <div className={styles.text}>
         Loading{'.'.repeat(dots)}
       </div>
 
-      {/* Arabic Text - "Loading" in Arabic (جارٍ التحميل) */}
-      <div style={arabicTextStyle}>جارٍ التحميل</div>
+      {/* Arabic Text - "Loading" (جارٍ التحميل) */}
+      <div className={styles.arabicText}>جارٍ التحميل</div>
 
       {/* Bouncing Dots */}
-      <div style={dotsContainerStyle}>
-        <div style={dotStyle('0s')} />
-        <div style={dotStyle('0.2s')} />
-        <div style={dotStyle('0.4s')} />
+      <div className={styles.dotsContainer}>
+        <div className={`${styles.dot} ${styles.dot1}`} />
+        <div className={`${styles.dot} ${styles.dot2}`} />
+        <div className={`${styles.dot} ${styles.dot3}`} />
       </div>
 
       {/* Progress Bar */}
-      <div style={progressBarContainerStyle}>
-        <div style={progressBarFillStyle(progress)} />
+      <div className={styles.progressBar}>
+        <div className={styles.progressFill} style={{ width: `${progress}%` }} />
       </div>
     </div>
   );

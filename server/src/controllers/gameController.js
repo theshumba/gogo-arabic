@@ -2,6 +2,15 @@ import User from '../models/User.js';
 import { AppError } from '../utils/AppError.js';
 import logger from '../utils/logger.js';
 
+/**
+ * Save game state (player progress, settings)
+ *
+ * @route POST /api/v1/game/save
+ * @body {Object} { player?: Object, settings?: Object }
+ * @auth Required - JWT token
+ * @returns {Object} { success: true, data: User, message: string }
+ * @description Updates user document with current game state
+ */
 export async function saveGame(req, res, next) {
   try {
     const { player, quests, settings } = req.body;
@@ -37,13 +46,25 @@ export async function saveGame(req, res, next) {
 
     logger.info('Game saved', { userId: req.userId });
 
-    res.json({ message: 'Game saved', user });
+    res.json({
+      success: true,
+      message: 'Game saved',
+      data: user,
+    });
   } catch (err) {
     logger.error('saveGame error:', { error: err.message, userId: req.userId });
     next(err);
   }
 }
 
+/**
+ * Load game state for the authenticated user
+ *
+ * @route GET /api/v1/game/load
+ * @auth Required - JWT token
+ * @returns {Object} { success: true, data: User }
+ * @description Returns complete user profile with game progress
+ */
 export async function loadGame(req, res, next) {
   try {
     const user = await User.findById(req.userId);
@@ -53,7 +74,10 @@ export async function loadGame(req, res, next) {
 
     logger.info('Game loaded', { userId: req.userId });
 
-    res.json({ user });
+    res.json({
+      success: true,
+      data: user,
+    });
   } catch (err) {
     logger.error('loadGame error:', { error: err.message, userId: req.userId });
     next(err);

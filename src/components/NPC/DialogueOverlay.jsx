@@ -6,7 +6,7 @@ import { addFsrsCard, updateFsrsCard } from '../../store/slices/vocabularySlice.
 import { addXP, incrementWordsLearned } from '../../store/slices/playerSlice.js';
 import { updateQuestProgress, completeQuest, checkPrerequisites } from '../../store/slices/questSlice.js';
 import { createNewCard } from '../../services/fsrs.js';
-import { EventBus } from '../../game/EventBus.js';
+import { EventBus } from '../../utils/eventBus.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { shuffle } from '../../utils/shuffle.js';
 import { selectWordsByDifficulty } from '../../utils/wordSelection.js';
@@ -360,32 +360,33 @@ export default function DialogueOverlay() {
   /* ---- choice line rendering ---- */
   if (line.choices) {
     return (
-      <div className={styles.overlay}>
-        <div className={styles.backdrop} />
+      <div className={styles.overlay} role="dialog" aria-label="Dialogue choices">
+        <div className={styles.backdrop} aria-hidden="true" />
         <div className={styles.dialogueBox}>
           {renderPortrait()}
           <div className={styles.content}>
-            <div className={styles.speakerName}>You</div>
-            <div className={styles.choices}>
+            <div className={styles.speakerName} role="heading" aria-level="2">You</div>
+            <div className={styles.choices} role="group" aria-label="Available dialogue choices">
               {line.choices.map((c, i) => (
                 <button
                   key={i}
                   className={styles.choiceBtn}
                   onClick={() => handleChoice(c)}
+                  aria-label={`Choice ${i + 1}: ${c.english}${c.arabic ? ` - ${c.arabic}` : ''}`}
                 >
                   <div>
-                    <span className={styles.choiceNumber}>{i + 1}</span>
+                    <span className={styles.choiceNumber} aria-hidden="true">{i + 1}</span>
                     {c.english}
                   </div>
                   {c.arabic && (
-                    <div className={styles.choiceArabic}>
+                    <div className={styles.choiceArabic} lang="ar">
                       {c.arabic}
                     </div>
                   )}
                 </button>
               ))}
             </div>
-            <div className={styles.choiceHint}>Press 1-{line.choices.length} to select</div>
+            <div className={styles.choiceHint} aria-live="polite">Press 1-{line.choices.length} to select</div>
           </div>
         </div>
       </div>
@@ -397,20 +398,44 @@ export default function DialogueOverlay() {
   const speakerName = isPlayerSpeaking ? 'You' : npc.name;
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.backdrop} onClick={advance} />
-      <div className={styles.dialogueBox} onClick={advance}>
+    <div className={styles.overlay} role="dialog" aria-label={`Dialogue with ${npc.name}`}>
+      <div
+        className={styles.backdrop}
+        onClick={advance}
+        role="button"
+        tabIndex={0}
+        aria-label="Continue dialogue"
+        onKeyDown={(e) => {
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            advance();
+          }
+        }}
+      />
+      <div
+        className={styles.dialogueBox}
+        onClick={advance}
+        role="button"
+        tabIndex={0}
+        aria-label="Continue dialogue"
+        onKeyDown={(e) => {
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            advance();
+          }
+        }}
+      >
         {renderPortrait()}
         <div className={styles.content}>
-          <div className={styles.speakerName}>{speakerName}</div>
-          {line.arabic && <div className={styles.arabicLine}>{line.arabic}</div>}
+          <div className={styles.speakerName} role="heading" aria-level="2">{speakerName}</div>
+          {line.arabic && <div className={styles.arabicLine} lang="ar">{line.arabic}</div>}
           {line.english && <div className={styles.englishLine}>{line.english}</div>}
           {settings?.showTransliteration && line.transliteration && (
-            <div className={styles.translitLine}>{line.transliteration}</div>
+            <div className={styles.translitLine} aria-label={`Transliteration: ${line.transliteration}`}>{line.transliteration}</div>
           )}
           {line.teachWord && renderTeachWordCard(line.teachWord)}
         </div>
-        <div className={styles.continueHint}>Space / Enter / Click to continue</div>
+        <div className={styles.continueHint} role="status" aria-live="polite">Space / Enter / Click to continue</div>
       </div>
     </div>
   );

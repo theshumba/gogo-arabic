@@ -143,6 +143,10 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
   .title {
     font-size: 24px;
   }
@@ -153,44 +157,62 @@
   }
 
   .btnGroup {
-    width: 280px;
-    gap: 12px;
+    width: 90%;
+    max-width: 320px;
+    gap: 14px;
   }
 
   .btnGold,
   .btnDark {
     font-size: 10px;
-    padding: 14px 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  .title {
-    font-size: 20px;
-  }
-
-  .titleArabic {
-    font-size: 24px;
-    margin-bottom: 24px;
-  }
-
-  .btnGroup {
-    width: 260px;
-    gap: 10px;
-  }
-
-  .btnGold {
-    font-size: 9px;
-    padding: 12px 20px;
-  }
-
-  .btnDark {
-    font-size: 9px;
-    padding: 10px 18px;
+    padding: 16px 24px;
+    /* Touch-friendly buttons */
+    min-height: 52px;
   }
 
   .badge {
     font-size: 7px;
-    padding: 2px 6px;
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+
+  .titleArabic {
+    font-size: 22px;
+    margin-bottom: 28px;
+  }
+
+  .btnGroup {
+    width: 95%;
+    max-width: 280px;
+    gap: 12px;
+  }
+
+  .btnGold {
+    font-size: 9px;
+    padding: 14px 20px;
+    /* WCAG compliant touch target */
+    min-height: 52px;
+  }
+
+  .btnDark {
+    font-size: 9px;
+    padding: 14px 18px;
+    min-height: 52px;
+  }
+
+  .badge {
+    font-size: 6px;
+    padding: 2px 5px;
+    margin-left: 6px;
   }
 }

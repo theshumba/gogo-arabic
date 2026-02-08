@@ -9,13 +9,30 @@ function getHeaders() {
 }
 
 async function request(path, options = {}) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: getHeaders(),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
-  return data;
+  try {
+    const res = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers: getHeaders(),
+    });
+
+    let data;
+    try {
+      data = await res.json();
+    } catch (parseError) {
+      throw new Error('Invalid JSON response from server');
+    }
+
+    if (!res.ok) {
+      throw new Error(data.message || `Request failed with status ${res.status}`);
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      throw new Error('Network error: Unable to connect to server');
+    }
+    throw error;
+  }
 }
 
 // Auth

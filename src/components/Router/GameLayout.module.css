@@ -1,0 +1,145 @@
+@import '../../styles/variables.css';
+
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Pause Menu Overlay */
+.pauseMenuOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 26, 46, 0.85);
+}
+
+.pauseMenuTitle {
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  color: var(--color-xp-gold);
+  margin-bottom: 32px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pauseMenuButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pauseMenuBtnResume {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  padding: 14px 28px;
+  background: var(--color-xp-gold);
+  color: var(--color-dark);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.05s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.2),
+    inset 4px 4px 0px 0px rgba(255, 255, 255, 0.3),
+    0 4px 0 0 #a0842a;
+}
+
+.pauseMenuBtnResume:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.2),
+    inset 4px 4px 0px 0px rgba(255, 255, 255, 0.4),
+    0 6px 0 0 #a0842a;
+}
+
+.pauseMenuBtnResume:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.25),
+    inset 4px 4px 0px 0px rgba(255, 255, 255, 0.2),
+    0 2px 0 0 #a0842a;
+}
+
+.pauseMenuBtnResume:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.pauseMenuBtnMenu {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  padding: 14px 28px;
+  background: transparent;
+  color: var(--color-xp-gold);
+  border: 2px solid var(--color-xp-gold);
+  cursor: pointer;
+  transition: transform 0.05s, background 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pauseMenuBtnMenu:hover {
+  transform: translateY(-2px);
+  background: rgba(226, 182, 89, 0.1);
+}
+
+.pauseMenuBtnMenu:active {
+  transform: translateY(2px);
+}
+
+.pauseMenuBtnMenu:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .pauseMenuTitle {
+    font-size: 16px;
+    margin-bottom: 28px;
+  }
+
+  .pauseMenuButtons {
+    gap: 14px;
+    width: 280px;
+  }
+
+  .pauseMenuBtnResume,
+  .pauseMenuBtnMenu {
+    font-size: 10px;
+    padding: 14px 26px;
+    min-height: 52px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pauseMenuOverlay {
+    padding: 20px;
+  }
+
+  .pauseMenuTitle {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .pauseMenuButtons {
+    gap: 12px;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .pauseMenuBtnResume,
+  .pauseMenuBtnMenu {
+    font-size: 9px;
+    padding: 14px 22px;
+    /* WCAG touch targets */
+    min-height: 52px;
+    width: 100%;
+  }
+}

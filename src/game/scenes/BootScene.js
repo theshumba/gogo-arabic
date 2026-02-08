@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { EventBus } from '../EventBus.js';
+import { EventBus } from '../../utils/eventBus.js';
 
 export class BootScene extends Phaser.Scene {
   constructor() {

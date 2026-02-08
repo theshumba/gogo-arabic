@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { getXPForLevel } from '../../utils/xpCalculator.js';
 
 const initialState = {
@@ -165,5 +165,45 @@ export const {
   markChestOpened,
   markBookRead,
 } = playerSlice.actions;
+
+// ========== MEMOIZED SELECTORS ==========
+
+// Select player stats (returns a stable object reference)
+export const selectPlayerStats = createSelector(
+  [(state) => state.player],
+  (player) => ({
+    level: player.level,
+    xp: player.xp,
+    xpToNextLevel: player.xpToNextLevel,
+    streak: player.streak,
+    dirhams: player.dirhams,
+    wordsLearned: player.wordsLearned,
+  })
+);
+
+// Select player inventory
+export const selectInventory = (state) => state.player.inventory;
+
+// Select inventory item IDs only (memoized array)
+export const selectInventoryIds = createSelector(
+  [selectInventory],
+  (inventory) => inventory.map((item) => item.itemId || item)
+);
+
+// Select player appearance
+export const selectPlayerAppearance = createSelector(
+  [(state) => state.player],
+  (player) => ({
+    skinTone: player.skinTone,
+    outfit: player.outfit,
+    headCovering: player.headCovering,
+  })
+);
+
+// Select unlocked zones
+export const selectUnlockedZones = (state) => state.player.unlockedZones;
+
+// Select current zone
+export const selectCurrentZone = (state) => state.player.currentZone;
 
 export default playerSlice.reducer;

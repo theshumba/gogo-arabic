@@ -1,6 +1,7 @@
 import VocabCard from '../models/VocabCard.js';
 import { AppError } from '../utils/AppError.js';
 import logger from '../utils/logger.js';
+import { paginate, paginationMeta, parsePaginationQuery } from '../utils/pagination.js';
 
 const MAX_SYNC_ITEMS = 500;
 
@@ -20,16 +21,47 @@ function sanitizeCard(card) {
   return clean;
 }
 
+/**
+ * Get paginated vocabulary cards for the authenticated user
+ *
+ * @route GET /api/v1/review/cards
+ * @query {number} [page=1] - Page number (1-indexed)
+ * @query {number} [limit=20] - Items per page (max 100)
+ * @auth Required - JWT token
+ * @returns {Object} { success: true, data: VocabCard[], pagination: PaginationMeta }
+ */
 export async function getCards(req, res, next) {
   try {
-    const cards = await VocabCard.find({ userId: req.userId });
-    res.json({ cards });
+    const { page, limit } = parsePaginationQuery(req.query);
+    const { skip, limit: safeLimit } = paginate({ page, limit });
+
+    const [cards, total] = await Promise.all([
+      VocabCard.find({ userId: req.userId })
+        .skip(skip)
+        .limit(safeLimit)
+        .sort({ due: 1, last_review: -1 }),
+      VocabCard.countDocuments({ userId: req.userId }),
+    ]);
+
+    res.json({
+      success: true,
+      data: cards,
+      pagination: paginationMeta(total, page, safeLimit),
+    });
   } catch (err) {
     logger.error('getCards error:', { error: err.message, userId: req.userId });
     next(err);
   }
 }
 
+/**
+ * Sync vocabulary cards from client to server (bulk upsert)
+ *
+ * @route POST /api/v1/review/sync
+ * @body {Object} { cards: VocabCard[] } - Array of vocab card objects to sync
+ * @auth Required - JWT token
+ * @returns {Object} { success: true, data: VocabCard[] } - All cards after sync
+ */
 export async function syncCards(req, res, next) {
   try {
     const { cards } = req.body;
@@ -57,7 +89,10 @@ export async function syncCards(req, res, next) {
     }
 
     const updated = await VocabCard.find({ userId: req.userId });
-    res.json({ cards: updated });
+    res.json({
+      success: true,
+      data: updated,
+    });
   } catch (err) {
     logger.error('syncCards error:', { error: err.message, userId: req.userId });
     next(err);

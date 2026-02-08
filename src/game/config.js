@@ -24,11 +24,26 @@ export const gameConfig = {
     mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     parent: 'phaser-container',
+    // Mobile-friendly scaling
+    min: {
+      width: 320,
+      height: 240,
+    },
+    max: {
+      width: GAME_WIDTH * 2,
+      height: GAME_HEIGHT * 2,
+    },
   },
   backgroundColor: '#1A1A2E',
   render: {
     pixelArt: true,
     antialias: false,
     roundPixels: true,
+  },
+  // Mobile optimizations
+  input: {
+    touch: {
+      capture: true,
+    },
   },
 };

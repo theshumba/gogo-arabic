@@ -65,26 +65,55 @@ async function start() {
         error: err.message,
         stack: err.stack,
       });
-      server.close(() => {
-        process.exit(1);
-      });
+      gracefulShutdown(server, 1);
     });
 
-    // Graceful shutdown
+    // Graceful shutdown handler
+    const gracefulShutdown = async (server, exitCode = 0) => {
+      logger.info('Shutting down gracefully...');
+
+      try {
+        // Stop accepting new connections
+        server.close(async () => {
+          logger.info('HTTP server closed');
+
+          try {
+            // Close MongoDB connection
+            await mongoose.connection.close();
+            logger.info('MongoDB connection closed');
+          } catch (mongoErr) {
+            logger.error('Error closing MongoDB connection', {
+              error: mongoErr.message,
+            });
+          }
+
+          logger.info(`Process terminated with code ${exitCode}`);
+          process.exit(exitCode);
+        });
+
+        // Force shutdown after 10 seconds if graceful shutdown fails
+        setTimeout(() => {
+          logger.error('Forced shutdown after timeout');
+          process.exit(1);
+        }, 10000);
+      } catch (err) {
+        logger.error('Error during shutdown', {
+          error: err.message,
+          stack: err.stack,
+        });
+        process.exit(1);
+      }
+    };
+
+    // Handle termination signals
     process.on('SIGTERM', () => {
-      logger.info('SIGTERM received. Shutting down gracefully...');
-      server.close(() => {
-        logger.info('Process terminated');
-        process.exit(0);
-      });
+      logger.info('SIGTERM received');
+      gracefulShutdown(server, 0);
     });
 
     process.on('SIGINT', () => {
-      logger.info('SIGINT received. Shutting down gracefully...');
-      server.close(() => {
-        logger.info('Process terminated');
-        process.exit(0);
-      });
+      logger.info('SIGINT received');
+      gracefulShutdown(server, 0);
     });
 
   } catch (err) {

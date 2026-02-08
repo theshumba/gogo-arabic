@@ -23,7 +23,13 @@ function setAuthCookie(res, userId) {
 }
 
 /**
- * Register a new user
+ * Register a new user account
+ *
+ * @route POST /api/v1/auth/register
+ * @body {Object} { name: string, email: string, password: string }
+ * @auth Not required
+ * @returns {Object} { success: true, data: { user: User, token: string }, message: string }
+ * @description Creates new user, sets httpOnly JWT cookie and CSRF token cookie
  */
 export async function register(req, res, next) {
   try {
@@ -56,9 +62,12 @@ export async function register(req, res, next) {
     });
 
     res.status(201).json({
+      success: true,
       message: 'Registration successful',
-      token, // Return token for backward compatibility with header-based auth
-      user,
+      data: {
+        token, // Return token for backward compatibility with header-based auth
+        user,
+      },
     });
   } catch (err) {
     next(err);
@@ -66,7 +75,13 @@ export async function register(req, res, next) {
 }
 
 /**
- * Login existing user
+ * Login existing user with email and password
+ *
+ * @route POST /api/v1/auth/login
+ * @body {Object} { email: string, password: string }
+ * @auth Not required
+ * @returns {Object} { success: true, data: { user: User, token: string }, message: string }
+ * @description Authenticates user, sets httpOnly JWT cookie and CSRF token cookie
  */
 export async function login(req, res, next) {
   try {
@@ -100,9 +115,12 @@ export async function login(req, res, next) {
     user.password = undefined;
 
     res.json({
+      success: true,
       message: 'Login successful',
-      token, // Return token for backward compatibility with header-based auth
-      user,
+      data: {
+        token, // Return token for backward compatibility with header-based auth
+        user,
+      },
     });
   } catch (err) {
     next(err);
@@ -110,7 +128,12 @@ export async function login(req, res, next) {
 }
 
 /**
- * Logout user by clearing cookie
+ * Logout user by clearing authentication cookies
+ *
+ * @route POST /api/v1/auth/logout
+ * @auth Not required (but will clear cookies if present)
+ * @returns {Object} { success: true, message: string }
+ * @description Clears JWT and CSRF token cookies
  */
 export async function logout(req, res, next) {
   try {
@@ -127,14 +150,22 @@ export async function logout(req, res, next) {
       sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
     });
 
-    res.json({ message: 'Logout successful' });
+    res.json({
+      success: true,
+      message: 'Logout successful',
+    });
   } catch (err) {
     next(err);
   }
 }
 
 /**
- * Verify if user is authenticated
+ * Verify if the current session is authenticated
+ *
+ * @route GET /api/v1/auth/verify
+ * @auth Required - JWT token
+ * @returns {Object} { success: true, data: { authenticated: boolean, user: User } }
+ * @description Checks if JWT token is valid and returns user data
  */
 export async function verifyAuth(req, res, next) {
   try {
@@ -143,7 +174,13 @@ export async function verifyAuth(req, res, next) {
       return next(AppError.unauthorized('User not found'));
     }
 
-    res.json({ authenticated: true, user });
+    res.json({
+      success: true,
+      data: {
+        authenticated: true,
+        user,
+      },
+    });
   } catch (err) {
     next(err);
   }

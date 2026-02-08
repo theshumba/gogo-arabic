@@ -5,7 +5,7 @@ import { addXP, incrementWordsLearned } from '../store/slices/playerSlice.js';
 import { incrementReviews, recordPerfectQuiz } from '../store/slices/achievementSlice.js';
 import { closeQuiz } from '../store/slices/uiSlice.js';
 import { createNewCard, reviewCard, Rating } from '../services/fsrs.js';
-import { EventBus } from '../game/EventBus.js';
+import { EventBus } from '../utils/eventBus.js';
 import { XP_REWARDS } from '../utils/xpCalculator.js';
 import { shuffle } from '../utils/shuffle.js';
 import vocabulary from '../data/vocabularyAll.js';

@@ -126,13 +126,13 @@ export default function CharacterCreation({ onDone }) {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} role="main">
       <div className={styles.panel}>
-        <div className={styles.title}>Create Your Character</div>
-        <div className={styles.titleAr}>أنشئ شخصيتك</div>
+        <h1 className={styles.title}>Create Your Character</h1>
+        <div className={styles.titleAr} lang="ar" aria-hidden="true">أنشئ شخصيتك</div>
 
         {/* Live character preview */}
-        <div className={styles.preview}>
+        <div className={styles.preview} role="img" aria-label={`Character preview: ${name || 'Unnamed'}`}>
           <CharacterPreview
             outfit={outfit}
             headCovering={headCovering}
@@ -142,27 +142,31 @@ export default function CharacterCreation({ onDone }) {
 
         {/* Name input */}
         <div className={styles.field}>
-          <span className={styles.label}>Your Name / اسمك</span>
+          <label htmlFor="character-name" className={styles.label}>Your Name / اسمك</label>
           <input
+            id="character-name"
             className={styles.input}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter name"
             maxLength={20}
+            aria-label="Enter your character's name"
+            aria-required="true"
           />
         </div>
 
         {/* Skin tone selector */}
         <div className={styles.field}>
-          <span className={styles.label}>Skin Tone / لون البشرة</span>
-          <div className={styles.options}>
+          <span className={styles.label} id="skin-tone-label">Skin Tone / لون البشرة</span>
+          <div className={styles.options} role="group" aria-labelledby="skin-tone-label">
             {SKIN_TONES.map((tone) => (
               <button
                 key={tone.id}
                 className={`${styles.swatch} ${skinTone === tone.id ? styles.swatchSelected : ''}`}
                 style={{ backgroundColor: tone.color }}
                 onClick={() => setSkinTone(tone.id)}
-                title={tone.label}
+                aria-label={tone.label}
+                aria-pressed={skinTone === tone.id}
               />
             ))}
           </div>
@@ -170,13 +174,15 @@ export default function CharacterCreation({ onDone }) {
 
         {/* Head covering selector */}
         <div className={styles.field}>
-          <span className={styles.label}>Head Covering / غطاء الرأس</span>
-          <div className={styles.options}>
+          <span className={styles.label} id="head-covering-label">Head Covering / غطاء الرأس</span>
+          <div className={styles.options} role="group" aria-labelledby="head-covering-label">
             {HEAD_COVERINGS.map((hc) => (
               <button
                 key={hc.id}
                 className={`${styles.option} ${headCovering === hc.id ? styles.optionSelected : ''}`}
                 onClick={() => setHeadCovering(hc.id)}
+                aria-label={hc.label}
+                aria-pressed={headCovering === hc.id}
               >
                 {hc.label}
               </button>
@@ -186,13 +192,15 @@ export default function CharacterCreation({ onDone }) {
 
         {/* Starting outfit selector */}
         <div className={styles.field}>
-          <span className={styles.label}>Starting Outfit / الزي</span>
-          <div className={styles.options}>
+          <span className={styles.label} id="outfit-label">Starting Outfit / الزي</span>
+          <div className={styles.options} role="group" aria-labelledby="outfit-label">
             {STARTING_OUTFITS.map((o) => (
               <button
                 key={o.id}
                 className={`${styles.option} ${outfit === o.id ? styles.optionSelected : ''}`}
                 onClick={() => setOutfit(o.id)}
+                aria-label={`${o.label} - ${o.desc}`}
+                aria-pressed={outfit === o.id}
               >
                 {o.label}
               </button>
@@ -204,6 +212,8 @@ export default function CharacterCreation({ onDone }) {
           className={`${styles.btn} ${!name.trim() ? styles.btnDisabled : ''}`}
           onClick={handleStart}
           disabled={!name.trim()}
+          aria-label="Begin your Arabic learning journey"
+          aria-disabled={!name.trim()}
         >
           Begin Journey / ابدأ الرحلة
         </button>

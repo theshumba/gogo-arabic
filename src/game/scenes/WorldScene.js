@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { EventBus } from '../EventBus.js';
+import { EventBus } from '../../utils/eventBus.js';
 import { Player } from '../sprites/Player.js';
 import { NPC } from '../sprites/NPC.js';
 import DOMOverlayManager from '../systems/DOMOverlay.js';

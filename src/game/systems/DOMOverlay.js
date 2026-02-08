@@ -8,6 +8,11 @@ class DOMOverlayManager {
     this.scene = scene;
     this.overlays = new Map(); // id -> { element, worldX, worldY, offsetX, offsetY, visible }
     this.container = null;
+    // Cache last camera state to avoid updating every frame
+    this.lastCameraScrollX = 0;
+    this.lastCameraScrollY = 0;
+    this.lastScaleX = 1;
+    this.lastScaleY = 1;
   }
 
   // Call once when scene starts - creates the overlay container div
@@ -119,11 +124,30 @@ class DOMOverlayManager {
 
   // Called every frame from scene.update() to sync overlay screen positions
   // with their world coordinates, accounting for camera scroll and canvas scaling.
+  // Optimized to only update DOM when camera actually moves or scale changes.
   update() {
     const camera = this.scene.cameras.main;
     const scaleX = this.scene.game.canvas.width / camera.width;
     const scaleY = this.scene.game.canvas.height / camera.height;
 
+    // Only update if camera position or scale changed (dirty flag pattern)
+    const cameraChanged =
+      camera.scrollX !== this.lastCameraScrollX ||
+      camera.scrollY !== this.lastCameraScrollY ||
+      scaleX !== this.lastScaleX ||
+      scaleY !== this.lastScaleY;
+
+    if (!cameraChanged) {
+      return;
+    }
+
+    // Update cache
+    this.lastCameraScrollX = camera.scrollX;
+    this.lastCameraScrollY = camera.scrollY;
+    this.lastScaleX = scaleX;
+    this.lastScaleY = scaleY;
+
+    // Update all overlay positions
     for (const [, overlay] of this.overlays) {
       if (!overlay.visible) continue;
 

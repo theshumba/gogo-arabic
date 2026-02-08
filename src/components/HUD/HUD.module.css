@@ -122,6 +122,11 @@
     0 1px 0 0 #1a191b;
 }
 
+.btn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
 .badge {
   position: absolute;
   top: -6px;
@@ -165,6 +170,7 @@
   .container {
     font-size: 10px;
     padding: 6px 10px;
+    flex-wrap: wrap;
   }
 
   .levelBadge,
@@ -180,7 +186,10 @@
 
   .btn {
     font-size: 10px;
-    padding: 5px 8px;
+    padding: 8px 12px;
+    /* Ensure min 44px touch target */
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .right {
@@ -190,12 +199,20 @@
   .xpBarOuter {
     width: 70px;
   }
+
+  .badge {
+    font-size: 10px;
+    min-width: 18px;
+    height: 18px;
+  }
 }
 
 @media (max-width: 480px) {
   .container {
     font-size: 8px;
     padding: 4px 8px;
+    flex-wrap: wrap;
+    border-bottom: 3px solid var(--color-dark);
   }
 
   .levelBadge,
@@ -211,7 +228,10 @@
 
   .btn {
     font-size: 8px;
-    padding: 4px 6px;
+    padding: 8px 10px;
+    /* WCAG touch target compliance */
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .xpBarOuter {
@@ -222,5 +242,15 @@
   .left,
   .right {
     gap: 6px;
+  }
+
+  .center {
+    gap: 3px;
+  }
+
+  .badge {
+    font-size: 9px;
+    min-width: 16px;
+    height: 16px;
   }
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback, useMemo, memo } from 'react';
 import { useSelector } from 'react-redux';
 import { prepareSentenceQuiz } from '../../utils/sentenceParser.js';
 import { shuffle } from '../../utils/shuffle.js';
@@ -131,7 +131,7 @@ const styles = {
 const CATEGORIES = ['all', 'adjectives', 'greetings', 'numbers', 'food', 'colors', 'family', 'directions', 'time', 'verbs'];
 const DIFFICULTIES = [1, 2, 3, 4, 5];
 
-export default function SentencePractice({ onBack }) {
+function SentencePractice({ onBack }) {
   const settings = useSelector((s) => s.settings);
   const [started, setStarted] = useState(false);
   const [done, setDone] = useState(false);
@@ -144,16 +144,18 @@ export default function SentencePractice({ onBack }) {
   const [currentQuizData, setCurrentQuizData] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
 
-  // Filter words with example sentences
-  const availableWords = vocabulary.filter(w =>
-    w.exampleSentence &&
-    w.exampleSentence.arabic &&
-    w.exampleSentence.english &&
-    (selectedCategory === 'all' || w.category === selectedCategory) &&
-    (!selectedDifficulty || w.difficulty === selectedDifficulty)
-  );
+  // Memoize filtered words to avoid recalculating on every render
+  const availableWords = useMemo(() => {
+    return vocabulary.filter(w =>
+      w.exampleSentence &&
+      w.exampleSentence.arabic &&
+      w.exampleSentence.english &&
+      (selectedCategory === 'all' || w.category === selectedCategory) &&
+      (!selectedDifficulty || w.difficulty === selectedDifficulty)
+    );
+  }, [selectedCategory, selectedDifficulty]);
 
-  const startPractice = () => {
+  const startPractice = useCallback(() => {
     if (availableWords.length === 0) return;
 
     // Take up to 10 random words
@@ -169,9 +171,9 @@ export default function SentencePractice({ onBack }) {
     // Prepare first quiz
     const quizData = prepareSentenceQuiz(words[0], vocabulary);
     setCurrentQuizData(quizData);
-  };
+  }, [availableWords]);
 
-  const handleComplete = (result) => {
+  const handleComplete = useCallback((result) => {
     if (isAnswered) return;
 
     setIsAnswered(true);
@@ -179,9 +181,9 @@ export default function SentencePractice({ onBack }) {
     if (result.correct) {
       setScore(prev => prev + 1);
     }
-  };
+  }, [isAnswered]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     const nextIndex = currentIndex + 1;
 
     if (nextIndex >= practiceWords.length) {
@@ -195,9 +197,9 @@ export default function SentencePractice({ onBack }) {
     const nextWord = practiceWords[nextIndex];
     const quizData = prepareSentenceQuiz(nextWord, vocabulary);
     setCurrentQuizData(quizData);
-  };
+  }, [currentIndex, practiceWords]);
 
-  const handleRetry = () => {
+  const handleRetry = useCallback(() => {
     setStarted(false);
     setDone(false);
     setIsAnswered(false);
@@ -205,7 +207,7 @@ export default function SentencePractice({ onBack }) {
     setScore(0);
     setTotal(0);
     setCurrentQuizData(null);
-  };
+  }, []);
 
   // Setup screen
   if (!started && !done) {
@@ -339,3 +341,6 @@ export default function SentencePractice({ onBack }) {
     </div>
   );
 }
+
+// Memoize component
+export default memo(SentencePractice);

@@ -44,7 +44,9 @@ export const COLORS = {
 
 export const FONTS = {
   pixel: "'Press Start 2P', cursive",
-  arabic: "'Noto Kufi Arabic', sans-serif",
+  arabic: "'Noto Kufi Arabic', sans-serif", // Legacy - prefer specific variants below
+  arabicDisplay: "'Noto Kufi Arabic', sans-serif", // For headings, labels, decorative text
+  arabicBody: "'Noto Naskh Arabic', serif", // For body text, readability focus
   pixeloid: "'PixeloidSans', sans-serif",
 };
 

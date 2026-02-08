@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
   quests: {},       // { [questId]: { status, progress, rewardClaimed } }
@@ -79,5 +79,32 @@ export const {
   completeQuest,
   claimReward,
 } = questSlice.actions;
+
+// ========== MEMOIZED SELECTORS ==========
+
+// Select all quests
+export const selectAllQuests = (state) => state.quests.quests;
+
+// Select active quests (memoized to avoid recalculating)
+export const selectActiveQuests = createSelector(
+  [selectAllQuests],
+  (quests) => Object.entries(quests)
+    .filter(([, quest]) => quest.status === 'active')
+    .reduce((acc, [id, quest]) => ({ ...acc, [id]: quest }), {})
+);
+
+// Select active quest count (memoized)
+export const selectActiveQuestCount = createSelector(
+  [selectActiveQuests],
+  (activeQuests) => Object.keys(activeQuests).length
+);
+
+// Select completed quests (memoized)
+export const selectCompletedQuests = createSelector(
+  [selectAllQuests],
+  (quests) => Object.entries(quests)
+    .filter(([, quest]) => quest.status === 'completed')
+    .reduce((acc, [id, quest]) => ({ ...acc, [id]: quest }), {})
+);
 
 export default questSlice.reducer;

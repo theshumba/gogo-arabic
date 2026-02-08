@@ -1,4 +1,4 @@
-import { EventBus } from '../EventBus.js';
+import { EventBus } from '../../utils/eventBus.js';
 
 // ZoneTransition handles moving between world zones.
 // Per PRD: walk onto exit tile -> fade to black (0.5s) -> load new zone -> fade in (0.5s).

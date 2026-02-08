@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { addXP, updateStreak } from '../../store/slices/playerSlice.js';
@@ -95,16 +95,16 @@ export default function ReviewSession({ onBack }) {
   /* ---------- No reviews due ---------- */
   if (sessionCards.length === 0) {
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <button className={styles.quitBtn} onClick={onBack}>Back</button>
-          <div className={styles.headerTitle}>Daily Review</div>
+      <div className={styles.container} role="main" aria-label="Daily review session">
+        <div className={styles.header} role="banner">
+          <button className={styles.quitBtn} onClick={onBack} aria-label="Go back to menu">Back</button>
+          <h1 className={styles.headerTitle}>Daily Review</h1>
           <div />
         </div>
         <div className={styles.body}>
-          <div className={styles.noReviewMsg}>No reviews due!</div>
+          <div className={styles.noReviewMsg} role="status" aria-live="polite">No reviews due!</div>
           <p className={styles.noReviewSub}>Learn more words and come back later.</p>
-          <button className={styles.doneBtn} onClick={onBack}>Back to Menu</button>
+          <button className={styles.doneBtn} onClick={onBack} aria-label="Return to main menu">Back to Menu</button>
         </div>
       </div>
     );
@@ -113,18 +113,18 @@ export default function ReviewSession({ onBack }) {
   /* ---------- Summary screen ---------- */
   if (done) {
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
+      <div className={styles.container} role="main" aria-label="Review complete">
+        <div className={styles.header} role="banner">
           <div />
-          <div className={styles.headerTitle}>Review Complete</div>
+          <h1 className={styles.headerTitle}>Review Complete</h1>
           <div />
         </div>
         <div className={styles.body}>
-          <div className={styles.summaryScore}>{score}/{total}</div>
+          <div className={styles.summaryScore} role="status" aria-live="polite" aria-label={`Score: ${score} out of ${total} correct`}>{score}/{total}</div>
           <p className={styles.summaryMsg}>
             {score === total ? 'Perfect review!' : 'Keep it up!'}
           </p>
-          <button className={styles.doneBtn} onClick={onBack}>Back to Menu</button>
+          <button className={styles.doneBtn} onClick={onBack} aria-label="Return to main menu">Back to Menu</button>
         </div>
       </div>
     );
@@ -253,36 +253,48 @@ export default function ReviewSession({ onBack }) {
 
   /* ---------- Active review ---------- */
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <button className={styles.quitBtn} onClick={onBack}>Quit</button>
-        <div className={styles.headerTitle}>Daily Review</div>
-        <div className={styles.headerProgress}>{index + 1}/{sessionCards.length}</div>
+    <div className={styles.container} role="main" aria-label="Daily review quiz">
+      <div className={styles.header} role="banner">
+        <button className={styles.quitBtn} onClick={onBack} aria-label="Quit review session">Quit</button>
+        <h1 className={styles.headerTitle}>Daily Review</h1>
+        <div className={styles.headerProgress} aria-label={`Question ${index + 1} of ${sessionCards.length}`}>{index + 1}/{sessionCards.length}</div>
       </div>
 
       <div className={styles.body}>
         <div className={styles.progressContainer}>
           <ProgressBar current={index + 1} total={sessionCards.length} />
         </div>
-        <div className={styles.scoreText}>{score}/{total} correct</div>
+        <div className={styles.scoreText} role="status" aria-live="polite" aria-label={`Current score: ${score} out of ${total} correct`}>{score}/{total} correct</div>
 
         {/* Arabic -> English */}
         {quizType === 'ar-to-en' && (
           <>
-            <div className={styles.arabicWord}>{currentWord.arabic}</div>
+            <div className={styles.arabicWord} lang="ar" role="heading" aria-level="2">{currentWord.arabic}</div>
             {settings.showTransliteration && (
-              <div className={styles.transliteration}>{currentWord.transliteration}</div>
+              <div className={styles.transliteration} aria-label={`Transliteration: ${currentWord.transliteration}`}>{currentWord.transliteration}</div>
             )}
-            <div className={styles.choicesGrid}>
-              {choices.map((w) => {
+            <div className={styles.choicesGrid} role="group" aria-label="Answer choices">
+              {choices.map((w, idx) => {
                 let extraClass = '';
+                let ariaLabel = w.english;
                 if (answered) {
-                  if (w.id === currentWord.id) extraClass = styles.choiceCorrect;
-                  else if (w.english === selected && w.id !== currentWord.id) extraClass = styles.choiceWrong;
+                  if (w.id === currentWord.id) {
+                    extraClass = styles.choiceCorrect;
+                    ariaLabel = `${w.english} - Correct answer`;
+                  } else if (w.english === selected && w.id !== currentWord.id) {
+                    extraClass = styles.choiceWrong;
+                    ariaLabel = `${w.english} - Wrong answer`;
+                  }
                 }
                 return (
-                  <button key={w.id} className={`${styles.choice} ${extraClass}`}
-                    onClick={() => handleAnswer(w.english)} disabled={answered}>
+                  <button
+                    key={w.id}
+                    className={`${styles.choice} ${extraClass}`}
+                    onClick={() => handleAnswer(w.english)}
+                    disabled={answered}
+                    aria-label={ariaLabel}
+                    aria-pressed={selected === w.english}
+                  >
                     {w.english}
                   </button>
                 );
@@ -294,17 +306,30 @@ export default function ReviewSession({ onBack }) {
         {/* English -> Arabic */}
         {quizType === 'en-to-ar' && (
           <>
-            <div className={styles.englishWord}>{currentWord.english}</div>
-            <div className={styles.choicesGrid}>
+            <div className={styles.englishWord} role="heading" aria-level="2">{currentWord.english}</div>
+            <div className={styles.choicesGrid} role="group" aria-label="Arabic answer choices">
               {choices.map((w) => {
                 let extraClass = '';
+                let ariaLabel = `${w.arabic} - ${w.english}`;
                 if (answered) {
-                  if (w.id === currentWord.id) extraClass = styles.choiceCorrect;
-                  else if (w.arabic === selected && w.id !== currentWord.id) extraClass = styles.choiceWrong;
+                  if (w.id === currentWord.id) {
+                    extraClass = styles.choiceCorrect;
+                    ariaLabel = `${w.arabic} - Correct answer`;
+                  } else if (w.arabic === selected && w.id !== currentWord.id) {
+                    extraClass = styles.choiceWrong;
+                    ariaLabel = `${w.arabic} - Wrong answer`;
+                  }
                 }
                 return (
-                  <button key={w.id} className={`${styles.choice} ${styles.choiceArabic} ${extraClass}`}
-                    onClick={() => handleAnswer(w.arabic)} disabled={answered}>
+                  <button
+                    key={w.id}
+                    className={`${styles.choice} ${styles.choiceArabic} ${extraClass}`}
+                    onClick={() => handleAnswer(w.arabic)}
+                    disabled={answered}
+                    lang="ar"
+                    aria-label={ariaLabel}
+                    aria-pressed={selected === w.arabic}
+                  >
                     {w.arabic}
                   </button>
                 );

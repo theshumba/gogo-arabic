@@ -35,64 +35,17 @@ import DialogueOverlay from '../NPC/DialogueOverlay.jsx';
 import QuizOverlay from '../Quiz/QuizOverlay.jsx';
 import QuestLog from '../Quest/QuestLog.jsx';
 import SignOverlay from '../World/SignOverlay.jsx';
-
-const gameLayoutStyle = {
-  width: '100%',
-  height: '100%',
-  position: 'relative',
-};
+import styles from './GameLayout.module.css';
 
 function PauseMenu({ onResume, onMainMenu }) {
   return (
-    <div
-      style={{
-        position: 'absolute',
-        inset: 0,
-        zIndex: 20,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'rgba(26, 26, 46, 0.85)',
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "'Press Start 2P', cursive",
-          fontSize: '18px',
-          color: '#D4A843',
-          marginBottom: '32px',
-        }}
-      >
-        Paused
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <button
-          onClick={onResume}
-          style={{
-            fontFamily: "'Press Start 2P', cursive",
-            fontSize: '11px',
-            padding: '14px 28px',
-            background: '#D4A843',
-            color: '#1A1A2E',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
+    <div className={styles.pauseMenuOverlay}>
+      <div className={styles.pauseMenuTitle}>Paused</div>
+      <div className={styles.pauseMenuButtons}>
+        <button onClick={onResume} className={styles.pauseMenuBtnResume}>
           Resume
         </button>
-        <button
-          onClick={onMainMenu}
-          style={{
-            fontFamily: "'Press Start 2P', cursive",
-            fontSize: '11px',
-            padding: '14px 28px',
-            background: 'transparent',
-            color: '#D4A843',
-            border: '2px solid #D4A843',
-            cursor: 'pointer',
-          }}
-        >
+        <button onClick={onMainMenu} className={styles.pauseMenuBtnMenu}>
           Main Menu
         </button>
       </div>
@@ -361,7 +314,7 @@ export default function GameLayout() {
   }, [dispatch, fsrsCards, quests, playSFX]);
 
   return (
-    <div style={gameLayoutStyle}>
+    <div className={styles.container}>
       {/* Phaser canvas - full screen, lowest z-index */}
       <PhaserGame ref={phaserRef} />
 

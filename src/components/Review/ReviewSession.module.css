@@ -47,6 +47,11 @@
   transform: translateY(1px);
 }
 
+.quitBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
 .headerTitle {
   font-family: var(--font-pixel);
   font-size: 12px;
@@ -149,6 +154,11 @@
 
 .choice:disabled {
   cursor: not-allowed;
+}
+
+.choice:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .choiceArabic {
@@ -274,6 +284,11 @@
   transform: translateY(2px);
 }
 
+.doneBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
 .noReviewMsg {
   font-family: var(--font-pixel);
   font-size: 14px;
@@ -321,6 +336,25 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
+  .container {
+    /* Full screen on mobile/tablet */
+  }
+
+  .header {
+    padding: 10px 14px;
+  }
+
+  .quitBtn {
+    font-size: 10px;
+    padding: 8px 14px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .body {
+    padding: 18px;
+  }
+
   .arabicWord {
     font-size: 40px;
   }
@@ -331,7 +365,9 @@
 
   .choice {
     font-size: 10px;
-    padding: 8px 12px;
+    padding: 12px 14px;
+    /* Touch-friendly height */
+    min-height: 48px;
   }
 
   .choiceArabic {
@@ -349,6 +385,18 @@
   .correctAnswer {
     font-size: 16px;
   }
+
+  .ratingBtn {
+    font-size: 10px;
+    padding: 10px 16px;
+    min-height: 44px;
+  }
+
+  .doneBtn {
+    font-size: 10px;
+    padding: 12px 24px;
+    min-height: 48px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -364,25 +412,41 @@
     font-size: 10px;
   }
 
+  .quitBtn {
+    font-size: 9px;
+    padding: 8px 12px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
   .body {
-    padding: 16px;
+    padding: 12px;
   }
 
   .arabicWord {
     font-size: 32px;
+    margin-bottom: 6px;
   }
 
   .englishWord {
     font-size: 10px;
+    margin-bottom: 12px;
   }
 
   .transliteration {
     font-size: 10px;
+    margin-bottom: 12px;
+  }
+
+  .choicesGrid {
+    gap: 10px;
   }
 
   .choice {
     font-size: 9px;
-    padding: 8px 10px;
+    padding: 12px 12px;
+    /* WCAG compliant touch target */
+    min-height: 48px;
   }
 
   .choiceArabic {
@@ -402,14 +466,34 @@
   .inputDisplay {
     font-size: 24px;
     padding: 8px 12px;
+    min-height: 48px;
   }
 
   .correctAnswer {
     font-size: 14px;
   }
 
+  .ratingRow {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
   .ratingBtn {
-    font-size: 10px;
-    padding: 6px 12px;
+    font-size: 9px;
+    padding: 10px 14px;
+    min-height: 44px;
+    flex: 1 1 calc(50% - 5px);
+  }
+
+  .doneBtn {
+    font-size: 9px;
+    padding: 12px 20px;
+    min-height: 48px;
+    margin-top: 20px;
+  }
+
+  .progressContainer {
+    margin-bottom: 12px;
   }
 }

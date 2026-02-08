@@ -34,20 +34,23 @@ export function errorHandler(err, req, res, next) {
     logger.warn('Client error', logData);
   }
 
-  // Send response
+  // Send response with consistent format
   const response = {
-    status: error.status,
-    message: error.message,
+    success: false,
+    error: {
+      message: error.message,
+      code: error.statusCode,
+    },
   };
 
   // Only include stack trace in development
   if (process.env.NODE_ENV !== 'production' && err.stack) {
-    response.stack = err.stack;
+    response.error.stack = err.stack;
   }
 
   // Don't expose internal error details in production
   if (!error.isOperational && process.env.NODE_ENV === 'production') {
-    response.message = 'Internal server error';
+    response.error.message = 'Internal server error';
   }
 
   res.status(error.statusCode).json(response);

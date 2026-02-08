@@ -16,3 +16,8 @@ export const syncQuestsSchema = z.object({
   quests: z.array(questSchema)
     .max(200, 'Cannot sync more than 200 quests at once'),
 });
+
+export const paginationQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).optional().default(1),
+  limit: z.coerce.number().int().min(1).max(100).optional().default(20),
+});

@@ -229,8 +229,14 @@
 }
 
 .choiceBtn:focus-visible {
-  outline: 2px solid var(--color-xp-gold);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.backdrop:focus-visible,
+.dialogueBox:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -4px;
 }
 
 .continueHint {
@@ -279,8 +285,8 @@
 /* Responsive design */
 @media (max-width: 768px) {
   .dialogueBox {
-    padding: 12px 16px;
-    min-height: 160px;
+    padding: 14px 18px;
+    min-height: 180px;
     gap: 12px;
   }
 
@@ -319,6 +325,11 @@
     font-size: 9px;
   }
 
+  .teachBadge {
+    font-size: 9px;
+    padding: 4px 10px;
+  }
+
   .wordCardArabic {
     font-size: 20px;
   }
@@ -327,9 +338,25 @@
     font-size: 10px;
   }
 
+  .wordCardTranslit {
+    font-size: 9px;
+  }
+
+  .choices {
+    gap: 12px;
+    margin-top: 14px;
+  }
+
   .choiceBtn {
     font-size: 10px;
-    padding: 10px 14px;
+    padding: 14px 16px;
+    /* Touch-friendly target */
+    min-height: 48px;
+    min-width: 100px;
+  }
+
+  .choiceHint {
+    font-size: 6px;
   }
 
   .continueHint {
@@ -340,15 +367,16 @@
 @media (max-width: 480px) {
   .dialogueBox {
     flex-direction: column;
-    padding: 10px 12px;
-    min-height: 140px;
-    gap: 8px;
+    padding: 12px 14px;
+    min-height: 160px;
+    gap: 10px;
   }
 
   .portraitWrap {
     flex-direction: row;
-    gap: 8px;
+    gap: 10px;
     align-items: center;
+    width: 100%;
   }
 
   .portrait {
@@ -371,31 +399,91 @@
     margin-top: 0;
   }
 
+  .content {
+    width: 100%;
+  }
+
   .speakerName {
     font-size: 9px;
   }
 
   .arabicLine {
     font-size: 20px;
+    line-height: 1.6;
   }
 
   .englishLine {
     font-size: 9px;
+    line-height: 1.7;
   }
 
   .translitLine {
     font-size: 8px;
+    line-height: 1.5;
+  }
+
+  .teachContainer {
+    margin-top: 8px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .teachBadge {
+    font-size: 8px;
+    padding: 4px 8px;
+  }
+
+  .wordCard {
+    padding: 6px 10px;
+    width: 100%;
+  }
+
+  .wordCardArabic {
+    font-size: 18px;
+  }
+
+  .wordCardEnglish {
+    font-size: 9px;
+  }
+
+  .wordCardTranslit {
+    font-size: 8px;
+  }
+
+  .choices {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
   }
 
   .choiceBtn {
     font-size: 9px;
-    padding: 8px 12px;
-    min-width: 80px;
+    padding: 14px 14px;
+    /* WCAG compliant touch target */
+    min-height: 48px;
+    min-width: 100%;
+  }
+
+  .choiceNumber {
+    font-size: 7px;
+    min-width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+
+  .choiceArabic {
+    font-size: 16px;
+    margin-top: 4px;
+  }
+
+  .choiceHint {
+    font-size: 6px;
+    margin-top: 6px;
   }
 
   .continueHint {
     font-size: 7px;
-    bottom: 6px;
-    right: 10px;
+    bottom: 8px;
+    right: 12px;
   }
 }

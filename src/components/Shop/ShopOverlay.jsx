@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
 import { spendDirhams, addToInventory, setOutfit, setHeadCovering } from '../../store/slices/playerSlice.js';
 import { recordShopPurchase } from '../../store/slices/achievementSlice.js';
-import { EventBus } from '../../game/EventBus.js';
+import { selectInventoryIds } from '../../store/slices/playerSlice.js';
+import { EventBus } from '../../utils/eventBus.js';
 import itemsData from '../../data/items.json';
 import { COLORS, FONTS, pixelPanel, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
 
@@ -168,29 +169,29 @@ const styles = {
   },
 };
 
-export default function ShopOverlay() {
+function ShopOverlay() {
   const dispatch = useDispatch();
   const player = useSelector((s) => s.player);
+  const inventoryIds = useSelector(selectInventoryIds);
   const [tab, setTab] = useState('clothing');
   const [toast, setToast] = useState(null);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     dispatch(closeDialogue());
     EventBus.emit('unfreeze-player');
-  };
+  }, [dispatch]);
 
-  const handleBuy = (item) => {
+  const handleBuy = useCallback((item) => {
     if (player.dirhams < item.price) return;
-    if (player.inventory.includes(item.id)) return;
+    if (inventoryIds.includes(item.id)) return;
     dispatch(spendDirhams(item.price));
     dispatch(addToInventory(item.id));
-    // Track shop purchase for achievement progress
     dispatch(recordShopPurchase(item.price));
     setToast(`Purchased ${item.name}!`);
     setTimeout(() => setToast(null), 2000);
-  };
+  }, [player.dirhams, inventoryIds, dispatch]);
 
-  const handleEquip = (item) => {
+  const handleEquip = useCallback((item) => {
     if (item.type === 'clothing') {
       dispatch(setOutfit(item.id));
     } else if (item.type === 'headwear') {
@@ -198,12 +199,14 @@ export default function ShopOverlay() {
     }
     setToast(`Equipped ${item.name}!`);
     setTimeout(() => setToast(null), 2000);
-  };
+  }, [dispatch]);
 
-  const filteredItems = itemsData.filter((i) => {
-    if (tab === 'clothing') return i.type === 'clothing' || i.type === 'headwear';
-    return i.type === 'boost';
-  });
+  const filteredItems = useMemo(() => {
+    return itemsData.filter((i) => {
+      if (tab === 'clothing') return i.type === 'clothing' || i.type === 'headwear';
+      return i.type === 'boost';
+    });
+  }, [tab]);
 
   return (
     <div style={styles.overlay}>
@@ -286,3 +289,6 @@ export default function ShopOverlay() {
     </div>
   );
 }
+
+// Memoize component
+export default memo(ShopOverlay);

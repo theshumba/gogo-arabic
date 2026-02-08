@@ -21,3 +21,8 @@ export const syncCardsSchema = z.object({
   cards: z.array(vocabCardSchema)
     .max(500, 'Cannot sync more than 500 cards at once'),
 });
+
+export const paginationQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).optional().default(1),
+  limit: z.coerce.number().int().min(1).max(100).optional().default(20),
+});

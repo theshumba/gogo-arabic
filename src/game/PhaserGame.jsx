@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
 import Phaser from 'phaser';
 import { gameConfig } from './config.js';
-import { EventBus } from './EventBus.js';
+import { EventBus } from '../utils/eventBus.js';
 
 export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) {
   const gameRef = useRef(null);
