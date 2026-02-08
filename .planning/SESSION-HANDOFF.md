@@ -1,125 +1,104 @@
 # Session Handoff — GoGo Arabic Overhaul
 
-**Date:** 2026-02-07
-**Session goal:** Initialize GSD project for massive app overhaul
-**Status:** Mid-workflow — `/gsd:new-project` in progress, paused at **Questioning phase**
+**Date:** 2026-02-08
+**Last commit:** `0ccb7f7` — `feat: tier 4 features + UX fixes`
+**Branch:** main
 
 ---
 
-## What Was Done This Session
+## What's Been Done (All 5 Tiers Complete)
 
-### 1. Full Codebase Exploration
-An Explore agent thoroughly analyzed the entire GoGo Arabic codebase and produced a comprehensive report covering tech stack, project structure, features, UI state, code quality, and content inventory.
+### Tier 1 — Critical Bug Fixes (6 bugs)
+XP NaN, zone corruption, review crash, shop exploit, DoS, infinite farming.
 
-### 2. Codebase Mapping (committed)
-Ran `/gsd:map-codebase` which spawned 4 parallel mapper agents. All 7 documents written and committed:
+### Tier 2 — Quick Wins
+FSRS auto-rating, vocabulary activation (1,220 words), adaptive difficulty, quiz progress bar, keyboard shortcuts, Fisher-Yates shuffle consolidation, XP table dedup. Deleted 6 redundant sub-category vocab files.
 
-| Document | Lines | Focus |
-|----------|-------|-------|
-| `STACK.md` | 109 | React 19, Vite 7, Phaser 3, Express 5, MongoDB, Redux Toolkit |
-| `ARCHITECTURE.md` | 211 | Hybrid Phaser+React pattern, EventBus bridge, Redux state, MVC backend |
-| `STRUCTURE.md` | 345 | Full directory layout, naming conventions, where to add new code |
-| `CONVENTIONS.md` | 215 | Code style, imports, error handling, module patterns |
-| `TESTING.md` | 221 | No tests exist. Playwright installed but unconfigured. Recommendations included |
-| `INTEGRATIONS.md` | 127 | MongoDB only. No external APIs. JWT auth. localStorage persistence |
-| `CONCERNS.md` | 260 | Tech debt, security issues, performance bottlenecks, fragile areas |
+### Tier 3 — Foundation (`8885b63`, 51 files, +7,182/-1,423)
+- God component refactoring: WorldScene 628→257, DialogueOverlay 442→180, App 350→79
+- 4 Phaser systems: PlayerController, NPCManager, InteractableManager, MapLoader
+- 5 extracted components: DialogueBox, DialogueChoices, DialoguePortrait, TeacherWordCard, PauseMenu
+- 3 custom hooks: useDialogue, useEventBusListeners, useReducedMotion
+- Framer Motion: route transitions, overlay animations, HUD micro-interactions
+- Testing: Vitest + RTL + Playwright, 120+ tests, 7 test files + E2E smoke
+- Cloud sync: version vectors, field-level merge, SyncIndicator, resolve endpoint
 
-**Commit:** `0e31fd0` — `docs: map existing codebase`
+### Tier 4 — Features + UX Fixes (`0ccb7f7`, 67 files, +12,587/-53)
+- Grammar system: 7 lessons (al-, pronouns, verbs, prepositions) with exercises + quiz
+- Word Duel: 8 zone bosses, turn-based battle, streak combos, adaptive difficulty
+- Quest diversification: 18 new quests (6 types: exploration, collection, review, quiz, dialogue, challenge)
+- Onboarding: 6-step interactive tutorial
+- Rewards: daily goals panel, 12 streak milestones, level-up modal with titles
+- Typewriter dialogue: character-by-character reveal, cultural NPC content (8 topics)
+- Quranic roots: Root Explorer with search + category filtering
+- Reading comprehension: 8 passages, 4 difficulty levels
+- Word search mini-game: 3 difficulties, category selection, RTL grid
+- Mini-games hub with lazy-loaded routes
+- All 9 overlays: Escape key + backdrop click + close button
+- Sprint: Shift key (2x speed), stamina bar, dust particles
+- MiniMap: corner overlay with zone exits (M key)
+- Letters button: HUD with progress badge + pulse animation (L key)
+- Map button: HUD shortcut (M key)
 
-### 3. GSD New Project Workflow Started
-- Setup checks passed (git repo exists, brownfield detected)
-- User chose "Map codebase first" before proceeding
-- Codebase mapping completed
-- **Paused at: Deep Questioning phase** — asked user "what frustrates you about where the app is now?" but didn't get a response yet
-
----
-
-## Current App State Summary
-
-### What Works
-- Phaser-based world exploration with 8 zones, tile-based movement, collision detection
-- 1000+ Arabic vocabulary words with audio pronunciation, transliteration, example sentences
-- 28 Arabic letters with 4 positional forms and vowel combinations
-- FSRS spaced repetition for vocabulary review scheduling
-- 5 quiz types: Arabic→English, English→Arabic, typing, listening, match pairs
-- 23 NPCs with multi-stage dialogue trees that teach words
-- 15+ quests with prerequisites and rewards
-- Character creation (name, skin tone, outfit, head covering)
-- 3-channel audio system (ambient, SFX, pronunciation)
-- Redux state with localStorage persistence
-
-### What's Missing / Broken
-- **UI**: All inline styles, pixel-art only, no mobile support, placeholder screens (World Map, Stats)
-- **Backend**: Route stubs exist but nothing implemented — no real auth, no cloud save, no working API
-- **No tests**: Zero unit tests, no test runner configured
-- **No achievements, leaderboards, grammar lessons, sentence building, cultural content, progress analytics**
-- **Shop is a stub**, only 3 starting outfits, no story cutscenes
-- **Security**: Token in localStorage, innerHTML usage, no input validation, no CSRF
-- **Performance**: Inefficient shuffles, DOM overlay updates every frame, no sprite pooling
-- **Tech debt**: Duplicate XP logic, EventBus in 2 locations, repeated shuffle implementations, magic strings
+### Tier 5 — Polish (`74d502e`, 58 files, +2,695/-560)
+Accessibility (ARIA, focus trap, keyboard nav), performance (memoization, Howl LRU cache, DOMOverlay dirty flag), mobile responsive, world map labels, loading screens, font fix (Noto Naskh + Kufi), backend pagination, API consistency, graceful shutdown.
 
 ---
 
-## Where to Resume
+## Current Architecture
 
-### Option A: Continue `/gsd:new-project` (Recommended)
-The GSD new-project workflow is mid-flight. Steps remaining:
+### Frontend
+- **React 19** + **Phaser 3** + **Redux Toolkit** + **React Router v7** + **Framer Motion**
+- Entry: `src/main.jsx` → `src/routes.jsx` → lazy-loaded route components
+- Game: `GameLayout.jsx` preserves Phaser canvas, renders HUD + overlays
+- Styles: Mixed CSS Modules (7 core) + inline (remaining)
+- EventBus bridges Phaser↔React
 
-1. **Deep Questioning** (Step 3) — Ask user what they want to improve, dig into vision
-2. **Write PROJECT.md** (Step 4) — Synthesize into project context document
-3. **Workflow Preferences** (Step 5) — YOLO/Interactive, depth, parallel, git tracking, agents
-4. **Research Decision** (Step 6) — Research domain ecosystem or skip
-5. **Define Requirements** (Step 7) — Scope v1 features by category
-6. **Create Roadmap** (Step 8) — Spawn roadmapper agent to create phased plan
+### Redux Slices
+player, vocabulary, quests, ui, alphabet, settings, npc, sync, achievements, battle, dailyGoals, grammar
 
-To resume, run:
-```
-/gsd:new-project
-```
-The workflow will detect `.planning/codebase/` exists (brownfield mapped) and skip to Step 3 (Questioning).
+### Backend
+- **Express 5** + **MongoDB** + **Mongoose**
+- Auth: httpOnly JWT cookies + CSRF + Authorization header fallback
+- Security: rate limiting (4 tiers), Zod validation, Helmet, CORS whitelist, Winston logging
+- API: `/api/v1/` versioned, pagination utility, graceful shutdown
 
-**Important:** The user said they want a "massive overhaul" — better UI, better backend, more features, more detail, more expansive, feel like a full-fledged app. They want suggestions for things they haven't thought of. They want to deliberate back and forth.
+### Routes
+`/` (main menu), `/game` (GameLayout), `/game/map`, `/alphabet`, `/review`, `/grammar`, `/battle`, `/mini-games`, `/mini-games/word-search`, `/mini-games/reading`, `/roots`, `/settings`, `/character-creation`
 
-### Option B: Start fresh
-If context is too stale, `/clear` then `/gsd:new-project` will detect the codebase map and skip straight to questioning.
-
----
-
-## Git State
-
-- **Branch:** main
-- **Last commit:** `0e31fd0` — `docs: map existing codebase`
-- **Untracked:** `.claude/` directory (Claude Code config, not committed)
-- **Clean working tree** (after codebase map commit)
+### Key Files
+- `src/store/store.js` — Redux store with all 12 slices
+- `src/data/vocabularyAll.js` — 1,220 merged vocabulary words
+- `src/data/grammar.js` — 7 grammar lessons
+- `src/data/bosses.js` — 8 zone bosses
+- `src/data/achievements.js` — 44 achievements
+- `src/data/quests.json` — 52 quests (34 original + 18 new)
+- `.planning/RESEARCH-REPORT.md` — Comprehensive improvement research
 
 ---
 
-## Files Created This Session
+## Remaining Work (from Research Report)
 
-```
-.planning/
-  codebase/
-    STACK.md
-    ARCHITECTURE.md
-    STRUCTURE.md
-    CONVENTIONS.md
-    TESTING.md
-    INTEGRATIONS.md
-    CONCERNS.md
-  SESSION-HANDOFF.md    ← this file
-```
+### High-Priority Improvements Not Yet Implemented
+1. Replace static onboarding overlay with contextual in-world tutorial
+2. Quest compass/objective indicator on HUD
+3. Daily dashboard overlay on game start
+4. In-dialogue comprehension checks (NPC quizzes during conversation)
+5. Per-character dialogue blip sounds
+6. Progressive tashkeel (vowel mark) fading based on mastery
+7. NPC quest indicators (!/?  above heads)
+8. Streak freeze item in shop
+9. Welcome back experience for returning players
+10. Map-based fast travel (click to teleport)
+11. Shape-group letter teaching order in AlphabetModule
+12. Zone-entry micro-reviews (spaced repetition in gameplay)
+13. Review session reframing ("Training with Scholar Yusuf")
+14. Environmental Arabic labels on game objects
+15. Anonymous quiz statistics ("72% of players get this right")
 
----
-
-## Key Context for Next Session
-
-- User wants the app to feel like "a full-fledged app that's taken years to build"
-- User wants Claude to suggest improvements they haven't thought of
-- User wants collaborative back-and-forth discussion before planning
-- The questioning phase should probe: What frustrates them? What does "done" look like? Who is this for? What's the MVP vs dream version?
-- The codebase is brownfield — existing code has validated capabilities that should be listed in PROJECT.md
-- Research phase will be valuable given the scope (Arabic learning + RPG game + modern web app)
-
----
-
-*Handoff written: 2026-02-07*
+### Technical Debt
+- Main bundle still 2.8MB (needs manual chunks via rollupOptions)
+- Mixed styling (CSS Modules + inline) — remaining components need migration
+- Zero integration tests for new features (battle, grammar, quests)
+- Quiz completion tracking not wired to daily goals middleware
+- Some quest types (dialogue, review, quiz) need tracking integration in their components
