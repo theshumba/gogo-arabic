@@ -1,0 +1,48 @@
+/**
+ * Global CSS custom properties from theme.js
+ * Shared pixel-art theme constants
+ */
+
+:root {
+  /* Warm backgrounds (from SimpleLuke) */
+  --color-beige: #f5f3da;
+  --color-brown: #391D23;
+  --color-dark-brown: #1f0c10;
+  --color-brown2: #2e1700;
+  --color-burgundy: #800200;
+  --color-pastel-red: #C1311C;
+  --color-olive-green: #BAB86C;
+  --color-dark-gold: #A26B35;
+  --color-creamy-beige: #F3EAD7;
+
+  /* Monster-quest palette */
+  --color-white: #f4fefa;
+  --color-pure-white: #ffffff;
+  --color-dark: #2b292c;
+  --color-light: #c8c8c8;
+  --color-gray: #3a373b;
+  --color-gold: #bfa100;
+  --color-light-gray: #4b484d;
+  --color-black: #000000;
+
+  /* Accent colors */
+  --color-cyan: #06c1de;
+  --color-cyan-hover: #06b6d1;
+  --color-fire: #f8a060;
+  --color-water: #50b0d8;
+  --color-plant: #64a990;
+  --color-red: #f03131;
+  --color-blue: #66d7ee;
+  --color-green: #2ecc71;
+
+  /* Game-specific */
+  --color-xp-gold: #e2b659;
+  --color-panel: #1e1e2e;
+  --color-panel-border: rgba(255, 255, 255, 0.15);
+  --color-overlay: rgba(0, 0, 0, 0.85);
+
+  /* Fonts */
+  --font-pixel: 'Press Start 2P', cursive;
+  --font-arabic: 'Noto Naskh Arabic', serif;
+  --font-pixeloid: 'PixeloidSans', sans-serif;
+}

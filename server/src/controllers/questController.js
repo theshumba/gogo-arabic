@@ -1,4 +1,6 @@
 import Quest from '../models/Quest.js';
+import { AppError } from '../utils/AppError.js';
+import logger from '../utils/logger.js';
 
 const MAX_SYNC_ITEMS = 200;
 
@@ -17,26 +19,26 @@ function sanitizeQuest(quest) {
   return clean;
 }
 
-export async function getQuests(req, res) {
+export async function getQuests(req, res, next) {
   try {
     const quests = await Quest.find({ userId: req.userId });
     res.json({ quests });
   } catch (err) {
-    console.error('getQuests error:', err);
-    res.status(500).json({ message: 'Failed to get quests' });
+    logger.error('getQuests error:', { error: err.message, userId: req.userId });
+    next(err);
   }
 }
 
-export async function syncQuests(req, res) {
+export async function syncQuests(req, res, next) {
   try {
     const { quests } = req.body;
 
     if (!Array.isArray(quests)) {
-      return res.status(400).json({ message: 'quests must be an array' });
+      return next(AppError.badRequest('quests must be an array'));
     }
 
     if (quests.length > MAX_SYNC_ITEMS) {
-      return res.status(400).json({ message: `Too many quests (max ${MAX_SYNC_ITEMS})` });
+      return next(AppError.badRequest(`Too many quests (max ${MAX_SYNC_ITEMS})`));
     }
 
     const ops = quests
@@ -56,7 +58,7 @@ export async function syncQuests(req, res) {
     const updated = await Quest.find({ userId: req.userId });
     res.json({ quests: updated });
   } catch (err) {
-    console.error('syncQuests error:', err);
-    res.status(500).json({ message: 'Failed to sync quests' });
+    logger.error('syncQuests error:', { error: err.message, userId: req.userId });
+    next(err);
   }
 }

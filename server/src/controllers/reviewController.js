@@ -1,4 +1,6 @@
 import VocabCard from '../models/VocabCard.js';
+import { AppError } from '../utils/AppError.js';
+import logger from '../utils/logger.js';
 
 const MAX_SYNC_ITEMS = 500;
 
@@ -18,26 +20,26 @@ function sanitizeCard(card) {
   return clean;
 }
 
-export async function getCards(req, res) {
+export async function getCards(req, res, next) {
   try {
     const cards = await VocabCard.find({ userId: req.userId });
     res.json({ cards });
   } catch (err) {
-    console.error('getCards error:', err);
-    res.status(500).json({ message: 'Failed to get cards' });
+    logger.error('getCards error:', { error: err.message, userId: req.userId });
+    next(err);
   }
 }
 
-export async function syncCards(req, res) {
+export async function syncCards(req, res, next) {
   try {
     const { cards } = req.body;
 
     if (!Array.isArray(cards)) {
-      return res.status(400).json({ message: 'cards must be an array' });
+      return next(AppError.badRequest('cards must be an array'));
     }
 
     if (cards.length > MAX_SYNC_ITEMS) {
-      return res.status(400).json({ message: `Too many cards (max ${MAX_SYNC_ITEMS})` });
+      return next(AppError.badRequest(`Too many cards (max ${MAX_SYNC_ITEMS})`));
     }
 
     const ops = cards
@@ -57,7 +59,7 @@ export async function syncCards(req, res) {
     const updated = await VocabCard.find({ userId: req.userId });
     res.json({ cards: updated });
   } catch (err) {
-    console.error('syncCards error:', err);
-    res.status(500).json({ message: 'Failed to sync cards' });
+    logger.error('syncCards error:', { error: err.message, userId: req.userId });
+    next(err);
   }
 }

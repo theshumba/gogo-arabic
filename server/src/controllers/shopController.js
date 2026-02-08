@@ -1,5 +1,7 @@
 import User from '../models/User.js';
 import { createRequire } from 'module';
+import { AppError } from '../utils/AppError.js';
+import logger from '../utils/logger.js';
 
 const require = createRequire(import.meta.url);
 const ITEMS_CATALOG = require('../../../src/data/items.json');
@@ -7,38 +9,50 @@ const ITEMS_CATALOG = require('../../../src/data/items.json');
 // Build a lookup map for O(1) price verification
 const itemsById = Object.fromEntries(ITEMS_CATALOG.map((item) => [item.id, item]));
 
-export async function buyItem(req, res) {
+export async function buyItem(req, res, next) {
   try {
     const { itemId } = req.body;
 
     // Look up the item in the server-side catalog — never trust client-sent price
     const catalogItem = itemsById[itemId];
     if (!catalogItem) {
-      return res.status(400).json({ message: 'Unknown item' });
+      return next(AppError.badRequest('Unknown item'));
     }
 
     const user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (!user) {
+      return next(AppError.notFound('User not found'));
+    }
 
+    // Check if already owned
     if (user.inventory.some(item => item.itemId === itemId)) {
-      return res.status(400).json({ message: 'Item already owned' });
+      return next(AppError.badRequest('Item already owned'));
     }
 
+    // Check level requirement
     if (user.level < catalogItem.unlockLevel) {
-      return res.status(400).json({ message: `Requires level ${catalogItem.unlockLevel}` });
+      return next(AppError.badRequest(`Requires level ${catalogItem.unlockLevel}`));
     }
 
+    // Check if user has enough dirhams
     if (user.dirhams < catalogItem.price) {
-      return res.status(400).json({ message: 'Not enough dirhams' });
+      return next(AppError.badRequest('Not enough dirhams'));
     }
 
+    // Process purchase
     user.dirhams -= catalogItem.price;
     user.inventory.push({ itemId, equipped: false });
     await user.save();
 
+    logger.info('Item purchased', {
+      userId: req.userId,
+      itemId,
+      price: catalogItem.price,
+    });
+
     res.json({ user });
   } catch (err) {
-    console.error('buyItem error:', err);
-    res.status(500).json({ message: 'Failed to buy item' });
+    logger.error('buyItem error:', { error: err.message, userId: req.userId });
+    next(err);
   }
 }

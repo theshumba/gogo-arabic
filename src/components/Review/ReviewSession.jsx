@@ -5,12 +5,14 @@ import { addXP, updateStreak } from '../../store/slices/playerSlice.js';
 import { reviewCard, getDueCards, Rating } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { shuffle } from '../../utils/shuffle.js';
+import { prepareSentenceQuiz } from '../../utils/sentenceParser.js';
 import ArabicKeyboard from '../Keyboard/ArabicKeyboard.jsx';
 import ProgressBar from '../Quiz/ProgressBar.jsx';
+import SentenceBuilder from './SentenceBuilder.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
 import { COLORS, FONTS, pixelPanel, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
 
-const QUIZ_TYPES = ['ar-to-en', 'en-to-ar', 'en-to-type-ar'];
+const QUIZ_TYPES = ['ar-to-en', 'en-to-ar', 'en-to-type-ar', 'sentence-building'];
 
 const styles = {
   container: {
@@ -245,6 +247,22 @@ function generateChoices(correctWord) {
   return shuffle([...others, correctWord]);
 }
 
+// Select a random quiz type appropriate for the current word
+function selectQuizType(word) {
+  const availableTypes = ['ar-to-en', 'en-to-ar', 'en-to-type-ar'];
+
+  // Add sentence-building if the word has example sentence data
+  if (word.exampleSentence && word.exampleSentence.arabic && word.exampleSentence.english) {
+    availableTypes.push('sentence-building');
+    // Weight sentence-building to appear ~20% of the time
+    if (Math.random() < 0.2) {
+      return 'sentence-building';
+    }
+  }
+
+  return availableTypes[Math.floor(Math.random() * 3)]; // Pick from first 3 types
+}
+
 export default function ReviewSession({ onBack }) {
   const dispatch = useDispatch();
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
@@ -268,14 +286,23 @@ export default function ReviewSession({ onBack }) {
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
   const [done, setDone] = useState(false);
-  const [quizType, setQuizType] = useState(() =>
-    QUIZ_TYPES[Math.floor(Math.random() * QUIZ_TYPES.length)]
-  );
+  const [quizType, setQuizType] = useState(() => {
+    const entry = sessionCards[0];
+    if (!entry) return 'ar-to-en';
+    const w = vocabulary.find((v) => v.id === entry.wordId);
+    return w ? selectQuizType(w) : 'ar-to-en';
+  });
   const [choices, setChoices] = useState(() => {
     const entry = sessionCards[0];
     if (!entry) return [];
     const w = vocabulary.find((v) => v.id === entry.wordId);
     return w ? generateChoices(w) : [];
+  });
+  const [sentenceQuizData, setSentenceQuizData] = useState(() => {
+    const entry = sessionCards[0];
+    if (!entry) return null;
+    const w = vocabulary.find((v) => v.id === entry.wordId);
+    return w ? prepareSentenceQuiz(w, vocabulary) : null;
   });
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
 
@@ -367,9 +394,10 @@ export default function ReviewSession({ onBack }) {
         setSelected(null);
         setTypingInput('');
         setTypingDone(false);
-        setQuizType(QUIZ_TYPES[Math.floor(Math.random() * QUIZ_TYPES.length)]);
         const nextWord = vocabulary.find((w) => w.id === sessionCards[nextIdx].wordId);
+        setQuizType(nextWord ? selectQuizType(nextWord) : 'ar-to-en');
         setChoices(nextWord ? generateChoices(nextWord) : []);
+        setSentenceQuizData(nextWord ? prepareSentenceQuiz(nextWord, vocabulary) : null);
         setQuestionStartTime(Date.now());
       }
     }, 1500); // 1.5 second delay to show correct/wrong feedback
@@ -404,6 +432,29 @@ export default function ReviewSession({ onBack }) {
     // Auto-rate based on correctness and response time
     const responseTime = (Date.now() - questionStartTime) / 1000; // seconds
     autoRateAndAdvance(correct, responseTime);
+  };
+
+  const handleSentenceComplete = (result) => {
+    if (answered) return;
+
+    setIsCorrect(result.correct);
+    setAnswered(true);
+    setTotal((t) => t + 1);
+    if (result.correct) setScore((s) => s + 1);
+
+    // Calculate response time and adjust rating based on attempts
+    const responseTime = (Date.now() - questionStartTime) / 1000; // seconds
+
+    // For sentence building, adjust rating based on attempts:
+    // First try correct → use normal rating
+    // Multiple attempts → reduce rating by one level
+    let correct = result.correct;
+    if (result.attempts > 1 && result.correct) {
+      // Multiple attempts: treat as slower response time to get lower rating
+      autoRateAndAdvance(true, 12); // Force "Hard" rating
+    } else {
+      autoRateAndAdvance(correct, responseTime);
+    }
   };
 
 
@@ -492,6 +543,15 @@ export default function ReviewSession({ onBack }) {
               />
             )}
           </>
+        )}
+
+        {/* Sentence Building */}
+        {quizType === 'sentence-building' && sentenceQuizData && (
+          <SentenceBuilder
+            quizData={sentenceQuizData}
+            onComplete={handleSentenceComplete}
+            disabled={answered}
+          />
         )}
 
       </div>

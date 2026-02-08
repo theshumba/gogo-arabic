@@ -1,31 +1,24 @@
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { RouterProvider } from 'react-router-dom';
 import { store, persistor } from './store/store.js';
-import App from './App.jsx';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx';
+import { router } from './routes.jsx';
+import { initializeQuests, checkPrerequisites } from './store/slices/questSlice.js';
+import questsData from './data/quests.json';
+import ErrorBoundaryClass from './components/ErrorBoundary/RouteErrorBoundary.jsx';
+import LoadingScreen from './components/UI/LoadingScreen.jsx';
+
+// Initialize quests on app boot
+store.dispatch(initializeQuests(questsData));
+store.dispatch(checkPrerequisites(questsData));
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <PersistGate loading={<LoadingScreen />} persistor={persistor}>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
+      <ErrorBoundaryClass>
+        <RouterProvider router={router} />
+      </ErrorBoundaryClass>
     </PersistGate>
   </Provider>
 );
-
-function LoadingScreen() {
-  return (
-    <div style={{
-      width: '100vw', height: '100vh',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      background: '#1A1A2E', color: '#D4A843',
-      fontFamily: "'Press Start 2P', cursive",
-    }}>
-      <div style={{ fontSize: '14px', marginBottom: '12px' }}>Loading...</div>
-      <div style={{ fontSize: '18px', fontFamily: "'Amiri', serif" }}>{'\u062C\u0627\u0631\u064A \u0627\u0644\u062A\u062D\u0645\u064A\u0644'}</div>
-    </div>
-  );
-}

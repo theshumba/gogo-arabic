@@ -1,6 +1,4 @@
 import { Component } from 'react';
-import { store } from '../../store/store.js';
-import { setScreen } from '../../store/slices/uiSlice.js';
 
 // PRD color palette
 const BG_DARK = '#1A1A2E';
@@ -126,10 +124,9 @@ class ErrorBoundary extends Component {
   };
 
   handleReturnToMenu = () => {
-    // Dispatch directly to the Redux store since class components
-    // cannot use hooks
-    store.dispatch(setScreen('menu'));
-    this.setState({ hasError: false, error: null, errorInfo: null });
+    // Navigate to root using window.location since class components
+    // cannot use React Router hooks
+    window.location.href = '/';
   };
 
   render() {

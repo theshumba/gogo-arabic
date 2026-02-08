@@ -1,43 +1,124 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { AppError } from '../utils/AppError.js';
 
-export async function register(req, res) {
+/**
+ * Helper function to generate JWT and set cookie
+ */
+function setAuthCookie(res, userId) {
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+  });
+
+  // Set httpOnly cookie (secure in production)
+  res.cookie('jwt', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+
+  return token;
+}
+
+/**
+ * Register a new user
+ */
+export async function register(req, res, next) {
   try {
     const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
 
+    // Check if user already exists
     const existing = await User.findOne({ email });
     if (existing) {
-      return res.status(400).json({ message: 'Email already registered' });
+      return next(AppError.conflict('Email already registered'));
     }
 
-    const user = await User.create({ name, email, password, inventory: ['thobe_white'] });
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    // Create user with default inventory
+    const user = await User.create({
+      name,
+      email,
+      password,
+      inventory: ['thobe_white'],
+    });
 
-    res.status(201).json({ token, user });
+    // Generate JWT and set cookie
+    const token = setAuthCookie(res, user._id);
+
+    res.status(201).json({
+      message: 'Registration successful',
+      token, // Return token for backward compatibility with header-based auth
+      user,
+    });
   } catch (err) {
-    res.status(500).json({ message: 'Registration failed' });
+    next(err);
   }
 }
 
-export async function login(req, res) {
+/**
+ * Login existing user
+ */
+export async function login(req, res, next) {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+
+    // Find user and explicitly select password field
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      return next(AppError.unauthorized('Invalid credentials'));
     }
 
-    const user = await User.findOne({ email });
-    if (!user || !(await user.comparePassword(password))) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+    // Verify password
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return next(AppError.unauthorized('Invalid credentials'));
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    // Generate JWT and set cookie
+    const token = setAuthCookie(res, user._id);
 
-    res.json({ token, user });
+    // Remove password from response
+    user.password = undefined;
+
+    res.json({
+      message: 'Login successful',
+      token, // Return token for backward compatibility with header-based auth
+      user,
+    });
   } catch (err) {
-    res.status(500).json({ message: 'Login failed' });
+    next(err);
+  }
+}
+
+/**
+ * Logout user by clearing cookie
+ */
+export async function logout(req, res, next) {
+  try {
+    res.clearCookie('jwt', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+    });
+
+    res.json({ message: 'Logout successful' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Verify if user is authenticated
+ */
+export async function verifyAuth(req, res, next) {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return next(AppError.unauthorized('User not found'));
+    }
+
+    res.json({ authenticated: true, user });
+  } catch (err) {
+    next(err);
   }
 }

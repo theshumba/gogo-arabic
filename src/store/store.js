@@ -10,13 +10,15 @@ import alphabetReducer from './slices/alphabetSlice.js';
 import settingsReducer from './slices/settingsSlice.js';
 import uiReducer from './slices/uiSlice.js';
 import syncReducer from './slices/syncSlice.js';
+import achievementReducer from './slices/achievementSlice.js';
+import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 
-// Persisted slices: player, vocabulary, quests, alphabet, settings, npc
+// Persisted slices: player, vocabulary, quests, alphabet, settings, npc, achievements
 // Non-persisted (transient UI state): ui, sync
 const persistConfig = {
   key: 'gogo-arabic',
   storage,
-  whitelist: ['player', 'vocabulary', 'quests', 'alphabet', 'settings', 'npc'],
+  whitelist: ['player', 'vocabulary', 'quests', 'alphabet', 'settings', 'npc', 'achievements'],
 };
 
 const rootReducer = combineReducers({
@@ -28,6 +30,7 @@ const rootReducer = combineReducers({
   settings: settingsReducer,
   ui: uiReducer,
   sync: syncReducer,
+  achievements: achievementReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -39,7 +42,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
       },
-    }),
+    }).concat(achievementMiddleware),
 });
 
 export const persistor = persistStore(store);

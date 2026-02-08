@@ -13,7 +13,8 @@ import { selectWordsByDifficulty } from '../../utils/wordSelection.js';
 import vocabulary from '../../data/vocabularyAll.js';
 import npcsData from '../../data/npcs.json';
 import questsData from '../../data/quests.json';
-import { COLORS, FONTS, pixelPanel, pixelBtnGold } from '../../styles/theme.js';
+import { FONTS } from '../../styles/theme.js';
+import styles from './DialogueOverlay.module.css';
 
 /* ---------- helpers ---------- */
 
@@ -64,237 +65,7 @@ function resolveVocabWord(wordId) {
   return vocabulary.find((w) => w.id === wordId) ?? null;
 }
 
-/* ---------- styles ---------- */
-
-const styles = {
-  overlay: {
-    position: 'absolute',
-    inset: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-    zIndex: 200,
-    pointerEvents: 'none',
-    fontFamily: FONTS.pixel,
-    imageRendering: 'pixelated',
-  },
-  backdrop: {
-    position: 'absolute',
-    inset: 0,
-    background: 'rgba(0,0,0,0.55)',
-    pointerEvents: 'auto',
-  },
-  dialogueBox: {
-    position: 'relative',
-    background: COLORS.dark,
-    borderTop: `4px solid ${COLORS.xpGold}`,
-    padding: '16px 20px',
-    color: COLORS.white,
-    minHeight: '180px',
-    pointerEvents: 'auto',
-    display: 'flex',
-    gap: '16px',
-    fontFamily: FONTS.pixel,
-    boxShadow: `
-      inset 0 -4px 0 0 rgba(0,0,0,0.3),
-      inset 0 4px 0 0 rgba(255,255,255,0.05)
-    `,
-  },
-  portraitWrap: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    flexShrink: 0,
-  },
-  portrait: {
-    ...pixelPanel,
-    width: '96px',
-    height: '96px',
-    padding: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: COLORS.gray,
-    border: `4px solid ${COLORS.dark}`,
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.4),
-      inset 3px 3px 0px 0px rgba(255,255,255,0.1)
-    `,
-    overflow: 'hidden',
-  },
-  portraitImg: {
-    width: '96px',
-    height: '96px',
-    imageRendering: 'pixelated',
-    objectFit: 'cover',
-  },
-  portraitName: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    textAlign: 'center',
-    marginTop: '6px',
-    color: COLORS.xpGold,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    maxWidth: '96px',
-    lineHeight: 1.4,
-  },
-  portraitNameArabic: {
-    fontFamily: FONTS.arabic,
-    fontSize: '16px',
-    textAlign: 'center',
-    marginTop: '2px',
-    color: COLORS.xpGold,
-    direction: 'rtl',
-  },
-  content: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  speakerName: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.xpGold,
-    marginBottom: '8px',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  arabicLine: {
-    fontSize: '28px',
-    fontFamily: FONTS.arabic,
-    direction: 'rtl',
-    textAlign: 'right',
-    lineHeight: 1.7,
-    marginBottom: '6px',
-    color: COLORS.xpGold,
-  },
-  englishLine: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.white,
-    marginBottom: '4px',
-    lineHeight: 1.8,
-  },
-  translitLine: {
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.light,
-    fontStyle: 'italic',
-    lineHeight: 1.6,
-  },
-
-  /* ---------- teach word badge + card ---------- */
-  teachContainer: {
-    marginTop: '10px',
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '10px',
-  },
-  teachBadge: {
-    display: 'inline-block',
-    background: COLORS.xpGold,
-    border: `4px solid ${COLORS.dark}`,
-    padding: '5px 12px',
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.dark,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    flexShrink: 0,
-    boxShadow: `
-      inset -2px -2px 0px 0px rgba(0,0,0,0.2),
-      inset 2px 2px 0px 0px rgba(255,255,255,0.3)
-    `,
-  },
-  wordCard: {
-    background: COLORS.gray,
-    border: `3px solid ${COLORS.xpGold}`,
-    padding: '8px 12px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  },
-  wordCardArabic: {
-    fontFamily: FONTS.arabic,
-    fontSize: '24px',
-    direction: 'rtl',
-    textAlign: 'right',
-    color: COLORS.xpGold,
-    lineHeight: 1.5,
-  },
-  wordCardEnglish: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.white,
-  },
-  wordCardTranslit: {
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.light,
-    fontStyle: 'italic',
-  },
-
-  /* ---------- choices ---------- */
-  choices: {
-    display: 'flex',
-    gap: '10px',
-    marginTop: '12px',
-    flexWrap: 'wrap',
-  },
-  choiceBtn: {
-    ...pixelPanel,
-    padding: '12px 18px',
-    background: COLORS.beige,
-    border: `4px solid ${COLORS.dark}`,
-    color: COLORS.dark,
-    cursor: 'pointer',
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    flex: 1,
-    textAlign: 'center',
-    minWidth: '100px',
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.15),
-      inset 3px 3px 0px 0px rgba(255,255,255,0.4),
-      0 4px 0 0 ${COLORS.brown}
-    `,
-    transition: 'transform 0.05s',
-  },
-  continueHint: {
-    position: 'absolute',
-    bottom: '10px',
-    right: '16px',
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.white,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
-  },
-  choiceHint: {
-    fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    color: COLORS.lightGray,
-    marginTop: '8px',
-    textAlign: 'center',
-    letterSpacing: '0.5px',
-  },
-  choiceNumber: {
-    display: 'inline-block',
-    minWidth: '16px',
-    height: '16px',
-    lineHeight: '16px',
-    textAlign: 'center',
-    background: COLORS.dark,
-    color: COLORS.xpGold,
-    borderRadius: '2px',
-    marginRight: '6px',
-    fontSize: '8px',
-    fontWeight: 'bold',
-  },
-};
+/* ---------- styles removed - now using CSS Module ---------- */
 
 /* ---------- component ---------- */
 
@@ -552,17 +323,17 @@ export default function DialogueOverlay() {
   const portraitSrc = `/assets/portraits/${npc.portrait}.png`;
 
   const renderPortrait = () => (
-    <div style={styles.portraitWrap}>
-      <div style={styles.portrait}>
+    <div className={styles.portraitWrap}>
+      <div className={styles.portrait}>
         <img
           src={portraitSrc}
           alt={npc.name}
-          style={styles.portraitImg}
+          className={styles.portraitImg}
           draggable={false}
         />
       </div>
-      <div style={styles.portraitName}>{npc.name}</div>
-      <div style={styles.portraitNameArabic}>{npc.nameArabic}</div>
+      <div className={styles.portraitName}>{npc.name}</div>
+      <div className={styles.portraitNameArabic}>{npc.nameArabic}</div>
     </div>
   );
 
@@ -573,14 +344,14 @@ export default function DialogueOverlay() {
     const alreadyKnown = !!cards[wordId];
 
     return (
-      <div style={styles.teachContainer}>
-        <span style={styles.teachBadge}>
+      <div className={styles.teachContainer}>
+        <span className={styles.teachBadge}>
           {alreadyKnown ? 'Review' : 'New Word!'}
         </span>
-        <div style={styles.wordCard}>
-          <div style={styles.wordCardArabic}>{word.arabic}</div>
-          <div style={styles.wordCardEnglish}>{word.english}</div>
-          <div style={styles.wordCardTranslit}>{word.transliteration}</div>
+        <div className={styles.wordCard}>
+          <div className={styles.wordCardArabic}>{word.arabic}</div>
+          <div className={styles.wordCardEnglish}>{word.english}</div>
+          <div className={styles.wordCardTranslit}>{word.transliteration}</div>
         </div>
       </div>
     );
@@ -589,49 +360,32 @@ export default function DialogueOverlay() {
   /* ---- choice line rendering ---- */
   if (line.choices) {
     return (
-      <div style={styles.overlay}>
-        <div style={styles.backdrop} />
-        <div style={styles.dialogueBox}>
+      <div className={styles.overlay}>
+        <div className={styles.backdrop} />
+        <div className={styles.dialogueBox}>
           {renderPortrait()}
-          <div style={styles.content}>
-            <div style={styles.speakerName}>You</div>
-            <div style={styles.choices}>
+          <div className={styles.content}>
+            <div className={styles.speakerName}>You</div>
+            <div className={styles.choices}>
               {line.choices.map((c, i) => (
                 <button
                   key={i}
-                  style={styles.choiceBtn}
+                  className={styles.choiceBtn}
                   onClick={() => handleChoice(c)}
-                  onMouseDown={(e) => {
-                    e.currentTarget.style.transform = 'translateY(2px)';
-                  }}
-                  onMouseUp={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
                 >
                   <div>
-                    <span style={styles.choiceNumber}>{i + 1}</span>
+                    <span className={styles.choiceNumber}>{i + 1}</span>
                     {c.english}
                   </div>
                   {c.arabic && (
-                    <div
-                      style={{
-                        fontSize: '18px',
-                        fontFamily: FONTS.arabic,
-                        direction: 'rtl',
-                        marginTop: '6px',
-                        color: COLORS.brown,
-                      }}
-                    >
+                    <div className={styles.choiceArabic}>
                       {c.arabic}
                     </div>
                   )}
                 </button>
               ))}
             </div>
-            <div style={styles.choiceHint}>Press 1-{line.choices.length} to select</div>
+            <div className={styles.choiceHint}>Press 1-{line.choices.length} to select</div>
           </div>
         </div>
       </div>
@@ -643,20 +397,20 @@ export default function DialogueOverlay() {
   const speakerName = isPlayerSpeaking ? 'You' : npc.name;
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.backdrop} onClick={advance} />
-      <div style={styles.dialogueBox} onClick={advance}>
+    <div className={styles.overlay}>
+      <div className={styles.backdrop} onClick={advance} />
+      <div className={styles.dialogueBox} onClick={advance}>
         {renderPortrait()}
-        <div style={styles.content}>
-          <div style={styles.speakerName}>{speakerName}</div>
-          {line.arabic && <div style={styles.arabicLine}>{line.arabic}</div>}
-          {line.english && <div style={styles.englishLine}>{line.english}</div>}
+        <div className={styles.content}>
+          <div className={styles.speakerName}>{speakerName}</div>
+          {line.arabic && <div className={styles.arabicLine}>{line.arabic}</div>}
+          {line.english && <div className={styles.englishLine}>{line.english}</div>}
           {settings?.showTransliteration && line.transliteration && (
-            <div style={styles.translitLine}>{line.transliteration}</div>
+            <div className={styles.translitLine}>{line.transliteration}</div>
           )}
           {line.teachWord && renderTeachWordCard(line.teachWord)}
         </div>
-        <div style={styles.continueHint}>Space / Enter / Click to continue</div>
+        <div className={styles.continueHint}>Space / Enter / Click to continue</div>
       </div>
     </div>
   );

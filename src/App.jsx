@@ -9,7 +9,7 @@ import {
   showNotification,
 } from './store/slices/uiSlice.js';
 import { setCurrentZone, unlockZone, addDirhams, addXP, incrementWordsLearned, markChestOpened, markBookRead } from './store/slices/playerSlice.js';
-import { addFsrsCard } from './store/slices/vocabularySlice.js';
+import { addFsrsCard, loadWords } from './store/slices/vocabularySlice.js';
 import { initializeQuests, checkPrerequisites, updateQuestProgress, completeQuest } from './store/slices/questSlice.js';
 import { createNewCard } from './services/fsrs.js';
 import { XP_REWARDS } from './utils/xpCalculator.js';
@@ -32,6 +32,7 @@ import SettingsMenu from './components/Menu/SettingsMenu.jsx';
 import { PhaserGame } from './game/PhaserGame.jsx';
 import HUD from './components/HUD/HUD.jsx';
 import NotificationToast from './components/HUD/NotificationToast.jsx';
+import AchievementToast from './components/Achievements/AchievementToast.jsx';
 import DialogueOverlay from './components/NPC/DialogueOverlay.jsx';
 import QuizOverlay from './components/Quiz/QuizOverlay.jsx';
 import QuestLog from './components/Quest/QuestLog.jsx';
@@ -190,8 +191,9 @@ export default function App() {
     }
   };
 
-  // Initialize quests on app boot
+  // Initialize quests and vocabulary on app boot
   useEffect(() => {
+    dispatch(loadWords(vocabulary));
     dispatch(initializeQuests(questsData));
     dispatch(checkPrerequisites(questsData));
   }, [dispatch]);
@@ -422,6 +424,7 @@ export default function App() {
 
             {/* Toast notifications (appears below HUD) */}
             <NotificationToast />
+            <AchievementToast />
 
             {/* Conditional overlays */}
             {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}

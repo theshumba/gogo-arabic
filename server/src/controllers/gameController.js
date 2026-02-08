@@ -1,6 +1,8 @@
 import User from '../models/User.js';
+import { AppError } from '../utils/AppError.js';
+import logger from '../utils/logger.js';
 
-export async function saveGame(req, res) {
+export async function saveGame(req, res, next) {
   try {
     const { player, quests, settings } = req.body;
     const updates = {};
@@ -24,21 +26,36 @@ export async function saveGame(req, res) {
       updates.settings = settings;
     }
 
-    const user = await User.findByIdAndUpdate(req.userId, updates, { new: true });
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    const user = await User.findByIdAndUpdate(req.userId, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      return next(AppError.notFound('User not found'));
+    }
+
+    logger.info('Game saved', { userId: req.userId });
 
     res.json({ message: 'Game saved', user });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to save game' });
+    logger.error('saveGame error:', { error: err.message, userId: req.userId });
+    next(err);
   }
 }
 
-export async function loadGame(req, res) {
+export async function loadGame(req, res, next) {
   try {
     const user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (!user) {
+      return next(AppError.notFound('User not found'));
+    }
+
+    logger.info('Game loaded', { userId: req.userId });
+
     res.json({ user });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to load game' });
+    logger.error('loadGame error:', { error: err.message, userId: req.userId });
+    next(err);
   }
 }

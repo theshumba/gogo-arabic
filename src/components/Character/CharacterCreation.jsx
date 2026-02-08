@@ -6,7 +6,7 @@ import {
   setOutfit as setPlayerOutfit,
   setHeadCovering as setPlayerHeadCovering,
 } from '../../store/slices/playerSlice.js';
-import { COLORS, FONTS, pixelBtnGold, pixelPanel, fullScreenBg } from '../../styles/theme.js';
+import styles from './CharacterCreation.module.css';
 
 // ---- Data ----
 const SKIN_TONES = [
@@ -39,140 +39,7 @@ const SKIN_TINT_FILTERS = [
   'brightness(0.6) saturate(1.2)',         // dark
 ];
 
-// ---- Styles ----
-const styles = {
-  container: {
-    ...fullScreenBg('/img/char-bg.gif'),
-    overflow: 'auto',
-  },
-  panel: {
-    ...pixelPanel,
-    padding: '24px 32px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    maxWidth: '500px',
-    width: '92%',
-    maxHeight: '90vh',
-    overflow: 'auto',
-  },
-  title: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.brown,
-    marginBottom: '4px',
-    textAlign: 'center',
-  },
-  titleAr: {
-    fontFamily: "'Amiri', serif",
-    fontSize: '22px',
-    color: COLORS.brown,
-    direction: 'rtl',
-    marginBottom: '20px',
-  },
-  // Character preview
-  preview: {
-    width: '192px',
-    height: '192px',
-    position: 'relative',
-    marginBottom: '16px',
-    imageRendering: 'pixelated',
-    border: `3px solid ${COLORS.dark}`,
-    background: 'rgba(0,0,0,0.15)',
-    overflow: 'hidden',
-  },
-  previewImg: {
-    position: 'absolute',
-    width: '192px',
-    height: '192px',
-    imageRendering: 'pixelated',
-    top: 0,
-    left: 0,
-  },
-  // Fields
-  field: {
-    marginBottom: '16px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '8px',
-    width: '100%',
-  },
-  label: {
-    fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    color: COLORS.gray,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  input: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    padding: '10px 14px',
-    border: `3px solid ${COLORS.dark}`,
-    background: COLORS.dark,
-    color: COLORS.beige,
-    textAlign: 'center',
-    outline: 'none',
-    width: '220px',
-  },
-  // Horizontal option row
-  options: {
-    display: 'flex',
-    gap: '6px',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  // Skin tone swatch
-  swatch: {
-    width: '36px',
-    height: '36px',
-    borderRadius: '50%',
-    border: '3px solid transparent',
-    cursor: 'pointer',
-    transition: 'border-color 0.1s',
-  },
-  swatchSelected: {
-    borderColor: COLORS.xpGold,
-    boxShadow: `0 0 0 2px ${COLORS.dark}`,
-  },
-  // Text option button
-  option: {
-    fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    padding: '8px 12px',
-    border: `3px solid ${COLORS.dark}`,
-    background: COLORS.creamyBeige,
-    color: COLORS.dark,
-    cursor: 'pointer',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    boxShadow: `
-      inset -2px -2px 0px 0px rgba(0,0,0,0.1),
-      inset 2px 2px 0px 0px rgba(255,255,255,0.3),
-      0 2px 0 0 ${COLORS.brown}
-    `,
-  },
-  optionSelected: {
-    background: COLORS.xpGold,
-    color: COLORS.brown,
-    boxShadow: `
-      inset -2px -2px 0px 0px rgba(0,0,0,0.2),
-      inset 2px 2px 0px 0px rgba(255,255,255,0.3),
-      0 2px 0 0 #a0842a
-    `,
-  },
-  btn: {
-    ...pixelBtnGold,
-    marginTop: '16px',
-    fontSize: '9px',
-    padding: '14px 28px',
-  },
-  btnDisabled: {
-    opacity: 0.5,
-    cursor: 'not-allowed',
-  },
-};
+// ---- Styles removed - now using CSS Module ----
 
 /**
  * Draws a character preview on a canvas using the body + head sprites.
@@ -259,13 +126,13 @@ export default function CharacterCreation({ onDone }) {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.panel}>
-        <div style={styles.title}>Create Your Character</div>
-        <div style={styles.titleAr}>أنشئ شخصيتك</div>
+    <div className={styles.container}>
+      <div className={styles.panel}>
+        <div className={styles.title}>Create Your Character</div>
+        <div className={styles.titleAr}>أنشئ شخصيتك</div>
 
         {/* Live character preview */}
-        <div style={styles.preview}>
+        <div className={styles.preview}>
           <CharacterPreview
             outfit={outfit}
             headCovering={headCovering}
@@ -274,10 +141,10 @@ export default function CharacterCreation({ onDone }) {
         </div>
 
         {/* Name input */}
-        <div style={styles.field}>
-          <span style={styles.label}>Your Name / اسمك</span>
+        <div className={styles.field}>
+          <span className={styles.label}>Your Name / اسمك</span>
           <input
-            style={styles.input}
+            className={styles.input}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter name"
@@ -286,17 +153,14 @@ export default function CharacterCreation({ onDone }) {
         </div>
 
         {/* Skin tone selector */}
-        <div style={styles.field}>
-          <span style={styles.label}>Skin Tone / لون البشرة</span>
-          <div style={styles.options}>
+        <div className={styles.field}>
+          <span className={styles.label}>Skin Tone / لون البشرة</span>
+          <div className={styles.options}>
             {SKIN_TONES.map((tone) => (
               <button
                 key={tone.id}
-                style={{
-                  ...styles.swatch,
-                  backgroundColor: tone.color,
-                  ...(skinTone === tone.id ? styles.swatchSelected : {}),
-                }}
+                className={`${styles.swatch} ${skinTone === tone.id ? styles.swatchSelected : ''}`}
+                style={{ backgroundColor: tone.color }}
                 onClick={() => setSkinTone(tone.id)}
                 title={tone.label}
               />
@@ -305,16 +169,13 @@ export default function CharacterCreation({ onDone }) {
         </div>
 
         {/* Head covering selector */}
-        <div style={styles.field}>
-          <span style={styles.label}>Head Covering / غطاء الرأس</span>
-          <div style={styles.options}>
+        <div className={styles.field}>
+          <span className={styles.label}>Head Covering / غطاء الرأس</span>
+          <div className={styles.options}>
             {HEAD_COVERINGS.map((hc) => (
               <button
                 key={hc.id}
-                style={{
-                  ...styles.option,
-                  ...(headCovering === hc.id ? styles.optionSelected : {}),
-                }}
+                className={`${styles.option} ${headCovering === hc.id ? styles.optionSelected : ''}`}
                 onClick={() => setHeadCovering(hc.id)}
               >
                 {hc.label}
@@ -324,16 +185,13 @@ export default function CharacterCreation({ onDone }) {
         </div>
 
         {/* Starting outfit selector */}
-        <div style={styles.field}>
-          <span style={styles.label}>Starting Outfit / الزي</span>
-          <div style={styles.options}>
+        <div className={styles.field}>
+          <span className={styles.label}>Starting Outfit / الزي</span>
+          <div className={styles.options}>
             {STARTING_OUTFITS.map((o) => (
               <button
                 key={o.id}
-                style={{
-                  ...styles.option,
-                  ...(outfit === o.id ? styles.optionSelected : {}),
-                }}
+                className={`${styles.option} ${outfit === o.id ? styles.optionSelected : ''}`}
                 onClick={() => setOutfit(o.id)}
               >
                 {o.label}
@@ -343,7 +201,7 @@ export default function CharacterCreation({ onDone }) {
         </div>
 
         <button
-          style={{ ...styles.btn, ...(!name.trim() ? styles.btnDisabled : {}) }}
+          className={`${styles.btn} ${!name.trim() ? styles.btnDisabled : ''}`}
           onClick={handleStart}
           disabled={!name.trim()}
         >
