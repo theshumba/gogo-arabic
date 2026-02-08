@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 
 ## Current Position
 
-Phase: 2 of 9 (Player Guidance) — COMPLETE
-Plan: 2 of 2 completed
-Status: Phase 2 complete - all player guidance systems implemented
-Last activity: 2026-02-08 — Phase 2 verified, all 4 GUID requirements satisfied
+Phase: 3 of 9 (Feature Discoverability) — IN PROGRESS
+Plan: 2 of 3 completed
+Status: Phase 3 in progress - NPC feature hints implemented
+Last activity: 2026-02-08 — Completed 03-02-PLAN.md (NPC feature hints)
 
-Progress: [████░░░░░░] 40% (4/10 plans complete across all phases)
+Progress: [█████░░░░░] 50% (5/10 plans complete across all phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 4.5 minutes
-- Total execution time: 0.30 hours
+- Total plans completed: 5
+- Average duration: 3.8 minutes
+- Total execution time: 0.32 hours
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [████░░░░░░] 40% (4/10 plans complete across all p
 |-------|-------|-------|----------|
 | 01 - Critical Fixes | 2/2 | 9 min | 4.5 min |
 | 02 - Player Guidance | 2/2 | 8 min | 4 min |
+| 03 - Feature Discoverability | 2/3 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-02 (7 min), 02-01 (7 min), 02-02 (1 min)
-- Trend: Phase 2 velocity improving, average 4 min/plan
+- Last 5 plans: 01-02 (7 min), 02-01 (7 min), 02-02 (1 min), 03-02 (2 min)
+- Trend: Consistent execution speed, Phase 3 maintaining velocity
 
 *Updated after each plan completion*
 
@@ -76,6 +77,11 @@ Recent decisions affecting current work:
 - Phaser EventBus throttling pattern: Frame counter % N for controlled update rate
 - Distance-based UI visibility: Show compass only when objective is far enough to need guidance
 
+**From 03-02 execution:**
+- Hint dialogue trees use trigger "hint" (never auto-selected by pickDialogueTree, only reachable via player choice)
+- NPC hint selection based on thematic fit: scholar=grammar, librarian=roots, storyteller=reading, merchant=mini-games
+- 3-line hint structure: introduction → benefit → explicit access instructions (pause menu → Activities)
+
 ### Pending Todos
 
 None yet.
@@ -87,9 +93,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Phase 2 complete — all player guidance systems verified
-Resume file: Ready for Phase 3 (Feature Discoverability)
+Stopped at: Completed 03-02-PLAN.md (NPC feature hints)
+Resume file: .planning/phases/03-feature-discoverability/03-02-SUMMARY.md
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-08 16:52 UTC*
+*Last updated: 2026-02-08 18:18 UTC*
