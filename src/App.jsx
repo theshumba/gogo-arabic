@@ -8,7 +8,7 @@ import {
   toggleMenu,
   showNotification,
 } from './store/slices/uiSlice.js';
-import { setCurrentZone, unlockZone, addDirhams, addXP, incrementWordsLearned } from './store/slices/playerSlice.js';
+import { setCurrentZone, unlockZone, addDirhams, addXP, incrementWordsLearned, markChestOpened, markBookRead } from './store/slices/playerSlice.js';
 import { addFsrsCard } from './store/slices/vocabularySlice.js';
 import { initializeQuests, checkPrerequisites, updateQuestProgress, completeQuest } from './store/slices/questSlice.js';
 import { createNewCard } from './services/fsrs.js';
@@ -203,8 +203,8 @@ export default function App() {
       dispatch(openDialogue({ npcId, npcName }));
     };
 
-    const handleZoneChange = (zoneId) => {
-      dispatch(setCurrentZone(zoneId));
+    const handleZoneChange = ({ zone }) => {
+      dispatch(setCurrentZone(zone));
     };
 
     const handleOpenQuiz = (quizConfig) => {
@@ -222,6 +222,10 @@ export default function App() {
 
     const handleBookshelfInteract = ({ category, id, reread }) => {
       playSFX('bookflip');
+      // Persist that this bookshelf has been read
+      if (!reread) {
+        dispatch(markBookRead(id));
+      }
       // Find a random word from this category that the player hasn't learned
       const categoryWords = vocabulary.filter((w) => w.category === category);
       const unknownWords = categoryWords.filter((w) => !fsrsCards[w.id]);
@@ -250,9 +254,10 @@ export default function App() {
       EventBus.emit('unfreeze-player');
     };
 
-    const handleChestOpened = ({ amount }) => {
+    const handleChestOpened = ({ amount, id }) => {
       playSFX('chest');
       playSFX('coin');
+      dispatch(markChestOpened(id));
       dispatch(addDirhams(amount));
       dispatch(showNotification({
         message: `Found ${amount} dirhams!`,

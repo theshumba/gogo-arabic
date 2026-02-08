@@ -51,6 +51,8 @@ const initialState = {
   inventory: [], // { itemId, equipped }
   position: { x: 640, y: 400 },
   boosts: [], // { type, expiresAt }
+  openedChests: [], // array of chest IDs that have been opened
+  readBooks: [], // array of bookshelf IDs that have been read
 };
 
 const playerSlice = createSlice({
@@ -155,6 +157,22 @@ const playerSlice = createSlice({
       const now = Date.now();
       state.boosts = state.boosts.filter((b) => b.expiresAt > now);
     },
+
+    markChestOpened(state, action) {
+      const chestId = action.payload;
+      if (!state.openedChests) state.openedChests = [];
+      if (!state.openedChests.includes(chestId)) {
+        state.openedChests.push(chestId);
+      }
+    },
+
+    markBookRead(state, action) {
+      const bookId = action.payload;
+      if (!state.readBooks) state.readBooks = [];
+      if (!state.readBooks.includes(bookId)) {
+        state.readBooks.push(bookId);
+      }
+    },
   },
 });
 
@@ -175,6 +193,8 @@ export const {
   setPosition,
   addBoost,
   removeExpiredBoosts,
+  markChestOpened,
+  markBookRead,
 } = playerSlice.actions;
 
 export default playerSlice.reducer;

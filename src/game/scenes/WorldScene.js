@@ -5,6 +5,7 @@ import { NPC } from '../sprites/NPC.js';
 import DOMOverlayManager from '../systems/DOMOverlay.js';
 import ZoneTransition from '../systems/ZoneTransition.js';
 import { ZONES, TILE, SAND, GRASS, WATER, ICE_GRASS } from '../../data/zones.js';
+import { store } from '../../store/store.js';
 
 // NPC proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = TILE * 2;
@@ -19,8 +20,8 @@ export class WorldScene extends Phaser.Scene {
     this.npcs = [];
     this.interactables = [];
     this.exitTriggers = [];
-    this.openedChests = new Set();
-    this.readBooks = new Set();
+    // Chest/book state is persisted in Redux (playerSlice.openedChests / readBooks)
+    // We read from the store directly so state survives zone changes
     this.frozen = false;
     this.interactCooldown = false;
     this.domOverlay = null;
@@ -310,6 +311,13 @@ export class WorldScene extends Phaser.Scene {
 
       const sprite = this.add.image(px, py, spriteKey).setOrigin(0.5, 0.8);
       sprite.setScale(0.7);
+      // Tint already-opened chests from persisted state
+      if (cfg.type === 'chest') {
+        const openedChests = store.getState().player.openedChests || [];
+        if (openedChests.includes(cfg.id)) {
+          sprite.setTint(0x666666);
+        }
+      }
       this.objectSprites.push(sprite);
 
       // Label above the object
@@ -565,6 +573,10 @@ export class WorldScene extends Phaser.Scene {
   }
 
   handleInteractable(obj) {
+    const playerState = store.getState().player;
+    const openedChests = playerState.openedChests || [];
+    const readBooks = playerState.readBooks || [];
+
     if (obj.type === 'sign') {
       EventBus.emit('show-sign', {
         arabic: obj.textArabic,
@@ -572,8 +584,7 @@ export class WorldScene extends Phaser.Scene {
       });
       EventBus.emit('freeze-player');
     } else if (obj.type === 'bookshelf') {
-      if (!this.readBooks.has(obj.id)) {
-        this.readBooks.add(obj.id);
+      if (!readBooks.includes(obj.id)) {
         EventBus.emit('bookshelf-interact', {
           category: obj.category,
           id: obj.id,
@@ -588,8 +599,7 @@ export class WorldScene extends Phaser.Scene {
         EventBus.emit('freeze-player');
       }
     } else if (obj.type === 'chest') {
-      if (!this.openedChests.has(obj.id)) {
-        this.openedChests.add(obj.id);
+      if (!openedChests.includes(obj.id)) {
         const amount = Math.floor(
           Math.random() * (obj.maxDirhams - obj.minDirhams + 1)
         ) + obj.minDirhams;

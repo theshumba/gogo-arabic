@@ -245,8 +245,13 @@ export default function ReviewSession({ onBack }) {
   const settings = useSelector((s) => s.settings);
 
   const [sessionCards] = useState(() => {
-    const due = getDueCards(cards);
-    return due.sort((a, b) => new Date(a.card.due) - new Date(b.card.due)).slice(0, 20);
+    const dueIds = getDueCards(cards);
+    // Map wordId strings back to { wordId, card } objects for scheduling
+    return dueIds
+      .map((id) => ({ wordId: id, card: cards[id]?.card }))
+      .filter((entry) => entry.card)
+      .sort((a, b) => new Date(a.card.due || 0) - new Date(b.card.due || 0))
+      .slice(0, 20);
   });
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState(false);
