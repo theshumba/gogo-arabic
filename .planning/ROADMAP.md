@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Critical Fixes** - Fix z-index bugs, mobile overflow, focus traps, HUD review button ✓ Complete
 - [x] **Phase 2: Player Guidance** - NPC quest markers, active objective display, quest compass ✓ Complete
-- [ ] **Phase 3: Feature Discoverability** - Expose hidden features through in-game UI
+- [x] **Phase 3: Feature Discoverability** - Expose hidden features through in-game UI ✓ Complete
 - [ ] **Phase 4: Onboarding & HUD** - Contextual tooltips, streamlined HUD, bundle splitting
 - [ ] **Phase 5: Daily Dashboard** - Startup screen with streak, reviews, goals, suggested activity
 - [ ] **Phase 6: World Map Upgrade** - Fast travel, zone completion %, locked zone teasers
@@ -70,8 +70,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Activities menu in pause menu + WorldMap boss nodes + review badge verify (DISC-01, DISC-02, DISC-03)
-- [ ] 03-02-PLAN.md — NPC contextual dialogue hints for hidden features (DISC-04)
+- [x] 03-01-PLAN.md — Activities menu in pause menu + WorldMap boss nodes + review badge verify (DISC-01, DISC-02, DISC-03) ✓ 6 min
+- [x] 03-02-PLAN.md — NPC contextual dialogue hints for hidden features (DISC-04) ✓ 2 min
 
 ### Phase 4: Onboarding & HUD
 **Goal**: Replace static onboarding slideshow with contextual guidance, reduce HUD clutter, and split the bundle
@@ -167,7 +167,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 |-------|----------------|--------|-----------|
 | 1. Critical Fixes | 2/2 | ✓ Complete | 2026-02-08 |
 | 2. Player Guidance | 2/2 | ✓ Complete | 2026-02-08 |
-| 3. Feature Discoverability | 0/2 | Planning complete | - |
+| 3. Feature Discoverability | 2/2 | ✓ Complete | 2026-02-08 |
 | 4. Onboarding & HUD | 0/0 | Not started | - |
 | 5. Daily Dashboard | 0/0 | Not started | - |
 | 6. World Map Upgrade | 0/0 | Not started | - |
@@ -177,4 +177,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 — Phase 2 complete*
+*Last updated: 2026-02-08 — Phase 3 complete*

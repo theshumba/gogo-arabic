@@ -10,10 +10,10 @@ Player-facing UX overhaul with new features. Infrastructure work deferred to v3.
 
 ### Critical Fixes
 
-- [ ] **CRIT-01**: Pause menu renders above all other UI elements (z-index fix)
-- [ ] **CRIT-02**: Quest log and quiz overlay are usable on mobile screens < 450px
-- [ ] **CRIT-03**: All 9 overlays trap keyboard focus (useFocusTrap wired)
-- [ ] **CRIT-04**: Review badge in HUD is clickable and opens review session
+- [x] **CRIT-01**: Pause menu renders above all other UI elements (z-index fix)
+- [x] **CRIT-02**: Quest log and quiz overlay are usable on mobile screens < 450px
+- [x] **CRIT-03**: All 9 overlays trap keyboard focus (useFocusTrap wired)
+- [x] **CRIT-04**: Review badge in HUD is clickable and opens review session
 
 ### Player Guidance
 
@@ -24,10 +24,10 @@ Player-facing UX overhaul with new features. Infrastructure work deferred to v3.
 
 ### Feature Discoverability
 
-- [ ] **DISC-01**: Grammar, Roots, Reading, and Mini-Games are accessible from in-game menu
-- [ ] **DISC-02**: Word Duel bosses are accessible through zone NPCs or world map
-- [ ] **DISC-03**: Daily review sessions can be started from the game HUD
-- [ ] **DISC-04**: Hidden features are mentioned by NPCs through contextual dialogue hints
+- [x] **DISC-01**: Grammar, Roots, Reading, and Mini-Games are accessible from in-game menu
+- [x] **DISC-02**: Word Duel bosses are accessible through zone NPCs or world map
+- [x] **DISC-03**: Daily review sessions can be started from the game HUD
+- [x] **DISC-04**: Hidden features are mentioned by NPCs through contextual dialogue hints
 
 ### Onboarding & HUD
 
@@ -131,18 +131,18 @@ Deferred to future milestone. Infrastructure + content expansion.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CRIT-01 | Phase 1 | Pending |
-| CRIT-02 | Phase 1 | Pending |
-| CRIT-03 | Phase 1 | Pending |
-| CRIT-04 | Phase 1 | Pending |
+| CRIT-01 | Phase 1 | ✓ Complete |
+| CRIT-02 | Phase 1 | ✓ Complete |
+| CRIT-03 | Phase 1 | ✓ Complete |
+| CRIT-04 | Phase 1 | ✓ Complete |
 | GUID-01 | Phase 2 | ✓ Complete |
 | GUID-02 | Phase 2 | ✓ Complete |
 | GUID-03 | Phase 2 | ✓ Complete |
 | GUID-04 | Phase 2 | ✓ Complete |
-| DISC-01 | Phase 3 | Pending |
-| DISC-02 | Phase 3 | Pending |
-| DISC-03 | Phase 3 | Pending |
-| DISC-04 | Phase 3 | Pending |
+| DISC-01 | Phase 3 | ✓ Complete |
+| DISC-02 | Phase 3 | ✓ Complete |
+| DISC-03 | Phase 3 | ✓ Complete |
+| DISC-04 | Phase 3 | ✓ Complete |
 | ONBD-01 | Phase 4 | Pending |
 | ONBD-02 | Phase 4 | Pending |
 | ONBD-03 | Phase 4 | Pending |
@@ -176,4 +176,4 @@ Deferred to future milestone. Infrastructure + content expansion.
 
 ---
 *Requirements defined: 2026-02-08*
-*Last updated: 2026-02-08 — Revised roadmap: player-facing focus*
+*Last updated: 2026-02-08 — Phase 3 complete (DISC-01 through DISC-04)*
