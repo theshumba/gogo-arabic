@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { audioManager } from '../../services/audio.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { COLORS, FONTS } from '../../styles/theme.js';
 
 const styles = {
@@ -67,6 +68,7 @@ const styles = {
 };
 
 export default function ListenAndChoose({ word, choices, feedback, onAnswer }) {
+  const formatArabic = useFormatArabic();
   const [played, setPlayed] = useState(false);
 
   const playAudio = () => {
@@ -79,7 +81,7 @@ export default function ListenAndChoose({ word, choices, feedback, onAnswer }) {
       <div style={styles.instruction}>Listen and choose the English meaning:</div>
 
       {/* Show the Arabic word as prompt (visible to help learners) */}
-      <div style={styles.prompt}>{word.arabic}</div>
+      <div style={styles.prompt}>{formatArabic(word.arabic)}</div>
 
       <button style={styles.playBtn} onClick={playAudio}>
         {played ? 'Play Again' : 'Play Audio'}

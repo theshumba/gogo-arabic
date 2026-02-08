@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import vocabulary from '../../data/vocabularyAll.js';
 import styles from './DialogueOverlay.module.css';
 
@@ -8,6 +9,7 @@ import styles from './DialogueOverlay.module.css';
  */
 export default function TeacherWordCard({ wordId }) {
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
+  const formatArabic = useFormatArabic();
 
   const word = vocabulary.find((w) => w.id === wordId);
   if (!word) return null;
@@ -20,7 +22,7 @@ export default function TeacherWordCard({ wordId }) {
         {alreadyKnown ? 'Review' : 'New Word!'}
       </span>
       <div className={styles.wordCard}>
-        <div className={styles.wordCardArabic}>{word.arabic}</div>
+        <div className={styles.wordCardArabic}>{formatArabic(word.arabic)}</div>
         <div className={styles.wordCardEnglish}>{word.english}</div>
         <div className={styles.wordCardTranslit}>{word.transliteration}</div>
       </div>

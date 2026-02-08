@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { shuffle } from '../../utils/shuffle.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { COLORS, FONTS } from '../../styles/theme.js';
 
 const styles = {
@@ -82,6 +83,7 @@ const styles = {
 };
 
 export default function MatchPairs({ words, onComplete }) {
+  const formatArabic = useFormatArabic();
   // words: array of 4 word objects with arabic & english
   const [arabicOrder] = useState(() => shuffle(words));
   const [englishOrder] = useState(() => shuffle(words));
@@ -157,7 +159,7 @@ export default function MatchPairs({ words, onComplete }) {
               onClick={() => handleArabicClick(w.id)}
               disabled={matched.has(w.id) || !!wrongPair}
             >
-              {w.arabic}
+              {formatArabic(w.arabic)}
             </button>
           ))}
         </div>

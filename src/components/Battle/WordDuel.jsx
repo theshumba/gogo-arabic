@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBattle } from '../../hooks/useBattle.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import BattleResult from './BattleResult.jsx';
 import styles from './WordDuel.module.css';
 
@@ -22,6 +23,7 @@ export default function WordDuel({ bossId, onClose }) {
     useHint,
   } = useBattle(bossId);
 
+  const formatArabic = useFormatArabic();
   const [userInput, setUserInput] = useState('');
   const [bossDialogue, setBossDialogue] = useState('');
   const [showResult, setShowResult] = useState(false);
@@ -210,7 +212,7 @@ export default function WordDuel({ bossId, onClose }) {
           {battle.quizType === 'ar-to-en' && (
             <>
               <p className={styles.prompt}>What does this mean in English?</p>
-              <div className={styles.arabicPrompt}>{battle.currentWord.arabic}</div>
+              <div className={styles.arabicPrompt}>{formatArabic(battle.currentWord.arabic)}</div>
             </>
           )}
 
@@ -275,7 +277,7 @@ export default function WordDuel({ bossId, onClose }) {
                   onClick={() => handleChoice(choice.value)}
                   disabled={!!battle.feedback}
                 >
-                  {idx + 1}. {choice.label}
+                  {idx + 1}. {battle.quizType === 'en-to-ar' ? formatArabic(choice.label) : choice.label}
                 </button>
               ))}
             </div>

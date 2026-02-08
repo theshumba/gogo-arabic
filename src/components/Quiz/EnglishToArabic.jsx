@@ -1,3 +1,4 @@
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { COLORS, FONTS } from '../../styles/theme.js';
 
 const styles = {
@@ -57,6 +58,8 @@ const styles = {
 };
 
 export default function EnglishToArabic({ word, choices, feedback, onAnswer }) {
+  const formatArabic = useFormatArabic();
+
   return (
     <div>
       <div style={styles.instruction}>Choose the Arabic translation:</div>
@@ -75,7 +78,7 @@ export default function EnglishToArabic({ word, choices, feedback, onAnswer }) {
               onClick={() => !feedback && onAnswer(c.value)}
               disabled={!!feedback}
             >
-              {c.label}
+              {formatArabic(c.label)}
             </button>
           );
         })}

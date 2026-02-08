@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { COLORS, FONTS, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import {
   getAllRoots,
   getRootWords,
@@ -23,6 +24,7 @@ import {
  * - Displays meanings and transliterations
  */
 export default function RootExplorer({ onBack }) {
+  const formatArabic = useFormatArabic();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRoot, setSelectedRoot] = useState(null);
@@ -74,7 +76,7 @@ export default function RootExplorer({ onBack }) {
       {/* Header */}
       <div style={styles.header}>
         <h1 style={styles.title}>Root Explorer</h1>
-        <h2 style={styles.titleArabic}>مستكشف الجذور</h2>
+        <h2 style={styles.titleArabic}>{formatArabic('مستكشف الجذور')}</h2>
         <p style={styles.subtitle}>
           Explore the Arabic root system - 3-letter roots that form related words
         </p>
@@ -132,7 +134,7 @@ export default function RootExplorer({ onBack }) {
                   onClick={() => handleRootClick(root)}
                   style={styles.rootCard}
                 >
-                  <div style={styles.rootArabic}>{root.rootSpaced}</div>
+                  <div style={styles.rootArabic}>{formatArabic(root.rootSpaced)}</div>
                   <div style={styles.rootMeaning}>{root.meaning}</div>
                   <div style={styles.rootWordCount}>
                     {root.wordCount} {root.wordCount === 1 ? 'word' : 'words'}
@@ -156,7 +158,7 @@ export default function RootExplorer({ onBack }) {
           </button>
 
           <div style={styles.detailHeader}>
-            <div style={styles.detailRootArabic}>{rootDetails?.rootSpaced || selectedRoot.rootSpaced}</div>
+            <div style={styles.detailRootArabic}>{formatArabic(rootDetails?.rootSpaced || selectedRoot.rootSpaced)}</div>
             <div style={styles.detailMeaning}>{rootDetails?.meaning || selectedRoot.meaning}</div>
           </div>
 
@@ -176,7 +178,7 @@ export default function RootExplorer({ onBack }) {
                         onClick={() => toggleWordDetails(word)}
                         style={styles.wordCard}
                       >
-                        <div style={styles.wordArabic}>{word}</div>
+                        <div style={styles.wordArabic}>{formatArabic(word)}</div>
                         {verbInfo && (
                           <>
                             <div style={styles.wordEnglish}>{verbInfo.english}</div>

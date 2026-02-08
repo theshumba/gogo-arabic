@@ -1,3 +1,4 @@
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import styles from './DialogueOverlay.module.css';
 
 /**
@@ -5,6 +6,7 @@ import styles from './DialogueOverlay.module.css';
  * The choice selection UI with numbered buttons (used for player responses)
  */
 export default function DialogueChoices({ choices, onChoiceSelect, portrait }) {
+  const formatArabic = useFormatArabic();
   return (
     <div className={styles.dialogueBox}>
       {/* Portrait */}
@@ -29,7 +31,7 @@ export default function DialogueChoices({ choices, onChoiceSelect, portrait }) {
               </div>
               {c.arabic && (
                 <div className={styles.choiceArabic} lang="ar">
-                  {c.arabic}
+                  {formatArabic(c.arabic)}
                 </div>
               )}
             </button>

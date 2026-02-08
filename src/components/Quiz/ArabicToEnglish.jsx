@@ -1,3 +1,4 @@
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { COLORS, FONTS } from '../../styles/theme.js';
 
 const styles = {
@@ -60,9 +61,11 @@ const styles = {
 };
 
 export default function ArabicToEnglish({ word, choices, feedback, onAnswer }) {
+  const formatArabic = useFormatArabic();
+
   return (
     <div>
-      <div style={styles.prompt}>{word.arabic}</div>
+      <div style={styles.prompt}>{formatArabic(word.arabic)}</div>
       {word.transliteration && (
         <div style={styles.transliteration}>{word.transliteration}</div>
       )}

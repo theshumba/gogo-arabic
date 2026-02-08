@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useTypewriter } from '../../hooks/useTypewriter.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import styles from './DialogueOverlay.module.css';
 
 /**
@@ -9,12 +10,13 @@ import styles from './DialogueOverlay.module.css';
  */
 export default function DialogueBox({ npc, line, onAdvance, portrait, teachWordCard }) {
   const settings = useSelector((s) => s.settings);
+  const formatArabic = useFormatArabic();
 
   const isPlayerSpeaking = line.speaker === 'player';
   const speakerName = isPlayerSpeaking ? 'You' : npc.name;
 
-  // Typewriter effect for Arabic text
-  const arabicTypewriter = useTypewriter(line.arabic, 30);
+  // Typewriter effect for Arabic text (respects harakat toggle)
+  const arabicTypewriter = useTypewriter(formatArabic(line.arabic), 30);
   // Typewriter effect for English text (starts after Arabic completes)
   const englishTypewriter = useTypewriter(
     arabicTypewriter.isComplete ? line.english : '',

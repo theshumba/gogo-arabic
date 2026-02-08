@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { completeLesson, recordExerciseProgress, recordQuizProgress } from '../../store/slices/grammarSlice.js';
 import { addXP } from '../../store/slices/playerSlice.js';
 import { COLORS, FONTS, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { grammarLessons } from '../../data/grammar.js';
 
 const XP_REWARDS = {
@@ -15,6 +16,7 @@ const XP_REWARDS = {
 
 export default function GrammarLesson({ lessonId, onBack }) {
   const dispatch = useDispatch();
+  const formatArabic = useFormatArabic();
   const lesson = grammarLessons.find((l) => l.id === lessonId);
 
   const [stage, setStage] = useState('explanation'); // explanation, examples, rules, exercises, quiz, complete
@@ -304,7 +306,7 @@ export default function GrammarLesson({ lessonId, onBack }) {
         </div>
 
         <div style={bodyStyle}>
-          <div style={arabicTextStyle}>{lesson.titleArabic}</div>
+          <div style={arabicTextStyle}>{formatArabic(lesson.titleArabic)}</div>
           <div style={sectionTitleStyle}>Lesson {lesson.order} - Difficulty: {'⭐'.repeat(lesson.difficulty)}</div>
 
           <div style={{ ...textStyle, whiteSpace: 'pre-line' }}>{lesson.explanation}</div>
@@ -340,7 +342,7 @@ export default function GrammarLesson({ lessonId, onBack }) {
           {lesson.examples.map((example, idx) => (
             <div key={idx} style={exampleBoxStyle}>
               <div style={{ fontFamily: FONTS.arabicDisplay, fontSize: '24px', color: COLORS.brown, marginBottom: '10px' }}>
-                {example.arabic}
+                {formatArabic(example.arabic)}
               </div>
               <div style={{ fontFamily: FONTS.pixel, fontSize: '12px', color: COLORS.dark, marginBottom: '5px' }}>
                 {example.english}
@@ -471,7 +473,7 @@ export default function GrammarLesson({ lessonId, onBack }) {
                       style={{ ...style, fontFamily: FONTS.arabicDisplay, fontSize: '16px' }}
                       disabled={showFeedback}
                     >
-                      {idx + 1}. {option}
+                      {idx + 1}. {formatArabic(option)}
                     </button>
                   );
                 })}
@@ -502,7 +504,7 @@ export default function GrammarLesson({ lessonId, onBack }) {
                     }}
                     disabled={matchedPairs[idx * 2]}
                   >
-                    {pair[0]}
+                    {formatArabic(pair[0])}
                   </button>,
                   <button
                     key={`${idx}-1`}

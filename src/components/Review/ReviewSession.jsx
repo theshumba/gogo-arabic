@@ -9,6 +9,7 @@ import { reviewCard, getDueCards, Rating } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { shuffle } from '../../utils/shuffle.js';
 import { prepareSentenceQuiz, removeDiacritics } from '../../utils/sentenceParser.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import ArabicKeyboard from '../Keyboard/ArabicKeyboard.jsx';
 import ProgressBar from '../Quiz/ProgressBar.jsx';
 import SentenceBuilder from './SentenceBuilder.jsx';
@@ -44,6 +45,7 @@ export default function ReviewSession({ onBack }) {
   const dispatch = useDispatch();
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
   const settings = useSelector((s) => s.settings);
+  const formatArabic = useFormatArabic();
 
   const [sessionCards] = useState(() => {
     const dueIds = getDueCards(cards);
@@ -330,7 +332,7 @@ export default function ReviewSession({ onBack }) {
         {/* Arabic -> English */}
         {quizType === 'ar-to-en' && (
           <>
-            <div className={styles.arabicWord} lang="ar" role="heading" aria-level="2">{currentWord.arabic}</div>
+            <div className={styles.arabicWord} lang="ar" role="heading" aria-level="2">{formatArabic(currentWord.arabic)}</div>
             {settings.showTransliteration && (
               <div className={styles.transliteration} aria-label={`Transliteration: ${currentWord.transliteration}`}>{currentWord.transliteration}</div>
             )}
@@ -391,7 +393,7 @@ export default function ReviewSession({ onBack }) {
                     aria-label={ariaLabel}
                     aria-pressed={selected === w.arabic}
                   >
-                    {w.arabic}
+                    {formatArabic(w.arabic)}
                   </button>
                 );
               })}
@@ -408,7 +410,7 @@ export default function ReviewSession({ onBack }) {
             </div>
             {typingDone && !isCorrect && (
               <div className={styles.correctAnswer}>
-                {currentWord.arabic}
+                {formatArabic(currentWord.arabic)}
               </div>
             )}
             {!typingDone && (

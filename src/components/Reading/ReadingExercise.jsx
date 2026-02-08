@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { COLORS, FONTS, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { PASSAGES, getPassagesByDifficulty } from '../../data/readingPassages.js';
 
 /**
@@ -18,6 +19,7 @@ import { PASSAGES, getPassagesByDifficulty } from '../../data/readingPassages.js
  * - Keyboard controls (1-4 for answers, T for translation, Enter to continue)
  */
 export default function ReadingExercise({ onBack }) {
+  const formatArabic = useFormatArabic();
   const [difficulty, setDifficulty] = useState(null);
   const [currentPassageIndex, setCurrentPassageIndex] = useState(0);
   const [showTranslation, setShowTranslation] = useState(false);
@@ -254,13 +256,13 @@ export default function ReadingExercise({ onBack }) {
       {/* Passage title */}
       <div style={styles.passageHeader}>
         <h2 style={styles.passageTitle}>{passage.title}</h2>
-        <h3 style={styles.passageTitleArabic}>{passage.titleArabic}</h3>
+        <h3 style={styles.passageTitleArabic}>{formatArabic(passage.titleArabic)}</h3>
         <div style={styles.difficultyBadge}>Level {passage.difficulty}</div>
       </div>
 
       {/* Arabic passage */}
       <div style={styles.passageBox}>
-        <p style={styles.arabicText}>{passage.arabic}</p>
+        <p style={styles.arabicText}>{formatArabic(passage.arabic)}</p>
 
         {/* Toggle buttons */}
         <div style={styles.toggleButtons}>

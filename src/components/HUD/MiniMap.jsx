@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { EventBus } from '../../utils/eventBus.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { ZONES } from '../../data/zones.js';
 import styles from './MiniMap.module.css';
 
@@ -11,6 +12,7 @@ import styles from './MiniMap.module.css';
 export default function MiniMap() {
   const currentZone = useSelector((s) => s.player.currentZone);
   const unlockedZones = useSelector((s) => s.player.unlockedZones);
+  const formatArabic = useFormatArabic();
 
   const zone = ZONES[currentZone];
 
@@ -42,7 +44,7 @@ export default function MiniMap() {
         {zone.name}
       </div>
       <div className={styles.zoneNameArabic} lang="ar" aria-hidden="true">
-        {zone.nameArabic}
+        {formatArabic(zone.nameArabic)}
       </div>
 
       {adjacentZones.length > 0 && (

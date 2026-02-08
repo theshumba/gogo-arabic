@@ -126,7 +126,7 @@ export default function SettingsMenu({ onBack }) {
         </div>
 
         <div style={styles.settingRow}>
-          <span style={styles.label}>Show Diacritics</span>
+          <span style={styles.label}>Show Harakat</span>
           <button
             style={settings.showDiacritics ? styles.toggleOn : styles.toggleOff}
             onClick={() => dispatch(toggleDiacritics())}

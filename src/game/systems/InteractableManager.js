@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
 import { store } from '../../store/store.js';
+import { stripDiacritics } from '../../utils/arabicUtils.js';
 
 // Interactable proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
@@ -43,10 +44,12 @@ export class InteractableManager {
       }
       objectSprites.push(sprite);
 
-      // Label above the object
-      const labelText = cfg.type === 'sign' ? cfg.textArabic
+      // Label above the object (respects harakat setting)
+      const showDiacritics = store.getState().settings?.showDiacritics ?? true;
+      const rawLabel = cfg.type === 'sign' ? cfg.textArabic
         : cfg.type === 'bookshelf' ? 'Bookshelf'
         : 'Chest';
+      const labelText = (cfg.type === 'sign' && !showDiacritics) ? stripDiacritics(rawLabel) : rawLabel;
       const label = this.scene.add.text(px, py - 50, labelText, {
         fontFamily: cfg.type === 'sign' ? "'Noto Naskh Arabic', serif" : "'Press Start 2P', monospace",
         fontSize: cfg.type === 'sign' ? '14px' : '7px',

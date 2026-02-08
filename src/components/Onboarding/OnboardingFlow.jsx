@@ -5,6 +5,7 @@ import { addFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { createNewCard } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { useAudio } from '../../hooks/useAudio.js';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import styles from './OnboardingFlow.module.css';
 
 /**
@@ -25,6 +26,7 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
   const [wordRevealed, setWordRevealed] = useState(false);
   const dispatch = useDispatch();
   const { playSFX } = useAudio();
+  const formatArabic = useFormatArabic();
 
   const totalSteps = 6;
 
@@ -63,7 +65,7 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
       case 0:
         return (
           <div className={styles.stepContent}>
-            <h1 className={styles.arabicTitle}>!أَهْلاً وَسَهْلاً</h1>
+            <h1 className={styles.arabicTitle}>{formatArabic('!أَهْلاً وَسَهْلاً')}</h1>
             <p className={styles.transliteration}>ahlan wa sahlan!</p>
             <h2 className={styles.subtitle}>Welcome to GoGo Arabic!</h2>
             <p className={styles.description}>
@@ -118,7 +120,7 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
                 </button>
               ) : (
                 <div className={styles.wordRevealed}>
-                  <div className={styles.arabicWord}>مَرْحَبا</div>
+                  <div className={styles.arabicWord}>{formatArabic('مَرْحَبا')}</div>
                   <div className={styles.transliteration}>marhaba</div>
                   <div className={styles.englishWord}>hello</div>
                   <div className={styles.wordNote}>
