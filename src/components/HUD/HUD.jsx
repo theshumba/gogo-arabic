@@ -11,7 +11,7 @@ import { EventBus } from '../../utils/eventBus.js';
 import styles from './HUD.module.css';
 import AchievementPanel from '../Achievements/AchievementPanel.jsx';
 import DailyGoalsPanel from '../Goals/DailyGoalsPanel.jsx';
-import SyncIndicator from './SyncIndicator.jsx';
+import StatsPanel from './StatsPanel.jsx';
 import QuestTracker from './QuestTracker.jsx';
 
 function HUD({ onMenu }) {
@@ -23,7 +23,7 @@ function HUD({ onMenu }) {
   const [showStamina, setShowStamina] = useState(false);
 
   // Use memoized selectors from Redux slices
-  const { level, xp, xpToNextLevel, streak, dirhams, wordsLearned } = useSelector(selectPlayerStats);
+  const { level, xp, xpToNextLevel } = useSelector(selectPlayerStats);
   const activeQuestCount = useSelector(selectActiveQuestCount);
   const reviewDueCount = useSelector(selectReviewQueueCount);
   const achievementCount = useSelector(selectUnlockedCount);
@@ -155,16 +155,9 @@ function HUD({ onMenu }) {
           )}
         </div>
 
-        {/* Center: Streak + Sync Indicator */}
-        <div className={styles.center}>
-          <span className={styles.streakText} aria-label={`Current streak: ${streak} days`}>Streak: {streak}</span>
-          <SyncIndicator />
-        </div>
-
-        {/* Right: Stats + Buttons */}
+        {/* Right: StatsPanel + Buttons */}
         <div className={styles.right}>
-          <span className={styles.dirhams} aria-label={`${dirhams} Dirhams currency`}>{dirhams} D</span>
-          <span className={styles.statLabel} aria-label={`${wordsLearned} words learned`}>Words: {wordsLearned}</span>
+          <StatsPanel />
 
           {/* Alphabet/Letters button with progress badge */}
           <motion.button
