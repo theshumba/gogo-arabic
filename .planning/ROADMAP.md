@@ -36,10 +36,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Quest log and quiz overlays are fully usable on screens down to 375px width
   3. All 9 overlays (dialogue, quiz, quest log, achievements, goals, sign, level-up, shop, onboarding) trap keyboard focus and prevent Tab escaping
   4. Review badge in HUD opens review session when clicked
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: TBD
+- [ ] 01-01-PLAN.md — Z-index tokens + clickable review badge (CRIT-01, CRIT-04)
+- [ ] 01-02-PLAN.md — Responsive overlay migration + focus traps (CRIT-02, CRIT-03)
 
 ### Phase 2: Player Guidance
 **Goal**: Eliminate "what do I do next?" confusion through visual guidance systems
@@ -145,11 +146,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Critical Fixes | 0/0 | Not started | - |
+| 1. Critical Fixes | 0/2 | Planning complete | - |
 | 2. Player Guidance | 0/0 | Not started | - |
 | 3. Feature Discoverability | 0/0 | Not started | - |
 | 4. Performance Optimization | 0/0 | Not started | - |
