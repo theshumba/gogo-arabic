@@ -10,29 +10,29 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 ## Current Position
 
 Phase: 2 of 9 (Player Guidance)
-Plan: 1 of 3 completed
-Status: In progress - NPC quest markers complete, HUD and compass next
-Last activity: 2026-02-08 — Completed 02-01-PLAN.md (NPC quest markers + active quest tracking)
+Plan: 2 of 3 completed
+Status: In progress - NPC markers + HUD compass complete, 3rd plan next
+Last activity: 2026-02-08 — Completed 02-02-PLAN.md (Quest Objective HUD + Compass)
 
-Progress: [███░░░░░░░] 30% (3/10 plans complete across all phases)
+Progress: [████░░░░░░] 40% (4/10 plans complete across all phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 6 minutes
-- Total execution time: 0.27 hours
+- Total plans completed: 4
+- Average duration: 4.5 minutes
+- Total execution time: 0.30 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 - Critical Fixes | 2/2 | 9 min | 4.5 min |
-| 02 - Player Guidance | 1/3 | 7 min | 7 min |
+| 02 - Player Guidance | 2/3 | 8 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-02 (7 min), 02-01 (7 min)
-- Trend: Consistent velocity at ~7 min/plan
+- Last 5 plans: 01-01 (2 min), 01-02 (7 min), 02-01 (7 min), 02-02 (1 min)
+- Trend: Phase 2 velocity improving, average 4 min/plan
 
 *Updated after each plan completion*
 
@@ -69,6 +69,13 @@ Recent decisions affecting current work:
 - Quest marker priority system: turn-in marker (green ?) takes precedence over available marker (golden !) for same NPC
 - Phaser Redux integration pattern: store.getState() in game loop (can't use React hooks in Phaser classes)
 
+**From 02-02 execution:**
+- Throttle player position updates to ~10Hz (every 6 frames) to avoid spamming React with 60fps updates
+- Hide compass when objective is within 128px (2 tiles) - player is already close enough
+- CSS transform for compass rotation with 0.15s transition for smooth rotation
+- Phaser EventBus throttling pattern: Frame counter % N for controlled update rate
+- Distance-based UI visibility: Show compass only when objective is far enough to need guidance
+
 ### Pending Todos
 
 None yet.
@@ -80,9 +87,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed 02-01-PLAN.md (NPC quest markers + active quest tracking)
-Resume file: .planning/phases/02-player-guidance/02-02-PLAN.md (Quest Objective HUD - next)
+Stopped at: Completed 02-02-PLAN.md (Quest Objective HUD + Compass)
+Resume file: .planning/phases/02-player-guidance/02-03-PLAN.md (if exists, else Phase 2 complete)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-08 16:53 UTC*
+*Last updated: 2026-02-08 16:52 UTC*
