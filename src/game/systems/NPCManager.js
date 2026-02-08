@@ -57,6 +57,7 @@ export class NPCManager {
   update(playerSprite, domOverlay, interactKey, interactCooldown, setInteractCooldown) {
     // Read quest marker state from Redux (Phaser can't use React hooks)
     const markers = selectNpcQuestMarkers(store.getState());
+    const onboardingTargetNpc = store.getState().player.onboardingTargetNpc;
 
     this.npcs.forEach((npc) => {
       const dist = Phaser.Math.Distance.Between(
@@ -74,6 +75,9 @@ export class NPCManager {
       // Update quest marker (!, ?, or hidden)
       const marker = markers[npc.npcId] || null;
       npc.setQuestMarker(marker);
+
+      // Update onboarding highlight
+      npc.setOnboardingHighlight(!!onboardingTargetNpc && npc.npcId === onboardingTargetNpc);
 
       // Show/hide the DOM overlay SPACE prompt
       domOverlay.setVisible(`prompt-${npc.npcId}`, inRange);
@@ -117,9 +121,6 @@ export class NPCManager {
    */
   destroy() {
     this.npcs.forEach((npc) => {
-      if (npc.hintText) npc.hintText.destroy();
-      if (npc.nameLabel) npc.nameLabel.destroy();
-      if (npc.questMarker) npc.questMarker.destroy();
       npc.destroy();
     });
     this.npcs = [];

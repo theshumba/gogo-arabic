@@ -1,1 +1,1 @@
-export { default as OnboardingFlow } from './OnboardingFlow.jsx';
+export { default as ContextualOnboarding } from './ContextualOnboarding.jsx';

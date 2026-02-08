@@ -18,7 +18,6 @@ import {
   incrementWordsLearned,
   markChestOpened,
   markBookRead,
-  completeOnboarding,
 } from '../../store/slices/playerSlice.js';
 import { addFsrsCard } from '../../store/slices/vocabularySlice.js';
 import {
@@ -46,7 +45,7 @@ import DialogueOverlay from '../NPC/DialogueOverlay.jsx';
 import QuizOverlay from '../Quiz/QuizOverlay.jsx';
 import QuestLog from '../Quest/QuestLog.jsx';
 import SignOverlay from '../World/SignOverlay.jsx';
-import OnboardingFlow from '../Onboarding/OnboardingFlow.jsx';
+import ContextualOnboarding from '../Onboarding/ContextualOnboarding.jsx';
 import LevelUpModal from '../UI/LevelUpModal.jsx';
 import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
 import AchievementToast from '../Achievements/AchievementToast.jsx';
@@ -495,16 +494,6 @@ export default function GameLayout() {
     };
   }, [dispatch, fsrsCards, quests, playSFX, navigate]);
 
-  // Onboarding handlers
-  const handleOnboardingComplete = () => {
-    dispatch(completeOnboarding());
-    dispatch(showNotification({ message: 'Welcome to GoGo Arabic!', type: 'quest' }));
-  };
-
-  const handleOnboardingSkip = () => {
-    dispatch(completeOnboarding());
-  };
-
   // Track session time for daily goals
   useEffect(() => {
     // Start session when component mounts
@@ -571,12 +560,7 @@ export default function GameLayout() {
       <LevelUpModal />
 
       {/* Onboarding overlay (highest priority) */}
-      {!onboardingComplete && (
-        <OnboardingFlow
-          onComplete={handleOnboardingComplete}
-          onSkip={handleOnboardingSkip}
-        />
-      )}
+      {!onboardingComplete && <ContextualOnboarding />}
 
       {/* Conditional overlays */}
       {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}

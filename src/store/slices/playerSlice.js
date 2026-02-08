@@ -29,6 +29,8 @@ const initialState = {
   levelUpRewards: null, // Pending level-up reward to display
   streakRewardPending: null, // Pending streak reward to display
   onboardingComplete: false, // Whether the player has completed the onboarding flow
+  onboardingStep: 0, // Current step index in contextual onboarding (0-4)
+  onboardingTargetNpc: null, // NPC ID to highlight during onboarding (e.g., 'scholar-yusuf')
 };
 
 const playerSlice = createSlice({
@@ -234,6 +236,17 @@ const playerSlice = createSlice({
     completeOnboarding(state) {
       state.onboardingComplete = true;
     },
+
+    setOnboardingStep(state, action) {
+      const step = action.payload;
+      if (typeof step === 'number' && step >= 0 && step <= 4) {
+        state.onboardingStep = step;
+      }
+    },
+
+    setOnboardingTargetNpc(state, action) {
+      state.onboardingTargetNpc = action.payload;
+    },
   },
 });
 
@@ -261,6 +274,8 @@ export const {
   setCurrentTitle,
   addTitle,
   completeOnboarding,
+  setOnboardingStep,
+  setOnboardingTargetNpc,
 } = playerSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -318,6 +333,16 @@ export const selectStreakInfo = createSelector(
     current: player.streak,
     max: player.maxStreak,
     lastPlayed: player.lastPlayedDate,
+  })
+);
+
+// Select onboarding state
+export const selectOnboardingState = createSelector(
+  [(state) => state.player],
+  (player) => ({
+    step: player.onboardingStep,
+    complete: player.onboardingComplete,
+    targetNpc: player.onboardingTargetNpc,
   })
 );
 
