@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
 import { selectNewAchievements, dismissAchievementNotification } from '../../store/slices/achievementSlice.js';
 import { getAchievementById, RARITY_COLORS } from '../../data/achievements.js';
 import { COLORS, FONTS } from '../../styles/theme.js';
@@ -24,7 +25,6 @@ const styles = {
       0 0 20px rgba(226, 182, 89, 0.6),
       inset 0 0 20px rgba(226, 182, 89, 0.1)
     `,
-    animation: 'achievementSlideIn 0.4s ease-out',
     pointerEvents: 'auto',
     cursor: 'pointer',
   },
@@ -102,6 +102,7 @@ const styles = {
 function Toast({ achievementId, onDismiss }) {
   const [progress, setProgress] = useState(100);
   const achievement = getAchievementById(achievementId);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
     // Auto-dismiss after 5 seconds
@@ -124,8 +125,24 @@ function Toast({ achievementId, onDismiss }) {
 
   const rarityColor = RARITY_COLORS[achievement.rarity] || COLORS.white;
 
+  const toastVariants = {
+    hidden: { opacity: 0, y: -50, scale: 0.9 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: -20, scale: 0.95 },
+  };
+
+  const toastVariantsReduced = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 },
+  };
+
+  const transition = reduceMotion
+    ? { duration: 0.2 }
+    : { duration: 0.35, ease: 'easeOut' };
+
   return (
-    <div
+    <motion.div
       style={{
         ...styles.toast,
         borderColor: rarityColor,
@@ -135,6 +152,11 @@ function Toast({ achievementId, onDismiss }) {
         `,
       }}
       onClick={() => onDismiss(achievementId)}
+      variants={reduceMotion ? toastVariantsReduced : toastVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      transition={transition}
     >
       <button style={styles.closeBtn} onClick={(e) => { e.stopPropagation(); onDismiss(achievementId); }}>
         ✕
@@ -162,7 +184,7 @@ function Toast({ achievementId, onDismiss }) {
       <div style={styles.progressBar}>
         <div style={{ ...styles.progressFill, width: `${progress}%` }} />
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -181,22 +203,8 @@ export default function AchievementToast() {
   if (visibleAchievements.length === 0) return null;
 
   return (
-    <>
-      <style>
-        {`
-          @keyframes achievementSlideIn {
-            from {
-              transform: translateX(400px);
-              opacity: 0;
-            }
-            to {
-              transform: translateX(0);
-              opacity: 1;
-            }
-          }
-        `}
-      </style>
-      <div style={styles.container}>
+    <div style={styles.container}>
+      <AnimatePresence mode="sync">
         {visibleAchievements.map((achievementId) => (
           <Toast
             key={achievementId}
@@ -204,7 +212,7 @@ export default function AchievementToast() {
             onDismiss={handleDismiss}
           />
         ))}
-      </div>
-    </>
+      </AnimatePresence>
+    </div>
   );
 }

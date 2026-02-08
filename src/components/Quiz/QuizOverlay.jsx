@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useQuiz } from '../../hooks/useQuiz.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { selectWordsByDifficulty } from '../../utils/wordSelection.js';
@@ -182,10 +183,44 @@ export default function QuizOverlay() {
     EventBus.emit('sfx-quest');
   }, [quiz.sessionWords, answer]);
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1 },
+  };
+
+  const transition = reduceMotion
+    ? { duration: 0.15 }
+    : { duration: 0.25, ease: 'easeOut' };
+
+  const buttonProps = reduceMotion
+    ? {}
+    : { whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 } };
+
   if (showSummary) {
     return (
-      <div style={styles.overlay}>
-        <div style={styles.card}>
+      <motion.div
+        style={styles.overlay}
+        variants={overlayVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        transition={transition}
+      >
+        <motion.div
+          style={styles.card}
+          variants={cardVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          transition={transition}
+        >
           <div style={styles.summary}>
             <div style={styles.summaryTitle}>Quiz Complete</div>
             <div style={styles.summaryScore}>
@@ -196,12 +231,16 @@ export default function QuizOverlay() {
                 ? 'Perfect score!'
                 : 'Keep practicing!'}
             </p>
-            <button style={styles.closeBtn} onClick={close}>
+            <motion.button
+              style={styles.closeBtn}
+              onClick={close}
+              {...buttonProps}
+            >
               Continue
-            </button>
+            </motion.button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
@@ -209,8 +248,22 @@ export default function QuizOverlay() {
   if (quiz.active && quiz.quizType === 'match') {
     const matchWords = quiz.sessionWords.slice(0, 4);
     return (
-      <div style={styles.overlay}>
-        <div style={styles.card}>
+      <motion.div
+        style={styles.overlay}
+        variants={overlayVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        transition={transition}
+      >
+        <motion.div
+          style={styles.card}
+          variants={cardVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          transition={transition}
+        >
           <div style={styles.header}>
             <span>{QUIZ_TYPE_LABELS['match']}</span>
           </div>
@@ -218,8 +271,8 @@ export default function QuizOverlay() {
             words={matchWords}
             onComplete={handleMatchComplete}
           />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
@@ -236,8 +289,22 @@ export default function QuizOverlay() {
   const totalQuestions = quiz.sessionWords.length;
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.card}>
+    <motion.div
+      style={styles.overlay}
+      variants={overlayVariants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      transition={transition}
+    >
+      <motion.div
+        style={styles.card}
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        transition={transition}
+      >
         <div style={styles.header}>
           <span>{QUIZ_TYPE_LABELS[quiz.quizType] || quiz.quizType}</span>
           <span style={styles.score}>
@@ -282,21 +349,30 @@ export default function QuizOverlay() {
           />
         )}
 
-        {combinedFeedback && (
-          <div style={styles.feedbackRow}>
-            <button
-              style={{
-                ...styles.nextBtn,
-                ...(combinedFeedback.correct ? styles.nextBtnCorrect : styles.nextBtnWrong),
-              }}
-              onClick={handleNext}
+        <AnimatePresence mode="wait">
+          {combinedFeedback && (
+            <motion.div
+              style={styles.feedbackRow}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
             >
-              {combinedFeedback.correct ? 'Correct! Next' : 'Next'}
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
+              <motion.button
+                style={{
+                  ...styles.nextBtn,
+                  ...(combinedFeedback.correct ? styles.nextBtnCorrect : styles.nextBtnWrong),
+                }}
+                onClick={handleNext}
+                {...buttonProps}
+              >
+                {combinedFeedback.correct ? 'Correct! Next' : 'Next'}
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
   );
 }
 

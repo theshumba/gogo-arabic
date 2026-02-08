@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
     keyboardMode: { type: String, default: 'standard' },
     difficulty: { type: String, default: 'normal' },
   },
+  // Cloud sync versioning
+  syncVersion: { type: Number, default: 0 },
+  lastSyncedAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 
 // Hash password before saving

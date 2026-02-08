@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { motion } from 'framer-motion';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
 import { spendDirhams, addToInventory, setOutfit, setHeadCovering } from '../../store/slices/playerSlice.js';
 import { recordShopPurchase } from '../../store/slices/achievementSlice.js';
@@ -208,9 +209,39 @@ function ShopOverlay() {
     });
   }, [tab]);
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1 },
+  };
+
+  const transition = reduceMotion
+    ? { duration: 0.15 }
+    : { duration: 0.25, ease: 'easeOut' };
+
   return (
-    <div style={styles.overlay}>
-      <div style={styles.card}>
+    <motion.div
+      style={styles.overlay}
+      variants={overlayVariants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      transition={transition}
+    >
+      <motion.div
+        style={styles.card}
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        transition={transition}
+      >
         <div style={styles.header}>
           <div style={styles.title}>Merchant Fatima's Shop</div>
           <div style={styles.balance}>Dirhams: {player.dirhams}</div>
@@ -283,10 +314,20 @@ function ShopOverlay() {
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
-      {toast && <div style={styles.toast}>{toast}</div>}
-    </div>
+      {toast && (
+        <motion.div
+          style={styles.toast}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+        >
+          {toast}
+        </motion.div>
+      )}
+    </motion.div>
   );
 }
 

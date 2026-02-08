@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { motion } from 'framer-motion';
 import { showNotification } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { ZONES, ZONE_ORDER } from '../../data/zones.js';
@@ -181,9 +182,41 @@ export default function WorldMap({ onBack }) {
     );
   };
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1 },
+  };
+
+  const transition = reduceMotion
+    ? { duration: 0.15 }
+    : { duration: 0.3, ease: 'easeOut' };
+
   return (
-    <div className={styles.overlay} role="dialog" aria-label="World Map">
-      <div className={styles.card}>
+    <motion.div
+      className={styles.overlay}
+      role="dialog"
+      aria-label="World Map"
+      variants={overlayVariants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      transition={transition}
+    >
+      <motion.div
+        className={styles.card}
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        transition={transition}
+      >
         <div className={styles.header}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <h1 className={styles.title}>World Map</h1>
@@ -217,7 +250,7 @@ export default function WorldMap({ onBack }) {
             <span>Locked</span>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

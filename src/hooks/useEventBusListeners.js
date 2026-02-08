@@ -1,14 +1,11 @@
-import { useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   openDialogue,
   openQuiz,
   openSign,
-  toggleMenu,
   showNotification,
-} from '../../store/slices/uiSlice.js';
+} from '../store/slices/uiSlice.js';
 import {
   setCurrentZone,
   unlockZone,
@@ -17,65 +14,35 @@ import {
   incrementWordsLearned,
   markChestOpened,
   markBookRead,
-} from '../../store/slices/playerSlice.js';
-import { addFsrsCard } from '../../store/slices/vocabularySlice.js';
-import { updateQuestProgress, completeQuest, checkPrerequisites } from '../../store/slices/questSlice.js';
-import { createNewCard } from '../../services/fsrs.js';
-import { XP_REWARDS } from '../../utils/xpCalculator.js';
-import vocabulary from '../../data/vocabularyAll.js';
-import questsData from '../../data/quests.json';
-import { EventBus } from '../../utils/eventBus.js';
-import { store } from '../../store/store.js';
-import { ZONES } from '../../data/zones.js';
-import { useAudio } from '../../hooks/useAudio.js';
-
-import { PhaserGame } from '../../game/PhaserGame.jsx';
-import HUD from '../HUD/HUD.jsx';
-import NotificationToast from '../HUD/NotificationToast.jsx';
-import DialogueOverlay from '../NPC/DialogueOverlay.jsx';
-import QuizOverlay from '../Quiz/QuizOverlay.jsx';
-import QuestLog from '../Quest/QuestLog.jsx';
-import SignOverlay from '../World/SignOverlay.jsx';
-import styles from './GameLayout.module.css';
-
-function PauseMenu({ onResume, onMainMenu }) {
-  return (
-    <div className={styles.pauseMenuOverlay}>
-      <div className={styles.pauseMenuTitle}>Paused</div>
-      <div className={styles.pauseMenuButtons}>
-        <button onClick={onResume} className={styles.pauseMenuBtnResume}>
-          Resume
-        </button>
-        <button onClick={onMainMenu} className={styles.pauseMenuBtnMenu}>
-          Main Menu
-        </button>
-      </div>
-    </div>
-  );
-}
+} from '../store/slices/playerSlice.js';
+import {
+  addFsrsCard,
+} from '../store/slices/vocabularySlice.js';
+import {
+  updateQuestProgress,
+  completeQuest,
+  checkPrerequisites,
+} from '../store/slices/questSlice.js';
+import { createNewCard } from '../services/fsrs.js';
+import { XP_REWARDS } from '../utils/xpCalculator.js';
+import vocabulary from '../data/vocabularyAll.js';
+import questsData from '../data/quests.json';
+import { EventBus } from '../utils/eventBus.js';
+import { store } from '../store/store.js';
+import { ZONES } from '../data/zones.js';
 
 /**
- * Layout component for /game/* routes
- * Keeps Phaser canvas mounted across sub-route navigation
- * Handles all EventBus listeners for Phaser <-> React communication
+ * useEventBusListeners
+ * Sets up all EventBus listeners for Phaser <-> React communication
  */
-export default function GameLayout() {
-  const phaserRef = useRef(null);
+export function useEventBusListeners(phaserRef, playSFX) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { playSFX } = useAudio();
-
-  const dialogueOpen = useSelector((state) => state.ui.dialogueOpen);
-  const dialogueConfig = useSelector((state) => state.ui.dialogueConfig);
-  const quizOpen = useSelector((state) => state.ui.quizOpen);
-  const menuOpen = useSelector((state) => state.ui.menuOpen);
-  const signOpen = useSelector((state) => state.ui.signOpen);
   const fsrsCards = useSelector((state) => state.vocabulary.fsrsCards);
   const quests = useSelector((state) => state.quests.quests);
 
   // Track word learned for quest progress
   const trackWordLearned = (category) => {
+    // Map word categories to quest trackEvents
     const categoryToEvent = {
       greetings: 'word_learned_greetings',
       trade: 'word_learned_trade',
@@ -95,10 +62,12 @@ export default function GameLayout() {
     };
     const event = categoryToEvent[category];
 
+    // Update category-specific quest
     if (event) {
       for (const qd of questsData) {
         if (qd.trackEvent === event && quests[qd.id]?.status === 'active') {
           dispatch(updateQuestProgress({ questId: qd.id, amount: 1 }));
+          // Check if quest is now complete
           const current = (quests[qd.id]?.progress || 0) + 1;
           if (current >= qd.target) {
             dispatch(completeQuest(qd.id));
@@ -109,6 +78,7 @@ export default function GameLayout() {
       }
     }
 
+    // Always update "word_learned_any" quests
     for (const qd of questsData) {
       if (qd.trackEvent === 'word_learned_any' && quests[qd.id]?.status === 'active') {
         dispatch(updateQuestProgress({ questId: qd.id, amount: 1 }));
@@ -122,7 +92,6 @@ export default function GameLayout() {
     }
   };
 
-  // EventBus listeners for Phaser -> React communication
   useEffect(() => {
     const handleNpcInteract = ({ npcId, npcName }) => {
       playSFX('click');
@@ -138,7 +107,8 @@ export default function GameLayout() {
     };
 
     const handleOpenAlphabet = () => {
-      navigate('/alphabet');
+      // Legacy: alphabet navigation now handled by React Router
+      // This handler remains as a no-op for backward compatibility with EventBus
     };
 
     const handleShowSign = ({ arabic, english }) => {
@@ -148,34 +118,34 @@ export default function GameLayout() {
 
     const handleBookshelfInteract = ({ category, id, reread }) => {
       playSFX('bookflip');
+      // Persist that this bookshelf has been read
       if (!reread) {
         dispatch(markBookRead(id));
       }
+      // Find a random word from this category that the player hasn't learned
       const categoryWords = vocabulary.filter((w) => w.category === category);
       const unknownWords = categoryWords.filter((w) => !fsrsCards[w.id]);
       const pool = unknownWords.length > 0 ? unknownWords : categoryWords;
       const word = pool[Math.floor(Math.random() * pool.length)];
 
       if (word && !reread) {
+        // Teach the word if it's new
         if (!fsrsCards[word.id]) {
           dispatch(addFsrsCard({ wordId: word.id, card: createNewCard() }));
           dispatch(incrementWordsLearned());
           dispatch(addXP(XP_REWARDS.NEW_WORD));
+          // Track quest progress
           trackWordLearned(word.category);
         }
-        dispatch(
-          showNotification({
-            message: `${word.arabic} — ${word.english}`,
-            type: 'word',
-          })
-        );
+        dispatch(showNotification({
+          message: `${word.arabic} — ${word.english}`,
+          type: 'word',
+        }));
       } else if (reread) {
-        dispatch(
-          showNotification({
-            message: `${word.arabic} — ${word.english}`,
-            type: 'word',
-          })
-        );
+        dispatch(showNotification({
+          message: `${word.arabic} — ${word.english}`,
+          type: 'word',
+        }));
       }
       EventBus.emit('unfreeze-player');
     };
@@ -185,67 +155,63 @@ export default function GameLayout() {
       playSFX('coin');
       dispatch(markChestOpened(id));
       dispatch(addDirhams(amount));
-      dispatch(
-        showNotification({
-          message: `Found ${amount} dirhams!`,
-          type: 'dirhams',
-        })
-      );
+      dispatch(showNotification({
+        message: `Found ${amount} dirhams!`,
+        type: 'dirhams',
+      }));
     };
 
     const handleChestEmpty = () => {
       playSFX('click');
-      dispatch(
-        showNotification({
-          message: 'Already opened!',
-          type: 'dirhams',
-        })
-      );
+      dispatch(showNotification({
+        message: 'Already opened!',
+        type: 'dirhams',
+      }));
     };
 
     const handleCheckZoneUnlock = ({ zoneName, entryX, entryY, unlock }) => {
+      // If no unlock requirement, allow transition
       if (!unlock) {
         EventBus.emit('zone-transition', { zoneName, entryX, entryY });
         return;
       }
+      // Check quest completion
       if (unlock.quest && quests[unlock.quest]?.status !== 'completed') {
         const qd = questsData.find((q) => q.id === unlock.quest);
         playSFX('wrong');
-        dispatch(
-          showNotification({
-            message: `Locked! Complete: ${qd?.title || unlock.quest}`,
-            type: 'quest',
-          })
-        );
+        dispatch(showNotification({
+          message: `Locked! Complete: ${qd?.title || unlock.quest}`,
+          type: 'quest',
+        }));
         return;
       }
+      // Check level
       const playerState = store.getState().player;
       if (unlock.minLevel && playerState.level < unlock.minLevel) {
         playSFX('wrong');
-        dispatch(
-          showNotification({
-            message: `Locked! Need level ${unlock.minLevel}`,
-            type: 'quest',
-          })
-        );
+        dispatch(showNotification({
+          message: `Locked! Need level ${unlock.minLevel}`,
+          type: 'quest',
+        }));
         return;
       }
+      // Check words learned
       if (unlock.minWords && playerState.wordsLearned < unlock.minWords) {
         playSFX('wrong');
-        dispatch(
-          showNotification({
-            message: `Locked! Need ${unlock.minWords} words learned`,
-            type: 'quest',
-          })
-        );
+        dispatch(showNotification({
+          message: `Locked! Need ${unlock.minWords} words learned`,
+          type: 'quest',
+        }));
         return;
       }
+      // All checks passed — unlock the zone and transition
       dispatch(unlockZone(zoneName));
       EventBus.emit('zone-transition', { zoneName, entryX, entryY });
     };
 
     const handleZoneTransition = ({ zoneName, entryX, entryY }) => {
       playSFX('transition');
+      // Get the WorldScene's zoneTransition system and trigger it
       const game = phaserRef.current?.game;
       if (game) {
         const worldScene = game.scene.getScene('WorldScene');
@@ -256,10 +222,12 @@ export default function GameLayout() {
     };
 
     const handleFastTravel = ({ zoneName }) => {
+      // Fast travel from world map — get spawn point from zone data
       const zone = ZONES[zoneName];
       if (!zone) return;
       const entryX = zone.spawnPoint.x * 64;
       const entryY = zone.spawnPoint.y * 64;
+      // Get the WorldScene's zoneTransition and trigger it
       const game = phaserRef.current?.game;
       if (game) {
         const worldScene = game.scene.getScene('WorldScene');
@@ -269,6 +237,7 @@ export default function GameLayout() {
       }
     };
 
+    // SFX event handlers (emitted by UI components)
     const handleSfxCorrect = () => playSFX('correct');
     const handleSfxWrong = () => playSFX('wrong');
     const handleSfxWordlearned = () => playSFX('wordlearned');
@@ -313,38 +282,5 @@ export default function GameLayout() {
       EventBus.off('sfx-quest', handleSfxQuest);
       EventBus.off('sfx-click', handleSfxClick);
     };
-  }, [dispatch, fsrsCards, quests, playSFX]);
-
-  return (
-    <div className={styles.container}>
-      {/* Phaser canvas - full screen, lowest z-index */}
-      <PhaserGame ref={phaserRef} />
-
-      {/* HUD overlay bar */}
-      <HUD onMenu={() => dispatch(toggleMenu())} />
-
-      {/* Toast notifications */}
-      <NotificationToast />
-
-      {/* Conditional overlays */}
-      {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}
-      {dialogueOpen && dialogueConfig?.type !== 'quest-log' && <DialogueOverlay />}
-      {quizOpen && <QuizOverlay />}
-      {signOpen && <SignOverlay />}
-      {menuOpen && (
-        <PauseMenu
-          onResume={() => dispatch(toggleMenu())}
-          onMainMenu={() => {
-            dispatch(toggleMenu());
-            navigate('/');
-          }}
-        />
-      )}
-
-      {/* Outlet for nested routes (e.g., /game/map) with AnimatePresence */}
-      <AnimatePresence mode="wait">
-        <Outlet key={location.pathname} />
-      </AnimatePresence>
-    </div>
-  );
+  }, [dispatch, fsrsCards, quests, playSFX, phaserRef]);
 }

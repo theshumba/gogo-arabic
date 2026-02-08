@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
 import { clearNotification } from '../../store/slices/uiSlice.js';
 import { COLORS, FONTS } from '../../styles/theme.js';
 
@@ -46,7 +47,6 @@ const TYPE_STYLES = {
 };
 
 const DISMISS_DELAY = 3000; // 3 seconds before auto-dismiss
-const ANIM_DURATION = 300; // slide/fade animation duration in ms
 
 const styles = {
   wrapper: {
@@ -100,87 +100,47 @@ const styles = {
 export default function NotificationToast() {
   const dispatch = useDispatch();
   const notification = useSelector((s) => s.ui.notification);
-
-  // Phase: 'entering' | 'visible' | 'exiting' | 'hidden'
-  const [phase, setPhase] = useState('hidden');
-  const [displayData, setDisplayData] = useState(null);
-  const [rendered, setRendered] = useState(false);
   const timerRef = useRef(null);
-  const animTimerRef = useRef(null);
-  const rafRef = useRef(null);
 
   // Handle notification lifecycle
   useEffect(() => {
     // Clear any existing timers when notification changes
     if (timerRef.current) clearTimeout(timerRef.current);
-    if (animTimerRef.current) clearTimeout(animTimerRef.current);
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
     if (notification) {
-      // New notification arrived: store it and begin enter animation
-      setDisplayData(notification);
-      setRendered(false);
-      setPhase('entering');
-
-      // After enter animation completes, mark as visible
-      animTimerRef.current = setTimeout(() => {
-        setPhase('visible');
-      }, ANIM_DURATION);
-
       // Auto-dismiss after delay
       timerRef.current = setTimeout(() => {
-        setPhase('exiting');
-
-        // After exit animation, clear from Redux and hide
-        animTimerRef.current = setTimeout(() => {
-          setPhase('hidden');
-          setDisplayData(null);
-          dispatch(clearNotification());
-        }, ANIM_DURATION);
+        dispatch(clearNotification());
       }, DISMISS_DELAY);
     }
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
-      if (animTimerRef.current) clearTimeout(animTimerRef.current);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [notification, dispatch]);
 
-  // Trigger the slide-down animation via double-rAF to ensure browser paints
-  // the initial state before transitioning to the visible state
-  useEffect(() => {
-    if (phase === 'entering') {
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = requestAnimationFrame(() => {
-          setRendered(true);
-        });
-      });
-    }
-  }, [phase]);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Nothing to render
-  if (phase === 'hidden' || !displayData) return null;
+  const toastVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -8 },
+  };
 
-  const { message, type } = displayData;
+  const toastVariantsReduced = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 },
+  };
+
+  const transition = reduceMotion
+    ? { duration: 0.2 }
+    : { duration: 0.3, ease: 'easeOut' };
+
+  if (!notification) return null;
+
+  const { message, type } = notification;
   const typeStyle = TYPE_STYLES[type] || TYPE_STYLES.xp;
-
-  // Compute animation transform + opacity based on phase
-  let animTransform = 'translateY(0)';
-  let animOpacity = 1;
-
-  if (phase === 'entering' && !rendered) {
-    // Initial entering state: offscreen above, invisible
-    animTransform = 'translateY(-20px)';
-    animOpacity = 0;
-  } else if (phase === 'entering' && rendered) {
-    // Triggered state: slide into place
-    animTransform = 'translateY(0)';
-    animOpacity = 1;
-  } else if (phase === 'exiting') {
-    animTransform = 'translateY(-8px)';
-    animOpacity = 0;
-  }
 
   const toastStyle = {
     ...styles.toast,
@@ -188,27 +148,34 @@ export default function NotificationToast() {
     backgroundImage: typeStyle.isLevelUp ? typeStyle.background : undefined,
     border: typeStyle.border,
     color: typeStyle.color,
-    transform: animTransform,
-    opacity: animOpacity,
-    transition: `transform ${ANIM_DURATION}ms ease-out, opacity ${ANIM_DURATION}ms ease-out`,
   };
 
   return (
     <div style={styles.wrapper}>
-      <div style={toastStyle}>
-        {/* Type icon badge */}
-        <span style={{ ...styles.iconBadge, color: typeStyle.color }}>
-          {typeStyle.icon}
-        </span>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`${type}-${message}`}
+          style={toastStyle}
+          variants={reduceMotion ? toastVariantsReduced : toastVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={transition}
+        >
+          {/* Type icon badge */}
+          <span style={{ ...styles.iconBadge, color: typeStyle.color }}>
+            {typeStyle.icon}
+          </span>
 
-        {/* Message text */}
-        <span style={{
-          ...styles.message,
-          ...(typeStyle.isLevelUp ? styles.levelUpGlow : {}),
-        }}>
-          {message}
-        </span>
-      </div>
+          {/* Message text */}
+          <span style={{
+            ...styles.message,
+            ...(typeStyle.isLevelUp ? styles.levelUpGlow : {}),
+          }}>
+            {message}
+          </span>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

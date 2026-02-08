@@ -1,61 +1,64 @@
 import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
-import { Player } from '../sprites/Player.js';
-import { NPC } from '../sprites/NPC.js';
 import DOMOverlayManager from '../systems/DOMOverlay.js';
 import ZoneTransition from '../systems/ZoneTransition.js';
-import { ZONES, TILE, SAND, GRASS, WATER, ICE_GRASS } from '../../data/zones.js';
-import { store } from '../../store/store.js';
-
-// NPC proximity threshold: 2 tiles = 128px
-const INTERACT_RANGE = TILE * 2;
+import { PlayerController } from '../systems/PlayerController.js';
+import { NPCManager } from '../systems/NPCManager.js';
+import { InteractableManager } from '../systems/InteractableManager.js';
+import { MapLoader } from '../systems/MapLoader.js';
+import { ZONES, TILE } from '../../data/zones.js';
 
 // ============================================================
 // WORLD SCENE
+// Main scene orchestrator — delegates to subsystems
 // ============================================================
 export class WorldScene extends Phaser.Scene {
   constructor() {
     super('WorldScene');
-    this.player = null;
-    this.npcs = [];
-    this.interactables = [];
-    this.exitTriggers = [];
-    // Chest/book state is persisted in Redux (playerSlice.openedChests / readBooks)
-    // We read from the store directly so state survives zone changes
     this.frozen = false;
     this.interactCooldown = false;
-    this.domOverlay = null;
-    this.zoneTransition = null;
     this.currentZone = 'oasis_village';
     this.currentMapW = 40;
     this.currentMapH = 30;
-    this.groundSprites = [];
-    this.objectSprites = [];
-    this.wallGroup = null;
+
+    // Subsystems
+    this.domOverlay = null;
+    this.zoneTransition = null;
+    this.playerController = null;
+    this.npcManager = null;
+    this.interactableManager = null;
+    this.mapLoader = null;
+
+    // Input
+    this.interactKey = null;
   }
 
   create() {
-    // Initialize systems
+    // Initialize subsystems
     this.domOverlay = new DOMOverlayManager(this);
     this.domOverlay.init();
     this.zoneTransition = new ZoneTransition(this);
+    this.playerController = new PlayerController(this);
+    this.npcManager = new NPCManager(this);
+    this.interactableManager = new InteractableManager(this);
+    this.mapLoader = new MapLoader(this);
 
     // Load the default zone
     const zone = ZONES.oasis_village;
     this.buildZone('oasis_village', zone.spawnPoint.x * TILE, zone.spawnPoint.y * TILE);
 
-    // --- Camera setup ---
+    // Camera setup
     const mapPixelW = this.currentMapW * TILE;
     const mapPixelH = this.currentMapH * TILE;
-    this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+    this.cameras.main.startFollow(this.playerController.getPlayer(), true, 0.08, 0.08);
     this.cameras.main.setBounds(0, 0, mapPixelW, mapPixelH);
     this.cameras.main.setBackgroundColor('#1A1A2E');
 
-    // --- EventBus listeners ---
+    // EventBus listeners
     EventBus.on('freeze-player', this.handleFreeze, this);
     EventBus.on('unfreeze-player', this.handleUnfreeze, this);
 
-    // --- Input: SPACE for interaction ---
+    // Input: SPACE for interaction
     this.interactKey = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
@@ -75,60 +78,24 @@ export class WorldScene extends Phaser.Scene {
     // Update camera bounds for new zone dimensions
     const mapPixelW = this.currentMapW * TILE;
     const mapPixelH = this.currentMapH * TILE;
-    this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+    this.cameras.main.startFollow(this.playerController.getPlayer(), true, 0.08, 0.08);
     this.cameras.main.setBounds(0, 0, mapPixelW, mapPixelH);
   }
 
   // Tear down current zone contents
   clearZone() {
-    // Remove DOM overlays
+    // Reset DOM overlays
     if (this.domOverlay) {
       this.domOverlay.destroy();
       this.domOverlay = new DOMOverlayManager(this);
       this.domOverlay.init();
     }
 
-    // Destroy ground tiles
-    this.groundSprites.forEach((s) => s.destroy());
-    this.groundSprites = [];
-
-    // Destroy object sprites
-    this.objectSprites.forEach((s) => s.destroy());
-    this.objectSprites = [];
-
-    // Destroy NPCs
-    this.npcs.forEach((npc) => {
-      if (npc.hintText) npc.hintText.destroy();
-      if (npc.nameLabel) npc.nameLabel.destroy();
-      npc.destroy();
-    });
-    this.npcs = [];
-
-    // Destroy interactables
-    this.interactables.forEach((obj) => {
-      if (obj.sprite) obj.sprite.destroy();
-      if (obj.label) obj.label.destroy();
-      if (obj.hintText) obj.hintText.destroy();
-    });
-    this.interactables = [];
-
-    // Destroy exit trigger sprites
-    this.exitTriggers.forEach((et) => {
-      if (et.sprite) et.sprite.destroy();
-      if (et.label) et.label.destroy();
-    });
-    this.exitTriggers = [];
-
-    // Destroy collision group
-    if (this.wallGroup) {
-      this.wallGroup.clear(true, true);
-    }
-
-    // Destroy player
-    if (this.player) {
-      this.player.destroy();
-      this.player = null;
-    }
+    // Destroy subsystems
+    this.mapLoader.destroy();
+    this.npcManager.destroy();
+    this.interactableManager.destroy();
+    this.playerController.destroy();
   }
 
   // Build a zone by name (data-driven from zones.js)
@@ -141,288 +108,38 @@ export class WorldScene extends Phaser.Scene {
       return;
     }
 
-    const MAP_W = zone.mapWidth;
-    const MAP_H = zone.mapHeight;
-    this.currentMapW = MAP_W;
-    this.currentMapH = MAP_H;
+    this.currentMapW = zone.mapWidth;
+    this.currentMapH = zone.mapHeight;
 
-    const groundData = zone.buildMap();
-    const objects = zone.objects;
-    const npcConfigs = zone.npcs;
-    const interactableConfigs = zone.interactables;
-    const exits = zone.exits || [];
+    // Build map (ground, objects, collision, exits)
+    const wallGroup = this.mapLoader.create(zone, zone.mapWidth, zone.mapHeight);
 
-    const mapPixelW = MAP_W * TILE;
-    const mapPixelH = MAP_H * TILE;
+    // Spawn player
+    const player = this.playerController.create(spawnX, spawnY, wallGroup);
 
-    // --- Render ground tiles ---
-    for (let y = 0; y < MAP_H; y++) {
-      for (let x = 0; x < MAP_W; x++) {
-        const px = x * TILE + TILE / 2;
-        const py = y * TILE + TILE / 2;
-        const tileType = groundData[y][x];
+    // Spawn NPCs
+    this.npcManager.create(zone.npcs, player, wallGroup, this.domOverlay);
 
-        let sprite;
-        if (tileType === GRASS) {
-          sprite = this.add.image(px, py, 'tile-grass');
-        } else if (tileType === WATER) {
-          sprite = this.add.image(px, py, 'tile-sand');
-          sprite.setTint(0x50b0d8);
-        } else if (tileType === ICE_GRASS) {
-          sprite = this.add.image(px, py, 'grass-ice');
-        } else {
-          sprite = this.add.image(px, py, 'tile-sand');
-        }
-        this.groundSprites.push(sprite);
-      }
-    }
-
-    // --- Water edge shimmer effect ---
-    for (let y = 0; y < MAP_H; y++) {
-      for (let x = 0; x < MAP_W; x++) {
-        if (groundData[y][x] !== WATER) continue;
-        const adj = [
-          [x - 1, y],
-          [x + 1, y],
-          [x, y - 1],
-          [x, y + 1],
-        ];
-        for (const [ax, ay] of adj) {
-          if (
-            ax >= 0 &&
-            ax < MAP_W &&
-            ay >= 0 &&
-            ay < MAP_H &&
-            groundData[ay][ax] !== WATER
-          ) {
-            const px = x * TILE + TILE / 2;
-            const py = y * TILE + TILE / 2;
-            const edge = this.add.rectangle(px, py, TILE, TILE, 0x66d7ee, 0.3);
-            this.tweens.add({
-              targets: edge,
-              alpha: { from: 0.15, to: 0.35 },
-              duration: 1500,
-              yoyo: true,
-              repeat: -1,
-              ease: 'Sine.easeInOut',
-            });
-            this.groundSprites.push(edge);
-            break;
-          }
-        }
-      }
-    }
-
-    // --- Collision group ---
-    this.wallGroup = this.physics.add.staticGroup();
-
-    // World border walls (invisible) — skip tiles that have exits
-    const exitEdgeTiles = this.buildExitEdgeSet(exits, MAP_W, MAP_H);
-
-    for (let x = -1; x <= MAP_W; x++) {
-      if (!exitEdgeTiles.has(`north:${x}`)) {
-        this.addInvisibleWall(x * TILE + TILE / 2, -TILE / 2, TILE, TILE);
-      }
-      if (!exitEdgeTiles.has(`south:${x}`)) {
-        this.addInvisibleWall(x * TILE + TILE / 2, mapPixelH + TILE / 2, TILE, TILE);
-      }
-    }
-    for (let y = 0; y < MAP_H; y++) {
-      if (!exitEdgeTiles.has(`west:${y}`)) {
-        this.addInvisibleWall(-TILE / 2, y * TILE + TILE / 2, TILE, TILE);
-      }
-      if (!exitEdgeTiles.has(`east:${y}`)) {
-        this.addInvisibleWall(mapPixelW + TILE / 2, y * TILE + TILE / 2, TILE, TILE);
-      }
-    }
-
-    // Water collision
-    for (let y = 0; y < MAP_H; y++) {
-      for (let x = 0; x < MAP_W; x++) {
-        if (groundData[y][x] === WATER) {
-          this.addInvisibleWall(
-            x * TILE + TILE / 2,
-            y * TILE + TILE / 2,
-            TILE,
-            TILE
-          );
-        }
-      }
-    }
-
-    // --- Place world objects (Y-sorted for depth) ---
-    const sortedObjects = [...objects].sort((a, b) => a.y - b.y);
-    sortedObjects.forEach((obj) => {
-      const px = obj.x * TILE + TILE / 2;
-      const py = obj.y * TILE + TILE / 2;
-      const sprite = this.add.image(px, py, obj.key).setOrigin(0.5, 0.8);
-      this.objectSprites.push(sprite);
-
-      if (obj.collide) {
-        const collider = this.wallGroup.create(px, py + 20, null);
-        collider.setVisible(false);
-        collider.body.setSize(obj.collideW || 40, obj.collideH || 20);
-        collider.refreshBody();
-      }
-    });
-
-    // --- Player ---
-    this.player = new Player(this, spawnX, spawnY);
-    this.physics.add.collider(this.player, this.wallGroup);
-    this.physics.world.setBounds(0, 0, mapPixelW, mapPixelH);
-    this.player.setCollideWorldBounds(true);
-
-    // --- NPCs ---
-    npcConfigs.forEach((cfg) => {
-      const npcX = cfg.x * TILE;
-      const npcY = cfg.y * TILE;
-
-      const npc = new NPC(this, npcX, npcY, {
-        id: cfg.id,
-        key: cfg.key,
-        name: cfg.name,
-      });
-      this.npcs.push(npc);
-      this.physics.add.collider(this.player, npc);
-
-      // Create DOM overlay labels for this NPC
-      this.domOverlay.createNpcLabel(
-        cfg.id,
-        npcX,
-        npcY,
-        cfg.nameArabic,
-        cfg.name
-      );
-
-      // Create interaction prompt (starts hidden)
-      this.domOverlay.createInteractionPrompt(cfg.id, npcX, npcY);
-    });
-
-    // --- Interactive Objects ---
-    interactableConfigs.forEach((cfg) => {
-      const px = cfg.x * TILE + TILE / 2;
-      const py = cfg.y * TILE + TILE / 2;
-
-      // Choose sprite based on type
-      let spriteKey;
-      if (cfg.type === 'sign') spriteKey = 'gate-pillar';
-      else if (cfg.type === 'bookshelf') spriteKey = 'ruin-pillar';
-      else if (cfg.type === 'chest') spriteKey = 'rock1';
-
-      const sprite = this.add.image(px, py, spriteKey).setOrigin(0.5, 0.8);
-      sprite.setScale(0.7);
-      // Tint already-opened chests from persisted state
-      if (cfg.type === 'chest') {
-        const openedChests = store.getState().player.openedChests || [];
-        if (openedChests.includes(cfg.id)) {
-          sprite.setTint(0x666666);
-        }
-      }
-      this.objectSprites.push(sprite);
-
-      // Label above the object
-      const labelText = cfg.type === 'sign' ? cfg.textArabic
-        : cfg.type === 'bookshelf' ? 'Bookshelf'
-        : 'Chest';
-      const label = this.add.text(px, py - 50, labelText, {
-        fontFamily: cfg.type === 'sign' ? "'Noto Naskh Arabic', serif" : "'Press Start 2P', monospace",
-        fontSize: cfg.type === 'sign' ? '14px' : '7px',
-        color: '#e2b659',
-        stroke: '#2b292c',
-        strokeThickness: 3,
-        align: 'center',
-      }).setOrigin(0.5).setDepth(9999);
-
-      // Interaction hint (hidden by default)
-      const hintText = this.add.text(px, py + 30, '[SPACE]', {
-        fontFamily: "'Press Start 2P', monospace",
-        fontSize: '7px',
-        color: '#f4fefa',
-        stroke: '#2b292c',
-        strokeThickness: 2,
-      }).setOrigin(0.5).setVisible(false).setDepth(9999);
-
-      this.interactables.push({
-        ...cfg,
-        sprite,
-        label,
-        hintText,
-        worldX: px,
-        worldY: py,
-      });
-    });
-
-    // --- Exit Triggers (signposts at zone edges) ---
-    exits.forEach((exit) => {
-      const { edge, tileRange, label, labelArabic } = exit;
-      const midTile = Math.floor((tileRange[0] + tileRange[1]) / 2);
-
-      let signX, signY;
-      if (edge === 'north') {
-        signX = midTile * TILE + TILE / 2;
-        signY = TILE / 2;
-      } else if (edge === 'south') {
-        signX = midTile * TILE + TILE / 2;
-        signY = (MAP_H - 1) * TILE + TILE / 2;
-      } else if (edge === 'west') {
-        signX = TILE / 2;
-        signY = midTile * TILE + TILE / 2;
-      } else {
-        signX = (MAP_W - 1) * TILE + TILE / 2;
-        signY = midTile * TILE + TILE / 2;
-      }
-
-      const signSprite = this.add.image(signX, signY, 'gate-pillar').setOrigin(0.5, 0.8).setDepth(9998);
-      const signLabel = this.add.text(signX, signY - 50, `${labelArabic}\n${label}`, {
-        fontFamily: "'Noto Naskh Arabic', serif",
-        fontSize: '12px',
-        color: '#e2b659',
-        stroke: '#2b292c',
-        strokeThickness: 3,
-        align: 'center',
-      }).setOrigin(0.5).setDepth(9999);
-
-      this.exitTriggers.push({
-        ...exit,
-        signX,
-        signY,
-        sprite: signSprite,
-        label: signLabel,
-      });
-    });
-  }
-
-  // Build a set of edge:tile keys where exits exist (to leave gaps in border walls)
-  buildExitEdgeSet(exits, mapW, mapH) {
-    const set = new Set();
-    for (const exit of exits) {
-      const [start, end] = exit.tileRange;
-      for (let t = start; t <= end; t++) {
-        set.add(`${exit.edge}:${t}`);
-      }
-    }
-    return set;
+    // Spawn interactables
+    this.interactableManager.create(zone.interactables, this.mapLoader.getObjectSprites());
   }
 
   // ============================================================
   // HELPERS
   // ============================================================
 
-  addInvisibleWall(x, y, w, h) {
-    const wall = this.wallGroup.create(x, y, null);
-    wall.setVisible(false);
-    wall.body.setSize(w, h);
-    wall.refreshBody();
-  }
-
   handleFreeze() {
     this.frozen = true;
-    if (this.player) this.player.freeze();
+    this.playerController.freeze();
   }
 
   handleUnfreeze() {
     this.frozen = false;
-    if (this.player) this.player.unfreeze();
+    this.playerController.unfreeze();
+  }
+
+  setInteractCooldown(value) {
+    this.interactCooldown = value;
   }
 
   // ============================================================
@@ -437,85 +154,34 @@ export class WorldScene extends Phaser.Scene {
     }
 
     // Update player movement
-    if (this.player) this.player.update();
+    this.playerController.update();
 
     // Y-sort all sprites for depth ordering
-    const allSprites = [this.player, ...this.npcs].filter(Boolean);
+    const player = this.playerController.getPlayer();
+    const npcs = this.npcManager.getNPCs();
+    const allSprites = [player, ...npcs].filter(Boolean);
     allSprites.forEach((s) => {
       s.setDepth(s.y);
     });
 
     // Check NPC interaction zones
-    this.npcs.forEach((npc) => {
-      const dist = Phaser.Math.Distance.Between(
-        this.player.x,
-        this.player.y,
-        npc.x,
-        npc.y
-      );
-
-      const inRange = dist < INTERACT_RANGE;
-
-      // Show/hide the Phaser-rendered hint text on the NPC sprite
-      npc.setInteractionHint(inRange);
-
-      // Show/hide the DOM overlay SPACE prompt
-      this.domOverlay.setVisible(`prompt-${npc.npcId}`, inRange);
-
-      // Update DOM overlay positions to track NPC world position
-      this.domOverlay.updatePosition(
-        `npc-label-${npc.npcId}`,
-        npc.x,
-        npc.y
-      );
-      this.domOverlay.updatePosition(`prompt-${npc.npcId}`, npc.x, npc.y);
-
-      // Handle SPACE key press for interaction
-      if (
-        inRange &&
-        Phaser.Input.Keyboard.JustDown(this.interactKey) &&
-        !this.interactCooldown
-      ) {
-        this.interactCooldown = true;
-        this.time.delayedCall(500, () => {
-          this.interactCooldown = false;
-        });
-        EventBus.emit('npc-interact', {
-          npcId: npc.npcId,
-          npcName: npc.npcName,
-        });
-        EventBus.emit('freeze-player');
-      }
-    });
+    this.npcManager.update(
+      player,
+      this.domOverlay,
+      this.interactKey,
+      this.interactCooldown,
+      this.setInteractCooldown.bind(this)
+    );
 
     // Check interactive object zones
-    let nearInteractable = false;
-    this.interactables.forEach((obj) => {
-      const dist = Phaser.Math.Distance.Between(
-        this.player.x,
-        this.player.y,
-        obj.worldX,
-        obj.worldY
-      );
-      const inRange = dist < INTERACT_RANGE;
-      obj.hintText.setVisible(inRange);
+    this.interactableManager.update(
+      player,
+      this.interactKey,
+      this.interactCooldown,
+      this.setInteractCooldown.bind(this)
+    );
 
-      if (
-        inRange &&
-        !nearInteractable &&
-        Phaser.Input.Keyboard.JustDown(this.interactKey) &&
-        !this.interactCooldown
-      ) {
-        nearInteractable = true;
-        this.interactCooldown = true;
-        this.time.delayedCall(500, () => {
-          this.interactCooldown = false;
-        });
-        this.handleInteractable(obj);
-      }
-    });
-
-    // Check exit trigger zones — player walks off map edge
+    // Check exit trigger zones
     this.checkExitTriggers();
 
     // Update DOM overlay positions every frame
@@ -524,14 +190,17 @@ export class WorldScene extends Phaser.Scene {
 
   // Check if player has walked into an exit trigger region
   checkExitTriggers() {
-    if (!this.player || this.zoneTransition.transitioning) return;
+    const player = this.playerController.getPlayer();
+    if (!player || this.zoneTransition.transitioning) return;
 
-    const px = this.player.x;
-    const py = this.player.y;
+    const px = player.x;
+    const py = player.y;
     const tileX = Math.floor(px / TILE);
     const tileY = Math.floor(py / TILE);
 
-    for (const exit of this.exitTriggers) {
+    const exitTriggers = this.mapLoader.getExitTriggers();
+
+    for (const exit of exitTriggers) {
       const [start, end] = exit.tileRange;
       let triggered = false;
 
@@ -568,46 +237,6 @@ export class WorldScene extends Phaser.Scene {
           unlock: targetZone.unlock,
         });
         return;
-      }
-    }
-  }
-
-  handleInteractable(obj) {
-    const playerState = store.getState().player;
-    const openedChests = playerState.openedChests || [];
-    const readBooks = playerState.readBooks || [];
-
-    if (obj.type === 'sign') {
-      EventBus.emit('show-sign', {
-        arabic: obj.textArabic,
-        english: obj.textEnglish,
-      });
-      EventBus.emit('freeze-player');
-    } else if (obj.type === 'bookshelf') {
-      if (!readBooks.includes(obj.id)) {
-        EventBus.emit('bookshelf-interact', {
-          category: obj.category,
-          id: obj.id,
-        });
-        EventBus.emit('freeze-player');
-      } else {
-        EventBus.emit('bookshelf-interact', {
-          category: obj.category,
-          id: obj.id,
-          reread: true,
-        });
-        EventBus.emit('freeze-player');
-      }
-    } else if (obj.type === 'chest') {
-      if (!openedChests.includes(obj.id)) {
-        const amount = Math.floor(
-          Math.random() * (obj.maxDirhams - obj.minDirhams + 1)
-        ) + obj.minDirhams;
-        EventBus.emit('chest-opened', { amount, id: obj.id });
-        // Visual feedback: tint the chest to show it's opened
-        if (obj.sprite) obj.sprite.setTint(0x666666);
-      } else {
-        EventBus.emit('chest-empty', { id: obj.id });
       }
     }
   }

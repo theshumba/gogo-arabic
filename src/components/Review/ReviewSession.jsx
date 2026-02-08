@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { motion } from 'framer-motion';
 import { updateFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { addXP, updateStreak } from '../../store/slices/playerSlice.js';
 import { incrementReviews } from '../../store/slices/achievementSlice.js';
@@ -92,10 +93,34 @@ export default function ReviewSession({ onBack }) {
     };
   }, []);
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  const contentVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const transition = reduceMotion
+    ? { duration: 0.15 }
+    : { duration: 0.25, ease: 'easeOut' };
+
   /* ---------- No reviews due ---------- */
   if (sessionCards.length === 0) {
     return (
-      <div className={styles.container} role="main" aria-label="Daily review session">
+      <motion.div
+        className={styles.container}
+        role="main"
+        aria-label="Daily review session"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        transition={transition}
+      >
         <div className={styles.header} role="banner">
           <button className={styles.quitBtn} onClick={onBack} aria-label="Go back to menu">Back</button>
           <h1 className={styles.headerTitle}>Daily Review</h1>
@@ -106,14 +131,22 @@ export default function ReviewSession({ onBack }) {
           <p className={styles.noReviewSub}>Learn more words and come back later.</p>
           <button className={styles.doneBtn} onClick={onBack} aria-label="Return to main menu">Back to Menu</button>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   /* ---------- Summary screen ---------- */
   if (done) {
     return (
-      <div className={styles.container} role="main" aria-label="Review complete">
+      <motion.div
+        className={styles.container}
+        role="main"
+        aria-label="Review complete"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        transition={transition}
+      >
         <div className={styles.header} role="banner">
           <div />
           <h1 className={styles.headerTitle}>Review Complete</h1>
@@ -126,7 +159,7 @@ export default function ReviewSession({ onBack }) {
           </p>
           <button className={styles.doneBtn} onClick={onBack} aria-label="Return to main menu">Back to Menu</button>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
@@ -253,7 +286,15 @@ export default function ReviewSession({ onBack }) {
 
   /* ---------- Active review ---------- */
   return (
-    <div className={styles.container} role="main" aria-label="Daily review quiz">
+    <motion.div
+      className={styles.container}
+      role="main"
+      aria-label="Daily review quiz"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      transition={transition}
+    >
       <div className={styles.header} role="banner">
         <button className={styles.quitBtn} onClick={onBack} aria-label="Quit review session">Quit</button>
         <h1 className={styles.headerTitle}>Daily Review</h1>
@@ -370,6 +411,6 @@ export default function ReviewSession({ onBack }) {
         )}
 
       </div>
-    </div>
+    </motion.div>
   );
 }

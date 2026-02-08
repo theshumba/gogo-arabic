@@ -53,4 +53,17 @@ export const saveGameSchema = z.object({
   player: playerSchema,
   quests: z.record(z.string(), questSchema).optional(),
   settings: settingsSchema,
+  clientVersion: z.number().int().min(0).optional(), // For conflict detection
+}).strict();
+
+/**
+ * Validation schema for conflict resolution endpoint
+ */
+export const resolveConflictSchema = z.object({
+  resolvedState: z.object({
+    player: playerSchema,
+    quests: z.record(z.string(), questSchema).optional(),
+    settings: settingsSchema,
+  }).strict(),
+  baseVersion: z.number().int().min(0), // Server version being resolved against
 }).strict();

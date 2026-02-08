@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, memo } from 'react';
 import { useSelector } from 'react-redux';
+import { motion } from 'framer-motion';
 import {
   selectUnlockedAchievements,
   selectAchievementProgress,
@@ -288,9 +289,46 @@ function AchievementPanel({ onClose }) {
     setActiveTab(tabId);
   }, []);
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  const panelVariants = {
+    hidden: { opacity: 0, x: 100 },
+    visible: { opacity: 1, x: 0 },
+  };
+
+  const panelVariantsReduced = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  const transition = reduceMotion
+    ? { duration: 0.2 }
+    : { duration: 0.3, ease: 'easeOut' };
+
   return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.panel} onClick={(e) => e.stopPropagation()}>
+    <motion.div
+      style={styles.overlay}
+      onClick={onClose}
+      variants={overlayVariants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      transition={transition}
+    >
+      <motion.div
+        style={styles.panel}
+        onClick={(e) => e.stopPropagation()}
+        variants={reduceMotion ? panelVariantsReduced : panelVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        transition={transition}
+      >
         {/* Header */}
         <div style={styles.header}>
           <div>
@@ -345,8 +383,8 @@ function AchievementPanel({ onClose }) {
             })}
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

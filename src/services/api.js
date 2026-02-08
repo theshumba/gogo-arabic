@@ -57,8 +57,11 @@ export const getCards = () => request('/review/cards');
 export const syncQuests = (quests) =>
   request('/quest/sync', { method: 'POST', body: JSON.stringify({ quests }) });
 
-// Game save
+// Game save with sync versioning
 export const saveGame = (state) =>
   request('/game/save', { method: 'POST', body: JSON.stringify(state) });
 
 export const loadGame = () => request('/game/load');
+
+export const resolveConflict = (data) =>
+  request('/game/resolve', { method: 'POST', body: JSON.stringify(data) });

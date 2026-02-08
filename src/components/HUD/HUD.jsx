@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { motion } from 'framer-motion';
 import { openDialogue } from '../../store/slices/uiSlice.js';
 import { selectUnlockedCount } from '../../store/slices/achievementSlice.js';
 import { selectPlayerStats } from '../../store/slices/playerSlice.js';
@@ -8,6 +9,7 @@ import { selectReviewQueueCount } from '../../store/slices/vocabularySlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import styles from './HUD.module.css';
 import AchievementPanel from '../Achievements/AchievementPanel.jsx';
+import SyncIndicator from './SyncIndicator.jsx';
 
 function HUD({ onMenu }) {
   const dispatch = useDispatch();
@@ -38,6 +40,11 @@ function HUD({ onMenu }) {
     EventBus.emit('unfreeze-player');
   }, []);
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const buttonProps = reduceMotion
+    ? {}
+    : { whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 } };
+
   return (
     <>
       <div className={styles.container} role="banner" aria-label="Game HUD">
@@ -57,9 +64,10 @@ function HUD({ onMenu }) {
           <span className={styles.xpText} aria-label={`${xp} XP out of ${xpToNextLevel}`}>{xp}/{xpToNextLevel}</span>
         </div>
 
-        {/* Center: Streak */}
+        {/* Center: Streak + Sync Indicator */}
         <div className={styles.center}>
           <span className={styles.streakText} aria-label={`Current streak: ${streak} days`}>Streak: {streak}</span>
+          <SyncIndicator />
         </div>
 
         {/* Right: Stats + Buttons */}
@@ -68,10 +76,11 @@ function HUD({ onMenu }) {
           <span className={styles.statLabel} aria-label={`${wordsLearned} words learned`}>Words: {wordsLearned}</span>
 
           {/* Quests button with active quest badge */}
-          <button
+          <motion.button
             className={styles.btn}
             onClick={openQuestLog}
             aria-label={`Quest log ${activeQuestCount > 0 ? `${activeQuestCount} active quests` : ''}`}
+            {...buttonProps}
           >
             Quests
             {activeQuestCount > 0 && (
@@ -79,13 +88,14 @@ function HUD({ onMenu }) {
                 {activeQuestCount}
               </span>
             )}
-          </button>
+          </motion.button>
 
           {/* Achievements button */}
-          <button
+          <motion.button
             className={styles.btn}
             onClick={openAchievements}
             aria-label={`Achievements ${achievementCount > 0 ? `${achievementCount} unlocked` : ''}`}
+            {...buttonProps}
           >
             <span role="img" aria-label="trophy">🏆</span>
             {achievementCount > 0 && (
@@ -93,7 +103,7 @@ function HUD({ onMenu }) {
                 {achievementCount}
               </span>
             )}
-          </button>
+          </motion.button>
 
           {/* Review button with due count badge */}
           {reviewDueCount > 0 && (
@@ -102,7 +112,14 @@ function HUD({ onMenu }) {
             </span>
           )}
 
-          <button className={styles.btn} onClick={onMenu} aria-label="Open menu">Menu</button>
+          <motion.button
+            className={styles.btn}
+            onClick={onMenu}
+            aria-label="Open menu"
+            {...buttonProps}
+          >
+            Menu
+          </motion.button>
         </div>
       </div>
 

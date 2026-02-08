@@ -1,8 +1,10 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { RouteErrorBoundary } from './components/ErrorBoundary/RouteErrorBoundary.jsx';
 import NotFoundPage from './components/ErrorBoundary/NotFoundPage.jsx';
 import LoadingScreen from './components/UI/LoadingScreen.jsx';
+import PageTransition from './components/UI/PageTransition.jsx';
 import { ProtectedRoute, CharacterCreationGuard } from './components/Router/ProtectedRoute.jsx';
 import GameLayout from './components/Router/GameLayout.jsx';
 import { useGameNavigation } from './hooks/useGameNavigation.js';
@@ -22,38 +24,40 @@ function Stats() {
   const { goToMenu } = useGameNavigation();
 
   return (
-    <div
-      style={{
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#1A1A2E',
-        color: '#D4A843',
-        fontFamily: "'Press Start 2P', cursive",
-      }}
-    >
-      <div style={{ fontSize: '18px', marginBottom: '16px' }}>Stats</div>
-      <div style={{ fontSize: '22px', fontFamily: "'Amiri', serif", marginBottom: '32px' }}>
-        {'\u0627\u0644\u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A'}
-      </div>
-      <button
-        onClick={goToMenu}
+    <PageTransition>
+      <div
         style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#1A1A2E',
+          color: '#D4A843',
           fontFamily: "'Press Start 2P', cursive",
-          fontSize: '11px',
-          padding: '12px 24px',
-          background: '#D4A843',
-          color: '#1A1A2E',
-          border: 'none',
-          cursor: 'pointer',
         }}
       >
-        Back
-      </button>
-    </div>
+        <div style={{ fontSize: '18px', marginBottom: '16px' }}>Stats</div>
+        <div style={{ fontSize: '22px', fontFamily: "'Amiri', serif", marginBottom: '32px' }}>
+          {'\u0627\u0644\u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A'}
+        </div>
+        <button
+          onClick={goToMenu}
+          style={{
+            fontFamily: "'Press Start 2P', cursive",
+            fontSize: '11px',
+            padding: '12px 24px',
+            background: '#D4A843',
+            color: '#1A1A2E',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Back
+        </button>
+      </div>
+    </PageTransition>
   );
 }
 
@@ -62,13 +66,15 @@ function MainMenuRoute() {
   const { goToGame, goToAlphabet, goToReview, goToSettings, goToCharacterCreation } = useGameNavigation();
 
   return (
-    <MainMenu
-      onStartGame={goToGame}
-      onAlphabet={goToAlphabet}
-      onReview={goToReview}
-      onSettings={goToSettings}
-      onCharacterCreation={goToCharacterCreation}
-    />
+    <PageTransition>
+      <MainMenu
+        onStartGame={goToGame}
+        onAlphabet={goToAlphabet}
+        onReview={goToReview}
+        onSettings={goToSettings}
+        onCharacterCreation={goToCharacterCreation}
+      />
+    </PageTransition>
   );
 }
 
@@ -76,11 +82,13 @@ function CharacterCreationRoute() {
   const { goToGame } = useGameNavigation();
 
   return (
-    <CharacterCreationGuard>
-      <Suspense fallback={<LoadingScreen />}>
-        <CharacterCreation onDone={goToGame} />
-      </Suspense>
-    </CharacterCreationGuard>
+    <PageTransition>
+      <CharacterCreationGuard>
+        <Suspense fallback={<LoadingScreen />}>
+          <CharacterCreation onDone={goToGame} />
+        </Suspense>
+      </CharacterCreationGuard>
+    </PageTransition>
   );
 }
 
@@ -88,9 +96,11 @@ function AlphabetRoute() {
   const { goToMenu } = useGameNavigation();
 
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <AlphabetModule onBack={goToMenu} />
-    </Suspense>
+    <PageTransition>
+      <Suspense fallback={<LoadingScreen />}>
+        <AlphabetModule onBack={goToMenu} />
+      </Suspense>
+    </PageTransition>
   );
 }
 
@@ -98,9 +108,11 @@ function ReviewRoute() {
   const { goToMenu } = useGameNavigation();
 
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <ReviewSession onBack={goToMenu} />
-    </Suspense>
+    <PageTransition>
+      <Suspense fallback={<LoadingScreen />}>
+        <ReviewSession onBack={goToMenu} />
+      </Suspense>
+    </PageTransition>
   );
 }
 
@@ -108,9 +120,11 @@ function SettingsRoute() {
   const { goToMenu } = useGameNavigation();
 
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <SettingsMenu onBack={goToMenu} />
-    </Suspense>
+    <PageTransition>
+      <Suspense fallback={<LoadingScreen />}>
+        <SettingsMenu onBack={goToMenu} />
+      </Suspense>
+    </PageTransition>
   );
 }
 
