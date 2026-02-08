@@ -46,11 +46,31 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       fontSize: '7px',
       color: '#e2b659',
     }).setOrigin(0.5).setVisible(true).setDepth(9999);
+
+    // Quest marker (! or ?) above NPC head
+    this.questMarker = scene.add.text(x, y - 85, '', {
+      fontFamily: "'Press Start 2P'",
+      fontSize: '14px',
+      color: '#FFD700',
+      stroke: '#000000',
+      strokeThickness: 3,
+    }).setOrigin(0.5).setVisible(false).setDepth(10000);
   }
 
   setInteractionHint(visible) {
     this.hintText.setVisible(visible);
     this.hintText.setPosition(this.x, this.y - 70);
     this.nameLabel.setPosition(this.x, this.y - 56);
+    this.questMarker.setPosition(this.x, this.y - 85);
+  }
+
+  setQuestMarker(type) {
+    if (type === 'exclamation') {
+      this.questMarker.setText('!').setColor('#FFD700').setVisible(true);
+    } else if (type === 'question') {
+      this.questMarker.setText('?').setColor('#00FF00').setVisible(true);
+    } else {
+      this.questMarker.setVisible(false);
+    }
   }
 }

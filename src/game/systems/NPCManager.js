@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { NPC } from '../sprites/NPC.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { store } from '../../store/store.js';
+import { selectNpcQuestMarkers } from '../../store/slices/questSlice.js';
 
 // NPC proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
@@ -53,6 +55,9 @@ export class NPCManager {
    * Checks proximity and handles SPACE key for interaction
    */
   update(playerSprite, domOverlay, interactKey, interactCooldown, setInteractCooldown) {
+    // Read quest marker state from Redux (Phaser can't use React hooks)
+    const markers = selectNpcQuestMarkers(store.getState());
+
     this.npcs.forEach((npc) => {
       const dist = Phaser.Math.Distance.Between(
         playerSprite.x,
@@ -65,6 +70,10 @@ export class NPCManager {
 
       // Show/hide the Phaser-rendered hint text on the NPC sprite
       npc.setInteractionHint(inRange);
+
+      // Update quest marker (!, ?, or hidden)
+      const marker = markers[npc.npcId] || null;
+      npc.setQuestMarker(marker);
 
       // Show/hide the DOM overlay SPACE prompt
       domOverlay.setVisible(`prompt-${npc.npcId}`, inRange);
@@ -110,6 +119,7 @@ export class NPCManager {
     this.npcs.forEach((npc) => {
       if (npc.hintText) npc.hintText.destroy();
       if (npc.nameLabel) npc.nameLabel.destroy();
+      if (npc.questMarker) npc.questMarker.destroy();
       npc.destroy();
     });
     this.npcs = [];

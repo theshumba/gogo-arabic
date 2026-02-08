@@ -251,10 +251,46 @@
   text-transform: uppercase;
 }
 
+.trackBtn {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 4px 10px;
+  margin-top: 4px;
+  border: 2px solid var(--color-blue);
+  background: var(--color-blue);
+  color: var(--color-white);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.trackBtn:hover:not(:disabled) {
+  background: var(--color-cyan);
+  border-color: var(--color-cyan);
+}
+
+.trackBtn:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.trackBtnActive {
+  background: var(--color-green);
+  border-color: var(--color-green);
+  color: var(--color-dark);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .card {
     max-width: 100%;
+  }
+
+  .trackBtn {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 10px;
+    padding: 8px 12px;
   }
 }
 
@@ -286,5 +322,12 @@
 
   .claimBtn {
     min-height: 44px;
+  }
+
+  .trackBtn {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 10px;
+    padding: 8px 12px;
   }
 }

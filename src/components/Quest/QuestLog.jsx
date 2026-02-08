@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { closeDialogue, showNotification } from '../../store/slices/uiSlice.js';
-import { claimReward } from '../../store/slices/questSlice.js';
+import { claimReward, setActiveQuest } from '../../store/slices/questSlice.js';
 import { addXP, addDirhams } from '../../store/slices/playerSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import questsData from '../../data/quests.json';
@@ -25,6 +25,7 @@ function groupQuestsByZone() {
 export default function QuestLog() {
   const dispatch = useDispatch();
   const quests = useSelector((s) => s.quests.quests);
+  const activeQuestId = useSelector((s) => s.quests.activeQuestId);
 
   const handleClose = () => {
     dispatch(closeDialogue());
@@ -91,6 +92,15 @@ export default function QuestLog() {
             {qd.reward.xp} XP + {qd.reward.dirhams} Dirhams
           </span>
         </div>
+        {status === 'active' && (
+          <button
+            className={`${styles.trackBtn} ${activeQuestId === qd.id ? styles.trackBtnActive : ''}`}
+            onClick={() => dispatch(setActiveQuest(qd.id))}
+            disabled={activeQuestId === qd.id}
+          >
+            {activeQuestId === qd.id ? 'Tracking' : 'Track Quest'}
+          </button>
+        )}
         {status === 'completed' && !rewardClaimed && (
           <button
             className={styles.claimBtn}
