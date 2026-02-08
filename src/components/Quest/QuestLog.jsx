@@ -5,179 +5,7 @@ import { addXP, addDirhams } from '../../store/slices/playerSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import questsData from '../../data/quests.json';
 import { ZONES, ZONE_ORDER } from '../../data/zones.js';
-import { COLORS, FONTS, pixelPanel, pixelBtnDark, pixelBtnGold } from '../../styles/theme.js';
-
-const styles = {
-  overlay: {
-    position: 'absolute',
-    inset: 0,
-    background: COLORS.overlay,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 200,
-  },
-  card: {
-    ...pixelPanel,
-    minWidth: '450px',
-    maxWidth: '600px',
-    maxHeight: '80vh',
-    overflowY: 'auto',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '16px',
-    paddingBottom: '10px',
-    borderBottom: `4px solid ${COLORS.dark}`,
-  },
-  title: {
-    fontFamily: FONTS.pixel,
-    fontSize: '14px',
-    color: COLORS.brown,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  closeBtn: {
-    ...pixelBtnDark,
-    padding: '8px 14px',
-    fontSize: '10px',
-  },
-  zoneHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    marginTop: '16px',
-    marginBottom: '8px',
-    paddingBottom: '6px',
-    borderBottom: `3px solid ${COLORS.lightGray}`,
-  },
-  zoneName: {
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.xpGold,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  zoneNameArabic: {
-    fontFamily: FONTS.arabic,
-    fontSize: '14px',
-    color: COLORS.xpGold,
-    direction: 'rtl',
-  },
-  questItem: {
-    padding: '12px',
-    border: `4px solid ${COLORS.dark}`,
-    background: COLORS.white,
-    marginBottom: '10px',
-  },
-  questActive: {
-    borderColor: COLORS.xpGold,
-    background: '#fdf8e8',
-  },
-  questCompleted: {
-    borderColor: COLORS.green,
-    background: '#eafaf1',
-  },
-  questLocked: {
-    opacity: 0.4,
-    borderColor: COLORS.lightGray,
-    background: COLORS.light,
-  },
-  questTitleRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '4px',
-  },
-  questTitle: {
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.dark,
-    fontWeight: 'bold',
-  },
-  questTitleActive: {
-    color: COLORS.gold,
-  },
-  questDesc: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.brown,
-    marginBottom: '8px',
-    lineHeight: '1.6',
-  },
-  progressBarOuter: {
-    height: '8px',
-    background: COLORS.dark,
-    border: `2px solid ${COLORS.gray}`,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    background: COLORS.xpGold,
-    transition: 'width 0.3s',
-  },
-  progressFillComplete: {
-    background: COLORS.green,
-  },
-  progressRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: '6px',
-  },
-  progressText: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.dark,
-  },
-  reward: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.gold,
-  },
-  badgeActive: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    padding: '3px 7px',
-    background: COLORS.xpGold,
-    color: COLORS.brown,
-    border: `2px solid ${COLORS.gold}`,
-    textTransform: 'uppercase',
-  },
-  badgeComplete: {
-    fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    padding: '2px 6px',
-    background: COLORS.green,
-    color: COLORS.white,
-    border: `2px solid #1fa855`,
-    textTransform: 'uppercase',
-  },
-  badgeLocked: {
-    fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    padding: '2px 6px',
-    background: COLORS.gray,
-    color: COLORS.lightGray,
-    border: `2px solid ${COLORS.dark}`,
-    textTransform: 'uppercase',
-  },
-  claimBtn: {
-    ...pixelBtnGold,
-    padding: '6px 14px',
-    fontSize: '7px',
-    marginTop: '8px',
-  },
-  claimedText: {
-    fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    color: COLORS.green,
-    marginTop: '8px',
-    textTransform: 'uppercase',
-  },
-};
+import styles from './QuestLog.module.css';
 
 // Group quests by zone
 function groupQuestsByZone() {
@@ -225,63 +53,62 @@ export default function QuestLog() {
     const target = qd.target;
     const pct = Math.min(100, (progress / target) * 100);
 
-    let itemStyle = styles.questItem;
-    let titleExtra = {};
+    let itemClassName = styles.questItem;
+    let titleClassName = styles.questTitle;
     let badge = null;
 
     if (status === 'completed') {
-      itemStyle = { ...itemStyle, ...styles.questCompleted };
-      badge = <span style={styles.badgeComplete}>Complete</span>;
+      itemClassName = `${styles.questItem} ${styles.questCompleted}`;
+      badge = <span className={styles.badgeComplete}>Complete</span>;
     } else if (status === 'active') {
-      itemStyle = { ...itemStyle, ...styles.questActive };
-      titleExtra = styles.questTitleActive;
-      badge = <span style={styles.badgeActive}>Active</span>;
+      itemClassName = `${styles.questItem} ${styles.questActive}`;
+      titleClassName = `${styles.questTitle} ${styles.questTitleActive}`;
+      badge = <span className={styles.badgeActive}>Active</span>;
     } else {
-      itemStyle = { ...itemStyle, ...styles.questLocked };
-      badge = <span style={styles.badgeLocked}>Locked</span>;
+      itemClassName = `${styles.questItem} ${styles.questLocked}`;
+      badge = <span className={styles.badgeLocked}>Locked</span>;
     }
 
     return (
-      <div key={qd.id} style={itemStyle}>
-        <div style={styles.questTitleRow}>
-          <span style={{ ...styles.questTitle, ...titleExtra }}>{qd.title}</span>
+      <div key={qd.id} className={itemClassName}>
+        <div className={styles.questTitleRow}>
+          <span className={titleClassName}>{qd.title}</span>
           {badge}
         </div>
-        <div style={styles.questDesc}>{qd.description}</div>
-        <div style={styles.progressBarOuter}>
-          <div style={{
-            ...styles.progressFill,
-            ...(status === 'completed' ? styles.progressFillComplete : {}),
-            width: `${pct}%`,
-          }} />
+        <div className={styles.questDesc}>{qd.description}</div>
+        <div className={styles.progressBarOuter}>
+          <div
+            className={`${styles.progressFill} ${status === 'completed' ? styles.progressFillComplete : ''}`}
+            style={{ width: `${pct}%` }}
+          />
         </div>
-        <div style={styles.progressRow}>
-          <span style={styles.progressText}>{progress}/{target}</span>
-          <span style={styles.reward}>
+        <div className={styles.progressRow}>
+          <span className={styles.progressText}>{progress}/{target}</span>
+          <span className={styles.reward}>
             {qd.reward.xp} XP + {qd.reward.dirhams} Dirhams
           </span>
         </div>
         {status === 'completed' && !rewardClaimed && (
           <button
-            style={styles.claimBtn}
+            className={styles.claimBtn}
             onClick={() => handleClaim(qd.id)}
           >
             Claim Reward
           </button>
         )}
         {status === 'completed' && rewardClaimed && (
-          <div style={styles.claimedText}>Reward Claimed</div>
+          <div className={styles.claimedText}>Reward Claimed</div>
         )}
       </div>
     );
   };
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.card}>
-        <div style={styles.header}>
-          <div style={styles.title}>Quest Log</div>
-          <button style={styles.closeBtn} onClick={handleClose}>Close</button>
+    <div className={styles.overlay}>
+      <div className={styles.card}>
+        <div className={styles.header}>
+          <div className={styles.title}>Quest Log</div>
+          <button className={styles.closeBtn} onClick={handleClose}>Close</button>
         </div>
 
         {ZONE_ORDER.map((zoneId) => {
@@ -291,10 +118,10 @@ export default function QuestLog() {
 
           return (
             <div key={zoneId}>
-              <div style={styles.zoneHeader}>
-                <span style={styles.zoneName}>{zone?.name || zoneId}</span>
+              <div className={styles.zoneHeader}>
+                <span className={styles.zoneName}>{zone?.name || zoneId}</span>
                 {zone?.nameArabic && (
-                  <span style={styles.zoneNameArabic}>{zone.nameArabic}</span>
+                  <span className={styles.zoneNameArabic}>{zone.nameArabic}</span>
                 )}
               </div>
               {zoneQuests.map(renderQuest)}

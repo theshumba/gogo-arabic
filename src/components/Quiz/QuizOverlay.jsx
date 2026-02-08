@@ -12,7 +12,7 @@ import MatchPairs from './MatchPairs.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import { shuffle } from '../../utils/shuffle.js';
 import vocabulary from '../../data/vocabularyAll.js';
-import { COLORS, FONTS, pixelBtn, pixelBtnGold, pixelPanel } from '../../styles/theme.js';
+import styles from './QuizOverlay.module.css';
 
 const QUIZ_TYPE_LABELS = {
   'ar-to-en': 'Arabic > English',
@@ -20,124 +20,6 @@ const QUIZ_TYPE_LABELS = {
   'en-to-type-ar': 'Type Arabic',
   'listen': 'Listen & Choose',
   'match': 'Match Pairs',
-};
-
-const styles = {
-  overlay: {
-    position: 'absolute',
-    inset: 0,
-    background: COLORS.overlay,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 200,
-  },
-  card: {
-    ...pixelPanel,
-    background: COLORS.beige,
-    border: `4px solid ${COLORS.dark}`,
-    padding: '24px 28px',
-    color: COLORS.dark,
-    textAlign: 'center',
-    minWidth: '420px',
-    maxWidth: '620px',
-    maxHeight: '90vh',
-    overflowY: 'auto',
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.08),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.4),
-      8px 8px 0px 0px rgba(0,0,0,0.3)
-    `,
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px',
-    paddingBottom: '12px',
-    borderBottom: `2px solid ${COLORS.brown}`,
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.brown,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  quitBtn: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    padding: '6px 12px',
-    background: COLORS.gray,
-    color: COLORS.white,
-    border: `2px solid ${COLORS.dark}`,
-    cursor: 'pointer',
-    textTransform: 'uppercase',
-  },
-  score: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.gold,
-  },
-  feedbackRow: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: '20px',
-  },
-  nextBtn: {
-    ...pixelBtn,
-    fontSize: '11px',
-    padding: '12px 24px',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  nextBtnCorrect: {
-    background: COLORS.green,
-    color: COLORS.white,
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.2),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.2),
-      0 4px 0 0 #1a9950
-    `,
-  },
-  nextBtnWrong: {
-    background: COLORS.red,
-    color: COLORS.white,
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.2),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.2),
-      0 4px 0 0 #a01010
-    `,
-  },
-  summary: {
-    textAlign: 'center',
-    fontFamily: FONTS.pixel,
-  },
-  summaryTitle: {
-    fontFamily: FONTS.pixel,
-    fontSize: '14px',
-    color: COLORS.brown,
-    textTransform: 'uppercase',
-    letterSpacing: '2px',
-    marginBottom: '8px',
-  },
-  summaryScore: {
-    fontFamily: FONTS.pixel,
-    fontSize: '36px',
-    color: COLORS.gold,
-    margin: '16px 0',
-    textShadow: `2px 2px 0px ${COLORS.brown}`,
-  },
-  summaryMsg: {
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.brown,
-    marginBottom: '8px',
-  },
-  closeBtn: {
-    ...pixelBtnGold,
-    marginTop: '20px',
-    fontSize: '11px',
-    padding: '14px 32px',
-  },
 };
 
 export default function QuizOverlay() {
@@ -236,7 +118,7 @@ export default function QuizOverlay() {
   if (showSummary) {
     return (
       <motion.div
-        style={styles.overlay}
+        className={styles.overlay}
         onClick={close}
         variants={overlayVariants}
         initial="hidden"
@@ -245,7 +127,7 @@ export default function QuizOverlay() {
         transition={transition}
       >
         <motion.div
-          style={styles.card}
+          className={styles.card}
           onClick={(e) => e.stopPropagation()}
           variants={cardVariants}
           initial="hidden"
@@ -253,18 +135,18 @@ export default function QuizOverlay() {
           exit="hidden"
           transition={transition}
         >
-          <div style={styles.summary}>
-            <div style={styles.summaryTitle}>Quiz Complete</div>
-            <div style={styles.summaryScore}>
+          <div className={styles.summary}>
+            <div className={styles.summaryTitle}>Quiz Complete</div>
+            <div className={styles.summaryScore}>
               {quiz.sessionScore}/{quiz.sessionTotal}
             </div>
-            <p style={styles.summaryMsg}>
+            <p className={styles.summaryMsg}>
               {quiz.sessionScore === quiz.sessionTotal
                 ? 'Perfect score!'
                 : 'Keep practicing!'}
             </p>
             <motion.button
-              style={styles.closeBtn}
+              className={styles.closeBtn}
               onClick={close}
               {...buttonProps}
             >
@@ -287,7 +169,7 @@ export default function QuizOverlay() {
     const matchWords = quiz.sessionWords.slice(0, 4);
     return (
       <motion.div
-        style={styles.overlay}
+        className={styles.overlay}
         variants={overlayVariants}
         initial="hidden"
         animate="visible"
@@ -295,7 +177,7 @@ export default function QuizOverlay() {
         transition={transition}
       >
         <motion.div
-          style={styles.card}
+          className={styles.card}
           onClick={(e) => e.stopPropagation()}
           variants={cardVariants}
           initial="hidden"
@@ -303,8 +185,8 @@ export default function QuizOverlay() {
           exit="hidden"
           transition={transition}
         >
-          <div style={styles.header}>
-            <button style={styles.quitBtn} onClick={handleQuit}>Quit</button>
+          <div className={styles.header}>
+            <button className={styles.quitBtn} onClick={handleQuit}>Quit</button>
             <span>{QUIZ_TYPE_LABELS['match']}</span>
             <div style={{ width: '50px' }} />
           </div>
@@ -331,7 +213,7 @@ export default function QuizOverlay() {
 
   return (
     <motion.div
-      style={styles.overlay}
+      className={styles.overlay}
       variants={overlayVariants}
       initial="hidden"
       animate="visible"
@@ -339,7 +221,7 @@ export default function QuizOverlay() {
       transition={transition}
     >
       <motion.div
-        style={styles.card}
+        className={styles.card}
         onClick={(e) => e.stopPropagation()}
         variants={cardVariants}
         initial="hidden"
@@ -347,10 +229,10 @@ export default function QuizOverlay() {
         exit="hidden"
         transition={transition}
       >
-        <div style={styles.header}>
-          <button style={styles.quitBtn} onClick={handleQuit}>Quit</button>
+        <div className={styles.header}>
+          <button className={styles.quitBtn} onClick={handleQuit}>Quit</button>
           <span>{QUIZ_TYPE_LABELS[quiz.quizType] || quiz.quizType}</span>
-          <span style={styles.score}>
+          <span className={styles.score}>
             {quiz.sessionScore}/{quiz.sessionTotal}
           </span>
         </div>
@@ -395,17 +277,14 @@ export default function QuizOverlay() {
         <AnimatePresence mode="wait">
           {combinedFeedback && (
             <motion.div
-              style={styles.feedbackRow}
+              className={styles.feedbackRow}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
               <motion.button
-                style={{
-                  ...styles.nextBtn,
-                  ...(combinedFeedback.correct ? styles.nextBtnCorrect : styles.nextBtnWrong),
-                }}
+                className={`${styles.nextBtn} ${combinedFeedback.correct ? styles.nextBtnCorrect : styles.nextBtnWrong}`}
                 onClick={handleNext}
                 {...buttonProps}
               >
