@@ -112,6 +112,10 @@ function HUD({ onMenu }) {
     EventBus.emit('open-alphabet');
   }, []);
 
+  const openReviewSession = useCallback(() => {
+    EventBus.emit('open-review-session');
+  }, []);
+
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const buttonProps = reduceMotion
     ? {}
@@ -233,9 +237,17 @@ function HUD({ onMenu }) {
 
           {/* Review button with due count badge */}
           {reviewDueCount > 0 && (
-            <span className={`${styles.badge} ${styles.reviewBadge}`} aria-label={`${reviewDueCount} reviews due`}>
-              {reviewDueCount} due
-            </span>
+            <motion.button
+              className={`${styles.btn} ${styles.reviewBtn}`}
+              onClick={openReviewSession}
+              aria-label={`Start review session - ${reviewDueCount} words due`}
+              {...buttonProps}
+            >
+              Review
+              <span className={`${styles.badge} ${styles.reviewBadge}`} aria-hidden="true">
+                {reviewDueCount}
+              </span>
+            </motion.button>
           )}
 
           <motion.button

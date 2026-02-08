@@ -217,13 +217,15 @@
   color: var(--color-dark);
 }
 
+.reviewBtn {
+  background: var(--color-fire);
+  color: var(--color-dark);
+  font-weight: bold;
+}
+
 .reviewBadge {
   background: var(--color-blue);
   color: var(--color-dark);
-  position: relative;
-  top: 0;
-  right: 0;
-  pointer-events: auto;
 }
 
 /* Media queries for responsive design */

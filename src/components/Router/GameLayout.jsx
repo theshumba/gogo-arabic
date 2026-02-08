@@ -215,6 +215,10 @@ export default function GameLayout() {
       navigate('/alphabet');
     };
 
+    const handleOpenReviewSession = () => {
+      navigate('/review');
+    };
+
     const handleShowSign = ({ arabic, english }) => {
       playSFX('bookopen');
       dispatch(openSign({ arabic, english }));
@@ -379,6 +383,7 @@ export default function GameLayout() {
     EventBus.on('zone-change', handleZoneChange);
     EventBus.on('open-quiz', handleOpenQuiz);
     EventBus.on('open-alphabet', handleOpenAlphabet);
+    EventBus.on('open-review-session', handleOpenReviewSession);
     EventBus.on('show-sign', handleShowSign);
     EventBus.on('bookshelf-interact', handleBookshelfInteract);
     EventBus.on('chest-opened', handleChestOpened);
@@ -398,6 +403,7 @@ export default function GameLayout() {
       EventBus.off('zone-change', handleZoneChange);
       EventBus.off('open-quiz', handleOpenQuiz);
       EventBus.off('open-alphabet', handleOpenAlphabet);
+      EventBus.off('open-review-session', handleOpenReviewSession);
       EventBus.off('show-sign', handleShowSign);
       EventBus.off('bookshelf-interact', handleBookshelfInteract);
       EventBus.off('chest-opened', handleChestOpened);
