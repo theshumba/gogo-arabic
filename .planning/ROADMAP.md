@@ -52,10 +52,11 @@ Plans:
   2. NPCs with completable quests show question mark (?) above their heads
   3. HUD displays active quest name with current objective and progress (e.g., "Village Explorer: Talk to Fatima 1/3")
   4. Player sees directional compass arrow pointing toward active quest objective location
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Quest markers (!/?) on NPCs + activeQuestId state + QuestLog tracking (GUID-01, GUID-02)
+- [ ] 02-02-PLAN.md — HUD quest tracker + compass arrow (GUID-03, GUID-04)
 
 ### Phase 3: Feature Discoverability
 **Goal**: Surface hidden features so players discover Grammar, Roots, Reading, Battles, and Reviews
