@@ -9,29 +9,29 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 
 ## Current Position
 
-Phase: 1 of 8 (Critical Fixes)
-Plan: Ready to plan
-Status: Ready to plan
-Last activity: 2026-02-08 — Roadmap created for v2.0 Comprehensive UX Overhaul milestone
+Phase: 1 of 9 (Critical Fixes)
+Plan: 1 of 2 completed
+Status: In progress - executing Phase 1 plans
+Last activity: 2026-02-08 — Completed 01-01-PLAN.md (z-index tokens + review badge)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 10% (1/10 Phase 1 tasks complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: N/A
-- Total execution time: 0 hours
+- Total plans completed: 1
+- Average duration: 2 minutes
+- Total execution time: 0.03 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 01 - Critical Fixes | 1/2 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: N/A
-- Trend: N/A
+- Last 5 plans: 01-01 (2 min)
+- Trend: Just started
 
 *Updated after each plan completion*
 
@@ -45,6 +45,15 @@ Recent decisions affecting current work:
 - CSS Modules for new components (consistency, responsive breakpoints, accessibility)
 - useFocusTrap for all overlays (WCAG AA compliance, hook already exists)
 - Phaser DOMOverlay for NPC markers (existing system, minimal overhead)
+- Revised v2.0 to prioritize player-facing features (cut Architecture, Testing, Backend phases to v3.0)
+- Added 5 new player-facing phases: Daily Dashboard, World Map Upgrade, Player Profile, Visual Polish, Outfit System
+- Outfit sprites to be AI-generated
+- Bundle splitting (PERF-01) folded into Phase 4 (Onboarding & HUD)
+
+**From 01-01 execution:**
+- Set --z-pause-menu to 200 (overlay tier) instead of 50 - pause menu is functionally a full-screen overlay
+- Top-level z-index tokens only (internal component z-index stays literal) - prevents over-engineering
+- EventBus pattern for review navigation (consistent with existing alphabet/map patterns)
 
 ### Pending Todos
 
@@ -52,14 +61,14 @@ None yet.
 
 ### Blockers/Concerns
 
-None yet.
+- Phases 8-9 (Visual Polish, Outfits) depend on pixel art assets — AI generation quality TBD
 
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Roadmap and STATE.md created for v2.0 milestone
-Resume file: None
+Stopped at: Completed 01-01-PLAN.md execution (z-index tokens + review badge)
+Resume file: .planning/phases/01-critical-fixes/01-02-PLAN.md (next)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-08*
+*Last updated: 2026-02-08 14:00 UTC*

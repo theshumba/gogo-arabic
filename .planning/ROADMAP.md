@@ -2,11 +2,11 @@
 
 ## Overview
 
-Transform GoGo Arabic from a feature-rich but navigable-poor experience into a polished, guided learning RPG. This milestone addresses critical UX gaps identified by comprehensive audit: adding player guidance systems, exposing hidden features, fixing accessibility violations, optimizing performance, and hardening code quality. Phases progress from immediate bug fixes through user-facing guidance, performance optimization, and infrastructure improvements.
+Transform GoGo Arabic from a feature-rich but hard-to-navigate experience into a polished, guided, feature-packed learning RPG. This milestone prioritizes player-facing improvements: fixing critical bugs, adding guidance systems, surfacing hidden features, redesigning the HUD, then adding entirely new systems — a daily dashboard, upgraded world map, player profile, visual polish, and outfit customization. Infrastructure work (testing, architecture, backend) is deferred to v3.0.
 
 ## Milestones
 
-- 🚧 **v2.0 Comprehensive UX Overhaul** - Phases 1-8 (in progress)
+- 🚧 **v2.0 Player Experience Overhaul** - Phases 1-9 (in progress)
 
 ## Phases
 
@@ -19,11 +19,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 1: Critical Fixes** - Fix z-index bugs, mobile overflow, focus traps, HUD review button
 - [ ] **Phase 2: Player Guidance** - NPC quest markers, active objective display, quest compass
 - [ ] **Phase 3: Feature Discoverability** - Expose hidden features through in-game UI
-- [ ] **Phase 4: Performance Optimization** - Bundle splitting and component memoization
-- [ ] **Phase 5: Onboarding & HUD Redesign** - Contextual tooltips and streamlined HUD
-- [ ] **Phase 6: Architecture Cleanup** - Refactor GameLayout, add linting, clean up EventBus
-- [ ] **Phase 7: Testing** - Add unit, component, middleware, backend, and E2E tests
-- [ ] **Phase 8: Backend Hardening** - Database indexes, sync fixes, auth improvements
+- [ ] **Phase 4: Onboarding & HUD** - Contextual tooltips, streamlined HUD, bundle splitting
+- [ ] **Phase 5: Daily Dashboard** - Startup screen with streak, reviews, goals, suggested activity
+- [ ] **Phase 6: World Map Upgrade** - Fast travel, zone completion %, locked zone teasers
+- [ ] **Phase 7: Player Profile & Stats** - Stats page, achievement showcase, streak history
+- [ ] **Phase 8: Visual Polish & Sprites** - Consistent sprite style, pixel-art icons, tashkeel fading
+- [ ] **Phase 9: Outfit System** - Wardrobe UI, outfit shop, AI-generated sprite outfits
 
 ## Phase Details
 
@@ -39,7 +40,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Z-index tokens + clickable review badge (CRIT-01, CRIT-04)
+- [x] 01-01-PLAN.md — Z-index tokens + clickable review badge (CRIT-01, CRIT-04) ✓ 2 min
 - [ ] 01-02-PLAN.md — Responsive overlay migration + focus traps (CRIT-02, CRIT-03)
 
 ### Phase 2: Player Guidance
@@ -70,95 +71,108 @@ Plans:
 Plans:
 - [ ] 03-01: TBD
 
-### Phase 4: Performance Optimization
-**Goal**: Reduce main bundle size from 2.8MB to under 500KB and eliminate unnecessary re-renders
+### Phase 4: Onboarding & HUD
+**Goal**: Replace static onboarding slideshow with contextual guidance, reduce HUD clutter, and split the bundle
 **Depends on**: Phase 3
-**Requirements**: PERF-01, PERF-02, PERF-03, PERF-04
+**Requirements**: ONBD-01, ONBD-02, ONBD-03, HUD-01, HUD-02, HUD-03, PERF-01
 **Success Criteria** (what must be TRUE):
-  1. Main JavaScript bundle is under 500KB after gzip
-  2. Phaser, React/Redux, Framer Motion, and game data load as separate chunks
-  3. HUD, MiniMap, QuestLog, and all overlay components use React.memo to prevent unnecessary re-renders
-  4. All 12 Redux slices (player, vocabulary, quests, ui, alphabet, settings, npc, sync, achievements, battle, dailyGoals, grammar) export memoized selectors using createSelector
+  1. New players see contextual tooltips pointing at actual UI elements instead of static overlay
+  2. Onboarding progresses through gameplay actions (moving, talking to NPC, completing word) not button clicks
+  3. First quest NPC has visual highlight with guidance arrow during onboarding
+  4. Primary HUD shows only Level/XP bar, active quest objective, and 3-4 essential action buttons
+  5. Secondary stats (words learned, dirhams, streak count) are in collapsible panel
+  6. Z-index values are standardized using CSS custom properties in variables.css
+  7. Main JavaScript bundle is under 500KB (code splitting configured)
 **Plans**: TBD
 
 Plans:
 - [ ] 04-01: TBD
 
-### Phase 5: Onboarding & HUD Redesign
-**Goal**: Replace static onboarding slideshow with contextual guidance and reduce HUD information overload
+### Phase 5: Daily Dashboard
+**Goal**: Give players a meaningful start screen that shows progress and suggests what to do next
 **Depends on**: Phase 4
-**Requirements**: ONBD-01, ONBD-02, ONBD-03, HUD-01, HUD-02, HUD-03
+**Requirements**: DASH-01, DASH-02, DASH-03
 **Success Criteria** (what must be TRUE):
-  1. New players see contextual tooltips pointing at actual UI elements (HUD, first NPC, dialogue interface) instead of static overlay
-  2. Onboarding progresses through gameplay actions (moving, talking to NPC, completing word) not button clicks
-  3. First quest NPC has visual highlight with guidance arrow during onboarding
-  4. Primary HUD shows only Level/XP bar, active quest objective, and 3-4 essential action buttons
-  5. Secondary stats (words learned, dirhams, streak count) are in collapsible panel that can be expanded/collapsed
-  6. Z-index values are standardized using CSS custom properties in variables.css (no magic numbers)
+  1. Game shows a dashboard on startup with streak count, words due for review, and daily goals progress
+  2. Dashboard suggests next activity based on player state (review if words due, continue quest if mid-quest, explore if idle)
+  3. Dashboard shows learning stats summary (words learned this week, accuracy trend)
 **Plans**: TBD
 
 Plans:
 - [ ] 05-01: TBD
 
-### Phase 6: Architecture Cleanup
-**Goal**: Refactor god components, enforce code consistency, and eliminate memory leak risks
+### Phase 6: World Map Upgrade
+**Goal**: Transform the world map from a simple zone selector into an informative navigation hub with fast travel
 **Depends on**: Phase 5
-**Requirements**: ARCH-01, ARCH-02, ARCH-03, ARCH-04
+**Requirements**: WMAP-01, WMAP-02, WMAP-03
 **Success Criteria** (what must be TRUE):
-  1. GameLayout is split into sub-components (GameHUD, GameOverlays, GameDialogue) each under 200 lines
-  2. All EventBus listeners in useBattle, useDialogue, and other hooks have matching cleanup in useEffect returns
-  3. All remaining inline-styled overlay components (QuestLog, QuizOverlay, etc.) are migrated to CSS Modules with responsive breakpoints
-  4. ESLint and Prettier are configured with pre-commit hooks enforcing code standards
+  1. Players can fast-travel to any previously visited zone from the world map
+  2. World map shows completion percentage for each zone (quests done, words learned, NPCs talked to)
+  3. Locked zones show teaser info (zone name, difficulty, what's needed to unlock)
 **Plans**: TBD
 
 Plans:
 - [ ] 06-01: TBD
 
-### Phase 7: Testing
-**Goal**: Establish test infrastructure and cover critical user paths with automated tests
+### Phase 7: Player Profile & Stats
+**Goal**: Give players a dedicated space to see their learning journey, achievements, and progress over time
 **Depends on**: Phase 6
-**Requirements**: TEST-01, TEST-02, TEST-03, TEST-04, TEST-05
+**Requirements**: PROF-01, PROF-02, PROF-03, PROF-04
 **Success Criteria** (what must be TRUE):
-  1. Quest, achievement, and battle Redux slices have unit tests covering state mutations and selectors
-  2. QuizOverlay, ReviewSession, and DialogueOverlay have React Testing Library component tests
-  3. Achievement middleware and daily goals middleware have unit tests verifying auto-unlock logic
-  4. Backend has test infrastructure with passing tests for auth flows and sync conflict resolution
-  5. E2E Playwright tests cover critical user journey: onboarding → learn word → review → level-up
+  1. Player profile page shows total words learned, accuracy rate, and time played
+  2. Profile displays achievement showcase with pinned achievements
+  3. Profile shows learning streak history and best streak record
+  4. Profile is accessible from the game HUD or pause menu
 **Plans**: TBD
 
 Plans:
 - [ ] 07-01: TBD
 
-### Phase 8: Backend Hardening
-**Goal**: Improve database performance, fix sync race conditions, and strengthen auth security
+### Phase 8: Visual Polish & Sprites
+**Goal**: Unify the visual style and add polish that makes the game feel professionally crafted
 **Depends on**: Phase 7
-**Requirements**: BACK-01, BACK-02, BACK-03, BACK-04
+**Requirements**: VPOL-01, VPOL-02, VPOL-03, VPOL-04
 **Success Criteria** (what must be TRUE):
-  1. Database indexes exist on VocabCard.due, Quest.status, and User.level fields
-  2. Sync resolveConflict endpoint uses atomic version checks to prevent race conditions
-  3. Client removes localStorage JWT and uses httpOnly cookies exclusively for authentication
-  4. Password validation requires minimum 8 characters with at least one uppercase, one lowercase, one number, and one special character
+  1. All NPC and player sprites follow a consistent pixel art style guide
+  2. HUD uses custom pixel-art icons instead of emoji/text
+  3. Learned words progressively fade diacritics (tashkeel) as mastery increases
+  4. Idle animations added to player and key NPCs
 **Plans**: TBD
 
 Plans:
 - [ ] 08-01: TBD
 
+### Phase 9: Outfit System
+**Goal**: Add character customization through purchasable outfits, giving players a rewarding way to spend dirhams
+**Depends on**: Phase 8
+**Requirements**: OUTF-01, OUTF-02, OUTF-03, OUTF-04
+**Success Criteria** (what must be TRUE):
+  1. Wardrobe UI accessible from pause menu showing available outfits
+  2. Players can purchase outfits using in-game currency (dirhams) from shop
+  3. Player sprite updates in real-time when outfit is changed
+  4. At least 5 distinct outfit options available at launch (AI-generated pixel art)
+**Plans**: TBD
+
+Plans:
+- [ ] 09-01: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Critical Fixes | 0/2 | Planning complete | - |
 | 2. Player Guidance | 0/0 | Not started | - |
 | 3. Feature Discoverability | 0/0 | Not started | - |
-| 4. Performance Optimization | 0/0 | Not started | - |
-| 5. Onboarding & HUD Redesign | 0/0 | Not started | - |
-| 6. Architecture Cleanup | 0/0 | Not started | - |
-| 7. Testing | 0/0 | Not started | - |
-| 8. Backend Hardening | 0/0 | Not started | - |
+| 4. Onboarding & HUD | 0/0 | Not started | - |
+| 5. Daily Dashboard | 0/0 | Not started | - |
+| 6. World Map Upgrade | 0/0 | Not started | - |
+| 7. Player Profile & Stats | 0/0 | Not started | - |
+| 8. Visual Polish & Sprites | 0/0 | Not started | - |
+| 9. Outfit System | 0/0 | Not started | - |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08*
+*Last updated: 2026-02-08 — Revised: player-facing focus, 9 phases*
