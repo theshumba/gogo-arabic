@@ -85,10 +85,12 @@ Plans:
   5. Secondary stats (words learned, dirhams, streak count) are in collapsible panel
   6. Z-index values are standardized using CSS custom properties in variables.css
   7. Main JavaScript bundle is under 500KB (code splitting configured)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: TBD
+- [ ] 04-01-PLAN.md — Vite bundle splitting + z-index token standardization (PERF-01, HUD-03)
+- [ ] 04-02-PLAN.md — HUD restructure with collapsible StatsPanel (HUD-01, HUD-02)
+- [ ] 04-03-PLAN.md — Contextual onboarding with React Joyride + NPC highlight (ONBD-01, ONBD-02, ONBD-03)
 
 ### Phase 5: Daily Dashboard
 **Goal**: Give players a meaningful start screen that shows progress and suggests what to do next
