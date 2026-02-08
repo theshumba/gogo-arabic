@@ -1,11 +1,12 @@
 # Requirements: GoGo Arabic
 
 **Defined:** 2026-02-08
+**Revised:** 2026-02-08 — Shifted to player-facing features, moved infrastructure to v3.0
 **Core Value:** Players naturally learn Arabic through guided exploration — never wondering "what should I do next?"
 
 ## v2.0 Requirements
 
-Requirements for the UX overhaul milestone. Each maps to roadmap phases.
+Player-facing UX overhaul with new features. Infrastructure work deferred to v3.0.
 
 ### Critical Fixes
 
@@ -28,50 +29,80 @@ Requirements for the UX overhaul milestone. Each maps to roadmap phases.
 - [ ] **DISC-03**: Daily review sessions can be started from the game HUD
 - [ ] **DISC-04**: Hidden features are mentioned by NPCs through contextual dialogue hints
 
-### Performance
-
-- [ ] **PERF-01**: Main JavaScript bundle is under 500KB (code splitting configured)
-- [ ] **PERF-02**: Phaser, React, Framer Motion, and game data are in separate chunks
-- [ ] **PERF-03**: HUD, MiniMap, and overlay components are memoized with React.memo
-- [ ] **PERF-04**: All 12 Redux slices export memoized selectors
-
-### Onboarding
+### Onboarding & HUD
 
 - [ ] **ONBD-01**: New players see contextual tooltips pointing at actual UI elements
 - [ ] **ONBD-02**: Onboarding progresses through gameplay actions, not button clicks
 - [ ] **ONBD-03**: First quest NPC is visually highlighted with guidance arrow
-
-### HUD Redesign
-
 - [ ] **HUD-01**: Primary HUD shows only Level/XP, active quest, and 3-4 action buttons
 - [ ] **HUD-02**: Secondary stats (words, dirhams, streak) are in collapsible panel
 - [ ] **HUD-03**: Z-index tokens are standardized in CSS variables
+- [ ] **PERF-01**: Main JavaScript bundle is under 500KB (code splitting configured)
 
-### Architecture
+### Daily Dashboard
 
-- [ ] **ARCH-01**: GameLayout is split into sub-components under 200 lines each
-- [ ] **ARCH-02**: EventBus listeners have complete cleanup (no memory leaks)
-- [ ] **ARCH-03**: Remaining inline-styled overlays are migrated to CSS Modules
-- [ ] **ARCH-04**: ESLint and Prettier are configured with pre-commit enforcement
+- [ ] **DASH-01**: Game shows a dashboard on startup with streak count, words due for review, and daily goals progress
+- [ ] **DASH-02**: Dashboard suggests next activity based on player state (review if words due, continue quest if mid-quest, explore if idle)
+- [ ] **DASH-03**: Dashboard shows learning stats summary (words learned this week, accuracy trend)
 
-### Testing
+### World Map Upgrade
 
-- [ ] **TEST-01**: Quest, achievement, and battle Redux slices have unit tests
-- [ ] **TEST-02**: QuizOverlay, ReviewSession, and DialogueOverlay have component tests
-- [ ] **TEST-03**: Achievement and daily goals middleware have unit tests
-- [ ] **TEST-04**: Backend has test infrastructure with auth and sync flow tests
-- [ ] **TEST-05**: E2E tests cover onboarding → learn word → review → level-up flow
+- [ ] **WMAP-01**: Players can fast-travel to any previously visited zone from the world map
+- [ ] **WMAP-02**: World map shows completion percentage for each zone (quests done, words learned, NPCs talked to)
+- [ ] **WMAP-03**: Locked zones show teaser info (zone name, difficulty, what's needed to unlock)
 
-### Backend
+### Player Profile & Stats
 
-- [ ] **BACK-01**: VocabCard.due, Quest.status, and User.level have database indexes
-- [ ] **BACK-02**: Sync resolveConflict uses atomic version check
-- [ ] **BACK-03**: Client auth uses httpOnly cookies only (no localStorage JWT)
-- [ ] **BACK-04**: Password requires minimum 8 characters with complexity rules
+- [ ] **PROF-01**: Player profile page shows total words learned, accuracy rate, and time played
+- [ ] **PROF-02**: Profile displays achievement showcase with pinned achievements
+- [ ] **PROF-03**: Profile shows learning streak history and best streak record
+- [ ] **PROF-04**: Profile is accessible from the game HUD or pause menu
+
+### Visual Polish & Sprites
+
+- [ ] **VPOL-01**: All NPC and player sprites follow a consistent pixel art style guide
+- [ ] **VPOL-02**: HUD uses custom pixel-art icons instead of emoji/text
+- [ ] **VPOL-03**: Learned words progressively fade diacritics (tashkeel) as mastery increases
+- [ ] **VPOL-04**: Idle animations added to player and key NPCs
+
+### Outfit System
+
+- [ ] **OUTF-01**: Wardrobe UI accessible from pause menu showing available outfits
+- [ ] **OUTF-02**: Players can purchase outfits using in-game currency (dirhams) from shop
+- [ ] **OUTF-03**: Player sprite updates in real-time when outfit is changed
+- [ ] **OUTF-04**: At least 5 distinct outfit options available at launch (AI-generated pixel art)
 
 ## v3.0 Requirements
 
-Deferred to future milestone. Tracked but not in current roadmap.
+Deferred to future milestone. Infrastructure + content expansion.
+
+### Architecture
+
+- **ARCH-01**: GameLayout is split into sub-components under 200 lines each
+- **ARCH-02**: EventBus listeners have complete cleanup (no memory leaks)
+- **ARCH-03**: Remaining inline-styled overlays are migrated to CSS Modules
+- **ARCH-04**: ESLint and Prettier are configured with pre-commit enforcement
+
+### Testing
+
+- **TEST-01**: Quest, achievement, and battle Redux slices have unit tests
+- **TEST-02**: QuizOverlay, ReviewSession, and DialogueOverlay have component tests
+- **TEST-03**: Achievement and daily goals middleware have unit tests
+- **TEST-04**: Backend has test infrastructure with auth and sync flow tests
+- **TEST-05**: E2E tests cover onboarding -> learn word -> review -> level-up flow
+
+### Backend
+
+- **BACK-01**: VocabCard.due, Quest.status, and User.level have database indexes
+- **BACK-02**: Sync resolveConflict uses atomic version check
+- **BACK-03**: Client auth uses httpOnly cookies only (no localStorage JWT)
+- **BACK-04**: Password requires minimum 8 characters with complexity rules
+
+### Performance (remaining)
+
+- **PERF-02**: Phaser, React, Framer Motion, and game data are in separate chunks
+- **PERF-03**: HUD, MiniMap, and overlay components are memoized with React.memo
+- **PERF-04**: All 12 Redux slices export memoized selectors
 
 ### Content Expansion
 
@@ -84,14 +115,6 @@ Deferred to future milestone. Tracked but not in current roadmap.
 - **ADV-01**: Refresh token flow with short-lived access tokens
 - **ADV-02**: Achievement system moved to backend with server-side validation
 - **ADV-03**: Field-level sync versioning (avoid conflicts on non-overlapping changes)
-- **ADV-04**: Daily dashboard shown on game start
-
-### Polish
-
-- **POL-01**: Custom pixel-art icons replacing emoji in HUD
-- **POL-02**: Progressive tashkeel fading (diacritics fade as word is learned)
-- **POL-03**: Streak freeze shop item
-- **POL-04**: Fast travel from world map
 
 ## Out of Scope
 
@@ -102,12 +125,9 @@ Deferred to future milestone. Tracked but not in current roadmap.
 | Mobile native app | Responsive web covers mobile use case |
 | OAuth/social login | Email/password sufficient for learning app |
 | Admin dashboard | Not user-facing, doesn't improve learning |
-| New content (words, quests) | Fix discoverability of existing content first |
 | Storybook component library | Nice-to-have, not blocking UX |
 
 ## Traceability
-
-Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
@@ -123,35 +143,37 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DISC-02 | Phase 3 | Pending |
 | DISC-03 | Phase 3 | Pending |
 | DISC-04 | Phase 3 | Pending |
+| ONBD-01 | Phase 4 | Pending |
+| ONBD-02 | Phase 4 | Pending |
+| ONBD-03 | Phase 4 | Pending |
+| HUD-01 | Phase 4 | Pending |
+| HUD-02 | Phase 4 | Pending |
+| HUD-03 | Phase 4 | Pending |
 | PERF-01 | Phase 4 | Pending |
-| PERF-02 | Phase 4 | Pending |
-| PERF-03 | Phase 4 | Pending |
-| PERF-04 | Phase 4 | Pending |
-| ONBD-01 | Phase 5 | Pending |
-| ONBD-02 | Phase 5 | Pending |
-| ONBD-03 | Phase 5 | Pending |
-| HUD-01 | Phase 5 | Pending |
-| HUD-02 | Phase 5 | Pending |
-| HUD-03 | Phase 5 | Pending |
-| ARCH-01 | Phase 6 | Pending |
-| ARCH-02 | Phase 6 | Pending |
-| ARCH-03 | Phase 6 | Pending |
-| ARCH-04 | Phase 6 | Pending |
-| TEST-01 | Phase 7 | Pending |
-| TEST-02 | Phase 7 | Pending |
-| TEST-03 | Phase 7 | Pending |
-| TEST-04 | Phase 7 | Pending |
-| TEST-05 | Phase 7 | Pending |
-| BACK-01 | Phase 8 | Pending |
-| BACK-02 | Phase 8 | Pending |
-| BACK-03 | Phase 8 | Pending |
-| BACK-04 | Phase 8 | Pending |
+| DASH-01 | Phase 5 | Pending |
+| DASH-02 | Phase 5 | Pending |
+| DASH-03 | Phase 5 | Pending |
+| WMAP-01 | Phase 6 | Pending |
+| WMAP-02 | Phase 6 | Pending |
+| WMAP-03 | Phase 6 | Pending |
+| PROF-01 | Phase 7 | Pending |
+| PROF-02 | Phase 7 | Pending |
+| PROF-03 | Phase 7 | Pending |
+| PROF-04 | Phase 7 | Pending |
+| VPOL-01 | Phase 8 | Pending |
+| VPOL-02 | Phase 8 | Pending |
+| VPOL-03 | Phase 8 | Pending |
+| VPOL-04 | Phase 8 | Pending |
+| OUTF-01 | Phase 9 | Pending |
+| OUTF-02 | Phase 9 | Pending |
+| OUTF-03 | Phase 9 | Pending |
+| OUTF-04 | Phase 9 | Pending |
 
 **Coverage:**
-- v2.0 requirements: 35 total
-- Mapped to phases: 35
+- v2.0 requirements: 39 total
+- Mapped to phases: 39
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-08*
-*Last updated: 2026-02-08 after roadmap creation*
+*Last updated: 2026-02-08 — Revised roadmap: player-facing focus*
