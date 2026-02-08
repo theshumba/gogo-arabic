@@ -12,6 +12,7 @@ import MatchPairs from './MatchPairs.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import { shuffle } from '../../utils/shuffle.js';
 import vocabulary from '../../data/vocabularyAll.js';
+import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './QuizOverlay.module.css';
 
 const QUIZ_TYPE_LABELS = {
@@ -29,6 +30,8 @@ export default function QuizOverlay() {
   const wordsLearned = useSelector((s) => s.player.wordsLearned);
   const [showSummary, setShowSummary] = useState(false);
   const [localFeedback, setLocalFeedback] = useState(null);
+
+  const focusTrapRef = useFocusTrap(true, null);
 
   // Escape key handler - only close on summary screen or if no feedback showing
   useEffect(() => {
@@ -118,6 +121,7 @@ export default function QuizOverlay() {
   if (showSummary) {
     return (
       <motion.div
+        ref={focusTrapRef}
         className={styles.overlay}
         onClick={close}
         variants={overlayVariants}
@@ -169,6 +173,7 @@ export default function QuizOverlay() {
     const matchWords = quiz.sessionWords.slice(0, 4);
     return (
       <motion.div
+        ref={focusTrapRef}
         className={styles.overlay}
         variants={overlayVariants}
         initial="hidden"
@@ -213,6 +218,7 @@ export default function QuizOverlay() {
 
   return (
     <motion.div
+      ref={focusTrapRef}
       className={styles.overlay}
       variants={overlayVariants}
       initial="hidden"

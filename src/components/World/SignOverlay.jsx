@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { closeSign } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import { COLORS, FONTS, pixelBtnGold, pixelPanel } from '../../styles/theme.js';
 
 const styles = {
@@ -59,6 +60,8 @@ export default function SignOverlay() {
     EventBus.emit('unfreeze-player');
   };
 
+  const focusTrapRef = useFocusTrap(!!signData, null);
+
   // Escape key handler
   useEffect(() => {
     if (!signData) return;
@@ -76,7 +79,7 @@ export default function SignOverlay() {
   if (!signData) return null;
 
   return (
-    <div style={styles.overlay} onClick={handleClose}>
+    <div ref={focusTrapRef} style={styles.overlay} onClick={handleClose}>
       <div style={styles.card} onClick={(e) => e.stopPropagation()}>
         <div style={styles.arabic}>{signData.arabic}</div>
         <div style={styles.english}>{signData.english}</div>

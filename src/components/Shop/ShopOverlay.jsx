@@ -6,6 +6,7 @@ import { spendDirhams, addToInventory, setOutfit, setHeadCovering } from '../../
 import { recordShopPurchase } from '../../store/slices/achievementSlice.js';
 import { selectInventoryIds } from '../../store/slices/playerSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import itemsData from '../../data/items.json';
 import { COLORS, FONTS, pixelPanel, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
 
@@ -177,6 +178,8 @@ function ShopOverlay() {
   const [tab, setTab] = useState('clothing');
   const [toast, setToast] = useState(null);
 
+  const focusTrapRef = useFocusTrap(true, null);
+
   const handleClose = useCallback(() => {
     dispatch(closeDialogue());
     EventBus.emit('unfreeze-player');
@@ -239,6 +242,7 @@ function ShopOverlay() {
 
   return (
     <motion.div
+      ref={focusTrapRef}
       style={styles.overlay}
       onClick={handleClose}
       variants={overlayVariants}

@@ -13,6 +13,7 @@ import {
   getAchievementsByCategory,
   RARITY_COLORS,
 } from '../../data/achievements.js';
+import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import { COLORS, FONTS } from '../../styles/theme.js';
 
 const styles = {
@@ -267,6 +268,8 @@ function AchievementPanel({ onClose }) {
   const unlockedCount = useSelector(selectUnlockedCount);
   const totalXP = useSelector(selectTotalAchievementXP);
 
+  const focusTrapRef = useFocusTrap(true, null);
+
   // Escape key handler
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -324,6 +327,7 @@ function AchievementPanel({ onClose }) {
 
   return (
     <motion.div
+      ref={focusTrapRef}
       style={styles.overlay}
       onClick={onClose}
       variants={overlayVariants}

@@ -6,6 +6,7 @@ import { createNewCard } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { useAudio } from '../../hooks/useAudio.js';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
+import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './OnboardingFlow.module.css';
 
 /**
@@ -27,6 +28,8 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
   const dispatch = useDispatch();
   const { playSFX } = useAudio();
   const formatArabic = useFormatArabic();
+
+  const focusTrapRef = useFocusTrap(true, onSkip);
 
   const totalSteps = 6;
 
@@ -237,7 +240,7 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
   };
 
   return (
-    <div className={styles.overlay}>
+    <div ref={focusTrapRef} className={styles.overlay}>
       <div className={styles.container}>
         {/* Skip button */}
         <button onClick={handleSkip} className={styles.skipButton}>

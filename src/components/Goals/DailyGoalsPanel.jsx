@@ -11,6 +11,7 @@ import {
 import { selectStreakInfo } from '../../store/slices/playerSlice.js';
 import { getNextStreakMilestone } from '../../data/streakRewards.js';
 import { ALL_GOALS_BONUS_XP, getGoalProgress } from '../../data/dailyGoals.js';
+import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './DailyGoalsPanel.module.css';
 
 function DailyGoalsPanel({ onClose }) {
@@ -20,6 +21,8 @@ function DailyGoalsPanel({ onClose }) {
   const totalCount = useSelector(selectTotalGoalsCount);
   const overallProgress = useSelector(selectOverallProgress);
   const streakInfo = useSelector(selectStreakInfo);
+
+  const focusTrapRef = useFocusTrap(true, null);
 
   const nextMilestone = useMemo(
     () => getNextStreakMilestone(streakInfo.current),
@@ -72,6 +75,7 @@ function DailyGoalsPanel({ onClose }) {
 
   return (
     <motion.div
+      ref={focusTrapRef}
       className={styles.overlay}
       onClick={handleOverlayClick}
       variants={overlayVariants}

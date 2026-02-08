@@ -5,6 +5,7 @@ import { closeDialogue } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { useDialogue } from '../../hooks/useDialogue.js';
 import { getEnhancedDialogueChoices } from '../../utils/culturalDialogueHelper.js';
+import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import npcsData from '../../data/npcs.json';
 import DialoguePortrait from './DialoguePortrait.jsx';
 import DialogueBox from './DialogueBox.jsx';
@@ -39,6 +40,8 @@ export default function DialogueOverlay() {
   const npc = npcsData.find((n) => n.id === npcId);
 
   const { currentTree, lineIndex, close, advance, handleChoice, showCulturalMenu, setShowCulturalMenu } = useDialogue(npc);
+
+  const focusTrapRef = useFocusTrap(true, null);
 
   // Early return if invalid data
   if (!npc || !currentTree) {
@@ -123,7 +126,7 @@ export default function DialogueOverlay() {
     };
 
     return (
-      <div className={styles.overlay} role="dialog" aria-label="Cultural dialogue menu">
+      <div ref={focusTrapRef} className={styles.overlay} role="dialog" aria-label="Cultural dialogue menu">
         <motion.div
           className={styles.backdrop}
           onClick={close}
@@ -167,7 +170,7 @@ export default function DialogueOverlay() {
     const enhancedChoices = getEnhancedDialogueChoices(npc, line);
 
     return (
-      <div className={styles.overlay} role="dialog" aria-label="Dialogue choices">
+      <div ref={focusTrapRef} className={styles.overlay} role="dialog" aria-label="Dialogue choices">
         <motion.div
           className={styles.backdrop}
           onClick={close}
@@ -206,7 +209,7 @@ export default function DialogueOverlay() {
 
   /* ---- normal dialogue line rendering ---- */
   return (
-    <div className={styles.overlay} role="dialog" aria-label={`Dialogue with ${npc.name}`}>
+    <div ref={focusTrapRef} className={styles.overlay} role="dialog" aria-label={`Dialogue with ${npc.name}`}>
       <motion.div
         className={styles.backdrop}
         onClick={advance}

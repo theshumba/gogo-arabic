@@ -2,6 +2,7 @@ import { useCallback, useEffect, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { selectLevelUpReward, dismissLevelUpReward } from '../../store/slices/playerSlice.js';
+import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './LevelUpModal.module.css';
 
 function LevelUpModal() {
@@ -11,6 +12,8 @@ function LevelUpModal() {
   const handleDismiss = useCallback(() => {
     dispatch(dismissLevelUpReward());
   }, [dispatch]);
+
+  const focusTrapRef = useFocusTrap(!!reward, null);
 
   // Escape key handler
   useEffect(() => {
@@ -71,6 +74,7 @@ function LevelUpModal() {
   return (
     <AnimatePresence mode="wait">
       <motion.div
+        ref={focusTrapRef}
         className={styles.overlay}
         onClick={handleDismiss}
         variants={overlayVariants}

@@ -5,6 +5,7 @@ import { addXP, addDirhams } from '../../store/slices/playerSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import questsData from '../../data/quests.json';
 import { ZONES, ZONE_ORDER } from '../../data/zones.js';
+import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './QuestLog.module.css';
 
 // Group quests by zone
@@ -29,6 +30,8 @@ export default function QuestLog() {
     dispatch(closeDialogue());
     EventBus.emit('unfreeze-player');
   };
+
+  const focusTrapRef = useFocusTrap(true, handleClose);
 
   const handleClaim = (questId) => {
     const qd = questsData.find((q) => q.id === questId);
@@ -104,7 +107,7 @@ export default function QuestLog() {
   };
 
   return (
-    <div className={styles.overlay}>
+    <div ref={focusTrapRef} className={styles.overlay}>
       <div className={styles.card}>
         <div className={styles.header}>
           <div className={styles.title}>Quest Log</div>
