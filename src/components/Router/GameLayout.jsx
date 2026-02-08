@@ -49,6 +49,7 @@ import ContextualOnboarding from '../Onboarding/ContextualOnboarding.jsx';
 import LevelUpModal from '../UI/LevelUpModal.jsx';
 import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
 import AchievementToast from '../Achievements/AchievementToast.jsx';
+import Wardrobe from '../Wardrobe/Wardrobe.jsx';
 import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate }) {
@@ -111,7 +112,7 @@ function ActivitiesMenu({ onBack, onNavigate }) {
   );
 }
 
-function PauseMenu({ onResume, onMainMenu, onNavigate }) {
+function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe }) {
   const [showActivities, setShowActivities] = React.useState(false);
 
   if (showActivities) {
@@ -132,6 +133,12 @@ function PauseMenu({ onResume, onMainMenu, onNavigate }) {
         </button>
         <button onClick={() => setShowActivities(true)} className={styles.pauseMenuBtnActivities}>
           Activities
+        </button>
+        <button onClick={() => onNavigate('/stats')} className={styles.pauseMenuBtnActivities}>
+          Profile
+        </button>
+        <button onClick={onOpenWardrobe} className={styles.pauseMenuBtnActivities}>
+          Wardrobe
         </button>
         <button onClick={onMainMenu} className={styles.pauseMenuBtnMenu}>
           Main Menu
@@ -161,6 +168,7 @@ export default function GameLayout() {
   const fsrsCards = useSelector((state) => state.vocabulary.fsrsCards);
   const quests = useSelector((state) => state.quests.quests);
   const onboardingComplete = useSelector((state) => state.player.onboardingComplete ?? true);
+  const [showWardrobe, setShowWardrobe] = React.useState(false);
 
   // Track word learned for quest progress
   const trackWordLearned = (category) => {
@@ -578,8 +586,17 @@ export default function GameLayout() {
             dispatch(toggleMenu());
             navigate(path);
           }}
+          onOpenWardrobe={() => {
+            dispatch(toggleMenu());
+            setShowWardrobe(true);
+          }}
         />
       )}
+
+      {/* Wardrobe overlay */}
+      <AnimatePresence>
+        {showWardrobe && <Wardrobe onClose={() => setShowWardrobe(false)} />}
+      </AnimatePresence>
 
       {/* Outlet for nested routes (e.g., /game/map) with AnimatePresence */}
       <AnimatePresence mode="wait">

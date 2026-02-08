@@ -21,50 +21,32 @@ const WorldMap = lazy(() => import('./components/World/WorldMap.jsx'));
 const WordDuel = lazy(() => import('./components/Battle/WordDuel.jsx'));
 const GrammarModule = lazy(() => import('./components/Grammar/GrammarModule.jsx'));
 
+// Phase 5-7-9 lazy imports
+const DailyDashboard = lazy(() => import('./components/Dashboard/DailyDashboard.jsx'));
+const PlayerProfile = lazy(() => import('./components/Profile/PlayerProfile.jsx'));
+
 // Mini-games lazy imports
 const MiniGamesHub = lazy(() => import('./components/MiniGames/MiniGamesHub.jsx'));
 const WordSearch = lazy(() => import('./components/MiniGames/WordSearch.jsx'));
 const ReadingExercise = lazy(() => import('./components/Reading/ReadingExercise.jsx'));
 const RootExplorer = lazy(() => import('./components/Roots/RootExplorer.jsx'));
 
-// Stats component (placeholder for now)
-function Stats() {
-  const { goToMenu } = useGameNavigation();
-
+function DashboardRoute() {
   return (
     <PageTransition>
-      <div
-        style={{
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#1A1A2E',
-          color: '#D4A843',
-          fontFamily: "'Press Start 2P', cursive",
-        }}
-      >
-        <div style={{ fontSize: '18px', marginBottom: '16px' }}>Stats</div>
-        <div style={{ fontSize: '22px', fontFamily: "'Amiri', serif", marginBottom: '32px' }}>
-          {'\u0627\u0644\u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A'}
-        </div>
-        <button
-          onClick={goToMenu}
-          style={{
-            fontFamily: "'Press Start 2P', cursive",
-            fontSize: '11px',
-            padding: '12px 24px',
-            background: '#D4A843',
-            color: '#1A1A2E',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          Back
-        </button>
-      </div>
+      <Suspense fallback={<LoadingScreen />}>
+        <DailyDashboard />
+      </Suspense>
+    </PageTransition>
+  );
+}
+
+function StatsRoute() {
+  return (
+    <PageTransition>
+      <Suspense fallback={<LoadingScreen />}>
+        <PlayerProfile />
+      </Suspense>
     </PageTransition>
   );
 }
@@ -259,8 +241,13 @@ export const router = createBrowserRouter([
     errorElement: <RouteErrorBoundary />,
   },
   {
+    path: '/dashboard',
+    element: <DashboardRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
     path: '/stats',
-    element: <Stats />,
+    element: <StatsRoute />,
     errorElement: <RouteErrorBoundary />,
   },
   {

@@ -40,6 +40,10 @@ export function useGameNavigation() {
     navigate('/stats');
   }, [navigate]);
 
+  const goToDashboard = useCallback(() => {
+    navigate('/dashboard');
+  }, [navigate]);
+
   const goToGrammar = useCallback(() => {
     navigate('/grammar');
   }, [navigate]);
@@ -83,6 +87,7 @@ export function useGameNavigation() {
     goToSettings,
     goToWorldMap,
     goToStats,
+    goToDashboard,
     goToGrammar,
     goToBattle,
     goToMiniGames,
