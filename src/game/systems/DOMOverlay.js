@@ -3,6 +3,11 @@
 // Updates position every frame based on camera position so overlays track
 // world coordinates while rendering crisp, native Arabic text via the DOM.
 
+function escapeHtml(text) {
+  const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+  return String(text).replace(/[&<>"']/g, (m) => map[m]);
+}
+
 class DOMOverlayManager {
   constructor(scene) {
     this.scene = scene;
@@ -65,8 +70,8 @@ class DOMOverlayManager {
   createNpcLabel(npcId, worldX, worldY, arabicName, englishName) {
     const html = `
       <div style="text-align:center;">
-        <div style="font-family:'Amiri',serif;font-size:14px;color:#D4A843;text-shadow:0 1px 2px rgba(0,0,0,0.8);">${arabicName}</div>
-        <div style="font-family:'Press Start 2P',cursive;font-size:8px;color:#FFFFFF;text-shadow:0 1px 2px rgba(0,0,0,0.8);">${englishName}</div>
+        <div style="font-family:'Amiri',serif;font-size:14px;color:#D4A843;text-shadow:0 1px 2px rgba(0,0,0,0.8);">${escapeHtml(arabicName)}</div>
+        <div style="font-family:'Press Start 2P',cursive;font-size:8px;color:#FFFFFF;text-shadow:0 1px 2px rgba(0,0,0,0.8);">${escapeHtml(englishName)}</div>
       </div>
     `;
     return this.createOverlay(`npc-label-${npcId}`, worldX, worldY, html, {

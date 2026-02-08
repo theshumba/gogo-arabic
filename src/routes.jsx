@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { createBrowserRouter, Navigate, useSearchParams } from 'react-router-dom';
 import { RouteErrorBoundary } from './components/ErrorBoundary/RouteErrorBoundary.jsx';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx';
 import NotFoundPage from './components/ErrorBoundary/NotFoundPage.jsx';
 import LoadingScreen from './components/UI/LoadingScreen.jsx';
 import PageTransition from './components/UI/PageTransition.jsx';
@@ -34,9 +34,11 @@ const RootExplorer = lazy(() => import('./components/Roots/RootExplorer.jsx'));
 function DashboardRoute() {
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <DailyDashboard />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <DailyDashboard />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }
@@ -44,9 +46,11 @@ function DashboardRoute() {
 function StatsRoute() {
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <PlayerProfile />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <PlayerProfile />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }
@@ -75,9 +79,11 @@ function CharacterCreationRoute() {
   return (
     <PageTransition>
       <CharacterCreationGuard>
-        <Suspense fallback={<LoadingScreen />}>
-          <CharacterCreation onDone={goToGame} />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingScreen />}>
+            <CharacterCreation onDone={goToGame} />
+          </Suspense>
+        </ErrorBoundary>
       </CharacterCreationGuard>
     </PageTransition>
   );
@@ -88,9 +94,11 @@ function AlphabetRoute() {
 
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <AlphabetModule onBack={goToMenu} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <AlphabetModule onBack={goToMenu} />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }
@@ -100,9 +108,11 @@ function ReviewRoute() {
 
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <ReviewSession onBack={goToMenu} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <ReviewSession onBack={goToMenu} />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }
@@ -112,9 +122,11 @@ function SettingsRoute() {
 
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <SettingsMenu onBack={goToMenu} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <SettingsMenu onBack={goToMenu} />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }
@@ -131,9 +143,11 @@ function WorldMapRoute() {
         background: 'rgba(0, 0, 0, 0.3)',
       }}
     >
-      <Suspense fallback={<LoadingScreen />}>
-        <WorldMap onBack={goBack} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <WorldMap onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 }
@@ -143,23 +157,26 @@ function GrammarRoute() {
 
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <GrammarModule onBack={goToMenu} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <GrammarModule onBack={goToMenu} />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }
 
 function BattleRoute() {
   const { goBack } = useGameNavigation();
-  // Get bossId from URL params
-  const params = new URLSearchParams(window.location.search);
-  const bossId = params.get('boss') || 'oasis_spirit';
+  const [searchParams] = useSearchParams();
+  const bossId = searchParams.get('boss') || 'oasis_spirit';
 
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <WordDuel bossId={bossId} onClose={goBack} />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<LoadingScreen />}>
+        <WordDuel bossId={bossId} onClose={goBack} />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
@@ -167,9 +184,11 @@ function BattleRoute() {
 function MiniGamesHubRoute() {
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <MiniGamesHub />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <MiniGamesHub />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }
@@ -179,9 +198,11 @@ function WordSearchRoute() {
 
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <WordSearch onBack={goBack} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <WordSearch onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }
@@ -191,9 +212,11 @@ function ReadingExerciseRoute() {
 
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <ReadingExercise onBack={goBack} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <ReadingExercise onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }
@@ -203,9 +226,11 @@ function RootExplorerRoute() {
 
   return (
     <PageTransition>
-      <Suspense fallback={<LoadingScreen />}>
-        <RootExplorer onBack={goToMenu} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <RootExplorer onBack={goToMenu} />
+        </Suspense>
+      </ErrorBoundary>
     </PageTransition>
   );
 }

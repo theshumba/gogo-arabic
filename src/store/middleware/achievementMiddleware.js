@@ -6,6 +6,7 @@
  */
 
 import { ACHIEVEMENTS } from '../../data/achievements.js';
+import vocabularyData from '../../data/vocabularyAll.js';
 import { unlockAchievement, recordPerfectQuiz } from '../slices/achievementSlice.js';
 import { addXP } from '../slices/playerSlice.js';
 
@@ -62,8 +63,7 @@ function isAchievementMet(achievement, state) {
       return player.dirhams >= req.threshold;
 
     case 'category_complete': {
-      const allWords = vocabulary.words || [];
-      const categoryWords = allWords.filter((w) => w.category === req.category);
+      const categoryWords = vocabularyData.filter((w) => w.category === req.category);
       const learnedInCategory = categoryWords.filter((w) => vocabulary.fsrsCards[w.id]);
       return learnedInCategory.length === categoryWords.length && categoryWords.length > 0;
     }

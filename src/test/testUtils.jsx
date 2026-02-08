@@ -13,6 +13,9 @@ import settingsReducer from '../store/slices/settingsSlice.js';
 import uiReducer from '../store/slices/uiSlice.js';
 import syncReducer from '../store/slices/syncSlice.js';
 import achievementReducer from '../store/slices/achievementSlice.js';
+import dailyGoalsReducer from '../store/slices/dailyGoalsSlice.js';
+import battleReducer from '../store/slices/battleSlice.js';
+import grammarReducer from '../store/slices/grammarSlice.js';
 
 /**
  * Creates a test store with optional preloaded state.
@@ -31,6 +34,9 @@ export function createTestStore(preloadedState = {}) {
     ui: uiReducer,
     sync: syncReducer,
     achievements: achievementReducer,
+    dailyGoals: dailyGoalsReducer,
+    battle: battleReducer,
+    grammar: grammarReducer,
   });
 
   return configureStore({

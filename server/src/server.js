@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import crypto from 'crypto';
 import mongoose from 'mongoose';
 import app from './app.js';
 import logger from './utils/logger.js';
@@ -23,11 +24,12 @@ async function start() {
 
     if (!jwtSecret || jwtSecret.trim() === '') {
       if (isDev) {
+        const randomSecret = crypto.randomBytes(64).toString('hex');
+        process.env.JWT_SECRET = randomSecret;
         logger.warn(
-          'JWT_SECRET is not set. Using default for local development. ' +
-          'DO NOT use this in production!'
+          'JWT_SECRET is not set. Generated random secret for this dev session. ' +
+          'Set JWT_SECRET in .env for persistent sessions across restarts.'
         );
-        process.env.JWT_SECRET = 'dev-default-secret-do-not-use-in-production!!';
       } else {
         logger.error('JWT_SECRET environment variable is required in production');
         process.exit(1);

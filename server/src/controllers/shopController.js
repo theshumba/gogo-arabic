@@ -33,8 +33,10 @@ export async function buyItem(req, res, next) {
       return next(AppError.notFound('User not found'));
     }
 
-    // Check if already owned
-    if (user.inventory.some(item => item.itemId === itemId)) {
+    // Check if already owned (handle both string and object formats)
+    if (user.inventory.some(item =>
+      typeof item === 'string' ? item === itemId : item.itemId === itemId
+    )) {
       return next(AppError.badRequest('Item already owned'));
     }
 
@@ -50,7 +52,7 @@ export async function buyItem(req, res, next) {
 
     // Process purchase
     user.dirhams -= catalogItem.price;
-    user.inventory.push({ itemId, equipped: false });
+    user.inventory.push(itemId);
     await user.save();
 
     logger.info('Item purchased', {

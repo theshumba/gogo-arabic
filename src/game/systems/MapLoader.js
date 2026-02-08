@@ -12,6 +12,7 @@ export class MapLoader {
     this.objectSprites = [];
     this.wallGroup = null;
     this.exitTriggers = [];
+    this.activeTweens = [];
   }
 
   /**
@@ -21,6 +22,8 @@ export class MapLoader {
     this.groundSprites = [];
     this.objectSprites = [];
     this.exitTriggers = [];
+    this.activeTweens.forEach((t) => { if (t) t.remove(); });
+    this.activeTweens = [];
 
     const groundData = zone.buildMap();
     const objects = zone.objects;
@@ -97,7 +100,7 @@ export class MapLoader {
             const px = x * TILE + TILE / 2;
             const py = y * TILE + TILE / 2;
             const edge = this.scene.add.rectangle(px, py, TILE, TILE, 0x66d7ee, 0.3);
-            this.scene.tweens.add({
+            const tween = this.scene.tweens.add({
               targets: edge,
               alpha: { from: 0.15, to: 0.35 },
               duration: 1500,
@@ -105,6 +108,7 @@ export class MapLoader {
               repeat: -1,
               ease: 'Sine.easeInOut',
             });
+            this.activeTweens.push(tween);
             this.groundSprites.push(edge);
             break;
           }
@@ -267,6 +271,9 @@ export class MapLoader {
    * Destroy all map elements
    */
   destroy() {
+    this.activeTweens.forEach((t) => { if (t) t.remove(); });
+    this.activeTweens = [];
+
     this.groundSprites.forEach((s) => s.destroy());
     this.groundSprites = [];
 

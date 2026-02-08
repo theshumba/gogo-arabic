@@ -39,6 +39,10 @@ describe('playerSlice', () => {
       wordsLearned: 0,
       streak: 0,
       lastPlayedDate: null,
+      maxStreak: 0,
+      streakRewardsEarned: [],
+      titles: [],
+      currentTitle: null,
       currentZone: 'oasis_village',
       unlockedZones: ['oasis_village'],
       inventory: [],
@@ -46,6 +50,11 @@ describe('playerSlice', () => {
       boosts: [],
       openedChests: [],
       readBooks: [],
+      levelUpRewards: null,
+      streakRewardPending: null,
+      onboardingComplete: false,
+      onboardingStep: 0,
+      onboardingTargetNpc: null,
     };
   });
 
@@ -166,21 +175,39 @@ describe('playerSlice', () => {
 
     it('should not increment streak on same day', () => {
       const today = new Date().toDateString();
-      const startState = { ...initialState, streak: 5, lastPlayedDate: today };
+      const startState = {
+        ...initialState,
+        streak: 5,
+        lastPlayedDate: today,
+        maxStreak: 10,
+        streakRewardsEarned: [],
+      };
       const state = playerReducer(startState, updateStreak());
       expect(state.streak).toBe(5);
     });
 
     it('should increment streak on consecutive day', () => {
       const yesterday = new Date(Date.now() - 86400000).toDateString();
-      const startState = { ...initialState, streak: 3, lastPlayedDate: yesterday };
+      const startState = {
+        ...initialState,
+        streak: 3,
+        lastPlayedDate: yesterday,
+        maxStreak: 5,
+        streakRewardsEarned: [],
+      };
       const state = playerReducer(startState, updateStreak());
       expect(state.streak).toBe(4);
     });
 
     it('should reset streak if not consecutive', () => {
       const twoDaysAgo = new Date(Date.now() - 172800000).toDateString();
-      const startState = { ...initialState, streak: 10, lastPlayedDate: twoDaysAgo };
+      const startState = {
+        ...initialState,
+        streak: 10,
+        lastPlayedDate: twoDaysAgo,
+        maxStreak: 10,
+        streakRewardsEarned: [],
+      };
       const state = playerReducer(startState, updateStreak());
       expect(state.streak).toBe(1);
     });

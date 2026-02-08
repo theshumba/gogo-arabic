@@ -1,11 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import vocabularyReducer, {
-  loadWords,
   addFsrsCard,
   updateFsrsCard,
   setReviewQueue,
   updateStats,
-  markWordLearned,
   selectFsrsCards,
   selectReviewQueue,
   selectReviewQueueCount,
@@ -18,7 +16,6 @@ describe('vocabularySlice', () => {
 
   beforeEach(() => {
     initialState = {
-      words: [],
       fsrsCards: {},
       reviewQueue: [],
       stats: { totalReviews: 0, accuracy: 0, streakDays: 0 },
@@ -28,29 +25,6 @@ describe('vocabularySlice', () => {
   describe('initial state', () => {
     it('should return the initial state', () => {
       expect(vocabularyReducer(undefined, { type: 'unknown' })).toEqual(initialState);
-    });
-  });
-
-  describe('loadWords', () => {
-    it('should load vocabulary words', () => {
-      const words = [
-        { id: 1, arabic: 'كتاب', english: 'book' },
-        { id: 2, arabic: 'قلم', english: 'pen' },
-      ];
-      const state = vocabularyReducer(initialState, loadWords(words));
-      expect(state.words).toEqual(words);
-      expect(state.words).toHaveLength(2);
-    });
-
-    it('should replace existing words', () => {
-      const oldWords = [{ id: 1, arabic: 'old', english: 'old' }];
-      const newWords = [{ id: 2, arabic: 'new', english: 'new' }];
-
-      let state = vocabularyReducer(initialState, loadWords(oldWords));
-      state = vocabularyReducer(state, loadWords(newWords));
-
-      expect(state.words).toEqual(newWords);
-      expect(state.words).toHaveLength(1);
     });
   });
 
@@ -156,50 +130,9 @@ describe('vocabularySlice', () => {
     });
   });
 
-  describe('markWordLearned', () => {
-    it('should mark word as learned', () => {
-      const words = [
-        { id: 'word1', arabic: 'كتاب', english: 'book', learned: false },
-        { id: 'word2', arabic: 'قلم', english: 'pen', learned: false },
-      ];
-
-      const startState = { ...initialState, words };
-      const state = vocabularyReducer(startState, markWordLearned('word1'));
-
-      const word = state.words.find(w => w.id === 'word1');
-      expect(word.learned).toBe(true);
-    });
-
-    it('should not affect other words', () => {
-      const words = [
-        { id: 'word1', arabic: 'كتاب', english: 'book' },
-        { id: 'word2', arabic: 'قلم', english: 'pen' },
-      ];
-
-      const startState = { ...initialState, words };
-      const state = vocabularyReducer(startState, markWordLearned('word1'));
-
-      const word2 = state.words.find(w => w.id === 'word2');
-      expect(word2.learned).toBeUndefined();
-    });
-
-    it('should handle marking non-existent word gracefully', () => {
-      const words = [{ id: 'word1', arabic: 'كتاب' }];
-      const startState = { ...initialState, words };
-
-      const state = vocabularyReducer(startState, markWordLearned('nonexistent'));
-
-      expect(state.words).toHaveLength(1);
-    });
-  });
-
   describe('selectors', () => {
     const mockState = {
       vocabulary: {
-        words: [
-          { id: 'word1', arabic: 'كتاب' },
-          { id: 'word2', arabic: 'قلم' },
-        ],
         fsrsCards: {
           word1: { card: { reps: 5 }, log: null },
           word2: { card: { reps: 3 }, log: null },

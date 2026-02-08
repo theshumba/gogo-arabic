@@ -12,6 +12,21 @@ vi.mock('../../../utils/eventBus.js', () => ({
   },
 }));
 
+// Mock window.matchMedia
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
 describe('HUD Component', () => {
   const mockOnMenu = vi.fn();
 
@@ -69,7 +84,11 @@ describe('HUD Component', () => {
 
     renderWithProviders(<HUD onMenu={mockOnMenu} />, { preloadedState });
 
-    expect(screen.getByLabelText(/250 Dirhams/i)).toBeInTheDocument();
+    // Open the stats panel
+    const statsButton = screen.getByLabelText(/show stats/i);
+    fireEvent.click(statsButton);
+
+    expect(screen.getByText('250 D')).toBeInTheDocument();
   });
 
   it('should display words learned count', () => {
@@ -86,7 +105,14 @@ describe('HUD Component', () => {
 
     renderWithProviders(<HUD onMenu={mockOnMenu} />, { preloadedState });
 
-    expect(screen.getByLabelText(/42 words learned/i)).toBeInTheDocument();
+    // Open the stats panel
+    const statsButton = screen.getByLabelText(/show stats/i);
+    fireEvent.click(statsButton);
+
+    // Find the stat value next to "Words:" label
+    const wordsLabel = screen.getByText('Words:');
+    const statDiv = wordsLabel.closest('div');
+    expect(statDiv).toHaveTextContent('42');
   });
 
   it('should display streak count', () => {
@@ -103,7 +129,11 @@ describe('HUD Component', () => {
 
     renderWithProviders(<HUD onMenu={mockOnMenu} />, { preloadedState });
 
-    expect(screen.getByLabelText(/streak: 7 days/i)).toBeInTheDocument();
+    // Open the stats panel
+    const statsButton = screen.getByLabelText(/show stats/i);
+    fireEvent.click(statsButton);
+
+    expect(screen.getByText('7 days')).toBeInTheDocument();
   });
 
   it('should display active quest count badge when quests exist', () => {
@@ -117,8 +147,22 @@ describe('HUD Component', () => {
         wordsLearned: 0,
       },
       quests: {
-        activeQuests: ['quest1', 'quest2', 'quest3'],
-        completedQuests: [],
+        quests: {
+          quest1: { status: 'active', progress: 0, rewardClaimed: false },
+          quest2: { status: 'active', progress: 0, rewardClaimed: false },
+          quest3: { status: 'active', progress: 0, rewardClaimed: false },
+        },
+        activeQuestId: null,
+        npcsVisited: [],
+        zonesVisited: [],
+        dialoguesCompleted: [],
+        reviewSessionsCompleted: [],
+        quizzesPassed: [],
+        chestsOpened: [],
+        wordsLearnedToday: 0,
+        lastResetDate: null,
+        lettersMastered: [],
+        sentenceQuizzesCompleted: 0,
       },
     };
 
@@ -138,8 +182,19 @@ describe('HUD Component', () => {
         wordsLearned: 0,
       },
       achievements: {
-        unlocked: ['achievement1', 'achievement2'],
-        definitions: {},
+        unlockedAchievements: {
+          achievement1: Date.now(),
+          achievement2: Date.now(),
+        },
+        newAchievements: [],
+        stats: {
+          totalReviews: 0,
+          reviewStreakDays: 0,
+          lastReviewDate: null,
+          perfectQuizzes: 0,
+          shopPurchases: 0,
+          dirhamsSpent: 0,
+        },
       },
     };
 
@@ -159,7 +214,6 @@ describe('HUD Component', () => {
         wordsLearned: 0,
       },
       vocabulary: {
-        words: [],
         fsrsCards: {},
         reviewQueue: ['word1', 'word2', 'word3', 'word4', 'word5'],
         stats: { totalReviews: 0, accuracy: 0, streakDays: 0 },
@@ -168,7 +222,7 @@ describe('HUD Component', () => {
 
     renderWithProviders(<HUD onMenu={mockOnMenu} />, { preloadedState });
 
-    expect(screen.getByLabelText(/5 reviews due/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Start review session - 5 words due/i)).toBeInTheDocument();
   });
 
   it('should call onMenu when Menu button is clicked', () => {
@@ -188,7 +242,7 @@ describe('HUD Component', () => {
 
     const state = store.getState();
     expect(state.ui.dialogueOpen).toBe(true);
-    expect(state.ui.currentDialogue.type).toBe('quest-log');
+    expect(state.ui.dialogueConfig.type).toBe('quest-log');
   });
 
   it('should open achievements panel when Achievements button is clicked', () => {
@@ -258,7 +312,11 @@ describe('HUD Component', () => {
 
     expect(screen.getByLabelText(/Level 3/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/300 XP out of 450/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/streak: 5 days/i)).toBeInTheDocument();
     expect(screen.getByRole('banner')).toHaveAttribute('aria-label', 'Game HUD');
+
+    // Streak is in the stats panel, open it first
+    const statsButton = screen.getByLabelText(/show stats/i);
+    fireEvent.click(statsButton);
+    expect(screen.getByText('5 days')).toBeInTheDocument();
   });
 });

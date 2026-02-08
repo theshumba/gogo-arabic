@@ -39,6 +39,7 @@ export function useTypewriter(text, baseSpeed = 30) {
   const [isComplete, setIsComplete] = useState(false);
   const intervalRef = useRef(null);
   const pauseTimeoutRef = useRef(null);
+  const mountedRef = useRef(true);
 
   // Check for reduced motion preference
   const prefersReducedMotion = useRef(
@@ -73,6 +74,8 @@ export function useTypewriter(text, baseSpeed = 30) {
       clearTimeout(pauseTimeoutRef.current);
       pauseTimeoutRef.current = null;
     }
+
+    mountedRef.current = true;
 
     // If no text or reduced motion, show instantly
     if (!text || prefersReducedMotion) {
@@ -117,6 +120,8 @@ export function useTypewriter(text, baseSpeed = 30) {
 
         pauseTimeoutRef.current = setTimeout(() => {
           pauseTimeoutRef.current = null;
+          // Guard: don't resume if effect was cleaned up during pause
+          if (!mountedRef.current) return;
           // Resume typing after pause
           intervalRef.current = setInterval(typeNextChar, speed);
         }, 200);
@@ -128,6 +133,7 @@ export function useTypewriter(text, baseSpeed = 30) {
 
     // Cleanup on unmount or text change
     return () => {
+      mountedRef.current = false;
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;

@@ -1,5 +1,6 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { ACHIEVEMENTS, getAchievementById } from '../../data/achievements.js';
+import vocabularyData from '../../data/vocabularyAll.js';
 
 const initialState = {
   unlockedAchievements: {}, // { achievementId: timestamp }
@@ -136,8 +137,7 @@ export const selectAchievementProgress = createSelector(
           break;
         case 'category_complete': {
           // Count words learned in this category
-          const allWords = vocabulary.words || [];
-          const categoryWords = allWords.filter((w) => w.category === req.category);
+          const categoryWords = vocabularyData.filter((w) => w.category === req.category);
           const learnedInCategory = categoryWords.filter((w) => vocabulary.fsrsCards[w.id]).length;
           current = learnedInCategory;
           target = categoryWords.length;

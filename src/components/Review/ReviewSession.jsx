@@ -85,10 +85,13 @@ export default function ReviewSession({ onBack }) {
   });
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const autoAdvanceTimerRef = useRef(null);
+  const isMountedRef = useRef(true);
 
   // Clear auto-advance timer on unmount to prevent dispatching after navigation
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
+      isMountedRef.current = false;
       if (autoAdvanceTimerRef.current) {
         clearTimeout(autoAdvanceTimerRef.current);
       }
@@ -226,6 +229,7 @@ export default function ReviewSession({ onBack }) {
 
     // Auto-advance after a short delay to show feedback
     autoAdvanceTimerRef.current = setTimeout(() => {
+      if (!isMountedRef.current) return;
       const nextIdx = index + 1;
       if (nextIdx >= sessionCards.length) {
         dispatch(addXP(XP_REWARDS.DAILY_REVIEW_COMPLETE));

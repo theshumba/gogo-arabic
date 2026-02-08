@@ -1,9 +1,18 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { DEFAULT_DAILY_GOALS, areAllGoalsCompleted, getGoalProgress } from '../../data/dailyGoals.js';
 
+// Deep-clone default goals without JSON.parse/stringify (Immer-safe)
+function resetGoals() {
+  const goals = {};
+  for (const [key, goal] of Object.entries(DEFAULT_DAILY_GOALS)) {
+    goals[key] = { ...goal, current: 0 };
+  }
+  return goals;
+}
+
 const initialState = {
   date: null, // ISO date string for current day
-  goals: { ...DEFAULT_DAILY_GOALS },
+  goals: resetGoals(),
   allCompleted: false,
   sessionStartTime: null, // Track session time for minutes played
   totalSessionMinutes: 0, // Accumulated minutes for current session
@@ -24,7 +33,7 @@ const dailyGoalsSlice = createSlice({
       const today = new Date().toISOString().split('T')[0];
       if (state.date !== today) {
         // Reset all goals for new day
-        state.goals = JSON.parse(JSON.stringify(DEFAULT_DAILY_GOALS));
+        state.goals = resetGoals();
         state.date = today;
         state.allCompleted = false;
         state.totalSessionMinutes = 0;
@@ -49,7 +58,7 @@ const dailyGoalsSlice = createSlice({
 
       const today = new Date().toISOString().split('T')[0];
       if (state.date !== today) {
-        state.goals = JSON.parse(JSON.stringify(DEFAULT_DAILY_GOALS));
+        state.goals = resetGoals();
         state.date = today;
         state.allCompleted = false;
         state.totalSessionMinutes = 0;
@@ -63,7 +72,7 @@ const dailyGoalsSlice = createSlice({
     resetDailyGoals(state) {
       const today = new Date().toISOString().split('T')[0];
       state.date = today;
-      state.goals = JSON.parse(JSON.stringify(DEFAULT_DAILY_GOALS));
+      state.goals = resetGoals();
       state.allCompleted = false;
       state.totalSessionMinutes = 0;
     },
@@ -73,7 +82,7 @@ const dailyGoalsSlice = createSlice({
       const today = new Date().toISOString().split('T')[0];
       if (state.date !== today) {
         state.date = today;
-        state.goals = JSON.parse(JSON.stringify(DEFAULT_DAILY_GOALS));
+        state.goals = resetGoals();
         state.allCompleted = false;
         state.totalSessionMinutes = 0;
       }
@@ -101,7 +110,7 @@ const dailyGoalsSlice = createSlice({
 
         const today = new Date().toISOString().split('T')[0];
         if (state.date !== today) {
-          state.goals = JSON.parse(JSON.stringify(DEFAULT_DAILY_GOALS));
+          state.goals = resetGoals();
           state.date = today;
           state.allCompleted = false;
           state.totalSessionMinutes = 0;
