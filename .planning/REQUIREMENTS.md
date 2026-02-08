@@ -111,47 +111,47 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CRIT-01 | — | Pending |
-| CRIT-02 | — | Pending |
-| CRIT-03 | — | Pending |
-| CRIT-04 | — | Pending |
-| GUID-01 | — | Pending |
-| GUID-02 | — | Pending |
-| GUID-03 | — | Pending |
-| GUID-04 | — | Pending |
-| DISC-01 | — | Pending |
-| DISC-02 | — | Pending |
-| DISC-03 | — | Pending |
-| DISC-04 | — | Pending |
-| PERF-01 | — | Pending |
-| PERF-02 | — | Pending |
-| PERF-03 | — | Pending |
-| PERF-04 | — | Pending |
-| ONBD-01 | — | Pending |
-| ONBD-02 | — | Pending |
-| ONBD-03 | — | Pending |
-| HUD-01 | — | Pending |
-| HUD-02 | — | Pending |
-| HUD-03 | — | Pending |
-| ARCH-01 | — | Pending |
-| ARCH-02 | — | Pending |
-| ARCH-03 | — | Pending |
-| ARCH-04 | — | Pending |
-| TEST-01 | — | Pending |
-| TEST-02 | — | Pending |
-| TEST-03 | — | Pending |
-| TEST-04 | — | Pending |
-| TEST-05 | — | Pending |
-| BACK-01 | — | Pending |
-| BACK-02 | — | Pending |
-| BACK-03 | — | Pending |
-| BACK-04 | — | Pending |
+| CRIT-01 | Phase 1 | Pending |
+| CRIT-02 | Phase 1 | Pending |
+| CRIT-03 | Phase 1 | Pending |
+| CRIT-04 | Phase 1 | Pending |
+| GUID-01 | Phase 2 | Pending |
+| GUID-02 | Phase 2 | Pending |
+| GUID-03 | Phase 2 | Pending |
+| GUID-04 | Phase 2 | Pending |
+| DISC-01 | Phase 3 | Pending |
+| DISC-02 | Phase 3 | Pending |
+| DISC-03 | Phase 3 | Pending |
+| DISC-04 | Phase 3 | Pending |
+| PERF-01 | Phase 4 | Pending |
+| PERF-02 | Phase 4 | Pending |
+| PERF-03 | Phase 4 | Pending |
+| PERF-04 | Phase 4 | Pending |
+| ONBD-01 | Phase 5 | Pending |
+| ONBD-02 | Phase 5 | Pending |
+| ONBD-03 | Phase 5 | Pending |
+| HUD-01 | Phase 5 | Pending |
+| HUD-02 | Phase 5 | Pending |
+| HUD-03 | Phase 5 | Pending |
+| ARCH-01 | Phase 6 | Pending |
+| ARCH-02 | Phase 6 | Pending |
+| ARCH-03 | Phase 6 | Pending |
+| ARCH-04 | Phase 6 | Pending |
+| TEST-01 | Phase 7 | Pending |
+| TEST-02 | Phase 7 | Pending |
+| TEST-03 | Phase 7 | Pending |
+| TEST-04 | Phase 7 | Pending |
+| TEST-05 | Phase 7 | Pending |
+| BACK-01 | Phase 8 | Pending |
+| BACK-02 | Phase 8 | Pending |
+| BACK-03 | Phase 8 | Pending |
+| BACK-04 | Phase 8 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 35 total
-- Mapped to phases: 0
-- Unmapped: 35
+- Mapped to phases: 35
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-08*
-*Last updated: 2026-02-08 after initial definition*
+*Last updated: 2026-02-08 after roadmap creation*
