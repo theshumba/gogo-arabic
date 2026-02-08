@@ -5,33 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 1 - Critical Fixes
+**Current focus:** Phase 2 - Player Guidance
 
 ## Current Position
 
-Phase: 1 of 9 (Critical Fixes)
-Plan: 2 of 2 completed
-Status: Phase 1 complete - all critical fixes resolved
-Last activity: 2026-02-08 — Completed 01-02-PLAN.md (responsive overlays + focus traps)
+Phase: 2 of 9 (Player Guidance)
+Plan: 1 of 3 completed
+Status: In progress - NPC quest markers complete, HUD and compass next
+Last activity: 2026-02-08 — Completed 02-01-PLAN.md (NPC quest markers + active quest tracking)
 
-Progress: [██░░░░░░░░] 20% (2/10 Phase 1 tasks complete, phase finished)
+Progress: [███░░░░░░░] 30% (3/10 plans complete across all phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 4.5 minutes
-- Total execution time: 0.15 hours
+- Total plans completed: 3
+- Average duration: 6 minutes
+- Total execution time: 0.27 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 - Critical Fixes | 2/2 | 9 min | 4.5 min |
+| 02 - Player Guidance | 1/3 | 7 min | 7 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-02 (7 min)
-- Trend: Phase 1 complete
+- Last 5 plans: 01-01 (2 min), 01-02 (7 min), 02-01 (7 min)
+- Trend: Consistent velocity at ~7 min/plan
 
 *Updated after each plan completion*
 
@@ -61,6 +62,13 @@ Recent decisions affecting current work:
 - Hooks with early returns: use conditional active parameter (!!signData, !!reward) instead of conditional hook call
 - Responsive breakpoints: 768px (tablet), 480px (mobile) with 44px touch targets on mobile
 
+**From 02-01 execution:**
+- Quest marker depth 10000 (above name label 9999, hint text 9999) for visibility
+- Memoized selectors (createSelector) for Phaser-accessed Redux state prevent per-frame recalculation
+- Auto-select first active quest on initialization and when tracked quest completes (reduces player friction)
+- Quest marker priority system: turn-in marker (green ?) takes precedence over available marker (golden !) for same NPC
+- Phaser Redux integration pattern: store.getState() in game loop (can't use React hooks in Phaser classes)
+
 ### Pending Todos
 
 None yet.
@@ -72,9 +80,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Completed Phase 1 (Critical Fixes) - both plans executed
-Resume file: Ready for Phase 2 (Player Guidance)
+Stopped at: Completed 02-01-PLAN.md (NPC quest markers + active quest tracking)
+Resume file: .planning/phases/02-player-guidance/02-02-PLAN.md (Quest Objective HUD - next)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-08 14:07 UTC*
+*Last updated: 2026-02-08 16:53 UTC*
