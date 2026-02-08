@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { showNotification } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { ZONES, ZONE_ORDER } from '../../data/zones.js';
+import { BOSSES } from '../../data/bosses.js';
 import quests from '../../data/quests.json';
 import styles from './WorldMap.module.css';
 
@@ -28,8 +30,14 @@ const ZONE_CONNECTIONS = [
   ['coastal_port', 'royal_palace'],
 ];
 
+const BOSS_OFFSETS = {
+  x: 6,
+  y: -3,
+};
+
 export default function WorldMap({ onBack }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const unlockedZones = useSelector((s) => s.player.unlockedZones);
   const currentZone = useSelector((s) => s.player.currentZone);
   const completedQuests = useSelector((s) => s.quests.quests);
@@ -194,6 +202,48 @@ export default function WorldMap({ onBack }) {
     );
   };
 
+  const renderBossNode = (boss) => {
+    const zonePos = ZONE_POSITIONS[boss.zone];
+    if (!zonePos) return null;
+
+    const pos = {
+      x: zonePos.x + BOSS_OFFSETS.x,
+      y: zonePos.y + BOSS_OFFSETS.y,
+    };
+
+    const isUnlocked = unlockedZones.includes(boss.zone);
+    if (!isUnlocked) return null;
+
+    const difficultyStars = '★'.repeat(boss.difficulty);
+
+    const handleBossClick = () => {
+      navigate(`/battle?boss=${boss.id}`);
+      onBack();
+    };
+
+    return (
+      <button
+        key={boss.id}
+        className={styles.bossNode}
+        style={{
+          left: `${pos.x}%`,
+          top: `${pos.y}%`,
+        }}
+        onClick={handleBossClick}
+        aria-label={`Challenge ${boss.name} — Difficulty ${boss.difficulty}`}
+      >
+        <div className={styles.bossSprite} aria-hidden="true">
+          {boss.sprite}
+        </div>
+        <div className={styles.bossLabel}>{boss.name}</div>
+        <div className={styles.bossLabelArabic} lang="ar">{boss.nameArabic}</div>
+        <div className={styles.bossDifficulty} aria-hidden="true">
+          {difficultyStars}
+        </div>
+      </button>
+    );
+  };
+
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const overlayVariants = {
@@ -243,6 +293,7 @@ export default function WorldMap({ onBack }) {
           <div className={styles.mapInner}>
             {ZONE_CONNECTIONS.map(renderConnection)}
             {ZONE_ORDER.map(renderZoneNode)}
+            {BOSSES.filter(b => unlockedZones.includes(b.zone)).map(renderBossNode)}
           </div>
         </div>
 
@@ -262,6 +313,10 @@ export default function WorldMap({ onBack }) {
           <div className={styles.legendItem}>
             <div className={styles.legendDot} style={{ background: 'var(--color-gray)' }} aria-hidden="true" />
             <span>Locked</span>
+          </div>
+          <div className={styles.legendItem}>
+            <span aria-hidden="true" style={{ fontSize: '14px' }}>⚔️</span>
+            <span>Boss Challenge</span>
           </div>
         </div>
       </motion.div>

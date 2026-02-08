@@ -398,6 +398,80 @@
 }
 
 /* ========================================
+   Boss Nodes
+   ======================================== */
+
+.bossNode {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 3;
+  background: none;
+  border: none;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.1s ease-out;
+}
+
+.bossNode:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.bossNode:active {
+  transform: translate(-50%, -50%) scale(0.95);
+}
+
+.bossNode:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.bossSprite {
+  font-size: 20px;
+  filter: drop-shadow(0 0 4px rgba(226, 182, 89, 0.8));
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.bossLabel {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--color-white);
+  text-shadow:
+    1px 1px 0 rgba(0, 0, 0, 0.9),
+    -1px -1px 0 rgba(0, 0, 0, 0.9),
+    1px -1px 0 rgba(0, 0, 0, 0.9),
+    -1px 1px 0 rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+.bossLabelArabic {
+  font-family: var(--font-arabic-display);
+  font-size: 10px;
+  color: var(--color-xp-gold);
+  text-shadow:
+    1px 1px 0 rgba(0, 0, 0, 0.9),
+    -1px -1px 0 rgba(0, 0, 0, 0.9),
+    1px -1px 0 rgba(0, 0, 0, 0.9),
+    -1px 1px 0 rgba(0, 0, 0, 0.9);
+  direction: rtl;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.bossDifficulty {
+  font-size: 8px;
+  color: var(--color-xp-gold);
+  text-shadow:
+    1px 1px 0 rgba(0, 0, 0, 0.9),
+    -1px -1px 0 rgba(0, 0, 0, 0.9);
+  margin-top: 2px;
+}
+
+/* ========================================
    Legend
    ======================================== */
 
@@ -503,6 +577,22 @@
     width: 12px;
     height: 12px;
   }
+
+  .bossSprite {
+    font-size: 18px;
+  }
+
+  .bossLabel {
+    font-size: 5px;
+  }
+
+  .bossLabelArabic {
+    font-size: 9px;
+  }
+
+  .bossDifficulty {
+    font-size: 7px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -577,5 +667,18 @@
   .legendDot {
     width: 10px;
     height: 10px;
+  }
+
+  .bossSprite {
+    font-size: 16px;
+  }
+
+  .bossLabel,
+  .bossLabelArabic {
+    display: none;
+  }
+
+  .bossDifficulty {
+    font-size: 6px;
   }
 }
