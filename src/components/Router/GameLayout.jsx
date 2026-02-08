@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -52,13 +52,87 @@ import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
 import AchievementToast from '../Achievements/AchievementToast.jsx';
 import styles from './GameLayout.module.css';
 
-function PauseMenu({ onResume, onMainMenu }) {
+function ActivitiesMenu({ onBack, onNavigate }) {
+  const activities = [
+    {
+      id: 'grammar',
+      icon: 'قواعد',
+      label: 'Grammar',
+      description: 'Learn Arabic grammar rules',
+      route: '/grammar',
+    },
+    {
+      id: 'roots',
+      icon: 'جذور',
+      label: 'Word Roots',
+      description: 'Explore Arabic root patterns',
+      route: '/roots',
+    },
+    {
+      id: 'reading',
+      icon: 'قراءة',
+      label: 'Reading',
+      description: 'Practice reading Arabic passages',
+      route: '/mini-games/reading',
+    },
+    {
+      id: 'minigames',
+      icon: 'ألعاب',
+      label: 'Mini-Games',
+      description: 'Fun vocabulary practice games',
+      route: '/mini-games',
+    },
+  ];
+
+  return (
+    <div className={styles.pauseMenuOverlay}>
+      <div className={styles.pauseMenuTitle}>Activities</div>
+      <div className={styles.activitiesMenu}>
+        <div className={styles.activitiesGrid}>
+          {activities.map((activity) => (
+            <button
+              key={activity.id}
+              className={styles.activityCard}
+              onClick={() => onNavigate(activity.route)}
+              aria-label={`${activity.label} - ${activity.description}`}
+            >
+              <div className={styles.activityCardArabic} lang="ar" aria-hidden="true">
+                {activity.icon}
+              </div>
+              <div className={styles.activityCardLabel}>{activity.label}</div>
+              <div className={styles.activityCardDesc}>{activity.description}</div>
+            </button>
+          ))}
+        </div>
+        <button onClick={onBack} className={styles.activitiesBackBtn}>
+          Back
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function PauseMenu({ onResume, onMainMenu, onNavigate }) {
+  const [showActivities, setShowActivities] = React.useState(false);
+
+  if (showActivities) {
+    return (
+      <ActivitiesMenu
+        onBack={() => setShowActivities(false)}
+        onNavigate={onNavigate}
+      />
+    );
+  }
+
   return (
     <div className={styles.pauseMenuOverlay}>
       <div className={styles.pauseMenuTitle}>Paused</div>
       <div className={styles.pauseMenuButtons}>
         <button onClick={onResume} className={styles.pauseMenuBtnResume}>
           Resume
+        </button>
+        <button onClick={() => setShowActivities(true)} className={styles.pauseMenuBtnActivities}>
+          Activities
         </button>
         <button onClick={onMainMenu} className={styles.pauseMenuBtnMenu}>
           Main Menu
@@ -515,6 +589,10 @@ export default function GameLayout() {
           onMainMenu={() => {
             dispatch(toggleMenu());
             navigate('/');
+          }}
+          onNavigate={(path) => {
+            dispatch(toggleMenu());
+            navigate(path);
           }}
         />
       )}
