@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Critical Fixes** - Fix z-index bugs, mobile overflow, focus traps, HUD review button ✓ Complete
 - [x] **Phase 2: Player Guidance** - NPC quest markers, active objective display, quest compass ✓ Complete
 - [x] **Phase 3: Feature Discoverability** - Expose hidden features through in-game UI ✓ Complete
-- [ ] **Phase 4: Onboarding & HUD** - Contextual tooltips, streamlined HUD, bundle splitting
+- [x] **Phase 4: Onboarding & HUD** - Contextual tooltips, streamlined HUD, bundle splitting ✓ Complete
 - [ ] **Phase 5: Daily Dashboard** - Startup screen with streak, reviews, goals, suggested activity
 - [ ] **Phase 6: World Map Upgrade** - Fast travel, zone completion %, locked zone teasers
 - [ ] **Phase 7: Player Profile & Stats** - Stats page, achievement showcase, streak history
@@ -88,9 +88,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Vite bundle splitting + z-index token standardization (PERF-01, HUD-03)
-- [ ] 04-02-PLAN.md — HUD restructure with collapsible StatsPanel (HUD-01, HUD-02)
-- [ ] 04-03-PLAN.md — Contextual onboarding with React Joyride + NPC highlight (ONBD-01, ONBD-02, ONBD-03)
+- [x] 04-01-PLAN.md — Vite bundle splitting + z-index token standardization (PERF-01, HUD-03) ✓ 5 min
+- [x] 04-02-PLAN.md — HUD restructure with collapsible StatsPanel (HUD-01, HUD-02) ✓ 4 min
+- [x] 04-03-PLAN.md — Contextual onboarding with custom Framer Motion tooltips + NPC highlight (ONBD-01, ONBD-02, ONBD-03) ✓ 20 min
 
 ### Phase 5: Daily Dashboard
 **Goal**: Give players a meaningful start screen that shows progress and suggests what to do next
@@ -170,7 +170,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 | 1. Critical Fixes | 2/2 | ✓ Complete | 2026-02-08 |
 | 2. Player Guidance | 2/2 | ✓ Complete | 2026-02-08 |
 | 3. Feature Discoverability | 2/2 | ✓ Complete | 2026-02-08 |
-| 4. Onboarding & HUD | 0/0 | Not started | - |
+| 4. Onboarding & HUD | 3/3 | ✓ Complete | 2026-02-08 |
 | 5. Daily Dashboard | 0/0 | Not started | - |
 | 6. World Map Upgrade | 0/0 | Not started | - |
 | 7. Player Profile & Stats | 0/0 | Not started | - |
@@ -179,4 +179,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 — Phase 3 complete*
+*Last updated: 2026-02-08 — Phase 4 complete (custom Framer Motion onboarding)*

@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 ## Current Position
 
 Phase: 4 of 9 (Onboarding & HUD) — COMPLETE
-Plan: 2 of 2 completed
-Status: Phase 4 complete - bundle splitting, z-index standardization, and HUD streamlining done
-Last activity: 2026-02-08 — Completed 04-02-PLAN.md (Streamlined HUD with StatsPanel)
+Plan: 3 of 3 completed
+Status: Phase 4 complete - bundle splitting, z-index standardization, HUD streamlining, and contextual onboarding done
+Last activity: 2026-02-08 — Completed 04-03-PLAN.md (Contextual Onboarding with Custom Framer Motion Tooltips)
 
-Progress: [████████░░] 80% (8/10 plans complete across all phases)
+Progress: [█████████░] 90% (9/10 plans complete across all phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 4.1 minutes
-- Total execution time: 0.55 hours
+- Total plans completed: 9
+- Average duration: 6.2 minutes
+- Total execution time: 0.93 hours
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [████████░░] 80% (8/10 plans complete across all p
 | 01 - Critical Fixes | 2/2 | 9 min | 4.5 min |
 | 02 - Player Guidance | 2/2 | 8 min | 4 min |
 | 03 - Feature Discoverability | 3/3 | 8 min | 2.7 min |
-| 04 - Onboarding & HUD | 2/2 | 9 min | 4.5 min |
+| 04 - Onboarding & HUD | 3/3 | 29 min | 9.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (2 min), 03-01 (6 min), 04-01 (5 min), 04-02 (4 min)
-- Trend: Phase 4 complete with excellent velocity, average 4.5 min/plan
+- Last 5 plans: 03-01 (6 min), 04-01 (5 min), 04-02 (4 min), 04-03 (20 min)
+- Trend: Phase 4 complete. 04-03 took longer due to custom component implementation (replaced react-joyride)
 
 *Updated after each plan completion*
 
@@ -103,6 +103,14 @@ Recent decisions affecting current work:
 - Redux selector optimization: HUD.jsx reduced from 6 destructured fields to 3 (level, xp, xpToNextLevel)
 - Arrow indicators (▶/▼) match pixel aesthetic better than icon libraries
 
+**From 04-03 execution:**
+- Custom Framer Motion tooltip system instead of react-joyride (React 19 incompatibility) - zero new dependencies
+- Onboarding highlights via NPC setOnboardingHighlight method (bouncing arrow depth 10001, pulsing glow depth 5)
+- Gameplay-driven tutorial progression: EventBus player-position-update triggers step 0→1 advance
+- getBoundingClientRect() for dynamic tooltip positioning (center/bottom placement)
+- Spotlight effect via box-shadow: 0 0 0 9999px rgba(0,0,0,0.5) for HUD element highlighting
+- Default onboardingComplete: false for new players (existing players already have true via redux-persist)
+
 ### Pending Todos
 
 None yet.
@@ -114,9 +122,11 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Phase 4 complete - all onboarding and HUD improvements done
+Stopped at: Phase 4 complete (3/3 plans) - bundle splitting, HUD streamlining, and contextual onboarding done
 Resume file: Ready for Phase 5 (Daily Dashboard) — `/gsd:plan-phase 5`
+
+**IMPORTANT NOTE:** 04-03 requires manual git commits (see SUMMARY.md Task Commits section for exact commands). Permission restrictions prevented automatic commits during execution. All code changes are complete and ready to commit.
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-08 21:12 UTC*
+*Last updated: 2026-02-08 21:42 UTC*
