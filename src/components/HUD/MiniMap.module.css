@@ -10,7 +10,7 @@
   border: 3px solid var(--color-light);
   border-radius: 8px;
   padding: 12px;
-  z-index: 90;
+  z-index: var(--z-minimap);
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   font-family: var(--font-pixel);

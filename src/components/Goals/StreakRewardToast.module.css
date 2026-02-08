@@ -4,7 +4,7 @@
   position: fixed;
   top: 80px;
   right: 20px;
-  z-index: 150;
+  z-index: var(--z-toast);
   pointer-events: none;
 }
 

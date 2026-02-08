@@ -15,20 +15,13 @@
   font-size: 12px;
   color: var(--color-white);
   pointer-events: none;
-  z-index: 100;
+  z-index: var(--z-hud);
 }
 
 .left {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.center {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  pointer-events: auto;
 }
 
 .right {
