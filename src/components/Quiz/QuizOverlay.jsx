@@ -2,12 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useQuiz } from '../../hooks/useQuiz.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { selectWordsByDifficulty } from '../../utils/wordSelection.js';
 import ArabicToEnglish from './ArabicToEnglish.jsx';
 import EnglishToArabic from './EnglishToArabic.jsx';
 import EnglishToTypeArabic from './EnglishToTypeArabic.jsx';
 import ListenAndChoose from './ListenAndChoose.jsx';
 import MatchPairs from './MatchPairs.jsx';
-import vocabulary from '../../data/vocabulary.json';
+import ProgressBar from './ProgressBar.jsx';
+import { shuffle } from '../../utils/shuffle.js';
+import vocabulary from '../../data/vocabularyAll.js';
 import { COLORS, FONTS, pixelBtn, pixelBtnGold, pixelPanel } from '../../styles/theme.js';
 
 const QUIZ_TYPE_LABELS = {
@@ -53,14 +56,14 @@ const styles = {
     paddingBottom: '12px',
     borderBottom: `2px solid ${COLORS.brown}`,
     fontFamily: FONTS.pixel,
-    fontSize: '9px',
+    fontSize: '11px',
     color: COLORS.brown,
     textTransform: 'uppercase',
     letterSpacing: '1px',
   },
   score: {
     fontFamily: FONTS.pixel,
-    fontSize: '10px',
+    fontSize: '12px',
     color: COLORS.gold,
   },
   feedbackRow: {
@@ -70,7 +73,7 @@ const styles = {
   },
   nextBtn: {
     ...pixelBtn,
-    fontSize: '10px',
+    fontSize: '11px',
     padding: '12px 24px',
     textTransform: 'uppercase',
     letterSpacing: '1px',
@@ -114,7 +117,7 @@ const styles = {
   },
   summaryMsg: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '11px',
     color: COLORS.brown,
     marginBottom: '8px',
   },
@@ -129,12 +132,14 @@ const styles = {
 export default function QuizOverlay() {
   const { quiz, feedback, start, answer, next, close } = useQuiz();
   const overlayData = useSelector((s) => s.ui.quizConfig);
+  const playerLevel = useSelector((s) => s.player.level);
+  const wordsLearned = useSelector((s) => s.player.wordsLearned);
   const [showSummary, setShowSummary] = useState(false);
   const [localFeedback, setLocalFeedback] = useState(null);
 
   useEffect(() => {
     if (!quiz.active) {
-      const words = overlayData?.words || getRandomWords(5);
+      const words = overlayData?.words || getRandomWords(5, playerLevel, wordsLearned);
       const type = overlayData?.quizType || null;
       start(words, type);
       setShowSummary(false);
@@ -226,6 +231,10 @@ export default function QuizOverlay() {
     ? { ...feedback, selected: localFeedback?.selected }
     : null;
 
+  // Calculate current question number (sessionTotal + 1 gives us the current question)
+  const currentQuestion = quiz.sessionTotal + 1;
+  const totalQuestions = quiz.sessionWords.length;
+
   return (
     <div style={styles.overlay}>
       <div style={styles.card}>
@@ -235,6 +244,8 @@ export default function QuizOverlay() {
             {quiz.sessionScore}/{quiz.sessionTotal}
           </span>
         </div>
+
+        <ProgressBar current={currentQuestion} total={totalQuestions} />
 
         {quiz.quizType === 'ar-to-en' && (
           <ArabicToEnglish
@@ -289,7 +300,7 @@ export default function QuizOverlay() {
   );
 }
 
-function getRandomWords(count) {
-  const shuffled = [...vocabulary].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+function getRandomWords(count, playerLevel, wordsLearned) {
+  // Use adaptive selection based on player progression
+  return selectWordsByDifficulty(vocabulary, count, playerLevel, wordsLearned);
 }

@@ -5,7 +5,7 @@ import { COLORS, FONTS } from '../../styles/theme.js';
 const styles = {
   instruction: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     color: COLORS.brown,
     marginBottom: '6px',
     textTransform: 'uppercase',
@@ -21,7 +21,7 @@ const styles = {
   },
   playBtn: {
     fontFamily: FONTS.pixel,
-    fontSize: '10px',
+    fontSize: '11px',
     padding: '12px 24px',
     border: `4px solid ${COLORS.dark}`,
     background: COLORS.cyan,
@@ -39,12 +39,12 @@ const styles = {
   choices: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
+    gap: '10px',
   },
   choice: {
     fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    padding: '12px 20px',
+    fontSize: '11px',
+    padding: '14px 22px',
     border: `4px solid ${COLORS.dark}`,
     background: COLORS.beige,
     color: COLORS.dark,

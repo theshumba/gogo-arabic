@@ -5,7 +5,7 @@ import { COLORS, FONTS, pixelBtnGold } from '../../styles/theme.js';
 const styles = {
   instruction: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     color: COLORS.brown,
     marginBottom: '6px',
     textTransform: 'uppercase',
@@ -13,7 +13,7 @@ const styles = {
   },
   prompt: {
     fontFamily: FONTS.pixel,
-    fontSize: '14px',
+    fontSize: '15px',
     margin: '12px 0 16px',
     color: COLORS.dark,
   },
@@ -51,7 +51,7 @@ const styles = {
     `,
   },
   correctAnswer: {
-    fontSize: '18px',
+    fontSize: '20px',
     fontFamily: FONTS.arabic,
     direction: 'rtl',
     color: COLORS.green,
@@ -60,14 +60,14 @@ const styles = {
   },
   correctLabel: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     color: COLORS.green,
     textTransform: 'uppercase',
     letterSpacing: '1px',
   },
   submitBtn: {
     ...pixelBtnGold,
-    fontSize: '10px',
+    fontSize: '11px',
     padding: '12px 28px',
     marginTop: '8px',
   },

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addXP } from '../../store/slices/playerSlice.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
+import { shuffle } from '../../utils/shuffle.js';
 import ArabicKeyboard from '../Keyboard/ArabicKeyboard.jsx';
 import alphabetData from '../../data/alphabet.json';
 import { COLORS, FONTS, pixelBtn, pixelBtnGold, pixelBtnDark, pixelPanel } from '../../styles/theme.js';
@@ -433,9 +434,9 @@ export default function AlphabetModule({ onBack }) {
     const otherLetters = letters.filter(
       (l) => l.group !== selectedGroup && l.id !== currentLetter.id
     );
-    const pool = [...sameGroup, ...otherLetters.sort(() => Math.random() - 0.5)];
+    const pool = [...sameGroup, ...shuffle(otherLetters)];
     const distractors = pool.slice(0, 3);
-    const choices = [...distractors, currentLetter].sort(() => Math.random() - 0.5);
+    const choices = shuffle([...distractors, currentLetter]);
     return choices;
   };
 

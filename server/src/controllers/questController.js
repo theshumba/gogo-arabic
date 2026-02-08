@@ -22,6 +22,7 @@ export async function getQuests(req, res) {
     const quests = await Quest.find({ userId: req.userId });
     res.json({ quests });
   } catch (err) {
+    console.error('getQuests error:', err);
     res.status(500).json({ message: 'Failed to get quests' });
   }
 }
@@ -55,6 +56,7 @@ export async function syncQuests(req, res) {
     const updated = await Quest.find({ userId: req.userId });
     res.json({ quests: updated });
   } catch (err) {
+    console.error('syncQuests error:', err);
     res.status(500).json({ message: 'Failed to sync quests' });
   }
 }

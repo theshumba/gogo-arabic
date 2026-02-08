@@ -8,7 +8,9 @@ import { updateQuestProgress, completeQuest, checkPrerequisites } from '../../st
 import { createNewCard } from '../../services/fsrs.js';
 import { EventBus } from '../../game/EventBus.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
-import vocabulary from '../../data/vocabulary.json';
+import { shuffle } from '../../utils/shuffle.js';
+import { selectWordsByDifficulty } from '../../utils/wordSelection.js';
+import vocabulary from '../../data/vocabularyAll.js';
 import npcsData from '../../data/npcs.json';
 import questsData from '../../data/quests.json';
 import { COLORS, FONTS, pixelPanel, pixelBtnGold } from '../../styles/theme.js';
@@ -128,7 +130,7 @@ const styles = {
   },
   portraitName: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     textAlign: 'center',
     marginTop: '6px',
     color: COLORS.xpGold,
@@ -139,7 +141,7 @@ const styles = {
   },
   portraitNameArabic: {
     fontFamily: FONTS.arabic,
-    fontSize: '14px',
+    fontSize: '16px',
     textAlign: 'center',
     marginTop: '2px',
     color: COLORS.xpGold,
@@ -153,14 +155,14 @@ const styles = {
   },
   speakerName: {
     fontFamily: FONTS.pixel,
-    fontSize: '10px',
+    fontSize: '12px',
     color: COLORS.xpGold,
     marginBottom: '8px',
     textTransform: 'uppercase',
     letterSpacing: '1px',
   },
   arabicLine: {
-    fontSize: '26px',
+    fontSize: '28px',
     fontFamily: FONTS.arabic,
     direction: 'rtl',
     textAlign: 'right',
@@ -170,15 +172,15 @@ const styles = {
   },
   englishLine: {
     fontFamily: FONTS.pixel,
-    fontSize: '11px',
+    fontSize: '12px',
     color: COLORS.white,
     marginBottom: '4px',
     lineHeight: 1.8,
   },
   translitLine: {
     fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.lightGray,
+    fontSize: '11px',
+    color: COLORS.light,
     fontStyle: 'italic',
     lineHeight: 1.6,
   },
@@ -194,9 +196,9 @@ const styles = {
     display: 'inline-block',
     background: COLORS.xpGold,
     border: `4px solid ${COLORS.dark}`,
-    padding: '4px 10px',
+    padding: '5px 12px',
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     color: COLORS.dark,
     textTransform: 'uppercase',
     letterSpacing: '1px',
@@ -216,7 +218,7 @@ const styles = {
   },
   wordCardArabic: {
     fontFamily: FONTS.arabic,
-    fontSize: '22px',
+    fontSize: '24px',
     direction: 'rtl',
     textAlign: 'right',
     color: COLORS.xpGold,
@@ -224,13 +226,13 @@ const styles = {
   },
   wordCardEnglish: {
     fontFamily: FONTS.pixel,
-    fontSize: '10px',
+    fontSize: '12px',
     color: COLORS.white,
   },
   wordCardTranslit: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
-    color: COLORS.lightGray,
+    fontSize: '11px',
+    color: COLORS.light,
     fontStyle: 'italic',
   },
 
@@ -243,13 +245,13 @@ const styles = {
   },
   choiceBtn: {
     ...pixelPanel,
-    padding: '10px 16px',
+    padding: '12px 18px',
     background: COLORS.beige,
     border: `4px solid ${COLORS.dark}`,
     color: COLORS.dark,
     cursor: 'pointer',
     fontFamily: FONTS.pixel,
-    fontSize: '10px',
+    fontSize: '11px',
     flex: 1,
     textAlign: 'center',
     minWidth: '100px',
@@ -262,13 +264,35 @@ const styles = {
   },
   continueHint: {
     position: 'absolute',
-    bottom: '8px',
+    bottom: '10px',
     right: '16px',
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
-    color: COLORS.lightGray,
+    fontSize: '10px',
+    color: COLORS.white,
     textTransform: 'uppercase',
     letterSpacing: '1px',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+  },
+  choiceHint: {
+    fontFamily: FONTS.pixel,
+    fontSize: '7px',
+    color: COLORS.lightGray,
+    marginTop: '8px',
+    textAlign: 'center',
+    letterSpacing: '0.5px',
+  },
+  choiceNumber: {
+    display: 'inline-block',
+    minWidth: '16px',
+    height: '16px',
+    lineHeight: '16px',
+    textAlign: 'center',
+    background: COLORS.dark,
+    color: COLORS.xpGold,
+    borderRadius: '2px',
+    marginRight: '6px',
+    fontSize: '8px',
+    fontWeight: 'bold',
   },
 };
 
@@ -281,6 +305,8 @@ export default function DialogueOverlay() {
   const dialogueState = useSelector((s) => s.npc.dialogueState);
   const settings = useSelector((s) => s.settings);
   const quests = useSelector((s) => s.quests.quests);
+  const playerLevel = useSelector((s) => s.player.level);
+  const wordsLearned = useSelector((s) => s.player.wordsLearned);
 
   const npcId = overlayData?.npcId;
   const npc = npcsData.find((n) => n.id === npcId);
@@ -407,12 +433,13 @@ export default function DialogueOverlay() {
 
         if (nextLine.words === 'random_learned_10') {
           const learnedIds = Object.keys(cards);
-          const shuffled = learnedIds.sort(() => Math.random() - 0.5).slice(0, 10);
+          const shuffled = shuffle(learnedIds).slice(0, 10);
           quizWords = shuffled
             .map((id) => resolveVocabWord(id))
             .filter(Boolean);
           if (quizWords.length === 0) {
-            quizWords = vocabulary.slice(0, 5);
+            // Use adaptive word selection for new players
+            quizWords = selectWordsByDifficulty(vocabulary, 5, playerLevel, wordsLearned);
           }
         } else {
           quizWords = nextLine.words
@@ -449,7 +476,7 @@ export default function DialogueOverlay() {
       EventBus.emit('open-alphabet');
     } else if (choice.action === 'daily_quiz') {
       const learnedIds = Object.keys(cards);
-      const shuffled = learnedIds.sort(() => Math.random() - 0.5).slice(0, 10);
+      const shuffled = shuffle(learnedIds).slice(0, 10);
       const quizWords = shuffled
         .map((id) => resolveVocabWord(id))
         .filter(Boolean);
@@ -472,6 +499,54 @@ export default function DialogueOverlay() {
       close();
     }
   };
+
+  /* ---- keyboard shortcuts ---- */
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't interfere with input fields or other overlays
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      // If current line has choices, handle number keys for choice selection
+      if (line?.choices) {
+        const num = parseInt(e.key, 10);
+        if (num >= 1 && num <= line.choices.length) {
+          e.preventDefault();
+          handleChoice(line.choices[num - 1]);
+          return;
+        }
+      }
+
+      switch (e.key) {
+        case ' ':
+        case 'Enter':
+          e.preventDefault();
+          // If there are choices, don't advance automatically
+          if (!line?.choices) {
+            advance();
+          }
+          break;
+
+        case 'Escape':
+          e.preventDefault();
+          close();
+          break;
+
+        default:
+          break;
+      }
+    };
+
+    // Only attach listener when dialogue is visible
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup on unmount or when dialogue closes
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [line, lineIndex, currentTree]); // Re-attach when line changes
 
   /* ---- portrait rendering ---- */
   const portraitSrc = `/assets/portraits/${npc.portrait}.png`;
@@ -536,7 +611,10 @@ export default function DialogueOverlay() {
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  <div>{c.english}</div>
+                  <div>
+                    <span style={styles.choiceNumber}>{i + 1}</span>
+                    {c.english}
+                  </div>
                   {c.arabic && (
                     <div
                       style={{
@@ -553,6 +631,7 @@ export default function DialogueOverlay() {
                 </button>
               ))}
             </div>
+            <div style={styles.choiceHint}>Press 1-{line.choices.length} to select</div>
           </div>
         </div>
       </div>
@@ -577,7 +656,7 @@ export default function DialogueOverlay() {
           )}
           {line.teachWord && renderTeachWordCard(line.teachWord)}
         </div>
-        <div style={styles.continueHint}>Click to continue</div>
+        <div style={styles.continueHint}>Space / Enter / Click to continue</div>
       </div>
     </div>
   );

@@ -51,7 +51,7 @@ const ANIM_DURATION = 300; // slide/fade animation duration in ms
 const styles = {
   wrapper: {
     position: 'absolute',
-    top: '38px', // just below the HUD bar
+    top: '44px', // just below the HUD bar
     left: '50%',
     transform: 'translateX(-50%)',
     zIndex: 101,
@@ -61,11 +61,11 @@ const styles = {
   },
   toast: {
     fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    padding: '6px 14px',
+    fontSize: '12px',
+    padding: '8px 16px',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '10px',
     whiteSpace: 'nowrap',
     imageRendering: 'pixelated',
     boxShadow: `
@@ -77,23 +77,23 @@ const styles = {
   },
   iconBadge: {
     fontFamily: FONTS.pixel,
-    fontSize: '7px',
+    fontSize: '10px',
     fontWeight: 'bold',
-    padding: '2px 5px',
-    background: 'rgba(0,0,0,0.4)',
-    border: '1px solid rgba(255,255,255,0.15)',
+    padding: '3px 6px',
+    background: 'rgba(0,0,0,0.5)',
+    border: '1px solid rgba(255,255,255,0.2)',
     lineHeight: 1,
     letterSpacing: '0.5px',
   },
   message: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '12px',
     lineHeight: 1.3,
     letterSpacing: '0.3px',
   },
   levelUpGlow: {
     textShadow: `0 0 8px ${COLORS.xpGold}, 0 0 16px ${COLORS.xpGold}`,
-    fontSize: '10px',
+    fontSize: '14px',
   },
 };
 

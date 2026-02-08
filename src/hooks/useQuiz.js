@@ -6,16 +6,8 @@ import { closeQuiz } from '../store/slices/uiSlice.js';
 import { createNewCard, reviewCard, Rating } from '../services/fsrs.js';
 import { EventBus } from '../game/EventBus.js';
 import { XP_REWARDS } from '../utils/xpCalculator.js';
-import vocabulary from '../data/vocabulary.json';
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+import { shuffle } from '../utils/shuffle.js';
+import vocabulary from '../data/vocabularyAll.js';
 
 function pickDistractors(correctWord, count = 3) {
   const sameCat = vocabulary.filter(

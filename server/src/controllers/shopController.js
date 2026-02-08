@@ -38,6 +38,7 @@ export async function buyItem(req, res) {
 
     res.json({ user });
   } catch (err) {
+    console.error('buyItem error:', err);
     res.status(500).json({ message: 'Failed to buy item' });
   }
 }

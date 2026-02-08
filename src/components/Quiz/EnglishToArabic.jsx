@@ -3,7 +3,7 @@ import { COLORS, FONTS } from '../../styles/theme.js';
 const styles = {
   instruction: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     color: COLORS.brown,
     marginBottom: '6px',
     textTransform: 'uppercase',
@@ -11,14 +11,14 @@ const styles = {
   },
   prompt: {
     fontFamily: FONTS.pixel,
-    fontSize: '14px',
+    fontSize: '15px',
     margin: '12px 0 20px',
     color: COLORS.dark,
   },
   choices: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
+    gap: '10px',
   },
   choice: {
     fontFamily: FONTS.arabic,

@@ -1,38 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-// XP thresholds from PRD — cumulative XP needed to reach each level
-const XP_TABLE = {
-  2: 100,
-  3: 250,
-  4: 450,
-  5: 700,
-  6: 1000,
-  7: 1400,
-  8: 1800,
-  9: 2300,
-  10: 2800,
-  11: 3500,
-  12: 4200,
-  13: 5000,
-  14: 6000,
-  15: 7000,
-  16: 8200,
-  17: 9500,
-  18: 11000,
-  19: 12500,
-  20: 14000,
-};
-
-/**
- * Returns the cumulative XP required to reach the given level.
- * Levels 2-20 use the fixed table. Level 21+ adds 2000 per level beyond 20.
- */
-function xpForLevel(level) {
-  if (level <= 1) return 0;
-  if (level <= 20) return XP_TABLE[level];
-  // 21+: level 20 threshold + 2000 per additional level
-  return XP_TABLE[20] + (level - 20) * 2000;
-}
+import { getXPForLevel } from '../../utils/xpCalculator.js';
 
 const initialState = {
   name: '',
@@ -79,10 +46,10 @@ const playerSlice = createSlice({
       state.xp += action.payload;
 
       // Auto level-up: keep levelling while XP exceeds the threshold for next level
-      let nextLevelThreshold = xpForLevel(state.level + 1);
+      let nextLevelThreshold = getXPForLevel(state.level + 1);
       while (state.xp >= nextLevelThreshold) {
         state.level += 1;
-        nextLevelThreshold = xpForLevel(state.level + 1);
+        nextLevelThreshold = getXPForLevel(state.level + 1);
       }
 
       // xpToNextLevel = how much total XP is needed for the next level
@@ -160,6 +127,7 @@ const playerSlice = createSlice({
 
     markChestOpened(state, action) {
       const chestId = action.payload;
+      if (!chestId || typeof chestId !== 'string') return;
       if (!state.openedChests) state.openedChests = [];
       if (!state.openedChests.includes(chestId)) {
         state.openedChests.push(chestId);
@@ -168,6 +136,7 @@ const playerSlice = createSlice({
 
     markBookRead(state, action) {
       const bookId = action.payload;
+      if (!bookId || typeof bookId !== 'string') return;
       if (!state.readBooks) state.readBooks = [];
       if (!state.readBooks.includes(bookId)) {
         state.readBooks.push(bookId);

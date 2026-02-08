@@ -23,6 +23,7 @@ export async function getCards(req, res) {
     const cards = await VocabCard.find({ userId: req.userId });
     res.json({ cards });
   } catch (err) {
+    console.error('getCards error:', err);
     res.status(500).json({ message: 'Failed to get cards' });
   }
 }
@@ -56,6 +57,7 @@ export async function syncCards(req, res) {
     const updated = await VocabCard.find({ userId: req.userId });
     res.json({ cards: updated });
   } catch (err) {
+    console.error('syncCards error:', err);
     res.status(500).json({ message: 'Failed to sync cards' });
   }
 }

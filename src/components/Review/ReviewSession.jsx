@@ -4,8 +4,10 @@ import { updateFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { addXP, updateStreak } from '../../store/slices/playerSlice.js';
 import { reviewCard, getDueCards, Rating } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
+import { shuffle } from '../../utils/shuffle.js';
 import ArabicKeyboard from '../Keyboard/ArabicKeyboard.jsx';
-import vocabulary from '../../data/vocabulary.json';
+import ProgressBar from '../Quiz/ProgressBar.jsx';
+import vocabulary from '../../data/vocabularyAll.js';
 import { COLORS, FONTS, pixelPanel, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
 
 const QUIZ_TYPES = ['ar-to-en', 'en-to-ar', 'en-to-type-ar'];
@@ -53,6 +55,11 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '20px',
+  },
+  progressContainer: {
+    width: '100%',
+    maxWidth: '400px',
+    marginBottom: '16px',
   },
   scoreText: {
     fontFamily: FONTS.pixel,
@@ -232,11 +239,10 @@ const styles = {
 };
 
 function generateChoices(correctWord) {
-  const others = vocabulary
-    .filter((w) => w.id !== correctWord.id)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3);
-  return [...others, correctWord].sort(() => Math.random() - 0.5);
+  const others = shuffle(
+    vocabulary.filter((w) => w.id !== correctWord.id)
+  ).slice(0, 3);
+  return shuffle([...others, correctWord]);
 }
 
 export default function ReviewSession({ onBack }) {
@@ -271,6 +277,7 @@ export default function ReviewSession({ onBack }) {
     const w = vocabulary.find((v) => v.id === entry.wordId);
     return w ? generateChoices(w) : [];
   });
+  const [questionStartTime, setQuestionStartTime] = useState(Date.now());
 
   /* ---------- No reviews due ---------- */
   if (sessionCards.length === 0) {
@@ -321,6 +328,53 @@ export default function ReviewSession({ onBack }) {
   }
 
   /* ---------- Handlers ---------- */
+  // Auto-rate based on correctness and response time, then advance to next question
+  const autoRateAndAdvance = (correct, responseTime) => {
+    // Calculate rating based on correctness and time:
+    // Wrong answer → Rating 1 (Again)
+    // Correct but slow (>10 seconds) → Rating 2 (Hard)
+    // Correct in normal time (4-10 seconds) → Rating 3 (Good)
+    // Correct and fast (<4 seconds) → Rating 4 (Easy)
+    let rating;
+    if (!correct) {
+      rating = Rating.Again;
+    } else if (responseTime > 10) {
+      rating = Rating.Hard;
+    } else if (responseTime >= 4) {
+      rating = Rating.Good;
+    } else {
+      rating = Rating.Easy;
+    }
+
+    const result = reviewCard(currentEntry.card, rating);
+    dispatch(updateFsrsCard({
+      wordId: currentEntry.wordId,
+      card: result.card,
+      log: result.log,
+    }));
+
+    // Auto-advance after a short delay to show feedback
+    setTimeout(() => {
+      const nextIdx = index + 1;
+      if (nextIdx >= sessionCards.length) {
+        dispatch(addXP(XP_REWARDS.DAILY_REVIEW_COMPLETE));
+        dispatch(updateStreak());
+        setDone(true);
+      } else {
+        setIndex(nextIdx);
+        setAnswered(false);
+        setIsCorrect(false);
+        setSelected(null);
+        setTypingInput('');
+        setTypingDone(false);
+        setQuizType(QUIZ_TYPES[Math.floor(Math.random() * QUIZ_TYPES.length)]);
+        const nextWord = vocabulary.find((w) => w.id === sessionCards[nextIdx].wordId);
+        setChoices(nextWord ? generateChoices(nextWord) : []);
+        setQuestionStartTime(Date.now());
+      }
+    }, 1500); // 1.5 second delay to show correct/wrong feedback
+  };
+
   const handleAnswer = (answer) => {
     if (answered) return;
     let correct = false;
@@ -331,7 +385,10 @@ export default function ReviewSession({ onBack }) {
     setAnswered(true);
     setTotal((t) => t + 1);
     if (correct) setScore((s) => s + 1);
-    // Quiz result tracked locally via score/total state
+
+    // Auto-rate based on correctness and response time
+    const responseTime = (Date.now() - questionStartTime) / 1000; // seconds
+    autoRateAndAdvance(correct, responseTime);
   };
 
   const handleTypingSubmit = () => {
@@ -343,34 +400,12 @@ export default function ReviewSession({ onBack }) {
     setAnswered(true);
     setTotal((t) => t + 1);
     if (correct) setScore((s) => s + 1);
-    // Quiz result tracked locally via score/total state
+
+    // Auto-rate based on correctness and response time
+    const responseTime = (Date.now() - questionStartTime) / 1000; // seconds
+    autoRateAndAdvance(correct, responseTime);
   };
 
-  const handleRating = (rating) => {
-    const result = reviewCard(currentEntry.card, rating);
-    dispatch(updateFsrsCard({
-      wordId: currentEntry.wordId,
-      card: result.card,
-      log: result.log,
-    }));
-
-    const nextIdx = index + 1;
-    if (nextIdx >= sessionCards.length) {
-      dispatch(addXP(XP_REWARDS.DAILY_REVIEW_COMPLETE));
-      dispatch(updateStreak());
-      setDone(true);
-    } else {
-      setIndex(nextIdx);
-      setAnswered(false);
-      setIsCorrect(false);
-      setSelected(null);
-      setTypingInput('');
-      setTypingDone(false);
-      setQuizType(QUIZ_TYPES[Math.floor(Math.random() * QUIZ_TYPES.length)]);
-      const nextWord = vocabulary.find((w) => w.id === sessionCards[nextIdx].wordId);
-      setChoices(nextWord ? generateChoices(nextWord) : []);
-    }
-  };
 
   /* ---------- Active review ---------- */
   return (
@@ -382,6 +417,9 @@ export default function ReviewSession({ onBack }) {
       </div>
 
       <div style={styles.body}>
+        <div style={styles.progressContainer}>
+          <ProgressBar current={index + 1} total={sessionCards.length} />
+        </div>
         <div style={styles.scoreText}>{score}/{total} correct</div>
 
         {/* Arabic -> English */}
@@ -456,19 +494,6 @@ export default function ReviewSession({ onBack }) {
           </>
         )}
 
-        {/* FSRS Rating buttons */}
-        {answered && (
-          <div style={styles.ratingRow}>
-            <button style={{ ...styles.ratingBtn, ...styles.ratingAgain }}
-              onClick={() => handleRating(Rating.Again)}>Again</button>
-            <button style={{ ...styles.ratingBtn, ...styles.ratingHard }}
-              onClick={() => handleRating(Rating.Hard)}>Hard</button>
-            <button style={{ ...styles.ratingBtn, ...styles.ratingGood }}
-              onClick={() => handleRating(Rating.Good)}>Good</button>
-            <button style={{ ...styles.ratingBtn, ...styles.ratingEasy }}
-              onClick={() => handleRating(Rating.Easy)}>Easy</button>
-          </div>
-        )}
       </div>
     </div>
   );

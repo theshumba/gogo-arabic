@@ -13,7 +13,7 @@ import { addFsrsCard } from './store/slices/vocabularySlice.js';
 import { initializeQuests, checkPrerequisites, updateQuestProgress, completeQuest } from './store/slices/questSlice.js';
 import { createNewCard } from './services/fsrs.js';
 import { XP_REWARDS } from './utils/xpCalculator.js';
-import vocabulary from './data/vocabulary.json';
+import vocabulary from './data/vocabularyAll.js';
 import questsData from './data/quests.json';
 import { EventBus } from './utils/eventBus.js';
 import { store } from './store/store.js';

@@ -41,8 +41,8 @@ const styles = {
   },
   closeBtn: {
     ...pixelBtnDark,
-    padding: '6px 12px',
-    fontSize: '8px',
+    padding: '8px 14px',
+    fontSize: '10px',
   },
   zoneHeader: {
     display: 'flex',
@@ -55,7 +55,7 @@ const styles = {
   },
   zoneName: {
     fontFamily: FONTS.pixel,
-    fontSize: '9px',
+    fontSize: '11px',
     color: COLORS.xpGold,
     textTransform: 'uppercase',
     letterSpacing: '1px',
@@ -93,7 +93,7 @@ const styles = {
   },
   questTitle: {
     fontFamily: FONTS.pixel,
-    fontSize: '10px',
+    fontSize: '11px',
     color: COLORS.dark,
     fontWeight: 'bold',
   },
@@ -102,7 +102,7 @@ const styles = {
   },
   questDesc: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     color: COLORS.brown,
     marginBottom: '8px',
     lineHeight: '1.6',
@@ -129,18 +129,18 @@ const styles = {
   },
   progressText: {
     fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    color: COLORS.gray,
+    fontSize: '10px',
+    color: COLORS.dark,
   },
   reward: {
     fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    color: COLORS.xpGold,
+    fontSize: '10px',
+    color: COLORS.gold,
   },
   badgeActive: {
     fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    padding: '2px 6px',
+    fontSize: '9px',
+    padding: '3px 7px',
     background: COLORS.xpGold,
     color: COLORS.brown,
     border: `2px solid ${COLORS.gold}`,

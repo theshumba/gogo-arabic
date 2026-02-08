@@ -36,7 +36,7 @@ const styles = {
   },
   label: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     color: COLORS.dark,
     textTransform: 'uppercase',
     letterSpacing: '1px',
@@ -48,7 +48,7 @@ const styles = {
   },
   toggleOn: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     padding: '8px 16px',
     border: `4px solid ${COLORS.dark}`,
     cursor: 'pointer',
@@ -65,7 +65,7 @@ const styles = {
   },
   toggleOff: {
     fontFamily: FONTS.pixel,
-    fontSize: '8px',
+    fontSize: '10px',
     padding: '8px 16px',
     border: `4px solid ${COLORS.dark}`,
     cursor: 'pointer',

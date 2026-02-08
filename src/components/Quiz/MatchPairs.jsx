@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { shuffle } from '../../utils/shuffle.js';
 import { COLORS, FONTS } from '../../styles/theme.js';
 
 const styles = {
@@ -82,12 +83,8 @@ const styles = {
 
 export default function MatchPairs({ words, onComplete }) {
   // words: array of 4 word objects with arabic & english
-  const [arabicOrder] = useState(() =>
-    [...words].sort(() => Math.random() - 0.5)
-  );
-  const [englishOrder] = useState(() =>
-    [...words].sort(() => Math.random() - 0.5)
-  );
+  const [arabicOrder] = useState(() => shuffle(words));
+  const [englishOrder] = useState(() => shuffle(words));
   const [selectedArabic, setSelectedArabic] = useState(null);
   const [selectedEnglish, setSelectedEnglish] = useState(null);
   const [matched, setMatched] = useState(new Set());

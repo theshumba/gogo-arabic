@@ -1,4 +1,5 @@
 import { createEmptyCard, fsrs, generatorParameters, Rating } from 'ts-fsrs';
+import { shuffle } from '../utils/shuffle.js';
 
 const params = generatorParameters();
 const scheduler = fsrs(params);
@@ -30,8 +31,7 @@ export function getDueCards(cards) {
 export function getSessionCards(cards, maxCards = 20) {
   const due = getDueCards(cards);
   // Shuffle and take up to maxCards
-  const shuffled = due.sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, maxCards);
+  return shuffle(due).slice(0, maxCards);
 }
 
 export { Rating };
