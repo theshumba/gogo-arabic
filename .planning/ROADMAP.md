@@ -163,7 +163,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Critical Fixes | 0/2 | Planning complete | - |
+| 1. Critical Fixes | 2/2 | ✓ Complete | 2026-02-08 |
 | 2. Player Guidance | 0/0 | Not started | - |
 | 3. Feature Discoverability | 0/0 | Not started | - |
 | 4. Onboarding & HUD | 0/0 | Not started | - |
@@ -175,4 +175,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 — Revised: player-facing focus, 9 phases*
+*Last updated: 2026-02-08 — Phase 1 complete*
