@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 
 ## Current Position
 
-Phase: 4 of 9 (Onboarding & HUD) — IN PROGRESS
-Plan: 1 of 2 completed
-Status: Bundle splitting and z-index standardization complete
-Last activity: 2026-02-08 — Completed 04-01-PLAN.md (Bundle splitting + z-index tokens)
+Phase: 4 of 9 (Onboarding & HUD) — COMPLETE
+Plan: 2 of 2 completed
+Status: Phase 4 complete - bundle splitting, z-index standardization, and HUD streamlining done
+Last activity: 2026-02-08 — Completed 04-02-PLAN.md (Streamlined HUD with StatsPanel)
 
-Progress: [███████░░░] 70% (7/10 plans complete across all phases)
+Progress: [████████░░] 80% (8/10 plans complete across all phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 4.1 minutes
-- Total execution time: 0.48 hours
+- Total execution time: 0.55 hours
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [███████░░░] 70% (7/10 plans complete across all p
 | 01 - Critical Fixes | 2/2 | 9 min | 4.5 min |
 | 02 - Player Guidance | 2/2 | 8 min | 4 min |
 | 03 - Feature Discoverability | 3/3 | 8 min | 2.7 min |
-| 04 - Onboarding & HUD | 1/2 | 5 min | 5 min |
+| 04 - Onboarding & HUD | 2/2 | 9 min | 4.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (1 min), 03-02 (2 min), 03-01 (6 min), 04-01 (5 min)
-- Trend: Consistent velocity, Phase 4 in progress
+- Last 5 plans: 03-02 (2 min), 03-01 (6 min), 04-01 (5 min), 04-02 (4 min)
+- Trend: Phase 4 complete with excellent velocity, average 4.5 min/plan
 
 *Updated after each plan completion*
 
@@ -96,6 +96,13 @@ Recent decisions affecting current work:
 - Internal component z-index values remain literals (avoid over-engineering)
 - Main bundle reduced from ~2.9MB to 264KB (91% reduction)
 
+**From 04-02 execution:**
+- StatsPanel collapsed by default to reduce cognitive load (secondary stats accessible via toggle)
+- CSS max-height transitions for accordion UI (smooth, performant, no JS animation library needed)
+- React.memo for StatsPanel prevents re-renders when HUD updates frequently (stamina/XP changes)
+- Redux selector optimization: HUD.jsx reduced from 6 destructured fields to 3 (level, xp, xpToNextLevel)
+- Arrow indicators (▶/▼) match pixel aesthetic better than icon libraries
+
 ### Pending Todos
 
 None yet.
@@ -107,9 +114,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-08
-Stopped at: Phase 4 Plan 1 complete - bundle splitting and z-index standardization done
-Resume file: Ready for 04-02 (Interactive Tooltips)
+Stopped at: Phase 4 complete - all onboarding and HUD improvements done
+Resume file: Ready for Phase 5 (Daily Dashboard) — `/gsd:plan-phase 5`
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-08 21:11 UTC*
+*Last updated: 2026-02-08 21:12 UTC*
