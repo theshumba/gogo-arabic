@@ -61,4 +61,16 @@
   --focus-ring: 2px solid var(--color-cyan);
   --focus-ring-offset: 2px;
   --focus-ring-inset: 0 0 0 3px var(--color-cyan);
+
+  /* Z-Index Tokens (top-level layers) */
+  --z-phaser-overlay: 10;
+  --z-minimap: 90;
+  --z-hud: 100;
+  --z-toast: 150;
+  --z-overlay: 200;
+  --z-pause-menu: 200;
+  --z-battle: 250;
+  --z-level-up: 300;
+  --z-error: 9999;
+  --z-onboarding: 10000;
 }
