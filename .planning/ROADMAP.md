@@ -16,7 +16,7 @@ Transform GoGo Arabic from a feature-rich but hard-to-navigate experience into a
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Critical Fixes** - Fix z-index bugs, mobile overflow, focus traps, HUD review button
+- [x] **Phase 1: Critical Fixes** - Fix z-index bugs, mobile overflow, focus traps, HUD review button ✓ Complete
 - [ ] **Phase 2: Player Guidance** - NPC quest markers, active objective display, quest compass
 - [ ] **Phase 3: Feature Discoverability** - Expose hidden features through in-game UI
 - [ ] **Phase 4: Onboarding & HUD** - Contextual tooltips, streamlined HUD, bundle splitting
@@ -41,7 +41,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Z-index tokens + clickable review badge (CRIT-01, CRIT-04) ✓ 2 min
-- [ ] 01-02-PLAN.md — Responsive overlay migration + focus traps (CRIT-02, CRIT-03)
+- [x] 01-02-PLAN.md — Responsive overlay migration + focus traps (CRIT-02, CRIT-03) ✓ 7 min
 
 ### Phase 2: Player Guidance
 **Goal**: Eliminate "what do I do next?" confusion through visual guidance systems
