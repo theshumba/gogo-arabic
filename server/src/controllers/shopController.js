@@ -20,7 +20,7 @@ export async function buyItem(req, res) {
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    if (user.inventory.includes(itemId)) {
+    if (user.inventory.some(item => item.itemId === itemId)) {
       return res.status(400).json({ message: 'Item already owned' });
     }
 
@@ -33,7 +33,7 @@ export async function buyItem(req, res) {
     }
 
     user.dirhams -= catalogItem.price;
-    user.inventory.push(itemId);
+    user.inventory.push({ itemId, equipped: false });
     await user.save();
 
     res.json({ user });
