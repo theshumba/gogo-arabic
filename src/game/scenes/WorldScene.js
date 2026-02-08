@@ -164,6 +164,12 @@ export class WorldScene extends Phaser.Scene {
       s.setDepth(s.y);
     });
 
+    // Emit player position for HUD compass (throttled: every 6 frames ~10Hz at 60fps)
+    this._frameCount = (this._frameCount || 0) + 1;
+    if (this._frameCount % 6 === 0) {
+      EventBus.emit('player-position-update', { x: player.x, y: player.y });
+    }
+
     // Check NPC interaction zones
     this.npcManager.update(
       player,
