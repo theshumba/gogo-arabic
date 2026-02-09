@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 ## Current Position
 
 Phase: 11 of 13 (Architecture Cleanup)
-Plan: 01 of 6 complete
+Plan: 03 of 6 complete
 Status: In progress
-Last activity: 2026-02-09 — Completed 11-01-PLAN.md (ESLint and Prettier Configuration)
+Last activity: 2026-02-09 — Completed 11-03-PLAN.md (Redux Selector Standardization)
 
-Progress: █░░░░░ 17% (Wave 1: 11-01 complete)
+Progress: ███░░░ 50% (Wave 1: 11-01, 11-03 complete)
 
 ## Performance Metrics
 
@@ -53,6 +53,8 @@ All v2.0 decisions logged in PROJECT.md Key Decisions table with outcomes.
 | Include React hooks plugin with recommended rules | 11-01 | Catch React anti-patterns (conditional hooks, missing deps) before runtime | Found 1 real issue in AlphabetModule.jsx |
 | Separate Node.js globals for server/ and scripts/ | 11-01 | Build scripts need process, server needs Node APIs, src/ needs browser globals | Zero false positive 'process is not defined' errors |
 | eslint-config-prettier as last config entry | 11-01 | Must be last to properly disable ESLint formatting rules that conflict with Prettier | Clean integration, no rule conflicts |
+| Use createSelector only for transformations, not simple property access | 11-03 | Avoids over-memoization while preventing re-renders from array/object recreations | 5 memoized selectors for transformations, 28 plain selectors for properties |
+| Export selectors at slice level, not in separate files | 11-03 | Co-location improves discoverability and maintainability | All 12 slices now have consistent selector exports |
 
 ### v3.0 Roadmap Structure
 
@@ -86,10 +88,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 11 Plan 01 complete - ESLint 9 and Prettier 3 configured
-Resume file: .planning/phases/11-architecture-cleanup/11-01-SUMMARY.md
-Next step: Continue with 11-02 or run `npm run lint:fix` to auto-fix violations before component extraction
+Stopped at: Phase 11 Plan 03 complete - Redux selector standardization
+Resume file: .planning/phases/11-architecture-cleanup/11-03-SUMMARY.md
+Next step: Continue with Plan 04 (God Component Extraction) or Plan 05 (Import Cleanup)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-09 — Phase 11 Plan 01 complete (ESLint and Prettier Configuration)*
+*Last updated: 2026-02-09 — Phase 11 Plan 03 complete (Redux Selector Standardization)*
