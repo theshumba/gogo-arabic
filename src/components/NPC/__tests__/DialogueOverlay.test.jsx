@@ -41,8 +41,8 @@ vi.mock('../../../hooks/useDialogue.js', () => ({
     currentTree: {
       id: 'greeting',
       lines: [
-        { speaker: 'Fatima', text: 'Welcome to the oasis!' },
-        { speaker: 'Fatima', text: 'How can I help you?', choices: [
+        { speaker: 'Fatima', arabic: 'أهلاً بك في الواحة', english: 'Welcome to the oasis!' },
+        { speaker: 'Fatima', arabic: 'كيف يمكنني مساعدتك؟', english: 'How can I help you?', choices: [
           { text: 'Teach me Arabic', action: 'start_lesson' },
           { text: 'Goodbye', action: 'close' },
         ]},
@@ -63,6 +63,20 @@ vi.mock('../../../hooks/useFocusTrap.js', () => ({
 
 vi.mock('../../../utils/culturalDialogueHelper.js', () => ({
   getEnhancedDialogueChoices: () => null,
+}));
+
+// Mock useTypewriter to return full text immediately (fake timers prevent intervals)
+vi.mock('../../../hooks/useTypewriter.js', () => ({
+  useTypewriter: (text) => ({
+    displayText: text || '',
+    isComplete: true,
+    skip: vi.fn(),
+  }),
+}));
+
+// Mock useFormatArabic to pass through text
+vi.mock('../../../hooks/useFormatArabic.js', () => ({
+  useFormatArabic: () => (text) => text || '',
 }));
 
 // Mock NPC data

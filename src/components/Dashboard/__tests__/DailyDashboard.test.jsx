@@ -55,13 +55,13 @@ describe('DailyDashboard', () => {
     vocabulary: {
       fsrsCards: {
         word1: {
-          card: { due: new Date(Date.now() - 1000).toISOString(), reps: 1 },
+          card: { due: '2026-02-08T23:59:00.000Z', reps: 1 },
         },
         word2: {
-          card: { due: new Date(Date.now() - 1000).toISOString(), reps: 1 },
+          card: { due: '2026-02-08T23:58:00.000Z', reps: 1 },
         },
         word3: {
-          card: { due: new Date(Date.now() + 10000).toISOString(), reps: 1 },
+          card: { due: '2026-02-09T01:00:00.000Z', reps: 1 },
         },
       },
     },

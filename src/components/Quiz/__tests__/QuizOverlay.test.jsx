@@ -45,7 +45,12 @@ const mockQuizState = {
     english: 'book',
     category: 'objects',
   },
-  choices: ['book', 'pen', 'desk', 'chair'],
+  choices: [
+    { label: 'book', value: 'book', correct: true },
+    { label: 'pen', value: 'pen', correct: false },
+    { label: 'desk', value: 'desk', correct: false },
+    { label: 'chair', value: 'chair', correct: false },
+  ],
   quizType: 'ar-to-en',
   sessionScore: 0,
   sessionTotal: 0,
