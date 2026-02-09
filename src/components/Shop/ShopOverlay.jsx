@@ -8,168 +8,7 @@ import { selectInventoryIds } from '../../store/slices/playerSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import itemsData from '../../data/items.json';
-import { COLORS, FONTS, pixelPanel, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
-
-const styles = {
-  overlay: {
-    position: 'absolute',
-    inset: 0,
-    backgroundImage: 'url(/img/shop-bg2.gif)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 200,
-  },
-  card: {
-    ...pixelPanel,
-    minWidth: '500px',
-    maxWidth: '650px',
-    maxHeight: '85vh',
-    overflowY: 'auto',
-    background: `${COLORS.beige}f0`,
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '12px',
-    paddingBottom: '10px',
-    borderBottom: `4px solid ${COLORS.dark}`,
-  },
-  title: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.brown,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  balance: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.xpGold,
-    fontWeight: 'bold',
-  },
-  tabRow: {
-    display: 'flex',
-    gap: '8px',
-    marginBottom: '14px',
-    alignItems: 'center',
-  },
-  tabBtn: {
-    ...pixelBtnDark,
-    padding: '7px 15px',
-    fontSize: '10px',
-  },
-  tabBtnActive: {
-    ...pixelBtnGold,
-    padding: '7px 15px',
-    fontSize: '10px',
-  },
-  closeBtn: {
-    ...pixelBtnDark,
-    padding: '7px 13px',
-    fontSize: '10px',
-    marginLeft: 'auto',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '10px',
-  },
-  item: {
-    padding: '12px',
-    border: `4px solid ${COLORS.dark}`,
-    background: COLORS.white,
-    textAlign: 'center',
-  },
-  itemOwned: {
-    borderColor: COLORS.green,
-    background: '#eafaf1',
-  },
-  itemNameArabic: {
-    fontFamily: FONTS.arabic,
-    fontSize: '16px',
-    direction: 'rtl',
-    color: COLORS.xpGold,
-    marginBottom: '4px',
-  },
-  itemName: {
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.dark,
-    fontWeight: 'bold',
-    marginBottom: '4px',
-  },
-  itemDesc: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.brown,
-    marginBottom: '8px',
-    lineHeight: '1.5',
-  },
-  itemPrice: {
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.xpGold,
-    marginBottom: '8px',
-    fontWeight: 'bold',
-  },
-  buyBtn: {
-    ...pixelBtnGold,
-    padding: '6px 15px',
-    fontSize: '10px',
-  },
-  buyBtnDisabled: {
-    opacity: 0.4,
-    cursor: 'default',
-  },
-  equipBtn: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    padding: '6px 15px',
-    border: 'none',
-    cursor: 'pointer',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    background: COLORS.cyan,
-    color: COLORS.dark,
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.2),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.2),
-      0 4px 0 0 #048a9e
-    `,
-  },
-  equippedBadge: {
-    fontFamily: FONTS.pixel,
-    fontSize: '8px',
-    color: COLORS.green,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-  },
-  lockedText: {
-    fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    color: COLORS.red,
-  },
-  toast: {
-    position: 'fixed',
-    bottom: '20px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    background: COLORS.green,
-    color: COLORS.white,
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    padding: '10px 24px',
-    border: `4px solid #1fa855`,
-    fontWeight: 'bold',
-    zIndex: 300,
-    textTransform: 'uppercase',
-  },
-};
+import styles from './ShopOverlay.module.css';
 
 function ShopOverlay() {
   const dispatch = useDispatch();
@@ -240,10 +79,16 @@ function ShopOverlay() {
     ? { duration: 0.15 }
     : { duration: 0.25, ease: 'easeOut' };
 
+  // Dynamic background image
+  const overlayStyle = {
+    backgroundImage: 'url(/img/shop-bg2.gif)',
+  };
+
   return (
     <motion.div
       ref={focusTrapRef}
-      style={styles.overlay}
+      className={styles.overlay}
+      style={overlayStyle}
       onClick={handleClose}
       variants={overlayVariants}
       initial="hidden"
@@ -252,7 +97,7 @@ function ShopOverlay() {
       transition={transition}
     >
       <motion.div
-        style={styles.card}
+        className={styles.card}
         onClick={(e) => e.stopPropagation()}
         variants={cardVariants}
         initial="hidden"
@@ -260,28 +105,28 @@ function ShopOverlay() {
         exit="hidden"
         transition={transition}
       >
-        <div style={styles.header}>
-          <div style={styles.title}>Merchant Fatima's Shop</div>
-          <div style={styles.balance}>Dirhams: {player.dirhams}</div>
+        <div className={styles.header}>
+          <div className={styles.title}>Merchant Fatima's Shop</div>
+          <div className={styles.balance}>Dirhams: {player.dirhams}</div>
         </div>
 
-        <div style={styles.tabRow}>
+        <div className={styles.tabRow}>
           <button
-            style={tab === 'clothing' ? styles.tabBtnActive : styles.tabBtn}
+            className={tab === 'clothing' ? styles.tabBtnActive : styles.tabBtn}
             onClick={() => setTab('clothing')}
           >
             Clothing
           </button>
           <button
-            style={tab === 'boosts' ? styles.tabBtnActive : styles.tabBtn}
+            className={tab === 'boosts' ? styles.tabBtnActive : styles.tabBtn}
             onClick={() => setTab('boosts')}
           >
             Boosts
           </button>
-          <button style={styles.closeBtn} onClick={handleClose}>Close</button>
+          <button className={styles.closeBtn} onClick={handleClose}>Close</button>
         </div>
 
-        <div style={styles.grid}>
+        <div className={styles.grid}>
           {filteredItems.map((item) => {
             const owned = player.inventory.includes(item.id);
             const canAfford = player.dirhams >= item.price;
@@ -289,23 +134,23 @@ function ShopOverlay() {
             const locked = item.unlockLevel && player.level < item.unlockLevel;
 
             return (
-              <div key={item.id} style={{ ...styles.item, ...(owned ? styles.itemOwned : {}) }}>
+              <div key={item.id} className={`${styles.item} ${owned ? styles.itemOwned : ''}`}>
                 {item.nameArabic && (
-                  <div style={styles.itemNameArabic}>{item.nameArabic}</div>
+                  <div className={styles.itemNameArabic}>{item.nameArabic}</div>
                 )}
-                <div style={styles.itemName}>{item.name}</div>
-                <div style={styles.itemDesc}>{item.description}</div>
+                <div className={styles.itemName}>{item.name}</div>
+                <div className={styles.itemDesc}>{item.description}</div>
 
                 {!owned && (
                   <>
-                    <div style={styles.itemPrice}>{item.price} Dirhams</div>
+                    <div className={styles.itemPrice}>{item.price} Dirhams</div>
                     {locked ? (
-                      <div style={styles.lockedText}>
+                      <div className={styles.lockedText}>
                         Requires Lv.{item.unlockLevel}
                       </div>
                     ) : (
                       <button
-                        style={{ ...styles.buyBtn, ...(!canAfford ? styles.buyBtnDisabled : {}) }}
+                        className={`${styles.buyBtn} ${!canAfford ? styles.buyBtnDisabled : ''}`}
                         onClick={() => handleBuy(item)}
                         disabled={!canAfford}
                       >
@@ -316,17 +161,17 @@ function ShopOverlay() {
                 )}
 
                 {owned && !isEquipped && (item.type === 'clothing' || item.type === 'headwear') && (
-                  <button style={styles.equipBtn} onClick={() => handleEquip(item)}>
+                  <button className={styles.equipBtn} onClick={() => handleEquip(item)}>
                     Equip
                   </button>
                 )}
 
                 {owned && isEquipped && (
-                  <span style={styles.equippedBadge}>Equipped</span>
+                  <span className={styles.equippedBadge}>Equipped</span>
                 )}
 
                 {owned && item.type === 'boost' && (
-                  <span style={styles.equippedBadge}>Owned</span>
+                  <span className={styles.equippedBadge}>Owned</span>
                 )}
               </div>
             );
@@ -336,7 +181,7 @@ function ShopOverlay() {
 
       {toast && (
         <motion.div
-          style={styles.toast}
+          className={styles.toast}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
