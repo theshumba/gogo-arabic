@@ -68,11 +68,14 @@ Plans:
 5. All Redux slices use memoized selectors (createSelector) for array filtering and object transformations
 6. Overlay z-index stack remains functional after refactoring (all 9 overlays render in correct order)
 
-**Plans:** TBD (estimate 2-3 plans)
+**Plans:** 5 plans in 2 waves
 
 Plans:
-- [ ] 11-01: TBD
-- [ ] 11-02: TBD
+- [ ] 11-01-PLAN.md — ESLint 9 flat config + Prettier 3 setup with npm scripts (Wave 1)
+- [ ] 11-02-PLAN.md — GameLayout god component extraction into custom hooks (Wave 1)
+- [ ] 11-03-PLAN.md — Memoized selectors for 5 remaining Redux slices (Wave 1)
+- [ ] 11-04-PLAN.md — CSS Modules migration for 7 inline-styled components (Wave 1)
+- [ ] 11-05-PLAN.md — Human verification of overlays, EventBus, and visual styles (Wave 2)
 
 ---
 
