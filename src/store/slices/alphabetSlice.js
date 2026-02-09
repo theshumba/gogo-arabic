@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
   groups: [], // loaded from alphabet.json
@@ -51,5 +51,22 @@ export const {
   completeGroup,
   resetLesson,
 } = alphabetSlice.actions;
+
+// --- Selectors ---
+export const selectGroups = (state) => state.alphabet.groups;
+export const selectCompletedGroups = (state) => state.alphabet.completedGroups;
+export const selectCurrentLesson = (state) => state.alphabet.currentLesson;
+export const selectIsGroupCompleted = createSelector(
+  [(state) => state.alphabet.completedGroups, (_state, groupId) => groupId],
+  (completedGroups, groupId) => completedGroups.includes(groupId)
+);
+export const selectAlphabetProgress = createSelector(
+  [(state) => state.alphabet.groups, (state) => state.alphabet.completedGroups],
+  (groups, completedGroups) => ({
+    total: groups.length,
+    completed: completedGroups.length,
+    percentage: groups.length > 0 ? Math.round((completedGroups.length / groups.length) * 100) : 0,
+  })
+);
 
 export default alphabetSlice.reducer;

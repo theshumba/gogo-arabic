@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
   dialogueState: {}, // { [npcId]: { lastLine: 0, wordsTaught: [] } }
@@ -43,5 +43,13 @@ export const {
   teachWord,
   resetNpcDialogue,
 } = npcSlice.actions;
+
+// --- Selectors ---
+export const selectDialogueState = (state) => state.npc.dialogueState;
+export const selectNpcDialogue = (npcId) => (state) => state.npc.dialogueState[npcId] || null;
+export const selectTalkedToNpcIds = createSelector(
+  [(state) => state.npc.dialogueState],
+  (dialogueState) => Object.keys(dialogueState)
+);
 
 export default npcSlice.reducer;
