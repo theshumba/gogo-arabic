@@ -197,7 +197,8 @@ export function createMockScene(overrides = {}) {
       text: vi.fn((x, y, content, style) => ({
         ...mockText,
         x,
-        y
+        y,
+        destroy: vi.fn()
       })),
       rectangle: vi.fn((x, y, w, h, color, alpha) => ({
         ...mockRectangle,
@@ -234,9 +235,9 @@ export function createMockScene(overrides = {}) {
         fadeOut: vi.fn(),
         fadeIn: vi.fn(),
         once: vi.fn((event, callback) => {
-          // Auto-trigger callbacks for testing
+          // Immediately trigger callbacks for testing (synchronous)
           if (event === 'camerafadeoutcomplete' || event === 'camerafadeincomplete') {
-            setTimeout(callback, 0);
+            Promise.resolve().then(callback);
           }
         })
       }
@@ -318,11 +319,17 @@ export function createMockScene(overrides = {}) {
       exists: vi.fn(() => true)
     },
 
-    // Game reference for MapLoader
+    // Game reference for MapLoader and DOMOverlay
     game: {
       canvas: {
         width: 1024,
-        height: 768
+        height: 768,
+        parentElement: {
+          appendChild: vi.fn()
+        }
+      },
+      loop: {
+        delta: 16.67 // ~60fps
       }
     },
 
