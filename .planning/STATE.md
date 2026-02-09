@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 ## Current Position
 
 Phase: 11 of 13 (Architecture Cleanup)
-Plan: 03 of 6 complete
+Plan: 04 of 6 complete
 Status: In progress
-Last activity: 2026-02-09 — Completed 11-02-PLAN.md (GameLayout Hook Extraction)
+Last activity: 2026-02-09 — Completed 11-04-PLAN.md (CSS Module Migration - First Batch)
 
-Progress: ███░░░ 50% (Wave 1: 11-01, 11-02, 11-03 complete)
+Progress: ████░░ 67% (Wave 1: 11-01, 11-02, 11-03, 11-04 complete)
 
 ## Performance Metrics
 
@@ -58,6 +58,9 @@ All v2.0 decisions logged in PROJECT.md Key Decisions table with outcomes.
 | useKeyboardShortcuts suppresses shortcuts when overlays open | 11-02 | Prevents M/L keys from interfering with dialogue, quizzes, menus, signs | 4 Redux selectors for overlay state |
 | Use createSelector only for transformations, not simple property access | 11-03 | Avoids over-memoization while preventing re-renders from array/object recreations | 5 memoized selectors for transformations, 28 plain selectors for properties |
 | Export selectors at slice level, not in separate files | 11-03 | Co-location improves discoverability and maintainability | All 12 slices now have consistent selector exports |
+| Keep dynamic values as inline styles in CSS Module migration | 11-04 | Type colors, rarity colors, backgrounds require runtime values that cannot be statically defined | Clean separation: static styles in CSS Modules, dynamic values inline |
+| Replicate theme.js button patterns as CSS classes | 11-04 | pixelBtn/pixelBtnGold/pixelBtnDark are reusable patterns; CSS classes more maintainable than JS objects | Consistent button styling across all migrated components |
+| Use camelCase class names in CSS Modules | 11-04 | Easier JS access with dot notation (styles.iconBadge vs styles['icon-badge']) | Consistent naming across 7 migrated components |
 
 ### v3.0 Roadmap Structure
 
@@ -91,10 +94,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 11 Plan 02 complete - GameLayout hook extraction (607 → 209 lines, 66% reduction)
-Resume file: .planning/phases/11-architecture-cleanup/11-02-SUMMARY.md
-Next step: Continue with remaining Phase 11 plans (04, 05, 06)
+Stopped at: Phase 11 Plan 04 complete - CSS Module migration first batch (7 components migrated)
+Resume file: .planning/phases/11-architecture-cleanup/11-04-SUMMARY.md
+Next step: Continue with remaining Phase 11 plans (05, 06)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-09 — Phase 11 Plan 02 complete (GameLayout Hook Extraction)*
+*Last updated: 2026-02-09 — Phase 11 Plan 04 complete (CSS Module Migration - First Batch)*
