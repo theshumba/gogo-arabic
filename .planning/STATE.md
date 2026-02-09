@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-08)
 Phase: 11 of 13 (Architecture Cleanup)
 Plan: 03 of 6 complete
 Status: In progress
-Last activity: 2026-02-09 — Completed 11-03-PLAN.md (Redux Selector Standardization)
+Last activity: 2026-02-09 — Completed 11-02-PLAN.md (GameLayout Hook Extraction)
 
-Progress: ███░░░ 50% (Wave 1: 11-01, 11-03 complete)
+Progress: ███░░░ 50% (Wave 1: 11-01, 11-02, 11-03 complete)
 
 ## Performance Metrics
 
@@ -53,6 +53,9 @@ All v2.0 decisions logged in PROJECT.md Key Decisions table with outcomes.
 | Include React hooks plugin with recommended rules | 11-01 | Catch React anti-patterns (conditional hooks, missing deps) before runtime | Found 1 real issue in AlphabetModule.jsx |
 | Separate Node.js globals for server/ and scripts/ | 11-01 | Build scripts need process, server needs Node APIs, src/ needs browser globals | Zero false positive 'process is not defined' errors |
 | eslint-config-prettier as last config entry | 11-01 | Must be last to properly disable ESLint formatting rules that conflict with Prettier | Clean integration, no rule conflicts |
+| Keep ActivitiesMenu and PauseMenu inline in GameLayout | 11-02 | Small (60 and 35 lines), colocated, only used by GameLayout - extracting adds file overhead without clarity benefit | GameLayout at 209 lines, well under 300 |
+| useEventBusListeners takes navigate as third parameter | 11-02 | Hook needs navigate for 3 handlers - passing it in keeps hook decoupled from router context | Signature: (phaserRef, playSFX, navigate) |
+| useKeyboardShortcuts suppresses shortcuts when overlays open | 11-02 | Prevents M/L keys from interfering with dialogue, quizzes, menus, signs | 4 Redux selectors for overlay state |
 | Use createSelector only for transformations, not simple property access | 11-03 | Avoids over-memoization while preventing re-renders from array/object recreations | 5 memoized selectors for transformations, 28 plain selectors for properties |
 | Export selectors at slice level, not in separate files | 11-03 | Co-location improves discoverability and maintainability | All 12 slices now have consistent selector exports |
 
@@ -88,10 +91,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 11 Plan 03 complete - Redux selector standardization
-Resume file: .planning/phases/11-architecture-cleanup/11-03-SUMMARY.md
-Next step: Continue with Plan 04 (God Component Extraction) or Plan 05 (Import Cleanup)
+Stopped at: Phase 11 Plan 02 complete - GameLayout hook extraction (607 → 209 lines, 66% reduction)
+Resume file: .planning/phases/11-architecture-cleanup/11-02-SUMMARY.md
+Next step: Continue with remaining Phase 11 plans (04, 05, 06)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-09 — Phase 11 Plan 03 complete (Redux Selector Standardization)*
+*Last updated: 2026-02-09 — Phase 11 Plan 02 complete (GameLayout Hook Extraction)*
