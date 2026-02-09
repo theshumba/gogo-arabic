@@ -22,6 +22,9 @@ import {
   updateQuestProgress,
   completeQuest,
   checkPrerequisites,
+  visitNpc,
+  visitZone,
+  recordChestOpened,
 } from '../store/slices/questSlice.js';
 import { createNewCard } from '../services/fsrs.js';
 import { XP_REWARDS } from '../utils/xpCalculator.js';
@@ -35,7 +38,7 @@ import { ZONES } from '../data/zones.js';
  * useEventBusListeners
  * Sets up all EventBus listeners for Phaser <-> React communication
  */
-export function useEventBusListeners(phaserRef, playSFX) {
+export function useEventBusListeners(phaserRef, playSFX, navigate) {
   const dispatch = useDispatch();
   const fsrsCards = useSelector((state) => state.vocabulary.fsrsCards);
   const quests = useSelector((state) => state.quests.quests);
@@ -96,10 +99,69 @@ export function useEventBusListeners(phaserRef, playSFX) {
     const handleNpcInteract = ({ npcId, npcName }) => {
       playSFX('click');
       dispatch(openDialogue({ npcId, npcName }));
+
+      // Track NPC visit for exploration quests
+      dispatch(visitNpc(npcId));
+
+      // Check exploration quests
+      for (const qd of questsData) {
+        if (qd.type === 'exploration' && quests[qd.id]?.status === 'active') {
+          // Count unique NPCs visited for this quest
+          const state = store.getState();
+          const npcsVisited = state.quests.npcsVisited || [];
+
+          if (qd.requirements?.npcsVisited) {
+            // Specific NPCs required
+            const requiredNpcs = qd.requirements.npcsVisited;
+            const visitedCount = requiredNpcs.filter(npc => npcsVisited.includes(npc)).length;
+            dispatch(updateQuestProgress({ questId: qd.id, amount: 0 })); // Update progress display
+            if (quests[qd.id]) {
+              quests[qd.id].progress = visitedCount;
+            }
+            if (visitedCount >= qd.target) {
+              dispatch(completeQuest(qd.id));
+              dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
+              dispatch(checkPrerequisites(questsData));
+            }
+          } else if (qd.requirements?.zone) {
+            // NPCs in specific zone
+            const currentZone = state.player.currentZone;
+            if (currentZone === qd.requirements.zone) {
+              dispatch(updateQuestProgress({ questId: qd.id, amount: 1 }));
+              const current = (quests[qd.id]?.progress || 0) + 1;
+              if (current >= qd.target) {
+                dispatch(completeQuest(qd.id));
+                dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
+                dispatch(checkPrerequisites(questsData));
+              }
+            }
+          }
+        }
+      }
     };
 
     const handleZoneChange = ({ zone }) => {
       dispatch(setCurrentZone(zone));
+
+      // Track zone visit for exploration quests
+      dispatch(visitZone(zone));
+
+      // Check zone exploration quests
+      for (const qd of questsData) {
+        if (qd.type === 'exploration' && qd.trackEvent === 'zones_visited' && quests[qd.id]?.status === 'active') {
+          const state = store.getState();
+          const zonesVisited = state.quests.zonesVisited || [];
+          const visitedCount = zonesVisited.length;
+          if (quests[qd.id]) {
+            quests[qd.id].progress = visitedCount;
+          }
+          if (visitedCount >= qd.target) {
+            dispatch(completeQuest(qd.id));
+            dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
+            dispatch(checkPrerequisites(questsData));
+          }
+        }
+      }
     };
 
     const handleOpenQuiz = (quizConfig) => {
@@ -107,8 +169,15 @@ export function useEventBusListeners(phaserRef, playSFX) {
     };
 
     const handleOpenAlphabet = () => {
-      // Legacy: alphabet navigation now handled by React Router
-      // This handler remains as a no-op for backward compatibility with EventBus
+      navigate('/alphabet');
+    };
+
+    const handleOpenReviewSession = () => {
+      navigate('/review');
+    };
+
+    const handleOpenWorldMap = () => {
+      navigate('/game/map');
     };
 
     const handleShowSign = ({ arabic, english }) => {
@@ -155,10 +224,32 @@ export function useEventBusListeners(phaserRef, playSFX) {
       playSFX('coin');
       dispatch(markChestOpened(id));
       dispatch(addDirhams(amount));
-      dispatch(showNotification({
-        message: `Found ${amount} dirhams!`,
-        type: 'dirhams',
-      }));
+      dispatch(
+        showNotification({
+          message: `Found ${amount} dirhams!`,
+          type: 'dirhams',
+        })
+      );
+
+      // Track chest opened for treasure hunter quest
+      dispatch(recordChestOpened(id));
+
+      // Check treasure hunter quest
+      for (const qd of questsData) {
+        if (qd.trackEvent === 'chest_opened' && quests[qd.id]?.status === 'active') {
+          const state = store.getState();
+          const chestsOpened = state.quests.chestsOpened || [];
+          const chestsCount = chestsOpened.length;
+          if (quests[qd.id]) {
+            quests[qd.id].progress = chestsCount;
+          }
+          if (chestsCount >= qd.target) {
+            dispatch(completeQuest(qd.id));
+            dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
+            dispatch(checkPrerequisites(questsData));
+          }
+        }
+      }
     };
 
     const handleChestEmpty = () => {
@@ -249,6 +340,8 @@ export function useEventBusListeners(phaserRef, playSFX) {
     EventBus.on('zone-change', handleZoneChange);
     EventBus.on('open-quiz', handleOpenQuiz);
     EventBus.on('open-alphabet', handleOpenAlphabet);
+    EventBus.on('open-review-session', handleOpenReviewSession);
+    EventBus.on('open-world-map', handleOpenWorldMap);
     EventBus.on('show-sign', handleShowSign);
     EventBus.on('bookshelf-interact', handleBookshelfInteract);
     EventBus.on('chest-opened', handleChestOpened);
@@ -268,6 +361,8 @@ export function useEventBusListeners(phaserRef, playSFX) {
       EventBus.off('zone-change', handleZoneChange);
       EventBus.off('open-quiz', handleOpenQuiz);
       EventBus.off('open-alphabet', handleOpenAlphabet);
+      EventBus.off('open-review-session', handleOpenReviewSession);
+      EventBus.off('open-world-map', handleOpenWorldMap);
       EventBus.off('show-sign', handleShowSign);
       EventBus.off('bookshelf-interact', handleBookshelfInteract);
       EventBus.off('chest-opened', handleChestOpened);
@@ -282,5 +377,5 @@ export function useEventBusListeners(phaserRef, playSFX) {
       EventBus.off('sfx-quest', handleSfxQuest);
       EventBus.off('sfx-click', handleSfxClick);
     };
-  }, [dispatch, fsrsCards, quests, playSFX, phaserRef]);
+  }, [dispatch, fsrsCards, quests, playSFX, phaserRef, navigate]);
 }

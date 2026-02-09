@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
   dialogueOpen: false,
@@ -74,5 +74,19 @@ export const {
   showNotification,
   clearNotification,
 } = uiSlice.actions;
+
+// --- Selectors ---
+export const selectDialogueOpen = (state) => state.ui.dialogueOpen;
+export const selectDialogueConfig = (state) => state.ui.dialogueConfig;
+export const selectQuizOpen = (state) => state.ui.quizOpen;
+export const selectQuizConfig = (state) => state.ui.quizConfig;
+export const selectMenuOpen = (state) => state.ui.menuOpen;
+export const selectSignOpen = (state) => state.ui.signOpen;
+export const selectSignData = (state) => state.ui.signData;
+export const selectNotification = (state) => state.ui.notification;
+export const selectAnyOverlayOpen = createSelector(
+  [(state) => state.ui.dialogueOpen, (state) => state.ui.quizOpen, (state) => state.ui.menuOpen, (state) => state.ui.signOpen],
+  (dialogueOpen, quizOpen, menuOpen, signOpen) => dialogueOpen || quizOpen || menuOpen || signOpen
+);
 
 export default uiSlice.reducer;

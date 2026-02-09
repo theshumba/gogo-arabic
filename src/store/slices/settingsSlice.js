@@ -54,4 +54,14 @@ export const {
   setTextSize,
 } = settingsSlice.actions;
 
+// --- Selectors ---
+export const selectShowTransliteration = (state) => state.settings.showTransliteration;
+export const selectShowDiacritics = (state) => state.settings.showDiacritics;
+export const selectKeyboardMode = (state) => state.settings.keyboardMode;
+export const selectAmbientVolume = (state) => state.settings.ambientVolume;
+export const selectSfxVolume = (state) => state.settings.sfxVolume;
+export const selectPronunciationVolume = (state) => state.settings.pronunciationVolume;
+export const selectTextSize = (state) => state.settings.textSize;
+export const selectSettings = (state) => state.settings;
+
 export default settingsSlice.reducer;

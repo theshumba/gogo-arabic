@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 /**
  * Sync status values
@@ -141,5 +141,18 @@ export const {
   clearConflict,
   resetSync,
 } = syncSlice.actions;
+
+// --- Selectors ---
+export const selectSyncStatus = (state) => state.sync.status;
+export const selectLastSyncTime = (state) => state.sync.lastSyncTime;
+export const selectPendingChanges = (state) => state.sync.pendingChanges;
+export const selectIsOnline = (state) => state.sync.isOnline;
+export const selectSyncVersion = (state) => state.sync.syncVersion;
+export const selectSyncError = (state) => state.sync.error;
+export const selectConflictData = (state) => state.sync.conflictData;
+export const selectSyncSummary = createSelector(
+  [(state) => state.sync.status, (state) => state.sync.error, (state) => state.sync.lastSyncTime],
+  (status, error, lastSyncTime) => ({ status, error, lastSyncTime })
+);
 
 export default syncSlice.reducer;
