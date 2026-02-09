@@ -31,7 +31,9 @@ function sanitizeQuest(quest) {
  */
 export async function getQuests(req, res, next) {
   try {
-    const { page, limit } = parsePaginationQuery(req.query);
+    // Use validatedQuery if available (from validate middleware), otherwise fall back to req.query
+    const queryData = req.validatedQuery || req.query;
+    const { page, limit } = parsePaginationQuery(queryData);
     const { skip, limit: safeLimit } = paginate({ page, limit });
 
     const [quests, total] = await Promise.all([

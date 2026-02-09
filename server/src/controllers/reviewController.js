@@ -32,7 +32,9 @@ function sanitizeCard(card) {
  */
 export async function getCards(req, res, next) {
   try {
-    const { page, limit } = parsePaginationQuery(req.query);
+    // Use validatedQuery if available (from validate middleware), otherwise fall back to req.query
+    const queryData = req.validatedQuery || req.query;
+    const { page, limit } = parsePaginationQuery(queryData);
     const { skip, limit: safeLimit } = paginate({ page, limit });
 
     const [cards, total] = await Promise.all([

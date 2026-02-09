@@ -7,6 +7,11 @@ let mongoServer;
 // Set test environment variables
 process.env.JWT_SECRET = 'test-secret-key-for-testing-only-32chars!';
 process.env.NODE_ENV = 'test';
+// Disable rate limiting in tests by setting very high limits
+process.env.RATE_LIMIT_GLOBAL = '10000';
+process.env.RATE_LIMIT_AUTH = '10000';
+process.env.RATE_LIMIT_API = '10000';
+process.env.RATE_LIMIT_SHOP = '10000';
 
 beforeAll(async () => {
   // Create in-memory MongoDB instance

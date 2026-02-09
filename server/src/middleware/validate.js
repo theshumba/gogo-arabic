@@ -13,7 +13,13 @@ export function validate(schema, source = 'body') {
       const data = req[source];
       const validated = schema.parse(data);
       // Replace with validated data (strips unknown fields, applies transforms)
-      req[source] = validated;
+      // Note: In Express 5, req.query is read-only, so we can't assign to it directly
+      if (source === 'query') {
+        // Store validated query in a separate property
+        req.validatedQuery = validated;
+      } else {
+        req[source] = validated;
+      }
       next();
     } catch (err) {
       if (err instanceof z.ZodError) {
