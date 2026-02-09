@@ -37,20 +37,25 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - Progressive tashkeel fading based on FSRS mastery — v2.0
 - Wardrobe system with 12 outfits, shop, and equip — v2.0
 
+- 548-test suite (unit, component, integration, E2E) with coverage thresholds — v3.0
+- GameLayout refactored (607→209 lines) + ESLint 9 + Prettier 3 — v3.0
+- 7 components migrated to CSS Modules + 33 named Redux selectors — v3.0
+
 ### Active
 
-See `.planning/REQUIREMENTS.md` for v3.0 scope.
+See `.planning/REQUIREMENTS.md` for v4.0 scope.
 
-## Current Milestone: v3.0 Infrastructure & Polish
+## Current Milestone: v4.0 Game Soul & Polish
 
-**Goal:** Pay down technical debt with comprehensive testing (~80%+ coverage), architecture cleanup, backend hardening, performance optimization, and visual polish using existing pixel art assets.
+**Goal:** Transform GoGo Arabic from a learning app with RPG graphics into a game that feels alive — with audio, atmosphere, clear progression, interactive world, and triple-A polish.
 
 **Target features:**
-- Comprehensive test suite (unit, component, integration, E2E)
-- GameLayout refactor + CSS Modules migration + ESLint/Prettier
-- Backend hardening (DB indexes, atomic sync, auth improvements)
-- Performance tuning (memoization, chunk optimization, memoized selectors)
-- Visual polish (consistent sprites, pixel HUD icons, idle animations)
+- Audio system (background music, SFX, ambient sounds per zone)
+- Bug fixes (freezing, stuck character, overlay locks)
+- World building (enterable buildings, more interactive objects, NPC life)
+- Clear letter learning path (guided alphabet progression, not hidden)
+- Visual juice (animations, particles, screen effects, transitions)
+- Player guidance overhaul (stronger direction, clearer next steps)
 
 ### Out of Scope
 
@@ -62,16 +67,20 @@ See `.planning/REQUIREMENTS.md` for v3.0 scope.
 
 ## Context
 
-**v2.0 shipped (2026-02-08):** 9 phases, 14 plans, 253 files modified. Comprehensive UX overhaul driven by 8-agent audit findings. Major wins: quest guidance eliminated "what do I do?" problem, bundle splitting cut main chunk 91%, daily dashboard gives players a meaningful start screen.
+**v3.0 partial (2026-02-09):** Testing foundation + architecture cleanup complete. 548 tests, ESLint/Prettier, GameLayout refactored, CSS Modules migration. Backend hardening and visual polish deferred.
 
-**Codebase:** 35,391 LOC (JS/JSX/CSS frontend). React 19 + Phaser 3 + Redux Toolkit (12 slices, 2 middleware) + Express 5 + MongoDB.
+**v2.0 shipped (2026-02-08):** 9 phases, 14 plans, 253 files modified. Quest guidance, feature discoverability, daily dashboard, world map, player profile, outfits.
 
-**Known technical debt:**
-- GameLayout god component (523 lines) — needs split into sub-components
-- Mixed styling (CSS Modules + inline) in older components
-- 1.85% test coverage — needs significant investment
-- EventBus cleanup gaps in some components
-- 3 visual polish requirements deferred (VPOL-01/02/04 need pixel art assets)
+**Codebase:** 35,000+ LOC (JS/JSX/CSS frontend). React 19 + Phaser 3 + Redux Toolkit (12 slices, 2 middleware) + Express 5 + MongoDB.
+
+**User feedback (v4.0 driver):**
+- Game freezes/gets stuck (multiple types: screen freeze, character stuck, overlays locked)
+- No sense of direction — can't figure out what to do or where to go
+- Can't find letter/alphabet learning — core feature is hidden
+- World feels empty — not enough NPCs, can't enter buildings, no ambient life
+- No audio — completely silent game feels lifeless
+- Doesn't feel like a "real game" — missing polish, soul, atmosphere
+- Not enough interactive content — limited things to do in the world
 
 ## Constraints
 

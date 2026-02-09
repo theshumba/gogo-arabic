@@ -28,3 +28,27 @@
 **What's next:** v3.0 — Infrastructure hardening (testing, architecture, backend), performance optimization, and content expansion.
 
 ---
+
+## v3.0 Infrastructure & Polish (Partial: 2026-02-09)
+
+**Delivered:** Testing foundation and architecture cleanup. Backend hardening and visual polish deferred to v4.0 priorities.
+
+**Phases completed:** 10-11 of 13 (11 plans total)
+
+**Key accomplishments:**
+- Built 548-test suite across 31 files (unit, component, integration, E2E)
+- Coverage thresholds enforced (25% stmts / 70% branch / 50% funcs / 25% lines)
+- Refactored GameLayout from 607 to 209 lines via 3 custom hooks
+- Configured ESLint 9 flat config + Prettier 3 with 4 npm scripts
+- Added 33 named selectors to 5 Redux slices (createSelector for transformations)
+- Migrated 7 components from inline styles to CSS Modules
+
+**Deferred:** Phases 12 (Backend Hardening) and 13 (Visual Polish) — user pivoted to game experience overhaul
+
+**Stats:**
+- 11 plans completed across 2 phases
+- Testing + architecture infrastructure established
+
+**What's next:** v4.0 — Game Soul & Polish (fix bugs, add audio, improve world feel, letter learning discoverability)
+
+---
