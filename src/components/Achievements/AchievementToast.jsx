@@ -3,100 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { selectNewAchievements, dismissAchievementNotification } from '../../store/slices/achievementSlice.js';
 import { getAchievementById, RARITY_COLORS } from '../../data/achievements.js';
-import { COLORS, FONTS } from '../../styles/theme.js';
-
-const styles = {
-  container: {
-    position: 'fixed',
-    top: '60px', // Below HUD
-    right: '20px',
-    zIndex: 150,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-    pointerEvents: 'none',
-  },
-  toast: {
-    width: '320px',
-    background: 'rgba(43, 41, 44, 0.98)',
-    border: `4px solid ${COLORS.xpGold}`,
-    padding: '16px',
-    boxShadow: `
-      0 0 20px rgba(226, 182, 89, 0.6),
-      inset 0 0 20px rgba(226, 182, 89, 0.1)
-    `,
-    pointerEvents: 'auto',
-    cursor: 'pointer',
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: '8px',
-  },
-  title: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.xpGold,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  body: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-  },
-  icon: {
-    fontSize: '32px',
-    lineHeight: 1,
-  },
-  content: {
-    flex: 1,
-  },
-  name: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    marginBottom: '4px',
-    lineHeight: 1.3,
-  },
-  description: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.light,
-    lineHeight: 1.4,
-    marginBottom: '6px',
-  },
-  xpReward: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.xpGold,
-    fontWeight: 'bold',
-  },
-  closeBtn: {
-    position: 'absolute',
-    top: '8px',
-    right: '8px',
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.light,
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    padding: '2px 6px',
-  },
-  progressBar: {
-    width: '100%',
-    height: '4px',
-    background: COLORS.dark,
-    marginTop: '8px',
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    background: COLORS.xpGold,
-    transition: 'width 5s linear',
-  },
-};
+import styles from './AchievementToast.module.css';
 
 // Individual toast component
 function Toast({ achievementId, onDismiss }) {
@@ -123,7 +30,7 @@ function Toast({ achievementId, onDismiss }) {
 
   if (!achievement) return null;
 
-  const rarityColor = RARITY_COLORS[achievement.rarity] || COLORS.white;
+  const rarityColor = RARITY_COLORS[achievement.rarity] || '#f4fefa';
 
   const toastVariants = {
     hidden: { opacity: 0, y: -50, scale: 0.9 },
@@ -141,16 +48,19 @@ function Toast({ achievementId, onDismiss }) {
     ? { duration: 0.2 }
     : { duration: 0.35, ease: 'easeOut' };
 
+  // Dynamic inline styles for rarity-specific colors
+  const toastInlineStyle = {
+    borderColor: rarityColor,
+    boxShadow: `
+      0 0 20px ${rarityColor}80,
+      inset 0 0 20px ${rarityColor}20
+    `,
+  };
+
   return (
     <motion.div
-      style={{
-        ...styles.toast,
-        borderColor: rarityColor,
-        boxShadow: `
-          0 0 20px ${rarityColor}80,
-          inset 0 0 20px ${rarityColor}20
-        `,
-      }}
+      className={styles.toast}
+      style={toastInlineStyle}
       onClick={() => onDismiss(achievementId)}
       variants={reduceMotion ? toastVariantsReduced : toastVariants}
       initial="hidden"
@@ -158,31 +68,31 @@ function Toast({ achievementId, onDismiss }) {
       exit="exit"
       transition={transition}
     >
-      <button style={styles.closeBtn} onClick={(e) => { e.stopPropagation(); onDismiss(achievementId); }}>
+      <button className={styles.closeBtn} onClick={(e) => { e.stopPropagation(); onDismiss(achievementId); }}>
         ✕
       </button>
 
-      <div style={styles.header}>
-        <span style={styles.title}>Achievement Unlocked!</span>
+      <div className={styles.header}>
+        <span className={styles.title}>Achievement Unlocked!</span>
       </div>
 
-      <div style={styles.body}>
-        <div style={styles.icon}>{achievement.icon}</div>
-        <div style={styles.content}>
-          <div style={{ ...styles.name, color: rarityColor }}>
+      <div className={styles.body}>
+        <div className={styles.icon}>{achievement.icon}</div>
+        <div className={styles.content}>
+          <div className={styles.name} style={{ color: rarityColor }}>
             {achievement.name}
           </div>
-          <div style={styles.description}>
+          <div className={styles.description}>
             {achievement.description}
           </div>
-          <div style={styles.xpReward}>
+          <div className={styles.xpReward}>
             +{achievement.xpReward} XP
           </div>
         </div>
       </div>
 
-      <div style={styles.progressBar}>
-        <div style={{ ...styles.progressFill, width: `${progress}%` }} />
+      <div className={styles.progressBar}>
+        <div className={styles.progressFill} style={{ width: `${progress}%` }} />
       </div>
     </motion.div>
   );
@@ -203,7 +113,7 @@ export default function AchievementToast() {
   if (visibleAchievements.length === 0) return null;
 
   return (
-    <div style={styles.container}>
+    <div className={styles.container}>
       <AnimatePresence mode="sync">
         {visibleAchievements.map((achievementId) => (
           <Toast

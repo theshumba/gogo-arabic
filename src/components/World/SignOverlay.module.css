@@ -1,0 +1,68 @@
+/**
+ * SignOverlay CSS Module
+ * Modal overlay for displaying sign messages in Arabic and English
+ */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.card {
+  /* pixelPanel base styles */
+  background: #3e2a14;
+  border: 6px solid var(--color-brown);
+  padding: 32px 40px;
+  text-align: center;
+  min-width: 320px;
+  max-width: 480px;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  image-rendering: pixelated;
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0,0,0,0.2),
+    inset 4px 4px 0px 0px rgba(255,255,255,0.1),
+    8px 8px 0px 0px rgba(0,0,0,0.4);
+}
+
+.arabic {
+  font-family: var(--font-arabic);
+  font-size: 36px;
+  color: var(--color-xp-gold);
+  direction: rtl;
+  margin-bottom: 16px;
+  text-shadow: 2px 2px 0px var(--color-dark-brown);
+}
+
+.english {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--color-beige);
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+}
+
+.closeBtn {
+  /* pixelBtnGold styles */
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 12px 28px;
+  border: none;
+  cursor: pointer;
+  image-rendering: pixelated;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  background: var(--color-xp-gold);
+  color: var(--color-brown);
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0,0,0,0.2),
+    inset 4px 4px 0px 0px rgba(255,255,255,0.3),
+    0 4px 0 0 #a0842a;
+  transition: transform 0.05s;
+}
