@@ -48,12 +48,15 @@
 7. Test coverage reaches 80%+ overall with thresholds enforced in vitest.config.js
 8. EventBus listeners are cleaned up in global test teardown preventing cross-test contamination
 
-**Plans:** TBD (estimate 3-4 plans)
+**Plans:** 6 plans in 3 waves
 
 Plans:
-- [ ] 10-01: TBD
-- [ ] 10-02: TBD
-- [ ] 10-03: TBD
+- [ ] 10-01-PLAN.md — Test infrastructure (EventBus cleanup, factories, config) + 10 Redux slice unit tests (Wave 1)
+- [ ] 10-02-PLAN.md — Backend test infrastructure (supertest, mongodb-memory-server) + 6 API route tests (Wave 1)
+- [ ] 10-03-PLAN.md — Phaser scene mocks + 6 game system unit tests (Wave 1)
+- [ ] 10-04-PLAN.md — Middleware integration tests + 7 component tests (Wave 2)
+- [ ] 10-05-PLAN.md — 5 Playwright E2E critical flow tests (Wave 2)
+- [ ] 10-06-PLAN.md — Coverage threshold enforcement in vitest.config.js (Wave 3)
 
 ---
 
