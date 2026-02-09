@@ -319,4 +319,30 @@ describe('HUD Component', () => {
     fireEvent.click(statsButton);
     expect(screen.getByText('5 days')).toBeInTheDocument();
   });
+
+  it('should display daily goals completion count', () => {
+    const preloadedState = {
+      player: {
+        level: 1,
+        xp: 0,
+        xpToNextLevel: 100,
+        streak: 0,
+        dirhams: 0,
+        wordsLearned: 0,
+      },
+      dailyGoals: {
+        goals: {
+          wordsLearned: { current: 3, target: 5, xpReward: 50, label: 'Learn Words', icon: 'Aa' },
+          reviewsDone: { current: 10, target: 10, xpReward: 30, label: 'Complete Reviews', icon: '✓' },
+          quizzesPassed: { current: 0, target: 3, xpReward: 40, label: 'Pass Quizzes', icon: '?' },
+          minutesPlayed: { current: 0, target: 15, xpReward: 25, label: 'Study Time', icon: '⏱' },
+        },
+      },
+    };
+
+    renderWithProviders(<HUD onMenu={mockOnMenu} />, { preloadedState });
+
+    // Should show 1/4 goals completed (only reviewsDone is complete)
+    expect(screen.getByLabelText(/Daily goals 1\/4 completed/i)).toBeInTheDocument();
+  });
 });
