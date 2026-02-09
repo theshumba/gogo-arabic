@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-08)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v3.0 Infrastructure & Polish — Phase 10: Testing Foundation
+**Current focus:** v3.0 Infrastructure & Polish — Phase 11: Architecture Cleanup
 
 ## Current Position
 
-Phase: 10 of 13 (Testing Foundation)
-Plan: 06 of 6 complete
-Status: Phase complete (all waves finished)
-Last activity: 2026-02-09 — Completed 10-06-PLAN.md (Coverage Thresholds)
+Phase: 11 of 13 (Architecture Cleanup)
+Plan: 01 of 6 complete
+Status: In progress
+Last activity: 2026-02-09 — Completed 11-01-PLAN.md (ESLint and Prettier Configuration)
 
-Progress: ██████████ 100% (All 3 waves complete: 10-01, 10-02, 10-03, 10-04, 10-05, 10-06)
+Progress: █░░░░░ 17% (Wave 1: 11-01 complete)
 
 ## Performance Metrics
 
@@ -44,6 +44,15 @@ All v2.0 decisions logged in PROJECT.md Key Decisions table with outcomes.
 | Chromium-only Playwright project | 10-05 | Simplify CI execution; multi-browser can be added later if needed | Faster test execution |
 | Use configureStore directly for middleware tests | 10-04 | createTestStore omits middleware; need real middleware chain for integration tests | Middleware tests accurately verify side effects |
 | Use fireEvent instead of userEvent in component tests | 10-04 | userEvent.setup() causing 5-second timeouts on interactions | Tests run faster and more reliably |
+
+**v3.0 Phase 11 Decisions:**
+
+| Decision | Plan | Rationale | Outcome |
+|----------|------|-----------|---------|
+| ESLint 9 flat config with ESM export default | 11-01 | Project uses "type": "module", flat config is native ESM and future-proof | eslint.config.js with clean structure |
+| Include React hooks plugin with recommended rules | 11-01 | Catch React anti-patterns (conditional hooks, missing deps) before runtime | Found 1 real issue in AlphabetModule.jsx |
+| Separate Node.js globals for server/ and scripts/ | 11-01 | Build scripts need process, server needs Node APIs, src/ needs browser globals | Zero false positive 'process is not defined' errors |
+| eslint-config-prettier as last config entry | 11-01 | Must be last to properly disable ESLint formatting rules that conflict with Prettier | Clean integration, no rule conflicts |
 
 ### v3.0 Roadmap Structure
 
@@ -77,10 +86,10 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Phase 10 complete - all 6 plans executed, 548 tests passing
-Resume file: .planning/phases/10-testing-foundation/10-06-SUMMARY.md
-Next step: `/gsd:plan-phase 11` to begin Architecture Cleanup planning
+Stopped at: Phase 11 Plan 01 complete - ESLint 9 and Prettier 3 configured
+Resume file: .planning/phases/11-architecture-cleanup/11-01-SUMMARY.md
+Next step: Continue with 11-02 or run `npm run lint:fix` to auto-fix violations before component extraction
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-09 — Phase 10 complete (Testing Foundation)*
+*Last updated: 2026-02-09 — Phase 11 Plan 01 complete (ESLint and Prettier Configuration)*
