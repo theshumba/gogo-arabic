@@ -13,7 +13,10 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
       include: ['src/**/*.{js,jsx}'],
-      exclude: ['src/test/**', 'src/data/**', 'src/game/**'],
+      exclude: ['src/test/**', 'src/data/**'],
+      thresholds: {
+        // Placeholder for Plan 06 - will set actual values later
+      },
     },
   },
 });
