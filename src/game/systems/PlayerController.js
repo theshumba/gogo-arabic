@@ -53,6 +53,17 @@ export class PlayerController {
   }
 
   /**
+   * Set up camera follow with lerp-based smooth tracking and deadzone
+   */
+  setupCamera(mapPixelW, mapPixelH) {
+    const cam = this.scene.cameras.main;
+    cam.startFollow(this.player, true, 0.09, 0.09);
+    cam.setBounds(0, 0, mapPixelW, mapPixelH);
+    cam.setDeadzone(8, 8);
+    cam.setBackgroundColor('#1A1A2E');
+  }
+
+  /**
    * Get player reference
    */
   getPlayer() {

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   openDialogue,
@@ -31,6 +31,7 @@ import { XP_REWARDS } from '../utils/xpCalculator.js';
 import vocabulary from '../data/vocabularyAll.js';
 import questsData from '../data/quests.json';
 import { EventBus } from '../utils/eventBus.js';
+import { audioManager } from '../services/audio.js';
 import { store } from '../store/store.js';
 import { ZONES } from '../data/zones.js';
 
@@ -42,6 +43,8 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
   const dispatch = useDispatch();
   const fsrsCards = useSelector((state) => state.vocabulary.fsrsCards);
   const quests = useSelector((state) => state.quests.quests);
+  const newAchievements = useSelector((state) => state.achievements.newAchievements);
+  const prevAchievementCountRef = useRef(0);
 
   // Track word learned for quest progress
   const trackWordLearned = (category) => {
@@ -260,6 +263,14 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
       }));
     };
 
+    const handleDoorLocked = ({ message }) => {
+      playSFX('wrong');
+      dispatch(showNotification({
+        message: message || 'This door is locked.',
+        type: 'quest',
+      }));
+    };
+
     const handleCheckZoneUnlock = ({ zoneName, entryX, entryY, unlock }) => {
       // If no unlock requirement, allow transition
       if (!unlock) {
@@ -328,13 +339,24 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
       }
     };
 
-    // SFX event handlers (emitted by UI components)
-    const handleSfxCorrect = () => playSFX('correct');
+    // SFX event handlers (emitted by UI components) + VFX triggers
+    const handleSfxCorrect = () => {
+      playSFX('correct');
+      EventBus.emit('vfx-shake', { intensity: 'light' });
+    };
     const handleSfxWrong = () => playSFX('wrong');
     const handleSfxWordlearned = () => playSFX('wordlearned');
-    const handleSfxLevelup = () => playSFX('levelup');
+    const handleSfxLevelup = () => {
+      playSFX('levelup');
+      EventBus.emit('vfx-shake', { intensity: 'heavy' });
+      EventBus.emit('vfx-particles-burst', { config: { count: 30, tint: 0xe2b659 } });
+      EventBus.emit('vfx-particles-continuous', { config: { duration: 3000, tint: 0xe2b659 } });
+    };
     const handleSfxQuest = () => playSFX('quest');
     const handleSfxClick = () => playSFX('click');
+
+    // BGM resume when quiz closes
+    const handleQuizClosed = () => audioManager.resumeBGM();
 
     EventBus.on('npc-interact', handleNpcInteract);
     EventBus.on('zone-change', handleZoneChange);
@@ -346,6 +368,7 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
     EventBus.on('bookshelf-interact', handleBookshelfInteract);
     EventBus.on('chest-opened', handleChestOpened);
     EventBus.on('chest-empty', handleChestEmpty);
+    EventBus.on('door-locked', handleDoorLocked);
     EventBus.on('check-zone-unlock', handleCheckZoneUnlock);
     EventBus.on('zone-transition', handleZoneTransition);
     EventBus.on('fast-travel', handleFastTravel);
@@ -355,6 +378,7 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
     EventBus.on('sfx-levelup', handleSfxLevelup);
     EventBus.on('sfx-quest', handleSfxQuest);
     EventBus.on('sfx-click', handleSfxClick);
+    EventBus.on('quiz-closed', handleQuizClosed);
 
     return () => {
       EventBus.off('npc-interact', handleNpcInteract);
@@ -367,6 +391,7 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
       EventBus.off('bookshelf-interact', handleBookshelfInteract);
       EventBus.off('chest-opened', handleChestOpened);
       EventBus.off('chest-empty', handleChestEmpty);
+      EventBus.off('door-locked', handleDoorLocked);
       EventBus.off('check-zone-unlock', handleCheckZoneUnlock);
       EventBus.off('zone-transition', handleZoneTransition);
       EventBus.off('fast-travel', handleFastTravel);
@@ -376,6 +401,16 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
       EventBus.off('sfx-levelup', handleSfxLevelup);
       EventBus.off('sfx-quest', handleSfxQuest);
       EventBus.off('sfx-click', handleSfxClick);
+      EventBus.off('quiz-closed', handleQuizClosed);
     };
   }, [dispatch, fsrsCards, quests, playSFX, phaserRef, navigate]);
+
+  // VFX on achievement unlock -- fires when newAchievements array grows
+  useEffect(() => {
+    if (newAchievements.length > prevAchievementCountRef.current) {
+      EventBus.emit('vfx-shake', { intensity: 'medium' });
+      EventBus.emit('vfx-particles-burst', { config: { count: 25, tint: 0xffd700 } });
+    }
+    prevAchievementCountRef.current = newAchievements.length;
+  }, [newAchievements]);
 }

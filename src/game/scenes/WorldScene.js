@@ -6,6 +6,8 @@ import { PlayerController } from '../systems/PlayerController.js';
 import { NPCManager } from '../systems/NPCManager.js';
 import { InteractableManager } from '../systems/InteractableManager.js';
 import { MapLoader } from '../systems/MapLoader.js';
+import ScreenShake from '../systems/ScreenShake.js';
+import ParticleEffectManager from '../systems/ParticleEffectManager.js';
 import { ZONES, TILE } from '../../data/zones.js';
 
 // ============================================================
@@ -28,6 +30,8 @@ export class WorldScene extends Phaser.Scene {
     this.npcManager = null;
     this.interactableManager = null;
     this.mapLoader = null;
+    this.screenShake = null;
+    this.particleEffects = null;
 
     // Input
     this.interactKey = null;
@@ -42,21 +46,22 @@ export class WorldScene extends Phaser.Scene {
     this.npcManager = new NPCManager(this);
     this.interactableManager = new InteractableManager(this);
     this.mapLoader = new MapLoader(this);
+    this.screenShake = new ScreenShake(this);
+    this.particleEffects = new ParticleEffectManager(this);
 
     // Load the default zone
     const zone = ZONES.oasis_village;
     this.buildZone('oasis_village', zone.spawnPoint.x * TILE, zone.spawnPoint.y * TILE);
 
-    // Camera setup
-    const mapPixelW = this.currentMapW * TILE;
-    const mapPixelH = this.currentMapH * TILE;
-    this.cameras.main.startFollow(this.playerController.getPlayer(), true, 0.08, 0.08);
-    this.cameras.main.setBounds(0, 0, mapPixelW, mapPixelH);
-    this.cameras.main.setBackgroundColor('#1A1A2E');
+    // Camera setup (delegated to PlayerController for encapsulation)
+    this.playerController.setupCamera(this.currentMapW * TILE, this.currentMapH * TILE);
 
     // EventBus listeners
     EventBus.on('freeze-player', this.handleFreeze, this);
     EventBus.on('unfreeze-player', this.handleUnfreeze, this);
+    EventBus.on('vfx-shake', this.handleVfxShake, this);
+    EventBus.on('vfx-particles-burst', this.handleVfxBurst, this);
+    EventBus.on('vfx-particles-continuous', this.handleVfxContinuous, this);
 
     // Input: SPACE for interaction
     this.interactKey = this.input.keyboard.addKey(
@@ -75,11 +80,8 @@ export class WorldScene extends Phaser.Scene {
     this.clearZone();
     this.buildZone(zoneName, entryX, entryY);
 
-    // Update camera bounds for new zone dimensions
-    const mapPixelW = this.currentMapW * TILE;
-    const mapPixelH = this.currentMapH * TILE;
-    this.cameras.main.startFollow(this.playerController.getPlayer(), true, 0.08, 0.08);
-    this.cameras.main.setBounds(0, 0, mapPixelW, mapPixelH);
+    // Update camera for new zone dimensions
+    this.playerController.setupCamera(this.currentMapW * TILE, this.currentMapH * TILE);
   }
 
   // Tear down current zone contents
@@ -122,6 +124,28 @@ export class WorldScene extends Phaser.Scene {
 
     // Spawn interactables
     this.interactableManager.create(zone.interactables, this.mapLoader.getObjectSprites());
+  }
+
+  // ============================================================
+  // VFX HANDLERS
+  // ============================================================
+
+  handleVfxShake({ intensity }) {
+    if (this.screenShake) this.screenShake.shake(intensity);
+  }
+
+  handleVfxBurst({ x, y, config } = {}) {
+    if (!this.particleEffects) return;
+    const px = x ?? this.cameras.main.midPoint.x;
+    const py = y ?? this.cameras.main.midPoint.y;
+    this.particleEffects.burst(px, py, config || {});
+  }
+
+  handleVfxContinuous({ x, y, config } = {}) {
+    if (!this.particleEffects) return;
+    const px = x ?? this.cameras.main.midPoint.x;
+    const py = y ?? this.cameras.main.midPoint.y;
+    this.particleEffects.continuous(px, py, config || {});
   }
 
   // ============================================================
@@ -254,6 +278,14 @@ export class WorldScene extends Phaser.Scene {
   shutdown() {
     EventBus.off('freeze-player', this.handleFreeze, this);
     EventBus.off('unfreeze-player', this.handleUnfreeze, this);
+    EventBus.off('vfx-shake', this.handleVfxShake, this);
+    EventBus.off('vfx-particles-burst', this.handleVfxBurst, this);
+    EventBus.off('vfx-particles-continuous', this.handleVfxContinuous, this);
+
+    if (this.particleEffects) {
+      this.particleEffects.destroy();
+      this.particleEffects = null;
+    }
 
     if (this.domOverlay) {
       this.domOverlay.destroy();
