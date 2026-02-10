@@ -15,44 +15,44 @@
 
 ---
 
-## v4.0 Requirements
+## v4.0 Requirements (Completed)
 
-Requirements for Game Soul & Polish milestone. Each maps to roadmap phases.
+All 20 requirements satisfied. Audited 2026-02-10.
 
 ### Audio
 
-- [ ] **AUD-01**: Player hears zone-specific background music that changes when entering a new zone (8 zones + menu + quiz = 10 tracks)
-- [ ] **AUD-02**: Player hears UI sound effects for button clicks, menu open/close, and error feedback (5+ sounds)
-- [ ] **AUD-03**: Player hears quiz feedback sounds — correct answer, incorrect answer, quiz complete (5+ sounds)
-- [ ] **AUD-04**: Player hears action SFX — footsteps (3 terrain types), door interaction, chest open, NPC interact (4+ sounds)
-- [ ] **AUD-05**: Player can adjust volume via settings — master, BGM, and SFX sliders with immediate effect
+- [x] **AUD-01**: Player hears zone-specific background music that changes when entering a new zone (8 zones + menu + quiz = 10 tracks)
+- [x] **AUD-02**: Player hears UI sound effects for button clicks, menu open/close, and error feedback (5+ sounds)
+- [x] **AUD-03**: Player hears quiz feedback sounds — correct answer, incorrect answer, quiz complete (5+ sounds)
+- [x] **AUD-04**: Player hears action SFX — footsteps (3 terrain types), door interaction, chest open, NPC interact (4+ sounds)
+- [x] **AUD-05**: Player can adjust volume via settings — master, BGM, and SFX sliders with immediate effect
 
 ### Visual Juice
 
-- [ ] **VFX-01**: Player sees screen shake on quiz correct answer, level up, and achievement unlock (with reduced-motion support)
-- [ ] **VFX-02**: Player sees particle effects on achievement unlock and level up (2+ effect types)
-- [ ] **VFX-03**: Player sees smooth fade transitions when overlays open/close and when changing zones
-- [ ] **VFX-04**: Player sees a full-screen level-up celebration overlay with animation and sound
-- [ ] **VFX-05**: Player sees enhanced achievement toast with celebration animation
+- [x] **VFX-01**: Player sees screen shake on quiz correct answer, level up, and achievement unlock (with reduced-motion support)
+- [x] **VFX-02**: Player sees particle effects on achievement unlock and level up (2+ effect types)
+- [x] **VFX-03**: Player sees smooth fade transitions when overlays open/close and when changing zones
+- [x] **VFX-04**: Player sees a full-screen level-up celebration overlay with animation and sound
+- [x] **VFX-05**: Player sees enhanced achievement toast with celebration animation
 
 ### Progression Clarity
 
-- [ ] **PROG-01**: Player can access a Learning Path menu showing alphabet → vocabulary → grammar progression with clear "Start Here" for new players
-- [ ] **PROG-02**: Player sees a Learning Dashboard with review queue, available lessons, and next-step indicators
-- [ ] **PROG-03**: Player sees progress metrics — letters mastered (X/28), words learned (X/1220), quests done (X/52) — visible from HUD or dashboard
-- [ ] **PROG-04**: New player is guided to letter learning within first 3 onboarding steps
+- [x] **PROG-01**: Player can access a Learning Path menu showing alphabet → vocabulary → grammar progression with clear "Start Here" for new players
+- [x] **PROG-02**: Player sees a Learning Dashboard with review queue, available lessons, and next-step indicators
+- [x] **PROG-03**: Player sees progress metrics — letters mastered (X/28), words learned (X/1220), quests done (X/52) — visible from HUD or dashboard
+- [x] **PROG-04**: New player is guided to letter learning within first 3 onboarding steps
 
 ### World Life
 
-- [ ] **LIFE-01**: Player sees NPC idle animations — all 140 NPCs have 2-frame idle (blink/shift weight) running continuously
-- [ ] **LIFE-02**: Player gets feedback when interacting with locked doors — "This door is locked" message instead of silent collision
-- [ ] **LIFE-03**: Player sees smooth camera follow (lerp-based) instead of snapping camera
+- [x] **LIFE-01**: Player sees NPC idle animations — all 140 NPCs have 2-frame idle (blink/shift weight) running continuously
+- [x] **LIFE-02**: Player gets feedback when interacting with locked doors — "This door is locked" message instead of silent collision
+- [x] **LIFE-03**: Player sees smooth camera follow (lerp-based) instead of snapping camera
 
 ### Bug Fixes & Polish
 
-- [ ] **FIX-01**: Player does not experience game freezes — overlay stuck states, character movement locks, and screen freezes are fixed
-- [ ] **FIX-02**: Player sees proper error states — "No words to review yet" instead of blank screens, empty state messages throughout
-- [ ] **FIX-03**: Player sees properly formatted text — dialogue wraps correctly, no overflow or cutoff in any overlay
+- [x] **FIX-01**: Player does not experience game freezes — overlay stuck states, character movement locks, and screen freezes are fixed
+- [x] **FIX-02**: Player sees proper error states — "No words to review yet" instead of blank screens, empty state messages throughout
+- [x] **FIX-03**: Player sees properly formatted text — dialogue wraps correctly, no overflow or cutoff in any overlay
 
 ## v4.x Requirements (Post-Launch)
 
@@ -87,32 +87,32 @@ Deferred enhancements after core soul is established.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FIX-01 | Phase 14 | Pending |
-| FIX-02 | Phase 14 | Pending |
-| FIX-03 | Phase 14 | Pending |
-| AUD-01 | Phase 15 | Pending |
-| AUD-02 | Phase 15 | Pending |
-| AUD-03 | Phase 15 | Pending |
-| AUD-04 | Phase 15 | Pending |
-| AUD-05 | Phase 15 | Pending |
-| VFX-01 | Phase 16 | Pending |
-| VFX-02 | Phase 16 | Pending |
-| VFX-03 | Phase 16 | Pending |
-| VFX-04 | Phase 16 | Pending |
-| VFX-05 | Phase 16 | Pending |
-| PROG-01 | Phase 17 | Pending |
-| PROG-02 | Phase 17 | Pending |
-| PROG-03 | Phase 17 | Pending |
-| PROG-04 | Phase 17 | Pending |
-| LIFE-01 | Phase 18 | Pending |
-| LIFE-02 | Phase 18 | Pending |
-| LIFE-03 | Phase 18 | Pending |
+| FIX-01 | Phase 14 | Satisfied |
+| FIX-02 | Phase 14 | Satisfied |
+| FIX-03 | Phase 14 | Satisfied |
+| AUD-01 | Phase 15 | Satisfied |
+| AUD-02 | Phase 15 | Satisfied |
+| AUD-03 | Phase 15 | Satisfied |
+| AUD-04 | Phase 15 | Satisfied |
+| AUD-05 | Phase 15 | Satisfied |
+| VFX-01 | Phase 16 | Satisfied |
+| VFX-02 | Phase 16 | Satisfied |
+| VFX-03 | Phase 16 | Satisfied |
+| VFX-04 | Phase 16 | Satisfied |
+| VFX-05 | Phase 16 | Satisfied |
+| PROG-01 | Phase 17 | Satisfied |
+| PROG-02 | Phase 17 | Satisfied |
+| PROG-03 | Phase 17 | Satisfied |
+| PROG-04 | Phase 17 | Satisfied |
+| LIFE-01 | Phase 18 | Satisfied |
+| LIFE-02 | Phase 18 | Satisfied |
+| LIFE-03 | Phase 18 | Satisfied |
 
 **Coverage:**
 - v4.0 requirements: 20 total
-- Mapped to phases: 20/20 (100%)
-- Unmapped: 0
+- Satisfied: 20/20 (100%)
+- Gaps: 0
 
 ---
 *Requirements defined: 2026-02-09*
-*Last updated: 2026-02-10 — v4.0 roadmap created, 100% coverage validated*
+*Last updated: 2026-02-10 — v4.0 milestone audit passed, all 20 requirements satisfied*
