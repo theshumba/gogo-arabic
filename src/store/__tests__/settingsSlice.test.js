@@ -3,9 +3,12 @@ import settingsReducer, {
   toggleTransliteration,
   toggleDiacritics,
   setKeyboardMode,
+  setMasterVolume,
   setAmbientVolume,
+  setBgmVolume,
   setSfxVolume,
   setPronunciationVolume,
+  toggleMute,
   setTextSize,
 } from '../slices/settingsSlice.js';
 
@@ -22,9 +25,12 @@ describe('settingsSlice', () => {
         showTransliteration: true,
         showDiacritics: true,
         keyboardMode: 'onscreen',
+        masterVolume: 70,
         ambientVolume: 70,
+        bgmVolume: 70,
         sfxVolume: 80,
         pronunciationVolume: 100,
+        isMuted: false,
         textSize: 'medium',
       });
     });
@@ -151,6 +157,61 @@ describe('settingsSlice', () => {
       const state = settingsReducer(initialState, setPronunciationVolume(120));
 
       expect(state.pronunciationVolume).toBe(100);
+    });
+  });
+
+  describe('setMasterVolume', () => {
+    it('should set master volume to valid value', () => {
+      const state = settingsReducer(initialState, setMasterVolume(50));
+
+      expect(state.masterVolume).toBe(50);
+    });
+
+    it('should clamp volume below 0 to 0', () => {
+      const state = settingsReducer(initialState, setMasterVolume(-10));
+
+      expect(state.masterVolume).toBe(0);
+    });
+
+    it('should clamp volume above 100 to 100', () => {
+      const state = settingsReducer(initialState, setMasterVolume(150));
+
+      expect(state.masterVolume).toBe(100);
+    });
+  });
+
+  describe('setBgmVolume', () => {
+    it('should set bgm volume to valid value', () => {
+      const state = settingsReducer(initialState, setBgmVolume(40));
+
+      expect(state.bgmVolume).toBe(40);
+    });
+
+    it('should clamp volume below 0 to 0', () => {
+      const state = settingsReducer(initialState, setBgmVolume(-5));
+
+      expect(state.bgmVolume).toBe(0);
+    });
+
+    it('should clamp volume above 100 to 100', () => {
+      const state = settingsReducer(initialState, setBgmVolume(200));
+
+      expect(state.bgmVolume).toBe(100);
+    });
+  });
+
+  describe('toggleMute', () => {
+    it('should toggle mute from false to true', () => {
+      const state = settingsReducer(initialState, toggleMute());
+
+      expect(state.isMuted).toBe(true);
+    });
+
+    it('should toggle mute from true to false', () => {
+      const startState = { ...initialState, isMuted: true };
+      const state = settingsReducer(startState, toggleMute());
+
+      expect(state.isMuted).toBe(false);
     });
   });
 

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getDueCards } from '../../services/fsrs.js';
 import { audioManager } from '../../services/audio.js';
@@ -6,6 +7,12 @@ import styles from './MainMenu.module.css';
 export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings, onCharacterCreation, onGrammar }) {
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
   const player = useSelector((s) => s.player);
+
+  // Start menu BGM when component mounts
+  useEffect(() => {
+    audioManager.playBGM('menu');
+    // Don't stop BGM on unmount -- let the next screen's BGM crossfade naturally
+  }, []);
 
   let dueCount = 0;
   try {

@@ -1,4 +1,4 @@
-import { Howl } from 'howler';
+import { Howl, Howler } from 'howler';
 
 /**
  * Simple LRU cache implementation for managing Howl instances.
@@ -52,8 +52,9 @@ class LRUCache {
 
 /**
  * AudioManager singleton
- * Three independent volume channels: ambient, sfx, pronunciation
- * Each channel has its own volume control (0-1 internally)
+ * Five independent volume channels: master, ambient, bgm, sfx, pronunciation
+ * Master volume scales all other channels.
+ * Effective volume = channelVolume * masterVolume
  */
 class AudioManager {
   constructor() {
@@ -62,10 +63,24 @@ class AudioManager {
     /** @type {string|null} Current ambient zone name for dedup */
     this.ambientZone = null;
 
+    /** @type {Howl|null} Currently playing BGM Howl */
+    this.bgm = null;
+    /** @type {string|null} Current BGM track name for dedup */
+    this.bgmTrack = null;
+    /** @type {boolean} Whether BGM was paused (for resume) */
+    this.bgmWasPaused = false;
+
+    // Master volume (0-1 internal range) — scales all channels
+    this.masterVolume = 0.7;
+
     // Channel volumes (0-1 internal range)
     this.ambientVolume = 0.7;
+    this.bgmVolume = 0.7;
     this.sfxVolume = 0.8;
     this.pronunciationVolume = 1.0;
+
+    // Mute state
+    this.isMuted = false;
 
     /** @type {Object<string, Howl>} Cached SFX Howl objects keyed by name */
     this.sfxCache = {};
@@ -75,6 +90,52 @@ class AudioManager {
 
     /** @type {LRUCache} LRU cache for letter pronunciations */
     this.letterCache = new LRUCache(28);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Master Volume & Mute
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Set master volume. Scales all channel outputs.
+   * @param {number} vol - Volume from 0 to 100
+   */
+  setMasterVolume(vol) {
+    this.masterVolume = Math.max(0, Math.min(1, vol / 100));
+    // Update all currently playing Howl volumes
+    if (this.ambient) {
+      this.ambient.volume(this.ambientVolume * this.masterVolume);
+    }
+    if (this.bgm) {
+      this.bgm.volume(this.bgmVolume * this.masterVolume);
+    }
+  }
+
+  /**
+   * Mute all audio globally via Howler.
+   */
+  mute() {
+    this.isMuted = true;
+    Howler.mute(true);
+  }
+
+  /**
+   * Unmute all audio globally via Howler.
+   */
+  unmute() {
+    this.isMuted = false;
+    Howler.mute(false);
+  }
+
+  /**
+   * Toggle mute state.
+   */
+  toggleMute() {
+    if (this.isMuted) {
+      this.unmute();
+    } else {
+      this.mute();
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -88,7 +149,18 @@ class AudioManager {
   setAmbientVolume(vol) {
     this.ambientVolume = Math.max(0, Math.min(1, vol / 100));
     if (this.ambient) {
-      this.ambient.volume(this.ambientVolume);
+      this.ambient.volume(this.ambientVolume * this.masterVolume);
+    }
+  }
+
+  /**
+   * Set BGM channel volume.
+   * @param {number} vol - Volume from 0 to 100
+   */
+  setBgmVolume(vol) {
+    this.bgmVolume = Math.max(0, Math.min(1, vol / 100));
+    if (this.bgm) {
+      this.bgm.volume(this.bgmVolume * this.masterVolume);
     }
   }
 
@@ -106,6 +178,104 @@ class AudioManager {
    */
   setPronunciationVolume(vol) {
     this.pronunciationVolume = Math.max(0, Math.min(1, vol / 100));
+  }
+
+  // ---------------------------------------------------------------------------
+  // BGM (Background Music)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Play background music with crossfade.
+   * Current BGM fades out over 800ms, new one fades in over 800ms.
+   * Maps track name to: /assets/audio/bgm/bgm-{trackName}.mp3
+   * If already playing the same track, does nothing.
+   * @param {string} trackName - e.g. "oasis", "library", "menu"
+   */
+  playBGM(trackName) {
+    if (!trackName) return;
+
+    // Already playing this track -- skip
+    if (this.bgmTrack === trackName && this.bgm && this.bgm.playing()) {
+      return;
+    }
+
+    this.bgmWasPaused = false;
+    const src = `/assets/audio/bgm/bgm-${trackName}.mp3`;
+
+    // Fade out current BGM if one is playing
+    if (this.bgm) {
+      const old = this.bgm;
+      old.fade(old.volume(), 0, 800);
+      old.once('fade', () => {
+        old.stop();
+        old.unload();
+      });
+    }
+
+    const targetVolume = this.bgmVolume * this.masterVolume;
+
+    // Create and fade in new BGM
+    const newBgm = new Howl({
+      src: [src],
+      loop: true,
+      volume: 0,
+      onloaderror: () => {
+        // File doesn't exist for this track -- silently skip
+        this.bgm = null;
+        this.bgmTrack = null;
+      },
+    });
+
+    this.bgm = newBgm;
+    this.bgmTrack = trackName;
+
+    newBgm.once('load', () => {
+      newBgm.play();
+      newBgm.fade(0, targetVolume, 800);
+    });
+  }
+
+  /**
+   * Stop the currently playing BGM with fadeout.
+   */
+  stopBGM() {
+    if (this.bgm) {
+      const old = this.bgm;
+      old.fade(old.volume(), 0, 800);
+      old.once('fade', () => {
+        old.stop();
+        old.unload();
+      });
+      this.bgm = null;
+      this.bgmTrack = null;
+      this.bgmWasPaused = false;
+    }
+  }
+
+  /**
+   * Pause BGM with a short fadeout (for quiz overlay, etc.).
+   */
+  pauseBGM() {
+    if (this.bgm && this.bgm.playing()) {
+      const bgmRef = this.bgm;
+      bgmRef.fade(bgmRef.volume(), 0, 300);
+      bgmRef.once('fade', () => {
+        bgmRef.pause();
+      });
+      this.bgmWasPaused = true;
+    }
+  }
+
+  /**
+   * Resume BGM after pause with a short fadein.
+   */
+  resumeBGM() {
+    if (this.bgmWasPaused && this.bgm) {
+      const targetVolume = this.bgmVolume * this.masterVolume;
+      this.bgm.play();
+      this.bgm.fade(0, targetVolume, 300);
+      this.bgmWasPaused = false;
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -139,6 +309,8 @@ class AudioManager {
       });
     }
 
+    const targetVolume = this.ambientVolume * this.masterVolume;
+
     // Create and fade in new ambient
     const newAmbient = new Howl({
       src: [src],
@@ -156,7 +328,7 @@ class AudioManager {
 
     newAmbient.once('load', () => {
       newAmbient.play();
-      newAmbient.fade(0, this.ambientVolume, 500);
+      newAmbient.fade(0, targetVolume, 500);
     });
   }
 
@@ -195,10 +367,12 @@ class AudioManager {
   playSFX(name) {
     if (!name) return;
 
+    const effectiveVolume = this.sfxVolume * this.masterVolume;
+
     if (!this.sfxCache[name]) {
       this.sfxCache[name] = new Howl({
         src: [`/assets/audio/sfx/sfx-${name}.ogg`],
-        volume: this.sfxVolume,
+        volume: effectiveVolume,
         onloaderror: () => {
           // Missing SFX file -- remove from cache so it can retry later
           delete this.sfxCache[name];
@@ -207,7 +381,7 @@ class AudioManager {
     }
 
     const howl = this.sfxCache[name];
-    howl.volume(this.sfxVolume);
+    howl.volume(effectiveVolume);
     howl.play();
   }
 
@@ -224,6 +398,8 @@ class AudioManager {
   playWord(wordId) {
     if (!wordId) return;
 
+    const effectiveVolume = this.pronunciationVolume * this.masterVolume;
+
     // Check cache first
     let howl = this.wordCache.get(wordId);
 
@@ -231,7 +407,7 @@ class AudioManager {
       // Create new Howl and add to cache
       howl = new Howl({
         src: [`/assets/audio/words/${wordId}.mp3`],
-        volume: this.pronunciationVolume,
+        volume: effectiveVolume,
         onloaderror: () => {
           console.warn(`[AudioManager] Missing word audio: ${wordId}`);
         },
@@ -239,7 +415,7 @@ class AudioManager {
       this.wordCache.set(wordId, howl);
     } else {
       // Update volume in case it changed
-      howl.volume(this.pronunciationVolume);
+      howl.volume(effectiveVolume);
     }
 
     howl.play();
@@ -254,6 +430,8 @@ class AudioManager {
   playLetter(letter) {
     if (!letter) return;
 
+    const effectiveVolume = this.pronunciationVolume * this.masterVolume;
+
     // Check cache first
     let howl = this.letterCache.get(letter);
 
@@ -261,7 +439,7 @@ class AudioManager {
       // Create new Howl and add to cache
       howl = new Howl({
         src: [`/assets/audio/letters/${letter}.mp3`],
-        volume: this.pronunciationVolume,
+        volume: effectiveVolume,
         onloaderror: () => {
           console.warn(`[AudioManager] Missing letter audio: ${letter}`);
         },
@@ -269,7 +447,7 @@ class AudioManager {
       this.letterCache.set(letter, howl);
     } else {
       // Update volume in case it changed
-      howl.volume(this.pronunciationVolume);
+      howl.volume(effectiveVolume);
     }
 
     howl.play();
@@ -285,6 +463,14 @@ class AudioManager {
       this.ambient.unload();
       this.ambient = null;
       this.ambientZone = null;
+    }
+
+    // Clean up BGM
+    if (this.bgm) {
+      this.bgm.unload();
+      this.bgm = null;
+      this.bgmTrack = null;
+      this.bgmWasPaused = false;
     }
 
     // Clean up SFX cache

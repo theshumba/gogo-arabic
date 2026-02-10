@@ -1,8 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  setAmbientVolume,
+  setMasterVolume,
+  setBgmVolume,
   setSfxVolume,
   setPronunciationVolume,
+  toggleMute,
   toggleTransliteration,
   toggleDiacritics,
   setKeyboardMode,
@@ -23,52 +25,92 @@ export default function SettingsMenu({ onBack }) {
       <div className={styles.panel}>
         <div className={styles.title}>Settings</div>
 
-        <div className={styles.settingRow}>
-          <span className={styles.label}>Ambience Volume</span>
-          <input type="range" min="0" max="100" step="10" value={settings.ambientVolume}
-            onChange={(e) => dispatch(setAmbientVolume(+e.target.value))} className={styles.slider} />
+        {/* Audio Section */}
+        <div className={styles.volumeSection}>
+          <div className={styles.sectionHeading}>Audio</div>
+
+          <div className={styles.settingRow}>
+            <span className={styles.label}>Master Volume</span>
+            <div className={styles.sliderGroup}>
+              <input type="range" min="0" max="100" step="5" value={settings.masterVolume}
+                onChange={(e) => dispatch(setMasterVolume(+e.target.value))} className={styles.slider} />
+              <span className={styles.volumeValue}>{settings.masterVolume}%</span>
+            </div>
+          </div>
+
+          <div className={styles.settingRow}>
+            <span className={styles.label}>
+              {settings.isMuted ? 'Muted' : 'Mute'}
+            </span>
+            <button
+              className={settings.isMuted ? styles.muteBtn + ' ' + styles.muteBtnActive : styles.muteBtn}
+              onClick={() => dispatch(toggleMute())}
+            >
+              {settings.isMuted ? 'UNMUTE' : 'MUTE'}
+            </button>
+          </div>
+
+          <div className={styles.settingRow}>
+            <span className={styles.label}>Music Volume</span>
+            <div className={styles.sliderGroup}>
+              <input type="range" min="0" max="100" step="5" value={settings.bgmVolume}
+                onChange={(e) => dispatch(setBgmVolume(+e.target.value))} className={styles.slider} />
+              <span className={styles.volumeValue}>{settings.bgmVolume}%</span>
+            </div>
+          </div>
+
+          <div className={styles.settingRow}>
+            <span className={styles.label}>SFX Volume</span>
+            <div className={styles.sliderGroup}>
+              <input type="range" min="0" max="100" step="5" value={settings.sfxVolume}
+                onChange={(e) => dispatch(setSfxVolume(+e.target.value))} className={styles.slider} />
+              <span className={styles.volumeValue}>{settings.sfxVolume}%</span>
+            </div>
+          </div>
+
+          <div className={styles.settingRow}>
+            <span className={styles.label}>Word Audio Volume</span>
+            <div className={styles.sliderGroup}>
+              <input type="range" min="0" max="100" step="5" value={settings.pronunciationVolume}
+                onChange={(e) => dispatch(setPronunciationVolume(+e.target.value))} className={styles.slider} />
+              <span className={styles.volumeValue}>{settings.pronunciationVolume}%</span>
+            </div>
+          </div>
         </div>
 
-        <div className={styles.settingRow}>
-          <span className={styles.label}>SFX Volume</span>
-          <input type="range" min="0" max="100" step="10" value={settings.sfxVolume}
-            onChange={(e) => dispatch(setSfxVolume(+e.target.value))} className={styles.slider} />
-        </div>
+        {/* Display Section */}
+        <div className={styles.settingsSection}>
+          <div className={styles.sectionHeading}>Display</div>
 
-        <div className={styles.settingRow}>
-          <span className={styles.label}>Word Audio Volume</span>
-          <input type="range" min="0" max="100" step="10" value={settings.pronunciationVolume}
-            onChange={(e) => dispatch(setPronunciationVolume(+e.target.value))} className={styles.slider} />
-        </div>
+          <div className={styles.settingRow}>
+            <span className={styles.label}>Show Transliteration</span>
+            <button
+              className={settings.showTransliteration ? styles.toggleOn : styles.toggleOff}
+              onClick={() => dispatch(toggleTransliteration())}
+            >
+              {settings.showTransliteration ? 'ON' : 'OFF'}
+            </button>
+          </div>
 
-        <div className={styles.settingRow}>
-          <span className={styles.label}>Show Transliteration</span>
-          <button
-            className={settings.showTransliteration ? styles.toggleOn : styles.toggleOff}
-            onClick={() => dispatch(toggleTransliteration())}
-          >
-            {settings.showTransliteration ? 'ON' : 'OFF'}
-          </button>
-        </div>
+          <div className={styles.settingRow}>
+            <span className={styles.label}>Show Harakat</span>
+            <button
+              className={settings.showDiacritics ? styles.toggleOn : styles.toggleOff}
+              onClick={() => dispatch(toggleDiacritics())}
+            >
+              {settings.showDiacritics ? 'ON' : 'OFF'}
+            </button>
+          </div>
 
-        <div className={styles.settingRow}>
-          <span className={styles.label}>Show Harakat</span>
-          <button
-            className={settings.showDiacritics ? styles.toggleOn : styles.toggleOff}
-            onClick={() => dispatch(toggleDiacritics())}
-          >
-            {settings.showDiacritics ? 'ON' : 'OFF'}
-          </button>
-        </div>
-
-        <div className={styles.settingRow}>
-          <span className={styles.label}>Keyboard Mode</span>
-          <button
-            className={settings.keyboardMode === 'physical' ? styles.toggleOn : styles.toggleOff}
-            onClick={() => dispatch(setKeyboardMode(settings.keyboardMode === 'onscreen' ? 'physical' : 'onscreen'))}
-          >
-            {settings.keyboardMode === 'onscreen' ? 'On-Screen' : 'Physical'}
-          </button>
+          <div className={styles.settingRow}>
+            <span className={styles.label}>Keyboard Mode</span>
+            <button
+              className={settings.keyboardMode === 'physical' ? styles.toggleOn : styles.toggleOff}
+              onClick={() => dispatch(setKeyboardMode(settings.keyboardMode === 'onscreen' ? 'physical' : 'onscreen'))}
+            >
+              {settings.keyboardMode === 'onscreen' ? 'On-Screen' : 'Physical'}
+            </button>
+          </div>
         </div>
 
         <button className={styles.backBtn} onClick={onBack}>Back to Menu</button>

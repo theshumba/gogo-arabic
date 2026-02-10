@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { store } from '../../store/store.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { audioManager } from '../../services/audio.js';
 
 /**
  * Player sprite with 2-layer compositing (body + head covering).
@@ -100,6 +101,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.speedBoostActive = false;
     this.speedBoostEndTime = 0;
     this.speedBoostMultiplier = 1.5;
+
+    // Footstep SFX timing
+    this.footstepTimer = 0;
+    this.footstepInterval = 320; // ms between footstep sounds at normal speed
 
     // Apply skin tone tint to body
     this.setTint(skinTint);
@@ -353,6 +358,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     // Normalize diagonal movement
     if ((left || right) && (up || down)) {
       this.body.velocity.normalize().scale(effectiveSpeed);
+    }
+
+    // Footstep SFX
+    const moving = left || right || up || down;
+    if (moving) {
+      this.footstepTimer += this.scene.game.loop.delta;
+      // Faster footsteps when sprinting
+      const interval = this.isSprinting ? this.footstepInterval * 0.6 : this.footstepInterval;
+      if (this.footstepTimer >= interval) {
+        this.footstepTimer = 0;
+        audioManager.playSFX('footstep');
+      }
+    } else {
+      this.footstepTimer = 0;
     }
 
     // Update dust particles

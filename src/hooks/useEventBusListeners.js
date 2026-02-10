@@ -34,6 +34,7 @@ import { EventBus } from '../utils/eventBus.js';
 import { audioManager } from '../services/audio.js';
 import { store } from '../store/store.js';
 import { ZONES } from '../data/zones.js';
+import { ZONE_BGM_MAP } from '../data/audioConfig.js';
 
 /**
  * useEventBusListeners
@@ -146,6 +147,12 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
     const handleZoneChange = ({ zone }) => {
       dispatch(setCurrentZone(zone));
 
+      // Play zone-specific BGM
+      const bgmTrack = ZONE_BGM_MAP[zone];
+      if (bgmTrack) {
+        audioManager.playBGM(bgmTrack);
+      }
+
       // Track zone visit for exploration quests
       dispatch(visitZone(zone));
 
@@ -168,6 +175,7 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
     };
 
     const handleOpenQuiz = (quizConfig) => {
+      audioManager.pauseBGM();
       dispatch(openQuiz(quizConfig));
     };
 

@@ -10,6 +10,7 @@ import { checkDailyReset } from './store/slices/dailyGoalsSlice.js';
 import questsData from './data/quests.json';
 import ErrorBoundaryClass from './components/ErrorBoundary/RouteErrorBoundary.jsx';
 import LoadingScreen from './components/UI/LoadingScreen.jsx';
+import AudioUnlockOverlay from './components/UI/AudioUnlockOverlay.jsx';
 
 // Initialize app state on boot
 store.dispatch(initializeQuests(questsData));
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <PersistGate loading={<LoadingScreen />} persistor={persistor}>
       <ErrorBoundaryClass>
+        <AudioUnlockOverlay />
         <RouterProvider router={router} />
       </ErrorBoundaryClass>
     </PersistGate>
