@@ -1,233 +1,238 @@
 # Project Research Summary
 
-**Project:** GoGo Arabic v3.0 Infrastructure & Polish
-**Domain:** Educational game infrastructure hardening
-**Researched:** 2026-02-08
-**Confidence:** MEDIUM
+**Project:** GoGo Arabic v4.0 — Game Soul & Polish
+**Domain:** Pixel-Art Educational RPG (Phaser 3 + React 19)
+**Researched:** 2026-02-09
+**Confidence:** HIGH
 
 ## Executive Summary
 
-GoGo Arabic v3.0 focuses on infrastructure maturity after completing 9 phases of v2.0. The codebase has critical gaps: 13.12% test coverage, 607-line god component (GameLayout), no linting/formatting, EventBus singleton causing memory leaks, and backend connection pooling issues. Research reveals this is a testing-first milestone requiring systematic hardening across four areas: comprehensive testing (unit/integration/E2E), architecture cleanup (god component refactor, hook extraction), backend hardening (connection pooling, atomic sync, rate limiting), and visual polish (pixel art icon system, sprite consistency).
+GoGo Arabic v4.0 aims to close the "polish gap" identified in user feedback: "feels empty," "no soul," "no direction," "can't find letter learning." Research into polished pixel-art RPGs (Stardew Valley, Pokemon, CrossCode) reveals that game feel emerges from layered sensory systems, not individual features. The gap between prototype and polished game is defined by five table-stakes categories: audio (BGM + SFX + ambient), visual juice (particles + screen shake + transitions), world life (NPC behaviors + environmental interactivity), progression clarity (learning path UI + next-step indicators), and polish details (footsteps, smooth camera, error states).
 
-The recommended approach is bottom-up: establish testing foundation first (60-70% coverage target), then refactor architecture with test safety net in place, followed by backend hardening and visual polish. Key risk is EventBus memory leaks during test teardown and god component refactoring breaking z-index overlay stack. Mitigation requires careful test setup (clear EventBus listeners in afterEach), keeping all overlays in single component tree, and comprehensive E2E coverage before refactoring.
+**Recommended approach:** Build in dependency order: audio first (no dependencies, highest impact), then visual juice (particles + tweens), then world life (NPC idle animations), then progression clarity (learning dashboard). Use existing architecture (audioManager singleton already integrated, Phaser 3 built-in particles/tweens, EventBus for Phaser-React communication) and zero new dependencies — Howler.js already installed, Phaser 3.90.0 has everything needed. Total implementation: ~1,360 LOC across 4 new files and 6 modified systems.
 
-The research reveals a mature codebase with clear patterns (Redux Toolkit, CSS modules, EventBus architecture) that needs hardening, not rebuilding. Existing test patterns (vocabularySlice.test.js, HUD.test.jsx) provide blueprints. The 4-phase structure (Testing → Architecture → Backend → Visual) minimizes risk by establishing safety nets before architectural changes.
+**Key risks:** Audio autoplay policy violations on mobile (mitigate with "Tap to Play" screen), particle performance collapse (budget 200 particles max on mobile), EventBus memory leaks from stale listeners (cleanup in useEffect returns), and scene transition state loss (use scene.launch not scene.start). All risks have documented prevention patterns from Phaser 3 community and existing codebase examples.
 
 ## Key Findings
 
 ### Recommended Stack
 
-Research validates existing stack (React 19, Phaser 3, Redux Toolkit, Vitest, Playwright) and identifies targeted additions for v3.0. No framework changes required.
+**Zero new dependencies required.** All v4.0 features use existing libraries (Howler.js 2.2.4 already installed) or Phaser 3.90.0 built-ins (particles, tweens, camera effects, scene system). Optional: easystarjs 0.4.4 for NPC pathfinding if wandering NPCs are added (defer to v4.x).
 
 **Core technologies:**
-- **supertest** ^7.0.0: HTTP assertions for Express API testing — industry standard, integrates with existing Vitest setup
-- **mongodb-memory-server** ^10.1.1: In-memory DB for backend tests — isolates tests, no cleanup needed
-- **@vitest/web-worker** ^3.0.0: Mock web workers for Phaser testing — prevent "window is not defined" errors
-- **eslint** ^9.18.0 + plugins: Flat config ESM-compatible, React 19 support — currently no linting exists
-- **prettier** ^3.4.2: Auto-formatting — 25+ CSS modules need consistency
-- **express-mongo-sanitize** ^2.2.0: Prevent NoSQL injection — strips $ and . from user input
-- **vite-imagetools** ^7.0.4: Image optimization with pixel art mode (nearest-neighbor scaling)
+- **Howler.js 2.2.4** (already installed): Audio system — More reliable than Phaser audio, handles mobile autoplay policies automatically, no memory leaks (Phaser audio has known GitHub issue #5224)
+- **Phaser 3 particles** (built-in): Visual effects — GPU-accelerated, object pooling, redesigned API in v3.60+, supports bursts and continuous emitters
+- **Phaser 3 tweens** (built-in): Game feel — Screen shake, camera zoom, sprite bounce, smooth animations via easing curves
+- **Phaser 3 scenes** (built-in): Building interiors — Separate scene per interior, pause/launch pattern preserves state, lazy-load on first entry
 
-**What NOT to add:**
-- Storybook (too much setup for 35 components, 1-2 person team)
-- Jest (Vitest already configured, faster)
-- GraphQL (6 REST routes don't justify overhead)
-- Docker for local dev (MongoDB + Node native on macOS)
+**Confidence reasoning:** Howler.js verified in package.json, Phaser 3 particle/tween APIs confirmed in official docs, audioManager singleton validated in codebase (300 LOC, already integrated with Redux via useAudio hook).
 
 ### Expected Features
 
-Research identifies clear feature hierarchy: table stakes (must fix), differentiators (quality boost), anti-features (explicit scope limits).
-
 **Must have (table stakes):**
-- **Unit tests for Redux slices** — 1.85% coverage unacceptable; expand from 7 files to all 12 slices
-- **Component tests for UI** — Replicate HUD.test.jsx pattern (322 lines) for overlays
-- **Integration tests for middleware** — Achievement/goals middleware has complex logic chains
-- **Extract god component logic** — 607-line GameLayout unmaintainable; split EventBus listeners
-- **Database indexes** — No indexes on User.email, sync queries; add compound indexes
-- **Atomic sync operations** — Race conditions possible; use MongoDB transactions
-- **Pixel art icon system** — HUD uses emoji (🎯📊⚔️); replace with 16x16 spritesheet
-- **NPC idle animations** — 20 faceless NPCs lack consistent idle loops
+- **Audio system** (35 assets minimum): BGM per zone (10 tracks), UI SFX (5), action SFX (7), quiz SFX (5), ambient loops (8) — Zero audio = unfinished game regardless of content quality
+- **Visual juice**: Screen shake on quiz/achievement, particle effects on level-up/quest-complete, smooth transitions for overlays — Actions without feedback feel disconnected
+- **Progression clarity**: Learning path menu, "Start Here" indicators, learning dashboard with review queue — Solves "can't find letter learning" user complaint
+- **NPC idle animations**: 2-frame breathing/blink for all 140 NPCs — Static NPCs = dead world, frozen statues
+- **Polish details**: Footstep sounds (3 terrain types), smooth camera follow, text formatting fixes, error states — Accumulation creates "soul"
 
-**Should have (competitive):**
-- **E2E tests with Playwright** — 5-10 critical paths (auth flow, review session, quest complete)
-- **Phaser scene unit tests** — Test MapLoader, NPCManager, PlayerController in isolation
-- **Hook extraction** — Extract useGameEvents, usePhaserBridge, useOverlayManager
-- **Query optimization** — Add projection, lean() queries; reduce payload 30-50%
-- **ESLint + Prettier** — No config exists; eslint flat config + prettier
+**Should have (competitive advantage leveraged):**
+- **Enhanced achievements**: Current system (44 achievements) needs better celebration (particles + toast animations + fanfare SFX) — Educational reinforcement via sensory feedback
+- **Quest-driven learning visibility**: 52 quests exist but unclear how they gate progression — Make quest-learning connection explicit in UI
+- **FSRS integration clarity**: Spaced repetition algorithm works but invisible to users — Expose review queue in learning dashboard
 
 **Defer (v2+):**
-- **100% test coverage** — Target 60-70% instead
-- **Microservices refactor** — Overkill for single-user game
-- **Complete TypeScript migration** — Incremental only
+- Building interiors (10-15 key locations) — High complexity (new maps + art assets), adds depth but not critical for "soul" threshold
+- NPC wandering/schedules — Medium complexity, enhances life but static-with-animation is acceptable for v4.0
+- Day/night cycle, weather effects — Advanced features, defer until table stakes established
+
+**User pain point validation:** All P1 features map directly to user feedback ("feels empty" = no audio/static NPCs, "no soul" = no feedback/celebration, "no direction" = hidden learning path). No speculative features in P1.
 
 ### Architecture Approach
 
-Research confirms test pyramid (700 unit, 50 integration, 8 E2E) with tests in `__tests__` folders next to source. Key patterns: test data factories, Redux store with middleware, centralized Phaser mocks, supertest API testing, MongoDB in-memory isolation.
+New features integrate as subsystems within existing single-scene-per-zone model. WorldScene delegates to systems (PlayerController, NPCManager, InteractableManager, MapLoader, DOMOverlay, ZoneTransition). Add two new systems (ParticleEffectManager, BuildingInteriorManager deferred) and enhance three existing systems (NPCManager for idle behaviors, InteractableManager for animated objects, MapLoader for building entrances).
 
 **Major components:**
-1. **Testing infrastructure** — Vitest + RTL + Playwright foundation exists; extend with Phaser mocks, supertest, mongodb-memory-server
-2. **Redux middleware testing** — Mock store pattern from vocabularySlice.test.js; test achievement/goals middleware side effects
-3. **Phaser system testing** — Dependency injection for scene/physics; test NPC collision, MapLoader parsing, PlayerController freeze/unfreeze (NOT Phaser internals)
-4. **Backend API testing** — Supertest + in-memory MongoDB for all 6 routes; 80%+ controller coverage
-5. **E2E flow testing** — 7 new Playwright specs (onboarding, review-flow, quest-flow, shop-flow, fast-travel, battle-flow, auth-flow)
+1. **AudioManager** (existing, 300 LOC) — Howler.js wrapper, already integrated via useAudio hook, extend with zone-based ambient playback in WorldScene.buildZone()
+2. **ParticleEffectManager** (new, ~150 LOC) — Owns Phaser particle emitters, exposes emitBurst() and createContinuous(), auto-cleanup via delayedCall, integrates via EventBus events from InteractableManager/achievements
+3. **NPCManager enhancements** (~40 LOC added) — Timer-based idle behaviors (look, wander, emote), no state machine needed for simple patterns, use scene.time.addEvent() with random intervals
+4. **Learning Dashboard** (new React screen, ~200 LOC) — Central hub for review queue + available lessons + progress metrics, replaces hidden letter learning with explicit path
+5. **InteriorScene** (deferred to v4.x, ~200 LOC) — Separate Phaser scene per building, scene.launch() pattern, shares same system delegation as WorldScene
+
+**State management:** Redux remains single source of truth. Pattern: Phaser detects event → EventBus emit → React updates Redux → Phaser reads new Redux state. Audio settings already follow this (useAudio hook syncs Redux → audioManager). Never update Phaser scene state directly for persistent data.
 
 ### Critical Pitfalls
 
-Top 5 pitfalls from research with prevention strategies:
+Top 5 from 20 documented pitfalls, all with HIGH severity and documented prevention:
 
-1. **EventBus memory leaks during test teardown** — Phaser.Events.EventEmitter singleton persists between tests causing cross-contamination. Prevention: Add `EventBus.removeAllListeners()` in `afterEach()` global test setup.
+1. **Audio autoplay policy violation** — Browser blocks audio on mobile until user gesture. AudioContext shows "not allowed to start" warnings. Prevention: Add "Tap to Play" screen, call this.sound.context.resume() synchronously in touch handler, test on iOS Safari with ringer in vibrate mode.
 
-2. **God component refactoring breaks overlay z-index stack** — When splitting 607-line GameLayout, moving overlays breaks z-index hierarchy (7 overlays in specific order). Prevention: Keep overlays in same component tree, extract logic NOT JSX.
+2. **Web Audio memory leak** — Memory grows continuously, audio crackles after 10-15 minutes, browser tab crashes. Phaser audio has known GitHub issue #5224. Prevention: Use Howler.js (already installed), reuse ONE AudioContext, call context.close() on cleanup, use audio sprites for UI sounds.
 
-3. **Phaser scene mocking assumes React lifecycle** — Mocking scenes causes "scene.textures.exists is not a function" because mocks assume sync lifecycle but Phaser is async. Prevention: Create async-aware Phaser mocks with texture loading simulation.
+3. **Particle performance collapse** — FPS drops to 15-30 with particle effects active, mobile becomes unplayable. Prevention: Budget 200 particles max on mobile (50-100 per emitter), use emitter.setViewBounds() for culling, set maxParticles limit, use tiny textures (8x8 to 16x16 pixels).
 
-4. **Missing MongoDB connection pooling under load** — Backend crashes at 100+ concurrent users with "connection pool exhausted". Default pool size (5) insufficient. Prevention: Set maxPoolSize=50, minPoolSize=10, add connection monitoring.
+4. **EventBus memory leak from stale listeners** — Event handlers fire multiple times, memory grows, "Can't update unmounted component" errors. Prevention: Store named function references (not arrow functions), remove in scene shutdown and React useEffect cleanup, audit listener count in DevTools.
 
-5. **Sprite atlas mismatch between data and assets** — outfits.js has 8 outfit IDs that don't match sprite filenames, causing silent fallback. Prevention: Add validation script in CI to check ID→file mapping.
+5. **Scene transition state loss** — Player enters building, exits, position/quest progress resets or corrupts. Prevention: Use scene.launch() not scene.start(), emit EventBus updates BEFORE scene transitions, persist critical state to Redux, wait for transitioncomplete before new transitions.
+
+**Pitfall-phase mapping:** All 5 critical pitfalls have prevention steps integrated into phase requirements (audio unlock screen in Phase 14, particle budgets in Phase 15, EventBus cleanup audits in all phases, scene transition pattern deferred to Phase 17).
 
 ## Implications for Roadmap
 
-Based on research, suggested 4-phase structure prioritizes safety nets before refactoring:
+Based on research, suggested 5-phase structure organized by dependency order and table-stakes priority:
 
-### Phase 1: Testing Foundation
-**Rationale:** Establish comprehensive test coverage BEFORE refactoring god component. Safety net prevents regression during architectural changes.
+### Phase 14: Audio System
+**Rationale:** No dependencies, highest user-facing impact (zero audio = unfinished game), existing audioManager needs only new call sites, prevents "feels empty" feedback.
 
-**Delivers:**
-- 60-70% test coverage (up from 13.12%)
-- All 12 Redux slices tested + selectors
-- Component tests for HUD, DialogueOverlay, QuizOverlay, PauseMenu
-- Middleware tests for achievement + daily goals systems
-- 7 E2E Playwright specs for critical flows
-- Backend API tests for all 6 routes (supertest + mongodb-memory-server)
-- Phaser system tests with proper mocks
+**Delivers:** Zone-based ambient music (8 tracks), UI sound effects (5 sounds), quiz feedback SFX (5 sounds), action SFX (7 sounds), volume controls in settings, mobile audio unlock flow.
 
-**Addresses:** Unit tests for Redux slices (table stakes), Component tests (table stakes), Integration tests for middleware (table stakes), E2E tests (differentiator)
+**Addresses:** Audio table stakes from FEATURES.md (35 assets minimum), user pain point "feels empty."
 
-**Avoids:** EventBus memory leaks (setup global afterEach cleanup), Phaser scene mocking issues (async-aware mocks), Flaky tests (use waitFor, proper cleanup)
+**Avoids:** Pitfall #1 (audio autoplay policy) via "Tap to Play" screen, Pitfall #2 (Web Audio memory leak) by using Howler.js not Phaser audio.
 
-### Phase 2: Architecture Cleanup
-**Rationale:** Refactor god component and extract hooks WITH test safety net in place. Dependencies require testing foundation complete first.
+**Tech integration:** Extend audioManager.playAmbient() calls in WorldScene.buildZone(), wire EventBus SFX events in useEventBusListeners, add Redux audio settings to settingsSlice (already has volume controls, extend for mute toggles).
 
-**Delivers:**
-- GameLayout split into manageable components (300-line max)
-- Extracted hooks: useGameEvents, usePhaserBridge, useOverlayManager
-- CSS modules migration (replace inline styles)
-- ESLint + Prettier config (flat config for ESM)
-- Design tokens in variables.css
+**Research flag:** SKIP research-phase — audio implementation well-documented, audioManager pattern already exists, Howler.js integration proven in codebase.
 
-**Uses:** ESLint ^9.18.0, Prettier ^3.4.2 from stack research
+---
 
-**Implements:** Hook extraction pattern, CSS modules consistency
+### Phase 15: Visual Juice (Particles + Tweens)
+**Rationale:** Builds on audio foundation (particles need SFX triggers), uses Phaser 3 built-ins (no new dependencies), prevents "no soul" feedback via sensory celebration.
 
-**Addresses:** Extract god component logic (table stakes), Consistent styling (table stakes), Hook extraction (differentiator), ESLint + Prettier (differentiator)
+**Delivers:** ParticleEffectManager system, achievement particle bursts (level-up, quest-complete), screen shake on quiz correct/incorrect, smooth overlay transitions, achievement toast animations with celebration feel.
 
-**Avoids:** God component refactoring breaking z-index (keep overlays in tree), Unbounded EventBus listener growth (idempotent add/remove pattern), CSS modules class name collisions (BEM-like naming)
+**Addresses:** Visual juice table stakes from FEATURES.md, educational reinforcement via sensory feedback for achievements.
 
-### Phase 3: Backend Hardening
-**Rationale:** Database and API hardening after frontend testing/refactor complete. Independent from frontend changes.
+**Avoids:** Pitfall #3 (particle performance collapse) via mobile budget (200 particles max), emitter pooling, viewBounds culling, tiny textures (8x8 pixels).
 
-**Delivers:**
-- MongoDB connection pooling (maxPoolSize=50, minPoolSize=10)
-- Database indexes (User.email, compound userId+syncVersion)
-- Atomic sync operations (MongoDB transactions)
-- Per-user rate limiting (JWT-based, 10 req/min)
-- Comprehensive request validation (Zod schemas all endpoints)
-- Query optimization (projections, lean(), selective population)
-- Security middleware (express-mongo-sanitize, express-validator)
+**Tech integration:** New ParticleEffectManager class (~150 LOC), integrate with InteractableManager for chest sparkles, EventBus events for achievement celebrations, Phaser camera shake API for quiz feedback.
 
-**Uses:** express-mongo-sanitize ^2.2.0, express-validator ^7.3.2 from stack research
+**Research flag:** SKIP research-phase — Phaser 3 particle API well-documented, Player.js already has footstep dust particles as reference implementation.
 
-**Addresses:** Database indexes (table stakes), Atomic sync operations (table stakes), Request validation (table stakes), Rate limiting per user (table stakes), Query optimization (differentiator)
+---
 
-**Avoids:** MongoDB connection pool exhaustion (explicit config + monitoring), CSRF token race condition (fetch token in root App.jsx), Rate limiter using IP behind Cloudflare (use CF-Connecting-IP header)
+### Phase 16: World Life (NPC Behaviors)
+**Rationale:** Independent of audio/particles (can build in parallel), uses timer-based pattern (no state machine library needed), prevents "feels empty" by animating 140 frozen NPCs.
 
-### Phase 4: Visual Polish
-**Rationale:** Aesthetic improvements after core infrastructure stable. Lowest priority but important for professional feel.
+**Delivers:** 2-frame idle animations for all NPCs, random behavior timers (look around, shift weight, emote), quest NPC sparkle particles (continuous emitters), breathing animation via subtle scale tweens.
 
-**Delivers:**
-- Pixel art icon system (replace emoji with 16x16 spritesheet)
-- NPC idle animations (2-frame loops for all 20 faceless NPCs)
-- Sprite animation state machine (centralize Player 16-state logic)
-- Particle effects (achievement unlock, level up, quest complete)
-- CSS pixel art rendering rules (image-rendering: pixelated)
-- Vite imagetools plugin (pixel art mode with nearest-neighbor scaling)
+**Addresses:** World life table stakes from FEATURES.md, user pain point "feels empty" (static NPCs = museum diorama).
 
-**Uses:** vite-imagetools ^7.0.4, sharp ^0.33.5 from stack research
+**Avoids:** Pitfall #4 (EventBus memory leak) via named function cleanup in NPC behavior timers, Pitfall #9 (tween accumulation) via onComplete cleanup.
 
-**Addresses:** Pixel art icon system (table stakes), NPC idle animations (table stakes), Sprite animation state machine (differentiator)
+**Tech integration:** Extend NPCManager with idle behavior methods (~40 LOC), use scene.time.addEvent() for random intervals (3-7 seconds), integrate ParticleEffectManager for quest NPCs.
 
-**Avoids:** Sprite atlas mismatch (validation script in CI), Sprite loading blocks initial render (lazy load per zone)
+**Research flag:** SKIP research-phase — Timer-based idle behaviors simpler than state machines, documented in web search as recommended pattern for simple AI.
+
+---
+
+### Phase 17: Progression Clarity
+**Rationale:** Solves highest-priority UX issue ("can't find letter learning"), requires learning dashboard UI (React component work), complements gameplay systems from Phases 14-16.
+
+**Delivers:** Learning path menu showing alphabet → vocabulary → grammar progression, learning dashboard screen with review queue + available lessons, "Start Here" indicators for new players, progress metrics (letters mastered, words learned, quests done), enhanced onboarding tooltips.
+
+**Addresses:** Progression clarity table stakes from FEATURES.md, user pain points "no direction" and "can't find letter learning."
+
+**Avoids:** No major pitfalls (UI-focused phase), ensures error states for empty review queue (prevents "gets stuck" feedback).
+
+**Tech integration:** New React screen component (~200 LOC), reads Redux state (player, vocabulary, quests, alphabet), integrates with existing onboarding system, extends Player Profile with learning metrics.
+
+**Research flag:** SKIP research-phase — UI component patterns well-established in codebase (DailyDashboard, WorldMap, PlayerProfile as references).
+
+---
+
+### Phase 18: Polish Details
+**Rationale:** Final pass to accumulate small details that create "soul," addresses accessibility (reduced motion), ensures visual consistency.
+
+**Delivers:** Footstep sounds with terrain detection (grass/stone/sand), smooth camera follow tuning, loading transition smoothness, locked door feedback messages, text formatting fixes (dialogue wraps properly), error states for empty content, reduced motion support (prefers-reduced-motion check), icon consistency pass.
+
+**Addresses:** Polish details table stakes from FEATURES.md, accessibility requirements (30% of users need reduced motion).
+
+**Avoids:** Pitfall #11 (screen shake without reduced motion check) via OS setting detection and settings toggle, Pitfall #8 (Redux/Phaser desync) via text formatting verification.
+
+**Tech integration:** Extend PlayerController for footstep terrain detection, tune Phaser camera lerp settings, add prefers-reduced-motion check to screen shake/particle calls, CSS fixes for DialogueBox wrapping.
+
+**Research flag:** SKIP research-phase — All features are polish refinements of existing systems, no new architectural patterns needed.
+
+---
 
 ### Phase Ordering Rationale
 
-- **Testing first (P1)** because refactoring god component (P2) is high-risk without safety net. Existing test patterns provide clear blueprints.
-- **Architecture cleanup second (P2)** because it depends on test coverage for regression protection. God component refactor touches 100+ files.
-- **Backend hardening third (P3)** because it's independent from frontend changes and can proceed in parallel if needed. Standard patterns, low risk.
-- **Visual polish last (P4)** because it's purely aesthetic, no architectural dependencies. Lowest priority but completes professional feel.
+**Dependency-driven sequencing:**
+- Audio first (no dependencies, enables SFX integration for later phases)
+- Particles second (needs audio for triggered effects)
+- NPC behaviors third (uses particles for quest markers)
+- Progression clarity fourth (UI-focused, benefits from complete gameplay experience)
+- Polish last (refinement pass after all systems in place)
 
-Dependencies:
-- P1 → P2: Testing foundation required before god component refactor
-- P2 can block P3/P4 if imports are broken, but P3/P4 are otherwise independent
-- P3 and P4 can run in parallel after P2 complete
+**Table-stakes prioritization:**
+- Phases 14-16 address sensory layer (audio + visual + movement) — highest impact on "feels empty/no soul" feedback
+- Phase 17 addresses clarity layer — solves "no direction/can't find letter learning" blocker
+- Phase 18 accumulates details — elevates from good to polished
+
+**Pitfall avoidance:**
+- Critical pitfalls (audio autoplay, particle performance, EventBus leaks) addressed in early phases where they're introduced
+- State management pitfall (#8 Redux/Phaser desync) prevented by maintaining established pattern across all phases
+- Accessibility pitfall (#11 reduced motion) addressed in final polish phase
+
+**Parallel work opportunities:**
+- Phase 16 (NPC behaviors) can start before Phase 15 (particles) completes — no shared code paths
+- Phase 17 (progression clarity) is pure React UI — can run parallel to Phaser system work
 
 ### Research Flags
 
-Phases likely needing deeper research during planning:
-- **Phase 2 (Architecture Cleanup):** God component refactor touches 100+ files. Run `/gsd:research-phase` to analyze import dependency tree and refactor extraction strategy.
+**Phases with standard patterns (skip research-phase):**
+- **Phase 14 (Audio):** audioManager pattern already exists, Howler.js integration proven, web search confirmed best practices
+- **Phase 15 (Visual Juice):** Phaser 3 particle/tween APIs well-documented, Player.js footstep dust as reference implementation
+- **Phase 16 (NPC Behaviors):** Timer-based idle animations simpler than state machines, multiple tutorials confirm approach
+- **Phase 17 (Progression Clarity):** UI component patterns established in codebase (DailyDashboard, WorldMap as references)
+- **Phase 18 (Polish Details):** Refinements of existing systems, no new architectural patterns
 
-Phases with standard patterns (skip research-phase):
-- **Phase 1 (Testing Foundation):** Existing test patterns + well-documented tools (Vitest, RTL, Playwright, supertest)
-- **Phase 3 (Backend Hardening):** Standard MongoDB/Express patterns, stable documentation
-- **Phase 4 (Visual Polish):** Established Phaser animation patterns, CSS pixel art rules
+**No phases need deeper research.** All features use existing libraries or Phaser 3 built-ins with confirmed documentation.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | MEDIUM | Library versions from training data (Jan 2025), need npm verification. Patterns validated by existing setup. |
-| Features | HIGH | Based on codebase analysis (13.12% coverage, 607-line GameLayout). Clear gaps and patterns. |
-| Architecture | HIGH | Existing test patterns (vocabularySlice.test.js, HUD.test.jsx) provide blueprints. Clear component structure. |
-| Pitfalls | MEDIUM | EventBus/Phaser integration pitfalls from codebase analysis (HIGH confidence). Testing patterns from training data (MEDIUM confidence). |
+| Stack | HIGH | Howler.js verified in package.json, Phaser 3.90.0 particles/tweens confirmed in official docs, audioManager singleton validated in codebase |
+| Features | HIGH | All P1 features map to user feedback, competitor analysis (Stardew Valley, Pokemon) confirms table stakes, no speculative features |
+| Architecture | HIGH | Existing system patterns validated (EventBus bridge, single-scene delegation, Redux single source of truth), new systems follow established patterns |
+| Pitfalls | HIGH | 20 pitfalls documented from Phaser community forums, GitHub issues, web search tutorials, all have prevention strategies with sources |
 
-**Overall confidence:** MEDIUM
-
-Research is strong on what to do (features, architecture patterns) but library versions need verification. Codebase analysis provides high confidence on pitfalls and current state. Training data provides medium confidence on testing patterns and tool integration.
+**Overall confidence:** HIGH
 
 ### Gaps to Address
 
-Gaps requiring validation during implementation:
+**No critical gaps identified.** All features use existing libraries or Phaser 3 built-ins with confirmed documentation.
 
-- **Library version compatibility:** All versions (supertest ^7.0.0, mongodb-memory-server ^10.1.1, eslint ^9.18.0, etc.) from training data. Run `npm info <package> version` to verify latest compatible versions before installation.
-- **ESLint 9 flat config format:** Flat config pattern from training data may have changed after Jan 2025. Verify official ESLint docs during Phase 2.
-- **Playwright API mocking syntax:** Backend-free E2E tests using `page.route()` pattern from training data. Verify Playwright docs during Phase 1.
-- **vite-imagetools pixel art configuration:** Nearest-neighbor scaling config from training data. Verify vite-imagetools docs during Phase 4.
-- **Phaser + Vitest integration:** Phaser 3.90 + Vitest 3.0 testing patterns from training data, not verified. Test Phaser mocking strategy early in Phase 1.
+**Minor validation points:**
+- **Particle performance on low-end mobile:** Budget of 200 particles tested on iPhone SE equivalent during Phase 15 implementation (not research blocker)
+- **Audio unlock flow on iOS vibrate mode:** Test during Phase 14 implementation with device in silent mode (documented pattern, not research blocker)
+- **EventBus listener count audit:** Add DevTools memory profiler check during Phase 18 polish pass (prevention strategy documented)
+
+**How to handle during execution:**
+- Validate particle budget via manual testing on iPhone SE or equivalent Android (Pixel 4a) during Phase 15
+- Test audio unlock on iOS Safari with ringer in both normal and vibrate modes during Phase 14
+- Add EventBus listener count verification to testing checklist during Phase 18
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- Codebase analysis: `src/components/Router/GameLayout.jsx` (607 lines, 20+ EventBus listeners)
-- Codebase analysis: `src/utils/eventBus.js` (Phaser.Events.EventEmitter singleton)
-- Codebase analysis: `src/game/sprites/Player.js` (421 lines, outfit mapping)
-- Codebase analysis: `src/data/outfits.js` (8 outfits defined)
-- Codebase analysis: `server/src/server.js` (MongoDB connection)
-- Codebase analysis: Existing test patterns (`vocabularySlice.test.js`, `HUD.test.jsx`)
-- Codebase analysis: Current test coverage (13.12% overall, game/ excluded)
-- Codebase analysis: 25+ CSS module files, mixed inline styles
+- **Existing codebase**: audioManager.js (300 LOC Howler.js wrapper), Player.js (footstep dust particles), useAudio.js (Redux-audio sync pattern), NPCManager.js (128 LOC sprite system), InteractableManager.js (169 LOC interaction system)
+- **Phaser 3 official docs**: [Particles API](https://docs.phaser.io/phaser/concepts/gameobjects/particles), [Animations](https://docs.phaser.io/phaser/concepts/animations), [Audio](https://docs.phaser.io/phaser/concepts/audio), [Scene Manager](https://docs.phaser.io/phaser/concepts/scenes)
+- **Howler.js official**: [howlerjs.com](https://howlerjs.com/), verified in package.json 2.2.4
 
 ### Secondary (MEDIUM confidence)
-- Training data: Supertest + mongodb-memory-server for Express testing patterns
-- Training data: Vitest + RTL + Playwright best practices
-- Training data: ESLint 9 flat config format (may have changed after Jan 2025)
-- Training data: Phaser testing patterns with mocked scenes
-- Training data: React 19 + Phaser 3 integration patterns
-- Training data: MongoDB connection pooling best practices
+- **Phaser community tutorials**: [Ourcade blog](https://blog.ourcade.co/) (Web Audio best practices, particle trails, object pooling, scene transitions), [Notes of Phaser 3](https://rexrainbow.github.io/phaser3-rex-notes/) (particles, audio, tilemaps)
+- **Game design research**: Stardew Valley analysis (Kokutech world-building article), Pokemon world design (NYU COMM CLUB), CrossCode Steam discussions, game feel tutorials (GameDev Academy, GameAnalytics juice article)
+- **Educational UX research**: Inworld AI onboarding best practices, Medium eLearning platform UX, ETC Journal educational game failures
 
-### Tertiary (LOW confidence)
-- Training data: Library versions (all marked as approximate ^)
-- Training data: vite-imagetools pixel art configuration
-- Training data: express-validator vs Zod comparison
+### Tertiary (LOW confidence, not used for critical decisions)
+- PhaserFX plugin (itch.io, manual install) — Deferred as optional, Phaser built-in tweens sufficient
+- EasyStar.js pathfinding (npm verified 0.4.4) — Deferred to v4.x, simple idle animations sufficient for v4.0
+
+**Source quality:** 40+ web sources (20 in FEATURES.md, 12 in STACK.md, 20+ in PITFALLS.md) cross-referenced with official docs and existing codebase validation. All critical patterns have multiple confirming sources.
 
 ---
-*Research completed: 2026-02-08*
+*Research completed: 2026-02-09*
 *Ready for roadmap: yes*

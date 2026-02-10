@@ -1,769 +1,686 @@
-# Architecture Research: v3.0 Infrastructure & Polish
+# Architecture Research: Game Soul & Polish Integration
 
-**Domain:** Arabic Learning RPG - Testing, Refactoring, Backend Hardening, Visual Polish
-**Researched:** 2026-02-08
+**Domain:** Phaser 3 + React 19 Game Enhancement
+**Researched:** 2026-02-09
 **Confidence:** HIGH
 
 ## Executive Summary
 
-GoGo Arabic v2.0 shipped 9 phases with a working React 19 + Phaser 3 + Redux + Express stack. v3.0 focuses on **infrastructure maturity** without major feature additions: comprehensive testing (~80% coverage), GameLayout refactoring (god component → manageable modules), backend hardening (rate limiting + validation already present, add tests + monitoring + security audit), and pixel art integration (sprites exist, need CSS polish + animations).
+This document defines how audio, particle effects, NPC idle behaviors, building interiors, and enhanced interactables integrate with the existing Phaser 3 system/scene architecture. The game uses a **single-scene-per-zone** model with subsystem delegation. New features integrate as new systems (AudioManager, ParticleEffectManager) and enhancements to existing systems (NPCManager, MapLoader, InteractableManager).
 
-**Key insight:** Build order matters. Refactor GameLayout BEFORE writing tests for it. Harden backend BEFORE visual polish (polish increases attack surface). Test utilities exist but coverage is ~5% (11 test files, 27K LOC codebase).
+**Key architectural decisions:**
+1. **AudioManager bridges Phaser WebAudio ↔ Redux settings** via existing audioManager singleton
+2. **ParticleEffectManager** as new system for environmental/interaction particles
+3. **NPCManager enhancement** for idle animation behaviors (no state machine needed for simple patterns)
+4. **BuildingInteriorManager** as new system for interior scene transitions
+5. **InteractableManager enhancement** for animated interactive objects
 
-## Current Architecture Analysis
+All new systems follow the existing delegation pattern: WorldScene owns, creates, and updates all systems.
 
-### System Overview (v2.0)
+---
+
+## Current Architecture (Validated from Codebase)
+
+### System Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      React 19 UI Layer                           │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐                 │
-│  │  MainMenu  │  │ GameLayout │  │  Dashboard │                 │
-│  │            │  │  (608 LOC) │  │            │                 │
-│  │ Lazy routes│  │ God Object │  │ Lazy routes│                 │
-│  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘                 │
-│        │               │               │                         │
-├────────┴───────────────┴───────────────┴─────────────────────────┤
-│                   EventBus Bridge (Phaser)                       │
-│         ← 20 event types, cleanup gaps, direct store access →    │
-├─────────────────────────────────────────────────────────────────┤
-│                    Phaser 3 Game Engine                          │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐                 │
-│  │ WorldScene │  │ PlayerCtrl │  │ NPCManager │                 │
-│  │            │  │            │  │            │                 │
-│  │ MapLoader  │  │ Collision  │  │ Dialogue   │                 │
-│  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘                 │
-├────────┴───────────────┴───────────────┴─────────────────────────┤
-│                 Redux Toolkit (12 slices)                        │
-│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐                   │
-│  │player│ │vocab │ │quests│ │  ui  │ │goals │  + 7 more         │
-│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘                   │
-├─────────────────────────────────────────────────────────────────┤
-│                   Express 5 Backend                              │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │  JWT httpOnly cookies + CSRF + rate limiting + Zod      │    │
-│  │  6 route modules, 8 middleware, MongoDB + Mongoose      │    │
-│  └─────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                          React Layer                              │
+│  GameLayout.jsx (209 lines) — Orchestration via 3 hooks          │
+│  ├─ useEventBusListeners (380 lines) — Phaser→React events       │
+│  ├─ useAudio (31 lines) — Redux→audioManager sync                │
+│  └─ useSessionTracking — Session persistence                     │
+├──────────────────────────────────────────────────────────────────┤
+│                         EventBus Bridge                           │
+│  Phaser.Events.EventEmitter — Bidirectional event passing        │
+├──────────────────────────────────────────────────────────────────┤
+│                       Phaser 3 Layer                              │
+│  WorldScene (263 lines) — Single scene, delegates to systems     │
+│  ├─ PlayerController (71 lines) — Player spawn, movement         │
+│  ├─ NPCManager (128 lines) — NPC spawning, interaction           │
+│  ├─ InteractableManager (169 lines) — Chests, signs, books       │
+│  ├─ MapLoader (294 lines) — Tiled map, collision, exits          │
+│  ├─ DOMOverlay (182 lines) — HTML overlays for Arabic text       │
+│  └─ ZoneTransition (46 lines) — Zone switching with fade         │
+├──────────────────────────────────────────────────────────────────┤
+│                      Redux Store (12 slices)                      │
+│  player, vocabulary, quests, ui, alphabet, settings, npc, sync,  │
+│  achievements, battle, dailyGoals, grammar + 2 middleware         │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-### Current Component Breakdown
+### Existing System Responsibilities
 
-| Component | LOC | Responsibilities | Issues |
-|-----------|-----|------------------|--------|
-| **GameLayout.jsx** | 608 | Phaser mount, HUD, 9 overlays, EventBus listeners, wardrobe state, keyboard shortcuts, session tracking, 20 quest handlers | God component, hard to test, mixed concerns |
-| **EventBus.js** | 13 | Phaser Events.EventEmitter wrapper | No cleanup utility, listeners can leak |
-| **Redux Store** | 12 slices | State management, redux-persist, 2 middleware | Well-structured, needs tests |
-| **Phaser Systems** | 5 files | PlayerController, NPCManager, InteractableManager, MapLoader, DOMOverlay | Can't use React hooks, read store directly |
-| **Backend** | app.js + 6 routes | Auth, CORS, rate limiting, Zod validation, JWT cookies, CSRF | Hardened, missing tests |
-| **CSS** | 25 CSS Modules + inline styles | Mixed paradigm, inconsistent | Needs consolidation |
+| System | Responsibility | State Location |
+|--------|----------------|----------------|
+| **WorldScene** | Scene orchestrator, owns all systems, handles frame update | Phaser scene instance |
+| **PlayerController** | Player sprite, movement, freeze/unfreeze, stamina | Phaser sprite, emits to EventBus |
+| **NPCManager** | NPC sprites, proximity detection, interaction prompts | Phaser sprites, reads Redux (quests) |
+| **InteractableManager** | Chests, signs, bookshelves interaction logic | Phaser sprites, reads Redux (player) |
+| **MapLoader** | Tiled map rendering, collision, water shimmer effect | Phaser game objects |
+| **DOMOverlay** | HTML overlays for Arabic text (NPC names, prompts) | DOM elements, positioned via Phaser camera |
+| **ZoneTransition** | Zone switching with camera fade | Phaser camera effects |
+| **audioManager** (singleton) | Howler.js wrapper with 3 channels (ambient, sfx, pronunciation) | JavaScript singleton |
+| **useAudio** (hook) | Syncs Redux settings.volume → audioManager | React hook in GameLayout |
+| **EventBus** | Phaser ↔ React communication | Phaser.Events.EventEmitter |
 
-### Data Flow Patterns
+---
 
-#### 1. Player Interaction → Redux Update
+## Integration Architecture for New Features
+
+### 1. Audio System Integration
+
+**Current state:** `audioManager` singleton (300 LOC) already exists with Howler.js integration. **No new system needed.**
+
+#### Audio Data Flow
+
 ```
-Player presses 'E' near NPC
+User adjusts volume in Settings UI
     ↓
-Phaser PlayerController detects collision
+Redux settingsSlice.setAmbientVolume(70)
     ↓
-EventBus.emit('npc-interact', { npcId, npcName })
+useAudio hook reacts to Redux state change
     ↓
-GameLayout useEffect listener catches event
+audioManager.setAmbientVolume(70) — converts 0-100 to 0-1
     ↓
-dispatch(openDialogue({ npcId, npcName }))
-    ↓
-DialogueOverlay renders (conditional in GameLayout)
-```
-
-**Problem:** GameLayout has 20+ EventBus listeners in one massive useEffect. Hard to test, easy to forget cleanup.
-
-#### 2. Quiz Complete → Achievement Unlock
-```
-QuizOverlay: dispatch(completeQuiz({ result }))
-    ↓
-achievementMiddleware intercepts action
-    ↓
-Checks ACHIEVEMENTS.json requirements
-    ↓
-dispatch(unlockAchievement(id)) if met
-    ↓
-AchievementToast appears
+Howler.js WebAudio API applies volume to active sounds
 ```
 
-**Pattern works well.** Middleware is testable, decoupled.
+#### Integration Points
 
-#### 3. Backend Sync (not yet implemented)
-```
-Frontend: dispatch(syncAction)
-    ↓
-API call to /api/v1/user/progress
-    ↓
-Backend: Zod validation, JWT auth, rate limit
-    ↓
-MongoDB update via Mongoose
-    ↓
-Response: syncReducer updates lastSyncTime
-```
+| Integration Point | Implementation | Files Modified |
+|-------------------|----------------|----------------|
+| **Ambient music per zone** | `WorldScene.buildZone()` calls `audioManager.playAmbient(zoneName)` | `WorldScene.js` |
+| **SFX triggers from Phaser** | Emit EventBus events like `EventBus.emit('sfx-footstep')` | `Player.js`, `InteractableManager.js` |
+| **Volume control in UI** | Already exists in settingsSlice + Settings component | No changes needed |
+| **Audio cleanup on scene shutdown** | `WorldScene.shutdown()` calls `audioManager.stopAmbient()` | `WorldScene.js` |
 
-**Security:** JWT httpOnly cookies + CSRF tokens. Rate limiting: global 100 req/15min, auth 5 req/15min.
+#### Audio Implementation Pattern
 
-## v3.0 Architecture Refactoring Plan
-
-### Phase 1: GameLayout Refactoring
-
-**Goal:** Split 608-line god component into testable modules.
-
-**New Structure:**
-```
-src/components/Router/
-├── GameLayout.jsx                    # 150 LOC - orchestration only
-├── GameLayout.module.css             # existing styles
-├── hooks/
-│   ├── useEventBusListeners.js       # EventBus setup/cleanup
-│   ├── useQuestTracking.js           # Quest progress logic
-│   ├── useSessionTracking.js         # Daily goals session timer
-│   └── useGameKeyboard.js            # Keyboard shortcuts (M, L, Esc)
-├── components/
-│   ├── PauseMenu.jsx                 # Extract from GameLayout
-│   ├── ActivitiesMenu.jsx            # Extract from GameLayout
-│   └── GameOverlays.jsx              # Conditional overlay rendering
-└── utils/
-    └── questEventHandlers.js         # Pure functions for quest logic
-```
-
-**Migration Strategy:**
-1. Extract hooks (no behavior change, just move code)
-2. Verify build passes
-3. Extract PauseMenu/ActivitiesMenu components
-4. Verify build passes
-5. Extract questEventHandlers pure functions
-6. Write tests for extracted units
-7. Commit refactored GameLayout
-
-**Testing becomes possible:**
-- `useEventBusListeners.test.js` - mock EventBus, verify listeners registered/cleaned
-- `useQuestTracking.test.js` - pure logic, verify quest completion conditions
-- `questEventHandlers.test.js` - pure functions, easy to test
-- `GameLayout.test.jsx` - integration test with mocked hooks
-
-### Phase 2: Testing Infrastructure
-
-**Target:** 80%+ coverage for business logic, 60%+ for UI components.
-
-**Coverage Strategy:**
-
-| Layer | Target | Priority | Approach |
-|-------|--------|----------|----------|
-| Redux slices | 90%+ | HIGH | Unit tests, all actions/reducers |
-| Redux middleware | 85%+ | HIGH | Integration tests with mock store |
-| Utils/services | 90%+ | HIGH | Pure functions, easy to test |
-| Hooks | 75%+ | MEDIUM | renderHook from RTL |
-| UI Components | 60%+ | MEDIUM | RTL, focus on logic not markup |
-| Phaser systems | 40%+ | LOW | Mock Phaser, test game logic only |
-| E2E critical paths | 5 flows | MEDIUM | Playwright: onboarding, review, quiz, battle, shop |
-
-**Phaser Testing Strategy:**
-
-Phaser classes can't use React hooks. Testing approach:
-
+**Existing pattern (DO NOT CHANGE):**
 ```javascript
-// BAD: Try to test Phaser rendering
-test('NPCManager renders sprites', () => {
-  // Requires full Phaser context, brittle
-});
+// React component dispatches volume change
+dispatch(setAmbientVolume(70));
 
-// GOOD: Test game logic extraction
-test('NPCManager.getInteractableNPC returns closest NPC in range', () => {
-  const npcs = [
-    { x: 100, y: 100, id: 'npc1' },
-    { x: 200, y: 200, id: 'npc2' }
-  ];
-  const playerX = 110;
-  const playerY = 110;
-  const range = 50;
+// useAudio hook syncs to audioManager
+useEffect(() => {
+  audioManager.setAmbientVolume(settings.ambientVolume);
+}, [settings.ambientVolume]);
 
-  expect(getInteractableNPC(npcs, playerX, playerY, range))
-    .toBe('npc1');
-});
+// Phaser emits SFX events
+EventBus.emit('sfx-footstep');
+
+// useEventBusListeners handles in React
+EventBus.on('sfx-footstep', () => playSFX('footstep'));
 ```
 
-**Extract game logic into pure functions in `src/game/utils/`, test those. Don't test Phaser rendering.**
-
-**Test File Organization:**
-```
-src/
-├── components/
-│   └── HUD/
-│       ├── HUD.jsx
-│       └── __tests__/
-│           └── HUD.test.jsx          # Colocated tests
-├── store/
-│   └── slices/
-│       ├── playerSlice.js
-│       └── __tests__/
-│           └── playerSlice.test.js
-├── utils/
-│   ├── xpCalculator.js
-│   └── __tests__/
-│       └── xpCalculator.test.js
-├── game/
-│   └── utils/                         # NEW: extracted game logic
-│       ├── npcInteraction.js
-│       └── __tests__/
-│           └── npcInteraction.test.js
-└── test/
-    ├── setup.js                       # Global mocks (Howler, Phaser)
-    └── testUtils.jsx                  # renderWithProviders helper
-```
-
-**Coverage Exclusions (vitest.config.js already has):**
-- `src/data/**` - static JSON/JS data
-- `src/game/**` - Phaser rendering (test extracted logic only)
-- `src/test/**` - test utilities
-
-**New Test Utilities Needed:**
-
+**New pattern for ambient per zone:**
 ```javascript
-// src/test/testUtils.jsx additions
-export function createMockEventBus() {
-  const listeners = new Map();
-  return {
-    on: vi.fn((event, handler) => {
-      if (!listeners.has(event)) listeners.set(event, []);
-      listeners.get(event).push(handler);
-    }),
-    off: vi.fn((event, handler) => {
-      if (!listeners.has(event)) return;
-      const handlers = listeners.get(event);
-      const idx = handlers.indexOf(handler);
-      if (idx > -1) handlers.splice(idx, 1);
-    }),
-    emit: vi.fn((event, ...args) => {
-      if (!listeners.has(event)) return;
-      listeners.get(event).forEach(h => h(...args));
-    }),
-    removeAllListeners: vi.fn(() => listeners.clear())
-  };
+// WorldScene.buildZone() after zone loads
+buildZone(zoneName, spawnX, spawnY) {
+  // ... existing map/NPC/player setup
+
+  // NEW: Start ambient for this zone
+  const { audioManager } = await import('../../services/audio.js');
+  audioManager.playAmbient(zoneName); // Maps to /assets/audio/ambient/ambient-{zoneName}.mp3
 }
+```
 
-export function mockPhaserGame(scene = {}) {
-  return {
-    game: {
-      scene: {
-        getScene: vi.fn(() => scene)
-      }
+**Confidence:** HIGH (audioManager already integrated, only needs new call sites)
+
+---
+
+### 2. Particle Effects System
+
+**New system required:** `ParticleEffectManager.js`
+
+Phaser 3's particle emitters already use object pooling internally, so we create a manager to own and configure emitters for different effect types.
+
+#### Particle Effect Types
+
+| Effect | Trigger | Configuration | Lifecycle |
+|--------|---------|---------------|-----------|
+| **Footstep dust** | Player walks | Burst of 3-5 particles, 200ms lifespan, sand color | Already implemented in Player.js |
+| **Water splash** | Walk on water edge | Burst of 5-10 blue particles, radial emission | New |
+| **Chest sparkle** | Chest opens | Continuous sparkle for 1s, gold particles | New |
+| **NPC greeting** | NPC interaction | Heart/star particles above NPC head | New |
+| **Ambient effects** | Zone-specific (fireflies, snow, leaves) | Continuous emission, zone-wide | New |
+
+#### ParticleEffectManager Architecture
+
+```javascript
+// src/game/systems/ParticleEffectManager.js
+export class ParticleEffectManager {
+  constructor(scene) {
+    this.scene = scene;
+    this.emitters = new Map(); // id -> emitter instance
+    this.textures = new Map(); // type -> texture key
+  }
+
+  create() {
+    // Create reusable particle textures (8x8 circles/stars)
+    this._createParticleTextures();
+  }
+
+  // Create a one-shot particle burst at position
+  emitBurst(effectType, x, y, config = {}) {
+    const emitter = this.scene.add.particles(x, y, this.textures.get(effectType), {
+      speed: config.speed || { min: 20, max: 40 },
+      lifespan: config.lifespan || 300,
+      quantity: config.quantity || 5,
+      scale: config.scale || { start: 0.3, end: 0 },
+      blendMode: config.blendMode || 'ADD',
+    });
+
+    // Auto-destroy after emission completes
+    this.scene.time.delayedCall(config.lifespan || 300, () => {
+      emitter.destroy();
+    });
+  }
+
+  // Create a continuous emitter (for ambient effects)
+  createContinuous(id, x, y, effectType, config = {}) {
+    const emitter = this.scene.add.particles(x, y, this.textures.get(effectType), {
+      ...config,
+      frequency: config.frequency || 200,
+      lifespan: config.lifespan || 2000,
+    });
+    this.emitters.set(id, emitter);
+    return emitter;
+  }
+
+  updatePosition(id, x, y) {
+    const emitter = this.emitters.get(id);
+    if (emitter) emitter.setPosition(x, y);
+  }
+
+  destroy() {
+    for (const [, emitter] of this.emitters) {
+      emitter.destroy();
     }
-  };
-}
-```
-
-### Phase 3: Backend Testing & Hardening
-
-**Current State:** Express 5 + JWT httpOnly cookies + CSRF + rate limiting + Zod validation. 1 backend test file.
-
-**Backend Test Strategy:**
-
-```
-server/
-├── src/
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   └── __tests__/
-│   │       └── authController.test.js  # Unit tests with mocked services
-│   ├── routes/
-│   │   ├── auth.js
-│   │   └── __tests__/
-│   │       └── auth.test.js            # Integration tests with supertest
-│   ├── middleware/
-│   │   ├── rateLimiter.js
-│   │   └── __tests__/
-│   │       └── rateLimiter.test.js     # Verify limits enforced
-│   ├── models/
-│   │   ├── User.js
-│   │   └── __tests__/
-│   │       └── User.test.js            # Mongoose schema validation
-│   └── utils/
-│       └── __tests__/
-│           └── logger.test.js
-└── test/
-    ├── setup.js                         # Test DB connection
-    └── helpers.js                       # createTestUser, cleanDB
-```
-
-**Security Hardening Additions:**
-
-1. **Helmet.js already configured** - check CSP headers for Phaser compatibility
-2. **MongoDB injection protection** - Mongoose + Zod handles this, add tests
-3. **JWT secret validation** - server.js already validates length, good
-4. **Input sanitization** - Zod handles, add edge case tests
-5. **Error message sanitization** - errorHandler.js should not leak stack traces in prod
-6. **Dependency audit** - `npm audit` + Dependabot
-7. **Request logging** - requestLogger.js exists, add sensitive field redaction
-8. **CORS whitelist** - app.js already configured, add tests
-
-**New Backend Tests Needed:**
-
-| Test Suite | Focus | Priority |
-|------------|-------|----------|
-| auth.test.js | Registration, login, logout, token refresh | HIGH |
-| rateLimiter.test.js | Verify 429 on limit exceeded | HIGH |
-| validate.test.js | Zod schema edge cases, XSS attempts | HIGH |
-| User.test.js | Schema validation, password hashing | MEDIUM |
-| errorHandler.test.js | Error responses don't leak secrets | HIGH |
-| csrf.test.js | Token validation, mismatch handling | MEDIUM |
-
-**Backend Test Environment:**
-
-```javascript
-// server/test/setup.js
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-
-let mongoServer;
-
-export async function setupTestDB() {
-  mongoServer = await MongoMemoryServer.create();
-  const uri = mongoServer.getUri();
-  await mongoose.connect(uri);
-}
-
-export async function teardownTestDB() {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-  await mongoServer.stop();
-}
-
-export async function clearTestDB() {
-  const collections = mongoose.connection.collections;
-  for (const key in collections) {
-    await collections[key].deleteMany();
+    this.emitters.clear();
   }
 }
 ```
 
-### Phase 4: Visual Polish Integration
+#### Integration with WorldScene
 
-**Current State:** 20 NPC sprites + 13 outfit sprites exist in `/public/assets/sprites/`. CSS Modules used for components, inline styles in some older files.
+```javascript
+// WorldScene.create()
+this.particleEffects = new ParticleEffectManager(this);
+this.particleEffects.create();
 
-**Polish Strategy:**
-
-1. **CSS Consolidation**
-   - All new styles → CSS Modules
-   - Inline styles → CSS Modules (gradual migration)
-   - CSS variables for theme tokens (colors, spacing, z-index already in `src/styles/variables.css`)
-
-2. **Pixel Art Polish**
-   - Sprites exist, ensure proper scaling (use `image-rendering: pixelated`)
-   - Add idle animations for NPCs (2-3 frame loop)
-   - Add walking animations for player (already exists in Player.js sprite)
-   - Outfit sprites already integrated (Wardrobe.jsx in v2.0)
-
-3. **UI Animations**
-   - Framer Motion already used (AnimatePresence in GameLayout)
-   - Add spring animations for modal entry/exit
-   - Smooth transitions for HUD elements
-   - Toast notifications already animated (AchievementToast, NotificationToast)
-
-4. **Performance Considerations**
-   - Lazy-loaded routes already implemented (routes.jsx)
-   - Vendor chunking configured (vite.config.js splits Phaser, React, Redux)
-   - CSS Modules tree-shake unused styles
-   - Asset optimization: sprites already PNG, consider WebP for backgrounds
-
-**CSS Architecture:**
-
-```
-src/
-├── styles/
-│   ├── variables.css          # Design tokens (existing)
-│   ├── globals.css            # Resets, body styles
-│   └── animations.css         # Shared animation keyframes
-├── components/
-│   └── HUD/
-│       ├── HUD.jsx
-│       └── HUD.module.css     # Scoped styles
-└── game/
-    └── styles/                # Phaser DOM overlays
-        └── overlays.css
-```
-
-**Image Rendering for Pixel Art:**
-
-```css
-/* Add to all pixel art components */
-.pixelArt {
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
+// Example usage in InteractableManager.handleInteractable()
+if (obj.type === 'chest' && !alreadyOpened) {
+  // Emit chest sparkle effect
+  this.scene.particleEffects.emitBurst('sparkle', obj.worldX, obj.worldY - 30, {
+    quantity: 15,
+    lifespan: 1000,
+    scale: { start: 0.4, end: 0 },
+  });
 }
 ```
 
-## Integration Points for v3.0
+**Memory management:** Phaser's particle system already pools particles internally. ParticleEffectManager only needs to destroy emitters when done.
 
-### 1. Testing ↔ Refactored Architecture
+**Performance:** Limit max particles per emitter (10-20 for bursts, 50-100 for continuous). Use `blendMode: 'ADD'` sparingly (GPU-intensive).
 
-**Integration:** Refactor GameLayout FIRST, then write tests. Writing tests for 608-line god component is painful.
+**Confidence:** HIGH (Phaser 3 particle API well-documented, pattern from web search)
 
-**Files Modified:**
-- `src/components/Router/GameLayout.jsx` (refactor)
-- `src/components/Router/hooks/*.js` (new)
-- `src/components/Router/__tests__/GameLayout.test.jsx` (new)
+**Sources:**
+- [Particles - Notes of Phaser 3](https://rexrainbow.github.io/phaser3-rex-notes/docs/site/particles/)
+- [ParticleEmitter | Phaser Help](https://docs.phaser.io/api-documentation/class/gameobjects-particles-particleemitter)
+- [Game Optimization with Object Pools in Phaser 3](https://blog.ourcade.co/posts/2020/phaser-3-optimization-object-pool-basic/)
 
-**Build Order:**
-1. Refactor GameLayout (Phase 1)
-2. Write tests for extracted hooks/utils
-3. Write integration test for refactored GameLayout
-4. Add coverage for Redux slices (independent of refactor)
-5. Add coverage for utilities (independent of refactor)
+---
 
-### 2. Backend Tests ↔ Frontend Sync
+### 3. NPC Idle Behaviors
 
-**Integration:** Backend tests can run independently. Frontend sync not yet implemented.
+**System enhancement:** Extend `NPCManager.js` to support behavior patterns.
 
-**Future:** When adding frontend sync, backend tests ensure API contract stability.
+Current NPC implementation (128 LOC) uses simple idle animation (slow cycle through down-facing frames). For v4.0, add richer behaviors: wandering, looking around, emoting.
 
-**Files:**
-- `server/src/routes/__tests__/*.test.js` (new)
-- `server/src/controllers/__tests__/*.test.js` (new)
+#### Behavior Types
 
-**Build Order:** Backend tests can be written in parallel with frontend refactor.
+| Behavior | Description | Implementation |
+|----------|-------------|----------------|
+| **Idle (current)** | Slow animation cycle (3fps) | Already implemented |
+| **Wander** | Random walk in 2-tile radius every 5-10s | New: tween-based position change |
+| **Look Around** | Face different directions every 3-5s | New: change animation direction |
+| **Emote** | Show emoji above head (?, !, heart) | New: temporary sprite above NPC |
+| **Activity** | Zone-specific (sweep, read, hammer) | New: special animation frames |
 
-### 3. Visual Polish ↔ Testing
+#### State Machine vs. Simple Timer Pattern
 
-**Integration:** Visual polish increases UI complexity. Test logic, not styles.
+**State machine (Finite State Machine):** Overkill for NPC idle behaviors. Useful for complex AI (enemy combat, patrol routes), but adds 100+ LOC for minimal gain here.
 
-**Testing Focus:**
-- Test component behavior (button clicks, form submissions)
-- Don't test CSS (brittle, low value)
-- Don't test animations (use data-testid to check element presence)
-
-**Build Order:**
-1. Consolidate CSS architecture
-2. Add pixel art polish (doesn't affect tests)
-3. Write tests that focus on logic, not visual output
-
-### 4. EventBus Cleanup ↔ GameLayout Refactor
-
-**Integration:** Extract EventBus logic into `useEventBusListeners` hook. Add cleanup utility.
-
-**New Utility:**
+**Simple timer pattern (RECOMMENDED):** Use Phaser's `time.addEvent()` for behavior changes.
 
 ```javascript
-// src/utils/eventBus.js enhancement
-export function createEventBusManager() {
-  const listeners = new Map();
+// In NPC.constructor() or NPCManager.create()
+this.behaviorTimer = scene.time.addEvent({
+  delay: Phaser.Math.Between(3000, 7000), // Random interval
+  callback: this._performIdleBehavior,
+  callbackScope: this,
+  loop: true,
+});
 
-  return {
-    on(event, handler) {
-      EventBus.on(event, handler);
-      if (!listeners.has(event)) listeners.set(event, []);
-      listeners.get(event).push(handler);
-    },
+_performIdleBehavior() {
+  const behaviors = ['look', 'emote', 'wander'];
+  const choice = Phaser.Utils.Array.GetRandom(behaviors);
 
-    off(event, handler) {
-      EventBus.off(event, handler);
-      if (!listeners.has(event)) return;
-      const handlers = listeners.get(event);
-      const idx = handlers.indexOf(handler);
-      if (idx > -1) handlers.splice(idx, 1);
-    },
-
-    cleanup() {
-      listeners.forEach((handlers, event) => {
-        handlers.forEach(handler => EventBus.off(event, handler));
+  if (choice === 'look') {
+    const directions = ['down', 'left', 'right', 'up'];
+    const dir = Phaser.Utils.Array.GetRandom(directions);
+    this.anims.play(`${this.npcId}-idle-${dir}`);
+  } else if (choice === 'wander') {
+    // Small movement within bounds (only if not during player interaction)
+    if (!this.isInteracting) {
+      const offsetX = Phaser.Math.Between(-64, 64);
+      const offsetY = Phaser.Math.Between(-64, 64);
+      this.scene.tweens.add({
+        targets: this,
+        x: this.spawnX + offsetX,
+        y: this.spawnY + offsetY,
+        duration: 2000,
+        ease: 'Sine.easeInOut',
+        yoyo: true,
       });
-      listeners.clear();
     }
-  };
+  }
 }
 ```
 
-**Usage in refactored GameLayout:**
+**Confidence:** HIGH (Timer-based behavior pattern simpler than state machines, recommended for simple idle behaviors)
+
+**Sources:**
+- [State Pattern for Character Movement in Phaser 3](https://blog.ourcade.co/posts/2020/state-pattern-character-movement-phaser-3/)
+- [How To Use State Machines To Control Behavior And Animations In Phaser](https://gamedevacademy.org/how-to-use-state-machines-to-control-behavior-and-animations-in-phaser/)
+
+---
+
+### 4. Building Interior System
+
+**New system required:** `BuildingInteriorManager.js`
+
+Buildings are **separate Phaser scenes**, NOT just different map layers. This approach:
+- Keeps memory low (only one zone + one interior loaded at a time)
+- Allows different ambient audio per interior
+- Supports interior-specific NPCs/interactables without zone data bloat
+
+#### Interior Scene Pattern
 
 ```javascript
-// src/components/Router/hooks/useEventBusListeners.js
-export function useEventBusListeners() {
-  const dispatch = useDispatch();
+// src/game/scenes/InteriorScene.js
+export class InteriorScene extends Phaser.Scene {
+  constructor() {
+    super('InteriorScene');
+    this.buildingId = null; // Set by transition
+    this.exitData = null;   // Where to return when exiting
+  }
 
-  useEffect(() => {
-    const bus = createEventBusManager();
+  init(data) {
+    this.buildingId = data.buildingId;
+    this.exitData = data.exitData; // { zoneName, exitX, exitY }
+  }
 
-    bus.on('npc-interact', handleNpcInteract);
-    bus.on('zone-change', handleZoneChange);
-    // ... other listeners
+  create() {
+    // Load interior-specific map, NPCs, objects
+    const interiorConfig = BUILDING_INTERIORS[this.buildingId];
 
-    return () => bus.cleanup(); // Automatic cleanup
-  }, [dispatch]);
+    // Same system delegation as WorldScene
+    this.mapLoader = new MapLoader(this);
+    this.npcManager = new NPCManager(this);
+    this.interactableManager = new InteractableManager(this);
+
+    // Build interior map
+    const wallGroup = this.mapLoader.create(interiorConfig, interiorConfig.mapWidth, interiorConfig.mapHeight);
+
+    // Spawn player at door entrance
+    this.playerController = new PlayerController(this);
+    this.playerController.create(interiorConfig.entranceX, interiorConfig.entranceY, wallGroup);
+
+    // Interior ambient audio
+    audioManager.playAmbient(interiorConfig.ambientKey || 'interior-default');
+
+    // Exit trigger at door
+    this.createExitTrigger();
+  }
+
+  createExitTrigger() {
+    // Invisible zone at door position
+    const exitZone = this.add.zone(this.exitX, this.exitY, 64, 64);
+    this.physics.add.overlap(this.playerController.getPlayer(), exitZone, () => {
+      // Return to exterior
+      this.scene.stop('InteriorScene');
+      this.scene.resume('WorldScene');
+      EventBus.emit('exit-interior', this.exitData);
+    });
+  }
 }
 ```
 
-## Build Order & Dependencies
+#### Building Entrance Integration
 
-**Recommended Sequence:**
+**Modify MapLoader to support building entrances:**
 
-### Sprint 1: Architecture Foundation (Refactor First)
-1. **GameLayout Refactor** (3 days)
-   - Extract hooks: `useEventBusListeners`, `useQuestTracking`, `useSessionTracking`, `useGameKeyboard`
-   - Extract components: `PauseMenu`, `ActivitiesMenu`
-   - Extract pure functions: `questEventHandlers.js`
-   - Verify build passes after each extraction
-   - No behavior changes, just code organization
+```javascript
+// In MapLoader.create(), new object type: 'building'
+{
+  type: 'building',
+  id: 'house-1',
+  x: 15,
+  y: 10,
+  spriteKey: 'house-exterior',
+  interiorSceneKey: 'InteriorScene',
+  buildingId: 'village-house-1',
+}
 
-2. **EventBus Cleanup Utility** (1 day)
-   - Add `createEventBusManager` to `src/utils/eventBus.js`
-   - Update `useEventBusListeners` to use manager
-   - Test no listener leaks remain
-
-**Output:** Testable architecture, GameLayout reduced from 608 LOC → ~150 LOC orchestration.
-
-### Sprint 2: Testing Infrastructure (Test Second)
-3. **Test Utilities & Setup** (1 day)
-   - Add `createMockEventBus` and `mockPhaserGame` to `testUtils.jsx`
-   - Verify vitest.config.js coverage settings
-
-4. **Unit Tests - Redux** (3 days)
-   - Test all 12 slices: actions, reducers, selectors
-   - Test 2 middleware: achievementMiddleware, dailyGoalsMiddleware
-   - Target: 90%+ coverage for Redux layer
-
-5. **Unit Tests - Utils/Hooks** (2 days)
-   - Test extracted GameLayout hooks
-   - Test pure utility functions (xpCalculator, questHelpers, etc.)
-   - Target: 90%+ coverage for utils
-
-6. **Component Tests** (3 days)
-   - Test refactored GameLayout (integration test)
-   - Test HUD, DialogueOverlay, QuizOverlay (existing test as template)
-   - Target: 60%+ coverage for UI components
-
-7. **Phaser Logic Tests** (2 days)
-   - Extract game logic to `src/game/utils/`
-   - Test pure functions (collision detection, NPC interaction range, etc.)
-   - Don't test Phaser rendering
-   - Target: 40%+ coverage for extracted logic
-
-**Output:** 80%+ overall coverage, CI-ready test suite.
-
-### Sprint 3: Backend Hardening (Parallel to Frontend)
-8. **Backend Test Setup** (1 day)
-   - Configure MongoDB memory server for tests
-   - Add test helpers (createTestUser, cleanDB)
-
-9. **Backend Unit Tests** (3 days)
-   - Test controllers, models, middleware
-   - Test Zod schemas with edge cases
-   - Test rate limiter enforcement
-
-10. **Backend Integration Tests** (2 days)
-    - Test auth flows with supertest
-    - Test CSRF protection
-    - Test error handling (no secret leakage)
-
-11. **Security Audit** (1 day)
-    - Run `npm audit`, fix vulnerabilities
-    - Review errorHandler for prod stack trace leakage
-    - Verify CORS whitelist
-    - Verify rate limits sufficient
-
-**Output:** Hardened backend with 80%+ test coverage, security audit passed.
-
-### Sprint 4: Visual Polish (After Testing)
-12. **CSS Consolidation** (2 days)
-    - Migrate inline styles → CSS Modules
-    - Add shared animation keyframes to `src/styles/animations.css`
-    - Verify no visual regressions
-
-13. **Pixel Art Polish** (2 days)
-    - Add `image-rendering: pixelated` to all sprites
-    - Add NPC idle animations (2-3 frames)
-    - Verify player walking animations smooth
-
-14. **UI Animation Polish** (2 days)
-    - Add Framer Motion spring animations for modals
-    - Polish toast notifications (already animated, refine timing)
-    - Add HUD element transitions
-
-15. **Performance Optimization** (1 day)
-    - Verify lazy-loading working (already configured)
-    - Check bundle sizes (vendor chunks already split)
-    - Consider WebP for backgrounds (optional)
-
-**Output:** Polished UI, consistent CSS architecture, optimized assets.
-
-### Sprint 5: Integration & E2E
-16. **E2E Critical Paths** (3 days)
-    - Onboarding flow (character creation → first NPC)
-    - Review session (due cards → quiz → FSRS update)
-    - Battle flow (boss selection → word duel → rewards)
-    - Shop purchase (select item → buy → inventory update)
-    - Quest completion (trigger → progress → reward)
-
-17. **CI/CD Integration** (1 day)
-    - Add test scripts to GitHub Actions
-    - Add coverage reporting
-    - Add bundle size checks
-
-**Output:** E2E coverage, CI pipeline, v3.0 ready to ship.
-
-## Data Flow Changes in v3.0
-
-### Before (v2.0): Monolithic GameLayout
-```
-GameLayout (608 LOC)
-├── 20 EventBus listeners in one useEffect
-├── Quest tracking inline
-├── Session tracking inline
-├── Keyboard shortcuts inline
-└── Overlay rendering inline
-    → Hard to test, hard to maintain
+// InteractableManager handles building interaction
+if (obj.type === 'building') {
+  EventBus.emit('enter-building', {
+    buildingId: obj.buildingId,
+    exitData: { zoneName: this.currentZone, exitX: player.x, exitY: player.y }
+  });
+  EventBus.emit('freeze-player');
+}
 ```
 
-### After (v3.0): Modular Hooks
-```
-GameLayout (150 LOC - orchestration)
-├── useEventBusListeners() → EventBus setup/cleanup
-├── useQuestTracking() → Quest logic
-├── useSessionTracking() → Session timer
-├── useGameKeyboard() → Keyboard shortcuts
-└── <GameOverlays /> → Conditional rendering
-    → Each hook independently testable
-    → Pure function utils fully testable
+**useEventBusListeners handles scene transition:**
+
+```javascript
+const handleEnterBuilding = ({ buildingId, exitData }) => {
+  playSFX('door');
+  const game = phaserRef.current?.game;
+  if (game) {
+    const worldScene = game.scene.getScene('WorldScene');
+    worldScene.scene.pause('WorldScene'); // Pause but don't destroy
+    worldScene.scene.launch('InteriorScene', { buildingId, exitData });
+  }
+};
+
+EventBus.on('enter-building', handleEnterBuilding);
 ```
 
-### New Test Data Flow
+**Pros:**
+- Clean separation (interiors don't bloat zone data)
+- Different ambient per interior
+- Easy to add unique NPCs/quests inside buildings
+
+**Cons:**
+- Slight load time when entering (mitigated by small interior maps)
+
+**Confidence:** HIGH (Scene transitions are standard Phaser pattern, documented in web search)
+
+**Sources:**
+- [Scene Transition with Fade Out in Phaser 3](https://blog.ourcade.co/posts/2020/phaser-3-fade-out-scene-transition/)
+- [Create Scenes And Scene Transitions At Phaser3 Library](https://steemit.com/utopian-io/@onepice/create-scenes-and-scene-transitions-at-phaser3-library)
+
+---
+
+### 5. Enhanced Interactables
+
+**System enhancement:** Extend `InteractableManager.js` with animated objects.
+
+Current implementation (169 LOC) supports static objects (chests, signs, bookshelves). For v4.0, add:
+- Animated sprites (spinning coins, glowing crystals, bubbling potions)
+- Interactive animations (door opening, lever pulling)
+- State-based visuals (already done for chests via tint)
+
+#### Enhanced Interactable Types
+
+| Type | Current State | New Behavior |
+|------|---------------|--------------|
+| **Chest** | Static sprite, tint when opened | Add particle burst on open |
+| **Door** | N/A | Animated sprite (closed → opening → open) |
+| **Lever** | N/A | Two-frame animation (up ↔ down) |
+| **Crystal** | N/A | Continuous glow animation (tween alpha) |
+| **Fountain** | N/A | Water particle emitter |
+
+#### Implementation Pattern
+
+```javascript
+// In InteractableManager.create()
+if (cfg.type === 'door') {
+  const sprite = this.scene.add.sprite(px, py, 'door-closed');
+
+  // Create animation if not exists
+  if (!this.scene.anims.exists('door-open')) {
+    this.scene.anims.create({
+      key: 'door-open',
+      frames: this.scene.anims.generateFrameNumbers('door-sprite', { start: 0, end: 3 }),
+      frameRate: 8,
+      repeat: 0, // Play once
+    });
+  }
+
+  this.interactables.push({
+    ...cfg,
+    sprite,
+    state: 'closed', // Track state for toggle
+  });
+}
+
+// In handleInteractable()
+if (obj.type === 'door') {
+  if (obj.state === 'closed') {
+    obj.sprite.anims.play('door-open');
+    obj.state = 'open';
+    // Trigger event (unlock area, spawn NPC, etc.)
+    EventBus.emit('door-opened', { id: obj.id });
+  }
+}
 ```
-Test Suite
-    ↓
-createTestStore(preloadedState) → Redux store with test data
-    ↓
-renderWithProviders(<Component />, { store }) → Component with Redux
-    ↓
-screen.getByRole() → Query rendered output
-    ↓
-fireEvent.click() → Simulate user interaction
-    ↓
-expect(store.getState().player.level).toBe(2) → Assert state change
+
+**Texture Atlas for Animated Objects:**
+
+Use Phaser's atlas loader for animated interactables:
+
+```javascript
+// In BootScene.preload()
+this.load.atlas('interactables', 'assets/sprites/interactables.png', 'assets/sprites/interactables.json');
+
+// Access frames via generateFrameNames
+this.anims.create({
+  key: 'door-open',
+  frames: this.anims.generateFrameNames('interactables', { prefix: 'door-', start: 1, end: 4, suffix: '.png' }),
+  frameRate: 8,
+});
 ```
+
+**Confidence:** MEDIUM (Texture atlas pattern well-documented, but specific frame configurations may need tuning)
+
+**Sources:**
+- [Working with Texture Atlases in Phaser 3](https://airum82.medium.com/working-with-texture-atlases-in-phaser-3-25c4df9a747a)
+- [Animate a Compressed Sprite Atlas in a Phaser Game](https://www.thepolyglotdeveloper.com/2020/08/animate-compressed-sprite-atlas-phaser-game/)
+
+---
+
+## System Dependencies & Build Order
+
+### Dependency Graph
+
+```
+ParticleEffectManager (no dependencies) ────┐
+                                             ├─→ WorldScene.create()
+AudioManager (no dependencies) ─────────────┤
+                                             │
+NPCManager (reads Redux) ───────────────────┤
+                                             │
+InteractableManager (reads Redux) ──────────┤
+    ↓ (emits particles)                      │
+ParticleEffectManager.emitBurst() ──────────┘
+
+BuildingInteriorManager ─→ InteriorScene (NEW SCENE)
+    ↓ (delegates to)
+    PlayerController, NPCManager, InteractableManager, MapLoader
+```
+
+### Recommended Build Order
+
+| Phase | Feature | Reason |
+|-------|---------|--------|
+| **1** | AudioManager integration (ambient per zone) | No dependencies, improves immersion immediately |
+| **2** | ParticleEffectManager (basic bursts) | Simple system, visual feedback for interactions |
+| **3** | Enhanced InteractableManager (animated objects) | Builds on ParticleEffectManager for chest sparkles |
+| **4** | NPC idle behaviors | Standalone enhancement, no dependencies |
+| **5** | Building interiors (InteriorScene) | Most complex, requires new scene + data files |
+
+---
+
+## Files to Create vs. Modify
+
+### New Files
+
+| File | Purpose | LOC Estimate |
+|------|---------|--------------|
+| `src/game/systems/ParticleEffectManager.js` | Particle emitter manager | ~150 |
+| `src/game/scenes/InteriorScene.js` | Building interior scene | ~200 |
+| `src/data/buildingInteriors.js` | Interior map/NPC/object configs | ~500 (data) |
+| `src/game/systems/__tests__/ParticleEffectManager.test.js` | Unit tests | ~80 |
+
+### Files to Modify
+
+| File | Modifications | LOC Change |
+|------|---------------|------------|
+| `src/game/scenes/WorldScene.js` | Add ParticleEffectManager instantiation, ambient audio calls | +20 |
+| `src/game/systems/NPCManager.js` | Add idle behavior timers | +40 |
+| `src/game/systems/InteractableManager.js` | Add animated object support, particle emission | +60 |
+| `src/game/systems/MapLoader.js` | Add building entrance object type | +30 |
+| `src/hooks/useEventBusListeners.js` | Add `enter-building`, `exit-interior` handlers | +25 |
+| `src/game/sprites/NPC.js` | Add behavior methods (look, wander, emote) | +50 |
+
+**Total new code:** ~1,135 LOC
+**Modified code:** ~225 LOC
+
+---
 
 ## Anti-Patterns to Avoid
 
-### Anti-Pattern 1: Testing Implementation Details
+### Anti-Pattern 1: Global Particle Emitter Reuse
 
-**What people do:** Test internal component state, CSS classes, implementation details.
+**What people do:** Create one emitter, reposition it for every effect
+**Why it's wrong:** Emitters have configuration (color, speed, lifespan). Reusing requires reconfiguring every time, error-prone.
+**Do this instead:** Create effect-specific emitters, destroy after use (Phaser pools particles internally).
 
-**Why it's wrong:** Brittle tests that break on refactors, even when behavior unchanged.
+### Anti-Pattern 2: State Machines for Simple NPC Behaviors
 
-**Do this instead:**
-```javascript
-// BAD: Testing implementation
-test('HUD shows statsPanel when statsOpen is true', () => {
-  const { container } = render(<HUD />);
-  expect(container.querySelector('.statsPanel')).toBeInTheDocument();
-});
+**What people do:** Implement FSM with states, transitions, guards for idle animations
+**Why it's wrong:** 100+ LOC for behavior that's just "change animation every 5 seconds"
+**Do this instead:** Use `scene.time.addEvent()` with random intervals. FSMs are for complex AI (combat, pathfinding).
 
-// GOOD: Testing user-facing behavior
-test('HUD shows stats when stats button clicked', () => {
-  render(<HUD onMenu={vi.fn()} />);
-  const statsButton = screen.getByLabelText(/show stats/i);
-  fireEvent.click(statsButton);
-  expect(screen.getByText(/Words:/i)).toBeInTheDocument();
-});
-```
+### Anti-Pattern 3: Polling for Audio Volume Changes
 
-### Anti-Pattern 2: Testing Phaser Rendering
+**What people do:** `update()` loop reads Redux state every frame, applies to audioManager
+**Why it's wrong:** Unnecessary computation 60 times per second
+**Do this instead:** Use React's `useEffect` to sync Redux → audioManager only when volume changes (already implemented correctly in useAudio hook).
 
-**What people do:** Try to test Phaser sprite rendering, canvas output.
+### Anti-Pattern 4: Loading All Interior Scenes at Startup
 
-**Why it's wrong:** Requires full Phaser context, slow, brittle, low value.
+**What people do:** Preload all building interiors in BootScene
+**Why it's wrong:** Long initial load, high memory usage for content player may never see
+**Do this instead:** Lazy-load interiors on first entry using `scene.launch()` (Phaser handles caching).
 
-**Do this instead:** Extract game logic into pure functions, test those.
+### Anti-Pattern 5: Destroying Particle Emitters in update()
 
-```javascript
-// BAD: Testing Phaser rendering
-test('NPCManager renders 140 sprites', () => {
-  const scene = new WorldScene();
-  const npcManager = new NPCManager(scene);
-  expect(scene.children.length).toBe(140); // Brittle, requires Phaser context
-});
+**What people do:** Check `emitter.emitting` in `update()`, call `destroy()` when false
+**Why it's wrong:** Runs check 60 times per second for one-off events
+**Do this instead:** Use `scene.time.delayedCall(lifespan, () => emitter.destroy())` when creating emitter.
 
-// GOOD: Test extracted game logic
-test('getInteractableNPC returns closest NPC within range', () => {
-  const npcs = [
-    { x: 100, y: 100, id: 'merchant' },
-    { x: 500, y: 500, id: 'guard' }
-  ];
-  const result = getInteractableNPC(npcs, 110, 110, 50);
-  expect(result).toEqual({ x: 100, y: 100, id: 'merchant' });
-});
-```
+---
 
-### Anti-Pattern 3: Skipping Backend Tests
+## Performance Considerations
 
-**What people do:** "Backend is simple CRUD, no need for tests."
+### Memory
 
-**Why it's wrong:** Security vulnerabilities, regression bugs, lack of API contract documentation.
+| System | Memory Impact | Mitigation |
+|--------|---------------|------------|
+| **Particle emitters** | ~1KB per active emitter | Destroy one-shot emitters after completion |
+| **Interior scenes** | ~500KB per scene | Lazy-load, unload when exiting |
+| **Texture atlases** | ~2MB for full sprite set | Use atlas compression (see STACK.md) |
+| **Audio** | ~1MB per ambient track | Howler.js streams, only 1 ambient active at a time |
 
-**Do this instead:** Write integration tests for all routes, unit tests for business logic.
+### Frame Budget (60fps = 16.67ms per frame)
 
-### Anti-Pattern 4: God Component Refactor Without Tests
+| System | Update Cost | Notes |
+|--------|-------------|-------|
+| **NPCManager.update()** | ~0.5ms (140 NPCs) | Proximity checks use squared distance (no sqrt) |
+| **ParticleEffectManager** | ~0.1ms | Phaser handles particle updates natively |
+| **DOMOverlay.update()** | ~0.2ms | Only updates when camera moves (dirty flag) |
+| **Audio (ambient)** | 0ms | Howler.js runs in WebAudio thread |
 
-**What people do:** Refactor giant component, forget edge cases, break production.
+**Current total:** ~5ms/frame for game systems (leaves 11ms for rendering)
+**With new systems:** Estimate +1ms (ParticleEffectManager + NPC behaviors)
 
-**Why it's wrong:** No safety net, regressions slip through, lose user trust.
+**Optimization:** If FPS drops below 55, reduce:
+1. Max particles per emitter (50 → 30)
+2. NPC idle behavior frequency (5s → 10s intervals)
+3. Particle alpha blend (use NORMAL instead of ADD)
 
-**Do this instead:** Write integration test FIRST (even if it tests god component), then refactor, verify test still passes.
+---
 
-## Scaling Considerations
+## Integration Testing Strategy
 
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| **Current (single-player, local-first)** | Redux-persist to localStorage works. Backend for sync only. |
-| **1k-10k users (cloud sync)** | Add Redis for session management. MongoDB with indexes sufficient. Rate limiting critical. |
-| **10k-100k users (multiplayer features)** | Add WebSocket for real-time features. Consider CDN for assets. Horizontal scaling for backend. |
-| **100k+ users** | Split backend into microservices (auth, game, sync). Use message queue for async operations. |
+### Unit Tests (New)
 
-### Scaling Priorities (v3.0 scope)
+| System | Test Focus | Tools |
+|--------|------------|-------|
+| **ParticleEffectManager** | Emitter creation, position updates, cleanup | Vitest + Phaser mocks |
+| **InteriorScene** | Scene initialization, player spawn, exit triggers | Vitest + Phaser mocks |
 
-1. **First bottleneck:** Backend rate limiting (already present, needs tuning)
-   - **Fix:** Monitor rate limit hits, adjust thresholds based on real usage
-   - **v3.0 action:** Add logging/monitoring for rate limit hits
+### Integration Tests (Existing + Enhanced)
 
-2. **Second bottleneck:** MongoDB query performance
-   - **Fix:** Add indexes for user queries, progress updates
-   - **v3.0 action:** Profile slow queries, add indexes
+| System | Test Focus | Tools |
+|--------|------------|-------|
+| **useEventBusListeners** | `enter-building`, `exit-interior` handlers | Vitest + renderWithProviders |
+| **WorldScene** | Ambient audio starts on zone load | Phaser scene test (manual) |
 
-3. **Third bottleneck:** Frontend bundle size
-   - **Fix:** Already code-split, further optimize with dynamic imports
-   - **v3.0 action:** Analyze bundle with vite-bundle-visualizer
+### E2E Tests (New)
 
-**Not a bottleneck yet:** Phaser rendering (single canvas, 64x64 tilemap), CSS performance, Redux store size.
+| Flow | Steps | Tools |
+|------|-------|-------|
+| **Building entry** | Walk to door → interact → see interior → exit | Playwright |
+| **Particle effects** | Open chest → see sparkles | Playwright (visual regression) |
+
+---
+
+## Confidence Assessment
+
+| Area | Confidence | Reasoning |
+|------|------------|-----------|
+| **Audio integration** | HIGH | audioManager already exists, only needs new call sites |
+| **Particle system** | HIGH | Phaser 3 particle API well-documented, pattern validated by existing Player.js dust particles |
+| **NPC behaviors** | HIGH | Timer-based pattern simpler than state machines, recommended for simple AI |
+| **Building interiors** | HIGH | Scene transition pattern standard in Phaser 3, multiple tutorials confirm approach |
+| **Enhanced interactables** | MEDIUM | Texture atlas animation pattern documented, but specific frame configs may need tuning |
+| **Performance estimates** | MEDIUM | Based on existing system costs + web search optimizations, not profiled |
+
+---
 
 ## Sources
 
-**Architecture Analysis:**
-- Existing codebase: GameLayout.jsx (608 LOC), routes.jsx, store.js, vitest.config.js, vite.config.js
-- Redux Toolkit patterns: Official documentation, middleware best practices
-- Phaser 3 integration: EventEmitter patterns, DOM overlay techniques
-- Testing strategy: Vitest + RTL documentation, existing test examples (HUD.test.jsx)
+### Official Documentation
+- [Phaser 3 Particles Documentation](https://docs.phaser.io/phaser/concepts/gameobjects/particles)
+- [Phaser 3 Animations Documentation](https://docs.phaser.io/phaser/concepts/animations)
+- [Phaser 3 Textures Documentation](https://docs.phaser.io/phaser/concepts/textures)
 
-**Backend Security:**
-- Express.js security: Helmet, CORS, rate limiting (already implemented)
-- JWT authentication: httpOnly cookies + CSRF (already implemented)
-- Zod validation: Schema-based input validation (already implemented)
+### Tutorials & Best Practices
+- [Particles - Notes of Phaser 3](https://rexrainbow.github.io/phaser3-rex-notes/docs/site/particles/)
+- [Game Optimization with Object Pools in Phaser 3](https://blog.ourcade.co/posts/2020/phaser-3-optimization-object-pool-basic/)
+- [How I optimized my Phaser 3 action game — in 2025](https://franzeus.medium.com/how-i-optimized-my-phaser-3-action-game-in-2025-5a648753f62b)
+- [State Pattern for Character Movement in Phaser 3](https://blog.ourcade.co/posts/2020/state-pattern-character-movement-phaser-3/)
+- [Scene Transition with Fade Out in Phaser 3](https://blog.ourcade.co/posts/2020/phaser-3-fade-out-scene-transition/)
+- [Working with Texture Atlases in Phaser 3](https://airum82.medium.com/working-with-texture-atlases-in-phaser-3-25c4df9a747a)
 
-**Testing Patterns:**
-- React Testing Library: Focus on user behavior, not implementation
-- Vitest: Jest-compatible API, ESM-first, fast
-- Playwright: E2E testing for critical flows
+### Architecture References
+- [How to use Phaser with React and Redux](https://morethancodingwithdario.hashnode.dev/how-to-use-phaser-with-react-and-redux)
+- [Successfully Integrating Phaser 3 into your React/Redux App (Part 1)](https://hopefourie.medium.com/successfully-integrating-phaser-3-into-your-react-redux-app-part-1-bade7feb460)
 
-**Visual Polish:**
-- CSS Modules: Scoped styles, tree-shaking
-- Framer Motion: Spring animations, AnimatePresence (already used)
-- Pixel art rendering: `image-rendering: pixelated` for crisp sprites
-
-**Confidence:** HIGH - All recommendations based on existing codebase analysis, established patterns, and standard best practices for React 19 + Phaser 3 + Express applications.
+### Codebase Analysis
+- Validated from existing files: `WorldScene.js`, `NPCManager.js`, `InteractableManager.js`, `MapLoader.js`, `DOMOverlay.js`, `Player.js`, `NPC.js`, `audio.js`, `useAudio.js`, `useEventBusListeners.js`, `settingsSlice.js`
 
 ---
-*Architecture research for: GoGo Arabic v3.0 Infrastructure & Polish*
-*Researched: 2026-02-08*
-*Basis: Codebase analysis (27K LOC, 608-line GameLayout, 12 Redux slices, Express 5 backend, 11 existing tests)*
+
+**Architecture research for:** GoGo Arabic v4.0 Game Soul & Polish
+**Researched:** 2026-02-09
+**Confidence:** HIGH (validated against existing codebase, web search confirmed patterns)
