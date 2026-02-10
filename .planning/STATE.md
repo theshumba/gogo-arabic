@@ -63,12 +63,18 @@ None.
 - No audio system → Phase 15 (AUD-01-05)
 - Missing triple-A game feel → Phase 16 (VFX-01-05)
 
+### v4.0 Animation Decisions
+
+- Individual motion.div wrappers with explicit delay per section (no staggerChildren on parent)
+- CSS keyframes for infinite animations (shimmer, sparkle, glow) -- more performant than Framer Motion
+- Spring physics for toast entrance, cubic bezier ease-out for overlay card transitions
+
 ## Session Continuity
 
 Last session: 2026-02-10
-Completed: 18-01-PLAN.md (NPC Idle Animations + Locked Door Feedback + Camera Follow)
-Resume: Continue with remaining Phase 18 plans or other v4.0 phases
+Completed: 16-02-PLAN.md (Level-Up Celebration + Achievement Toast Enhancement)
+Resume: Continue with remaining Phase 16 plans or other v4.0 phases
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-10 — Completed 18-01 (NPC idle + door feedback + camera follow)*
+*Last updated: 2026-02-10 — Completed 16-02 (level-up celebration + achievement toast + overlay transitions)*
