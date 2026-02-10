@@ -282,7 +282,17 @@ export function createMockScene(overrides = {}) {
     // Scene management
     scene: {
       start: vi.fn(),
-      key: 'TestScene'
+      key: 'TestScene',
+      // Scene lifecycle for SceneStackManager:
+      pause: vi.fn(),
+      resume: vi.fn(),
+      launch: vi.fn(),
+      stop: vi.fn(),
+      isActive: vi.fn(() => true),
+      getScene: vi.fn(() => null),
+      manager: {
+        getActiveScenes: vi.fn(() => []),
+      },
     },
 
     // System
@@ -298,7 +308,12 @@ export function createMockScene(overrides = {}) {
         loop: {
           delta: 16.67 // ~60fps
         }
-      }
+      },
+      scene: {
+        manager: {
+          getActiveScenes: vi.fn(() => []),
+        },
+      },
     },
 
     // Animations
