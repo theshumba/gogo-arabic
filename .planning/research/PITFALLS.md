@@ -1,595 +1,842 @@
-# Domain Pitfalls
+# Domain Pitfalls: Narrative-Driven Educational Game Features
 
-**Domain:** Game Soul & Polish for Phaser 3 + React Arabic Learning RPG
-**Researched:** 2026-02-09
-**Focus:** Audio system, particle effects, NPC AI, building interiors, game feel polish
+**Domain:** Adding branching narrative, enterable buildings, interactive objects, and guided onboarding to existing Phaser 3 + React Arabic learning RPG
+**Researched:** 2026-02-10
+**Context:** 36,000+ LOC codebase, 12 Redux slices, Phaser + React bridge via EventBus, 52 existing quests, 140 NPCs, 8 zones
+
+---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites or major issues.
+These mistakes cause rewrites, player churn, or system complexity nightmares.
 
-### Pitfall 1: Audio Autoplay Policy Violation
+### Pitfall 1: State Explosion in Branching Narrative
 
-**What goes wrong:** Audio fails to play on mobile browsers and some desktop browsers. Users experience silent gameplay or sounds only work intermittently after first user interaction.
+**What goes wrong:** Branching narratives scale exponentially while linear code scales linearly. With 20 NPCs and 10 quest states, you theoretically have 200 conversation variations. But quests interact—completing Quest A changes dialogue in Quest B—and the explosion happens faster than expected.
 
-**Why it happens:** Browser autoplay policies require AudioContext to be resumed after a user gesture. Phaser will automatically resume the AudioContext when the game gains focus, but background music or ambient sounds that attempt to play before any user interaction will be blocked. On iOS, audio won't play at all if the device ringer is set to vibrate.
+A dialogue system becomes a state machine managing multiple boolean flags (like `playerBefriendedMerchant`, `merchantAngry`, `merchantQuestComplete`). This works until you have 200 booleans spread across 15 scripts, and you can't remember which flag controls which conversation, or what happens when two contradictory flags are both true.
 
-**Consequences:** Silent game, poor user experience, support tickets, players think game is broken.
+**Why it happens:**
+- No dialogue variable management strategy upfront
+- Quest state stored in multiple locations (Redux quest slice, NPC slice, player slice)
+- Each new quest adds flags without checking existing ones
+- No visual tooling to see dependency graph
 
-**Prevention:**
-- Create an explicit "Start Game" or "Tap to Play" screen that requires user interaction
-- Call `this.sound.context.resume()` on the first user gesture (touch, click, keydown)
-- Use Phaser's built-in `unlocked` property to check if AudioContext is ready
-- Prime all audio on user-initiated events by calling `play()` then immediately `pause()`
-- Test on iOS with ringer in both normal and vibrate modes
-
-**Detection:**
-- Audio works on desktop Chrome but not mobile Safari
-- Console warnings about "AudioContext was not allowed to start"
-- Sounds play after first click/tap but not on page load
-- Audio works inconsistently between browser tabs
-
-### Pitfall 2: Web Audio Memory Leaks
-
-**What goes wrong:** Memory usage grows continuously during gameplay, eventually causing performance degradation, browser tab crashes, or "Out of Memory" errors. Profiling shows AudioBufferSourceNode references not being freed.
-
-**Why it happens:** Calling `context.decodeAudioData()` creates ArrayBuffers that aren't garbage collected unless `context.close()` is explicitly called. Creating multiple AudioContext instances without cleanup causes severe memory bloat. Sound objects that play repeatedly (UI clicks, NPC dialogue) create new buffer source nodes that accumulate in memory.
-
-**Consequences:** Game crashes after 10-15 minutes, audio crackling, frame rate drops, browser tab unresponsive.
+**Consequences:**
+- Impossible to debug ("Why is this NPC repeating old dialogue?")
+- Quest logic breaks when players complete quests out of order
+- 500+ line if/else chains in NPC interaction handlers
+- Development paralysis: afraid to change anything because impact unknown
 
 **Prevention:**
-- Use ONE AudioContext for the entire application (reuse Phaser's sound manager)
-- Call `context.close()` when destroying audio systems or switching major game states
-- Use Phaser's built-in sound pooling (HTML5Audio for mobile, WebAudio for desktop)
-- Disconnect and destroy audio nodes after playback: `node.disconnect(); node = null`
-- Prefer audio sprites over individual files for UI sounds and short effects
-- Clear unused audio assets: `this.cache.audio.remove(key)`
-- Monitor memory usage in Performance tab during long play sessions
+1. **Use narrative bottlenecking:** Implement repeating diamond structure (choices converge back to same nodes). Most successful branching narratives use parallel paths that merge, not true exponential branching.
+2. **Centralize dialogue state:** Single source of truth in Redux `dialogueSlice` with structured format:
+   ```javascript
+   dialogueState: {
+     flags: {
+       'merchant-trust': 3,        // 0-5 trust meter
+       'scholar-quest-stage': 2,   // Quest progression
+       'zone-reputation': 'neutral' // Enum, not boolean
+     },
+     conversationHistory: ['merchant-greeting-1', 'scholar-intro']
+   }
+   ```
+3. **Visual dialogue tool or DSL:** Use Yarn Spinner, ink, or simple JSON schema. Visual obviousness prevents complexity explosions.
+4. **Flag budget:** Limit to 50 global flags max. If you need more, rethink architecture (use enums instead of booleans, quest stages instead of completion flags).
 
 **Detection:**
-- Memory usage increases steadily in Chrome DevTools Performance Monitor
-- Audio crackling or distortion after 10-15 minutes of gameplay
-- Frame rate drops over time without visual changes
-- Browser tab becomes unresponsive after extended gameplay
-- Heap snapshots show increasing AudioBuffer/AudioBufferSourceNode counts
+- Warning sign 1: Adding new quest requires checking 10+ existing flags
+- Warning sign 2: NPC dialogue files exceed 300 LOC
+- Warning sign 3: Playtest reveals dialogue contradictions
+- Warning sign 4: Can't answer "What happens if player did X before Y?"
 
-### Pitfall 3: Particle Emitter Performance Collapse
+**Phase-specific warnings:**
+- **Branching Narrative phase:** This is THE pitfall. Allocate 40% of phase time to dialogue system architecture.
+- **Rich NPC Conversations phase:** Flag count will spike here. Audit every 5 NPCs added.
+- **Personalized Progression phase:** Player choices affect future content = flag explosion risk.
 
-**What goes wrong:** Frame rate drops from 60fps to 15-30fps when particle effects are active. Mobile devices become unplayably slow. Visual effects that look fine on desktop cause mobile browsers to freeze.
+**Integration gotcha (GoGo Arabic specific):**
+- Currently: 12 Redux slices already exist. Adding `dialogueSlice` is 13th.
+- Risk: Dialogue state scattered across `questSlice`, `npcSlice`, `playerSlice`.
+- Mitigation: Audit existing state first. Migrate relevant flags to `dialogueSlice` before adding new dialogue.
 
-**Why it happens:** Creating too many active particles simultaneously (200+ particles on mobile, 1000+ on desktop). Using high-resolution particle textures instead of small pixel art sprites. Creating new ParticleEmitter instances instead of reusing them. Running multiple emitters without using `viewBounds` to cull off-screen particles. Not setting `maxParticles` or `frequency` limits.
+**Confidence:** HIGH
+**Sources:**
+- [The Branching Dialogue Nightmare: Why Your First Dialogue System Will Fail (And How to Fix It)](https://storyflow-editor.com/blog/branching-dialogue-nightmare-how-to-fix/)
+- [Narrative Control and Player Experience in Role Playing Games](https://www.researchgate.net/publication/300588610_Narrative_Control_and_Player_Experience_in_Role_Playing_Games_Decision_Points_and_Branching_Narrative_Feedback)
 
-**Consequences:** Game becomes unplayable, poor reviews, users abandon on mobile.
+---
+
+### Pitfall 2: Narrative-Learning Balance Catastrophe
+
+**What goes wrong:** The biggest challenge educational games face is finding the right balance between learning and engagement. One of the primary challenges of gamification is striking the right balance between fun and educational value. Research shows that the rich narrative condition produced the lowest learning gains compared to both minimal narrative and PowerPoint conditions, suggesting that more elaborate narratives don't always enhance learning outcomes.
+
+Educational games with overly complex narratives suffer from:
+- Players skip dialogue to "get to the game"
+- Learning objectives obscured by story
+- Cognitive overload: processing Arabic vocabulary + complex plot
+- Story becomes "work" instead of motivation
+
+**Why it happens:**
+- Designer assumes "more story = more engagement"
+- Narrative written without alignment to learning objectives
+- Story pacing conflicts with learning pacing (learning needs repetition, story needs novelty)
+- No playtesting with actual language learners (friends/family don't match target audience)
+
+**Consequences:**
+- Players engage with story but ignore vocabulary
+- Players skip all dialogue to "get to the quizzes"
+- Learning retention drops (narrative distracts from pedagogy)
+- Development wasted on content players skip
 
 **Prevention:**
-- **Mobile budget:** 50-100 particles max per emitter, 200 total on-screen
-- **Desktop budget:** 200-500 particles max per emitter, 1000 total on-screen
-- Use `emitter.setViewBounds(camera.worldView)` to cull off-screen particles
-- Set explicit `maxParticles` and `stopAfter` limits
-- Reuse emitters with `emitter.stop()` then reconfigure, don't destroy/recreate
-- Use tiny particle textures (4x4 to 16x16 pixels) for pixel art aesthetic
-- Pool emitter instances: create once, show/hide as needed
-- Use `emitter.pause()` when emitter is off-screen instead of destroying
-- Test on low-end mobile device (iPhone SE or equivalent Android)
+1. **Intrinsic narrative-learning integration:** Every dialogue teaches vocabulary. Example: NPC merchant uses words for "buy," "sell," "price" in natural conversation. The narrative should be intrinsically related to the learning objective.
+2. **Flow state balancing:** Create a balance between skill level and challenge to avoid anxiety. Flow theory describes a state of deep engagement when a person is completely immersed in an activity. In a study by the University of Colorado, students in gamified learning showed 14% increase in knowledge retention and 20% increase in engagement.
+3. **Tight first session:** In 2026, top teams design onboarding like a product funnel. They keep the first session tight, readable, and emotionally rewarding. A small win quickly beats a deep tutorial slowly.
+4. **Narrative serves learning, not vice versa:** If a dialogue tree doesn't teach vocabulary or grammar, cut it. Story is vehicle for learning, not the destination.
+5. **Avoid punishment during learning:** Don't punish players excessively in early stages while they're still learning. That's a sure path to bad retention.
 
 **Detection:**
-- FPS drops immediately when particle effect starts
-- Chrome DevTools Performance shows long "Composite Layers" times
-- Mobile devices exhibit touch input lag during particle effects
-- Particle effects look choppy or delayed
-- Game stutters when multiple NPCs have active effects
+- Warning sign 1: Dialogue scenes exceed 2 minutes without vocabulary exposure
+- Warning sign 2: Players skip dialogue in playtests
+- Warning sign 3: Story completion high, quiz completion low (or vice versa)
+- Warning sign 4: Narrative requires understanding concepts not yet taught
 
-### Pitfall 4: NPC Pathfinding Frame Rate Destruction
+**Phase-specific warnings:**
+- **Guided Onboarding phase:** Highest risk. First 5 minutes determine retention. Keep tutorial under 5 minutes, give players option to skip.
+- **Rich NPC Conversations phase:** Each NPC should teach 5-10 vocab words. If not, reevaluate.
+- **Branching Narrative phase:** Choices should reinforce vocabulary (choose Arabic responses, not just English).
 
-**What goes wrong:** Game freezes or drops to 5-10 fps when multiple NPCs calculate paths simultaneously. Pathfinding works fine with 5-10 NPCs but becomes unplayable with 140 NPCs across 8 zones.
+**Integration gotcha (GoGo Arabic specific):**
+- Currently: 1,220 vocab words, 28 letters, 6 quiz types, FSRS spaced repetition.
+- Risk: Adding narrative without tying to existing vocabulary = disconnect.
+- Mitigation: Map dialogue to vocabulary categories. Each NPC "owns" 10-20 words from existing 1,220.
 
-**Why it happens:** Running A* pathfinding synchronously on every frame for all active NPCs. Recalculating paths every frame instead of caching results. Using grid-based pathfinding on large maps (50x50 tiles = 2,500 nodes searched per NPC). All NPCs in a zone recalculating paths at the same time when player moves.
+**Confidence:** HIGH
+**Sources:**
+- [Educational Games — Balance between Learning and Engagement](https://medium.com/@SharanShodhan/educational-games-balance-between-learning-and-engagement-3437b2efb9f)
+- [Balancing Fun and Learning in Educational Game Design](https://www.filamentgames.com/blog/balancing-fun-and-learning-in-educational-game-design/)
+- [Educational Game Design: An Empirical Study of the Effects of Narrative](https://chaimaj.github.io/papers/fdg_paper.pdf)
+- [Effect of Digital Game-Based Learning on Student Engagement and Motivation](https://www.mdpi.com/2073-431X/12/9/177)
 
-**Consequences:** Game becomes unplayable in crowded zones, poor performance reputation, refund requests.
+---
+
+### Pitfall 3: EventBus Overload (Integration-Specific)
+
+**What goes wrong:** GoGo Arabic uses Phaser.Events.EventEmitter as bridge between Phaser (game engine) and React (UI). Currently handles ~15 event types (`npc-interact`, `chest-opened`, `freeze-player`, etc.). Adding branching narrative, building interiors, interactive objects, and onboarding adds 20+ new events. EventBus becomes unmaintainable:
+
+- Event name collisions (`door-opened` in InteractableManager vs. BuildingInteriorManager)
+- Memory leaks (listeners not cleaned up during scene transitions)
+- Event listeners keep executing even after scene changes
+- Debugging: "Which component handles `quest-choice-made`?"
+
+**Why it happens:**
+- EventBus pattern scales poorly beyond 30-40 event types
+- No event naming convention enforced
+- Listener cleanup not in scene shutdown lifecycle
+- Multiple components listen to same event (race conditions)
+
+**Consequences:**
+- Event listeners causing memory leaks
+- Duplicate event handling (same action triggered twice)
+- Phaser scene transitions leave orphaned listeners
+- Developer confusion: "Who's listening to this event?"
 
 **Prevention:**
-- Use NavMesh plugin instead of EasyStar/A* grid pathfinding (187x faster for long paths, 5x faster for short paths)
-- Stagger pathfinding across frames: only 2-3 NPCs calculate paths per frame
-- Cache paths and recalculate only when player moves significantly (>32 pixels)
-- Use simpler "follow player" behavior for most NPCs, complex pathing for quest-critical NPCs only
-- Disable pathfinding for NPCs outside camera view + buffer zone (100px)
-- **Budget:** Max 5 active pathfinding NPCs per frame, defer others to next frame
-- For wandering NPCs, use random walk instead of pathfinding to predetermined points
-- Consider web worker for pathfinding calculations (requires serializable data)
+1. **Event naming convention:**
+   ```javascript
+   // Format: <source>:<action>:<target>
+   'phaser:npc:interact'         // Phaser NPC interaction
+   'phaser:building:enter'       // Phaser building entry
+   'react:dialogue:choice-made'  // React dialogue choice
+   'react:ui:close-menu'         // React UI action
+   ```
+2. **Centralized event registry:** Document in `src/utils/eventBusTypes.js`:
+   ```javascript
+   export const EVENTS = {
+     PHASER_NPC_INTERACT: 'phaser:npc:interact',
+     PHASER_BUILDING_ENTER: 'phaser:building:enter',
+     // ... all events
+   };
+   ```
+3. **Mandatory cleanup in scene shutdown:**
+   ```javascript
+   // In WorldScene.shutdown()
+   shutdown() {
+     EventBus.removeAllListeners(); // Current approach
+     // OR per-scene cleanup:
+     this.eventListeners.forEach(event => EventBus.off(event, this));
+     this.npcManager.destroy();
+     this.interactableManager.destroy();
+   }
+   ```
+4. **Listener audit:** Before adding v5.0 events, audit current listeners in `useEventBusListeners.js` (380 LOC). Refactor before expansion.
+5. **Event payload schema:** TypeScript or JSDoc for event data:
+   ```javascript
+   /**
+    * @typedef {Object} NpcInteractEvent
+    * @property {string} npcId - NPC identifier
+    * @property {string} npcName - Display name
+    * @property {number} trustLevel - 0-5 trust meter
+    */
+   EventBus.emit('phaser:npc:interact', { npcId, npcName, trustLevel });
+   ```
 
 **Detection:**
-- FPS drops when entering crowded zones (market, town center)
-- Profiler shows high CPU time in pathfinding functions
-- NPCs freeze in place momentarily then jump to new positions
-- Touch/click input feels unresponsive in zones with many NPCs
-- Frame time spikes visible in Performance Monitor
+- Warning sign 1: `useEventBusListeners.js` exceeds 500 LOC
+- Warning sign 2: Memory profiler shows EventEmitter listeners growing
+- Warning sign 3: Event triggered but no handler found (silent failure)
+- Warning sign 4: Same event fired 2+ times per action
 
-### Pitfall 5: Scene Transition State Loss
+**Phase-specific warnings:**
+- **Branching Narrative phase:** Will add 8-12 new events (dialogue choices, narrative state changes)
+- **Enterable Buildings phase:** Will add 6-8 new events (enter/exit, interior interactions)
+- **Interactive Objects phase:** Will add 5-7 new events (object state changes)
+- **Guided Onboarding phase:** Will add 4-6 new events (tutorial steps)
 
-**What goes wrong:** Player enters a building, game transitions to interior scene, but when exiting back to overworld, player data (position, quest progress, inventory) is reset or corrupted. NPCs respawn in wrong positions. Game state becomes inconsistent.
+**Integration gotcha (GoGo Arabic specific):**
+- Currently: EventBus is single global instance, no namespacing.
+- Risk: Phaser scenes emit events React doesn't handle, React emits events Phaser doesn't handle (silent failures).
+- Mitigation: Add event validation in dev mode (warn if no listeners registered).
 
-**Why it happens:** Using `scene.start()` instead of `scene.launch()`, which shuts down the previous scene and loses its state. Not persisting critical state to Redux before scene transitions. Storing state in scene instance variables instead of scene data or registry. Scene transition events firing before data is saved. Not handling `transitioninit` vs `transitionstart` vs `transitioncomplete` events correctly.
+**Confidence:** HIGH (validated from existing codebase EventBus.js, NPCManager.js, useEventBusListeners.js)
+**Sources:**
+- [Event listeners causing Memory Leaks](https://www.html5gamedevs.com/topic/40166-event-listeners-causing-memory-leaks/)
+- [Do I need to manually dispose of event listeners?](https://phaser.discourse.group/t/do-i-need-to-manually-dispose-of-event-listeners/13429)
+- [Event listeners keep executing code even on scene change](https://phaser.discourse.group/t/event-listeners-keep-executing-code-even-on-scene-change/10097)
 
-**Consequences:** Data loss, game-breaking bugs, players lose progress, support tickets.
+---
+
+### Pitfall 4: Onboarding Tutorial as Gatekeeper
+
+**What goes wrong:** Many tutorials are either too long or too complex, and players lose interest before they even get to try the game. One of the biggest drop-off points is right at the tutorial stage. Poor onboarding is a major cause of low Day 1 retention, because players feel lost or frustrated, don't see the "fun" fast enough, and aren't emotionally connected to the game.
+
+Common tutorial mistakes:
+- **Too long:** Tutorial exceeds 5 minutes (players churn)
+- **Too much information:** Overwhelming players with all mechanics upfront
+- **No skip option:** Forces returning players through tutorial again
+- **Lack of proper feedback:** Tutorial doesn't confirm player understanding
+- **Teaches wrong things first:** Explains lore/story before core mechanics
+
+**Why it happens:**
+- Designer knows the game too well (curse of knowledge)
+- Tutorial designed for "complete understanding" instead of "quick engagement"
+- Tutorial written after game is built (retrofitted, not designed)
+- No playtesting with fresh users (friends/family already know the game)
+
+**Consequences:**
+- Day 1 retention drops to 30-40% (industry standard is 50%+)
+- Returning players frustrated by unskippable tutorial
+- Players quit during tutorial, never see actual game
+- Support requests: "How do I...?" (tutorial didn't teach it)
 
 **Prevention:**
-- Use `scene.launch(key, data)` to run scenes in parallel, not `scene.start()`
-- For building interiors: pause overworld scene, launch interior scene, on exit destroy interior and resume overworld
-- Always emit EventBus state updates BEFORE calling scene transition methods
-- Store player position/state in Redux before transition, restore in `transitioninit`
-- Use scene registry for cross-scene persistence (player health, currency)
-- Wait for `transitioncomplete` event before allowing new transitions
-- Check `scene.isTransitioning()` before initiating new transitions
-- Add transition guard: prevent rapid scene switches (debounce 500ms)
+1. **Under 5 minutes, skip option:** Keep tutorial under 5 minutes, and give players the option to skip or fast-forward.
+2. **Show, don't tell:** Players learn by doing, not reading. Instead of text explanation of movement, show WASD on screen and let player discover.
+3. **Progressive disclosure:** Teach one mechanic at a time. Don't overwhelm.
+4. **First win in 60 seconds:** Players need emotional connection fast. Give small win (find NPC, learn one word, open chest) in first minute.
+5. **Avoid early punishment:** Don't punish players while they're still learning. No fail states in tutorial.
+6. **Contextual tutorials over monolithic:** Teach features when first encountered, not all upfront. Example: teach building interiors when player first sees a door, not in initial tutorial.
 
 **Detection:**
-- Player position resets when exiting buildings
-- Console errors about "scene already transitioning"
-- Redux state differs from Phaser scene state after transitions
-- Quest progress lost when moving between zones
-- NPCs duplicated or missing after scene transitions
-- Input events fire in both scenes during transition
+- Warning sign 1: Tutorial exceeds 5 minutes in playtest
+- Warning sign 2: Players skip dialogue or spam through text
+- Warning sign 3: Day 1 retention below 45%
+- Warning sign 4: Players ask "How do I...?" for features tutorial covered
+- Warning sign 5: Returning players ask "Can I skip this?"
 
-### Pitfall 6: EventBus Memory Leak from Stale Listeners
+**Phase-specific warnings:**
+- **Guided Onboarding phase:** THE critical phase. Allocate 50% of phase time to playtesting.
+- **Learning Path phase:** Don't reintroduce tutorial for each path (alphabet, vocabulary, grammar). Use contextual hints.
+- **Branching Narrative phase:** Don't use tutorial to explain entire story. Teach story through gameplay.
 
-**What goes wrong:** Memory usage grows over time. Event handlers fire multiple times for single event. Callbacks execute on destroyed objects, causing errors. Performance degrades after multiple scene changes.
+**Integration gotcha (GoGo Arabic specific):**
+- Currently: 6-step onboarding exists (walk to NPC, talk, quiz, chest, bookshelf, sign).
+- Risk: Replacing with "guided onboarding" might become longer, more complex.
+- Mitigation: New onboarding should be SHORTER than current 6-step. Target: 3 steps, 90 seconds.
 
-**Why it happens:** Adding EventBus listeners in Phaser scenes or React components without removing them on cleanup. Using arrow functions or bound methods as listeners (creates new function reference, can't remove). Restarting scenes without calling `off()` for previous listeners. React components unmounting without EventBus cleanup in useEffect return.
+**Confidence:** HIGH
+**Sources:**
+- [Game UX: Best practices for video game onboarding 2024](https://inworld.ai/blog/game-ux-best-practices-for-video-game-onboarding)
+- [Mobile Game Onboarding: Top UX Strategies That Boost Retention](https://medium.com/@amol346bhalerao/mobile-game-onboarding-top-ux-strategies-that-boost-retention-6ef266f433cb)
+- [Player Retention Mistakes and How To Fix Them](https://www.sonamine.com/player-retention-mistakes-and-how-to-fix-them)
+- [Day 1 to Day 7 Retention: How To Make Players Stay](https://maf.ad/en/blog/game-retention/)
 
-**Consequences:** Memory leaks, duplicate event handlers, crashes, "Can't update unmounted component" errors.
+---
+
+### Pitfall 5: Personalization Complexity Spiral
+
+**What goes wrong:** Adaptive learning systems integrate game mechanics with AI-driven personalization to enhance adaptability, but every variable you add to an interactive narrative increases design complexity exponentially. A personalized dynamic difficulty adjustment system that combines player performance data, learning patterns, and narrative choices creates a state explosion worse than dialogue branching alone.
+
+The goal of personalization is to keep players in the optimal zone of engagement (flow state), but implementation creates:
+- **Data collection overhead:** Track 50+ metrics (quiz accuracy, time spent, repeat rate, dialogue choices, zone completion)
+- **Algorithm complexity:** Machine learning models require training data, tuning, validation
+- **Edge case explosion:** What if player excels at vocabulary but fails grammar? What if they speedrun quizzes without learning?
+- **Debugging nightmare:** "Why did the system recommend this lesson?" becomes unanswerable
+
+**Why it happens:**
+- Designer assumes personalization = better learning (not always true)
+- Underestimate complexity of adaptive systems
+- No clear success metrics ("How do we measure if personalization works?")
+- Feature creep: "Let's also personalize NPC dialogue, quest difficulty, item rewards..."
+
+**Consequences:**
+- 6+ months building personalization system
+- System recommends wrong content (player confusion)
+- Performance issues (ML models in browser)
+- Impossible to debug ("System is a black box")
+- Development paralysis: changing anything breaks recommendations
 
 **Prevention:**
-- Store listener references: `this.handleEvent = this.handleEvent.bind(this)` in constructor
-- Always remove listeners in scene `shutdown` event: `EventBus.off('event', this.handleEvent, this)`
-- React useEffect cleanup: `return () => EventBus.off('event', handler)`
-- Use named functions, not arrow functions, so you can remove them
-- Create scene-specific event names to avoid cross-scene collisions
-- Clear all listeners on scene shutdown: track them in array, loop through `off()`
-- Audit listeners in Chrome DevTools Memory Profiler (look for detached listeners)
+1. **Start simple, prove value:** Begin with rule-based personalization (if quiz score < 60%, recommend review), not ML. Validate with users before adding complexity.
+2. **Limit personalization scope:** Personalize ONE thing (lesson recommendations) before expanding to narrative/difficulty.
+3. **Use existing proven systems:** GoGo Arabic already has FSRS spaced repetition. Don't replace it with custom algorithm.
+4. **Transparent recommendations:** Player should understand WHY system recommended something. No black boxes.
+5. **Manual override:** Let players ignore recommendations and choose their own path.
+6. **Metrics upfront:** Define success metrics before building (e.g., "30% more vocab retention after 2 weeks").
 
 **Detection:**
-- Same console.log appears multiple times for single event
-- Memory snapshots show increasing EventEmitter listener counts
-- Errors about calling methods on undefined/null objects
-- Events trigger in scenes that should be inactive
-- React DevTools shows components updating after unmount
+- Warning sign 1: Personalization system exceeds 1,000 LOC
+- Warning sign 2: Recommendations feel random to playtesters
+- Warning sign 3: System requires training data you don't have
+- Warning sign 4: "Personalized" content identical for all players
+- Warning sign 5: Can't explain algorithm in 2 sentences
 
-### Pitfall 7: Texture Atlas Memory Overflow
+**Phase-specific warnings:**
+- **Personalized Progression phase:** This is THE pitfall. Resist temptation to over-engineer.
+- **Learning Path phase:** Three-stage progression (alphabet → vocabulary → grammar) is already personalized by choice. Don't add dynamic reordering without validating need.
 
-**What goes wrong:** Game fails to load textures, shows blank sprites, or crashes with WebGL context loss errors. Mobile devices show "out of memory" warnings.
+**Integration gotcha (GoGo Arabic specific):**
+- Currently: FSRS spaced repetition already working. 1,220 vocab words, 28 letters, 6 quiz types.
+- Risk: Adding "personalized learning path" that conflicts with FSRS scheduling.
+- Mitigation: FSRS owns "when to review." Personalization owns "what to learn next" (separate concerns).
 
-**Why it happens:** Texture atlases larger than GPU maximum texture size (often 4096x4096 on mobile, 8192x8192 desktop). Loading all zone textures at once instead of dynamically loading per zone. Not using power-of-two dimensions (waste GPU memory). Multiple small atlases instead of one optimized atlas per zone.
-
-**Consequences:** Crashes, visual glitches, poor mobile performance, refund requests.
-
-**Prevention:**
-- Target 2048x2048 max for mobile compatibility
-- One atlas per zone (8 zones = 8 atlases), load/unload on zone transitions
-- Use TexturePacker or similar to optimize packing efficiency
-- Always use power-of-two dimensions (512, 1024, 2048, 4096)
-- Remove loaded textures when leaving zone: `this.textures.remove(key)`
-- Enable WebGL compressed textures in Phaser v3.60+ config
-- Monitor texture memory in Performance tab (look for GPU process)
-- Test on mid-range mobile device (typically more restrictive GPU limits)
-
-**Detection:**
-- WebGL context lost errors in console
-- Sprites render as white/transparent boxes
-- Game crashes on zone transitions with many assets
-- Memory warnings on mobile devices
-- Different behavior between desktop and mobile
-- DevTools shows high GPU memory usage
-
-### Pitfall 8: Redux/Phaser State Desync
-
-**What goes wrong:** React UI shows different player health than Phaser game. Quest progress updates in Redux but NPC dialogue doesn't reflect changes. Player unlocks item in Phaser but React inventory doesn't update. State becomes "source of truth" ambiguous.
-
-**Why it happens:** Updating Phaser scene state without dispatching Redux actions. Updating Redux without emitting EventBus events that Phaser listens to. Race conditions between EventBus emit and Redux dispatch. Async Redux thunks resolving after Phaser state already changed. Using scene data instead of Redux as canonical state.
-
-**Consequences:** Data inconsistency, game-breaking bugs, lost progress, support tickets.
-
-**Prevention:**
-- **Single source of truth:** Redux is canonical, Phaser reads from it
-- **Pattern:** User input (Phaser) → EventBus emit → React component → Redux dispatch → EventBus emit → Phaser updates
-- Never update Phaser scene state directly for persistent data (position, stats, inventory)
-- Subscribe to Redux store in Phaser scenes, update on state changes
-- Use EventBus only for transient events (dialogue opened, animation started)
-- **Sequence:** Phaser detects event → emit → React updates Redux → Phaser reads new Redux state
-- Add state sync verification function that compares Redux vs Phaser state
-
-**Detection:**
-- React UI shows stale data compared to game visuals
-- Saving/loading produces inconsistent state
-- Features work until page refresh, then break
-- Player actions don't trigger UI updates
-- Console shows Redux state differs from EventBus payload
-- E2E tests pass but manual testing finds bugs
+**Confidence:** HIGH
+**Sources:**
+- [Game Mechanics and Artificial Intelligence Personalization: A Framework for Adaptive Learning Systems](https://www.mdpi.com/2227-7102/15/3/301)
+- [Dynamic Difficulty Adjustment: Crafting Personalized Gaming Experiences](https://vocal.media/geeks/dynamic-difficulty-adjustment-crafting-personalized-gaming-experiences)
+- [Personalized Dynamic Difficulty Adjustment – Imitation Learning Meets Reinforcement Learning](https://arxiv.org/html/2408.06818v1)
 
 ---
 
 ## Moderate Pitfalls
 
-Annoying but fixable without major rewrites.
+These cause frustration, rework, or quality issues, but won't kill the project.
 
-### Pitfall 9: Tween Accumulation and Cleanup
+### Pitfall 6: Scene Management Complexity (Building Interiors)
 
-**What goes wrong:** Creating hundreds of tweens without cleanup. Memory grows, GC pauses cause stuttering. Tweens continue playing on destroyed objects, causing errors.
+**What goes wrong:** Phaser 3 doesn't place any constraints on how many scenes need to be running, meaning you can have 0, 1, or as many as you need going at once. For building interiors, developers choose between:
+- **Layer-based:** Toggle tilemap layer visibility (roofs, interior walls)
+- **Scene-based:** Separate Phaser scene per interior
 
-**Why it happens:** Creating new tweens in update loop, not removing on complete. Destroying game objects without stopping their tweens.
+Both approaches have complexity traps:
+- **Layer-based:** Depth sorting breaks, roof rendering issues, Y-sorting conflicts
+- **Scene-based:** Scene transition state bugs, data passing errors, memory leaks if scenes not properly destroyed
 
-**Consequences:** Memory leaks, stuttering, visual glitches.
+**Why it happens:**
+- No architecture decision documented upfront
+- Mixed approach (some buildings use layers, some use scenes)
+- Scene lifecycle misunderstood (when to pause vs. stop vs. destroy)
 
-**Prevention:**
-- Use `onComplete: () => tween.remove()` for all tweens
-- Stop tweens before destroying objects: `this.tweens.killTweensOf(object)`
-- Reuse tweens with `tween.restart()` instead of creating new ones
-- Pool tween targets (sprites, particles) instead of creating new objects
-- **Budget:** Max 100 active tweens simultaneously
-
-**Detection:**
-- Memory profiler shows growing tween object counts
-- Stuttering after 5+ minutes gameplay
-- Errors about undefined object properties during animations
-
-### Pitfall 10: Audio Sprites vs Individual Files
-
-**What goes wrong:** Loading 50+ individual sound files causes slow initial load, many HTTP requests, and autoplay unlock complexity.
-
-**Why it happens:** Didn't consolidate sounds into audio sprites. Each sound is separate file.
-
-**Consequences:** Slow load times, poor mobile experience, network congestion.
+**Consequences:**
+- Player stuck in interior (can't exit)
+- Visual glitches (player rendering above roof when outside)
+- Performance issues (multiple scenes running simultaneously)
+- Development confusion (two patterns coexist)
 
 **Prevention:**
-- Use audio sprites for UI sounds and short effects (1-5 second sounds)
-- Combine related sounds into single audio sprite file
-- Prime audio sprite on first user gesture, have all sounds ready instantly
-- **Warning:** Don't make audio sprite too large (keep under 1-2MB)
-- Use individual files for music and long ambient sounds
+1. **Pick ONE approach:** Document in ARCHITECTURE.md. For GoGo Arabic: Scene-based recommended (interiors are distinct spaces with unique NPCs/quests).
+2. **Scene lifecycle checklist:**
+   - Launch interior: `scene.pause('WorldScene')`, `scene.launch('InteriorScene', data)`
+   - Exit interior: `scene.stop('InteriorScene')`, `scene.resume('WorldScene')`
+   - Always pass exit coordinates via scene data
+3. **Test transitions:** Every interior needs exit test (enter → exit → re-enter).
+4. **Memory management:** Use browser dev tools to profile memory during scene transitions.
 
 **Detection:**
-- Network tab shows 50+ audio requests
-- Initial load time >5 seconds
-- Audio unlock inconsistent across sounds
+- Warning sign 1: Player can't exit interior
+- Warning sign 2: Interior loads but player invisible
+- Warning sign 3: Memory increases with each interior visit
+- Warning sign 4: Scene transition takes >1 second
 
-### Pitfall 11: Screen Shake Without Reduced Motion Check
+**Phase-specific warnings:**
+- **Enterable Buildings phase:** This is where pitfall manifests. Allocate 30% of phase to scene transition testing.
 
-**What goes wrong:** Screen shake and camera effects cause motion sickness, vertigo, nausea for ~30% of users. Violates accessibility guidelines.
+**Confidence:** HIGH
+**Sources:**
+- [Managing scenes... so confusing to me!](https://phaser.discourse.group/t/managing-scenes-so-confusing-to-me/9854)
+- [Scene Management (Timing?) Issue when starting other scenes](https://github.com/phaserjs/phaser/issues/3314)
+- [Please unconfuse me about the lifecycle of scenes](https://phaser.discourse.group/t/please-unconfuse-me-about-the-lifecycle-of-scenes/9198)
 
-**Why it happens:** Implementing "game feel" effects without checking `prefers-reduced-motion` setting.
+---
 
-**Consequences:** User complaints, motion sickness, poor reviews, accessibility lawsuit risk.
+### Pitfall 7: Interactive Object System Bloat
+
+**What goes wrong:** When designing a new game system, it is essential to understand the goals of the system so you can avoid excessive bloat or in-game complexity. Adding interactive objects (doors, levers, crystals, fountains) creates ripple effects:
+
+- **InteractableManager grows to 500+ LOC** (currently 169 LOC)
+- **New object types need rendering, collision, state persistence, interaction logic**
+- **Each object type needs unique behavior** (door opens, lever toggles, crystal glows)
+- **Interconnection complexity:** Lever unlocks door, door reveals NPC, NPC gives quest
+
+**Why it happens:**
+- No object type budget (add "just one more" repeatedly)
+- Object behaviors not abstracted (each object has custom logic)
+- State persistence not designed (where is "lever pulled" stored?)
+
+**Consequences:**
+- InteractableManager becomes God object (too many responsibilities)
+- Object interactions break (lever doesn't unlock door)
+- Save/load bugs (object state not persisted)
+- Development slowdown (every new object type takes longer)
 
 **Prevention:**
-- Check `window.matchMedia('(prefers-reduced-motion: reduce)').matches` before screen shake
-- Provide settings toggle to disable camera effects
-- Disable or significantly reduce screen shake when setting enabled
-- Also disable/reduce particle effects when reduced motion enabled
-- Test with OS reduced motion setting enabled
+1. **Object type budget:** Limit to 8 interactive object types max for v5.0.
+2. **Behavior composition over inheritance:**
+   ```javascript
+   // BAD: One class per object type
+   class Door {} class Lever {} class Crystal {} // 8 classes
+
+   // GOOD: Behavior system
+   const door = createInteractable('door', {
+     behaviors: [Animated, Toggleable, Blocking],
+     onInteract: () => toggleState()
+   });
+   ```
+3. **State persistence schema:** Store in `playerSlice.interactableStates`:
+   ```javascript
+   interactableStates: {
+     'zone1-door-1': { state: 'open' },
+     'zone1-lever-1': { state: 'pulled' },
+   }
+   ```
+4. **Decide interconnections upfront:** Document in design doc which objects affect others BEFORE implementing.
 
 **Detection:**
-- Test with macOS System Settings → Accessibility → Display → Reduce motion enabled
-- Test with Windows Settings → Ease of Access → Display → Show animations disabled
-- User complaints about motion sickness in reviews
+- Warning sign 1: InteractableManager exceeds 300 LOC
+- Warning sign 2: Adding new object type takes >2 hours
+- Warning sign 3: Object interactions buggy (lever doesn't unlock door)
+- Warning sign 4: 10+ if/else branches in `handleInteractable()`
 
-### Pitfall 12: Mobile Touch Audio Unlock Timing
+**Phase-specific warnings:**
+- **Interactive World Objects phase:** THE pitfall phase. Do architecture review after first 3 object types.
 
-**What goes wrong:** User taps "Start Game", but audio doesn't unlock because touch event handled incorrectly. Subsequent audio plays fine but first sound is silent.
+**Confidence:** MEDIUM
+**Sources:**
+- [A Guide to Systems-Based Game Development](https://www.gamedeveloper.com/design/a-guide-to-systems-based-game-development)
+- [Game Mechanics — Interaction Loop and the Game State](https://stanislav-stankovic.medium.com/game-mechanics-interaction-loop-and-the-game-state-c38e6e4584dd)
 
-**Why it happens:** AudioContext.resume() called in async callback after touch event completes. Browser requires resume() to be called synchronously during user gesture.
+---
 
-**Consequences:** First sound doesn't play, confusing UX.
+### Pitfall 8: Empty World Syndrome
+
+**What goes wrong:** Developer focuses on mechanics (branching narrative, building interiors, interactive objects) but forgets world feels empty:
+- **NPCs stand idle, no life:** Even with idle animations, NPCs feel like props
+- **No ambient activity:** No birds, wind, distant sounds, environmental storytelling
+- **Sparse object placement:** Large zones with 3 interactable objects feel barren
+- **No purpose to exploration:** Buildings exist but have no reason to enter them
+
+**Why it happens:**
+- Mechanics prioritized over world-building
+- No "atmosphere pass" in development schedule
+- Underestimate importance of ambient detail
+- Focus on "what player can do" not "what world feels like"
+
+**Consequences:**
+- Player boredom: "Why explore if nothing's there?"
+- Low immersion: "This feels like a game level, not a world"
+- NPCs feel like quest dispensers, not characters
+- Players rush through zones, miss content
 
 **Prevention:**
-- Call `this.sound.context.resume()` synchronously in touch event handler
-- Don't await promises before calling resume()
-- Test on iOS Safari (most restrictive) and Android Chrome
-- Show user feedback when audio is unlocked ("Sound enabled!")
+1. **Ambient layer budget:** Each zone needs:
+   - 2-3 ambient sounds (wind, water, birds)
+   - 5-10 decorative objects (rocks, plants, furniture)
+   - 2-3 "life" animations (birds flying, water flowing, smoke rising)
+   - 1-2 environmental storytelling objects (abandoned cart, message board)
+2. **NPC purpose beyond quests:** Some NPCs just exist (shopkeeper sweeping, child playing, elder sitting). Not everything is quest-related.
+3. **Reward exploration:** Hidden chests, rare vocabulary words, lore books in off-path areas.
+4. **Density guidelines:** Minimum 1 interactable per 5x5 tile area. Maximum 15 tiles between points of interest.
 
 **Detection:**
-- First tap doesn't play audio, second tap does
-- Works on desktop but not mobile
-- Console warnings about AudioContext not unlocked
+- Warning sign 1: Playtest feedback: "Feels empty"
+- Warning sign 2: Players skip exploration, beeline to quest markers
+- Warning sign 3: Zones take <2 minutes to traverse (too small or too sparse)
+- Warning sign 4: No ambient sounds playing
 
-### Pitfall 13: Pathfinding Cache Invalidation
+**Phase-specific warnings:**
+- **World Life phase:** If this phase is skipped or rushed, empty world syndrome guaranteed.
+- **Enterable Buildings phase:** Buildings need interiors worth entering (loot, unique NPCs, secrets).
 
-**What goes wrong:** NPC calculates path to player, player moves, NPC follows cached outdated path, ends up in wrong location.
+**Confidence:** MEDIUM
+**Sources:** Inferred from game design principles (no specific web search source, training data)
 
-**Why it happens:** Caching paths for performance but not invalidating when player moves significantly.
+---
 
-**Consequences:** NPCs follow player poorly, look "dumb", immersion broken.
+### Pitfall 9: Redux Slice Bloat
+
+**What goes wrong:** GoGo Arabic currently has 12 Redux slices (player, vocabulary, quests, ui, alphabet, settings, npc, sync, achievements, battle, dailyGoals, grammar). Adding v5.0 features risks adding:
+- `dialogueSlice` (narrative state)
+- `buildingSlice` (interior state)
+- `interactableSlice` (object state)
+- `onboardingSlice` (tutorial state)
+- `learningPathSlice` (progression state)
+
+Suddenly: 17 slices. Problems:
+- **Store size:** Serialized state exceeds localStorage limit (5MB)
+- **Performance:** Selectors recompute frequently, re-renders spike
+- **Cognitive overload:** Developer confusion ("Where does this state live?")
+- **Slice interdependencies:** Dialogue reads quests, quests read NPCs, NPCs read player
+
+**Why it happens:**
+- "One slice per feature" pattern taken too far
+- No architectural review before adding slices
+- Lack of understanding of Redux normalization
+
+**Consequences:**
+- localStorage quota exceeded (state persistence fails)
+- App performance degrades (too many selectors)
+- Development paralysis (changing one slice breaks three others)
+- Debugging nightmare (state scattered across 17 slices)
 
 **Prevention:**
-- Store player position when path calculated
-- Invalidate cache if player moved >32 pixels (1 tile) since calculation
-- Recalculate path after N frames (e.g., every 60 frames = 1 second)
-- Balance performance vs accuracy
+1. **Slice budget:** Max 15 slices. If new feature needs slice, merge into existing.
+   - `dialogueSlice` → merge into `questSlice` (quests own dialogue)
+   - `buildingSlice` → merge into `playerSlice.visitedBuildings`
+   - `interactableSlice` → merge into `playerSlice.interactableStates`
+   - `onboardingSlice` → merge into `playerSlice.onboardingProgress`
+   - `learningPathSlice` → merge into `playerSlice.learningPathStage`
+2. **Normalize state:** Use entity adapter for NPCs, quests, interactables (avoid duplication).
+3. **Persistence audit:** Test serialized state size. If exceeds 3MB, refactor.
+4. **Selector memoization:** Use `createSelector` from Reselect (already in Redux Toolkit).
 
 **Detection:**
-- NPCs walk to where player was, not where player is
-- NPCs take inefficient routes
-- Manual testing shows poor following behavior
+- Warning sign 1: Slice count exceeds 15
+- Warning sign 2: State persistence fails in browser
+- Warning sign 3: Adding slice requires changing 3+ other slices
+- Warning sign 4: Redux DevTools shows state tree >1000 lines
 
-### Pitfall 14: Building Interior Asset Loading Delays
+**Phase-specific warnings:**
+- **All v5.0 phases:** Audit slice architecture BEFORE implementing any phase.
 
-**What goes wrong:** Player clicks door, game freezes for 1-2 seconds while loading interior assets, then interior appears. Feels broken.
+**Integration gotcha (GoGo Arabic specific):**
+- Currently: 12 slices, all have named selector exports (v3.0 Phase 11 refactor).
+- Risk: Adding 5 new slices breaks existing selector patterns.
+- Mitigation: Use existing slices for new state. Only add slice if truly independent domain.
 
-**Why it happens:** Not preloading building interior assets. Loading synchronously on transition.
+**Confidence:** HIGH (validated from existing codebase Redux slices)
 
-**Consequences:** Poor UX, feels laggy, immersion broken.
+---
+
+### Pitfall 10: Phaser-React Lifecycle Mismatch
+
+**What goes wrong:** Phaser scenes have lifecycle (create → update → shutdown → destroy). React components have lifecycle (mount → render → unmount). When adding narrative UI, building transitions, onboarding overlays, the two lifecycles conflict:
+
+- **React overlay mounted but Phaser scene not ready:** UI renders before game world exists
+- **Phaser scene destroyed but React listeners still active:** Memory leaks, orphaned listeners
+- **State updates during Phaser update loop:** React re-renders 60 times per second
+- **EventBus events fired before React listeners registered:** Events lost
+
+**Why it happens:**
+- Lifecycle synchronization not designed upfront
+- EventBus listeners registered in `useEffect` (timing issues)
+- Redux dispatch called from Phaser update loop (performance killer)
+
+**Consequences:**
+- UI bugs: "Dialogue shows but NPC not visible"
+- Memory leaks: EventBus listeners accumulate
+- Performance: 60 Redux dispatches per second
+- Race conditions: "Sometimes it works, sometimes it doesn't"
 
 **Prevention:**
-- Preload interior assets when player is near building (within 100px)
-- Show "Loading..." or door opening animation during load
-- Cache loaded interior assets for fast re-entry
-- Unload interiors when player moves far away (>500px from building)
+1. **GameLayout orchestration:** GameLayout.jsx already handles Phaser-React sync via useEventBusListeners. Don't bypass this pattern.
+2. **Event timing contract:**
+   - Phaser emits events in `create()` AFTER scene ready
+   - React registers listeners in `useEffect` BEFORE Phaser starts
+   - EventBus events buffered if no listeners (or emit warning in dev mode)
+3. **Throttle/debounce Redux updates from Phaser:**
+   ```javascript
+   // BAD: In Player.update() (60 calls/second)
+   EventBus.emit('player-moved', { x, y });
+
+   // GOOD: Only emit when significant change
+   if (Math.abs(this.lastEmittedX - this.x) > 64) {
+     EventBus.emit('player-moved', { x, y });
+     this.lastEmittedX = this.x;
+   }
+   ```
+4. **Scene ready flag:**
+   ```javascript
+   // In WorldScene.create()
+   this.sceneReady = true;
+   EventBus.emit('scene-ready', { sceneName: 'WorldScene' });
+
+   // In React
+   const [sceneReady, setSceneReady] = useState(false);
+   EventBus.on('scene-ready', () => setSceneReady(true));
+   ```
 
 **Detection:**
-- Manual test: click building door, observe freeze
-- Performance profiler shows long asset load time during transition
-- User feedback about laggy building entry
+- Warning sign 1: React DevTools shows component re-rendering 60fps
+- Warning sign 2: EventBus event fired but no handler called
+- Warning sign 3: UI overlay renders before game world visible
+- Warning sign 4: Memory profiler shows listeners accumulating
+
+**Phase-specific warnings:**
+- **All phases:** Every new Phaser-React integration point needs lifecycle review.
+- **Guided Onboarding phase:** Onboarding UI heavily dependent on Phaser scene state.
+
+**Integration gotcha (GoGo Arabic specific):**
+- Currently: GameLayout.jsx 209 LOC, useEventBusListeners 380 LOC. This is already complex.
+- Risk: Adding 20+ new events without refactoring useEventBusListeners.
+- Mitigation: Refactor useEventBusListeners into sub-hooks (useNarrativeEvents, useBuildingEvents, etc.).
+
+**Confidence:** HIGH (validated from existing codebase GameLayout.jsx, useEventBusListeners.js)
 
 ---
 
 ## Minor Pitfalls
 
-Small issues, easy fixes.
+These are nuisances, not blockers. Fix during polish phase.
 
-### Pitfall 15: Particle Texture Filter Blur
+### Pitfall 11: Dialogue Overflow & Arabic Text Rendering
 
-**What goes wrong:** Pixel art particle textures appear blurry, losing pixel art aesthetic.
-
-**Why it happens:** WebGL default texture filter is LINEAR (anti-aliased). Need NEAREST for pixel art.
-
-**Consequences:** Visual inconsistency, blurry particles.
+**What goes wrong:** Rich NPC conversations with long Arabic sentences overflow dialogue boxes. Arabic is right-to-left, diacritics add vertical space, text wrapping behaves differently than English.
 
 **Prevention:**
-- Set Phaser config: `render: { pixelArt: true }` to use NEAREST filter globally
-- Or per texture: `texture.setFilter(Phaser.Textures.FilterMode.NEAREST)`
+- Test all dialogue with longest Arabic sentence (measure in characters)
+- Use CSS `overflow-wrap: break-word` and `hyphens: auto`
+- DOMOverlay system already handles Arabic rendering; extend for dialogue boxes
 
-**Detection:**
-- Particles look blurry/anti-aliased
-- Visual comparison with sprite textures
-
-### Pitfall 16: Audio Volume Not Respecting Settings
-
-**What goes wrong:** User sets volume to 50% in settings, but new sounds play at 100%.
-
-**Why it happens:** Not reading volume setting when playing sounds. Setting volume only on existing sound instances.
-
-**Consequences:** User frustration, feels like settings don't work.
-
-**Prevention:**
-- Store volume in Redux settings slice
-- Read volume setting when playing sounds: `this.sound.play(key, { volume: volumeSetting })`
-- Subscribe to Redux settings changes in Phaser, update sound manager volume
-
-**Detection:**
-- Change volume setting, trigger new sound, check volume
-- E2E test: set volume to 0, verify no sound plays
-
-### Pitfall 17: NPC Wandering Overlap
-
-**What goes wrong:** Multiple wandering NPCs choose same random destination, cluster together, look unnatural.
-
-**Why it happens:** Pure random destination selection, no collision avoidance.
-
-**Consequences:** Visual crowding, NPCs overlap, looks broken.
-
-**Prevention:**
-- Add minimum distance check: don't select destination if another NPC within 64px
-- Use "arrival radius" so NPCs don't stack on exact point
-- Consider flocking/steering behaviors for groups
-
-**Detection:**
-- Manual observation: NPCs cluster together
-- Visual review in crowded zones
-
-### Pitfall 18: Scene Registry vs Scene Data Confusion
-
-**What goes wrong:** Storing data in scene registry, expecting it to be scene-specific, but registry is global. Data shared across all scenes unexpectedly.
-
-**Why it happens:** Confusion between `this.registry` (global) and `this.data` (scene-specific).
-
-**Consequences:** State pollution, bugs across scenes.
-
-**Prevention:**
-- Use `this.registry` for truly global data (player health, currency)
-- Use `this.data` for scene-specific data (current dialogue, temp state)
-- Document which data belongs where
-
-**Detection:**
-- Scene data unexpectedly persists across scene changes
-- Data changes in one scene affect another scene
-
-### Pitfall 19: Tween Easing Inconsistency
-
-**What goes wrong:** Some tweens use 'Power2', some use 'Cubic', visual inconsistency in animation feel.
-
-**Why it happens:** Ad-hoc tween creation, no design system for easing.
-
-**Consequences:** Inconsistent animation feel, unprofessional.
-
-**Prevention:**
-- Define standard easings in constants: `EASE_IN = 'Power2'`, `EASE_OUT = 'Power2'`, `EASE_BOUNCE = 'Bounce.easeOut'`
-- Document when to use each easing
-- Code review for tween consistency
-
-**Detection:**
-- Review tween code, count distinct easing functions
-- Manual review: animations feel inconsistent
-
-### Pitfall 20: Particle Emitter Z-Index Issues
-
-**What goes wrong:** Particle effects appear behind player or UI when they should be in front.
-
-**Why it happens:** Particle emitters added to scene at wrong depth. Z-index not set.
-
-**Consequences:** Visual glitches, particles hidden.
-
-**Prevention:**
-- Use `emitter.setDepth(depth)` to control layering
-- Define depth constants: `DEPTH_GROUND = 0`, `DEPTH_PLAYER = 10`, `DEPTH_PARTICLES = 20`, `DEPTH_UI = 100`
-- Document depth layers
-
-**Detection:**
-- Manual observation: particles appear behind objects
-- Visual review of effects
+**Detection:** Playtest with actual Arabic content (not Lorem Ipsum).
 
 ---
 
-## Phase-Specific Warnings
+### Pitfall 12: Audio Crossfade Timing
 
-| Phase Topic | Likely Pitfall | Mitigation |
-|-------------|---------------|------------|
-| **Phase 14: Audio** | Audio autoplay blocked on mobile | Add "Tap to Play" screen, resume AudioContext on first gesture |
-| **Phase 14: Audio** | Web Audio memory leak from multiple contexts | Reuse Phaser sound manager, call context.close() on cleanup |
-| **Phase 14: Audio** | Audio sprites too large (>2MB) | Split into multiple sprites by category (UI, NPC, ambient) |
-| **Phase 15: Visual Effects** | Too many particles crash mobile | Set budget: 200 particles max mobile, use viewBounds culling |
-| **Phase 15: Visual Effects** | Particle textures blurry | Set `render: { pixelArt: true }` in Phaser config |
-| **Phase 15: Visual Effects** | WebGL context loss from texture overload | Max 2048x2048 atlases, load/unload per zone |
-| **Phase 16: NPC Life** | 140 NPCs pathfinding = 5fps | Use NavMesh, stagger pathfinding (max 5/frame), cache paths |
-| **Phase 16: NPC Life** | NPC wandering looks unnatural | Add arrival radius, minimum distance between NPCs |
-| **Phase 17: Building Interiors** | State lost on scene transitions | Use scene.launch() not scene.start(), persist to Redux |
-| **Phase 17: Building Interiors** | 1-2s freeze when entering building | Preload assets when near building, show loading animation |
-| **Phase 18: Game Feel** | Screen shake causes motion sickness | Check prefers-reduced-motion, add settings toggle |
-| **Phase 18: Game Feel** | Tween accumulation causes memory leak | Add onComplete cleanup, killTweensOf before destroy |
+**What goes wrong:** Building interiors require ambient audio crossfade (exterior → interior). Poor crossfade timing creates jarring transitions (silence gap, volume spike, overlap).
+
+**Prevention:**
+- audioManager already exists with crossfade support (v4.0 shipped this)
+- Use 300-500ms crossfade duration (tested in v4.0)
+- Test every building entrance
+
+**Detection:** Listen for audio pops/gaps during playtest.
 
 ---
 
-## Performance Traps
+### Pitfall 13: Interactive Object Discovery
 
-| Trap | Symptoms | Prevention | When It Breaks |
-|------|----------|------------|----------------|
-| Too many active particles | FPS drops to 20-30, input lag | Mobile: 200 total, Desktop: 1000 total, use viewBounds culling | >200 particles on mobile |
-| Synchronous pathfinding | Frame freezes, stuttering movement | Stagger across frames (max 5/frame), use NavMesh not A* | >10 NPCs pathfinding same frame |
-| Unbounded tween creation | Memory growth, GC pauses | Reuse tweens, remove on complete, pool tween targets | >100 active tweens |
-| Loading all zone assets | Initial load >10s, memory warnings | Lazy load per zone, preload adjacent zones only | >3 zones loaded simultaneously |
-| EventBus listener accumulation | Slows over time, handlers fire 2-10x | Remove in shutdown/useEffect cleanup | >50 listeners total |
-| Texture atlas over GPU limit | WebGL context loss, white sprites | Max 2048x2048 mobile, 4096x4096 desktop, split by zone | >4096x4096 on any platform |
-| Creating audio buffers in loop | Memory leak, audio crackling after 10 min | Use audio sprites, pool sound objects, close contexts | >100 unique audio files |
-| Update loop object allocation | GC pressure, stuttering | Object pooling for bullets, effects, UI elements | >50 new objects/frame |
-| Redux state thrashing | React re-renders 100+/sec, UI lag | Batch updates, debounce Phaser→Redux sync | >30 dispatches/frame |
-| No reduced motion check | Motion sickness complaints | Check prefers-reduced-motion, disable shake/particles | Affects ~30% of users |
+**What goes wrong:** Players don't notice interactive objects (doors, levers, crystals) because no visual cue.
+
+**Prevention:**
+- Interaction hint already implemented (`[SPACE]` prompt in InteractableManager)
+- Add glow/particle effect to interactive objects (use ParticleEffectManager from v4.0)
+- Distinct color for interactive objects (avoid blending with background)
+
+**Detection:** Playtest observation: "Did player find the lever?"
 
 ---
 
-## UX Pitfalls
+### Pitfall 14: Branching Narrative Regression Testing
 
-| Pitfall | User Impact | Better Approach |
-|---------|-------------|-----------------|
-| Audio autoplays without warning | User startled, poor mobile experience | Require "Start Game" button, show audio icon |
-| Screen shake without reduced motion check | Motion sickness, vertigo for 30% of users | Check prefers-reduced-motion, make shake optional in settings |
-| Particles on every UI interaction | Visual noise, accessibility issues | Reserve particles for meaningful moments (level up, quest complete) |
-| No loading indicators during transitions | Feels broken, users click multiple times | Show "Loading..." or transition animation |
-| Music loops without fade | Jarring restart audible | Crossfade or use seamless loop points |
-| Building interiors take >1s to load | Feels laggy, breaks immersion | Preload adjacent building assets, show door opening animation during load |
-| NPC dialogue starts before audio unlocked | Silent dialogue, confusing | Show "Tap to start" if audio not unlocked |
-| Effects ignore battery saver mode | Drains battery quickly on mobile | Reduce particle count and audio on low battery |
+**What goes wrong:** Changing one dialogue node breaks 10 others. No automated testing for dialogue trees.
+
+**Prevention:**
+- Write integration tests for critical dialogue paths
+- Use Playwright E2E tests to walk through narrative branches
+- JSON schema validation for dialogue data
+
+**Detection:** Manual playtest catches bugs late.
 
 ---
 
-## "Looks Done But Isn't" Checklist
+### Pitfall 15: Building Interior Navigation
 
-- [ ] **Audio system:** Often missing mobile unlock flow — verify audio plays on first tap on iOS Safari
-- [ ] **Particle effects:** Often missing maxParticles limit — verify FPS >30 on mobile with all effects active
-- [ ] **NPC pathfinding:** Often missing frame staggering — verify 140 NPCs don't all pathfind same frame
-- [ ] **Scene transitions:** Often missing state persistence — verify Redux state survives scene.restart()
-- [ ] **EventBus cleanup:** Often missing useEffect return — verify Memory Profiler shows stable listener count
-- [ ] **Texture atlases:** Often missing power-of-two check — verify atlas dimensions are 512/1024/2048
-- [ ] **Reduced motion support:** Often missing prefers-reduced-motion check — verify screen shake disabled when OS setting enabled
-- [ ] **Audio memory cleanup:** Often missing context.close() — verify Memory Profiler shows stable AudioBuffer count
-- [ ] **Tween cleanup:** Often missing removeOnComplete — verify Heap snapshots don't accumulate tween objects
-- [ ] **Asset unloading:** Often missing zone exit cleanup — verify texture memory drops when leaving zone
+**What goes wrong:** Player gets lost inside large buildings (no minimap, no waypoints).
+
+**Prevention:**
+- Keep interiors small (max 20x20 tiles)
+- Clear visual exit indicator (door glow, arrow, map icon)
+- Interior map UI (optional, only if buildings large)
+
+**Detection:** Playtest feedback: "How do I get out?"
 
 ---
 
-## Recovery Strategies
+## Phase-Specific Pitfall Summary
 
-| Pitfall | Recovery Cost | Recovery Steps |
-|---------|---------------|----------------|
-| Audio autoplay blocked | LOW | Add "Tap to Start" screen, resume AudioContext on first user gesture |
-| Web Audio memory leak | MEDIUM | Audit all audio creation points, add context.close() to cleanup, switch to audio sprites |
-| Particle performance collapse | LOW | Add maxParticles limits, implement viewBounds culling, reduce particle texture sizes |
-| NPC pathfinding frame drops | MEDIUM | Refactor to NavMesh plugin, add frame staggering, cache paths |
-| Scene transition state loss | HIGH | Refactor to scene.launch() pattern, add state persistence layer, audit all transitions |
-| EventBus memory leak | MEDIUM | Audit all listeners, add cleanup in shutdown/useEffect, switch to named functions |
-| Texture atlas GPU overflow | MEDIUM | Split into zone-specific atlases, add dynamic loading, remove unused textures |
-| Redux/Phaser desync | HIGH | Establish single source of truth pattern, refactor all state mutations, add sync verification |
-| Screen shake accessibility issue | LOW | Add prefers-reduced-motion check, add settings toggle, apply to all motion effects |
-| Mobile touch audio broken | LOW | Add explicit touch unlock handler, test on iOS/Android, add user feedback |
+| Phase | Primary Pitfall | Secondary Pitfalls | Mitigation Priority |
+|-------|-----------------|--------------------|--------------------|
+| **Branching Narrative** | State explosion (#1), Narrative-learning balance (#2) | EventBus overload (#3), Redux bloat (#9) | Dialogue architecture review (40% of phase time) |
+| **Enterable Buildings** | Scene management (#6), Empty world (#8) | Phaser-React lifecycle (#10) | Pick ONE scene approach, test transitions |
+| **Interactive Objects** | System bloat (#7), EventBus overload (#3) | Discovery (#13) | Object type budget (max 8 types) |
+| **Guided Onboarding** | Tutorial as gatekeeper (#4) | Phaser-React lifecycle (#10) | Playtest with fresh users (50% of phase) |
+| **Personalized Progression** | Complexity spiral (#5), Narrative-learning balance (#2) | Redux bloat (#9) | Start simple (rule-based), prove value first |
 
 ---
 
-## Pitfall-to-Phase Mapping
+## Integration-Specific Gotchas (GoGo Arabic Codebase)
 
-| Pitfall | Prevention Phase | Verification |
-|---------|------------------|--------------|
-| Audio autoplay policy | Phase 14 | Manual test on iOS Safari, Android Chrome with fresh session |
-| Web Audio memory leak | Phase 14 | Chrome Performance Monitor shows stable memory after 30 min gameplay |
-| Particle performance collapse | Phase 15 | FPS >30 on mobile with all effects active simultaneously |
-| NPC pathfinding frame drops | Phase 16 | Profiler shows <5ms pathfinding time per frame with 140 NPCs |
-| Scene transition state loss | Phase 17 | E2E test: enter/exit building 10 times, verify state unchanged |
-| EventBus memory leak | Phases 14-17 | Memory snapshot shows <100 total listeners after all features added |
-| Texture atlas GPU overflow | Phase 15 | WebGL inspector shows no context loss, <2048x2048 atlases on mobile |
-| Redux/Phaser desync | Phases 14-17 | Add state comparison test, run after every EventBus emit |
-| Screen shake accessibility | Phase 18 | Test with OS reduced motion enabled, verify effects disabled |
-| Touch audio unlock | Phase 14 | Test on iOS with silent mode, Android low-power mode |
+### Gotcha 1: Parallel Agent Execution Cleanup
+
+**Context:** Previous milestones shipped with parallel agents (3 milestones in 3 days). Plan absorption happened (15-02 style).
+
+**Risk for v5.0:**
+- Multiple agents modify EventBus simultaneously (event name collisions)
+- Multiple agents add Redux slices (merge conflicts)
+- Parallel narrative + building phases both modify InteractableManager
+
+**Mitigation:**
+- Sequential phase execution for v5.0 (no parallel)
+- OR strict file ownership per agent (narrative owns dialogueSlice, buildings own InteriorScene)
+- Post-execution audit: `npx vite build` + test suite before committing
+
+---
+
+### Gotcha 2: Existing Test Setup (Fake Timers)
+
+**Context:** `src/test/setup.js` sets global fake timers to `2026-02-09T00:00:00Z` for ALL tests.
+
+**Risk for v5.0:**
+- Dialogue system with timestamps breaks (uses fake time)
+- Onboarding "first time" detection breaks (always fake date)
+- Personalized progression based on time-of-day breaks
+
+**Mitigation:**
+- Use static ISO strings in test preloadedState (not `Date.now()`)
+- Test time-dependent features with multiple fake times
+- Document time-dependency in tests
+
+---
+
+### Gotcha 3: Missing Exports After Multi-Agent Runs
+
+**Context:** "Missing exports = most common build failure after multi-agent runs"
+
+**Risk for v5.0:**
+- dialogueSlice created but not exported from store.js
+- InteriorScene created but not registered in Phaser config
+- New selectors created but not exported from slice
+
+**Mitigation:**
+- `npx vite build` after every agent execution
+- Automated export validation script (check all slices exported)
+- Lint rule: "All Redux slices must export selectors"
+
+---
+
+### Gotcha 4: ROADMAP.md and STATE.md Manual Updates
+
+**Context:** "ROADMAP.md and STATE.md need manual updates after parallel execution — agents update summaries but not the roadmap progress table"
+
+**Risk for v5.0:**
+- Progress tracking inconsistent
+- Can't answer "What's done in v5.0?"
+
+**Mitigation:**
+- Single agent owns ROADMAP.md updates
+- Post-milestone audit of progress tracking
+
+---
+
+### Gotcha 5: EventBus Listener Cleanup Timing
+
+**Context:** NPCManager and InteractableManager read Redux via `store.getState()` (Phaser can't use React hooks).
+
+**Risk for v5.0:**
+- Dialogue system needs Redux state in Phaser scenes
+- Building transitions need player state
+- Creates coupling between Phaser and Redux
+
+**Mitigation:**
+- Continue pattern: Phaser reads Redux via store.getState()
+- EventBus for Phaser → React communication (UI updates)
+- Never dispatch Redux actions from Phaser update loop (only from event handlers)
+
+---
+
+## Confidence Assessment by Source Type
+
+| Pitfall | Confidence | Source Type |
+|---------|------------|-------------|
+| State explosion (#1) | HIGH | Web search (Storyflow, ResearchGate) |
+| Narrative-learning balance (#2) | HIGH | Web search (MDPI, Springer, Medium) |
+| EventBus overload (#3) | HIGH | Codebase analysis + web search (Phaser forums) |
+| Tutorial gatekeeper (#4) | HIGH | Web search (Inworld, Medium, MAF) |
+| Personalization spiral (#5) | HIGH | Web search (MDPI, arXiv) |
+| Scene management (#6) | HIGH | Web search (Phaser forums, GitHub issues) |
+| Interactive object bloat (#7) | MEDIUM | Web search (GDC, Medium) + game design principles |
+| Empty world (#8) | MEDIUM | Game design principles (no specific source) |
+| Redux bloat (#9) | HIGH | Codebase analysis (12 existing slices) |
+| Phaser-React lifecycle (#10) | HIGH | Codebase analysis (GameLayout, useEventBusListeners) |
+| Minor pitfalls (#11-15) | MEDIUM | Codebase analysis + v4.0 ARCHITECTURE.md |
+
+---
+
+## Recommended Reading Before Each Phase
+
+| Phase | Read These Pitfalls | Why |
+|-------|---------------------|-----|
+| **Branching Narrative** | #1, #2, #3, #9, #14 | Prevent state explosion, balance learning, manage events |
+| **Enterable Buildings** | #3, #6, #8, #10 | Scene management, avoid empty interiors, lifecycle sync |
+| **Interactive Objects** | #3, #7, #13 | Prevent system bloat, manage EventBus, ensure discovery |
+| **Guided Onboarding** | #4, #10 | Avoid tutorial frustration, sync Phaser-React |
+| **Personalized Progression** | #2, #5, #9 | Balance learning, avoid complexity, manage Redux |
 
 ---
 
 ## Sources
 
-### Audio System
-- [Phaser 3 AudioContext discussion](https://phaser.discourse.group/t/phaser-3-how-am-i-doing-audiocontext-stuff-wrong/778)
-- [Web Audio Best Practices for Games in Phaser 3](https://blog.ourcade.co/posts/2020/phaser-3-web-audio-best-practices-games/)
-- [Audio for Web games - MDN](https://developer.mozilla.org/en-US/docs/Games/Techniques/Audio_for_Web_Games)
-- [Unlock JavaScript Web Audio in Safari](https://www.mattmontag.com/web/unlock-web-audio-in-safari-for-ios-and-macos)
-- [Web Audio API memory leak issues](https://github.com/WebAudio/web-audio-api/issues/2484)
-- [Phaser Web Audio memory leak](https://github.com/photonstorm/phaser/issues/5224)
-- [Audio sprites vs individual files](https://medium.com/game-development-stuff/how-to-create-audiosprites-to-use-with-howler-js-beed5d006ac1)
+### High-Confidence Web Search Sources (2026-02-10)
 
-### Particle Effects
-- [Particles - Notes of Phaser 3](https://rexrainbow.github.io/phaser3-rex-notes/docs/site/particles/)
-- [How to manage lots of Particle Emitter Managers?](https://phaser.discourse.group/t/how-to-manage-lots-of-particle-emitter-managers/12654)
-- [Reusing particle emitters](https://phaser.discourse.group/t/how-can-i-reuse-particle-emitter/12074)
-- [Phaser 3 optimization article (2025)](https://franzeus.medium.com/how-i-optimized-my-phaser-3-action-game-in-2025-5a648753f62b)
+**Branching Narrative:**
+- [The Branching Dialogue Nightmare: Why Your First Dialogue System Will Fail (And How to Fix It)](https://storyflow-editor.com/blog/branching-dialogue-nightmare-how-to-fix/)
+- [Narrative Control and Player Experience in Role Playing Games: Decision Points and Branching Narrative Feedback](https://www.researchgate.net/publication/300588610_Narrative_Control_and_Player_Experience_in_Role_Playing_Games_Decision_Points_and_Branching_Narrative_Feedback)
 
-### NPC Pathfinding
-- [Mastering 2D Game Path Finding with Phaser3](https://medium.com/@tajammalmaqbool11/mastering-2d-game-path-finding-with-phaser3-ai-path-finding-301807c74ba3)
-- [A to Z guide to pathfinding with Easystar and Phaser 3](https://gamedevjs.com/tutorials/a-to-z-guide-to-pathfinding-with-easystar-and-phaser-3/)
-- [NavMesh plugin for Phaser 3](https://github.com/mikewesthad/navmesh)
+**Educational Game Design:**
+- [Educational Games — Balance between Learning and Engagement](https://medium.com/@SharanShodhan/educational-games-balance-between-learning-and-engagement-3437b2efb9f)
+- [Balancing Fun and Learning in Educational Game Design - Filament Games](https://www.filamentgames.com/blog/balancing-fun-and-learning-in-educational-game-design/)
+- [Educational Game Design: An Empirical Study of the Effects of Narrative](https://chaimaj.github.io/papers/fdg_paper.pdf)
+- [Effect of Digital Game-Based Learning on Student Engagement and Motivation](https://www.mdpi.com/2073-431X/12/9/177)
+- [An Analysis of Game Design Elements Used in Digital Game-Based Language Learning](https://www.mdpi.com/2071-1050/13/12/6679)
 
-### Scene Transitions & State Management
-- [Understanding Scene Transitions](https://phaser.discourse.group/t/understanding-scene-transitions/5652)
-- [Scene manager - Notes of Phaser 3](https://rexrainbow.github.io/phaser3-rex-notes/docs/site/scenemanager/)
-- [Best practices for managing state](https://phaser.discourse.group/t/best-practices-for-managing-state/6518)
-- [Scene Registry and Data](https://docs.phaser.io/phaser/concepts/data-manager)
+**Onboarding & Retention:**
+- [Game UX: Best practices for video game onboarding 2024](https://inworld.ai/blog/game-ux-best-practices-for-video-game-onboarding)
+- [Mobile Game Onboarding: Top UX Strategies That Boost Retention](https://medium.com/@amol346bhalerao/mobile-game-onboarding-top-ux-strategies-that-boost-retention-6ef266f433cb)
+- [Player Retention Mistakes and How To Fix Them](https://www.sonamine.com/player-retention-mistakes-and-how-to-fix-them)
+- [Day 1 to Day 7 Retention: How To Make Players Stay - MAF](https://maf.ad/en/blog/game-retention/)
 
-### EventBus & Memory Management
-- [Do I need to manually dispose of event listeners?](https://phaser.discourse.group/t/do-i-need-to-manually-dispose-of-event-listeners/13429)
+**Personalized Learning & Adaptive Difficulty:**
+- [Game Mechanics and Artificial Intelligence Personalization: A Framework for Adaptive Learning Systems](https://www.mdpi.com/2227-7102/15/3/301)
+- [Dynamic Difficulty Adjustment: Crafting Personalized Gaming Experiences | Geeks](https://vocal.media/geeks/dynamic-difficulty-adjustment-crafting-personalized-gaming-experiences)
+- [Personalized Dynamic Difficulty Adjustment – Imitation Learning Meets Reinforcement Learning](https://arxiv.org/html/2408.06818v1)
+
+**Phaser 3 Technical:**
 - [Event listeners causing Memory Leaks](https://www.html5gamedevs.com/topic/40166-event-listeners-causing-memory-leaks/)
-- [Phaser3 memory leak issue](https://github.com/photonstorm/phaser/issues/5456)
+- [Do I need to manually dispose of event listeners? - Phaser 3](https://phaser.discourse.group/t/do-i-need-to-manually-dispose-of-event-listeners/13429)
+- [Event listeners keep executing code even on scene change - Phaser 3](https://phaser.discourse.group/t/event-listeners-keep-executing-code-even-on-scene-change/10097)
+- [Managing scenes... so confusing to me! - Phaser 3](https://phaser.discourse.group/t/managing-scenes-so-confusing-to-me/9854)
+- [Scene Management (Timing?) Issue when starting other scenes · Issue #3314](https://github.com/phaserjs/phaser/issues/3314)
+- [Please unconfuse me about the lifecycle of scenes - Phaser 3](https://phaser.discourse.group/t/please-unconfuse-me-about-the-lifecycle-of-scenes/9198)
 
-### Texture Atlases
-- [Working with Texture Atlases in Phaser 3](https://airum82.medium.com/working-with-texture-atlases-in-phaser-3-25c4df9a747a)
-- [Recommended number of Texture Atlases?](https://phaser.discourse.group/t/recommended-number-of-texture-atlases/15270)
+**Game Systems Design:**
+- [A Guide to Systems-Based Game Development](https://www.gamedeveloper.com/design/a-guide-to-systems-based-game-development)
+- [Game Mechanics — Interaction Loop and the Game State](https://stanislav-stankovic.medium.com/game-mechanics-interaction-loop-and-the-game-state-c38e6e4584dd)
 
-### Performance Optimization
-- [Phaser 3.60 Mobile Performance](https://github.com/phaserjs/phaser/blob/v3.60.0/changelog/3.60/MobilePerformance.md)
-- [Object Pooling in Phaser 3](https://blog.ourcade.co/posts/2020/phaser-3-optimization-object-pool-basic/)
-- [Tweens performance discussion](https://phaser.discourse.group/t/tweens-performance/10930)
+### Codebase Analysis Sources (Validated 2026-02-10)
 
-### Phaser + React Integration
-- [Official Phaser 3 React Template](https://github.com/phaserjs/template-react)
-- [An architecture for Phaser JS + Redux](http://orta.io/notes/games/phaser-redux/)
-- [Successfully Integrating Phaser 3 into React/Redux App](https://hopefourie.medium.com/successfully-integrating-phaser-3-into-your-react-redux-app-part-1-bade7feb460)
-
-### Accessibility
-- [Motion Sickness Accessibility in Video Games](https://madelinemiller.dev/blog/motion-sickness-accessibility/)
-- [prefers-reduced-motion - CSS MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion)
-- [Designing With Reduced Motion For Motion Sensitivities](https://www.smashingmagazine.com/2020/09/design-reduced-motion-sensitivities/)
-- [Create accessible animations in React](https://motion.dev/docs/react-accessibility)
+- `src/game/systems/NPCManager.js` (128 LOC)
+- `src/game/systems/InteractableManager.js` (169 LOC)
+- `src/utils/eventBus.js` (13 LOC)
+- `src/hooks/useEventBusListeners.js` (380 LOC per MEMORY.md)
+- `src/components/GameLayout.jsx` (209 LOC per MEMORY.md)
+- `.planning/research/STACK.md` (v4.0 audio system, Howler.js integration)
+- `.planning/research/ARCHITECTURE.md` (v4.0 system architecture, EventBus patterns)
+- Project MEMORY.md (v4.0 complete, 12 Redux slices, parallel execution gotchas)
 
 ---
-*Pitfalls research for: GoGo Arabic v4.0 Game Soul & Polish*
-*Researched: 2026-02-09*
+
+**Research complete:** 2026-02-10
+**Overall confidence:** HIGH (web search + codebase validation)
+**Recommended next step:** Phase-by-phase architectural reviews BEFORE implementation
