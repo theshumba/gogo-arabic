@@ -3,7 +3,8 @@
 ## Milestones
 
 - SHIPPED **v2.0 Player Experience Overhaul** — Phases 1-9 (shipped 2026-02-08) → [archive](milestones/v2.0-ROADMAP.md)
-- IN PROGRESS **v3.0 Infrastructure & Polish** — Phases 10-13 (started 2026-02-08)
+- PARTIAL **v3.0 Infrastructure & Polish** — Phases 10-11 complete, 12-13 deferred (2026-02-09) → [archive](milestones/v3.0-ROADMAP.md)
+- IN PROGRESS **v4.0 Game Soul & Polish** — Phases 14-18 (started 2026-02-10)
 
 ## Phases
 
@@ -22,114 +23,138 @@
 
 </details>
 
-### v3.0 Infrastructure & Polish (In Progress)
+<details>
+<summary>v3.0 Infrastructure & Polish (Phases 10-11) — PARTIAL 2026-02-09</summary>
 
-**Milestone Goal:** Pay down technical debt with comprehensive testing (80%+ coverage), architecture cleanup, backend hardening, performance optimization, and visual polish.
+- [x] Phase 10: Testing Foundation (6/6 plans) — 2026-02-09
+- [x] Phase 11: Architecture Cleanup (5/5 plans) — 2026-02-09
+- [ ] Phase 12: Backend Hardening — DEFERRED
+- [ ] Phase 13: Visual Polish — DEFERRED
 
-**Phase Numbering:** v3.0 continues from v2.0, starting at Phase 10.
+</details>
 
----
+### v4.0 Game Soul & Polish (In Progress)
 
-#### Phase 10: Testing Foundation ✅ (2026-02-09)
+**Milestone Goal:** Transform GoGo Arabic from a learning app with RPG graphics into a game that feels alive — with audio, atmosphere, clear progression, interactive world, and triple-A polish.
 
-**Goal:** Establish comprehensive test coverage as safety net before refactoring
-
-**Depends on:** Phase 9 (v2.0 complete)
-
-**Requirements:** TEST-01, TEST-02, TEST-03, TEST-04, TEST-05, TEST-06, TEST-07, TEST-08
-
-**Result:** 548 tests passing across 31 test files. Coverage thresholds enforced (25/70/50/25). Core business logic at 90%+. Overall coverage below 80% target due to untested UI components/hooks — acceptable as safety net for refactoring is established.
-
-**Plans:** 6 plans in 3 waves — ALL COMPLETE
-
-Plans:
-- [x] 10-01-PLAN.md — Test infrastructure + 12 Redux slice unit tests (Wave 1)
-- [x] 10-02-PLAN.md — Backend test infrastructure + 6 API route tests (Wave 1)
-- [x] 10-03-PLAN.md — Phaser scene mocks + 6 game system unit tests (Wave 1)
-- [x] 10-04-PLAN.md — Middleware integration tests + 7 component tests (Wave 2)
-- [x] 10-05-PLAN.md — 5 Playwright E2E critical flow tests (Wave 2)
-- [x] 10-06-PLAN.md — Coverage threshold enforcement in vitest.config.js (Wave 3)
+**Phase Numbering:** v4.0 continues from v3.0, starting at Phase 14.
 
 ---
 
-#### Phase 11: Architecture Cleanup
+#### Phase 14: Bug Fixes & Stability
 
-**Goal:** Refactor god component and establish architecture standards with test safety net in place
+**Goal:** Fix critical user-blocking issues before adding new sensory systems
 
-**Depends on:** Phase 10 (testing foundation complete)
+**Depends on:** Phase 11 (v3.0 architecture complete)
 
-**Requirements:** ARCH-01, ARCH-02, ARCH-03, ARCH-04, ARCH-05, PERF-02
+**Requirements:** FIX-01, FIX-02, FIX-03
 
 **Success Criteria** (what must be TRUE):
-1. GameLayout is split into manageable sub-components with no file exceeding 300 lines
-2. EventBus listeners are extracted into reusable custom hooks (useGameEvents, usePhaserBridge, useOverlayManager)
-3. Inline styles in older components are migrated to CSS Modules with consistent naming conventions
-4. ESLint and Prettier are configured with npm scripts (lint, lint:fix, format, format:check) enforcing code quality
-5. All Redux slices use memoized selectors (createSelector) for array filtering and object transformations
-6. Overlay z-index stack remains functional after refactoring (all 9 overlays render in correct order)
+1. User does not experience overlay stuck states — clicking outside overlay, ESC key, and X button all properly close overlays
+2. User does not experience character movement locks — player can move freely after all quiz/dialogue/menu interactions
+3. User does not experience screen freezes — game remains responsive during zone transitions and fast-travel
+4. User sees proper error states — "No words to review yet" instead of blank screens in quiz overlay
+5. User sees properly formatted dialogue text — all NPC dialogue wraps correctly without overflow or cutoff
 
-**Plans:** 5 plans in 2 waves
+**Plans:** TBD (estimate 1 plan)
 
 Plans:
-- [ ] 11-01-PLAN.md — ESLint 9 flat config + Prettier 3 setup with npm scripts (Wave 1)
-- [ ] 11-02-PLAN.md — GameLayout god component extraction into custom hooks (Wave 1)
-- [ ] 11-03-PLAN.md — Memoized selectors for 5 remaining Redux slices (Wave 1)
-- [ ] 11-04-PLAN.md — CSS Modules migration for 7 inline-styled components (Wave 1)
-- [ ] 11-05-PLAN.md — Human verification of overlays, EventBus, and visual styles (Wave 2)
+- [ ] 14-01: TBD
 
 ---
 
-#### Phase 12: Backend Hardening
+#### Phase 15: Audio System
 
-**Goal:** Harden database and API with connection pooling, transactions, validation, and security improvements
+**Goal:** Add complete audio layer with zone music, UI sounds, quiz feedback, and action effects
 
-**Depends on:** Phase 11 (architecture stable)
+**Depends on:** Phase 14 (stability fixes prevent audio trigger bugs)
 
-**Requirements:** BACK-01, BACK-02, BACK-03, BACK-04, BACK-05, BACK-06, PERF-01
+**Requirements:** AUD-01, AUD-02, AUD-03, AUD-04, AUD-05
 
 **Success Criteria** (what must be TRUE):
-1. MongoDB connection uses explicit pool configuration (maxPoolSize, minPoolSize, timeouts) with connection monitoring
-2. Database indexes exist on frequently queried fields (User.email, userId+syncVersion compound, timestamps)
-3. Sync endpoint uses MongoDB transactions for atomic version updates preventing race conditions
-4. Per-user rate limiting is active alongside IP-based limits
-5. All API endpoints validate request bodies using comprehensive Zod schemas
-6. NoSQL injection prevention middleware (express-mongo-sanitize) protects all routes
-7. Query optimization (projections, lean() queries, selective population) reduces response payloads by 30-50%
+1. User hears zone-specific background music that changes when entering a new zone (8 zones + menu + quiz = 10 tracks)
+2. User hears UI sound effects for button clicks, menu open/close, and error feedback (5+ sounds)
+3. User hears quiz feedback sounds — correct answer, incorrect answer, quiz complete (5+ sounds)
+4. User hears action SFX — footsteps (3 terrain types), door interaction, chest open, NPC interact (4+ sounds)
+5. User can adjust volume via settings — master, BGM, and SFX sliders with immediate effect
+6. User sees "Tap to Play" screen on mobile to unlock audio (prevents autoplay policy violations)
 
 **Plans:** TBD (estimate 2 plans)
 
 Plans:
-- [ ] 12-01: TBD
-- [ ] 12-02: TBD
+- [ ] 15-01: TBD
+- [ ] 15-02: TBD
 
 ---
 
-#### Phase 13: Visual Polish
+#### Phase 16: Visual Juice
 
-**Goal:** Replace placeholder visuals with consistent pixel art system for professional aesthetic
+**Goal:** Add particle effects, screen shake, and celebration animations for sensory feedback
 
-**Depends on:** Phase 11 (architecture stable, can run parallel with Phase 12)
+**Depends on:** Phase 15 (particles need audio triggers for full impact)
 
-**Requirements:** VPOL-01, VPOL-02, VPOL-03, VPOL-04, VPOL-05
+**Requirements:** VFX-01, VFX-02, VFX-03, VFX-04, VFX-05
 
 **Success Criteria** (what must be TRUE):
-1. HUD emoji icons are replaced with consistent 16x16 pixel art icons from a spritesheet
-2. All 20 faceless NPC sprites have 2-frame idle animations running continuously
-3. Player animation logic is centralized in a sprite animation state machine
-4. Particle effects play on achievement unlock, level up, and quest completion
-5. CSS pixel art rendering rules (image-rendering: pixelated) are applied to game canvas and all sprites
+1. User sees screen shake on quiz correct answer, level up, and achievement unlock (with reduced-motion support)
+2. User sees particle effects on achievement unlock and level up (2+ effect types: burst and continuous)
+3. User sees smooth fade transitions when overlays open/close and when changing zones
+4. User sees a full-screen level-up celebration overlay with animation and sound
+5. User sees enhanced achievement toast with celebration animation (particles + fade-in + bounce)
+
+**Plans:** TBD (estimate 2 plans)
+
+Plans:
+- [ ] 16-01: TBD
+- [ ] 16-02: TBD
+
+---
+
+#### Phase 17: Progression Clarity
+
+**Goal:** Make letter learning discoverable and provide clear next-step guidance
+
+**Depends on:** None (pure UI, can run parallel with Phase 16)
+
+**Requirements:** PROG-01, PROG-02, PROG-03, PROG-04
+
+**Success Criteria** (what must be TRUE):
+1. User can access a Learning Path menu showing alphabet → vocabulary → grammar progression with clear "Start Here" for new players
+2. User sees a Learning Dashboard with review queue, available lessons, and next-step indicators
+3. User sees progress metrics — letters mastered (X/28), words learned (X/1220), quests done (X/52) — visible from HUD or dashboard
+4. New player is guided to letter learning within first 3 onboarding steps (not hidden in menus)
 
 **Plans:** TBD (estimate 1-2 plans)
 
 Plans:
-- [ ] 13-01: TBD
+- [ ] 17-01: TBD
+
+---
+
+#### Phase 18: World Life
+
+**Goal:** Animate NPCs and add environmental interactivity for living world feel
+
+**Depends on:** Phase 16 (uses particles for NPC effects)
+
+**Requirements:** LIFE-01, LIFE-02, LIFE-03
+
+**Success Criteria** (what must be TRUE):
+1. User sees NPC idle animations — all 140 NPCs have 2-frame idle (blink/shift weight) running continuously
+2. User gets feedback when interacting with locked doors — "This door is locked" message instead of silent collision
+3. User sees smooth camera follow (lerp-based) instead of snapping camera
+
+**Plans:** TBD (estimate 1 plan)
+
+Plans:
+- [ ] 18-01: TBD
 
 ---
 
 ## Progress
 
 **Execution Order:**
-Phases execute sequentially: 10 → 11 → 12/13 (12 and 13 can run in parallel after 11)
+Phases execute in dependency order: 14 → 15 → 16/17 (parallel) → 18
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -142,11 +167,16 @@ Phases execute sequentially: 10 → 11 → 12/13 (12 and 13 can run in parallel 
 | 7. Player Profile & Stats | v2.0 | 1/1 | Complete | 2026-02-08 |
 | 8. Visual Polish & Sprites | v2.0 | 1/1 | Complete | 2026-02-08 |
 | 9. Outfit System | v2.0 | 1/1 | Complete | 2026-02-08 |
-| 10. Testing Foundation | v3.0 | 0/TBD | Not started | - |
-| 11. Architecture Cleanup | v3.0 | 0/TBD | Not started | - |
-| 12. Backend Hardening | v3.0 | 0/TBD | Not started | - |
-| 13. Visual Polish | v3.0 | 0/TBD | Not started | - |
+| 10. Testing Foundation | v3.0 | 6/6 | Complete | 2026-02-09 |
+| 11. Architecture Cleanup | v3.0 | 5/5 | Complete | 2026-02-09 |
+| 12. Backend Hardening | v3.0 | — | Deferred | — |
+| 13. Visual Polish | v3.0 | — | Deferred | — |
+| 14. Bug Fixes & Stability | v4.0 | 0/TBD | Not started | — |
+| 15. Audio System | v4.0 | 0/TBD | Not started | — |
+| 16. Visual Juice | v4.0 | 0/TBD | Not started | — |
+| 17. Progression Clarity | v4.0 | 0/TBD | Not started | — |
+| 18. World Life | v4.0 | 0/TBD | Not started | — |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-08 — v3.0 phases 10-13 added*
+*Last updated: 2026-02-10 — v4.0 roadmap created (Phases 14-18)*

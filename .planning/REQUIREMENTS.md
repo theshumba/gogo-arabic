@@ -37,7 +37,7 @@ Requirements for Game Soul & Polish milestone. Each maps to roadmap phases.
 
 ### Progression Clarity
 
-- [ ] **PROG-01**: Player can access a Learning Path menu showing alphabet -> vocabulary -> grammar progression with clear "Start Here" for new players
+- [ ] **PROG-01**: Player can access a Learning Path menu showing alphabet → vocabulary → grammar progression with clear "Start Here" for new players
 - [ ] **PROG-02**: Player sees a Learning Dashboard with review queue, available lessons, and next-step indicators
 - [ ] **PROG-03**: Player sees progress metrics — letters mastered (X/28), words learned (X/1220), quests done (X/52) — visible from HUD or dashboard
 - [ ] **PROG-04**: New player is guided to letter learning within first 3 onboarding steps
@@ -87,32 +87,32 @@ Deferred enhancements after core soul is established.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUD-01 | TBD | Pending |
-| AUD-02 | TBD | Pending |
-| AUD-03 | TBD | Pending |
-| AUD-04 | TBD | Pending |
-| AUD-05 | TBD | Pending |
-| VFX-01 | TBD | Pending |
-| VFX-02 | TBD | Pending |
-| VFX-03 | TBD | Pending |
-| VFX-04 | TBD | Pending |
-| VFX-05 | TBD | Pending |
-| PROG-01 | TBD | Pending |
-| PROG-02 | TBD | Pending |
-| PROG-03 | TBD | Pending |
-| PROG-04 | TBD | Pending |
-| LIFE-01 | TBD | Pending |
-| LIFE-02 | TBD | Pending |
-| LIFE-03 | TBD | Pending |
-| FIX-01 | TBD | Pending |
-| FIX-02 | TBD | Pending |
-| FIX-03 | TBD | Pending |
+| FIX-01 | Phase 14 | Pending |
+| FIX-02 | Phase 14 | Pending |
+| FIX-03 | Phase 14 | Pending |
+| AUD-01 | Phase 15 | Pending |
+| AUD-02 | Phase 15 | Pending |
+| AUD-03 | Phase 15 | Pending |
+| AUD-04 | Phase 15 | Pending |
+| AUD-05 | Phase 15 | Pending |
+| VFX-01 | Phase 16 | Pending |
+| VFX-02 | Phase 16 | Pending |
+| VFX-03 | Phase 16 | Pending |
+| VFX-04 | Phase 16 | Pending |
+| VFX-05 | Phase 16 | Pending |
+| PROG-01 | Phase 17 | Pending |
+| PROG-02 | Phase 17 | Pending |
+| PROG-03 | Phase 17 | Pending |
+| PROG-04 | Phase 17 | Pending |
+| LIFE-01 | Phase 18 | Pending |
+| LIFE-02 | Phase 18 | Pending |
+| LIFE-03 | Phase 18 | Pending |
 
 **Coverage:**
 - v4.0 requirements: 20 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 20
+- Mapped to phases: 20/20 (100%)
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-09*
-*Last updated: 2026-02-09 after v4.0 research synthesis*
+*Last updated: 2026-02-10 — v4.0 roadmap created, 100% coverage validated*
