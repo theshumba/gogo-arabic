@@ -56,10 +56,10 @@
 4. User sees proper error states — "No words to review yet" instead of blank screens in quiz overlay
 5. User sees properly formatted dialogue text — all NPC dialogue wraps correctly without overflow or cutoff
 
-**Plans:** TBD (estimate 1 plan)
+**Plans:** 1 plan
 
 Plans:
-- [ ] 14-01: TBD
+- [ ] 14-01-PLAN.md — Fix overlay close guarantees, movement unlock safety nets, zone transition freezes, empty quiz state, dialogue text overflow
 
 ---
 
@@ -171,7 +171,7 @@ Phases execute in dependency order: 14 → 15 → 16/17 (parallel) → 18
 | 11. Architecture Cleanup | v3.0 | 5/5 | Complete | 2026-02-09 |
 | 12. Backend Hardening | v3.0 | — | Deferred | — |
 | 13. Visual Polish | v3.0 | — | Deferred | — |
-| 14. Bug Fixes & Stability | v4.0 | 0/TBD | Not started | — |
+| 14. Bug Fixes & Stability | v4.0 | 0/1 | Not started | — |
 | 15. Audio System | v4.0 | 0/TBD | Not started | — |
 | 16. Visual Juice | v4.0 | 0/TBD | Not started | — |
 | 17. Progression Clarity | v4.0 | 0/TBD | Not started | — |
@@ -179,4 +179,4 @@ Phases execute in dependency order: 14 → 15 → 16/17 (parallel) → 18
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-10 — Phase 18 planned (1 plan)*
+*Last updated: 2026-02-10 — Phase 14 planned (1 plan)*
