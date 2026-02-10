@@ -144,10 +144,10 @@ Plans:
 2. User gets feedback when interacting with locked doors — "This door is locked" message instead of silent collision
 3. User sees smooth camera follow (lerp-based) instead of snapping camera
 
-**Plans:** TBD (estimate 1 plan)
+**Plans:** 1 plan
 
 Plans:
-- [ ] 18-01: TBD
+- [ ] 18-01-PLAN.md — NPC idle animations, locked door interactables, camera follow polish
 
 ---
 
@@ -175,8 +175,8 @@ Phases execute in dependency order: 14 → 15 → 16/17 (parallel) → 18
 | 15. Audio System | v4.0 | 0/TBD | Not started | — |
 | 16. Visual Juice | v4.0 | 0/TBD | Not started | — |
 | 17. Progression Clarity | v4.0 | 0/TBD | Not started | — |
-| 18. World Life | v4.0 | 0/TBD | Not started | — |
+| 18. World Life | v4.0 | 0/1 | Not started | — |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-10 — v4.0 roadmap created (Phases 14-18)*
+*Last updated: 2026-02-10 — Phase 18 planned (1 plan)*
