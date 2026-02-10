@@ -2,7 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuiz } from '../../hooks/useQuiz.js';
+import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { audioManager } from '../../services/audio.js';
 import { selectWordsByDifficulty } from '../../utils/wordSelection.js';
 import ArabicToEnglish from './ArabicToEnglish.jsx';
 import EnglishToArabic from './EnglishToArabic.jsx';
@@ -33,25 +35,30 @@ export default function QuizOverlay() {
 
   const focusTrapRef = useFocusTrap(true, null);
 
-  // Escape key handler - only close on summary screen or if no feedback showing
+  // Wrap close to emit quiz-closed event for BGM resume
+  const handleClose = useCallback(() => {
+    EventBus.emit('quiz-closed');
+    close();
+  }, [close]);
+
+  // Centralized overlay close with ESC key and unmount safety net
+  const handleOverlayClose = useOverlayClose(handleClose, {
+    beforeClose: () => {
+      // On summary screen, always allow close
+      if (showSummary) return true;
+      // During active quiz, ask for confirmation
+      return window.confirm('Quit quiz? Progress will be lost.');
+    },
+  });
+
+  // Pause BGM when quiz opens, resume on unmount
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        // Allow closing on summary screen, or warn on active quiz
-        if (showSummary) {
-          close();
-        } else if (!feedback) {
-          // No answer given yet, allow closing
-          if (window.confirm('Quit quiz? Progress will be lost.')) {
-            close();
-          }
-        }
-      }
+    audioManager.pauseBGM();
+    return () => {
+      // Safety: resume BGM if component unmounts without explicit close
+      audioManager.resumeBGM();
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showSummary, feedback, close]);
+  }, []);
 
   useEffect(() => {
     if (!quiz.active) {
@@ -66,7 +73,7 @@ export default function QuizOverlay() {
   const handleAnswer = useCallback((userAnswer) => {
     answer(userAnswer);
     setLocalFeedback({ selected: userAnswer });
-    // Determine correctness to play the right SFX
+    // Determine correctness to play the right SFX — direct call for lower latency
     const word = quiz.currentWord;
     if (word) {
       const isCorrect =
@@ -75,7 +82,7 @@ export default function QuizOverlay() {
           : (quiz.quizType === 'en-to-ar')
             ? userAnswer === word.arabic
             : userAnswer.replace(/[\u064B-\u065F\u0670]/g, '').trim() === word.arabic.replace(/[\u064B-\u065F\u0670]/g, '').trim();
-      EventBus.emit(isCorrect ? 'sfx-correct' : 'sfx-wrong');
+      audioManager.playSFX(isCorrect ? 'correct' : 'wrong');
     }
   }, [answer, quiz.currentWord, quiz.quizType]);
 
@@ -83,7 +90,7 @@ export default function QuizOverlay() {
     const done = next();
     if (done) {
       setShowSummary(true);
-      EventBus.emit('sfx-quest');
+      audioManager.playSFX('quest');
     }
     setLocalFeedback(null);
   }, [next]);
@@ -95,7 +102,7 @@ export default function QuizOverlay() {
       answer(perfect ? w.english : (i === 0 ? 'wrong' : w.english));
     });
     setShowSummary(true);
-    EventBus.emit('sfx-quest');
+    audioManager.playSFX('quest');
   }, [quiz.sessionWords, answer]);
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -106,13 +113,13 @@ export default function QuizOverlay() {
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1 },
+    hidden: { opacity: 0, scale: 0.92, y: 15 },
+    visible: { opacity: 1, scale: 1, y: 0 },
   };
 
   const transition = reduceMotion
     ? { duration: 0.15 }
-    : { duration: 0.25, ease: 'easeOut' };
+    : { duration: 0.3, ease: [0.22, 1, 0.36, 1] };
 
   const buttonProps = reduceMotion
     ? {}
@@ -123,7 +130,7 @@ export default function QuizOverlay() {
       <motion.div
         ref={focusTrapRef}
         className={styles.overlay}
-        onClick={close}
+        onClick={handleOverlayClose}
         variants={overlayVariants}
         initial="hidden"
         animate="visible"
@@ -151,7 +158,7 @@ export default function QuizOverlay() {
             </p>
             <motion.button
               className={styles.closeBtn}
-              onClick={close}
+              onClick={handleOverlayClose}
               {...buttonProps}
             >
               Continue
@@ -164,9 +171,9 @@ export default function QuizOverlay() {
 
   const handleQuit = useCallback(() => {
     if (window.confirm('Quit quiz? Progress will be lost.')) {
-      close();
+      handleClose();
     }
-  }, [close]);
+  }, [handleClose]);
 
   // Match Pairs mode: show all 4 words at once
   if (quiz.active && quiz.quizType === 'match') {
@@ -205,7 +212,42 @@ export default function QuizOverlay() {
   }
 
   if (!quiz.active || !quiz.currentWord) {
-    return null;
+    return (
+      <motion.div
+        ref={focusTrapRef}
+        className={styles.overlay}
+        onClick={handleOverlayClose}
+        variants={overlayVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        transition={transition}
+      >
+        <motion.div
+          className={styles.card}
+          onClick={(e) => e.stopPropagation()}
+          variants={cardVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          transition={transition}
+        >
+          <div className={styles.emptyState}>
+            <div className={styles.emptyStateTitle}>No Words to Review</div>
+            <p className={styles.emptyStateMsg}>
+              Explore the world and talk to NPCs to learn new words first!
+            </p>
+            <motion.button
+              className={styles.closeBtn}
+              onClick={handleOverlayClose}
+              {...buttonProps}
+            >
+              Continue
+            </motion.button>
+          </div>
+        </motion.div>
+      </motion.div>
+    );
   }
 
   const combinedFeedback = feedback

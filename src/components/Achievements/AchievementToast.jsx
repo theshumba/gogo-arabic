@@ -33,9 +33,19 @@ function Toast({ achievementId, onDismiss }) {
   const rarityColor = RARITY_COLORS[achievement.rarity] || '#f4fefa';
 
   const toastVariants = {
-    hidden: { opacity: 0, y: -50, scale: 0.9 },
-    visible: { opacity: 1, y: 0, scale: 1 },
-    exit: { opacity: 0, y: -20, scale: 0.95 },
+    hidden: { opacity: 0, y: -60, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: 'spring',
+        damping: 12,
+        stiffness: 200,
+        mass: 0.8,
+      },
+    },
+    exit: { opacity: 0, y: -30, scale: 0.9, transition: { duration: 0.25 } },
   };
 
   const toastVariantsReduced = {
@@ -46,7 +56,7 @@ function Toast({ achievementId, onDismiss }) {
 
   const transition = reduceMotion
     ? { duration: 0.2 }
-    : { duration: 0.35, ease: 'easeOut' };
+    : undefined; // Spring transition is defined in toastVariants.visible
 
   // Dynamic inline styles for rarity-specific colors
   const toastInlineStyle = {
@@ -56,6 +66,24 @@ function Toast({ achievementId, onDismiss }) {
       inset 0 0 20px ${rarityColor}20
     `,
   };
+
+  // Icon entrance animation
+  const iconAnim = reduceMotion
+    ? {}
+    : {
+        initial: { scale: 0, rotate: -20 },
+        animate: { scale: 1, rotate: 0 },
+        transition: { type: 'spring', damping: 10, stiffness: 300, delay: 0.15 },
+      };
+
+  // XP reward pop animation
+  const xpAnim = reduceMotion
+    ? {}
+    : {
+        initial: { scale: 0 },
+        animate: { scale: [0, 1.3, 1] },
+        transition: { delay: 0.3, duration: 0.4 },
+      };
 
   return (
     <motion.div
@@ -77,7 +105,9 @@ function Toast({ achievementId, onDismiss }) {
       </div>
 
       <div className={styles.body}>
-        <div className={styles.icon}>{achievement.icon}</div>
+        <motion.div className={styles.icon} {...iconAnim}>
+          {achievement.icon}
+        </motion.div>
         <div className={styles.content}>
           <div className={styles.name} style={{ color: rarityColor }}>
             {achievement.name}
@@ -85,9 +115,9 @@ function Toast({ achievementId, onDismiss }) {
           <div className={styles.description}>
             {achievement.description}
           </div>
-          <div className={styles.xpReward}>
+          <motion.span className={styles.xpReward} {...xpAnim}>
             +{achievement.xpReward} XP
-          </div>
+          </motion.span>
         </div>
       </div>
 

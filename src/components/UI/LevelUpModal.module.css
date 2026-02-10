@@ -27,6 +27,47 @@
   overflow: hidden;
 }
 
+/* Pulsing golden border animation */
+.goldenBorderPulse {
+  animation: goldenBorder 2s ease-in-out infinite;
+}
+
+@keyframes goldenBorder {
+  0%,
+  100% {
+    box-shadow: 0 0 40px rgba(226, 182, 89, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 80px rgba(226, 182, 89, 0.7),
+      0 0 120px rgba(226, 182, 89, 0.3);
+  }
+}
+
+/* Shimmer overlay - diagonal light sweep */
+.shimmerOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(226, 182, 89, 0.08) 45%,
+    transparent 55%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 .glow {
   position: absolute;
   inset: -50%;
@@ -40,7 +81,7 @@
 
 .content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,16 +92,16 @@
   font-size: 40px;
   margin-bottom: 16px;
   line-height: 1;
-  animation: float 2s ease-in-out infinite;
+  animation: sparkleFloat 2s ease-in-out infinite;
 }
 
-@keyframes float {
+@keyframes sparkleFloat {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-12px) scale(1.05);
   }
 }
 
@@ -102,6 +143,22 @@
   font-weight: bold;
   text-shadow: 0 0 8px var(--color-xp-gold);
   line-height: 1;
+}
+
+/* Level number glow pulse */
+.levelNumberPulse {
+  animation: levelPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes levelPulse {
+  0%,
+  100% {
+    text-shadow: 0 0 8px var(--color-xp-gold);
+  }
+  50% {
+    text-shadow: 0 0 20px var(--color-xp-gold),
+      0 0 40px rgba(226, 182, 89, 0.4);
+  }
 }
 
 .rewards {
@@ -176,6 +233,26 @@
 .continueBtn:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
+}
+
+/* Reduced motion: disable all animations */
+@media (prefers-reduced-motion: reduce) {
+  .goldenBorderPulse {
+    animation: none;
+  }
+
+  .shimmerOverlay {
+    animation: none;
+    background: none;
+  }
+
+  .celebration {
+    animation: none;
+  }
+
+  .levelNumberPulse {
+    animation: none;
+  }
 }
 
 /* Responsive Design */

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { useDialogue } from '../../hooks/useDialogue.js';
+import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { getEnhancedDialogueChoices } from '../../utils/culturalDialogueHelper.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import npcsData from '../../data/npcs.json';
@@ -22,9 +23,9 @@ const backdropVariants = {
 };
 
 const dialogueBoxVariants = {
-  hidden: { opacity: 0, y: 50, scale: 0.95 },
+  hidden: { opacity: 0, y: 15, scale: 0.92 },
   visible: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: 30, scale: 0.98 },
+  exit: { opacity: 0, y: 10, scale: 0.96 },
 };
 
 /**
@@ -43,6 +44,9 @@ export default function DialogueOverlay() {
 
   const focusTrapRef = useFocusTrap(true, null);
 
+  // Centralized overlay close with ESC key and unmount safety net
+  useOverlayClose(close);
+
   // Early return if invalid data
   if (!npc || !currentTree) {
     if (npc || overlayData) {
@@ -58,7 +62,8 @@ export default function DialogueOverlay() {
     return null;
   }
 
-  /* ---- keyboard shortcuts ---- */
+  /* ---- keyboard shortcuts (Space/Enter to advance, number keys for choices) ---- */
+  /* NOTE: ESC is handled by useOverlayClose above (capture phase) */
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Don't interfere with input fields or other overlays
@@ -86,11 +91,6 @@ export default function DialogueOverlay() {
           }
           break;
 
-        case 'Escape':
-          e.preventDefault();
-          close();
-          break;
-
         default:
           break;
       }
@@ -109,8 +109,8 @@ export default function DialogueOverlay() {
   // Check for reduced motion preference
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const transition = reduceMotion
-    ? { duration: 0.2 }
-    : { duration: 0.3, ease: 'easeOut' };
+    ? { duration: 0.15 }
+    : { duration: 0.3, ease: [0.22, 1, 0.36, 1] };
 
   /* ---- cultural menu rendering ---- */
   if (showCulturalMenu) {
