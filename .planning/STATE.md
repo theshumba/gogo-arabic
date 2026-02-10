@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 19 of 26 (Infrastructure & Architecture)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-02-10 — v5.0 roadmap created (8 phases, 100 requirements)
+Plan: 2 of 4 in current phase (Wave 1 complete)
+Status: In progress — Wave 2 ready to execute
+Last activity: 2026-02-10 — Completed 19-02-PLAN.md (narrativeSlice + store wiring)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██░░░░░░░░] 20% (2/4 plans in phase 19)
 
 ### Shipped Milestones
 
@@ -33,9 +33,9 @@ Progress: [░░░░░░░░░░] 0%
 **Cumulative:** 16 phases, 33 plans shipped across 3 milestones in 3 days
 
 **v5.0 in progress:**
-- Total plans completed: 0
-- Average duration: N/A
-- Trend: Starting fresh
+- Total plans completed: 2 (19-01, 19-02)
+- Average duration: ~2 min per plan
+- Trend: Wave 1 complete, Wave 2 ready
 
 ## Accumulated Context
 
@@ -48,6 +48,12 @@ Recent decisions affecting v5.0:
 - v4.0: Parallel execution preferred by user for speed
 - v3.0: Skip TypeScript migration — UX fixes higher priority
 - v2.0: CSS Modules for new components — consistency pattern
+
+**Phase 19 decisions (19-02):**
+- narrativeSlice: resetNarrativeProgress uses `return { ...initialState }` spread for clean immutable reset
+- narrativeSlice: selectHasMadeChoice is memoized via createSelector (iterates array); selectNarrativeFlagCount is plain (O(1) Object.keys)
+- sceneMock: sys.scene.manager added alongside scene.manager — SceneStackManager uses both access patterns
+- narrativeSlice: story flag budget is 50 max with DEV-mode console.warn (not enforced hard limit)
 
 ### Open Items Carried Forward
 - Audio asset files (MP3s) need to be created/sourced
@@ -81,11 +87,11 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-10 (roadmap creation)
-Stopped at: v5.0 roadmap and STATE.md initialized with 8 phases
-Resume file: None
+Last session: 2026-02-10 (19-02 execution)
+Stopped at: Phase 19 Plan 2 complete — Wave 1 both done (19-01 EventBus, 19-02 narrativeSlice)
+Resume file: .planning/phases/19-infrastructure-architecture/19-02-SUMMARY.md
 
-**Next step:** `/gsd:plan-phase 19` to begin Infrastructure & Architecture planning
+**Next step:** Execute Wave 2 — `/gsd:execute-phase 19` plans 03 and 04 (useEventBusListeners refactor + SceneStackManager)
 
 ---
 *State initialized: 2026-02-08*
