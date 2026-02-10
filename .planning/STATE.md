@@ -10,13 +10,13 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 **Milestone:** v4.0 Game Soul & Polish
-**Phase:** 14 (Bug Fixes & Stability)
-**Plan:** —
-**Status:** Ready for planning
+**Phase:** 16 (Visual Juice)
+**Plan:** 01 of 2 complete
+**Status:** In progress
 
 **Progress:** ████░░░░░░░░░░░░░░░░ 0/5 phases (0%)
 
-Last activity: 2026-02-10 — v4.0 roadmap created
+Last activity: 2026-02-10 — Completed 16-01-PLAN.md (Screen Shake + Particle System + Zone Fade)
 
 ## Performance Metrics
 
@@ -72,9 +72,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-10
-Completed: 16-02-PLAN.md (Level-Up Celebration + Achievement Toast Enhancement)
+Completed: 16-01-PLAN.md (Screen Shake + Particle System + Zone Fade Transitions)
 Resume: Continue with remaining Phase 16 plans or other v4.0 phases
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-10 — Completed 16-02 (level-up celebration + achievement toast + overlay transitions)*
+*Last updated: 2026-02-10 — Completed 16-01 (screen shake + particles + zone fade transitions)*
