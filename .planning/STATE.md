@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Planning next milestone
+**Current focus:** v5.0 The Real Game — defining requirements
 
 ## Current Position
 
-**Milestone:** v4.0 Game Soul & Polish — COMPLETE
-**Status:** Shipped and archived
-
-Last activity: 2026-02-10 — v4.0 milestone completed, archived, and tagged
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-10 — Milestone v5.0 started
 
 ### Shipped Milestones
 
@@ -32,12 +32,21 @@ Last activity: 2026-02-10 — v4.0 milestone completed, archived, and tagged
 
 ## Accumulated Context
 
-### Open Items for Next Milestone
+### Open Items Carried Forward
 - Audio asset files (MP3s) need to be created/sourced
 - Only 4 locked doors across 8 zones (partial coverage)
 - Backend hardening deferred since v3.0 (Phases 12-13)
-- Not enough interactive content (user feedback)
-- Can't enter buildings (user feedback)
+
+### v5.0 User Feedback Driving This Milestone
+- Onboarding only teaches controls, not purpose — player lost from minute one
+- World feels empty — houses, pillars, pond, trees. Nothing interactive.
+- Can't enter buildings, chests are rocks with text
+- No story or narrative pulling player forward
+- No structure — doesn't know who to talk to or where to go
+- NPCs feel like signposts, not characters
+- Player wants Pokémon-style guided discovery
+- Wants personalized journey — unique per player based on choices
+- "Every other game I play, I know where I'm going. I can't do that here."
 
 ### Decisions
 All decisions logged in PROJECT.md Key Decisions table.
@@ -51,9 +60,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-10
-Completed: v4.0 milestone archived and tagged
-Resume: `/gsd:new-milestone` to start v5.0
+Started: v5.0 The Real Game milestone
+Next: Research phase (4 parallel agents), then requirements definition
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-10 — v4.0 milestone completed and archived*
+*Last updated: 2026-02-10 — v5.0 milestone started*

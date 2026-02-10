@@ -47,7 +47,17 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
-No active requirements. Ready for v5.0 milestone planning.
+## Current Milestone: v5.0 The Real Game
+
+**Goal:** Transform GoGo Arabic from a learning app with a game skin into an actual game — epic personalized narrative, living interactive world, and guided structure from minute one.
+
+**Target features:**
+- Complete onboarding overhaul with guide character, first mission, and clear purpose
+- Personalized branching narrative that adapts to player choices and learning path
+- Living world with enterable buildings, interactive objects, market stalls, signs, fountains
+- Structured progression so players always know what to do and why
+- Rich zone environments that feel like real places worth exploring
+- NPC conversations that feel meaningful — tips, warnings, stories, personality
 
 ### Out of Scope
 
@@ -80,9 +90,15 @@ No active requirements. Ready for v5.0 milestone planning.
 - ~~No audio~~ -> Fixed (zone BGM, SFX, volume controls, mobile unlock)
 - ~~Doesn't feel like a "real game"~~ -> Fixed (screen shake, particles, celebrations, toasts, transitions)
 
-**Remaining feedback for future milestones:**
-- Not enough interactive content — limited things to do in the world
-- Can't enter buildings
+**v5.0 user feedback driving this milestone:**
+- Onboarding is useless — only teaches controls, not purpose. Player has no idea what to do.
+- World feels empty — just houses, pillars, a pond, trees. Nothing interactive.
+- Can't enter buildings, chests are just rocks with text.
+- No story or narrative pulling the player forward.
+- No structure — player doesn't know who to talk to, where to go, or how to find Arabic learning.
+- NPCs feel like signposts, not characters.
+- Zones exist on map but feel disconnected and empty.
+- "Every other game I play, I know where I'm supposed to go. I can't do that here."
 - Audio assets (MP3 files) still need to be created/sourced
 
 ## Constraints
@@ -116,4 +132,4 @@ No active requirements. Ready for v5.0 milestone planning.
 | Parallel execution of all v4.0 phases | User preference for speed, independent features | Good — shipped 5 phases in 1 day, minor cleanup needed |
 
 ---
-*Last updated: 2026-02-10 after v4.0 milestone completion*
+*Last updated: 2026-02-10 after v5.0 milestone started*
