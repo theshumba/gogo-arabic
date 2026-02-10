@@ -175,13 +175,123 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| — | — | — |
+| INFR-01 | 19 | Pending |
+| INFR-02 | 19 | Pending |
+| INFR-03 | 19 | Pending |
+| INFR-04 | 19 | Pending |
+| INFR-05 | 19 | Pending |
+| INFR-06 | 19 | Pending |
+| INFR-07 | 19 | Pending |
+| INFR-08 | 19 | Pending |
+| INFR-09 | 19 | Pending |
+| INFR-10 | 19 | Pending |
+| DLGE-01 | 20 | Pending |
+| DLGE-02 | 20 | Pending |
+| DLGE-03 | 20 | Pending |
+| DLGE-04 | 20 | Pending |
+| DLGE-05 | 20 | Pending |
+| DLGE-06 | 20 | Pending |
+| DLGE-07 | 20 | Pending |
+| DLGE-08 | 20 | Pending |
+| DLGE-09 | 20 | Pending |
+| DLGE-10 | 20 | Pending |
+| DLGE-11 | 20 | Pending |
+| DLGE-12 | 20 | Pending |
+| DLGE-13 | 20 | Pending |
+| DLGE-14 | 20 | Pending |
+| ONBR-01 | 21 | Pending |
+| ONBR-02 | 21 | Pending |
+| ONBR-03 | 21 | Pending |
+| ONBR-04 | 21 | Pending |
+| ONBR-05 | 21 | Pending |
+| ONBR-06 | 21 | Pending |
+| ONBR-07 | 21 | Pending |
+| ONBR-08 | 21 | Pending |
+| ONBR-09 | 21 | Pending |
+| ONBR-10 | 21 | Pending |
+| BLDG-01 | 22 | Pending |
+| BLDG-02 | 22 | Pending |
+| BLDG-03 | 22 | Pending |
+| BLDG-04 | 22 | Pending |
+| BLDG-05 | 22 | Pending |
+| BLDG-06 | 22 | Pending |
+| BLDG-07 | 22 | Pending |
+| BLDG-08 | 22 | Pending |
+| BLDG-09 | 22 | Pending |
+| BLDG-10 | 22 | Pending |
+| BLDG-11 | 22 | Pending |
+| BLDG-12 | 22 | Pending |
+| OBJT-01 | 23 | Pending |
+| OBJT-02 | 23 | Pending |
+| OBJT-03 | 23 | Pending |
+| OBJT-04 | 23 | Pending |
+| OBJT-05 | 23 | Pending |
+| OBJT-06 | 23 | Pending |
+| OBJT-07 | 23 | Pending |
+| OBJT-08 | 23 | Pending |
+| OBJT-09 | 23 | Pending |
+| OBJT-10 | 23 | Pending |
+| OBJT-11 | 23 | Pending |
+| OBJT-12 | 23 | Pending |
+| PROG-01 | 24 | Pending |
+| PROG-02 | 24 | Pending |
+| PROG-03 | 24 | Pending |
+| PROG-04 | 24 | Pending |
+| PROG-05 | 24 | Pending |
+| PROG-06 | 24 | Pending |
+| PROG-07 | 24 | Pending |
+| PROG-08 | 24 | Pending |
+| PROG-09 | 24 | Pending |
+| PROG-10 | 24 | Pending |
+| PROG-11 | 24 | Pending |
+| PROG-12 | 24 | Pending |
+| VCAB-01 | 25 | Pending |
+| VCAB-02 | 25 | Pending |
+| VCAB-03 | 25 | Pending |
+| VCAB-04 | 25 | Pending |
+| VCAB-05 | 25 | Pending |
+| VCAB-06 | 25 | Pending |
+| VCAB-07 | 25 | Pending |
+| VCAB-08 | 25 | Pending |
+| VCAB-09 | 25 | Pending |
+| VCAB-10 | 25 | Pending |
+| VCAB-11 | 25 | Pending |
+| VCAB-12 | 25 | Pending |
+| NARR-01 | 25 | Pending |
+| NARR-02 | 25 | Pending |
+| NARR-03 | 26 | Pending |
+| NARR-04 | 26 | Pending |
+| NARR-05 | 26 | Pending |
+| NARR-06 | 26 | Pending |
+| NARR-07 | 26 | Pending |
+| NARR-08 | 26 | Pending |
+| NARR-09 | 26 | Pending |
+| NARR-10 | 26 | Pending |
+| NARR-11 | 26 | Pending |
+| NARR-12 | 26 | Pending |
+| UXPL-01 | 26 | Pending |
+| UXPL-02 | 26 | Pending |
+| UXPL-03 | 26 | Pending |
+| UXPL-04 | 26 | Pending |
+| UXPL-05 | 26 | Pending |
+| UXPL-06 | 26 | Pending |
 
 **Coverage:**
 - v5.0 requirements: 100 total
-- Mapped to phases: 0
-- Unmapped: 100 ⚠️
+- Mapped to phases: 100 ✓
+- Unmapped: 0 ✓
+
+**By Category:**
+- Infrastructure (INFR): 10 requirements → Phase 19
+- Dialogue System (DLGE): 14 requirements → Phase 20
+- Onboarding (ONBR): 10 requirements → Phase 21
+- Buildings (BLDG): 12 requirements → Phase 22
+- Interactive Objects (OBJT): 12 requirements → Phase 23
+- Progression (PROG): 12 requirements → Phase 24
+- Vocabulary Integration (VCAB): 12 requirements → Phase 25
+- Narrative & Story (NARR): 12 requirements → Phase 25 (2), Phase 26 (10)
+- UX & Polish (UXPL): 6 requirements → Phase 26
 
 ---
 *Requirements defined: 2026-02-10*
-*Last updated: 2026-02-10 after initial definition*
+*Last updated: 2026-02-10 — all 100 requirements mapped to phases 19-26*
