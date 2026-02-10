@@ -79,11 +79,11 @@ Plans:
 5. User can adjust volume via settings — master, BGM, and SFX sliders with immediate effect
 6. User sees "Tap to Play" screen on mobile to unlock audio (prevents autoplay policy violations)
 
-**Plans:** TBD (estimate 2 plans)
+**Plans:** 2 plans
 
 Plans:
-- [ ] 15-01: TBD
-- [ ] 15-02: TBD
+- [ ] 15-01-PLAN.md — Core audio infrastructure: BGM system, master volume, audio config, settings UI
+- [ ] 15-02-PLAN.md — SFX integration: quiz feedback, footsteps, menu BGM, mobile audio unlock
 
 ---
 
@@ -173,11 +173,11 @@ Phases execute in dependency order: 14 → 15 → 16/17 (parallel) → 18
 | 12. Backend Hardening | v3.0 | — | Deferred | — |
 | 13. Visual Polish | v3.0 | — | Deferred | — |
 | 14. Bug Fixes & Stability | v4.0 | 0/1 | Not started | — |
-| 15. Audio System | v4.0 | 0/TBD | Not started | — |
+| 15. Audio System | v4.0 | 0/2 | Planned | — |
 | 16. Visual Juice | v4.0 | 0/2 | Not started | — |
 | 17. Progression Clarity | v4.0 | 0/2 | Planned | — |
 | 18. World Life | v4.0 | 0/1 | Not started | — |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-10 — Phase 17 planned (2 plans)*
+*Last updated: 2026-02-10 — Phase 15 planned (2 plans)*
