@@ -14,15 +14,16 @@ import achievementReducer from './slices/achievementSlice.js';
 import dailyGoalsReducer from './slices/dailyGoalsSlice.js';
 import grammarReducer from './slices/grammarSlice.js';
 import battleReducer from './slices/battleSlice.js';
+import narrativeReducer from './slices/narrativeSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 
-// Persisted slices: player, vocabulary, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, battle
+// Persisted slices: player, vocabulary, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, battle, narrative
 // Non-persisted (transient UI state): ui, sync
 const persistConfig = {
   key: 'gogo-arabic',
   storage,
-  whitelist: ['player', 'vocabulary', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'battle'],
+  whitelist: ['player', 'vocabulary', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'battle', 'narrative'],
 };
 
 const rootReducer = combineReducers({
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   dailyGoals: dailyGoalsReducer,
   grammar: grammarReducer,
   battle: battleReducer,
+  narrative: narrativeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
