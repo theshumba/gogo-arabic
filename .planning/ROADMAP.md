@@ -119,15 +119,16 @@ Plans:
 **Requirements:** PROG-01, PROG-02, PROG-03, PROG-04
 
 **Success Criteria** (what must be TRUE):
-1. User can access a Learning Path menu showing alphabet → vocabulary → grammar progression with clear "Start Here" for new players
+1. User can access a Learning Path menu showing alphabet -> vocabulary -> grammar progression with clear "Start Here" for new players
 2. User sees a Learning Dashboard with review queue, available lessons, and next-step indicators
 3. User sees progress metrics — letters mastered (X/28), words learned (X/1220), quests done (X/52) — visible from HUD or dashboard
 4. New player is guided to letter learning within first 3 onboarding steps (not hidden in menus)
 
-**Plans:** TBD (estimate 1-2 plans)
+**Plans:** 2 plans
 
 Plans:
-- [ ] 17-01: TBD
+- [ ] 17-01-PLAN.md — Learning Path menu + DailyDashboard enhancement with progress metrics and next-step guidance
+- [ ] 17-02-PLAN.md — HUD inline progress metrics + onboarding reorder for alphabet discovery
 
 ---
 
@@ -174,9 +175,9 @@ Phases execute in dependency order: 14 → 15 → 16/17 (parallel) → 18
 | 14. Bug Fixes & Stability | v4.0 | 0/1 | Not started | — |
 | 15. Audio System | v4.0 | 0/TBD | Not started | — |
 | 16. Visual Juice | v4.0 | 0/2 | Not started | — |
-| 17. Progression Clarity | v4.0 | 0/TBD | Not started | — |
+| 17. Progression Clarity | v4.0 | 0/2 | Planned | — |
 | 18. World Life | v4.0 | 0/1 | Not started | — |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-10 — Phase 16 planned (2 plans)*
+*Last updated: 2026-02-10 — Phase 17 planned (2 plans)*
