@@ -4,7 +4,7 @@
 
 - SHIPPED **v2.0 Player Experience Overhaul** — Phases 1-9 (shipped 2026-02-08) → [archive](milestones/v2.0-ROADMAP.md)
 - PARTIAL **v3.0 Infrastructure & Polish** — Phases 10-11 complete, 12-13 deferred (2026-02-09) → [archive](milestones/v3.0-ROADMAP.md)
-- SHIPPED **v4.0 Game Soul & Polish** — Phases 14-18 (shipped 2026-02-10)
+- SHIPPED **v4.0 Game Soul & Polish** — Phases 14-18 (shipped 2026-02-10) → [archive](milestones/v4.0-ROADMAP.md)
 
 ## Phases
 
