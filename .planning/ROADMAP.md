@@ -102,11 +102,11 @@ Plans:
 4. User sees a full-screen level-up celebration overlay with animation and sound
 5. User sees enhanced achievement toast with celebration animation (particles + fade-in + bounce)
 
-**Plans:** TBD (estimate 2 plans)
+**Plans:** 2 plans
 
 Plans:
-- [ ] 16-01: TBD
-- [ ] 16-02: TBD
+- [ ] 16-01-PLAN.md — Screen shake + particle system + zone fade transitions (Phaser-side)
+- [ ] 16-02-PLAN.md — Level-up celebration + achievement toast enhancement (React-side)
 
 ---
 
@@ -173,10 +173,10 @@ Phases execute in dependency order: 14 → 15 → 16/17 (parallel) → 18
 | 13. Visual Polish | v3.0 | — | Deferred | — |
 | 14. Bug Fixes & Stability | v4.0 | 0/1 | Not started | — |
 | 15. Audio System | v4.0 | 0/TBD | Not started | — |
-| 16. Visual Juice | v4.0 | 0/TBD | Not started | — |
+| 16. Visual Juice | v4.0 | 0/2 | Not started | — |
 | 17. Progression Clarity | v4.0 | 0/TBD | Not started | — |
 | 18. World Life | v4.0 | 0/1 | Not started | — |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-10 — Phase 14 planned (1 plan)*
+*Last updated: 2026-02-10 — Phase 16 planned (2 plans)*
