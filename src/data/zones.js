@@ -95,6 +95,7 @@ const oasis_village = {
     { id: 'bookshelf-student', type: 'bookshelf', x: 31, y: 23, category: 'phrases' },
     { id: 'chest-ruins', type: 'chest', x: 21, y: 3, minDirhams: 10, maxDirhams: 30 },
     { id: 'chest-hidden', type: 'chest', x: 2, y: 26, minDirhams: 15, maxDirhams: 50 },
+    { id: 'door-scholar-house', type: 'door', x: 8, y: 5, locked: true, lockMessage: "Scholar Yusuf's private study. This door is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
   ],
 
   exits: [
@@ -199,6 +200,7 @@ const ancient_library = {
     { id: 'bookshelf-phrases', type: 'bookshelf', x: 17, y: 8, category: 'phrases' },
     { id: 'chest-library', type: 'chest', x: 7, y: 6, minDirhams: 20, maxDirhams: 60 },
     { id: 'chest-library-hidden', type: 'chest', x: 30, y: 25, minDirhams: 25, maxDirhams: 70 },
+    { id: 'door-archive', type: 'door', x: 20, y: 8, locked: true, lockMessage: 'The ancient archives are sealed.', labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
   ],
 
   exits: [
@@ -310,6 +312,7 @@ const desert_marketplace = {
     { id: 'bookshelf-market-numbers', type: 'bookshelf', x: 22, y: 6, category: 'numbers' },
     { id: 'chest-market-hidden', type: 'chest', x: 40, y: 3, minDirhams: 25, maxDirhams: 80 },
     { id: 'chest-market-corner', type: 'chest', x: 3, y: 32, minDirhams: 20, maxDirhams: 65 },
+    { id: 'door-warehouse', type: 'door', x: 35, y: 12, locked: true, lockMessage: "The merchant's warehouse is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
   ],
 
   exits: [
@@ -417,6 +420,7 @@ const farmland = {
     { id: 'bookshelf-body', type: 'bookshelf', x: 20, y: 25, category: 'body' },
     { id: 'chest-farm-hidden', type: 'chest', x: 42, y: 3, minDirhams: 30, maxDirhams: 90 },
     { id: 'chest-farm-pond', type: 'chest', x: 36, y: 30, minDirhams: 25, maxDirhams: 75 },
+    { id: 'door-barn', type: 'door', x: 15, y: 8, locked: true, lockMessage: 'The barn door is stuck.', labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
   ],
 
   exits: [

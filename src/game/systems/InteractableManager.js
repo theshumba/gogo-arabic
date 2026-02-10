@@ -31,6 +31,7 @@ export class InteractableManager {
       if (cfg.type === 'sign') spriteKey = 'gate-pillar';
       else if (cfg.type === 'bookshelf') spriteKey = 'ruin-pillar';
       else if (cfg.type === 'chest') spriteKey = 'rock1';
+      else if (cfg.type === 'door') spriteKey = 'house-small';
 
       const sprite = this.scene.add.image(px, py, spriteKey).setOrigin(0.5, 0.8);
       sprite.setScale(0.7);
@@ -48,11 +49,13 @@ export class InteractableManager {
       const showDiacritics = store.getState().settings?.showDiacritics ?? true;
       const rawLabel = cfg.type === 'sign' ? cfg.textArabic
         : cfg.type === 'bookshelf' ? 'Bookshelf'
+        : cfg.type === 'door' ? (cfg.labelArabic || 'Door')
         : 'Chest';
-      const labelText = (cfg.type === 'sign' && !showDiacritics) ? stripDiacritics(rawLabel) : rawLabel;
+      const useArabicFont = cfg.type === 'sign' || (cfg.type === 'door' && cfg.labelArabic);
+      const labelText = (useArabicFont && !showDiacritics) ? stripDiacritics(rawLabel) : rawLabel;
       const label = this.scene.add.text(px, py - 50, labelText, {
-        fontFamily: cfg.type === 'sign' ? "'Noto Naskh Arabic', serif" : "'Press Start 2P', monospace",
-        fontSize: cfg.type === 'sign' ? '14px' : '7px',
+        fontFamily: useArabicFont ? "'Noto Naskh Arabic', serif" : "'Press Start 2P', monospace",
+        fontSize: useArabicFont ? '14px' : '7px',
         color: '#e2b659',
         stroke: '#2b292c',
         strokeThickness: 3,
@@ -151,6 +154,15 @@ export class InteractableManager {
         if (obj.sprite) obj.sprite.setTint(0x666666);
       } else {
         EventBus.emit('chest-empty', { id: obj.id });
+      }
+    } else if (obj.type === 'door') {
+      if (obj.locked) {
+        EventBus.emit('door-locked', {
+          message: obj.lockMessage || 'This door is locked.',
+          id: obj.id,
+        });
+      } else {
+        EventBus.emit('door-opened', { id: obj.id });
       }
     }
   }

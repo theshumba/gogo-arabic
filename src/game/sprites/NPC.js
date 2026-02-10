@@ -19,17 +19,40 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     this.npcId = id;
     this.npcName = name;
 
-    // Idle animation — cycle through down-facing frames (row 0: frames 0-3)
-    const animKey = `${id}-idle`;
-    if (!scene.anims.exists(animKey)) {
+    // Idle animations — two 2-frame patterns for lifelike idle
+    const idleKey = `${id}-idle`;
+    const blinkKey = `${id}-blink`;
+
+    if (!scene.anims.exists(idleKey)) {
       scene.anims.create({
-        key: animKey,
-        frames: scene.anims.generateFrameNumbers(key, { start: 0, end: 3 }),
-        frameRate: 3,
-        repeat: -1,
+        key: idleKey,
+        frames: scene.anims.generateFrameNumbers(key, { frames: [0, 1] }),
+        frameRate: 4,
+        repeat: 0,
       });
     }
-    this.anims.play(animKey);
+    if (!scene.anims.exists(blinkKey)) {
+      scene.anims.create({
+        key: blinkKey,
+        frames: scene.anims.generateFrameNumbers(key, { frames: [0, 2] }),
+        frameRate: 6,
+        repeat: 0,
+      });
+    }
+
+    // Start on standing frame
+    this.setFrame(0);
+
+    // Timer-based idle cycle: randomly play shift or blink every 2-4s
+    this.idleTimer = scene.time.addEvent({
+      delay: 2000 + Math.random() * 2000,
+      loop: true,
+      callback: () => {
+        if (!this.active) return;
+        const anim = Math.random() < 0.5 ? idleKey : blinkKey;
+        this.anims.play(anim);
+      },
+    });
 
     // Interaction hint text with pixel font
     this.hintText = scene.add.text(x, y - 70, 'SPACE', {
@@ -138,6 +161,9 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
   }
 
   destroy(fromScene) {
+    // Stop idle timer
+    if (this.idleTimer) this.idleTimer.remove();
+
     // Stop onboarding tweens
     if (this._arrowTween) this._arrowTween.remove();
     if (this._glowTween) this._glowTween.remove();
