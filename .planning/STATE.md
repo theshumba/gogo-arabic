@@ -66,9 +66,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-10
-Completed: v4.0 roadmap created with 5 phases (14-18)
-Next step: `/gsd:plan-phase 14` for Bug Fixes & Stability
+Completed: 17-02-PLAN.md (HUD Inline Progress Metrics + Onboarding Reorder)
+Resume: Continue with remaining Phase 17 plans or other v4.0 phases
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-10 — v4.0 roadmap complete, ready for Phase 14 planning*
+*Last updated: 2026-02-10 — Completed 17-02 (HUD progress metrics + onboarding reorder)*
