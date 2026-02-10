@@ -80,10 +80,13 @@ v5.0 transforms GoGo Arabic from a learning app with game skin into an actual ga
   3. All existing 548 tests pass without regressions after infrastructure changes
   4. EventBus uses namespaced naming convention with centralized registry preventing event conflicts
   5. Build bundle remains under 500KB after all infrastructure additions
-**Plans**: TBD
+**Plans:** 4 plans
 
 Plans:
-- [ ] 19-01: TBD
+- [ ] 19-01-PLAN.md — EventBus namespaced registry + atomic rename across 21 files
+- [ ] 19-02-PLAN.md — narrativeSlice creation + store/test tooling updates + sceneMock extension
+- [ ] 19-03-PLAN.md — useEventBusListeners refactor into 5 domain sub-hooks
+- [ ] 19-04-PLAN.md — SceneStackManager + Zod dialogue JSON validation
 
 ### Phase 20: Dialogue System
 **Goal**: NPCs become real characters with personality, multi-topic conversations, and the ability to teach vocabulary through meaningful dialogue
@@ -215,7 +218,7 @@ Phases execute in numeric order: 19 → 20 → 21 → 22 → 23 → 24 → 25 �
 | 16. Visual Juice | v4.0 | 2/2 | Complete | 2026-02-10 |
 | 17. Progression Clarity | v4.0 | 2/2 | Complete | 2026-02-10 |
 | 18. World Life | v4.0 | 1/1 | Complete | 2026-02-10 |
-| 19. Infrastructure & Architecture | v5.0 | 0/TBD | Not started | - |
+| 19. Infrastructure & Architecture | v5.0 | 0/4 | Not started | - |
 | 20. Dialogue System | v5.0 | 0/TBD | Not started | - |
 | 21. Guided Onboarding & Mentor | v5.0 | 0/TBD | Not started | - |
 | 22. Buildings & Interiors | v5.0 | 0/TBD | Not started | - |
@@ -226,4 +229,4 @@ Phases execute in numeric order: 19 → 20 → 21 → 22 → 23 → 24 → 25 �
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-10 — v5.0 roadmap created with 8 phases*
+*Last updated: 2026-02-10 — Phase 19 planned with 4 plans in 2 waves*
