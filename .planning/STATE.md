@@ -49,6 +49,11 @@ Recent decisions affecting v5.0:
 - v3.0: Skip TypeScript migration — UX fixes higher priority
 - v2.0: CSS Modules for new components — consistency pattern
 
+**Phase 19 decisions (19-01):**
+- eventBusTypes.js: 33 constants (30 planned + open-shop discovered via grep), frozen object
+- event naming: source:category:action (phaser: or react: prefix shows data flow direction)
+- test files updated atomically: 3 test files asserting old event names updated in same Task 2 commit
+
 **Phase 19 decisions (19-02):**
 - narrativeSlice: resetNarrativeProgress uses `return { ...initialState }` spread for clean immutable reset
 - narrativeSlice: selectHasMadeChoice is memoized via createSelector (iterates array); selectNarrativeFlagCount is plain (O(1) Object.keys)
