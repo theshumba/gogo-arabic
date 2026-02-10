@@ -66,9 +66,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-10
-Completed: 17-02-PLAN.md (HUD Inline Progress Metrics + Onboarding Reorder)
-Resume: Continue with remaining Phase 17 plans or other v4.0 phases
+Completed: 18-01-PLAN.md (NPC Idle Animations + Locked Door Feedback + Camera Follow)
+Resume: Continue with remaining Phase 18 plans or other v4.0 phases
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-10 — Completed 17-02 (HUD progress metrics + onboarding reorder)*
+*Last updated: 2026-02-10 — Completed 18-01 (NPC idle + door feedback + camera follow)*
