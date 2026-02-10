@@ -1,4 +1,5 @@
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 
 // ZoneTransition handles moving between world zones.
 // Per PRD: walk onto exit tile -> fade to black (0.5s) -> load new zone -> fade in (0.5s).
@@ -31,14 +32,14 @@ class ZoneTransition {
     const color = fadeConfig.fadeColor ?? { r: 0, g: 0, b: 0 };
 
     // Disable player movement during transition
-    EventBus.emit('freeze-player');
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
 
     try {
       // Fade out with timeout protection (3 second max)
       await this._fadeWithTimeout('fadeOut', fadeOutDuration, 3000, color);
 
       // Notify Redux of zone change
-      EventBus.emit('zone-change', { zone: zoneName, x: entryX, y: entryY });
+      EventBus.emit(EVENTS.ZONE_CHANGE, { zone: zoneName, x: entryX, y: entryY });
 
       // Load the new zone (WorldScene handles this via loadZone method)
       this.scene.loadZone(zoneName, entryX, entryY);
@@ -56,7 +57,7 @@ class ZoneTransition {
     } finally {
       // ALWAYS reset state and unfreeze, even on error
       this.transitioning = false;
-      EventBus.emit('unfreeze-player');
+      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
     }
   }
 

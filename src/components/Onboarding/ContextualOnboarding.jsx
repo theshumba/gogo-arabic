@@ -7,6 +7,7 @@ import {
   completeOnboarding,
 } from '../../store/slices/playerSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { onboardingSteps } from './onboardingSteps.js';
 import styles from './ContextualOnboarding.module.css';
 
@@ -98,10 +99,10 @@ export default function ContextualOnboarding() {
         }, 500);
       };
 
-      EventBus.on('player-position-update', handlePlayerMove);
+      EventBus.on(EVENTS.PLAYER_POSITION_UPDATE, handlePlayerMove);
 
       return () => {
-        EventBus.off('player-position-update', handlePlayerMove);
+        EventBus.off(EVENTS.PLAYER_POSITION_UPDATE, handlePlayerMove);
         if (timeoutId) clearTimeout(timeoutId);
       };
     }

@@ -8,6 +8,7 @@ import { selectActiveQuestCount } from '../../store/slices/questSlice.js';
 import { selectReviewQueueCount, selectLearnedWordCount } from '../../store/slices/vocabularySlice.js';
 import { selectCompletedGoalsCount, selectTotalGoalsCount } from '../../store/slices/dailyGoalsSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import styles from './HUD.module.css';
 import AchievementPanel from '../Achievements/AchievementPanel.jsx';
 import DailyGoalsPanel from '../Goals/DailyGoalsPanel.jsx';
@@ -47,10 +48,10 @@ function HUD({ onMenu }) {
       setShowStamina(isSprinting || stamina < maxStamina);
     };
 
-    EventBus.on('player-stamina-update', handleStaminaUpdate);
+    EventBus.on(EVENTS.PLAYER_STAMINA_UPDATE, handleStaminaUpdate);
 
     return () => {
-      EventBus.off('player-stamina-update', handleStaminaUpdate);
+      EventBus.off(EVENTS.PLAYER_STAMINA_UPDATE, handleStaminaUpdate);
     };
   }, []);
 
@@ -86,39 +87,39 @@ function HUD({ onMenu }) {
 
   const openQuestLog = useCallback(() => {
     dispatch(openDialogue({ type: 'quest-log' }));
-    EventBus.emit('freeze-player');
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
   }, [dispatch]);
 
   const openAchievements = useCallback(() => {
     setAchievementPanelOpen(true);
-    EventBus.emit('freeze-player');
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
   }, []);
 
   const closeAchievements = useCallback(() => {
     setAchievementPanelOpen(false);
-    EventBus.emit('unfreeze-player');
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
   }, []);
 
   const openDailyGoals = useCallback(() => {
     setDailyGoalsPanelOpen(true);
-    EventBus.emit('freeze-player');
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
   }, []);
 
   const closeDailyGoals = useCallback(() => {
     setDailyGoalsPanelOpen(false);
-    EventBus.emit('unfreeze-player');
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
   }, []);
 
   const openMap = useCallback(() => {
-    EventBus.emit('open-world-map');
+    EventBus.emit(EVENTS.WORLD_MAP_OPEN);
   }, []);
 
   const openAlphabet = useCallback(() => {
-    EventBus.emit('open-alphabet');
+    EventBus.emit(EVENTS.ALPHABET_OPEN);
   }, []);
 
   const openReviewSession = useCallback(() => {
-    EventBus.emit('open-review-session');
+    EventBus.emit(EVENTS.REVIEW_SESSION_OPEN);
   }, []);
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

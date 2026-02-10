@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { ZONES } from '../../data/zones.js';
 import styles from './MiniMap.module.css';
@@ -29,7 +30,7 @@ export default function MiniMap() {
   }, [zone, unlockedZones]);
 
   const handleClick = () => {
-    EventBus.emit('open-world-map');
+    EventBus.emit(EVENTS.WORLD_MAP_OPEN);
   };
 
   if (!zone) return null;

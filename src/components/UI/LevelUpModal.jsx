@@ -5,6 +5,7 @@ import { selectLevelUpReward, dismissLevelUpReward } from '../../store/slices/pl
 import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import styles from './LevelUpModal.module.css';
 
 function LevelUpModal() {
@@ -24,7 +25,7 @@ function LevelUpModal() {
   // Emit sfx-levelup on mount (triggers audio + Phaser particles via plan 01 wiring)
   useEffect(() => {
     if (!reward) return;
-    EventBus.emit('sfx-levelup');
+    EventBus.emit(EVENTS.SFX_LEVELUP);
   }, [reward]);
 
   // Level number count-up animation

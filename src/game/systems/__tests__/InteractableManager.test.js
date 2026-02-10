@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createMockScene } from './mocks/sceneMock.js';
 import { InteractableManager } from '../InteractableManager.js';
+import { EVENTS } from '../../../utils/eventBusTypes.js';
 
 // Mock dependencies
 vi.mock('../../../utils/eventBus.js', () => ({
@@ -202,11 +203,11 @@ describe('InteractableManager', () => {
 
       interactableManager.handleInteractable(sign);
 
-      expect(EventBus.emit).toHaveBeenCalledWith('show-sign', {
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.SIGN_SHOW, {
         arabic: 'مرحبا',
         english: 'Welcome'
       });
-      expect(EventBus.emit).toHaveBeenCalledWith('freeze-player');
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.PLAYER_FREEZE);
     });
 
     it('should emit bookshelf-interact event for unread bookshelf', async () => {
@@ -226,7 +227,7 @@ describe('InteractableManager', () => {
 
       interactableManager.handleInteractable(bookshelf);
 
-      expect(EventBus.emit).toHaveBeenCalledWith('bookshelf-interact', {
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.BOOKSHELF_INTERACT, {
         category: 'grammar',
         id: 'book1'
       });
@@ -249,7 +250,7 @@ describe('InteractableManager', () => {
 
       interactableManager.handleInteractable(bookshelf);
 
-      expect(EventBus.emit).toHaveBeenCalledWith('bookshelf-interact', {
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.BOOKSHELF_INTERACT, {
         category: 'grammar',
         id: 'book1',
         reread: true
@@ -277,13 +278,13 @@ describe('InteractableManager', () => {
 
       interactableManager.handleInteractable(chest);
 
-      expect(EventBus.emit).toHaveBeenCalledWith('chest-opened', {
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.CHEST_OPENED, {
         amount: expect.any(Number),
         id: 'chest1'
       });
 
       // Verify amount is within range
-      const emitCall = EventBus.emit.mock.calls.find(call => call[0] === 'chest-opened');
+      const emitCall = EventBus.emit.mock.calls.find(call => call[0] === EVENTS.CHEST_OPENED);
       const amount = emitCall[1].amount;
       expect(amount).toBeGreaterThanOrEqual(10);
       expect(amount).toBeLessThanOrEqual(50);
@@ -310,7 +311,7 @@ describe('InteractableManager', () => {
 
       interactableManager.handleInteractable(chest);
 
-      expect(EventBus.emit).toHaveBeenCalledWith('chest-empty', {
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.CHEST_EMPTY, {
         id: 'chest1'
       });
     });

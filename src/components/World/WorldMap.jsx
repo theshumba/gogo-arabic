@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { showNotification } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { ZONES, ZONE_ORDER } from '../../data/zones.js';
 import { BOSSES } from '../../data/bosses.js';
 import quests from '../../data/quests.json';
@@ -130,7 +131,7 @@ export default function WorldMap({ onBack }) {
     }
 
     // Emit fast-travel event and close map
-    EventBus.emit('fast-travel', { zoneName: zoneId });
+    EventBus.emit(EVENTS.FAST_TRAVEL, { zoneName: zoneId });
     navigate('/game');
   };
 

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setOutfit, spendDirhams, addToInventory } from '../../store/slices/playerSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import { OUTFITS, getRarityColor } from '../../data/outfits.js';
 import styles from './Wardrobe.module.css';
@@ -100,7 +101,7 @@ function Wardrobe({ onClose }) {
       dispatch(setOutfit(outfit.id));
 
       // Emit event to Phaser to update sprite
-      EventBus.emit('outfit-changed', { outfitId: outfit.id });
+      EventBus.emit(EVENTS.OUTFIT_CHANGED, { outfitId: outfit.id });
 
       showToast(`Equipped ${outfit.name}!`);
     },

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createMockScene } from './mocks/sceneMock.js';
 import { NPCManager } from '../NPCManager.js';
+import { EVENTS } from '../../../utils/eventBusTypes.js';
 
 // Mock dependencies
 vi.mock('../../../utils/eventBus.js', () => ({
@@ -164,11 +165,11 @@ describe('NPCManager', () => {
 
       npcManager.update(mockPlayerSprite, mockDomOverlay, interactKey, false, setInteractCooldown);
 
-      expect(EventBus.emit).toHaveBeenCalledWith('npc-interact', {
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.NPC_INTERACT, {
         npcId: 'npc1',
         npcName: 'Elder'
       });
-      expect(EventBus.emit).toHaveBeenCalledWith('freeze-player');
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.PLAYER_FREEZE);
       expect(setInteractCooldown).toHaveBeenCalledWith(true);
       expect(scene.time.delayedCall).toHaveBeenCalledWith(500, expect.any(Function));
     });
@@ -182,7 +183,7 @@ describe('NPCManager', () => {
 
       npcManager.update(mockPlayerSprite, mockDomOverlay, interactKey, true, setInteractCooldown);
 
-      expect(EventBus.emit).not.toHaveBeenCalledWith('npc-interact', expect.any(Object));
+      expect(EventBus.emit).not.toHaveBeenCalledWith(EVENTS.NPC_INTERACT, expect.any(Object));
     });
 
     it('should apply quest markers from Redux state', async () => {

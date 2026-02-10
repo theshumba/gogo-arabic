@@ -4,6 +4,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { toggleMenu, selectAnyOverlayOpen } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { audioManager } from '../../services/audio.js';
 import { useAudio } from '../../hooks/useAudio.js';
 import { useEventBusListeners } from '../../hooks/useEventBusListeners.js';
@@ -175,7 +176,7 @@ export default function GameLayout() {
     if (!anyOverlayOpen && !showWardrobe) {
       // Small delay to avoid race with overlay close animations
       const timer = setTimeout(() => {
-        EventBus.emit('unfreeze-player');
+        EventBus.emit(EVENTS.PLAYER_UNFREEZE);
       }, 100);
       return () => clearTimeout(timer);
     }

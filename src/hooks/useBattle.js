@@ -9,6 +9,7 @@ import { shuffle } from '../utils/shuffle.js';
 import vocabulary from '../data/vocabularyAll.js';
 import { getBossById } from '../data/bosses.js';
 import { EventBus } from '../utils/eventBus.js';
+import { EVENTS } from '../utils/eventBusTypes.js';
 
 const HINT_COST = 50;
 const ROUND_TIME_LIMIT = 15000; // 15 seconds per round
@@ -182,13 +183,13 @@ export function useBattle(bossId) {
     });
 
     // Play sound effect
-    EventBus.emit(correct ? 'sfx-correct' : 'sfx-wrong');
+    EventBus.emit(correct ? EVENTS.SFX_CORRECT : EVENTS.SFX_WRONG);
 
     // Get appropriate dialogue
     if (boss && correct) {
-      EventBus.emit('boss-dialogue', boss.dialogue.hit);
+      EventBus.emit(EVENTS.BOSS_DIALOGUE, boss.dialogue.hit);
     } else if (boss && !correct) {
-      EventBus.emit('boss-dialogue', boss.dialogue.miss);
+      EventBus.emit(EVENTS.BOSS_DIALOGUE, boss.dialogue.miss);
     }
   }, [currentWord, quizType, feedback, calculateDamage, battleState.streak, boss, dispatch, fsrsCards]);
 
@@ -211,7 +212,7 @@ export function useBattle(bossId) {
     if (wrongChoices.length > 0) {
       const toRemove = wrongChoices[0];
       setChoices(choices.filter(c => c !== toRemove));
-      EventBus.emit('sfx-quest');
+      EventBus.emit(EVENTS.SFX_QUEST);
       return true;
     }
 
@@ -237,14 +238,14 @@ export function useBattle(bossId) {
     if (victory) {
       dispatch(addXP(rewards.xp));
       dispatch(addDirhams(rewards.dirhams));
-      EventBus.emit('sfx-quest');
+      EventBus.emit(EVENTS.SFX_QUEST);
       if (boss.dialogue.defeat) {
-        EventBus.emit('boss-dialogue', boss.dialogue.defeat);
+        EventBus.emit(EVENTS.BOSS_DIALOGUE, boss.dialogue.defeat);
       }
     } else {
-      EventBus.emit('sfx-wrong');
+      EventBus.emit(EVENTS.SFX_WRONG);
       if (boss.dialogue.victory) {
-        EventBus.emit('boss-dialogue', boss.dialogue.victory);
+        EventBus.emit(EVENTS.BOSS_DIALOGUE, boss.dialogue.victory);
       }
     }
 

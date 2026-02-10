@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { NPC } from '../sprites/NPC.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { store } from '../../store/store.js';
 import { selectNpcQuestMarkers } from '../../store/slices/questSlice.js';
 
@@ -100,11 +101,11 @@ export class NPCManager {
         this.scene.time.delayedCall(500, () => {
           setInteractCooldown(false);
         });
-        EventBus.emit('npc-interact', {
+        EventBus.emit(EVENTS.NPC_INTERACT, {
           npcId: npc.npcId,
           npcName: npc.npcName,
         });
-        EventBus.emit('freeze-player');
+        EventBus.emit(EVENTS.PLAYER_FREEZE);
       }
     });
   }

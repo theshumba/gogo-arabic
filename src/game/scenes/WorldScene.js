@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import DOMOverlayManager from '../systems/DOMOverlay.js';
 import ZoneTransition from '../systems/ZoneTransition.js';
 import { PlayerController } from '../systems/PlayerController.js';
@@ -57,18 +58,18 @@ export class WorldScene extends Phaser.Scene {
     this.playerController.setupCamera(this.currentMapW * TILE, this.currentMapH * TILE);
 
     // EventBus listeners
-    EventBus.on('freeze-player', this.handleFreeze, this);
-    EventBus.on('unfreeze-player', this.handleUnfreeze, this);
-    EventBus.on('vfx-shake', this.handleVfxShake, this);
-    EventBus.on('vfx-particles-burst', this.handleVfxBurst, this);
-    EventBus.on('vfx-particles-continuous', this.handleVfxContinuous, this);
+    EventBus.on(EVENTS.PLAYER_FREEZE, this.handleFreeze, this);
+    EventBus.on(EVENTS.PLAYER_UNFREEZE, this.handleUnfreeze, this);
+    EventBus.on(EVENTS.VFX_SHAKE, this.handleVfxShake, this);
+    EventBus.on(EVENTS.VFX_PARTICLES_BURST, this.handleVfxBurst, this);
+    EventBus.on(EVENTS.VFX_PARTICLES_CONTINUOUS, this.handleVfxContinuous, this);
 
     // Input: SPACE for interaction
     this.interactKey = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
 
-    EventBus.emit('scene-ready', this);
+    EventBus.emit(EVENTS.SCENE_READY, this);
   }
 
   // ============================================================
@@ -194,7 +195,7 @@ export class WorldScene extends Phaser.Scene {
     // Emit player position for HUD compass (throttled: every 6 frames ~10Hz at 60fps)
     this._frameCount = (this._frameCount || 0) + 1;
     if (this._frameCount % 6 === 0) {
-      EventBus.emit('player-position-update', { x: player.x, y: player.y });
+      EventBus.emit(EVENTS.PLAYER_POSITION_UPDATE, { x: player.x, y: player.y });
     }
 
     // Check NPC interaction zones
@@ -263,7 +264,7 @@ export class WorldScene extends Phaser.Scene {
         }
 
         // Check unlock requirements via EventBus
-        EventBus.emit('check-zone-unlock', {
+        EventBus.emit(EVENTS.ZONE_CHECK_UNLOCK, {
           zoneName: exit.targetZone,
           entryX,
           entryY,
@@ -284,11 +285,11 @@ export class WorldScene extends Phaser.Scene {
       this.zoneTransition.transitioning = false;
     }
 
-    EventBus.off('freeze-player', this.handleFreeze, this);
-    EventBus.off('unfreeze-player', this.handleUnfreeze, this);
-    EventBus.off('vfx-shake', this.handleVfxShake, this);
-    EventBus.off('vfx-particles-burst', this.handleVfxBurst, this);
-    EventBus.off('vfx-particles-continuous', this.handleVfxContinuous, this);
+    EventBus.off(EVENTS.PLAYER_FREEZE, this.handleFreeze, this);
+    EventBus.off(EVENTS.PLAYER_UNFREEZE, this.handleUnfreeze, this);
+    EventBus.off(EVENTS.VFX_SHAKE, this.handleVfxShake, this);
+    EventBus.off(EVENTS.VFX_PARTICLES_BURST, this.handleVfxBurst, this);
+    EventBus.off(EVENTS.VFX_PARTICLES_CONTINUOUS, this.handleVfxContinuous, this);
 
     if (this.particleEffects) {
       this.particleEffects.destroy();

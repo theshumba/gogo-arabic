@@ -7,6 +7,7 @@ import { addXP, incrementWordsLearned } from '../store/slices/playerSlice.js';
 import { updateQuestProgress, completeQuest, checkPrerequisites } from '../store/slices/questSlice.js';
 import { createNewCard } from '../services/fsrs.js';
 import { EventBus } from '../utils/eventBus.js';
+import { EVENTS } from '../utils/eventBusTypes.js';
 import { XP_REWARDS } from '../utils/xpCalculator.js';
 import { shuffle } from '../utils/shuffle.js';
 import { selectWordsByDifficulty } from '../utils/wordSelection.js';
@@ -101,7 +102,7 @@ export function useDialogue(npc) {
       dispatch(updateDialogueState({ npcId: npc.id, lastLine: lineIndex }));
     }
     dispatch(closeDialogue());
-    EventBus.emit('unfreeze-player');
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
   }, [dispatch, npc, lineIndex]);
 
   /* ---- teach a vocabulary word (FSRS card + XP + quest tracking) ---- */
@@ -110,7 +111,7 @@ export function useDialogue(npc) {
     const word = resolveVocabWord(wordId);
 
     if (isNew && word) {
-      EventBus.emit('sfx-wordlearned');
+      EventBus.emit(EVENTS.SFX_WORDLEARNED);
       dispatch(addFsrsCard({ wordId, card: createNewCard() }));
       dispatch(incrementWordsLearned());
       dispatch(addXP(XP_REWARDS.NEW_WORD));
@@ -216,14 +217,14 @@ export function useDialogue(npc) {
 
   /* ---- handle player choice buttons ---- */
   const handleChoice = useCallback((choice) => {
-    EventBus.emit('sfx-click');
+    EventBus.emit(EVENTS.SFX_CLICK);
     if (choice.action === 'open_shop') {
       // Re-use the same dialogue config slot for shop
       dispatch(closeDialogue());
-      EventBus.emit('open-shop', { npcId: npc.id });
+      EventBus.emit(EVENTS.SHOP_OPEN, { npcId: npc.id });
     } else if (choice.action === 'open_alphabet') {
       close();
-      EventBus.emit('open-alphabet');
+      EventBus.emit(EVENTS.ALPHABET_OPEN);
     } else if (choice.action === 'daily_quiz') {
       const learnedIds = Object.keys(cards);
       const shuffled = shuffle(learnedIds).slice(0, 10);

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { useDialogue } from '../../hooks/useDialogue.js';
 import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { getEnhancedDialogueChoices } from '../../utils/culturalDialogueHelper.js';
@@ -51,7 +52,7 @@ export default function DialogueOverlay() {
   if (!npc || !currentTree) {
     if (npc || overlayData) {
       dispatch(closeDialogue());
-      EventBus.emit('unfreeze-player');
+      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
     }
     return null;
   }

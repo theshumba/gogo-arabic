@@ -31,6 +31,7 @@ import { XP_REWARDS } from '../utils/xpCalculator.js';
 import vocabulary from '../data/vocabularyAll.js';
 import questsData from '../data/quests.json';
 import { EventBus } from '../utils/eventBus.js';
+import { EVENTS } from '../utils/eventBusTypes.js';
 import { audioManager } from '../services/audio.js';
 import { store } from '../store/store.js';
 import { ZONES } from '../data/zones.js';
@@ -227,7 +228,7 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
           type: 'word',
         }));
       }
-      EventBus.emit('unfreeze-player');
+      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
     };
 
     const handleChestOpened = ({ amount, id }) => {
@@ -282,7 +283,7 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
     const handleCheckZoneUnlock = ({ zoneName, entryX, entryY, unlock }) => {
       // If no unlock requirement, allow transition
       if (!unlock) {
-        EventBus.emit('zone-transition', { zoneName, entryX, entryY });
+        EventBus.emit(EVENTS.ZONE_TRANSITION, { zoneName, entryX, entryY });
         return;
       }
       // Check quest completion
@@ -316,7 +317,7 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
       }
       // All checks passed — unlock the zone and transition
       dispatch(unlockZone(zoneName));
-      EventBus.emit('zone-transition', { zoneName, entryX, entryY });
+      EventBus.emit(EVENTS.ZONE_TRANSITION, { zoneName, entryX, entryY });
     };
 
     const handleZoneTransition = ({ zoneName, entryX, entryY }) => {
@@ -350,15 +351,15 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
     // SFX event handlers (emitted by UI components) + VFX triggers
     const handleSfxCorrect = () => {
       playSFX('correct');
-      EventBus.emit('vfx-shake', { intensity: 'light' });
+      EventBus.emit(EVENTS.VFX_SHAKE, { intensity: 'light' });
     };
     const handleSfxWrong = () => playSFX('wrong');
     const handleSfxWordlearned = () => playSFX('wordlearned');
     const handleSfxLevelup = () => {
       playSFX('levelup');
-      EventBus.emit('vfx-shake', { intensity: 'heavy' });
-      EventBus.emit('vfx-particles-burst', { config: { count: 30, tint: 0xe2b659 } });
-      EventBus.emit('vfx-particles-continuous', { config: { duration: 3000, tint: 0xe2b659 } });
+      EventBus.emit(EVENTS.VFX_SHAKE, { intensity: 'heavy' });
+      EventBus.emit(EVENTS.VFX_PARTICLES_BURST, { config: { count: 30, tint: 0xe2b659 } });
+      EventBus.emit(EVENTS.VFX_PARTICLES_CONTINUOUS, { config: { duration: 3000, tint: 0xe2b659 } });
     };
     const handleSfxQuest = () => playSFX('quest');
     const handleSfxClick = () => playSFX('click');
@@ -366,58 +367,58 @@ export function useEventBusListeners(phaserRef, playSFX, navigate) {
     // BGM resume when quiz closes
     const handleQuizClosed = () => audioManager.resumeBGM();
 
-    EventBus.on('npc-interact', handleNpcInteract);
-    EventBus.on('zone-change', handleZoneChange);
-    EventBus.on('open-quiz', handleOpenQuiz);
-    EventBus.on('open-alphabet', handleOpenAlphabet);
-    EventBus.on('open-review-session', handleOpenReviewSession);
-    EventBus.on('open-world-map', handleOpenWorldMap);
-    EventBus.on('show-sign', handleShowSign);
-    EventBus.on('bookshelf-interact', handleBookshelfInteract);
-    EventBus.on('chest-opened', handleChestOpened);
-    EventBus.on('chest-empty', handleChestEmpty);
-    EventBus.on('door-locked', handleDoorLocked);
-    EventBus.on('check-zone-unlock', handleCheckZoneUnlock);
-    EventBus.on('zone-transition', handleZoneTransition);
-    EventBus.on('fast-travel', handleFastTravel);
-    EventBus.on('sfx-correct', handleSfxCorrect);
-    EventBus.on('sfx-wrong', handleSfxWrong);
-    EventBus.on('sfx-wordlearned', handleSfxWordlearned);
-    EventBus.on('sfx-levelup', handleSfxLevelup);
-    EventBus.on('sfx-quest', handleSfxQuest);
-    EventBus.on('sfx-click', handleSfxClick);
-    EventBus.on('quiz-closed', handleQuizClosed);
+    EventBus.on(EVENTS.NPC_INTERACT, handleNpcInteract);
+    EventBus.on(EVENTS.ZONE_CHANGE, handleZoneChange);
+    EventBus.on(EVENTS.QUIZ_OPEN, handleOpenQuiz);
+    EventBus.on(EVENTS.ALPHABET_OPEN, handleOpenAlphabet);
+    EventBus.on(EVENTS.REVIEW_SESSION_OPEN, handleOpenReviewSession);
+    EventBus.on(EVENTS.WORLD_MAP_OPEN, handleOpenWorldMap);
+    EventBus.on(EVENTS.SIGN_SHOW, handleShowSign);
+    EventBus.on(EVENTS.BOOKSHELF_INTERACT, handleBookshelfInteract);
+    EventBus.on(EVENTS.CHEST_OPENED, handleChestOpened);
+    EventBus.on(EVENTS.CHEST_EMPTY, handleChestEmpty);
+    EventBus.on(EVENTS.DOOR_LOCKED, handleDoorLocked);
+    EventBus.on(EVENTS.ZONE_CHECK_UNLOCK, handleCheckZoneUnlock);
+    EventBus.on(EVENTS.ZONE_TRANSITION, handleZoneTransition);
+    EventBus.on(EVENTS.FAST_TRAVEL, handleFastTravel);
+    EventBus.on(EVENTS.SFX_CORRECT, handleSfxCorrect);
+    EventBus.on(EVENTS.SFX_WRONG, handleSfxWrong);
+    EventBus.on(EVENTS.SFX_WORDLEARNED, handleSfxWordlearned);
+    EventBus.on(EVENTS.SFX_LEVELUP, handleSfxLevelup);
+    EventBus.on(EVENTS.SFX_QUEST, handleSfxQuest);
+    EventBus.on(EVENTS.SFX_CLICK, handleSfxClick);
+    EventBus.on(EVENTS.QUIZ_CLOSED, handleQuizClosed);
 
     return () => {
-      EventBus.off('npc-interact', handleNpcInteract);
-      EventBus.off('zone-change', handleZoneChange);
-      EventBus.off('open-quiz', handleOpenQuiz);
-      EventBus.off('open-alphabet', handleOpenAlphabet);
-      EventBus.off('open-review-session', handleOpenReviewSession);
-      EventBus.off('open-world-map', handleOpenWorldMap);
-      EventBus.off('show-sign', handleShowSign);
-      EventBus.off('bookshelf-interact', handleBookshelfInteract);
-      EventBus.off('chest-opened', handleChestOpened);
-      EventBus.off('chest-empty', handleChestEmpty);
-      EventBus.off('door-locked', handleDoorLocked);
-      EventBus.off('check-zone-unlock', handleCheckZoneUnlock);
-      EventBus.off('zone-transition', handleZoneTransition);
-      EventBus.off('fast-travel', handleFastTravel);
-      EventBus.off('sfx-correct', handleSfxCorrect);
-      EventBus.off('sfx-wrong', handleSfxWrong);
-      EventBus.off('sfx-wordlearned', handleSfxWordlearned);
-      EventBus.off('sfx-levelup', handleSfxLevelup);
-      EventBus.off('sfx-quest', handleSfxQuest);
-      EventBus.off('sfx-click', handleSfxClick);
-      EventBus.off('quiz-closed', handleQuizClosed);
+      EventBus.off(EVENTS.NPC_INTERACT, handleNpcInteract);
+      EventBus.off(EVENTS.ZONE_CHANGE, handleZoneChange);
+      EventBus.off(EVENTS.QUIZ_OPEN, handleOpenQuiz);
+      EventBus.off(EVENTS.ALPHABET_OPEN, handleOpenAlphabet);
+      EventBus.off(EVENTS.REVIEW_SESSION_OPEN, handleOpenReviewSession);
+      EventBus.off(EVENTS.WORLD_MAP_OPEN, handleOpenWorldMap);
+      EventBus.off(EVENTS.SIGN_SHOW, handleShowSign);
+      EventBus.off(EVENTS.BOOKSHELF_INTERACT, handleBookshelfInteract);
+      EventBus.off(EVENTS.CHEST_OPENED, handleChestOpened);
+      EventBus.off(EVENTS.CHEST_EMPTY, handleChestEmpty);
+      EventBus.off(EVENTS.DOOR_LOCKED, handleDoorLocked);
+      EventBus.off(EVENTS.ZONE_CHECK_UNLOCK, handleCheckZoneUnlock);
+      EventBus.off(EVENTS.ZONE_TRANSITION, handleZoneTransition);
+      EventBus.off(EVENTS.FAST_TRAVEL, handleFastTravel);
+      EventBus.off(EVENTS.SFX_CORRECT, handleSfxCorrect);
+      EventBus.off(EVENTS.SFX_WRONG, handleSfxWrong);
+      EventBus.off(EVENTS.SFX_WORDLEARNED, handleSfxWordlearned);
+      EventBus.off(EVENTS.SFX_LEVELUP, handleSfxLevelup);
+      EventBus.off(EVENTS.SFX_QUEST, handleSfxQuest);
+      EventBus.off(EVENTS.SFX_CLICK, handleSfxClick);
+      EventBus.off(EVENTS.QUIZ_CLOSED, handleQuizClosed);
     };
   }, [dispatch, fsrsCards, quests, playSFX, phaserRef, navigate]);
 
   // VFX on achievement unlock -- fires when newAchievements array grows
   useEffect(() => {
     if (newAchievements.length > prevAchievementCountRef.current) {
-      EventBus.emit('vfx-shake', { intensity: 'medium' });
-      EventBus.emit('vfx-particles-burst', { config: { count: 25, tint: 0xffd700 } });
+      EventBus.emit(EVENTS.VFX_SHAKE, { intensity: 'medium' });
+      EventBus.emit(EVENTS.VFX_PARTICLES_BURST, { config: { count: 25, tint: 0xffd700 } });
     }
     prevAchievementCountRef.current = newAchievements.length;
   }, [newAchievements]);

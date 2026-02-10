@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createMockScene } from './mocks/sceneMock.js';
 import ZoneTransition from '../ZoneTransition.js';
+import { EVENTS } from '../../../utils/eventBusTypes.js';
 
 // Mock EventBus
 vi.mock('../../../utils/eventBus.js', () => ({
@@ -42,7 +43,7 @@ describe('ZoneTransition', () => {
 
       await zoneTransition.transitionTo('market', 10, 10);
 
-      expect(EventBus.emit).toHaveBeenCalledWith('freeze-player');
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.PLAYER_FREEZE);
     });
 
     it('should fade out camera before zone change', async () => {
@@ -56,7 +57,7 @@ describe('ZoneTransition', () => {
 
       await zoneTransition.transitionTo('market', 10, 15);
 
-      expect(EventBus.emit).toHaveBeenCalledWith('zone-change', {
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.ZONE_CHANGE, {
         zone: 'market',
         x: 10,
         y: 15
@@ -80,7 +81,7 @@ describe('ZoneTransition', () => {
 
       await zoneTransition.transitionTo('market', 10, 10);
 
-      expect(EventBus.emit).toHaveBeenCalledWith('unfreeze-player');
+      expect(EventBus.emit).toHaveBeenCalledWith(EVENTS.PLAYER_UNFREEZE);
     });
 
     it('should set transitioning flag during transition', async () => {
@@ -103,7 +104,7 @@ describe('ZoneTransition', () => {
       await zoneTransition.transitionTo('oasis', 5, 5);
 
       // Second transition should not emit events or call loadZone
-      expect(EventBus.emit).not.toHaveBeenCalledWith('zone-change', {
+      expect(EventBus.emit).not.toHaveBeenCalledWith(EVENTS.ZONE_CHANGE, {
         zone: 'oasis',
         x: 5,
         y: 5
@@ -119,9 +120,9 @@ describe('ZoneTransition', () => {
 
       // Verify event emission order
       const calls = EventBus.emit.mock.calls;
-      const freezeIndex = calls.findIndex(call => call[0] === 'freeze-player');
-      const zoneChangeIndex = calls.findIndex(call => call[0] === 'zone-change');
-      const unfreezeIndex = calls.findIndex(call => call[0] === 'unfreeze-player');
+      const freezeIndex = calls.findIndex(call => call[0] === EVENTS.PLAYER_FREEZE);
+      const zoneChangeIndex = calls.findIndex(call => call[0] === EVENTS.ZONE_CHANGE);
+      const unfreezeIndex = calls.findIndex(call => call[0] === EVENTS.PLAYER_UNFREEZE);
 
       expect(freezeIndex).toBeLessThan(zoneChangeIndex);
       expect(zoneChangeIndex).toBeLessThan(unfreezeIndex);

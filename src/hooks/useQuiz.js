@@ -6,6 +6,7 @@ import { incrementReviews, recordPerfectQuiz } from '../store/slices/achievement
 import { closeQuiz } from '../store/slices/uiSlice.js';
 import { createNewCard, reviewCard, Rating } from '../services/fsrs.js';
 import { EventBus } from '../utils/eventBus.js';
+import { EVENTS } from '../utils/eventBusTypes.js';
 import { XP_REWARDS } from '../utils/xpCalculator.js';
 import { shuffle } from '../utils/shuffle.js';
 import vocabulary from '../data/vocabularyAll.js';
@@ -166,7 +167,7 @@ export function useQuiz() {
       sessionTotal: 0,
     });
     dispatch(closeQuiz());
-    EventBus.emit('unfreeze-player');
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
   }, [dispatch]);
 
   const quiz = {

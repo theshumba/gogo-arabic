@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { store } from '../../store/store.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { audioManager } from '../../services/audio.js';
 
 /**
@@ -398,7 +399,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     // Emit stamina update for HUD (only when sprinting to avoid spam)
     if (this.isSprinting || this.stamina < this.maxStamina) {
-      EventBus.emit('player-stamina-update', {
+      EventBus.emit(EVENTS.PLAYER_STAMINA_UPDATE, {
         stamina: this.stamina,
         maxStamina: this.maxStamina,
         isSprinting: this.isSprinting

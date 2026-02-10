@@ -2,6 +2,7 @@ import { useState, useEffect, memo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectActiveQuest, selectActiveQuestObjectiveLocation } from '../../store/slices/questSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import styles from './QuestTracker.module.css';
 
 function QuestTracker() {
@@ -15,9 +16,9 @@ function QuestTracker() {
       setPlayerPos(pos);
     };
 
-    EventBus.on('player-position-update', handlePositionUpdate);
+    EventBus.on(EVENTS.PLAYER_POSITION_UPDATE, handlePositionUpdate);
     return () => {
-      EventBus.off('player-position-update', handlePositionUpdate);
+      EventBus.off(EVENTS.PLAYER_POSITION_UPDATE, handlePositionUpdate);
     };
   }, []);
 

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { store } from '../../store/store.js';
 import { stripDiacritics } from '../../utils/arabicUtils.js';
 
@@ -124,45 +125,45 @@ export class InteractableManager {
     const readBooks = playerState.readBooks || [];
 
     if (obj.type === 'sign') {
-      EventBus.emit('show-sign', {
+      EventBus.emit(EVENTS.SIGN_SHOW, {
         arabic: obj.textArabic,
         english: obj.textEnglish,
       });
-      EventBus.emit('freeze-player');
+      EventBus.emit(EVENTS.PLAYER_FREEZE);
     } else if (obj.type === 'bookshelf') {
       if (!readBooks.includes(obj.id)) {
-        EventBus.emit('bookshelf-interact', {
+        EventBus.emit(EVENTS.BOOKSHELF_INTERACT, {
           category: obj.category,
           id: obj.id,
         });
-        EventBus.emit('freeze-player');
+        EventBus.emit(EVENTS.PLAYER_FREEZE);
       } else {
-        EventBus.emit('bookshelf-interact', {
+        EventBus.emit(EVENTS.BOOKSHELF_INTERACT, {
           category: obj.category,
           id: obj.id,
           reread: true,
         });
-        EventBus.emit('freeze-player');
+        EventBus.emit(EVENTS.PLAYER_FREEZE);
       }
     } else if (obj.type === 'chest') {
       if (!openedChests.includes(obj.id)) {
         const amount = Math.floor(
           Math.random() * (obj.maxDirhams - obj.minDirhams + 1)
         ) + obj.minDirhams;
-        EventBus.emit('chest-opened', { amount, id: obj.id });
+        EventBus.emit(EVENTS.CHEST_OPENED, { amount, id: obj.id });
         // Visual feedback: tint the chest to show it's opened
         if (obj.sprite) obj.sprite.setTint(0x666666);
       } else {
-        EventBus.emit('chest-empty', { id: obj.id });
+        EventBus.emit(EVENTS.CHEST_EMPTY, { id: obj.id });
       }
     } else if (obj.type === 'door') {
       if (obj.locked) {
-        EventBus.emit('door-locked', {
+        EventBus.emit(EVENTS.DOOR_LOCKED, {
           message: obj.lockMessage || 'This door is locked.',
           id: obj.id,
         });
       } else {
-        EventBus.emit('door-opened', { id: obj.id });
+        EventBus.emit(EVENTS.DOOR_OPENED, { id: obj.id });
       }
     }
   }

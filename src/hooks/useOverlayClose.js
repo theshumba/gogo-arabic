@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { EventBus } from '../utils/eventBus.js';
+import { EVENTS } from '../utils/eventBusTypes.js';
 
 /**
  * useOverlayClose -- centralized overlay dismissal
@@ -16,7 +17,7 @@ export function useOverlayClose(onClose, options = {}) {
   const handleClose = useCallback(() => {
     if (beforeClose && beforeClose() === false) return;
     onClose();
-    EventBus.emit('unfreeze-player');
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
   }, [onClose, beforeClose]);
 
   // ESC key handler
@@ -37,7 +38,7 @@ export function useOverlayClose(onClose, options = {}) {
   // Unmount safety net -- if overlay is removed without explicit close, still unfreeze
   useEffect(() => {
     return () => {
-      EventBus.emit('unfreeze-player');
+      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
     };
   }, []);
 

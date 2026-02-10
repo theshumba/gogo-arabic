@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -181,6 +182,6 @@ export class BootScene extends Phaser.Scene {
 
   create() {
     this.scene.start('WorldScene');
-    EventBus.emit('scene-ready');
+    EventBus.emit(EVENTS.SCENE_READY);
   }
 }

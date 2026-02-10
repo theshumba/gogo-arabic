@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuiz } from '../../hooks/useQuiz.js';
 import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 import { audioManager } from '../../services/audio.js';
 import { selectWordsByDifficulty } from '../../utils/wordSelection.js';
 import ArabicToEnglish from './ArabicToEnglish.jsx';
@@ -37,7 +38,7 @@ export default function QuizOverlay() {
 
   // Wrap close to emit quiz-closed event for BGM resume
   const handleClose = useCallback(() => {
-    EventBus.emit('quiz-closed');
+    EventBus.emit(EVENTS.QUIZ_CLOSED);
     close();
   }, [close]);
 
