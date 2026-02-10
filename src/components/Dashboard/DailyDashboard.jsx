@@ -3,9 +3,11 @@ import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useGameNavigation } from '../../hooks/useGameNavigation.js';
 import { selectPlayerStats, selectStreakInfo } from '../../store/slices/playerSlice.js';
-import { selectFsrsCards } from '../../store/slices/vocabularySlice.js';
+import { selectFsrsCards, selectLearnedWordCount } from '../../store/slices/vocabularySlice.js';
 import { selectDailyGoals } from '../../store/slices/dailyGoalsSlice.js';
-import { selectActiveQuest } from '../../store/slices/questSlice.js';
+import { selectActiveQuest, selectCompletedQuests } from '../../store/slices/questSlice.js';
+import { selectAlphabetProgress } from '../../store/slices/alphabetSlice.js';
+import { selectGrammarProgress } from '../../store/slices/grammarSlice.js';
 import { getGoalProgress } from '../../data/dailyGoals.js';
 import styles from './DailyDashboard.module.css';
 
@@ -23,7 +25,7 @@ import styles from './DailyDashboard.module.css';
  * <DailyDashboard />
  */
 export default function DailyDashboard() {
-  const { goToGame, goToReview } = useGameNavigation();
+  const { goToGame, goToReview, goToAlphabet, goToLearningPath } = useGameNavigation();
 
   // Redux state
   const playerStats = useSelector(selectPlayerStats);
@@ -32,6 +34,10 @@ export default function DailyDashboard() {
   const dailyGoals = useSelector(selectDailyGoals);
   const activeQuest = useSelector(selectActiveQuest);
   const playerName = useSelector((state) => state.player.name);
+  const alphabetProgress = useSelector(selectAlphabetProgress);
+  const learnedWordCount = useSelector(selectLearnedWordCount);
+  const grammarProgress = useSelector(selectGrammarProgress);
+  const completedQuests = useSelector(selectCompletedQuests);
 
   // Calculate reviews due
   const reviewsDue = useMemo(() => {
@@ -76,12 +82,23 @@ export default function DailyDashboard() {
 
   // Determine suggested activity
   const suggestedActivity = useMemo(() => {
+    const completedGroupCount = alphabetProgress.completed;
+    if (completedGroupCount === 0) {
+      return {
+        title: 'Start Learning Letters',
+        description: 'Begin your Arabic journey with the alphabet!',
+        action: goToAlphabet,
+        icon: '\u0623',
+        color: 'var(--color-green)',
+      };
+    }
+
     if (reviewsDue > 0) {
       return {
         title: 'Review Words',
         description: `You have ${reviewsDue} word${reviewsDue !== 1 ? 's' : ''} ready for review`,
         action: goToReview,
-        icon: '📚',
+        icon: '\uD83D\uDCDA',
         color: 'var(--color-fire)',
       };
     }
@@ -91,7 +108,7 @@ export default function DailyDashboard() {
         title: 'Continue Quest',
         description: `${activeQuest.title} is in progress`,
         action: goToGame,
-        icon: '⚔️',
+        icon: '\u2694\uFE0F',
         color: 'var(--color-green)',
       };
     }
@@ -100,10 +117,10 @@ export default function DailyDashboard() {
       title: 'Explore the World',
       description: 'Discover new adventures and learn Arabic',
       action: goToGame,
-      icon: '🗺️',
+      icon: '\uD83D\uDDFA\uFE0F',
       color: 'var(--color-cyan)',
     };
-  }, [reviewsDue, activeQuest, goToReview, goToGame]);
+  }, [reviewsDue, activeQuest, goToReview, goToGame, alphabetProgress, goToAlphabet]);
 
   // Animation settings
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -164,6 +181,32 @@ export default function DailyDashboard() {
               <p className={styles.streakMax}>Best: {streakInfo.max} days</p>
             )}
           </div>
+        </motion.section>
+
+        {/* Learning Progress Section */}
+        <motion.section className={styles.learningSection} variants={itemVariants}>
+          <h2 className={styles.sectionTitle}>Learning Progress</h2>
+          <div className={styles.learningGrid}>
+            <div className={styles.statCard}>
+              <span className={styles.statValue}>{alphabetProgress.completed * 4}/28</span>
+              <span className={styles.statLabel}>Letters</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statValue}>{learnedWordCount}/1220</span>
+              <span className={styles.statLabel}>Words</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statValue}>{Object.keys(completedQuests).length}/52</span>
+              <span className={styles.statLabel}>Quests</span>
+            </div>
+          </div>
+          <motion.button
+            className={styles.learningPathBtn}
+            onClick={goToLearningPath}
+            {...buttonProps}
+          >
+            View Learning Path
+          </motion.button>
         </motion.section>
 
         {/* Reviews Due Section */}

@@ -25,6 +25,9 @@ const GrammarModule = lazy(() => import('./components/Grammar/GrammarModule.jsx'
 const DailyDashboard = lazy(() => import('./components/Dashboard/DailyDashboard.jsx'));
 const PlayerProfile = lazy(() => import('./components/Profile/PlayerProfile.jsx'));
 
+// Learning path lazy import
+const LearningPath = lazy(() => import('./components/LearningPath/LearningPath.jsx'));
+
 // Mini-games lazy imports
 const MiniGamesHub = lazy(() => import('./components/MiniGames/MiniGamesHub.jsx'));
 const WordSearch = lazy(() => import('./components/MiniGames/WordSearch.jsx'));
@@ -221,6 +224,20 @@ function ReadingExerciseRoute() {
   );
 }
 
+function LearningPathRoute() {
+  const { goBack } = useGameNavigation();
+
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <LearningPath onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
 function RootExplorerRoute() {
   const { goToMenu } = useGameNavigation();
 
@@ -298,6 +315,11 @@ export const router = createBrowserRouter([
   {
     path: '/mini-games/reading',
     element: <ReadingExerciseRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/learning-path',
+    element: <LearningPathRoute />,
     errorElement: <RouteErrorBoundary />,
   },
   {

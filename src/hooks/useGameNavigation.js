@@ -68,6 +68,10 @@ export function useGameNavigation() {
     navigate('/roots');
   }, [navigate]);
 
+  const goToLearningPath = useCallback(() => {
+    navigate('/learning-path');
+  }, [navigate]);
+
   const goBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
@@ -94,6 +98,7 @@ export function useGameNavigation() {
     goToWordSearch,
     goToReading,
     goToRoots,
+    goToLearningPath,
     goBack,
     goTo,
   };
