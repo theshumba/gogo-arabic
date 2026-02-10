@@ -70,28 +70,7 @@ describe('HUD Component', () => {
     expect(progressBar).toHaveAttribute('aria-valuemax', '100');
   });
 
-  it('should display dirhams count', () => {
-    const preloadedState = {
-      player: {
-        level: 1,
-        xp: 0,
-        xpToNextLevel: 100,
-        streak: 0,
-        dirhams: 250,
-        wordsLearned: 0,
-      },
-    };
-
-    renderWithProviders(<HUD onMenu={mockOnMenu} />, { preloadedState });
-
-    // Open the stats panel
-    const statsButton = screen.getByLabelText(/show stats/i);
-    fireEvent.click(statsButton);
-
-    expect(screen.getByText('250 D')).toBeInTheDocument();
-  });
-
-  it('should display words learned count', () => {
+  it('should display inline progress metrics', () => {
     const preloadedState = {
       player: {
         level: 1,
@@ -99,41 +78,37 @@ describe('HUD Component', () => {
         xpToNextLevel: 100,
         streak: 0,
         dirhams: 0,
-        wordsLearned: 42,
-      },
-    };
-
-    renderWithProviders(<HUD onMenu={mockOnMenu} />, { preloadedState });
-
-    // Open the stats panel
-    const statsButton = screen.getByLabelText(/show stats/i);
-    fireEvent.click(statsButton);
-
-    // Find the stat value next to "Words:" label
-    const wordsLabel = screen.getByText('Words:');
-    const statDiv = wordsLabel.closest('div');
-    expect(statDiv).toHaveTextContent('42');
-  });
-
-  it('should display streak count', () => {
-    const preloadedState = {
-      player: {
-        level: 1,
-        xp: 0,
-        xpToNextLevel: 100,
-        streak: 7,
-        dirhams: 0,
         wordsLearned: 0,
       },
+      alphabet: {
+        completedGroups: ['group1', 'group2'],
+      },
+      quests: {
+        quests: {
+          quest1: { status: 'completed', progress: 100, rewardClaimed: true },
+          quest2: { status: 'active', progress: 50, rewardClaimed: false },
+        },
+        activeQuestId: null,
+        npcsVisited: [],
+        zonesVisited: [],
+        dialoguesCompleted: [],
+        reviewSessionsCompleted: [],
+        quizzesPassed: [],
+        chestsOpened: [],
+        wordsLearnedToday: 0,
+        lastResetDate: null,
+        lettersMastered: [],
+        sentenceQuizzesCompleted: 0,
+      },
     };
 
     renderWithProviders(<HUD onMenu={mockOnMenu} />, { preloadedState });
 
-    // Open the stats panel
-    const statsButton = screen.getByLabelText(/show stats/i);
-    fireEvent.click(statsButton);
-
-    expect(screen.getByText('7 days')).toBeInTheDocument();
+    // Progress strip should be visible with letters (2 groups * 4 = 8)
+    expect(screen.getByLabelText('Learning progress')).toBeInTheDocument();
+    expect(screen.getByText('8/28')).toBeInTheDocument();
+    // Completed quest count (1 completed)
+    expect(screen.getByText('1/52')).toBeInTheDocument();
   });
 
   it('should display active quest count badge when quests exist', () => {
@@ -313,11 +288,7 @@ describe('HUD Component', () => {
     expect(screen.getByLabelText(/Level 3/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/300 XP out of 450/i)).toBeInTheDocument();
     expect(screen.getByRole('banner')).toHaveAttribute('aria-label', 'Game HUD');
-
-    // Streak is in the stats panel, open it first
-    const statsButton = screen.getByLabelText(/show stats/i);
-    fireEvent.click(statsButton);
-    expect(screen.getByText('5 days')).toBeInTheDocument();
+    expect(screen.getByLabelText('Learning progress')).toBeInTheDocument();
   });
 
   it('should display daily goals completion count', () => {

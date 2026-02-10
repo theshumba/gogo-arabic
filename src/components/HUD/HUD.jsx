@@ -5,13 +5,12 @@ import { openDialogue } from '../../store/slices/uiSlice.js';
 import { selectUnlockedCount } from '../../store/slices/achievementSlice.js';
 import { selectPlayerStats } from '../../store/slices/playerSlice.js';
 import { selectActiveQuestCount } from '../../store/slices/questSlice.js';
-import { selectReviewQueueCount } from '../../store/slices/vocabularySlice.js';
+import { selectReviewQueueCount, selectLearnedWordCount } from '../../store/slices/vocabularySlice.js';
 import { selectCompletedGoalsCount, selectTotalGoalsCount } from '../../store/slices/dailyGoalsSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import styles from './HUD.module.css';
 import AchievementPanel from '../Achievements/AchievementPanel.jsx';
 import DailyGoalsPanel from '../Goals/DailyGoalsPanel.jsx';
-import StatsPanel from './StatsPanel.jsx';
 import QuestTracker from './QuestTracker.jsx';
 
 function HUD({ onMenu }) {
@@ -30,6 +29,11 @@ function HUD({ onMenu }) {
   const completedGoalsCount = useSelector(selectCompletedGoalsCount);
   const totalGoalsCount = useSelector(selectTotalGoalsCount);
   const completedGroups = useSelector((s) => s.alphabet.completedGroups || []);
+  const wordsLearned = useSelector(selectLearnedWordCount);
+  const completedQuestCount = useSelector((s) => {
+    const quests = s.quests.quests;
+    return Object.values(quests).filter(q => q.status === 'completed').length;
+  });
 
   // Calculate letters learned (7 groups × 4 letters = 28 total)
   const lettersLearned = completedGroups.length * 4;
@@ -153,11 +157,27 @@ function HUD({ onMenu }) {
               <div className={styles.staminaBarFill} style={{ width: `${Math.min(staminaPercent, 100)}%` }} />
             </div>
           )}
+
+          <div className={styles.progressStrip} aria-label="Learning progress">
+            <span className={styles.progressItem} title="Letters mastered">
+              <span className={styles.progressIcon} aria-hidden="true">{'\u0623'}</span>
+              <span className={styles.progressValue}>{lettersLearned}/{totalLetters}</span>
+            </span>
+            <span className={styles.progressSep} aria-hidden="true">|</span>
+            <span className={styles.progressItem} title="Words learned">
+              <span className={styles.progressIcon} aria-hidden="true">W</span>
+              <span className={styles.progressValue}>{wordsLearned}</span>
+            </span>
+            <span className={styles.progressSep} aria-hidden="true">|</span>
+            <span className={styles.progressItem} title="Quests completed">
+              <span className={styles.progressIcon} aria-hidden="true">Q</span>
+              <span className={styles.progressValue}>{completedQuestCount}/52</span>
+            </span>
+          </div>
         </div>
 
-        {/* Right: StatsPanel + Buttons */}
+        {/* Right: Buttons */}
         <div className={styles.right}>
-          <StatsPanel />
 
           {/* Alphabet/Letters button with progress badge */}
           <motion.button
