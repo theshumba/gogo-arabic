@@ -1,11 +1,11 @@
-import { useState, useMemo, useCallback, useEffect, memo } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
 import { spendDirhams, addToInventory, setOutfit, setHeadCovering } from '../../store/slices/playerSlice.js';
 import { recordShopPurchase } from '../../store/slices/achievementSlice.js';
 import { selectInventoryIds } from '../../store/slices/playerSlice.js';
-import { EventBus } from '../../utils/eventBus.js';
+import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import itemsData from '../../data/items.json';
 import styles from './ShopOverlay.module.css';
@@ -21,20 +21,9 @@ function ShopOverlay() {
 
   const handleClose = useCallback(() => {
     dispatch(closeDialogue());
-    EventBus.emit('unfreeze-player');
   }, [dispatch]);
 
-  // Escape key handler
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        handleClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleClose]);
+  const handleOverlayClose = useOverlayClose(handleClose);
 
   const handleBuy = useCallback((item) => {
     if (player.dirhams < item.price) return;
@@ -89,7 +78,7 @@ function ShopOverlay() {
       ref={focusTrapRef}
       className={styles.overlay}
       style={overlayStyle}
-      onClick={handleClose}
+      onClick={handleOverlayClose}
       variants={overlayVariants}
       initial="hidden"
       animate="visible"
@@ -123,7 +112,7 @@ function ShopOverlay() {
           >
             Boosts
           </button>
-          <button className={styles.closeBtn} onClick={handleClose}>Close</button>
+          <button className={styles.closeBtn} onClick={handleOverlayClose}>Close</button>
         </div>
 
         <div className={styles.grid}>

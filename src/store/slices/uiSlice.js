@@ -60,6 +60,16 @@ const uiSlice = createSlice({
     clearNotification(state) {
       state.notification = null;
     },
+
+    closeAllOverlays(state) {
+      state.dialogueOpen = false;
+      state.quizOpen = false;
+      state.menuOpen = false;
+      state.signOpen = false;
+      state.quizConfig = null;
+      state.dialogueConfig = null;
+      state.signData = null;
+    },
   },
 });
 
@@ -73,6 +83,7 @@ export const {
   closeSign,
   showNotification,
   clearNotification,
+  closeAllOverlays,
 } = uiSlice.actions;
 
 // --- Selectors ---

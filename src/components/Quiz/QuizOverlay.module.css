@@ -236,3 +236,27 @@
     min-height: 44px;
   }
 }
+
+/* Empty state when no words available */
+.emptyState {
+  text-align: center;
+  font-family: var(--font-pixel);
+  padding: 20px 0;
+}
+
+.emptyStateTitle {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  color: var(--color-brown);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.emptyStateMsg {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--color-brown);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}

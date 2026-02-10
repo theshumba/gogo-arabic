@@ -1,8 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { toggleMenu } from '../../store/slices/uiSlice.js';
+import { toggleMenu, selectAnyOverlayOpen } from '../../store/slices/uiSlice.js';
+import { EventBus } from '../../utils/eventBus.js';
+import { audioManager } from '../../services/audio.js';
 import { useAudio } from '../../hooks/useAudio.js';
 import { useEventBusListeners } from '../../hooks/useEventBusListeners.js';
 import { useSessionTracking } from '../../hooks/useSessionTracking.js';
@@ -25,6 +27,13 @@ import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate }) {
   const activities = [
+    {
+      id: 'learning-path',
+      icon: '\u0645\u0633\u0627\u0631',
+      label: 'Learning Path',
+      description: 'See your learning progression',
+      route: '/learning-path',
+    },
     {
       id: 'grammar',
       icon: 'قواعد',
@@ -86,6 +95,18 @@ function ActivitiesMenu({ onBack, onNavigate }) {
 function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe }) {
   const [showActivities, setShowActivities] = React.useState(false);
 
+  // ESC key handler for pause menu
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onResume();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onResume]);
+
   if (showActivities) {
     return (
       <ActivitiesMenu
@@ -99,19 +120,19 @@ function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe }) {
     <div className={styles.pauseMenuOverlay}>
       <div className={styles.pauseMenuTitle}>Paused</div>
       <div className={styles.pauseMenuButtons}>
-        <button onClick={onResume} className={styles.pauseMenuBtnResume}>
+        <button onClick={() => { audioManager.playSFX('click'); onResume(); }} className={styles.pauseMenuBtnResume}>
           Resume
         </button>
-        <button onClick={() => setShowActivities(true)} className={styles.pauseMenuBtnActivities}>
+        <button onClick={() => { audioManager.playSFX('click'); setShowActivities(true); }} className={styles.pauseMenuBtnActivities}>
           Activities
         </button>
-        <button onClick={() => onNavigate('/stats')} className={styles.pauseMenuBtnActivities}>
+        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/stats'); }} className={styles.pauseMenuBtnActivities}>
           Profile
         </button>
-        <button onClick={onOpenWardrobe} className={styles.pauseMenuBtnActivities}>
+        <button onClick={() => { audioManager.playSFX('click'); onOpenWardrobe(); }} className={styles.pauseMenuBtnActivities}>
           Wardrobe
         </button>
-        <button onClick={onMainMenu} className={styles.pauseMenuBtnMenu}>
+        <button onClick={() => { audioManager.playSFX('click'); onMainMenu(); }} className={styles.pauseMenuBtnMenu}>
           Main Menu
         </button>
       </div>
@@ -146,13 +167,27 @@ export default function GameLayout() {
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
 
+  // Safety net selector
+  const anyOverlayOpen = useSelector(selectAnyOverlayOpen);
+
+  // Safety net: if no overlays are open, ensure player is unfrozen
+  useEffect(() => {
+    if (!anyOverlayOpen && !showWardrobe) {
+      // Small delay to avoid race with overlay close animations
+      const timer = setTimeout(() => {
+        EventBus.emit('unfreeze-player');
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [anyOverlayOpen, showWardrobe]);
+
   return (
     <div className={styles.container}>
       {/* Phaser canvas - full screen, lowest z-index */}
       <PhaserGame ref={phaserRef} />
 
       {/* HUD overlay bar */}
-      <HUD onMenu={() => dispatch(toggleMenu())} />
+      <HUD onMenu={() => { audioManager.playSFX('click'); dispatch(toggleMenu()); }} />
 
       {/* MiniMap - bottom right corner */}
       {location.pathname === '/game' && <MiniMap />}

@@ -1,8 +1,9 @@
+import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeDialogue, showNotification } from '../../store/slices/uiSlice.js';
 import { claimReward, setActiveQuest } from '../../store/slices/questSlice.js';
 import { addXP, addDirhams } from '../../store/slices/playerSlice.js';
-import { EventBus } from '../../utils/eventBus.js';
+import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import questsData from '../../data/quests.json';
 import { ZONES, ZONE_ORDER } from '../../data/zones.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
@@ -27,12 +28,13 @@ export default function QuestLog() {
   const quests = useSelector((s) => s.quests.quests);
   const activeQuestId = useSelector((s) => s.quests.activeQuestId);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     dispatch(closeDialogue());
-    EventBus.emit('unfreeze-player');
-  };
+  }, [dispatch]);
 
-  const focusTrapRef = useFocusTrap(true, handleClose);
+  const handleOverlayClose = useOverlayClose(handleClose);
+
+  const focusTrapRef = useFocusTrap(true, handleOverlayClose);
 
   const handleClaim = (questId) => {
     const qd = questsData.find((q) => q.id === questId);
@@ -117,11 +119,11 @@ export default function QuestLog() {
   };
 
   return (
-    <div ref={focusTrapRef} className={styles.overlay}>
-      <div className={styles.card}>
+    <div ref={focusTrapRef} className={styles.overlay} onClick={handleOverlayClose}>
+      <div className={styles.card} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <div className={styles.title}>Quest Log</div>
-          <button className={styles.closeBtn} onClick={handleClose}>Close</button>
+          <button className={styles.closeBtn} onClick={handleOverlayClose}>Close</button>
         </div>
 
         {ZONE_ORDER.map((zoneId) => {

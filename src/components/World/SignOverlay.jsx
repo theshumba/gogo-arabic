@@ -1,7 +1,7 @@
+import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
 import { closeSign } from '../../store/slices/uiSlice.js';
-import { EventBus } from '../../utils/eventBus.js';
+import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './SignOverlay.module.css';
 
@@ -9,35 +9,22 @@ export default function SignOverlay() {
   const dispatch = useDispatch();
   const signData = useSelector((s) => s.ui.signData);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     dispatch(closeSign());
-    EventBus.emit('unfreeze-player');
-  };
+  }, [dispatch]);
+
+  const handleOverlayClose = useOverlayClose(handleClose);
 
   const focusTrapRef = useFocusTrap(!!signData, null);
-
-  // Escape key handler
-  useEffect(() => {
-    if (!signData) return;
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        handleClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [signData]);
 
   if (!signData) return null;
 
   return (
-    <div ref={focusTrapRef} className={styles.overlay} onClick={handleClose}>
+    <div ref={focusTrapRef} className={styles.overlay} onClick={handleOverlayClose}>
       <div className={styles.card} onClick={(e) => e.stopPropagation()}>
         <div className={styles.arabic}>{signData.arabic}</div>
         <div className={styles.english}>{signData.english}</div>
-        <button className={styles.closeBtn} onClick={handleClose}>
+        <button className={styles.closeBtn} onClick={handleOverlayClose}>
           Continue
         </button>
       </div>

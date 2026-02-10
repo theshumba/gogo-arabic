@@ -77,6 +77,9 @@ export class WorldScene extends Phaser.Scene {
 
   // Called by ZoneTransition to swap zones
   loadZone(zoneName, entryX, entryY) {
+    // Guard: don't load if scene is shutting down
+    if (!this.scene || !this.scene.isActive()) return;
+
     this.clearZone();
     this.buildZone(zoneName, entryX, entryY);
 
@@ -276,6 +279,11 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   shutdown() {
+    // Reset zone transition to prevent stuck state on scene restart
+    if (this.zoneTransition) {
+      this.zoneTransition.transitioning = false;
+    }
+
     EventBus.off('freeze-player', this.handleFreeze, this);
     EventBus.off('unfreeze-player', this.handleUnfreeze, this);
     EventBus.off('vfx-shake', this.handleVfxShake, this);
