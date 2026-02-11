@@ -25,6 +25,7 @@ export class WorldScene extends Phaser.Scene {
     this.currentZone = 'oasis_village';
     this.currentMapW = 40;
     this.currentMapH = 30;
+    this.pendingSpawnPosition = null;
 
     // Subsystems
     this.domOverlay = null;
@@ -69,11 +70,23 @@ export class WorldScene extends Phaser.Scene {
     EventBus.on(EVENTS.VFX_SHAKE, this.handleVfxShake, this);
     EventBus.on(EVENTS.VFX_PARTICLES_BURST, this.handleVfxBurst, this);
     EventBus.on(EVENTS.VFX_PARTICLES_CONTINUOUS, this.handleVfxContinuous, this);
+    EventBus.on(EVENTS.DOOR_OPENED, this.handleDoorOpened, this);
 
     // Input: SPACE for interaction
     this.interactKey = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
+
+    // Restore player position when resuming from InteriorScene
+    this.events.on('resume', () => {
+      if (this.pendingSpawnPosition) {
+        const player = this.playerController.getPlayer();
+        if (player) {
+          player.setPosition(this.pendingSpawnPosition.x, this.pendingSpawnPosition.y);
+        }
+        this.pendingSpawnPosition = null;
+      }
+    });
 
     EventBus.emit(EVENTS.SCENE_READY, this);
   }
@@ -156,6 +169,22 @@ export class WorldScene extends Phaser.Scene {
     const px = x ?? this.cameras.main.midPoint.x;
     const py = y ?? this.cameras.main.midPoint.y;
     this.particleEffects.continuous(px, py, config || {});
+  }
+
+  // ============================================================
+  // BUILDING ENTRY
+  // ============================================================
+
+  async handleDoorOpened({ id, interiorId, entryPosition }) {
+    if (!interiorId) return; // Legacy door without interior
+    try {
+      const { audioManager } = await import('../../services/audio.js');
+      const { INTERIOR_BGM } = await import('../../data/audioConfig.js');
+      const bgmTrack = INTERIOR_BGM[interiorId] || INTERIOR_BGM.default || 'interior';
+      audioManager.playBGM(bgmTrack);
+    } catch (e) { /* audio not critical */ }
+    this.sceneStackManager.pushScene('InteriorScene', { interiorId, entryPosition });
+    EventBus.emit(EVENTS.BUILDING_ENTERED, { interiorId });
   }
 
   // ============================================================
@@ -306,6 +335,7 @@ export class WorldScene extends Phaser.Scene {
     EventBus.off(EVENTS.VFX_SHAKE, this.handleVfxShake, this);
     EventBus.off(EVENTS.VFX_PARTICLES_BURST, this.handleVfxBurst, this);
     EventBus.off(EVENTS.VFX_PARTICLES_CONTINUOUS, this.handleVfxContinuous, this);
+    EventBus.off(EVENTS.DOOR_OPENED, this.handleDoorOpened, this);
 
     if (this.particleEffects) {
       this.particleEffects.destroy();

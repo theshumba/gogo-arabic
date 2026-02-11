@@ -160,6 +160,10 @@ export const EVENTS = Object.freeze({
   // ────────────────────────────────────────────────
   /** Phaser → React: BootScene/WorldScene finished initializing */
   SCENE_READY: 'phaser:scene:ready',
+  /** Phaser → Phaser: building entered, interior scene launched */
+  BUILDING_ENTERED: 'phaser:scene:building-entered',
+  /** Phaser → Phaser: building exited, WorldScene resumed */
+  BUILDING_EXITED: 'phaser:scene:building-exited',
 
   // ────────────────────────────────────────────────
   // BATTLE — Word Duel boss fight events

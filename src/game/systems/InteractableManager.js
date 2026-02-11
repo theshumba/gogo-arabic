@@ -15,6 +15,7 @@ export class InteractableManager {
   constructor(scene) {
     this.scene = scene;
     this.interactables = [];
+    this.doorTweens = [];
   }
 
   /**
@@ -72,14 +73,32 @@ export class InteractableManager {
         strokeThickness: 2,
       }).setOrigin(0.5).setVisible(false).setDepth(9999);
 
-      this.interactables.push({
+      const interactable = {
         ...cfg,
         sprite,
         label,
         hintText,
         worldX: px,
         worldY: py,
-      });
+      };
+      this.interactables.push(interactable);
+
+      // Door glow effect: pulsing alpha for unlocked doors with interiors
+      if (cfg.type === 'door') {
+        if (!cfg.locked && cfg.interiorId) {
+          const tween = this.scene.tweens.add({
+            targets: sprite,
+            alpha: { from: 0.85, to: 1.0 },
+            duration: 1200,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut',
+          });
+          this.doorTweens.push(tween);
+        } else if (cfg.locked) {
+          sprite.setTint(0x888888);
+        }
+      }
     });
   }
 
@@ -157,10 +176,27 @@ export class InteractableManager {
         EventBus.emit(EVENTS.CHEST_EMPTY, { id: obj.id });
       }
     } else if (obj.type === 'door') {
-      if (obj.locked) {
+      let isLocked = obj.locked;
+      if (isLocked && obj.unlockFlag) {
+        const state = store.getState();
+        const flagValue = state.narrative?.storyFlags?.[obj.unlockFlag];
+        if (flagValue) {
+          isLocked = false;
+          obj.locked = false;
+          if (obj.sprite) obj.sprite.clearTint();
+        }
+      }
+      if (isLocked) {
         EventBus.emit(EVENTS.DOOR_LOCKED, {
           message: obj.lockMessage || 'This door is locked.',
           id: obj.id,
+        });
+      } else if (obj.interiorId) {
+        const player = this.scene.playerController?.getPlayer();
+        EventBus.emit(EVENTS.DOOR_OPENED, {
+          id: obj.id,
+          interiorId: obj.interiorId,
+          entryPosition: player ? { x: player.x, y: player.y } : null,
         });
       } else {
         EventBus.emit(EVENTS.DOOR_OPENED, { id: obj.id });
@@ -172,6 +208,9 @@ export class InteractableManager {
    * Destroy all interactables
    */
   destroy() {
+    this.doorTweens.forEach((t) => { if (t) t.remove(); });
+    this.doorTweens = [];
+
     this.interactables.forEach((obj) => {
       if (obj.sprite) obj.sprite.destroy();
       if (obj.label) obj.label.destroy();

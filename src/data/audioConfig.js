@@ -20,11 +20,17 @@ export const ZONE_BGM_MAP = {
 export const MENU_BGM = 'menu';
 export const QUIZ_BGM = 'quiz';
 
+// Interior ID -> BGM track mapping
+export const INTERIOR_BGM = {
+  default: 'interior',
+};
+
 // All BGM tracks for preloading reference
 export const ALL_BGM_TRACKS = [
   ...Object.values(ZONE_BGM_MAP),
   MENU_BGM,
   QUIZ_BGM,
+  'interior',
 ];
 
 // SFX categories for consistent naming

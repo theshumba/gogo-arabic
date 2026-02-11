@@ -96,7 +96,9 @@ const oasis_village = {
     { id: 'bookshelf-student', type: 'bookshelf', x: 31, y: 23, category: 'phrases' },
     { id: 'chest-ruins', type: 'chest', x: 21, y: 3, minDirhams: 10, maxDirhams: 30 },
     { id: 'chest-hidden', type: 'chest', x: 2, y: 26, minDirhams: 15, maxDirhams: 50 },
-    { id: 'door-scholar-house', type: 'door', x: 8, y: 5, locked: true, lockMessage: "Scholar Yusuf's private study. This door is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
+    { id: 'door-scholar-house', type: 'door', x: 8, y: 5, interiorId: 'scholar_house_interior', locked: true, unlockFlag: 'met_scholar_yusuf', lockMessage: "Scholar Yusuf's private study. This door is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
+    { id: 'door-merchant-house', type: 'door', x: 10, y: 16, interiorId: 'merchant_house_interior', locked: false, labelArabic: 'بَيْت فاطِمَة', labelEnglish: "Fatima's House" },
+    { id: 'door-oasis-guild', type: 'door', x: 34, y: 24, interiorId: 'oasis_guild_interior', locked: false, labelArabic: 'نادي المُغامِرين', labelEnglish: "Adventurer's Guild" },
   ],
 
   exits: [
@@ -201,7 +203,8 @@ const ancient_library = {
     { id: 'bookshelf-phrases', type: 'bookshelf', x: 17, y: 8, category: 'phrases' },
     { id: 'chest-library', type: 'chest', x: 7, y: 6, minDirhams: 20, maxDirhams: 60 },
     { id: 'chest-library-hidden', type: 'chest', x: 30, y: 25, minDirhams: 25, maxDirhams: 70 },
-    { id: 'door-archive', type: 'door', x: 20, y: 8, locked: true, lockMessage: 'The ancient archives are sealed.', labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
+    { id: 'door-archive', type: 'door', x: 20, y: 8, interiorId: 'library_archive_interior', locked: true, unlockFlag: 'library_access_granted', lockMessage: 'The ancient archives are sealed.', labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
+    { id: 'door-library-study', type: 'door', x: 8, y: 12, interiorId: 'library_study_interior', locked: false, labelArabic: 'غُرفَة الدِّراسَة', labelEnglish: 'Study Room' },
   ],
 
   exits: [
@@ -313,7 +316,9 @@ const desert_marketplace = {
     { id: 'bookshelf-market-numbers', type: 'bookshelf', x: 22, y: 6, category: 'numbers' },
     { id: 'chest-market-hidden', type: 'chest', x: 40, y: 3, minDirhams: 25, maxDirhams: 80 },
     { id: 'chest-market-corner', type: 'chest', x: 3, y: 32, minDirhams: 20, maxDirhams: 65 },
-    { id: 'door-warehouse', type: 'door', x: 35, y: 12, locked: true, lockMessage: "The merchant's warehouse is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
+    { id: 'door-warehouse', type: 'door', x: 35, y: 12, interiorId: 'market_warehouse_interior', locked: true, unlockFlag: 'warehouse_key_obtained', lockMessage: "The merchant's warehouse is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
+    { id: 'door-spice-shop', type: 'door', x: 10, y: 14, interiorId: 'spice_shop_interior', locked: false, labelArabic: 'دُكّان البُهارات', labelEnglish: 'Spice Shop' },
+    { id: 'door-textile-shop', type: 'door', x: 30, y: 14, interiorId: 'textile_shop_interior', locked: false, labelArabic: 'دُكّان الأَقمِشَة', labelEnglish: 'Textile Shop' },
   ],
 
   exits: [
@@ -421,7 +426,7 @@ const farmland = {
     { id: 'bookshelf-body', type: 'bookshelf', x: 20, y: 25, category: 'body' },
     { id: 'chest-farm-hidden', type: 'chest', x: 42, y: 3, minDirhams: 30, maxDirhams: 90 },
     { id: 'chest-farm-pond', type: 'chest', x: 36, y: 30, minDirhams: 25, maxDirhams: 75 },
-    { id: 'door-barn', type: 'door', x: 15, y: 8, locked: true, lockMessage: 'The barn door is stuck.', labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
+    { id: 'door-barn', type: 'door', x: 15, y: 8, interiorId: 'farmhouse_interior', locked: false, labelArabic: 'بَيْت المُزارِع', labelEnglish: "Farmer's House" },
   ],
 
   exits: [
@@ -520,6 +525,7 @@ const bedouin_camp = {
     { id: 'bookshelf-adjectives', type: 'bookshelf', x: 29, y: 8, category: 'adjectives' },
     { id: 'chest-camp-hidden', type: 'chest', x: 31, y: 22, minDirhams: 30, maxDirhams: 100 },
     { id: 'chest-camp-tent', type: 'chest', x: 5, y: 7, minDirhams: 25, maxDirhams: 80 },
+    { id: 'door-bedouin-tent', type: 'door', x: 7, y: 8, interiorId: 'bedouin_tent_interior', locked: false, labelArabic: 'خَيْمَة الشَّيْخ', labelEnglish: "Elder's Tent" },
   ],
 
   exits: [
@@ -625,6 +631,8 @@ const mountain_village = {
     { id: 'bookshelf-adj-mt', type: 'bookshelf', x: 20, y: 16, category: 'adjectives' },
     { id: 'chest-mountain-stream', type: 'chest', x: 32, y: 15, minDirhams: 35, maxDirhams: 110 },
     { id: 'chest-mountain-peak', type: 'chest', x: 5, y: 3, minDirhams: 40, maxDirhams: 120 },
+    { id: 'door-mountain-home', type: 'door', x: 15, y: 20, interiorId: 'mountain_home_interior', locked: false, labelArabic: 'بَيْت الشَّيْخ', labelEnglish: "Elder's Home" },
+    { id: 'door-mountain-mosque', type: 'door', x: 25, y: 20, interiorId: 'mountain_mosque_interior', locked: false, labelArabic: 'المَسْجِد', labelEnglish: 'Mosque' },
   ],
 
   exits: [
@@ -734,6 +742,8 @@ const coastal_port = {
     { id: 'bookshelf-port-food', type: 'bookshelf', x: 18, y: 23, category: 'food' },
     { id: 'chest-port-dock', type: 'chest', x: 34, y: 28, minDirhams: 40, maxDirhams: 130 },
     { id: 'chest-port-alley', type: 'chest', x: 8, y: 8, minDirhams: 35, maxDirhams: 110 },
+    { id: 'door-port-tavern', type: 'door', x: 15, y: 22, interiorId: 'port_tavern_interior', locked: false, labelArabic: 'حانَة البَحّارَة', labelEnglish: "Sailor's Tavern" },
+    { id: 'door-port-warehouse', type: 'door', x: 22, y: 22, interiorId: 'port_warehouse_interior', locked: false, labelArabic: 'مَخْزَن المِيناء', labelEnglish: 'Port Warehouse' },
   ],
 
   exits: [
@@ -860,6 +870,7 @@ const royal_palace = {
     { id: 'bookshelf-palace-phrases', type: 'bookshelf', x: 25, y: 17, category: 'phrases' },
     { id: 'chest-palace-throne', type: 'chest', x: 25, y: 9, minDirhams: 60, maxDirhams: 200 },
     { id: 'chest-palace-garden', type: 'chest', x: 43, y: 20, minDirhams: 50, maxDirhams: 180 },
+    { id: 'door-palace-throne', type: 'door', x: 25, y: 12, interiorId: 'palace_throne_interior', locked: true, lockMessage: 'The throne room requires an audience with the Vizier.', unlockFlag: 'palace_audience_granted', labelArabic: 'قاعَة العَرش', labelEnglish: 'Throne Room' },
   ],
 
   exits: [

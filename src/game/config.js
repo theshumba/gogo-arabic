@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene.js';
 import { WorldScene } from './scenes/WorldScene.js';
+import { InteriorScene } from './scenes/InteriorScene.js';
 
 export const GAME_WIDTH = 1280;
 export const GAME_HEIGHT = 720;
@@ -19,7 +20,7 @@ export const gameConfig = {
       debug: false,
     },
   },
-  scene: [BootScene, WorldScene],
+  scene: [BootScene, WorldScene, InteriorScene],
   scale: {
     mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
