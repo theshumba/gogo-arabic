@@ -134,6 +134,14 @@ export const EVENTS = Object.freeze({
   VFX_PARTICLES_CONTINUOUS: 'phaser:vfx:particles-continuous',
 
   // ────────────────────────────────────────────────
+  // NARRATIVE — story flags, relationships (Phase 20+)
+  // ────────────────────────────────────────────────
+  /** React → Redux: set a story flag in narrativeSlice */
+  NARRATIVE_FLAG_SET: 'react:narrative:flag-set',
+  /** React → Redux: change NPC relationship level in narrativeSlice */
+  NARRATIVE_RELATIONSHIP_CHANGED: 'react:narrative:relationship-changed',
+
+  // ────────────────────────────────────────────────
   // SCENE — Phaser scene lifecycle
   // ────────────────────────────────────────────────
   /** Phaser → React: BootScene/WorldScene finished initializing */
