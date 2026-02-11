@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
+import { selectNpcRelationship } from '../../store/slices/narrativeSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { useDialogue } from '../../hooks/useDialogue.js';
@@ -14,6 +15,9 @@ import DialogueBox from './DialogueBox.jsx';
 import DialogueChoices from './DialogueChoices.jsx';
 import TeacherWordCard from './TeacherWordCard.jsx';
 import CulturalDialogueMenu from './CulturalDialogueMenu.jsx';
+import TopicSelectionMenu from './TopicSelectionMenu.jsx';
+import ConversationHistory from './ConversationHistory.jsx';
+import RelationshipIndicator from './RelationshipIndicator.jsx';
 import styles from './DialogueOverlay.module.css';
 
 /* ---- animation variants ---- */
@@ -29,21 +33,37 @@ const dialogueBoxVariants = {
   exit: { opacity: 0, y: 10, scale: 0.96 },
 };
 
+const moodToEmoji = (mood) => {
+  const map = { cheerful: '😊', serious: '🤔', worried: '😟', excited: '🤩', angry: '😠', sad: '😢', neutral: '😐' };
+  return map[mood] || '😐';
+};
+
 /**
  * DialogueOverlay
- * Main container for NPC dialogue — orchestrates portrait, dialogue box, choices, and word cards
+ * Main container for NPC dialogue — orchestrates portrait, dialogue box, choices,
+ * topic selection, relationship indicator, and word cards.
+ *
+ * Supports both legacy linear dialogue and hub-and-spoke multi-topic conversations.
  */
 export default function DialogueOverlay() {
   const dispatch = useDispatch();
   const overlayData = useSelector((s) => s.ui.dialogueConfig);
-  const settings = useSelector((s) => s.settings);
 
   const npcId = overlayData?.npcId;
   const npc = npcsData.find((n) => n.id === npcId);
 
-  const { currentTree, lineIndex, close, advance, handleChoice, showCulturalMenu, setShowCulturalMenu } = useDialogue(npc);
+  const {
+    currentTree, lineIndex, close, advance, handleChoice,
+    showCulturalMenu, setShowCulturalMenu,
+    phase, availableTopics, selectTopic, topicsDiscussed,
+    filteredChoices, resumeAfterQuiz, isHubAndSpoke,
+  } = useDialogue(npc);
+
+  const relationshipLevel = useSelector(selectNpcRelationship(npcId || ''));
 
   const focusTrapRef = useFocusTrap(true, null);
+
+  const [showHistory, setShowHistory] = useState(false);
 
   // Centralized overlay close with ESC key and unmount safety net
   useOverlayClose(close);
@@ -67,17 +87,15 @@ export default function DialogueOverlay() {
   /* NOTE: ESC is handled by useOverlayClose above (capture phase) */
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Don't interfere with input fields or other overlays
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-        return;
-      }
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
       // If current line has choices, handle number keys for choice selection
       if (line?.choices) {
+        const choices = isHubAndSpoke ? filteredChoices : line.choices;
         const num = parseInt(e.key, 10);
-        if (num >= 1 && num <= line.choices.length) {
+        if (num >= 1 && num <= choices.length) {
           e.preventDefault();
-          handleChoice(line.choices[num - 1]);
+          handleChoice(choices[num - 1]);
           return;
         }
       }
@@ -86,32 +104,111 @@ export default function DialogueOverlay() {
         case ' ':
         case 'Enter':
           e.preventDefault();
-          // If there are choices, don't advance automatically
           if (!line?.choices) {
             advance();
           }
           break;
-
         default:
           break;
       }
     };
 
-    // Only attach listener when dialogue is visible
     window.addEventListener('keydown', handleKeyDown);
-
-    // Cleanup on unmount or when dialogue closes
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [line, lineIndex, currentTree]); // Re-attach when line changes
+  }, [line, lineIndex, currentTree, isHubAndSpoke, filteredChoices]);
 
   // Check for reduced motion preference
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const transition = reduceMotion
     ? { duration: 0.15 }
     : { duration: 0.3, ease: [0.22, 1, 0.36, 1] };
+
+  /* ---- conversation history (highest priority overlay) ---- */
+  if (showHistory) {
+    return (
+      <div ref={focusTrapRef} className={styles.overlay} role="dialog" aria-label="Conversation history">
+        <motion.div
+          className={styles.backdrop}
+          onClick={() => setShowHistory(false)}
+          role="button"
+          tabIndex={0}
+          aria-label="Close history"
+          onKeyDown={(e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              setShowHistory(false);
+            }
+          }}
+          variants={backdropVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={transition}
+        />
+        <motion.div
+          variants={dialogueBoxVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={transition}
+          style={{ width: '100%' }}
+        >
+          <ConversationHistory
+            npc={npc}
+            topicsDiscussed={topicsDiscussed}
+            allTopics={availableTopics}
+            onBack={() => setShowHistory(false)}
+          />
+        </motion.div>
+      </div>
+    );
+  }
+
+  /* ---- hub phase: topic selection ---- */
+  if (phase === 'hub' && isHubAndSpoke) {
+    return (
+      <div ref={focusTrapRef} className={styles.overlay} role="dialog" aria-label="Topic selection">
+        <motion.div
+          className={styles.backdrop}
+          onClick={close}
+          role="button"
+          tabIndex={0}
+          aria-label="Close dialogue"
+          onKeyDown={(e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              close();
+            }
+          }}
+          variants={backdropVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={transition}
+        />
+        <motion.div
+          variants={dialogueBoxVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={transition}
+          style={{ width: '100%' }}
+        >
+          <TopicSelectionMenu
+            topics={availableTopics}
+            onSelectTopic={selectTopic}
+            topicsDiscussed={topicsDiscussed}
+            npc={npc}
+            portrait={<DialoguePortrait npc={npc} />}
+            onClose={close}
+            onShowHistory={() => setShowHistory(true)}
+            relationshipLevel={relationshipLevel}
+          />
+        </motion.div>
+      </div>
+    );
+  }
 
   /* ---- cultural menu rendering ---- */
   if (showCulturalMenu) {
@@ -167,8 +264,17 @@ export default function DialogueOverlay() {
 
   /* ---- choice line rendering ---- */
   if (line.choices) {
-    // Enhance choices with cultural dialogue option if available
-    const enhancedChoices = getEnhancedDialogueChoices(npc, line);
+    const choicesToRender = isHubAndSpoke ? filteredChoices : line.choices;
+    const enhancedChoices = !isHubAndSpoke ? getEnhancedDialogueChoices(npc, line) : null;
+
+    // Add "Back to topics" choice for hub-and-spoke NPCs in topic phase
+    const finalChoices = [...(enhancedChoices || choicesToRender)];
+    if (isHubAndSpoke && phase === 'topic' && currentTree.returnToHub) {
+      finalChoices.push({
+        english: '← Back to topics',
+        action: 'return_to_hub',
+      });
+    }
 
     return (
       <div ref={focusTrapRef} className={styles.overlay} role="dialog" aria-label="Dialogue choices">
@@ -198,8 +304,22 @@ export default function DialogueOverlay() {
           transition={transition}
           style={{ width: '100%' }}
         >
+          {isHubAndSpoke && (
+            <div className={styles.dialogueBox} style={{ minHeight: 'auto', paddingBottom: 0, borderTop: 'none' }}>
+              <div className={styles.content}>
+                <div className={styles.npcHeader}>
+                  {npc.personality?.mood && (
+                    <span className={styles.npcMood} aria-label={`NPC mood: ${npc.personality.mood}`}>
+                      {moodToEmoji(npc.personality.mood)}
+                    </span>
+                  )}
+                  <RelationshipIndicator npcId={npc.id} level={relationshipLevel} />
+                </div>
+              </div>
+            </div>
+          )}
           <DialogueChoices
-            choices={enhancedChoices || line.choices}
+            choices={finalChoices}
             onChoiceSelect={handleChoice}
             portrait={<DialoguePortrait npc={npc} />}
           />
@@ -243,6 +363,8 @@ export default function DialogueOverlay() {
           onAdvance={advance}
           portrait={<DialoguePortrait npc={npc} />}
           teachWordCard={line.teachWord ? <TeacherWordCard wordId={line.teachWord} /> : null}
+          isHubAndSpoke={isHubAndSpoke}
+          relationshipLevel={relationshipLevel}
         />
       </motion.div>
     </div>

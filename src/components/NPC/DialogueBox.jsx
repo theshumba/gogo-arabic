@@ -1,14 +1,57 @@
 import { useSelector } from 'react-redux';
 import { useTypewriter } from '../../hooks/useTypewriter.js';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
+import VocabularyHighlight from './VocabularyHighlight.jsx';
+import RelationshipIndicator from './RelationshipIndicator.jsx';
 import styles from './DialogueOverlay.module.css';
+
+const moodToEmoji = (mood) => {
+  const map = { cheerful: '😊', serious: '🤔', worried: '😟', excited: '🤩', angry: '😠', sad: '😢', neutral: '😐' };
+  return map[mood] || '😐';
+};
+
+/**
+ * Renders Arabic text with vocabulary highlights (only after typewriter completes).
+ * Replaces matching arabicText segments with VocabularyHighlight components.
+ */
+function renderArabicWithHighlights(arabicText, inlineVocab) {
+  if (!inlineVocab || inlineVocab.length === 0) return arabicText;
+
+  const sorted = inlineVocab
+    .map((v) => ({ ...v, idx: arabicText.indexOf(v.arabicText) }))
+    .filter((v) => v.idx >= 0)
+    .sort((a, b) => a.idx - b.idx);
+
+  if (sorted.length === 0) return arabicText;
+
+  const parts = [];
+  let lastIndex = 0;
+
+  sorted.forEach((v) => {
+    if (v.idx > lastIndex) {
+      parts.push(arabicText.slice(lastIndex, v.idx));
+    }
+    parts.push(
+      <VocabularyHighlight key={v.wordId} wordId={v.wordId} arabicText={v.arabicText}>
+        {v.arabicText}
+      </VocabularyHighlight>
+    );
+    lastIndex = v.idx + v.arabicText.length;
+  });
+
+  if (lastIndex < arabicText.length) {
+    parts.push(arabicText.slice(lastIndex));
+  }
+
+  return parts;
+}
 
 /**
  * DialogueBox
  * The dialogue bubble UI showing speaker name, Arabic text, English text, and continue prompt
- * Now features typewriter effect for dialogue text
+ * Now features typewriter effect for dialogue text and inline vocabulary highlighting
  */
-export default function DialogueBox({ npc, line, onAdvance, portrait, teachWordCard }) {
+export default function DialogueBox({ npc, line, onAdvance, portrait, teachWordCard, isHubAndSpoke, relationshipLevel }) {
   const settings = useSelector((s) => s.settings);
   const formatArabic = useFormatArabic();
 
@@ -64,12 +107,33 @@ export default function DialogueBox({ npc, line, onAdvance, portrait, teachWordC
       {/* Portrait */}
       {portrait}
       <div className={styles.content}>
-        <div className={styles.speakerName} role="heading" aria-level="2">
-          {speakerName}
-        </div>
+        {/* NPC Header with mood + relationship for hub-and-spoke NPCs */}
+        {isHubAndSpoke && !isPlayerSpeaking && (
+          <div className={styles.npcHeader}>
+            <div className={styles.speakerName} role="heading" aria-level="2">
+              {speakerName}
+            </div>
+            {npc.personality?.mood && (
+              <span className={styles.npcMood} aria-label={`NPC mood: ${npc.personality.mood}`}>
+                {moodToEmoji(npc.personality.mood)}
+              </span>
+            )}
+          </div>
+        )}
+        {isHubAndSpoke && !isPlayerSpeaking && (
+          <RelationshipIndicator npcId={npc.id} level={relationshipLevel} />
+        )}
+        {/* Standard speaker name for legacy NPCs or player */}
+        {(!isHubAndSpoke || isPlayerSpeaking) && (
+          <div className={styles.speakerName} role="heading" aria-level="2">
+            {speakerName}
+          </div>
+        )}
         {line.arabic && (
           <div className={styles.arabicLine} lang="ar">
-            {arabicTypewriter.displayText}
+            {arabicTypewriter.isComplete && line.inlineVocab
+              ? renderArabicWithHighlights(formatArabic(line.arabic), line.inlineVocab)
+              : arabicTypewriter.displayText}
           </div>
         )}
         {line.english && arabicTypewriter.isComplete && (
