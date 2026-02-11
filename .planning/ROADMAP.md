@@ -59,7 +59,7 @@ v5.0 transforms GoGo Arabic from a learning app with game skin into an actual ga
 
 **Milestone Goal:** Transform GoGo Arabic from a learning app with game skin into an actual game — epic personalized narrative, living interactive world, and guided structure from minute one.
 
-- [ ] **Phase 19: Infrastructure & Architecture** - EventBus refactor, narrativeSlice, foundation systems
+- [x] **Phase 19: Infrastructure & Architecture** - EventBus refactor, narrativeSlice, foundation systems
 - [ ] **Phase 20: Dialogue System** - DialogueEngine, rich NPC conversations, branching
 - [ ] **Phase 21: Guided Onboarding & Mentor** - 90-second tutorial, mentor character, first mission
 - [ ] **Phase 22: Buildings & Interiors** - SceneStackManager, enterable buildings, 15 interior maps
@@ -83,10 +83,10 @@ v5.0 transforms GoGo Arabic from a learning app with game skin into an actual ga
 **Plans:** 4 plans
 
 Plans:
-- [ ] 19-01-PLAN.md — EventBus namespaced registry + atomic rename across 21 files
-- [ ] 19-02-PLAN.md — narrativeSlice creation + store/test tooling updates + sceneMock extension
-- [ ] 19-03-PLAN.md — useEventBusListeners refactor into 5 domain sub-hooks
-- [ ] 19-04-PLAN.md — SceneStackManager + Zod dialogue JSON validation
+- [x] 19-01-PLAN.md — EventBus namespaced registry + atomic rename across 21 files
+- [x] 19-02-PLAN.md — narrativeSlice creation + store/test tooling updates + sceneMock extension
+- [x] 19-03-PLAN.md — useEventBusListeners refactor into 5 domain sub-hooks
+- [x] 19-04-PLAN.md — SceneStackManager + Zod dialogue JSON validation
 
 ### Phase 20: Dialogue System
 **Goal**: NPCs become real characters with personality, multi-topic conversations, and the ability to teach vocabulary through meaningful dialogue
@@ -223,8 +223,8 @@ Phases execute in numeric order: 19 → 20 → 21 → 22 → 23 → 24 → 25 �
 | 16. Visual Juice | v4.0 | 2/2 | Complete | 2026-02-10 |
 | 17. Progression Clarity | v4.0 | 2/2 | Complete | 2026-02-10 |
 | 18. World Life | v4.0 | 1/1 | Complete | 2026-02-10 |
-| 19. Infrastructure & Architecture | v5.0 | 0/4 | Not started | - |
-| 20. Dialogue System | v5.0 | 0/6 | Not started | - |
+| 19. Infrastructure & Architecture | v5.0 | 4/4 | Complete | 2026-02-11 |
+| 20. Dialogue System | v5.0 | 0/6 | Planned | - |
 | 21. Guided Onboarding & Mentor | v5.0 | 0/TBD | Not started | - |
 | 22. Buildings & Interiors | v5.0 | 0/TBD | Not started | - |
 | 23. Interactive Objects & World Life | v5.0 | 0/TBD | Not started | - |

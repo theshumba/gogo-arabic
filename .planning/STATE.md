@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 19 - Infrastructure & Architecture
+**Current focus:** Phase 20 - Dialogue System
 
 ## Current Position
 
-Phase: 19 of 26 (Infrastructure & Architecture)
-Plan: 2 of 4 in current phase (Wave 1 complete)
-Status: In progress — Wave 2 ready to execute
-Last activity: 2026-02-10 — Completed 19-02-PLAN.md (narrativeSlice + store wiring)
+Phase: 20 of 26 (Dialogue System)
+Plan: 0 of 6 in current phase (planned, not yet executing)
+Status: Planned — ready to execute
+Last activity: 2026-02-11 — Phase 19 complete, Phase 20 planned (6 plans, 4 waves)
 
-Progress: [██░░░░░░░░] 20% (2/4 plans in phase 19)
+Progress: [█░░░░░░░░░] 12.5% (1/8 v5.0 phases complete)
 
 ### Shipped Milestones
 
@@ -33,9 +33,9 @@ Progress: [██░░░░░░░░] 20% (2/4 plans in phase 19)
 **Cumulative:** 16 phases, 33 plans shipped across 3 milestones in 3 days
 
 **v5.0 in progress:**
-- Total plans completed: 2 (19-01, 19-02)
-- Average duration: ~2 min per plan
-- Trend: Wave 1 complete, Wave 2 ready
+- Total plans completed: 4 (19-01, 19-02, 19-03, 19-04)
+- Phase 19 complete: 4/4 plans shipped
+- Phase 20 planned: 6 plans in 4 waves, ready to execute
 
 ## Accumulated Context
 
@@ -76,10 +76,13 @@ Recent decisions affecting v5.0:
 
 ### Blockers/Concerns
 
-**Phase 19 readiness:**
-- useEventBusListeners currently 380 LOC monolithic — refactor needed before adding 20+ event types
-- narrativeSlice architecture needs careful design — will become largest slice
-- EventBus naming convention must be established before new systems
+**Phase 19 DONE:**
+- EventBus: 35 namespaced constants, zero raw strings
+- narrativeSlice: story flags, NPC relationships, choice history, building visits
+- useEventBusListeners: 22 LOC orchestrator + 5 domain sub-hooks (23 events)
+- SceneStackManager: push/pop scene lifecycle with 7 tests
+- Zod: dialogueSchema.js validates npcs.json at build time
+- Tests: 561 total, 558 passing, bundle 280KB
 
 **v5.0 scope:**
 - 100 requirements across 8 phases — largest milestone yet
@@ -92,11 +95,11 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-10 (19-02 execution)
-Stopped at: Phase 19 Plan 2 complete — Wave 1 both done (19-01 EventBus, 19-02 narrativeSlice)
-Resume file: .planning/phases/19-infrastructure-architecture/19-02-SUMMARY.md
+Last session: 2026-02-11 (Phase 19 complete, Phase 20 planned)
+Stopped at: Phase 20 planned — 6 plans in 4 waves, ready to execute
+Resume file: .planning/phases/20-dialogue-system/20-01-PLAN.md
 
-**Next step:** Execute Wave 2 — `/gsd:execute-phase 19` plans 03 and 04 (useEventBusListeners refactor + SceneStackManager)
+**Next step:** Execute Phase 20 — `/gsd:execute-phase 20`
 
 ---
 *State initialized: 2026-02-08*
