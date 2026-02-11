@@ -64,6 +64,20 @@ export const EVENTS = Object.freeze({
   NPC_INTERACT: 'phaser:npc:interact',
 
   // ────────────────────────────────────────────────
+  // DIALOGUE — dialogue lifecycle events (Phase 20)
+  // ────────────────────────────────────────────────
+  /** React → Phaser: player selected a topic from hub menu */
+  DIALOGUE_TOPIC_SELECTED: 'react:dialogue:topic-selected',
+  /** Phaser → React: dialogue effect executed (for UI feedback) */
+  DIALOGUE_EFFECT_EXECUTED: 'react:dialogue:effect-executed',
+  /** React → Phaser: request mid-dialogue quiz */
+  DIALOGUE_QUIZ_REQUESTED: 'react:dialogue:quiz-requested',
+  /** React → React: dialogue conversation ended normally */
+  DIALOGUE_ENDED: 'react:dialogue:ended',
+  /** React → React: relationship changed during dialogue (for UI feedback) */
+  DIALOGUE_RELATIONSHIP_CHANGED: 'react:dialogue:relationship-changed',
+
+  // ────────────────────────────────────────────────
   // ZONE — transitions, unlock gating, fast travel
   // ────────────────────────────────────────────────
   /** Phaser → React: player entered a new zone, update Redux currentZone */
