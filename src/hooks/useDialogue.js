@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeDialogue, openQuiz, showNotification } from '../store/slices/uiSlice.js';
 import { updateDialogueState, teachWord as npcTeachWord } from '../store/slices/npcSlice.js';
@@ -14,6 +14,7 @@ import { selectWordsByDifficulty } from '../utils/wordSelection.js';
 import vocabulary from '../data/vocabularyAll.js';
 import questsData from '../data/quests.json';
 import { getCulturalDialoguesForNPC } from '../data/culturalDialogues.js';
+import { DialogueEngine } from '../game/systems/DialogueEngine.js';
 
 /**
  * Selects the correct dialogue tree for this NPC based on the player's
@@ -64,7 +65,15 @@ function resolveVocabWord(wordId) {
 
 /**
  * useDialogue hook
- * Extracts dialogue state logic: tree selection, line advancement, choices, quiz triggering
+ * Manages hub-and-spoke dialogue flow with topic selection, condition evaluation, and effects execution.
+ *
+ * State machine phases:
+ * - greeting: Playing initial greeting/intro lines
+ * - hub: Showing topic selection menu
+ * - topic: Playing selected topic tree lines
+ * - returning: Transitioning back to hub after topic completion
+ *
+ * Backward compatible: NPCs without topic fields use traditional linear flow.
  */
 export function useDialogue(npc) {
   const dispatch = useDispatch();
@@ -73,6 +82,18 @@ export function useDialogue(npc) {
   const quests = useSelector((s) => s.quests.quests);
   const playerLevel = useSelector((s) => s.player.level);
   const wordsLearned = useSelector((s) => s.player.wordsLearned);
+
+  // Create DialogueEngine instance (no scene needed for condition/effect logic)
+  const engineRef = useRef(null);
+  if (!engineRef.current) {
+    engineRef.current = new DialogueEngine(null);
+  }
+
+  // Check if this NPC supports hub-and-spoke (has topic trees)
+  const isHubAndSpoke = useMemo(() => {
+    if (!npc) return false;
+    return npc.dialogueTrees.some(t => t.topic);
+  }, [npc]);
 
   // Pick the correct dialogue tree based on visit history
   const initialTree = useMemo(
@@ -85,16 +106,54 @@ export function useDialogue(npc) {
   const [lineIndex, setLineIndex] = useState(0);
   const [showCulturalMenu, setShowCulturalMenu] = useState(false);
 
-  // Reset tree + line when a new NPC dialogue opens
+  // Hub-and-spoke state
+  const [phase, setPhase] = useState('greeting'); // 'greeting' | 'hub' | 'topic' | 'returning'
+  const [availableTopics, setAvailableTopics] = useState([]);
+  const [currentTopicTreeId, setCurrentTopicTreeId] = useState(null);
+  const [topicsDiscussed, setTopicsDiscussed] = useState([]); // track discussed topics this session
+  const [quizReturnState, setQuizReturnState] = useState(null); // {treeId, lineIndex} for mid-quiz return
+
+  // Reset tree + line + state when a new NPC dialogue opens
   useEffect(() => {
     if (npc) {
       const tree = pickDialogueTree(npc, dialogueState);
       setCurrentTree(tree);
       setLineIndex(0);
       setShowCulturalMenu(false);
+      setPhase('greeting');
+      setAvailableTopics([]);
+      setCurrentTopicTreeId(null);
+      setTopicsDiscussed([]);
+      setQuizReturnState(null);
+
+      // Set current NPC in engine
+      if (engineRef.current) {
+        engineRef.current.currentNpcId = npc.id;
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [npc?.id]);
+
+  /* ---- refresh available topics (re-evaluate conditions) ---- */
+  const refreshTopics = useCallback(() => {
+    if (!npc || !engineRef.current) return [];
+    engineRef.current.currentNpcId = npc.id;
+    const topics = engineRef.current.getAvailableTopics(npc);
+    setAvailableTopics(topics);
+    return topics;
+  }, [npc]);
+
+  /* ---- select a topic from the hub ---- */
+  const selectTopic = useCallback((topicTreeId) => {
+    const tree = npc.dialogueTrees.find(t => t.id === topicTreeId);
+    if (!tree) return;
+    setCurrentTree(tree);
+    setLineIndex(0);
+    setCurrentTopicTreeId(topicTreeId);
+    setPhase('topic');
+    setTopicsDiscussed(prev => [...new Set([...prev, tree.topic || topicTreeId])]);
+    EventBus.emit(EVENTS.DIALOGUE_TOPIC_SELECTED, { npcId: npc.id, topicId: topicTreeId, topic: tree.topic });
+  }, [npc]);
 
   /* ---- close handler ---- */
   const close = useCallback(() => {
@@ -103,6 +162,7 @@ export function useDialogue(npc) {
     }
     dispatch(closeDialogue());
     EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+    EventBus.emit(EVENTS.DIALOGUE_ENDED, { npcId: npc?.id });
   }, [dispatch, npc, lineIndex]);
 
   /* ---- teach a vocabulary word (FSRS card + XP + quest tracking) ---- */
@@ -180,6 +240,9 @@ export function useDialogue(npc) {
 
       // If the next line is a quiz action, open the quiz overlay
       if (nextLine.action === 'quiz') {
+        // Save state for resume after quiz
+        setQuizReturnState({ treeId: currentTree.id, lineIndex: nextIdx + 1 });
+
         let quizWords;
 
         if (nextLine.words === 'random_learned_10') {
@@ -206,18 +269,71 @@ export function useDialogue(npc) {
             : nextLine.quizType;
 
         dispatch(openQuiz({ words: quizWords, quizType }));
+        EventBus.emit(EVENTS.DIALOGUE_QUIZ_REQUESTED, {
+          npcId: npc.id,
+          quizType,
+          wordCount: quizWords.length
+        });
         return;
       }
 
       setLineIndex(nextIdx);
     } else {
-      close();
+      // End of tree — check if we should return to hub or close
+      if (phase === 'greeting' && isHubAndSpoke) {
+        // Transition from greeting to hub
+        setPhase('hub');
+        refreshTopics();
+      } else if (phase === 'topic' && engineRef.current.shouldReturnToHub(currentTree)) {
+        // Return to hub after topic
+        setPhase('hub');
+        setCurrentTopicTreeId(null);
+        refreshTopics();
+      } else {
+        // Close dialogue
+        close();
+      }
     }
-  }, [currentTree, lineIndex, handleTeachWord, cards, playerLevel, wordsLearned, dispatch, close]);
+  }, [currentTree, lineIndex, handleTeachWord, cards, playerLevel, wordsLearned, dispatch, close, phase, isHubAndSpoke, refreshTopics, npc]);
+
+  /* ---- resume after mid-dialogue quiz ---- */
+  const resumeAfterQuiz = useCallback(() => {
+    if (!quizReturnState) return;
+    const tree = npc.dialogueTrees.find(t => t.id === quizReturnState.treeId);
+    if (tree && quizReturnState.lineIndex < tree.lines.length) {
+      setCurrentTree(tree);
+      setLineIndex(quizReturnState.lineIndex);
+    } else {
+      // Quiz was at end of tree, return to hub or close
+      if (phase === 'topic' && engineRef.current.shouldReturnToHub(tree)) {
+        setPhase('hub');
+        refreshTopics();
+      } else {
+        close();
+      }
+    }
+    setQuizReturnState(null);
+  }, [quizReturnState, npc, phase, refreshTopics, close]);
 
   /* ---- handle player choice buttons ---- */
   const handleChoice = useCallback((choice) => {
     EventBus.emit(EVENTS.SFX_CLICK);
+
+    // Execute choice effects if present
+    if (choice.effects && engineRef.current) {
+      engineRef.current.executeEffects(choice.effects, npc.id);
+    }
+
+    // Record player choice
+    if (choice.choiceId && engineRef.current) {
+      engineRef.current.recordPlayerChoice(npc.id, choice.choiceId);
+    } else if (choice.text && engineRef.current) {
+      // Generate choiceId from text if not provided
+      const choiceId = choice.text.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+      engineRef.current.recordPlayerChoice(npc.id, choiceId);
+    }
+
+    // Handle choice actions
     if (choice.action === 'open_shop') {
       // Re-use the same dialogue config slot for shop
       dispatch(closeDialogue());
@@ -256,6 +372,10 @@ export function useDialogue(npc) {
     } else if (choice.action === 'hide_cultural_menu') {
       // Hide cultural menu and return to dialogue
       setShowCulturalMenu(false);
+    } else if (choice.action === 'return_to_hub') {
+      // Return to hub from within dialogue
+      setPhase('hub');
+      refreshTopics();
     } else if (choice.next) {
       // Jump to a different tree by id
       const nextTree = npc.dialogueTrees.find((t) => t.id === choice.next);
@@ -269,9 +389,17 @@ export function useDialogue(npc) {
       // choice.next === null means close dialogue
       close();
     }
-  }, [npc, cards, dispatch, close]);
+  }, [npc, cards, dispatch, close, refreshTopics]);
+
+  // Compute filtered choices for current line (re-evaluated when line changes)
+  const filteredChoices = useMemo(() => {
+    const line = currentTree?.lines[lineIndex];
+    if (!line?.choices || !engineRef.current) return line?.choices || [];
+    return engineRef.current.getFilteredChoices(line.choices);
+  }, [currentTree, lineIndex]);
 
   return {
+    // Existing API
     currentTree,
     lineIndex,
     close,
@@ -279,5 +407,14 @@ export function useDialogue(npc) {
     handleChoice,
     showCulturalMenu,
     setShowCulturalMenu,
+
+    // New hub-and-spoke API
+    phase,                    // 'greeting' | 'hub' | 'topic' | 'returning'
+    availableTopics,          // [{treeId, topic, label, priority}]
+    selectTopic,              // (topicTreeId) => void
+    topicsDiscussed,          // string[] of topic IDs discussed this session
+    filteredChoices,          // choices filtered by conditions (computed from current line)
+    resumeAfterQuiz,          // () => void — call when quiz overlay closes
+    isHubAndSpoke,            // boolean — does this NPC support topic selection?
   };
 }
