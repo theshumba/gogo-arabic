@@ -5533,37 +5533,210 @@
         ]
       },
       {
-        "id": "return_default",
+        "id": "hub",
         "trigger": "default",
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "أَهْلاً يا بُنَيّ. هَل تُريد أَن تَتَعَلَّم؟",
-            "english": "Hello, dear child. Do you want to learn?",
-            "transliteration": "ahlan ya bunayy. hal turiid an tata'allam?"
+            "arabic": "أَهْلاً يا بُنَيّ. بِالشِّفاء إِن شاء الله",
+            "english": "Hello, dear child. May healing come, God willing.",
+            "transliteration": "ahlan ya bunayy. bish-shifaa' in shaa' allaah"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كَيفَ أُساعِدُك اليَوم؟",
+            "english": "How can I help you today?",
+            "transliteration": "kayfa usaa'iduk al-yawm?"
           },
           {
             "speaker": "player",
             "choices": [
               {
-                "arabic": "عَلِّميني صِفات جَديدَة",
-                "english": "Teach me new adjectives",
-                "next": "teach_adjectives_health_2"
+                "arabic": "عَلِّميني كَلِمات الجِسم",
+                "english": "Teach me body words",
+                "topic": "teaching"
               },
               {
-                "arabic": "أُريدُ نَصيحَة",
-                "english": "I want advice",
-                "next": "about_herbs"
+                "arabic": "تَقاليد الشِّفاء",
+                "english": "Healing traditions",
+                "topic": "lore"
               },
               {
-                "arabic": "إِلى اللِّقاء",
-                "english": "See you later",
-                "next": null
+                "arabic": "أَخبار القَرية",
+                "english": "Village news",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_body",
+        "topic": "teaching",
+        "label": "Body & Health Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الجِسمُ أَمانَة. لِنَتَعَلَّم أَجزاءَهُ",
+            "english": "The body is a trust. Let us learn its parts.",
+            "transliteration": "al-jismu amaana. linata'allam ajzaa'ahu"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "رَأْسٌ — يَحمِلُ العَقل",
+            "english": "Head — it carries the mind.",
+            "transliteration": "ra'sun — yahmilu al-'aql",
+            "teachWord": "head_1",
+            "inlineVocab": [
+              {
+                "wordId": "head_1",
+                "arabicText": "رَأْسٌ"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "يَدٌ — بِها نَلمِسُ وَنُشفي",
+            "english": "Hand — with it we touch and heal.",
+            "transliteration": "yadun — bihaa nalmisu wa nushfii",
+            "teachWord": "hand_1",
+            "inlineVocab": [
+              {
+                "wordId": "hand_1",
+                "arabicText": "يَدٌ"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "عَيْنٌ — تَرى الدَّواء وَالمَرَض",
+            "english": "Eye — it sees medicine and illness.",
+            "transliteration": "'aynun — taraa ad-dawaa' wal-marad",
+            "teachWord": "eye_1",
+            "inlineVocab": [
+              {
+                "wordId": "eye_1",
+                "arabicText": "عَيْنٌ"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَحسَنت! تَعَلَّمتَ ثَلاثَ كَلِمات",
+            "english": "Well done! You learned three words.",
+            "transliteration": "ahsant! ta'allamta thalaath kalimaat"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "شُكراً",
+                "english": "Thank you",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_healing",
+        "topic": "lore",
+        "label": "Healing Traditions",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الطِّبُّ العَرَبِيّ قَديم جِدّاً",
+            "english": "Arab medicine is very ancient.",
+            "transliteration": "at-tibbu al-'arabiyy qadiim jiddan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَجدادُنا اِستَخدَموا النَّعناع لِلمَعِدَة وَالبابونَج لِلنَّوم",
+            "english": "Our ancestors used mint for the stomach and chamomile for sleep.",
+            "transliteration": "ajdaadunaa istakhdamuu an-na'naa' lil-ma'ida wal-baabunaj lin-nawm"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كُلُّ عُشبَة فيها حِكمَة مِن الله",
+            "english": "Every herb contains wisdom from God.",
+            "transliteration": "kullu 'ushba fiihaa hikma min allaah"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَأَنا أُحاوِل أَن أُعَلِّم هَذِهِ الحِكمَة لِلجيل الجَديد",
+            "english": "And I try to teach this wisdom to the new generation.",
+            "transliteration": "wa ana uhaawilu an u'allima haadhihi al-hikma lil-jiil al-jadiid"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_village",
+        "topic": "gossip",
+        "label": "Village Health Tips",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هَل سَمِعت؟ الحَدّاد داوود يَشكو مِن ظَهرِه",
+            "english": "Have you heard? Blacksmith Daud complains about his back.",
+            "transliteration": "hal sami't? al-haddaad daawuud yashkuu min zahrihi"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قُلتُ لَهُ: اِشرَب شاي الزَّنجَبيل كُلّ صَباح",
+            "english": "I told him: drink ginger tea every morning.",
+            "transliteration": "qultu lahu: ishrab shaay az-zanjabiil kulla sabaah"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَالأَميرَة عائِشَة طَلَبَت مِنّي أَعشاباً لِلنَّوم",
+            "english": "And Princess Aisha asked me for herbs for sleep.",
+            "transliteration": "wal-amiira 'aa'isha talabat minnii a'shaaban lin-nawm"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "مُمتِع!",
+                "english": "Interesting!",
+                "action": "return_to_hub"
               }
             ]
           }
         ]
       }
+    ],
+    "personality": {
+      "tone": "gentle_healer",
+      "catchphrase": "بِالشِّفاء إِن شاء الله — bish-shifaa' in shaa' allaah (May you be healed, God willing)",
+      "interests": [
+        "healing",
+        "herbs",
+        "health",
+        "body"
+      ],
+      "mood": "cheerful"
+    },
+    "zone": "oasis_village",
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip"
     ]
   },
   {
@@ -5786,37 +5959,242 @@
         ]
       },
       {
-        "id": "return_default",
+        "id": "hub",
         "trigger": "default",
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "أَهْلاً يا بَحّار! ماذا تُريد اليَوم؟",
-            "english": "Welcome, sailor! What do you want today?",
-            "transliteration": "ahlan ya bahhaar! maadha turiid al-yawm?"
+            "arabic": "ماذا تُريد؟ يا لَلبَحر، الوَقتُ ضَيِّق",
+            "english": "What do you want? By the sea, time is short.",
+            "transliteration": "maadha turiid? ya lal-bahr, al-waqtu dayyiq"
           },
           {
             "speaker": "player",
             "choices": [
               {
-                "arabic": "عَلِّمْني اِتِّجاهات جَديدَة",
-                "english": "Teach me new directions",
-                "next": "teach_directions_2"
+                "arabic": "الاتِّجاهات",
+                "english": "Teach me directions",
+                "topic": "teaching"
               },
               {
-                "arabic": "أَخبِرْني عَن البَحر",
-                "english": "Tell me about the sea",
-                "next": "about_sea"
+                "arabic": "تاريخ البَحر",
+                "english": "Naval history",
+                "topic": "lore"
               },
               {
-                "arabic": "إِلى اللِّقاء",
-                "english": "See you later",
-                "next": null
+                "arabic": "مَهامّ بَحرِيَّة",
+                "english": "Sea missions",
+                "topic": "quests"
+              },
+              {
+                "arabic": "أَخبار المِيناء",
+                "english": "Port news",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_directions",
+        "topic": "teaching",
+        "label": "Direction Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "البَحّار يَحتاج يَعرِف الاتِّجاهات",
+            "english": "A sailor needs to know directions.",
+            "transliteration": "al-bahhaar yahtaaj ya'rif al-ittijaahaat"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "شَمال — نَحوَ النَّجم القُطبي",
+            "english": "North — toward the pole star.",
+            "transliteration": "shamaal — nahwa an-najm al-qutbii",
+            "teachWord": "north_1",
+            "inlineVocab": [
+              {
+                "wordId": "north_1",
+                "arabicText": "شَمال"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "يَمين — الجانِب الأَيمَن مِن السَّفينَة",
+            "english": "Right — the starboard side of the ship.",
+            "transliteration": "yamiin — al-jaanib al-ayman min as-safiina",
+            "teachWord": "right_1",
+            "inlineVocab": [
+              {
+                "wordId": "right_1",
+                "arabicText": "يَمين"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "يَسار — الجانِب الأَيسَر",
+            "english": "Left — the port side.",
+            "transliteration": "yasaar — al-jaanib al-aysar",
+            "teachWord": "left_1",
+            "inlineVocab": [
+              {
+                "wordId": "left_1",
+                "arabicText": "يَسار"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "فَهِمت",
+                "english": "Understood",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_naval",
+        "topic": "lore",
+        "label": "Naval History",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "العَرَبُ كانوا سادَة البِحار",
+            "english": "The Arabs were masters of the seas.",
+            "transliteration": "al-'arabu kaanuu saadat al-bihaar"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "اِبنُ ماجِد كانَ أَعظَم مَلّاح عَرَبي",
+            "english": "Ibn Majid was the greatest Arab navigator.",
+            "transliteration": "ibnu maajid kaana a'zam mallaah 'arabii"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هُوَ الَّذي أَرشَدَ فاسكو دي غاما إِلى الهِند",
+            "english": "He is the one who guided Vasco da Gama to India.",
+            "transliteration": "huwa alladhii arshada faaskuu dii ghaamaa ilaa al-hind"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_quests_sea",
+        "topic": "quests",
+        "label": "Sea Missions",
+        "returnToHub": true,
+        "priority": 3,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "captain-rashid",
+            "min": 2
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هُناكَ شُحنَة فُقِدَت قُربَ المَرفَأ",
+            "english": "There is a shipment lost near the harbor.",
+            "transliteration": "hunaaka shuhna fuqidat qurba al-marfa'"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَحتاجُ شَخصاً يَعرِف الاتِّجاهات لِيَجِدَها",
+            "english": "I need someone who knows directions to find it.",
+            "transliteration": "ahtaaju shakhsan ya'rif al-ittijaahaat liyajidahaa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَل أَنتَ مُستَعِدّ؟",
+            "english": "Are you ready?",
+            "transliteration": "hal anta musta'idd?",
+            "effects": [
+              {
+                "type": "quest_start",
+                "questId": "port_navigation"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "نَعَم",
+                "english": "Yes, captain!",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_port",
+        "topic": "gossip",
+        "label": "Port News",
+        "returnToHub": true,
+        "priority": 4,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "سَفينَة جَديدَة وَصَلَت مِن المَغرِب",
+            "english": "A new ship arrived from Morocco.",
+            "transliteration": "safiina jadiida wasalat min al-maghrib"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَنادِيَة رَئيسَة المِيناء تَشكو مِن التُّجّار",
+            "english": "And Nadia the dockmaster complains about the merchants.",
+            "transliteration": "wa naadiya ra'iisat al-miinaa' tashkuu min at-tujjaar"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
               }
             ]
           }
         ]
       }
+    ],
+    "personality": {
+      "tone": "gruff_warrior",
+      "catchphrase": "يا لَلبَحر! — ya lal-bahr! (Oh, the sea!)",
+      "interests": [
+        "navigation",
+        "military",
+        "sea",
+        "discipline"
+      ],
+      "mood": "serious"
+    },
+    "zone": "coastal_port",
+    "topics": [
+      "teaching",
+      "lore",
+      "quests",
+      "gossip"
     ]
   },
   {
@@ -6039,37 +6417,186 @@
         ]
       },
       {
-        "id": "return_default",
+        "id": "hub",
         "trigger": "default",
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "يا هَلا! رَجَعتَ لِلسَّمَك؟ وَلّا لِلكَلِمات؟",
-            "english": "Welcome! Back for fish? Or for words?",
-            "transliteration": "ya halaa! raja'ta lis-samak? walla lil-kalimaat?"
+            "arabic": "طازَج! طازَج! أَهلاً يا حَبيبي",
+            "english": "Fresh! Fresh! Welcome, my dear!",
+            "transliteration": "taazaj! taazaj! ahlan ya habiibi"
           },
           {
             "speaker": "player",
             "choices": [
               {
-                "arabic": "عَلِّميني كَلِمات جَديدة",
-                "english": "Teach me new words",
-                "next": "teach_food_2"
+                "arabic": "كَلِمات الطَّعام",
+                "english": "Food words",
+                "topic": "teaching"
               },
               {
-                "arabic": "أُريدُ أَن أَشتَري سَمَك",
-                "english": "I want to buy fish",
-                "next": "about_stall"
+                "arabic": "تَقاليد الصَّيد",
+                "english": "Fishing traditions",
+                "topic": "lore"
               },
               {
-                "arabic": "إِلى اللِّقاء",
-                "english": "See you later",
-                "next": null
+                "arabic": "أَخبار",
+                "english": "Port gossip",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_food",
+        "topic": "teaching",
+        "label": "Food & Fish Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الأَكلُ نِصفُ الحَياة! تَعال نَتَعَلَّم",
+            "english": "Food is half of life! Come, let us learn.",
+            "transliteration": "al-aklu nisf al-hayaah! ta'aal nata'allam"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "سَمَك — هَذا ما أَبيع",
+            "english": "Fish — this is what I sell.",
+            "transliteration": "samak — haadha maa abii'",
+            "teachWord": "fish_1",
+            "inlineVocab": [
+              {
+                "wordId": "fish_1",
+                "arabicText": "سَمَك"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "خُبْز — كُلّ وَجبَة تَحتاج خُبز",
+            "english": "Bread — every meal needs bread.",
+            "transliteration": "khubz — kullu wajba tahtaaj khubz",
+            "teachWord": "bread_1",
+            "inlineVocab": [
+              {
+                "wordId": "bread_1",
+                "arabicText": "خُبْز"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مَاء — بِدونِ الماء لا حَياة",
+            "english": "Water — without water there is no life.",
+            "transliteration": "maa' — biduuni al-maa' laa hayaah",
+            "teachWord": "water_1",
+            "inlineVocab": [
+              {
+                "wordId": "water_1",
+                "arabicText": "مَاء"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "شُكراً",
+                "english": "Thanks!",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_fishing",
+        "topic": "lore",
+        "label": "Fishing Traditions",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَبي عَلَّمَني الصَّيد وَأَنا صَغيرَة",
+            "english": "My father taught me fishing when I was little.",
+            "transliteration": "abii 'allamanii as-sayd wa ana saghiira"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "نَخرُج مَع الفَجر وَنَعود مَع الشَّمس",
+            "english": "We go out at dawn and return with the sun.",
+            "transliteration": "nakhruj ma' al-fajr wa na'uud ma' ash-shams"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَطيَبُ سَمَك هُوَ سَمَكُ الصُّبح",
+            "english": "The tastiest fish is the morning fish.",
+            "transliteration": "atyabu samak huwa samaku as-subh"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_port",
+        "topic": "gossip",
+        "label": "Port Gossip",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "القُبطان رَشيد زَعلان اليَوم — سَفينَة تَأَخَّرَت",
+            "english": "Captain Rashid is angry today — a ship was late.",
+            "transliteration": "al-qubtaan rashiid za'laan al-yawm — safiina ta'akhkharat"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَالتاجِر حَسَن يَبحَث عَن تَوابِل جَديدَة",
+            "english": "And Trader Hassan is looking for new spices.",
+            "transliteration": "wat-taajir hasan yabhath 'an tawaabil jadiida"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
               }
             ]
           }
         ]
       }
+    ],
+    "personality": {
+      "tone": "casual_merchant",
+      "catchphrase": "طازَج! طازَج! — taazaj! taazaj! (Fresh! Fresh!)",
+      "interests": [
+        "fishing",
+        "food",
+        "cooking",
+        "trade"
+      ],
+      "mood": "cheerful"
+    },
+    "zone": "coastal_port",
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip"
     ]
   },
   {
@@ -6284,37 +6811,168 @@
         ]
       },
       {
-        "id": "return_default",
+        "id": "hub",
         "trigger": "default",
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "أَهْلاً. هَل تُريد أَن تَتَعَلَّم شَيئاً؟",
-            "english": "Welcome. Do you want to learn something?",
-            "transliteration": "ahlan. hal turiid an tata'allam shay'an?"
+            "arabic": "الحَديدُ لا يَكذِب. ماذا تُريد؟",
+            "english": "Iron does not lie. What do you want?",
+            "transliteration": "al-hadiidu laa yakdhib. maadha turiid?"
           },
           {
             "speaker": "player",
             "choices": [
               {
-                "arabic": "عَلِّمْني كَلِمات جَديدة",
-                "english": "Teach me new words",
-                "next": "teach_nature_2"
+                "arabic": "كَلِمات الأَدَوات",
+                "english": "Tool words",
+                "topic": "teaching"
               },
               {
-                "arabic": "أُريدُ أَن أَرى العَمَل",
-                "english": "I want to see the work",
-                "next": "about_forge"
+                "arabic": "تَقاليد الحِدادَة",
+                "english": "Forging traditions",
+                "topic": "lore"
               },
               {
-                "arabic": "إِلى اللِّقاء",
-                "english": "See you later",
-                "next": null
+                "arabic": "أَخبار",
+                "english": "News",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_tools",
+        "topic": "teaching",
+        "label": "Tool & Trade Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الأَدَواتُ لُغَة الحَدّاد",
+            "english": "Tools are the blacksmith's language.",
+            "transliteration": "al-adawaatu lughat al-haddaad"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لَحْم — المَعدِن يُشبِه اللَّحم عِندَ الصَّهر",
+            "english": "Meat — metal resembles meat when melting.",
+            "transliteration": "lahm — al-ma'din yushbihu al-lahm 'inda as-sahr",
+            "teachWord": "meat_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "فَوْق — ضَع المِطرَقَة فَوقَ السِّندان",
+            "english": "Above — place the hammer above the anvil.",
+            "transliteration": "fawq — da' al-mitraqa fawqa as-sindaan",
+            "teachWord": "above_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "تَحْت — النّار تَحتَ المَعدِن",
+            "english": "Below — the fire below the metal.",
+            "transliteration": "taht — an-naar tahta al-ma'din",
+            "teachWord": "below_1"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "شُكراً",
+                "english": "Thanks",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_forging",
+        "topic": "lore",
+        "label": "Forging Traditions",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَبي وَجَدّي كانا حَدّادَين",
+            "english": "My father and grandfather were blacksmiths.",
+            "transliteration": "abii wa jaddii kaanaa haddaadayn"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "السَّيف العَرَبي — أَجمَل ما صَنَعَت يَدُ إِنسان",
+            "english": "The Arab sword — the most beautiful thing a hand ever made.",
+            "transliteration": "as-sayf al-'arabii — ajmal maa sana'at yadu insaan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الصَّبرُ هُوَ سِرّ الحِدادَة الجَيِّدَة",
+            "english": "Patience is the secret of good smithing.",
+            "transliteration": "as-sabru huwa sirr al-hidaada al-jayyida"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_smith",
+        "topic": "gossip",
+        "label": "Workshop News",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "ظَهري يُؤلِمُني. خَديجَة أَعطَتني شاي زَنجَبيل",
+            "english": "My back hurts. Khadija gave me ginger tea.",
+            "transliteration": "zahrii yu'limunii. khadiija a'tatnii shaay zanjabiil"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "القُبطان يُريد سَيفاً جَديداً. كَثير العَمَل",
+            "english": "The captain wants a new sword. Lots of work.",
+            "transliteration": "al-qubtaan yuriid sayfan jadiidan. kathiir al-'amal"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
               }
             ]
           }
         ]
       }
+    ],
+    "personality": {
+      "tone": "gruff_warrior",
+      "catchphrase": "الحَديدُ لا يَكذِب — al-hadiidu laa yakdhib (Iron does not lie)",
+      "interests": [
+        "smithing",
+        "tools",
+        "metal",
+        "crafting"
+      ],
+      "mood": "neutral"
+    },
+    "zone": "coastal_port",
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip"
     ]
   },
   {
@@ -6543,37 +7201,186 @@
         ]
       },
       {
-        "id": "return_default",
+        "id": "hub",
         "trigger": "default",
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "أَهْلاً بِكَ مُجَدَّداً فِي القَصْر. ماذا تُرِيد؟",
-            "english": "Welcome back to the palace. What would you like?",
-            "transliteration": "ahlan bika mujaddadan fil-qasr. maadha turiid?"
+            "arabic": "بِأَمرِ المَلِك. تَكَلَّم بِسُرعَة",
+            "english": "By the king's command. Speak quickly.",
+            "transliteration": "bi-amr al-malik. takallam bisur'a"
           },
           {
             "speaker": "player",
             "choices": [
               {
-                "arabic": "عَلِّمْنِي عِباراتٍ رَسْمِيَّة",
-                "english": "Teach me formal phrases",
-                "next": "teach_etiquette_2"
+                "arabic": "تاريخ المَملَكَة",
+                "english": "Kingdom history",
+                "topic": "lore"
               },
               {
-                "arabic": "أَخْبِرْنِي عَنِ القَصْر",
-                "english": "Tell me about the palace",
-                "next": "about_palace"
+                "arabic": "مَهامّ مَلَكِيَّة",
+                "english": "Royal missions",
+                "topic": "quests"
               },
               {
-                "arabic": "مَعَ السَّلامَة",
-                "english": "See you later",
-                "next": null
+                "arabic": "أَسرار البَلاط",
+                "english": "Court secrets",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_kingdom",
+        "topic": "lore",
+        "label": "Kingdom History",
+        "returnToHub": true,
+        "priority": 1,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "vizier-abbas",
+            "min": 1
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هَذِهِ المَملَكَة بُنِيَت عَلى العِلم وَالعَدل",
+            "english": "This kingdom was built on knowledge and justice.",
+            "transliteration": "haadhihi al-mamlaka buniyat 'alaa al-'ilm wal-'adl"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "المَلِكُ الأَوَّل أَسَّسَ المَكتَبَة قَبلَ القَصر",
+            "english": "The first king founded the library before the palace.",
+            "transliteration": "al-maliku al-awwal assasa al-maktaba qabla al-qasr"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَذا يَقول الكَثير عَن قِيَمِنا",
+            "english": "This says a lot about our values.",
+            "transliteration": "haadha yaquul al-kathiir 'an qiyaminaa",
+            "effects": [
+              {
+                "type": "story_flag",
+                "flag": "kingdom_history_learned"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_quests_royal",
+        "topic": "quests",
+        "label": "Royal Missions",
+        "returnToHub": true,
+        "priority": 2,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "vizier-abbas",
+            "min": 1
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "المَملَكَة تَحتاج مَن يَخدِمُها",
+            "english": "The kingdom needs those who serve it.",
+            "transliteration": "al-mamlaka tahtaaj man yakhdimuhaa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "إِذا أَثبَتَّ نَفسَك، سَأُعطيكَ مُهِمَّة",
+            "english": "If you prove yourself, I will give you a mission.",
+            "transliteration": "idhaa athbatta nafsak, sa-u'tiika muhimma",
+            "effects": [
+              {
+                "type": "quest_start",
+                "questId": "palace_wisdom"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أَنا مُستَعِدّ",
+                "english": "I am ready",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_court",
+        "topic": "gossip",
+        "label": "Court Secrets",
+        "returnToHub": true,
+        "priority": 3,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "vizier-abbas",
+            "min": 1
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الأَميرَة عائِشَة تُريد السَّفَر لَكِنَّ المَلِك يَرفُض",
+            "english": "Princess Aisha wants to travel but the king refuses.",
+            "transliteration": "al-amiira 'aa'isha turiid as-safar laakinna al-malik yarfud"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَالشّاعِر رومي يَكتُب قَصيدَة لِلمَلِك",
+            "english": "And the poet Rumi is writing a poem for the king.",
+            "transliteration": "wash-shaa'ir ruumii yaktub qasiida lil-malik"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
               }
             ]
           }
         ]
       }
+    ],
+    "personality": {
+      "tone": "authoritative_vizier",
+      "catchphrase": "بِأَمرِ المَلِك — bi-amr al-malik (By the king's command)",
+      "interests": [
+        "politics",
+        "history",
+        "law",
+        "diplomacy"
+      ],
+      "mood": "serious"
+    },
+    "zone": "royal_palace",
+    "topics": [
+      "lore",
+      "quests",
+      "gossip"
     ]
   },
   {
@@ -6810,37 +7617,230 @@
         ]
       },
       {
-        "id": "return_default",
+        "id": "hub",
         "trigger": "default",
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "أَهْلاً! هَل تُرِيدُ أَنْ تَتَعَلَّمَ المَزِيد عَنِ العائِلَة؟",
-            "english": "Hello! Would you like to learn more about family?",
-            "transliteration": "ahlan! hal turiidu an tata'allama al-maziid an al-aa'ila?"
+            "arabic": "أَهلاً وَسَهلاً في القَصر",
+            "english": "Welcome to the palace.",
+            "transliteration": "ahlan wa sahlan fii al-qasr"
           },
           {
             "speaker": "player",
             "choices": [
               {
-                "arabic": "عَلِّمِينِي كَلِماتِ العائِلَة",
-                "english": "Teach me family words",
-                "next": "teach_family_2"
+                "arabic": "العَرَبِيَّة الرَّسمِيَّة",
+                "english": "Formal Arabic",
+                "topic": "teaching"
               },
               {
-                "arabic": "أَخْبِرِينِي عَنِ العائِلَةِ المَلَكِيَّة",
-                "english": "Tell me about the royal family",
-                "next": "about_royal_family"
+                "arabic": "التَّقاليد المَلَكِيَّة",
+                "english": "Royal traditions",
+                "topic": "lore"
               },
               {
-                "arabic": "إِلى اللِّقاء يا أَمِيرَة",
-                "english": "See you later, Princess",
-                "next": null
+                "arabic": "حَياة القَصر",
+                "english": "Palace life",
+                "topic": "gossip"
+              },
+              {
+                "arabic": "مَهامّ دِبلوماسِيَّة",
+                "english": "Diplomatic missions",
+                "topic": "quests"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_formal",
+        "topic": "teaching",
+        "label": "Formal Arabic",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "في القَصر نَتَكَلَّم بِلُغَة رَسمِيَّة",
+            "english": "In the palace we speak formal language.",
+            "transliteration": "fii al-qasr natakallam bilugha rasmiyya"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "صَباح — أَوَّل الكَلِمات في البَلاط",
+            "english": "Morning — the first word in the court.",
+            "transliteration": "sabaah — awwal al-kalimaat fii al-balaat",
+            "teachWord": "morning_1",
+            "inlineVocab": [
+              {
+                "wordId": "morning_1",
+                "arabicText": "صَباح"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مَساء — وَقت العَشاء المَلَكي",
+            "english": "Evening — time for the royal dinner.",
+            "transliteration": "masaa' — waqt al-'ashaa' al-malakii",
+            "teachWord": "evening_1",
+            "inlineVocab": [
+              {
+                "wordId": "evening_1",
+                "arabicText": "مَساء"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "شُكراً يا أَميرَة",
+                "english": "Thank you, princess",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_royal",
+        "topic": "lore",
+        "label": "Royal Traditions",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "كُلّ صَباح نَقرَأ القُرآن مَعاً",
+            "english": "Every morning we read the Quran together.",
+            "transliteration": "kulla sabaah naqra' al-qur'aan ma'an"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَبَعدَ الظُّهر دُروس في اللُّغات والتّاريخ",
+            "english": "And after noon, lessons in languages and history.",
+            "transliteration": "wa ba'da az-zuhr duruus fii al-lughaat wat-taariikh"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أُحِبّ أَن أَتَعَلَّم عَن الشُّعوب الأُخرى",
+            "english": "I love learning about other peoples.",
+            "transliteration": "uhibbu an ata'allam 'an ash-shu'uub al-ukhraa"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_palace",
+        "topic": "gossip",
+        "label": "Palace Life",
+        "returnToHub": true,
+        "priority": 3,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "princess-aisha",
+            "min": 3
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أُريدُ أَن أُسافِر لَكِن أَبي يَقلَق",
+            "english": "I want to travel but my father worries.",
+            "transliteration": "uriidu an usaafir laakinn abii yaqlaq"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الوَزير عَبّاس دائِماً يُراقِبُني",
+            "english": "Vizier Abbas always watches me.",
+            "transliteration": "al-waziir 'abbaas daa'iman yuraaqibunii"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_quests_diplo",
+        "topic": "quests",
+        "label": "Diplomatic Missions",
+        "returnToHub": true,
+        "priority": 4,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "princess-aisha",
+            "min": 2
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَحتاج مَن يُوصِل رِسالَة إِلى المَكتَبَة",
+            "english": "I need someone to deliver a message to the library.",
+            "transliteration": "ahtaaj man yuusil risaala ilaa al-maktaba",
+            "effects": [
+              {
+                "type": "quest_start",
+                "questId": "palace_colors"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَل يُمكِنُك مُساعَدَتي؟",
+            "english": "Can you help me?",
+            "transliteration": "hal yumkinuk musaa'adatii?"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "بِالتَّأكيد",
+                "english": "Of course",
+                "action": "return_to_hub"
               }
             ]
           }
         ]
       }
+    ],
+    "personality": {
+      "tone": "noble_princess",
+      "catchphrase": "بِإِذنِ الله وَبِقُوَّة المَعرِفَة — bi-idhn allaah wa bi-quwwat al-ma'rifa (By God's permission and the power of knowledge)",
+      "interests": [
+        "diplomacy",
+        "languages",
+        "travel",
+        "culture"
+      ],
+      "mood": "cheerful"
+    },
+    "zone": "royal_palace",
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip",
+      "quests"
     ]
   },
   {
@@ -7075,37 +8075,186 @@
         ]
       },
       {
-        "id": "return_default",
+        "id": "hub",
         "trigger": "default",
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "أَهْلاً يا صَدِيقِي. هَل تُرِيدُ أَلْواناً أَمْ شِعْراً؟",
-            "english": "Hello, my friend. Do you want colors or poetry?",
-            "transliteration": "ahlan ya sadiiqii. hal turiidu alwaanan am shi'ran?"
+            "arabic": "الكَلِمَة نور! أَهلاً بِصَديق الشِّعر",
+            "english": "The word is light! Welcome, friend of poetry.",
+            "transliteration": "al-kalima nuur! ahlan bisadiiq ash-shi'r"
           },
           {
             "speaker": "player",
             "choices": [
               {
-                "arabic": "عَلِّمْنِي كَلِماتٍ جَمِيلَة",
-                "english": "Teach me beautiful words",
-                "next": "teach_colors_2"
+                "arabic": "كَلِمات وَصفِيَّة",
+                "english": "Descriptive words",
+                "topic": "teaching"
               },
               {
-                "arabic": "أَلْقِ عَلَيَّ شِعْراً",
-                "english": "Recite poetry for me",
-                "next": "poetry"
+                "arabic": "تَقاليد الشِّعر",
+                "english": "Poetry traditions",
+                "topic": "lore"
               },
               {
-                "arabic": "مَعَ السَّلامَة يا شاعِر",
-                "english": "Goodbye, poet",
-                "next": null
+                "arabic": "أَخبار الفَنّانين",
+                "english": "Artist news",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_adjectives",
+        "topic": "teaching",
+        "label": "Descriptive Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الصِّفاتُ هِيَ أَلوان اللُّغَة",
+            "english": "Adjectives are the colors of language.",
+            "transliteration": "as-sifaatu hiya alwaan al-lugha"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَحْمَر — لَونُ الوَردَة في الحَديقَة",
+            "english": "Red — the color of the rose in the garden.",
+            "transliteration": "ahmar — lawnu al-warda fii al-hadiiqa",
+            "teachWord": "color_red",
+            "inlineVocab": [
+              {
+                "wordId": "color_red",
+                "arabicText": "أَحْمَر"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَخْضَر — لَونُ الأَشجار وَالأَمَل",
+            "english": "Green — the color of trees and hope.",
+            "transliteration": "akhdar — lawnu al-ashjaar wal-amal",
+            "teachWord": "color_green",
+            "inlineVocab": [
+              {
+                "wordId": "color_green",
+                "arabicText": "أَخْضَر"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَزْرَق — لَونُ السَّماء الَّتي تُلهِمُني",
+            "english": "Blue — the color of the sky that inspires me.",
+            "transliteration": "azraq — lawnu as-samaa' allatii tulhimunii",
+            "teachWord": "color_blue",
+            "inlineVocab": [
+              {
+                "wordId": "color_blue",
+                "arabicText": "أَزْرَق"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "جَميل!",
+                "english": "Beautiful!",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_poetry",
+        "topic": "lore",
+        "label": "Poetry Traditions",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الشِّعرُ العَرَبي أَقدَم مِن الكِتابَة",
+            "english": "Arabic poetry is older than writing itself.",
+            "transliteration": "ash-shi'r al-'arabii aqdam min al-kitaaba"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "المُعَلَّقاتُ السَّبع كانَت تُعَلَّق عَلى الكَعبَة",
+            "english": "The Seven Mu'allaqat were hung on the Kaaba.",
+            "transliteration": "al-mu'allaqaat as-sab' kaanat tu'allaq 'alaa al-ka'ba"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كُلّ بَيت شِعر هُوَ نافِذَة إِلى الرّوح",
+            "english": "Every verse of poetry is a window to the soul.",
+            "transliteration": "kullu bayt shi'r huwa naafidha ilaa ar-ruuh"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_art",
+        "topic": "gossip",
+        "label": "Artist Community",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "لَيلى حارِسَة الحَديقَة تُحِبّ الشِّعر سِرّاً",
+            "english": "Leila the garden keeper secretly loves poetry.",
+            "transliteration": "laylaa haarisat al-hadiiqa tuhibb ash-shi'r sirran"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَأَنا أَكتُب قَصيدَة لِلمَلِك — لَكِن لا تُخبِر أَحَداً",
+            "english": "And I am writing a poem for the king — but tell no one.",
+            "transliteration": "wa ana aktub qasiida lil-malik — laakin laa tukhbir ahadan"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "سِرُّك أَمان",
+                "english": "Your secret is safe",
+                "action": "return_to_hub"
               }
             ]
           }
         ]
       }
+    ],
+    "personality": {
+      "tone": "artistic_poet",
+      "catchphrase": "الكَلِمَة نور — al-kalima nuur (The word is light)",
+      "interests": [
+        "poetry",
+        "beauty",
+        "nature",
+        "philosophy"
+      ],
+      "mood": "excited"
+    },
+    "zone": "garden_district",
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip"
     ]
   },
   {
@@ -7346,32 +8495,1691 @@
         ]
       },
       {
-        "id": "return_default",
+        "id": "hub",
         "trigger": "default",
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "أَهْلاً بِكَ يا طالِبَ العِلْم. ماذا تُرِيد؟",
-            "english": "Welcome, seeker of knowledge. What would you like?",
-            "transliteration": "ahlan bika ya taaliba al-ilm. maadha turiid?"
+            "arabic": "الحَمدُ لِلَّه. مَرحَباً يا بُنَيّ",
+            "english": "Praise be to God. Welcome, my child.",
+            "transliteration": "al-hamdu lillaah. marhaban ya bunayy"
           },
           {
             "speaker": "player",
             "choices": [
               {
-                "arabic": "عَلِّمْنِي أَفْعالاً جَدِيدَة",
-                "english": "Teach me new verbs",
-                "next": "teach_verbs_2"
+                "arabic": "كَلِمات الوَقت",
+                "english": "Time words",
+                "topic": "teaching"
               },
               {
-                "arabic": "أَخْبِرْنِي عَنِ المَكْتَبَة",
-                "english": "Tell me about the library",
-                "next": "about_library"
+                "arabic": "التَّقاليد الإِسلامِيَّة",
+                "english": "Islamic traditions",
+                "topic": "lore"
               },
               {
-                "arabic": "مَعَ السَّلامَة يا إِمام",
-                "english": "Goodbye, Imam",
+                "arabic": "أَخبار الجَماعَة",
+                "english": "Community news",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_time",
+        "topic": "teaching",
+        "label": "Time & Prayer Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الوَقتُ نِعمَة مِن الله. لِنَتَعَلَّم",
+            "english": "Time is a blessing from God. Let us learn.",
+            "transliteration": "al-waqtu ni'ma min allaah. linata'allam"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "يَوْم — كُلّ يَوم فيهِ خَمس صَلَوات",
+            "english": "Day — every day has five prayers.",
+            "transliteration": "yawm — kullu yawm fiihi khams salawaat",
+            "teachWord": "day_1",
+            "inlineVocab": [
+              {
+                "wordId": "day_1",
+                "arabicText": "يَوْم"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لَيْل — وَقتُ السُّكون وَالتَّأَمُّل",
+            "english": "Night — a time of stillness and reflection.",
+            "transliteration": "layl — waqtu as-sukuun wat-ta'ammul",
+            "teachWord": "night_1",
+            "inlineVocab": [
+              {
+                "wordId": "night_1",
+                "arabicText": "لَيْل"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "صَباح — وَقتُ صَلاة الفَجر",
+            "english": "Morning — time for the dawn prayer.",
+            "transliteration": "sabaah — waqtu salaat al-fajr",
+            "teachWord": "morning_1",
+            "inlineVocab": [
+              {
+                "wordId": "morning_1",
+                "arabicText": "صَباح"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "جَزاك الله خَيراً",
+                "english": "May God reward you",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_islam",
+        "topic": "lore",
+        "label": "Islamic Traditions",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "المَسجِد هُوَ قَلبُ القَريَة",
+            "english": "The mosque is the heart of the village.",
+            "transliteration": "al-masjid huwa qalbu al-qarya"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هُنا نُصَلّي وَنَتَعَلَّم وَنَجتَمِع",
+            "english": "Here we pray, learn, and gather.",
+            "transliteration": "hunaa nusallii wa nata'allam wa najtami'"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العِلمُ فَريضَة عَلى كُلّ مُسلِم",
+            "english": "Knowledge is an obligation for every Muslim.",
+            "transliteration": "al-'ilmu fariida 'alaa kulli muslim"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_community",
+        "topic": "gossip",
+        "label": "Community News",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "المُزارِع عُمَر يَحتاج مُساعَدَة في الحَصاد",
+            "english": "Farmer Omar needs help with the harvest.",
+            "transliteration": "al-muzaari' 'umar yahtaaj musaa'ada fii al-hasaad"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَالشَّيخ يوسُف يُعِدّ دَرساً جَديداً",
+            "english": "And Sheikh Yusuf is preparing a new lesson.",
+            "transliteration": "wash-shaykh yuusuf yu'idd darsan jadiidan"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "personality": {
+      "tone": "devout_imam",
+      "catchphrase": "الحَمدُ لِلَّه — al-hamdu lillaah (Praise be to God)",
+      "interests": [
+        "faith",
+        "time",
+        "community",
+        "prayer"
+      ],
+      "mood": "neutral"
+    },
+    "zone": "oasis_village",
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip"
+    ]
+  },
+  {
+    "id": "baker-yasmin",
+    "name": "Baker Yasmin",
+    "nameArabic": "الخَبّازَة ياسمين",
+    "portrait": "portrait-baker-yasmin",
+    "role": "Teaches food vocabulary through baking",
+    "zone": "oasis_village",
+    "personality": {
+      "tone": "cheerful_farmer",
+      "catchphrase": "بِسْمِ الله — bismillaah (In God's name)",
+      "interests": [
+        "baking",
+        "food",
+        "community"
+      ],
+      "mood": "cheerful"
+    },
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip"
+    ],
+    "greeting": {
+      "arabic": "أَهلاً! ريحَة الخُبز الطّازَج أَحلى شَيء",
+      "english": "Hello! The smell of fresh bread is the sweetest thing.",
+      "transliteration": "ahlan! riihat al-khubz at-taazaj ahlaa shay'"
+    },
+    "dialogueTrees": [
+      {
+        "id": "intro",
+        "trigger": "first_meeting",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَنا ياسمين الخَبّازَة. مَرحَباً!",
+            "english": "I am Yasmin the baker. Welcome!",
+            "transliteration": "ana yasmiin al-khabbazza. marhaban!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَخبُزُ مُنذُ طُفولَتي. الخُبزُ يَجمَع النّاس",
+            "english": "I have been baking since childhood. Bread brings people together.",
+            "transliteration": "akhbuzu mundhu tufuulatii. al-khubzu yajma' an-naas"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلِّميني",
+                "english": "Teach me",
+                "next": "hub"
+              },
+              {
+                "arabic": "إِلى اللِّقاء",
+                "english": "Goodbye",
                 "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hub",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "بِسْمِ الله! ماذا نَطبُخ اليَوم؟",
+            "english": "In God's name! What shall we cook today?",
+            "transliteration": "bismillaah! maadha natbukh al-yawm?"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "كَلِمات الطَّعام",
+                "english": "Food words",
+                "topic": "teaching"
+              },
+              {
+                "arabic": "تَقاليد الخَبز",
+                "english": "Baking traditions",
+                "topic": "lore"
+              },
+              {
+                "arabic": "أَخبار القَرية",
+                "english": "Village breakfast gossip",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_food",
+        "topic": "teaching",
+        "label": "Food Vocabulary",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "المَطبَخ مَدرَسَة! لِنَتَعَلَّم",
+            "english": "The kitchen is a school! Let us learn.",
+            "transliteration": "al-matbakh madrasa! linata'allam"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَرُزّ — نَأكُلُهُ مَع كُلّ شَيء",
+            "english": "Rice — we eat it with everything.",
+            "transliteration": "aruzz — na'kuluhu ma' kulli shay'",
+            "teachWord": "rice_1",
+            "inlineVocab": [
+              {
+                "wordId": "rice_1",
+                "arabicText": "أَرُزّ"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "دَجاج — الطَّبَق المُفَضَّل في الواحَة",
+            "english": "Chicken — the favorite dish in the oasis.",
+            "transliteration": "dajaaj — at-tabaq al-mufaddal fii al-waaha",
+            "teachWord": "chicken_1",
+            "inlineVocab": [
+              {
+                "wordId": "chicken_1",
+                "arabicText": "دَجاج"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "لَذيذ!",
+                "english": "Delicious!",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_baking",
+        "topic": "lore",
+        "label": "Baking Traditions",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أُمّي عَلَّمَتني الخَبز وَأَنا صَغيرَة",
+            "english": "My mother taught me baking when I was little.",
+            "transliteration": "ummii 'allamatnii al-khabz wa ana saghiira"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "في رَمَضان نَخبُز طُوال اللَّيل لِلجيران",
+            "english": "In Ramadan we bake all night for the neighbors.",
+            "transliteration": "fii ramadaan nakhbuz tuwaal al-layl lil-jiiraan"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_breakfast",
+        "topic": "gossip",
+        "label": "Village Breakfast News",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الإِمام مُحَمَّد يُحِبّ خُبزي بِالزَّعتَر",
+            "english": "Imam Muhammad loves my za'atar bread.",
+            "transliteration": "al-imaam muhammad yuhibb khubzii biz-za'tar"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَالعَشّابَة خَديجَة تَطلُب خُبزاً بِدون مِلح",
+            "english": "And Herbalist Khadija orders bread without salt.",
+            "transliteration": "wal-'ashhaaba khadiija tatlub khubzan biduun milh"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "astronomer-zain",
+    "name": "Astronomer Zain",
+    "nameArabic": "الفَلَكي زَين",
+    "portrait": "portrait-astronomer-zain",
+    "role": "Teaches number and sky vocabulary through astronomy",
+    "zone": "ancient_library",
+    "personality": {
+      "tone": "formal_scholar",
+      "catchphrase": "النُّجومُ لا تَكذِب — an-nujuumu laa takdhib (The stars do not lie)",
+      "interests": [
+        "astronomy",
+        "numbers",
+        "stars",
+        "mathematics"
+      ],
+      "mood": "excited"
+    },
+    "topics": [
+      "teaching",
+      "lore",
+      "quests"
+    ],
+    "greeting": {
+      "arabic": "النُّجومُ لا تَكذِب. مَرحَباً يا مُتَعَلِّم",
+      "english": "The stars do not lie. Welcome, learner.",
+      "transliteration": "an-nujuumu laa takdhib. marhaban ya muta'allim"
+    },
+    "dialogueTrees": [
+      {
+        "id": "intro",
+        "trigger": "first_meeting",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَنا زَين. أَدرُسُ النُّجوم مُنذُ عِشرين سَنَة",
+            "english": "I am Zain. I have studied the stars for twenty years.",
+            "transliteration": "ana zayn. adrusu an-nujuum mundhu 'ishriina sana"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العَرَبُ أَعطَوا النُّجومَ أَسماءَها",
+            "english": "The Arabs gave the stars their names.",
+            "transliteration": "al-'arabu a'taw an-nujuuma asmaa'ahaa"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلِّمني",
+                "english": "Teach me",
+                "next": "hub"
+              },
+              {
+                "arabic": "إِلى اللِّقاء",
+                "english": "Goodbye",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hub",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "النُّجومُ لا تَكذِب! ماذا نَدرُس؟",
+            "english": "The stars do not lie! What shall we study?",
+            "transliteration": "an-nujuumu laa takdhib! maadha nadrus?"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الأَرقام",
+                "english": "Numbers",
+                "topic": "teaching"
+              },
+              {
+                "arabic": "تاريخ الفَلَك",
+                "english": "Astronomy history",
+                "topic": "lore"
+              },
+              {
+                "arabic": "مَهَمَّة فَلَكِيَّة",
+                "english": "Stargazing mission",
+                "topic": "quests"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_numbers",
+        "topic": "teaching",
+        "label": "Number & Sky Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الأَرقامُ أَساسُ الفَلَك",
+            "english": "Numbers are the foundation of astronomy.",
+            "transliteration": "al-arqaamu asaas al-falak"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "نَجْم — كُلّ نَجم لَهُ اِسم عَرَبي",
+            "english": "Star — every star has an Arabic name.",
+            "transliteration": "najm — kullu najm lahu ism 'arabii",
+            "teachWord": "star_w16",
+            "inlineVocab": [
+              {
+                "wordId": "star_w16",
+                "arabicText": "نَجْم"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قَمَر — القَمَرُ يُنير لَيالينا",
+            "english": "Moon — the moon illuminates our nights.",
+            "transliteration": "qamar — al-qamaru yuniir layaaliinaa",
+            "teachWord": "moon_w15",
+            "inlineVocab": [
+              {
+                "wordId": "moon_w15",
+                "arabicText": "قَمَر"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "شَمْس — مَركَزُ كُلّ شَيء",
+            "english": "Sun — the center of everything.",
+            "transliteration": "shams — markazu kulli shay'",
+            "teachWord": "sun_w14",
+            "inlineVocab": [
+              {
+                "wordId": "sun_w14",
+                "arabicText": "شَمْس"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "رائِع!",
+                "english": "Wonderful!",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_astronomy",
+        "topic": "lore",
+        "label": "Astronomy History",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الخوارِزمي اِبتَكَر الجَبر",
+            "english": "Al-Khwarizmi invented algebra.",
+            "transliteration": "al-khwaarizmii ibtakara al-jabr"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"algorithm\" جاءَت مِن اِسمِه",
+            "english": "And the word \"algorithm\" came from his name.",
+            "transliteration": "wa kalimat algorithm jaa'at min ismihi"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العَرَبُ حَفِظوا عِلمَ اليونان وَزادوا عَلَيه",
+            "english": "The Arabs preserved Greek science and added to it.",
+            "transliteration": "al-'arabu hafizuu 'ilm al-yuunaan wa zaaduu 'alayhi"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_quests_star",
+        "topic": "quests",
+        "label": "Stargazing Mission",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "اللَّيلَة القَمَر مُكتَمِل!",
+            "english": "Tonight the moon is full!",
+            "transliteration": "al-layla al-qamar muktamil!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَحتاجُ مَن يُساعِدُني في رَصد النُّجوم",
+            "english": "I need someone to help me observe the stars.",
+            "transliteration": "ahtaaju man yusaa'idunii fii rasd an-nujuum",
+            "effects": [
+              {
+                "type": "quest_start",
+                "questId": "library_numbers"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "بِكُلّ سُرور",
+                "english": "With pleasure",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "carpet-seller-jamal",
+    "name": "Carpet Seller Jamal",
+    "nameArabic": "بائِع السَّجّاد جَمال",
+    "portrait": "portrait-carpet-seller-jamal",
+    "role": "Teaches color vocabulary through carpet trading",
+    "zone": "desert_marketplace",
+    "personality": {
+      "tone": "casual_merchant",
+      "catchphrase": "يا سلام! — ya salaam! (Oh wow!)",
+      "interests": [
+        "carpets",
+        "colors",
+        "bargaining",
+        "trade"
+      ],
+      "mood": "cheerful"
+    },
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip"
+    ],
+    "greeting": {
+      "arabic": "يا سلام! تَعال شوف السَّجّاد الجَميل",
+      "english": "Oh wow! Come see the beautiful carpets!",
+      "transliteration": "ya salaam! ta'aal shuuf as-sajjaad al-jamiil"
+    },
+    "dialogueTrees": [
+      {
+        "id": "intro",
+        "trigger": "first_meeting",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَنا جَمال! أَبيعُ أَجمَل سَجّاد في المَملَكَة",
+            "english": "I am Jamal! I sell the most beautiful carpets in the kingdom!",
+            "transliteration": "ana jamaal! abii' ajmal sajjaad fii al-mamlaka"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أَرِني",
+                "english": "Show me",
+                "next": "hub"
+              },
+              {
+                "arabic": "لاحِقاً",
+                "english": "Later",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hub",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "يا سلام! عِندي سَجّاد جَديد اليَوم",
+            "english": "Oh wow! I have new carpets today!",
+            "transliteration": "ya salaam! 'indii sajjaad jadiid al-yawm"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الأَلوان",
+                "english": "Color words",
+                "topic": "teaching"
+              },
+              {
+                "arabic": "فَنّ السَّجّاد",
+                "english": "Carpet art",
+                "topic": "lore"
+              },
+              {
+                "arabic": "أَخبار السّوق",
+                "english": "Market deals",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_colors",
+        "topic": "teaching",
+        "label": "Color Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "السَّجّادُ يُعَلِّمُك الأَلوان",
+            "english": "Carpets teach you colors!",
+            "transliteration": "as-sajjaadu yu'allimuk al-alwaan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَصْفَر — لَونُ الذَّهَب وَالشَّمس",
+            "english": "Yellow — the color of gold and sun.",
+            "transliteration": "asfar — lawnu adh-dhahab wash-shams",
+            "teachWord": "color_yellow",
+            "inlineVocab": [
+              {
+                "wordId": "color_yellow",
+                "arabicText": "أَصْفَر"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَبْيَض — لَونُ النَّقاء وَالسَّلام",
+            "english": "White — the color of purity and peace.",
+            "transliteration": "abyad — lawnu an-naqaa' was-salaam",
+            "teachWord": "color_white",
+            "inlineVocab": [
+              {
+                "wordId": "color_white",
+                "arabicText": "أَبْيَض"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "جَميل!",
+                "english": "Beautiful!",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_carpets",
+        "topic": "lore",
+        "label": "Carpet Traditions",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "كُلّ سَجّادَة تَحكي قِصَّة",
+            "english": "Every carpet tells a story.",
+            "transliteration": "kullu sajjaada tahkii qissa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الأُنثوذاتُ تُنسَج بِأَيدي النِّساء في القُرى",
+            "english": "The patterns are woven by women in the villages.",
+            "transliteration": "al-unthuzaat tunsaj bi-aydii an-nisaa' fii al-quraa"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_market",
+        "topic": "gossip",
+        "label": "Market Deals",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "لَيلى بائِعَة التَّوابِل رَفَعَت الأَسعار!",
+            "english": "Layla the spice seller raised her prices!",
+            "transliteration": "laylaa baa'i'at at-tawaabil rafa'at al-as'aar!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لَكِن عِندي أَسعار أَحسَن. يا سلام!",
+            "english": "But I have better prices. Oh wow!",
+            "transliteration": "laakin 'indii as'aar ahsan. ya salaam!"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dockmaster-nadia",
+    "name": "Dockmaster Nadia",
+    "nameArabic": "رَئيسَة المِيناء نادِيَة",
+    "portrait": "portrait-dockmaster-nadia",
+    "role": "Teaches direction vocabulary through port management",
+    "zone": "coastal_port",
+    "personality": {
+      "tone": "authoritative_vizier",
+      "catchphrase": "بِنِظام! — bi-nizaam! (In order!)",
+      "interests": [
+        "shipping",
+        "directions",
+        "order",
+        "efficiency"
+      ],
+      "mood": "serious"
+    },
+    "topics": [
+      "teaching",
+      "lore",
+      "quests"
+    ],
+    "greeting": {
+      "arabic": "بِنِظام! مَن أَنت وَماذا تُريد؟",
+      "english": "In order! Who are you and what do you want?",
+      "transliteration": "bi-nizaam! man anta wa maadha turiid?"
+    },
+    "dialogueTrees": [
+      {
+        "id": "intro",
+        "trigger": "first_meeting",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَنا نادِيَة، رَئيسَة المِيناء. كُلّ شَيء يَمُرّ عَبري",
+            "english": "I am Nadia, dockmaster. Everything passes through me.",
+            "transliteration": "ana naadiya, ra'iisat al-miinaa'. kullu shay' yamurr 'abrii"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أُريد أَن أَتَعَلَّم",
+                "english": "I want to learn",
+                "next": "hub"
+              },
+              {
+                "arabic": "عَفواً",
+                "english": "Excuse me",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hub",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "بِنِظام! عِندي وَقت قَليل",
+            "english": "In order! I have little time.",
+            "transliteration": "bi-nizaam! 'indii waqt qaliil"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الاتِّجاهات",
+                "english": "Direction words",
+                "topic": "teaching"
+              },
+              {
+                "arabic": "تاريخ المِيناء",
+                "english": "Port history",
+                "topic": "lore"
+              },
+              {
+                "arabic": "تَصاريح",
+                "english": "Docking permits",
+                "topic": "quests"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_directions",
+        "topic": "teaching",
+        "label": "Direction Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "في المِيناء يَجِب أَن تَعرِف الاتِّجاهات",
+            "english": "In the port you must know directions.",
+            "transliteration": "fii al-miinaa' yajib an ta'rif al-ittijaahaat"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "فَوْق — البِضاعَة فَوقَ السَّفينَة",
+            "english": "Above — the cargo above the ship.",
+            "transliteration": "fawq — al-bidaa'a fawqa as-safiina",
+            "teachWord": "above_1",
+            "inlineVocab": [
+              {
+                "wordId": "above_1",
+                "arabicText": "فَوْق"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "تَحْت — المَخزَن تَحتَ الأَرض",
+            "english": "Below — the warehouse below ground.",
+            "transliteration": "taht — al-makhzan tahta al-ard",
+            "teachWord": "below_1",
+            "inlineVocab": [
+              {
+                "wordId": "below_1",
+                "arabicText": "تَحْت"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "فَهِمت",
+                "english": "Understood",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_port",
+        "topic": "lore",
+        "label": "Port History",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هَذا المِيناء عُمرُه ثَلاثمائَة سَنَة",
+            "english": "This port is three hundred years old.",
+            "transliteration": "haadha al-miinaa' 'umruhu thalaathmi'at sana"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مِن هُنا خَرَجَت سُفُن إِلى الهِند وَالصّين",
+            "english": "From here ships departed to India and China.",
+            "transliteration": "min hunaa kharajat sufun ilaa al-hind was-siin"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_quests_permits",
+        "topic": "quests",
+        "label": "Docking Permits",
+        "returnToHub": true,
+        "priority": 3,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "dockmaster-nadia",
+            "min": 1
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هُناكَ سَفينَة بِدون تَصريح. اِذهَب وَتَحَقَّق",
+            "english": "There is a ship without a permit. Go and check.",
+            "transliteration": "hunaaka safiina biduun tasriih. idhhab wa tahaqqaq",
+            "effects": [
+              {
+                "type": "quest_start",
+                "questId": "port_market"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "حاضِر",
+                "english": "Right away",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mountain-hermit-idris",
+    "name": "Mountain Hermit Idris",
+    "nameArabic": "ناسِك الجَبَل إِدريس",
+    "portrait": "portrait-mountain-hermit-idris",
+    "role": "Teaches nature vocabulary through mountain wisdom",
+    "zone": "mountain_pass",
+    "personality": {
+      "tone": "wise_storyteller",
+      "catchphrase": "الجَبَلُ يَعلَم — al-jabalu ya'lam (The mountain knows)",
+      "interests": [
+        "nature",
+        "mountains",
+        "philosophy",
+        "solitude"
+      ],
+      "mood": "neutral"
+    },
+    "topics": [
+      "teaching",
+      "lore",
+      "quests"
+    ],
+    "greeting": {
+      "arabic": "الجَبَلُ يَعلَم مَن يَأتي. تَعال اِجلِس",
+      "english": "The mountain knows who comes. Come, sit.",
+      "transliteration": "al-jabalu ya'lam man ya'tii. ta'aal ijlis"
+    },
+    "dialogueTrees": [
+      {
+        "id": "intro",
+        "trigger": "first_meeting",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَنا إِدريس. أَعيشُ هُنا وَحدي مُنذُ سَنَوات",
+            "english": "I am Idris. I have lived here alone for years.",
+            "transliteration": "ana idriis. a'iishu hunaa wahdii mundhu sanawaat"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الجَبَلُ مُعَلِّمي وَصَديقي",
+            "english": "The mountain is my teacher and my friend.",
+            "transliteration": "al-jabalu mu'allimii wa sadiiqii"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلِّمني",
+                "english": "Teach me",
+                "next": "hub"
+              },
+              {
+                "arabic": "مَع السَّلامَة",
+                "english": "Farewell",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hub",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الجَبَلُ يَعلَم... ماذا تَبحَث عَنه؟",
+            "english": "The mountain knows... what do you seek?",
+            "transliteration": "al-jabalu ya'lam... maadha tabhath 'anhu?"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "كَلِمات الطَّبيعَة",
+                "english": "Nature words",
+                "topic": "teaching"
+              },
+              {
+                "arabic": "أَساطير الجَبَل",
+                "english": "Mountain legends",
+                "topic": "lore"
+              },
+              {
+                "arabic": "اِختِبارات الجَبَل",
+                "english": "Mountain trials",
+                "topic": "quests"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_nature",
+        "topic": "teaching",
+        "label": "Nature Words",
+        "returnToHub": true,
+        "priority": 1,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "mountain-hermit-idris",
+            "min": 1
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الطَّبيعَةُ لُغَة بِلا كَلِمات. لَكِن نَحتاج كَلِمات أَيضاً",
+            "english": "Nature is a language without words. But we need words too.",
+            "transliteration": "at-tabii'atu lugha bilaa kalimaat. laakin nahtaaj kalimaat aydan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "رَمْل — الصَّحراء تَتَكَلَّم بِالرَّمل",
+            "english": "Sand — the desert speaks with sand.",
+            "transliteration": "raml — as-sahraa' tatakallam bir-raml",
+            "teachWord": "sand_w17",
+            "inlineVocab": [
+              {
+                "wordId": "sand_w17",
+                "arabicText": "رَمْل"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "شَجَرَة — الصَّبر كَالشَّجَرَة، يَنمو بِبُطء",
+            "english": "Tree — patience is like a tree, it grows slowly.",
+            "transliteration": "shajara — as-sabr kash-shajara, yanmuu bibu't'",
+            "teachWord": "tree_w18"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "شُكراً",
+                "english": "Thank you",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_mountain",
+        "topic": "lore",
+        "label": "Mountain Legends",
+        "returnToHub": true,
+        "priority": 2,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "mountain-hermit-idris",
+            "min": 1
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "يَقولون أَنَّ في هَذا الجَبَل كَنزاً مَخفِيّاً",
+            "english": "They say there is a hidden treasure in this mountain.",
+            "transliteration": "yaquuluun anna fii haadha al-jabal kanzan makhfiyyan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لَكِنَّ الكَنز الحَقيقي هُوَ المَعرِفَة",
+            "english": "But the real treasure is knowledge.",
+            "transliteration": "laakinna al-kanz al-haqiiqii huwa al-ma'rifa",
+            "effects": [
+              {
+                "type": "story_flag",
+                "flag": "mountain_secret_learned"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_quests_trials",
+        "topic": "quests",
+        "label": "Mountain Trials",
+        "returnToHub": true,
+        "priority": 3,
+        "conditions": [
+          {
+            "type": "relationship",
+            "npcId": "mountain-hermit-idris",
+            "min": 1
+          }
+        ],
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الجَبَل يَختَبِر مَن يَدخُل",
+            "english": "The mountain tests those who enter.",
+            "transliteration": "al-jabal yakhtabir man yadkhul"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "إِذا عَرَفتَ الكَلِمات، سَتَجِد الطَّريق",
+            "english": "If you know the words, you will find the way.",
+            "transliteration": "idhaa 'arafta al-kalimaat, satajid at-tariiq",
+            "effects": [
+              {
+                "type": "quest_start",
+                "questId": "mountain_paths"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أَنا مُستَعِدّ",
+                "english": "I am ready",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "stable-master-yara",
+    "name": "Stable Master Yara",
+    "nameArabic": "سائِسَة الخَيل يارا",
+    "portrait": "portrait-stable-master-yara",
+    "role": "Teaches animal vocabulary through horse care",
+    "zone": "oasis_village",
+    "personality": {
+      "tone": "cheerful_farmer",
+      "catchphrase": "هَيّا يا حُصان! — hayyaa ya husaan! (Come on, horse!)",
+      "interests": [
+        "horses",
+        "animals",
+        "travel",
+        "outdoors"
+      ],
+      "mood": "cheerful"
+    },
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip"
+    ],
+    "greeting": {
+      "arabic": "هَيّا يا حُصان! أَهلاً يا مُسافِر!",
+      "english": "Come on, horse! Hello, traveler!",
+      "transliteration": "hayyaa ya husaan! ahlan ya musaafir!"
+    },
+    "dialogueTrees": [
+      {
+        "id": "intro",
+        "trigger": "first_meeting",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَنا يارا. أَعتَني بِالخُيول مُنذُ صِغَري",
+            "english": "I am Yara. I have cared for horses since I was small.",
+            "transliteration": "ana yaaraa. a'tanii bil-khuyuul mundhu sigharii"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلِّميني",
+                "english": "Teach me",
+                "next": "hub"
+              },
+              {
+                "arabic": "مَع السَّلامَة",
+                "english": "Goodbye",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hub",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هَيّا! الخُيول تَنتَظِر. ماذا تُريد؟",
+            "english": "Let's go! The horses are waiting. What do you want?",
+            "transliteration": "hayyaa! al-khuyuul tantazir. maadha turiid?"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "كَلِمات الحَيَوانات",
+                "english": "Animal words",
+                "topic": "teaching"
+              },
+              {
+                "arabic": "تَربِيَة الخُيول",
+                "english": "Horse breeding",
+                "topic": "lore"
+              },
+              {
+                "arabic": "أَخبار السَّفَر",
+                "english": "Travel news",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_animals",
+        "topic": "teaching",
+        "label": "Animal Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الحَيَوانات أَصدِقاؤنا! لِنَتَعَلَّم أَسماءَها",
+            "english": "Animals are our friends! Let us learn their names.",
+            "transliteration": "al-hayawaanaat asdiqaa'unaa! linata'allam asmaa'ahaa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "حِصان — أَنبَل الحَيَوانات",
+            "english": "Horse — the noblest of animals.",
+            "transliteration": "hisaan — anbal al-hayawaanaat",
+            "teachWord": "horse_1",
+            "inlineVocab": [
+              {
+                "wordId": "horse_1",
+                "arabicText": "حِصان"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "جَمَل — سَفينَة الصَّحراء",
+            "english": "Camel — the ship of the desert.",
+            "transliteration": "jamal — safiinat as-sahraa'",
+            "teachWord": "camel_1",
+            "inlineVocab": [
+              {
+                "wordId": "camel_1",
+                "arabicText": "جَمَل"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "طَيْر — حُرّ في السَّماء",
+            "english": "Bird — free in the sky.",
+            "transliteration": "tayr — hurr fis-samaa'",
+            "teachWord": "bird_1",
+            "inlineVocab": [
+              {
+                "wordId": "bird_1",
+                "arabicText": "طَيْر"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "شُكراً يا يارا",
+                "english": "Thanks, Yara!",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_horses",
+        "topic": "lore",
+        "label": "Horse Breeding",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الحِصانُ العَرَبي أَجمَل سُلالَة في العالَم",
+            "english": "The Arabian horse is the most beautiful breed in the world.",
+            "transliteration": "al-hisaanu al-'arabii ajmal sulaala fii al-'aalam"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "يَقولون أَنَّ الله خَلَقَهُ مِن الرّيح",
+            "english": "They say God created it from the wind.",
+            "transliteration": "yaquuluun anna allaah khalaqahu min ar-riih"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_travel",
+        "topic": "gossip",
+        "label": "Travel News",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "قافِلَة جَديدَة وَصَلَت مِن الجَبَل",
+            "english": "A new caravan arrived from the mountain.",
+            "transliteration": "qaafila jadiida wasalat min al-jabal"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "يَقولون إِنَّ الطَّريق خَطير هَذِهِ الأَيّام",
+            "english": "They say the road is dangerous these days.",
+            "transliteration": "yaquuluun inna at-tariiq khatiir haadhihi al-ayyaam"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "garden-keeper-leila",
+    "name": "Garden Keeper Leila",
+    "nameArabic": "حارِسَة الحَديقَة لَيلى",
+    "portrait": "portrait-garden-keeper-leila",
+    "role": "Teaches nature and plant vocabulary",
+    "zone": "garden_district",
+    "personality": {
+      "tone": "gentle_healer",
+      "catchphrase": "الحَديقَة جَنَّة — al-hadiiqa janna (The garden is paradise)",
+      "interests": [
+        "plants",
+        "nature",
+        "gardening",
+        "peace"
+      ],
+      "mood": "cheerful"
+    },
+    "topics": [
+      "teaching",
+      "lore",
+      "gossip"
+    ],
+    "greeting": {
+      "arabic": "الحَديقَة جَنَّة! مَرحَباً يا زائِر",
+      "english": "The garden is paradise! Welcome, visitor.",
+      "transliteration": "al-hadiiqa janna! marhaban ya zaa'ir"
+    },
+    "dialogueTrees": [
+      {
+        "id": "intro",
+        "trigger": "first_meeting",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَنا لَيلى. أَعتَني بِهَذِهِ الحَديقَة مُنذُ عَشر سَنَوات",
+            "english": "I am Leila. I have tended this garden for ten years.",
+            "transliteration": "ana laylaa. a'tanii bihaadhihi al-hadiiqa mundhu 'ashr sanawaat"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلِّميني",
+                "english": "Teach me",
+                "next": "hub"
+              },
+              {
+                "arabic": "مَع السَّلامَة",
+                "english": "Goodbye",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hub",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الحَديقَة جَنَّة! ماذا نَكتَشِف اليَوم؟",
+            "english": "The garden is paradise! What shall we discover today?",
+            "transliteration": "al-hadiiqa janna! maadha naktashif al-yawm?"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "كَلِمات النَّبات",
+                "english": "Plant words",
+                "topic": "teaching"
+              },
+              {
+                "arabic": "تاريخ الحَديقَة",
+                "english": "Garden history",
+                "topic": "lore"
+              },
+              {
+                "arabic": "أَخبار",
+                "english": "News",
+                "topic": "gossip"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_teaching_nature",
+        "topic": "teaching",
+        "label": "Nature & Plant Words",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الطَّبيعَة مُعَلِّمَة عَظيمَة",
+            "english": "Nature is a great teacher.",
+            "transliteration": "at-tabii'a mu'allima 'aziima"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "شَمْس — النَّباتات تَحتاج الشَّمس لِتَنمو",
+            "english": "Sun — plants need the sun to grow.",
+            "transliteration": "shams — an-nabaataat tahtaaj ash-shams litanmuu",
+            "teachWord": "sun_w14",
+            "inlineVocab": [
+              {
+                "wordId": "sun_w14",
+                "arabicText": "شَمْس"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مَاء — وَالماء أَيضاً ضَروري",
+            "english": "Water — and water is also essential.",
+            "transliteration": "maa' — wal-maa' aydan daruurii",
+            "teachWord": "water_w13",
+            "inlineVocab": [
+              {
+                "wordId": "water_w13",
+                "arabicText": "مَاء"
+              }
+            ]
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "شُكراً يا لَيلى",
+                "english": "Thank you, Leila",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_lore_garden",
+        "topic": "lore",
+        "label": "Garden History",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هَذِهِ الحَديقَة بَناها المَلِكُ الأَوَّل",
+            "english": "The first king built this garden.",
+            "transliteration": "haadhihi al-hadiiqa banaahaa al-maliku al-awwal"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كانَ يَقول: الحَديقَة تُريح النَّفس وَتُنَقّي الرّوح",
+            "english": "He used to say: the garden soothes the soul and purifies the spirit.",
+            "transliteration": "kaana yaquul: al-hadiiqa turiih an-nafs wa tunaqqii ar-ruuh"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_gossip_botanical",
+        "topic": "gossip",
+        "label": "Botanical News",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الشّاعِر رومي يَجلِس هُنا كُلّ يَوم وَيَكتُب",
+            "english": "The poet Rumi sits here every day and writes.",
+            "transliteration": "ash-shaa'ir ruumii yajlis hunaa kulla yawm wa yaktub"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَأَحياناً يَقرَأ لي قَصائِدَهُ. هِيَ جَميلَة",
+            "english": "And sometimes he reads me his poems. They are beautiful.",
+            "transliteration": "wa ahyaanan yaqra' lii qasaa'idahu. hiya jamiila"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَوْدَة",
+                "english": "Return",
+                "action": "return_to_hub"
               }
             ]
           }
