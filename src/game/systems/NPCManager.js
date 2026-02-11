@@ -111,6 +111,22 @@ export class NPCManager {
   }
 
   /**
+   * Trigger interaction with a specific NPC without requiring SPACE press.
+   * Used by useTutorialTrigger for auto-greeting Guide Amira.
+   */
+  autoInteract(npcId) {
+    const npc = this.npcs.find((n) => n.npcId === npcId);
+    if (!npc) return;
+
+    EventBus.emit(EVENTS.NPC_INTERACT, {
+      npcId: npc.npcId,
+      npcName: npc.npcName,
+      autoTriggered: true,
+    });
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+  }
+
+  /**
    * Get NPCs for Y-sorting
    */
   getNPCs() {

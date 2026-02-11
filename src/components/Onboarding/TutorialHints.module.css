@@ -1,0 +1,114 @@
+@import '../../styles/variables.css';
+
+.container {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-onboarding);
+  pointer-events: none;
+}
+
+/* Floating arrow pointing toward a target */
+.arrow {
+  position: fixed;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 16px solid #e2b659;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.arrowUp {
+  border-top: none;
+  border-bottom: 16px solid #e2b659;
+  animation: bounceUp 1s ease-in-out infinite;
+}
+
+/* Prompt bubble */
+.prompt {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid #e2b659;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: #f5f3da;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: fadeInPulse 0.5s ease-out, pulse 2s ease-in-out 0.5s infinite;
+}
+
+/* Skip button - the only interactive element */
+.skipBtn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(226, 182, 89, 0.4);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: #f5f3da;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.skipBtn:hover {
+  opacity: 1;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+@keyframes bounceUp {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes fadeInPulse {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    border-color: #e2b659;
+  }
+  50% {
+    border-color: rgba(226, 182, 89, 0.4);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .prompt {
+    font-size: 8px;
+    padding: 6px 10px;
+  }
+
+  .skipBtn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

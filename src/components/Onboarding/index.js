@@ -1,1 +1,1 @@
-export { default as ContextualOnboarding } from './ContextualOnboarding.jsx';
+export { default as TutorialHints } from './TutorialHints.jsx';

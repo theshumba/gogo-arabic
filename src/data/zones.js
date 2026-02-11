@@ -82,6 +82,7 @@ const oasis_village = {
   ],
 
   npcs: [
+    { id: 'guide-amira', key: 'npc-guide-amira', name: 'Guide Amira', nameArabic: 'المُرشِدَة أَميرَة', x: 14, y: 18 },
     { id: 'scholar-yusuf', key: 'npc-scholar-yusuf', name: 'Scholar Yusuf', nameArabic: 'الشَّيْخ يوسُف', x: 9, y: 6 },
     { id: 'merchant-fatima', key: 'npc-merchant-fatima', name: 'Merchant Fatima', nameArabic: 'التّاجِرَة فاطِمَة', x: 12, y: 16 },
     { id: 'student-khalid', key: 'npc-student-khalid', name: 'Student Khalid', nameArabic: 'الطّالِب خالِد', x: 33, y: 25 },

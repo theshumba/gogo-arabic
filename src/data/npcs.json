@@ -10186,5 +10186,259 @@
         ]
       }
     ]
+  },
+  {
+    "id": "guide-amira",
+    "name": "Guide Amira",
+    "nameArabic": "المُرشِدَة أَميرَة",
+    "portrait": "portrait-guide-amira",
+    "role": "Mentor and guide for new travelers",
+    "personality": { "tone": "warm_mentor", "mood": "cheerful" },
+    "greeting": {
+      "arabic": "أَهْلاً وَسَهْلاً يا مُسافِر! أَنا أَميرَة",
+      "english": "Welcome, traveler! I am Amira.",
+      "transliteration": "ahlan wa sahlan ya musaafir! ana amiira"
+    },
+    "dialogueTrees": [
+      {
+        "id": "intro",
+        "trigger": "first_meeting",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهْلاً وَسَهْلاً يا مُسافِر الزَّمَن!",
+            "english": "Welcome, time traveler!",
+            "transliteration": "ahlan wa sahlan ya musaafir az-zaman!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَنا أَميرَة، مُرشِدَتُكَ في هَذا العالَم",
+            "english": "I am Amira, your guide in this world.",
+            "transliteration": "ana amiira, murshidatuka fii haadha al-aalam"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لَقَد وَصَلتَ إلى واحَة الحُروف — مَكانٌ قَديمٌ مَليءٌ بِأَسرارِ اللُّغَةِ العَرَبِيَّة",
+            "english": "You've arrived at the Oasis of Letters — an ancient place full of Arabic language secrets.",
+            "transliteration": "laqad wasalta ilaa waahat al-huruuf — makaanun qadiimun malii'un bi-asraar al-lugha al-arabiyya"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مَخطوطَةٌ سِحرِيَّةٌ نَقَلَتكَ عَبرَ الزَّمَن لِتَتَعَلَّمَ العَرَبِيَّة مِن أَهلِها",
+            "english": "A magical manuscript brought you through time to learn Arabic from its people.",
+            "transliteration": "makhtootatun sihriyyatun naqalatka abra az-zaman lita-ta'allama al-arabiyya min ahlihaa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لِنَبدَأ بِأَوَّلِ كَلِمَة: مَرْحَبا — وَهِيَ تَعني 'أَهلاً'",
+            "english": "Let's start with your first word: marhaba — it means 'hello'.",
+            "transliteration": "linabda' bi-awwal kalima: marhaba — wa hiya ta'nii 'ahlan'",
+            "teachWord": "marhaba",
+            "inlineVocab": [
+              {
+                "wordId": "marhaba",
+                "arabicText": "مَرْحَبا"
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مُمتاز! الآن، اِذهَب إلى الشَّيْخ يوسُف — إنَّهُ عالِمُ القَرية",
+            "english": "Excellent! Now, go to Scholar Yusuf — he is the village scholar.",
+            "transliteration": "mumtaaz! al-aan, idh-hab ilaa ash-shaykh yuusuf — innahu aalimu al-qarya",
+            "effects": [
+              {
+                "type": "quest_start",
+                "questId": "tutorial_welcome"
+              },
+              {
+                "type": "story_flag",
+                "flag": "met_mentor",
+                "value": true
+              }
+            ]
+          },
+          {
+            "speaker": "npc",
+            "arabic": "سَأَكونُ هُنا دائِماً إذا اِحتَجتَ مُساعَدَة",
+            "english": "I'll always be here if you need help.",
+            "transliteration": "sa-akuunu hunaa daa'iman idhaa ihtajta musaa'ada"
+          }
+        ]
+      },
+      {
+        "id": "hub",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مَرْحَباً مِن جَديد! كَيفَ حالُكَ يا مُسافِر؟",
+            "english": "Hello again! How are you, traveler?",
+            "transliteration": "marhaban min jadiid! kayfa haaluka ya musaafir?"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كَيفَ أَستَطيعُ مُساعَدَتَك؟",
+            "english": "How can I help you?",
+            "transliteration": "kayfa astatii'u musaa'adatak?"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "ماذا أَفعَلُ الآن؟",
+                "english": "What should I do now?",
+                "topic": "hints"
+              },
+              {
+                "arabic": "كَيفَ أَتَحَرَّك؟",
+                "english": "How do I move?",
+                "topic": "controls"
+              },
+              {
+                "arabic": "أَخبِرني عَن هَذا المَكان",
+                "english": "Tell me about this place",
+                "topic": "purpose"
+              },
+              {
+                "arabic": "إلى اللِّقاء",
+                "english": "Goodbye",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_hints",
+        "topic": "hints",
+        "returnToHub": true,
+        "priority": 1,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "تَكَلَّم مَعَ سُكّانِ القَرية — كُلُّ شَخصٍ يُعَلِّمُكَ كَلِماتٍ جَديدَة",
+            "english": "Talk to the village residents — each person teaches you new words.",
+            "transliteration": "takallam ma'a sukkaan al-qarya — kullu shakhsin yu'allimuka kalimaat jadiida"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَكمِل المَهامّ لِتَكسِبَ خِبرَة وَدَراهِم",
+            "english": "Complete quests to earn XP and dirhams.",
+            "transliteration": "akmil al-mahaamm litaksib khibra wa daraahim"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كُلَّما تَعَلَّمتَ كَلِماتٍ أَكثَر، فُتِحَت مَناطِقُ جَديدَة!",
+            "english": "The more words you learn, the more zones open up!",
+            "transliteration": "kullama ta'allamta kalimaat akthar, futihat manaatiqu jadiida!"
+          }
+        ]
+      },
+      {
+        "id": "topic_controls",
+        "topic": "controls",
+        "returnToHub": true,
+        "priority": 2,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "اِستَخدِم WASD أَو الأَسهُم لِلتَّحَرُّك. اِضغَط Shift لِلرَّكض!",
+            "english": "Use WASD or arrow keys to move. Hold Shift to sprint!",
+            "transliteration": "istakhdim WASD aw al-ashum lit-taharruk. idghat Shift lir-rakd!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "اِضغَط مَسافَة لِلتَّكَلُّم مَعَ النّاس. اِضغَط Q لِقائِمَة المَهامّ",
+            "english": "Press Space to talk to people. Press Q for the quest log.",
+            "transliteration": "idghat masaafa lit-takallum ma'a an-naas. idghat Q li-qaa'imat al-mahaamm"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "اِضغَط M لِفَتح الخَريطَة وَ ESC لِلقائِمَة الرَّئيسِيَّة",
+            "english": "Press M to open the map and ESC for the main menu.",
+            "transliteration": "idghat M lifath al-khariita wa ESC lil-qaa'ima ar-ra'iisiyya"
+          }
+        ]
+      },
+      {
+        "id": "topic_purpose",
+        "topic": "purpose",
+        "returnToHub": true,
+        "priority": 3,
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "واحَةُ الحُروف عالَمٌ سِحرِيٌّ حَيثُ تَتَعَلَّمُ العَرَبِيَّة مِن أَهلِها",
+            "english": "The Oasis of Letters is a magical world where you learn Arabic from its people.",
+            "transliteration": "waahat al-huruuf aalamun sihriyyun haythu tata'allamu al-arabiyya min ahlihaa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مَخطوطَة قَديمَة نَقَلَتكَ إلى هُنا — وَلِكَي تَعودَ يَجِبُ أَن تُتقِنَ اللُّغَة",
+            "english": "An ancient manuscript brought you here — and to return, you must master the language.",
+            "transliteration": "makhtootatun qadiima naqalatka ilaa hunaa — wa likay ta'uuda yajib an tutqina al-lugha"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "اِستَكشِف ثَمانِيَة مَناطِق، تَعَلَّم مِن ثَلاثينَ مُعَلِّماً، وَأَكمِل رِحلَتَك!",
+            "english": "Explore eight zones, learn from thirty teachers, and complete your journey!",
+            "transliteration": "istakshif thamaaniyat manaatiq, ta'allam min thalaathiin mu'alliman, wa akmil rihlatak!"
+          }
+        ]
+      },
+      {
+        "id": "topic_about_zones",
+        "topic": "about_zones",
+        "returnToHub": true,
+        "priority": 4,
+        "condition": {
+          "storyFlag": {
+            "key": "zones_visited_2",
+            "value": true
+          }
+        },
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَرى أَنَّكَ بَدَأتَ تَستَكشِف! كُلُّ مِنطَقَة تُعَلِّمُكَ مَوضوعاً مُختَلِفاً",
+            "english": "I see you've started exploring! Each zone teaches you a different topic.",
+            "transliteration": "araa annaka bada'ta tastakshif! kullu mintaqa tu'allimuka mawduu'an mukhtalifan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "المَكتَبَة تُعَلِّم الأَعداد وَالأَلوان، وَالسّوق يُعَلِّم التِّجارَة وَالطَّعام",
+            "english": "The library teaches numbers and colors, and the market teaches trade and food.",
+            "transliteration": "al-maktaba tu'allim al-a'daad wal-alwaan, was-suuq yu'allim at-tijaara wat-ta'aam"
+          }
+        ]
+      },
+      {
+        "id": "topic_encouragement",
+        "topic": "encouragement",
+        "returnToHub": true,
+        "priority": 5,
+        "condition": {
+          "storyFlag": {
+            "key": "met_mentor",
+            "value": true
+          }
+        },
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "ما شاءَ اللَّه! أَنتَ تَتَقَدَّمُ بِسُرعَة",
+            "english": "Wonderful! You are progressing quickly.",
+            "transliteration": "maa shaa'a allaah! anta tataqaddamu bisur'a"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "واصِل هَكَذا — الطَّريقُ طَويلٌ وَلَكِنَّكَ قادِر",
+            "english": "Keep it up — the path is long but you are capable.",
+            "transliteration": "waasil haakadha — at-tariiqu tawiilun wa laakinnaka qaadir"
+          }
+        ]
+      }
+    ]
   }
 ]

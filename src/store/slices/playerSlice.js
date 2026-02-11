@@ -29,8 +29,9 @@ const initialState = {
   levelUpRewards: null, // Pending level-up reward to display
   streakRewardPending: null, // Pending streak reward to display
   onboardingComplete: false, // Whether the player has completed the onboarding flow
-  onboardingStep: 0, // Current step index in contextual onboarding (0-4)
-  onboardingTargetNpc: null, // NPC ID to highlight during onboarding (e.g., 'scholar-yusuf')
+  tutorialPhase: 'awaiting_mentor', // 'awaiting_mentor' | 'met_mentor' | 'learned_word' | 'met_yusuf' | 'complete'
+  mentorAvailable: true, // Guide Amira can be found for hints
+  onboardingTargetNpc: null, // NPC ID to highlight during onboarding (e.g., 'guide-amira')
 };
 
 const playerSlice = createSlice({
@@ -237,10 +238,13 @@ const playerSlice = createSlice({
       state.onboardingComplete = true;
     },
 
-    setOnboardingStep(state, action) {
-      const step = action.payload;
-      if (typeof step === 'number' && step >= 0 && step <= 4) {
-        state.onboardingStep = step;
+    setTutorialPhase(state, action) {
+      const validPhases = ['awaiting_mentor', 'met_mentor', 'learned_word', 'met_yusuf', 'complete'];
+      if (validPhases.includes(action.payload)) {
+        state.tutorialPhase = action.payload;
+        if (action.payload === 'complete') {
+          state.onboardingComplete = true;
+        }
       }
     },
 
@@ -274,7 +278,7 @@ export const {
   setCurrentTitle,
   addTitle,
   completeOnboarding,
-  setOnboardingStep,
+  setTutorialPhase,
   setOnboardingTargetNpc,
 } = playerSlice.actions;
 
@@ -340,9 +344,10 @@ export const selectStreakInfo = createSelector(
 export const selectOnboardingState = createSelector(
   [(state) => state.player],
   (player) => ({
-    step: player.onboardingStep,
+    tutorialPhase: player.tutorialPhase,
     complete: player.onboardingComplete,
     targetNpc: player.onboardingTargetNpc,
+    mentorAvailable: player.mentorAvailable,
   })
 );
 

@@ -53,7 +53,8 @@ describe('playerSlice', () => {
       levelUpRewards: null,
       streakRewardPending: null,
       onboardingComplete: false,
-      onboardingStep: 0,
+      tutorialPhase: 'awaiting_mentor',
+      mentorAvailable: true,
       onboardingTargetNpc: null,
     };
   });

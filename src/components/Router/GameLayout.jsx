@@ -19,7 +19,8 @@ import DialogueOverlay from '../NPC/DialogueOverlay.jsx';
 import QuizOverlay from '../Quiz/QuizOverlay.jsx';
 import QuestLog from '../Quest/QuestLog.jsx';
 import SignOverlay from '../World/SignOverlay.jsx';
-import ContextualOnboarding from '../Onboarding/ContextualOnboarding.jsx';
+import TutorialHints from '../Onboarding/TutorialHints.jsx';
+import { useTutorialTrigger } from '../../hooks/useTutorialTrigger.js';
 import LevelUpModal from '../UI/LevelUpModal.jsx';
 import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
 import AchievementToast from '../Achievements/AchievementToast.jsx';
@@ -157,6 +158,7 @@ export default function GameLayout() {
   useEventBusListeners(phaserRef, playSFX, navigate);
   useSessionTracking();
   useKeyboardShortcuts();
+  useTutorialTrigger();
 
   // UI state selectors
   const dialogueOpen = useSelector((state) => state.ui.dialogueOpen);
@@ -205,8 +207,8 @@ export default function GameLayout() {
       {/* Level up modal */}
       <LevelUpModal />
 
-      {/* Onboarding overlay (highest priority) */}
-      {!onboardingComplete && <ContextualOnboarding />}
+      {/* Tutorial hints (non-blocking arrows/prompts) */}
+      {!onboardingComplete && <TutorialHints />}
 
       {/* Conditional overlays */}
       {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}

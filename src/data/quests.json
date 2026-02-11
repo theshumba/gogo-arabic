@@ -1,5 +1,25 @@
 [
   {
+    "id": "tutorial_welcome",
+    "title": "The Scholar's Path",
+    "titleArabic": "طَريق العالِم",
+    "description": "Meet Guide Amira, learn your first Arabic word, and speak with Scholar Yusuf",
+    "descriptionArabic": "قابِل المُرشِدَة أَميرَة وَتَعَلَّم أَوَّل كَلِمَة عَرَبِيَّة وَتَكَلَّم مَع الشَّيْخ يوسُف",
+    "zone": "oasis_village",
+    "type": "tutorial",
+    "target": 3,
+    "trackEvent": "tutorial_step",
+    "autoStart": true,
+    "prerequisites": [],
+    "reward": { "xp": 50, "dirhams": 20 },
+    "npcGiver": "guide",
+    "objectives": [
+      { "id": "talk_amira", "description": "Talk to Guide Amira", "descriptionArabic": "تَكَلَّم مَع المُرشِدَة أَميرَة" },
+      { "id": "learn_word", "description": "Learn your first Arabic word", "descriptionArabic": "تَعَلَّم أَوَّل كَلِمَة عَرَبِيَّة" },
+      { "id": "talk_yusuf", "description": "Talk to Scholar Yusuf", "descriptionArabic": "تَكَلَّم مَع الشَّيْخ يوسُف" }
+    ]
+  },
+  {
     "id": "learn_first_letters",
     "title": "Learn Your First Letters",
     "titleArabic": "تَعَلَّم حُروفَك الأولى",
@@ -493,8 +513,8 @@
     "type": "exploration",
     "target": 3,
     "trackEvent": "npcs_visited",
-    "autoStart": true,
-    "prerequisites": [],
+    "autoStart": false,
+    "prerequisites": ["tutorial_welcome"],
     "reward": { "xp": 100, "dirhams": 50 },
     "npcGiver": "scholar",
     "requirements": { "npcsVisited": ["scholar-yusuf", "merchant-fatima", "student-khalid"] }

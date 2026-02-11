@@ -108,7 +108,7 @@ describe('HUD Component', () => {
     expect(screen.getByLabelText('Learning progress')).toBeInTheDocument();
     expect(screen.getByText('8/28')).toBeInTheDocument();
     // Completed quest count (1 completed)
-    expect(screen.getByText('1/52')).toBeInTheDocument();
+    expect(screen.getByText('1/53')).toBeInTheDocument();
   });
 
   it('should display active quest count badge when quests exist', () => {
