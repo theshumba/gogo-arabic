@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 20 of 26 (Dialogue System)
-Plan: 0 of 6 in current phase (planned, not yet executing)
-Status: Planned — ready to execute
-Last activity: 2026-02-11 — Phase 19 complete, Phase 20 planned (6 plans, 4 waves)
+Plan: 1 of 6 in current phase (in progress)
+Status: In progress — Wave 1 executing
+Last activity: 2026-02-11 — Completed 20-01-PLAN.md (DialogueEngine Core + Schema)
 
-Progress: [█░░░░░░░░░] 12.5% (1/8 v5.0 phases complete)
+Progress: [█░░░░░░░░░] 12.5% (1/8 v5.0 phases complete, 1/6 plans in Phase 20 complete)
 
 ### Shipped Milestones
 
@@ -33,9 +33,9 @@ Progress: [█░░░░░░░░░] 12.5% (1/8 v5.0 phases complete)
 **Cumulative:** 16 phases, 33 plans shipped across 3 milestones in 3 days
 
 **v5.0 in progress:**
-- Total plans completed: 4 (19-01, 19-02, 19-03, 19-04)
+- Total plans completed: 5 (19-01, 19-02, 19-03, 19-04, 20-01)
 - Phase 19 complete: 4/4 plans shipped
-- Phase 20 planned: 6 plans in 4 waves, ready to execute
+- Phase 20 in progress: 1/6 plans complete (Wave 1)
 
 ## Accumulated Context
 
@@ -59,6 +59,12 @@ Recent decisions affecting v5.0:
 - narrativeSlice: selectHasMadeChoice is memoized via createSelector (iterates array); selectNarrativeFlagCount is plain (O(1) Object.keys)
 - sceneMock: sys.scene.manager added alongside scene.manager — SceneStackManager uses both access patterns
 - narrativeSlice: story flag budget is 50 max with DEV-mode console.warn (not enforced hard limit)
+
+**Phase 20 decisions (20-01):**
+- dialogueSchema: All new fields optional for backward compatibility — existing npcs.json validates without modification
+- DialogueEngine: Condition evaluation uses AND-combination (all conditions must pass)
+- DialogueEngine: teach_word and give_item emit events rather than directly mutating state (React handles FSRS, inventory not yet implemented)
+- DialogueEngine: relationship_change emits DIALOGUE_RELATIONSHIP_CHANGED for real-time UI feedback
 
 ### Open Items Carried Forward
 - Audio asset files (MP3s) need to be created/sourced
@@ -84,6 +90,12 @@ Recent decisions affecting v5.0:
 - Zod: dialogueSchema.js validates npcs.json at build time
 - Tests: 561 total, 558 passing, bundle 280KB
 
+**Phase 20 Wave 1 (20-01 DONE):**
+- DialogueEngine: condition evaluation, effect execution, hub-and-spoke topic filtering
+- Extended dialogueSchema: conditions, effects, personality, inlineVocab (all optional)
+- 5 new dialogue EVENTS: TOPIC_SELECTED, EFFECT_EXECUTED, QUIZ_REQUESTED, ENDED, RELATIONSHIP_CHANGED
+- Tests: 589 total, 586 passing (+28 DialogueEngine tests), bundle 280.85KB
+
 **v5.0 scope:**
 - 100 requirements across 8 phases — largest milestone yet
 - Content creation workload (30 NPC conversations, 15 interiors, 100 objects) significant
@@ -95,12 +107,12 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-11 (Phase 19 complete, Phase 20 planned)
-Stopped at: Phase 20 planned — 6 plans in 4 waves, ready to execute
-Resume file: .planning/phases/20-dialogue-system/20-01-PLAN.md
+Last session: 2026-02-11 (Phase 20 Wave 1 executing)
+Stopped at: 20-01 complete — DialogueEngine Core + Schema
+Resume file: .planning/phases/20-dialogue-system/20-02-PLAN.md
 
-**Next step:** Execute Phase 20 — `/gsd:execute-phase 20`
+**Next step:** Execute Plan 20-02 (DialogueOverlay React component, Wave 1)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-10 — v5.0 roadmap created*
+*Last updated: 2026-02-11 — Phase 20 Plan 01 complete*
