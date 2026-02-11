@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 ## Current Position
 
 Phase: 20 of 26 (Dialogue System)
-Plan: 1 of 6 in current phase (in progress)
-Status: In progress — Wave 1 executing
-Last activity: 2026-02-11 — Completed 20-01-PLAN.md (DialogueEngine Core + Schema)
+Plan: 2 of 6 in current phase (in progress)
+Status: In progress — Wave 2 executing
+Last activity: 2026-02-11 — Completed 20-02-PLAN.md (Hub-and-Spoke Dialogue Flow)
 
-Progress: [█░░░░░░░░░] 12.5% (1/8 v5.0 phases complete, 1/6 plans in Phase 20 complete)
+Progress: [█░░░░░░░░░] 12.5% (1/8 v5.0 phases complete, 2/6 plans in Phase 20 complete)
 
 ### Shipped Milestones
 
@@ -33,9 +33,9 @@ Progress: [█░░░░░░░░░] 12.5% (1/8 v5.0 phases complete, 1/6 
 **Cumulative:** 16 phases, 33 plans shipped across 3 milestones in 3 days
 
 **v5.0 in progress:**
-- Total plans completed: 5 (19-01, 19-02, 19-03, 19-04, 20-01)
+- Total plans completed: 6 (19-01, 19-02, 19-03, 19-04, 20-01, 20-02)
 - Phase 19 complete: 4/4 plans shipped
-- Phase 20 in progress: 1/6 plans complete (Wave 1)
+- Phase 20 in progress: 2/6 plans complete (Wave 2)
 
 ## Accumulated Context
 
@@ -65,6 +65,14 @@ Recent decisions affecting v5.0:
 - DialogueEngine: Condition evaluation uses AND-combination (all conditions must pass)
 - DialogueEngine: teach_word and give_item emit events rather than directly mutating state (React handles FSRS, inventory not yet implemented)
 - DialogueEngine: relationship_change emits DIALOGUE_RELATIONSHIP_CHANGED for real-time UI feedback
+
+**Phase 20 decisions (20-02):**
+- useDialogue: Phase state machine (greeting -> hub -> topic -> returning) for hub-and-spoke flow
+- useDialogue: DialogueEngine instance created with null scene (only needs Redux store access)
+- useDialogue: refreshTopics() re-evaluates conditions on each hub display for dynamic topic unlocking
+- useDialogue: quizReturnState tracks {treeId, lineIndex} for mid-quiz resume
+- useNarrativeEvents: topic_visited_{topicId} flags follow composite progress pattern (O(1) condition checks)
+- useDialogue: Backward compatible with legacy linear flow for NPCs without topic trees
 
 ### Open Items Carried Forward
 - Audio asset files (MP3s) need to be created/sourced
@@ -96,6 +104,14 @@ Recent decisions affecting v5.0:
 - 5 new dialogue EVENTS: TOPIC_SELECTED, EFFECT_EXECUTED, QUIZ_REQUESTED, ENDED, RELATIONSHIP_CHANGED
 - Tests: 589 total, 586 passing (+28 DialogueEngine tests), bundle 280.85KB
 
+**Phase 20 Wave 2 (20-02 DONE):**
+- useDialogue: Hub-and-spoke flow with greeting -> hub -> topic -> returning phases
+- useDialogue: DialogueEngine integration (conditions, effects, topic filtering)
+- useDialogue: 7 new API exports (phase, availableTopics, selectTopic, topicsDiscussed, filteredChoices, resumeAfterQuiz, isHubAndSpoke)
+- useDialogueEvents: 3 new handlers (EFFECT_EXECUTED, RELATIONSHIP_CHANGED, ENDED) with UI feedback
+- useNarrativeEvents: DIALOGUE_TOPIC_SELECTED handler for topic visit tracking
+- Tests: 589 total, 586 passing (3 pre-existing failures), bundle 286.06KB
+
 **v5.0 scope:**
 - 100 requirements across 8 phases — largest milestone yet
 - Content creation workload (30 NPC conversations, 15 interiors, 100 objects) significant
@@ -107,12 +123,12 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-11 (Phase 20 Wave 1 executing)
-Stopped at: 20-01 complete — DialogueEngine Core + Schema
-Resume file: .planning/phases/20-dialogue-system/20-02-PLAN.md
+Last session: 2026-02-11 (Phase 20 Wave 2 executing)
+Stopped at: 20-02 complete — Hub-and-Spoke Dialogue Flow
+Resume file: .planning/phases/20-dialogue-system/20-03-PLAN.md
 
-**Next step:** Execute Plan 20-02 (DialogueOverlay React component, Wave 1)
+**Next step:** Execute Plan 20-03 (DialogueOverlay React component)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-11 — Phase 20 Plan 01 complete*
+*Last updated: 2026-02-11 — Phase 20 Plan 02 complete*
