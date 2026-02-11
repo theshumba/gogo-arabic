@@ -13,7 +13,13 @@ import { EVENTS } from '../utils/eventBusTypes.js';
 import { store } from '../store/store.js';
 
 /**
- * useDialogueEvents — NPC interaction and dialogue event handlers
+ * useDialogueEvents — NPC interaction and dialogue lifecycle event handlers
+ *
+ * Handles:
+ * - NPC_INTERACT: Opens dialogue and tracks exploration quest progress
+ * - DIALOGUE_EFFECT_EXECUTED: Provides UI feedback for dialogue effects (teach_word, give_item)
+ * - DIALOGUE_RELATIONSHIP_CHANGED: Shows trust change notifications and plays SFX
+ * - DIALOGUE_ENDED: Logs conversation end for analytics (DEV mode only)
  */
 export function useDialogueEvents(playSFX) {
   const dispatch = useDispatch();
@@ -64,10 +70,74 @@ export function useDialogueEvents(playSFX) {
       }
     };
 
+    const handleEffectExecuted = (payload) => {
+      // Provide UI feedback for specific effect types
+      if (payload.type === 'teach_word') {
+        // Word teaching flow is handled by useDialogue's handleTeachWord
+        // This event is for logging/analytics purposes
+        if (import.meta.env.DEV) {
+          console.log('[useDialogueEvents] teach_word effect:', payload.wordId);
+        }
+      } else if (payload.type === 'give_item') {
+        // Show item received notification (inventory system Phase 25+)
+        dispatch(showNotification({
+          message: `Received: ${payload.itemId}`,
+          type: 'success',
+        }));
+        if (import.meta.env.DEV) {
+          console.log('[useDialogueEvents] give_item effect:', payload);
+        }
+      } else if (payload.effectCount) {
+        // Summary event after multiple effects
+        if (import.meta.env.DEV) {
+          console.log('[useDialogueEvents] Effects executed:', payload.effectCount);
+        }
+      }
+    };
+
+    const handleRelationshipChanged = ({ npcId, amount, newLevel }) => {
+      // Get NPC name from Redux state
+      const state = store.getState();
+      const npcName = state.ui.dialogueNpcName || 'NPC';
+
+      // Show trust change notification
+      const direction = amount > 0 ? '+' : '';
+      dispatch(showNotification({
+        message: `${direction}${amount} Trust with ${npcName}`,
+        type: amount > 0 ? 'success' : 'warning',
+      }));
+
+      // Play appropriate SFX
+      if (amount > 0) {
+        EventBus.emit(EVENTS.SFX_QUEST);
+      } else if (amount < 0) {
+        EventBus.emit(EVENTS.SFX_WRONG);
+      }
+
+      if (import.meta.env.DEV) {
+        console.log('[useDialogueEvents] Relationship changed:', { npcId, amount, newLevel });
+      }
+    };
+
+    const handleDialogueEnded = ({ npcId }) => {
+      // Log conversation end for analytics (DEV mode only)
+      if (import.meta.env.DEV) {
+        console.log('[useDialogueEvents] Dialogue ended with NPC:', npcId);
+      }
+    };
+
+    // Register event listeners
     EventBus.on(EVENTS.NPC_INTERACT, handleNpcInteract);
+    EventBus.on(EVENTS.DIALOGUE_EFFECT_EXECUTED, handleEffectExecuted);
+    EventBus.on(EVENTS.DIALOGUE_RELATIONSHIP_CHANGED, handleRelationshipChanged);
+    EventBus.on(EVENTS.DIALOGUE_ENDED, handleDialogueEnded);
 
     return () => {
+      // Cleanup: unregister all listeners
       EventBus.off(EVENTS.NPC_INTERACT, handleNpcInteract);
+      EventBus.off(EVENTS.DIALOGUE_EFFECT_EXECUTED, handleEffectExecuted);
+      EventBus.off(EVENTS.DIALOGUE_RELATIONSHIP_CHANGED, handleRelationshipChanged);
+      EventBus.off(EVENTS.DIALOGUE_ENDED, handleDialogueEnded);
     };
   }, [dispatch, quests, playSFX]);
 }
