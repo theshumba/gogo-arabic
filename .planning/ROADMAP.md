@@ -133,10 +133,12 @@ Plans:
   3. Each interior has distinct purpose: shops, library, homes, guild, mosque with relevant NPCs and content
   4. Player exits seamlessly by walking to door and returns to exact exterior position they entered from
   5. Audio crossfades between exterior zone BGM and interior ambient when entering/exiting
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 22-01: TBD
+- [ ] 22-01-PLAN.md — InteriorScene class + Phaser config + door-to-interior wiring + audio crossfade
+- [ ] 22-02-PLAN.md — 15 interior map configs (5 templates) + zones.js door updates + building locks
+- [ ] 22-03-PLAN.md — Interior NPC dialogue data + dynamic unlock hardening + integration verification
 
 ### Phase 23: Interactive Objects & World Life
 **Goal**: World feels alive and worth exploring — 100+ objects teach vocabulary, reward curiosity, and fill empty space with meaning
