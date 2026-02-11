@@ -1,8 +1,30 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+function validateDialoguePlugin() {
+  return {
+    name: 'validate-dialogue-data',
+    async buildStart() {
+      if (process.env.NODE_ENV !== 'production' && !process.argv.includes('build')) return;
+      const { validateDialogueData } = await import('./src/data/dialogueSchema.js');
+      const npcsPath = path.resolve(__dirname, 'src/data/npcs.json');
+      const npcsData = JSON.parse(fs.readFileSync(npcsPath, 'utf-8'));
+      const result = validateDialogueData(npcsData);
+      if (!result.success) {
+        throw new Error(`Dialogue data validation failed:\n${result.errors.join('\n')}`);
+      }
+      console.log('[validate-dialogue] NPC data validated successfully');
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react({ jsxRuntime: 'automatic' })],
+  plugins: [react({ jsxRuntime: 'automatic' }), validateDialoguePlugin()],
   publicDir: 'public',
   server: {
     port: 3000,
