@@ -9,6 +9,7 @@ import { InteractableManager } from '../systems/InteractableManager.js';
 import { MapLoader } from '../systems/MapLoader.js';
 import ScreenShake from '../systems/ScreenShake.js';
 import ParticleEffectManager from '../systems/ParticleEffectManager.js';
+import { SceneStackManager } from '../systems/SceneStackManager.js';
 import { ZONES, TILE } from '../../data/zones.js';
 
 // ============================================================
@@ -33,6 +34,7 @@ export class WorldScene extends Phaser.Scene {
     this.mapLoader = null;
     this.screenShake = null;
     this.particleEffects = null;
+    this.sceneStackManager = null;
 
     // Input
     this.interactKey = null;
@@ -49,6 +51,7 @@ export class WorldScene extends Phaser.Scene {
     this.mapLoader = new MapLoader(this);
     this.screenShake = new ScreenShake(this);
     this.particleEffects = new ParticleEffectManager(this);
+    this.sceneStackManager = new SceneStackManager(this);
 
     // Load the default zone
     const zone = ZONES.oasis_village;
@@ -280,6 +283,11 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   shutdown() {
+    if (this.sceneStackManager) {
+      this.sceneStackManager.destroy();
+      this.sceneStackManager = null;
+    }
+
     // Reset zone transition to prevent stuck state on scene restart
     if (this.zoneTransition) {
       this.zoneTransition.transitioning = false;
