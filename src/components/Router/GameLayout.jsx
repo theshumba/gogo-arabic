@@ -19,6 +19,7 @@ import DialogueOverlay from '../NPC/DialogueOverlay.jsx';
 import QuizOverlay from '../Quiz/QuizOverlay.jsx';
 import QuestLog from '../Quest/QuestLog.jsx';
 import SignOverlay from '../World/SignOverlay.jsx';
+import ObjectInteractionOverlay from '../World/ObjectInteractionOverlay.jsx';
 import TutorialHints from '../Onboarding/TutorialHints.jsx';
 import { useTutorialTrigger } from '../../hooks/useTutorialTrigger.js';
 import LevelUpModal from '../UI/LevelUpModal.jsx';
@@ -166,6 +167,7 @@ export default function GameLayout() {
   const quizOpen = useSelector((state) => state.ui.quizOpen);
   const menuOpen = useSelector((state) => state.ui.menuOpen);
   const signOpen = useSelector((state) => state.ui.signOpen);
+  const objectInspectOpen = useSelector((state) => state.ui.objectInspectOpen);
   const onboardingComplete = useSelector((state) => state.player.onboardingComplete ?? true);
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
@@ -215,6 +217,7 @@ export default function GameLayout() {
       {dialogueOpen && dialogueConfig?.type !== 'quest-log' && <DialogueOverlay />}
       {quizOpen && <QuizOverlay />}
       {signOpen && <SignOverlay />}
+      {objectInspectOpen && <ObjectInteractionOverlay />}
       {menuOpen && (
         <PauseMenu
           onResume={() => dispatch(toggleMenu())}

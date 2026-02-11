@@ -5,9 +5,11 @@ const initialState = {
   quizOpen: false,
   menuOpen: false,
   signOpen: false,
+  objectInspectOpen: false,
   quizConfig: null, // { type, words, context, timer }
   dialogueConfig: null, // { npcId, npcName }
   signData: null, // { arabic, english }
+  objectInspectData: null, // { id, type, labelArabic, labelEnglish, ... }
   notification: null, // { message, type }
 };
 
@@ -52,6 +54,19 @@ const uiSlice = createSlice({
       state.signData = null;
     },
 
+    openObjectInspect(state, action) {
+      // payload: { id, type, labelArabic, labelEnglish, descriptionArabic, descriptionEnglish,
+      //            culturalNote, vocabWordId, vocabCategory, loot, stateChange, repeatable,
+      //            taughtWord, lootMessage }
+      state.objectInspectOpen = true;
+      state.objectInspectData = action.payload;
+    },
+
+    closeObjectInspect(state) {
+      state.objectInspectOpen = false;
+      state.objectInspectData = null;
+    },
+
     showNotification(state, action) {
       // payload: { message, type }
       state.notification = action.payload;
@@ -66,9 +81,11 @@ const uiSlice = createSlice({
       state.quizOpen = false;
       state.menuOpen = false;
       state.signOpen = false;
+      state.objectInspectOpen = false;
       state.quizConfig = null;
       state.dialogueConfig = null;
       state.signData = null;
+      state.objectInspectData = null;
     },
   },
 });
@@ -81,6 +98,8 @@ export const {
   toggleMenu,
   openSign,
   closeSign,
+  openObjectInspect,
+  closeObjectInspect,
   showNotification,
   clearNotification,
   closeAllOverlays,
@@ -94,10 +113,19 @@ export const selectQuizConfig = (state) => state.ui.quizConfig;
 export const selectMenuOpen = (state) => state.ui.menuOpen;
 export const selectSignOpen = (state) => state.ui.signOpen;
 export const selectSignData = (state) => state.ui.signData;
+export const selectObjectInspectOpen = (state) => state.ui.objectInspectOpen;
+export const selectObjectInspectData = (state) => state.ui.objectInspectData;
 export const selectNotification = (state) => state.ui.notification;
 export const selectAnyOverlayOpen = createSelector(
-  [(state) => state.ui.dialogueOpen, (state) => state.ui.quizOpen, (state) => state.ui.menuOpen, (state) => state.ui.signOpen],
-  (dialogueOpen, quizOpen, menuOpen, signOpen) => dialogueOpen || quizOpen || menuOpen || signOpen
+  [
+    (state) => state.ui.dialogueOpen,
+    (state) => state.ui.quizOpen,
+    (state) => state.ui.menuOpen,
+    (state) => state.ui.signOpen,
+    (state) => state.ui.objectInspectOpen,
+  ],
+  (dialogueOpen, quizOpen, menuOpen, signOpen, objectInspectOpen) =>
+    dialogueOpen || quizOpen || menuOpen || signOpen || objectInspectOpen
 );
 
 export default uiSlice.reducer;

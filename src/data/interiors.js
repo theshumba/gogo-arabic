@@ -135,6 +135,10 @@ const scholar_house_interior = {
     { id: 'exit-door', type: 'door', x: 7, y: 9, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'bookshelf-scholar-study-1', type: 'bookshelf', x: 2, y: 1, category: 'greetings' },
     { id: 'bookshelf-scholar-study-2', type: 'bookshelf', x: 11, y: 1, category: 'phrases' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'lantern-scholar-1', type: 'lantern', x: 5, y: 2, labelArabic: 'فانوس', labelEnglish: 'Study Lantern', descriptionEnglish: 'A brass lantern illuminating the scholar\'s reading desk.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'painting-scholar-1', type: 'painting', x: 9, y: 3, labelArabic: 'لوحة', labelEnglish: 'Calligraphy Scroll', descriptionEnglish: 'A framed scroll of beautiful Arabic calligraphy hanging on the study wall.', culturalNote: 'Arabic calligraphy is often called the art of the soul.', vocabWordId: null, vocabCategory: 'greetings', repeatable: true },
+    { id: 'pot-scholar-1', type: 'pot', x: 4, y: 6, labelArabic: 'قِدر', labelEnglish: 'Ink Pot', descriptionEnglish: 'A small clay pot of dark ink used by the scholar for writing.', vocabWordId: null, vocabCategory: null, repeatable: true },
   ],
 };
 
@@ -160,6 +164,9 @@ const merchant_house_interior = {
   interactables: [
     { id: 'exit-door', type: 'door', x: 5, y: 7, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'chest-merchant-home', type: 'chest', x: 8, y: 1, minDirhams: 10, maxDirhams: 30 },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'barrel-merchant-1', type: 'barrel', x: 3, y: 1, labelArabic: 'برميل', labelEnglish: 'Trade Barrel', descriptionEnglish: 'A barrel of goods Fatima has acquired through shrewd trading.', vocabWordId: null, vocabCategory: 'trade', repeatable: true },
+    { id: 'pot-merchant-1', type: 'pot', x: 7, y: 4, labelArabic: 'قِدر', labelEnglish: 'Tea Pot', descriptionEnglish: 'A pot of mint tea kept warm for customers and guests.', vocabWordId: null, vocabCategory: null, repeatable: true },
   ],
 };
 
@@ -187,6 +194,10 @@ const oasis_guild_interior = {
     { id: 'exit-door', type: 'door', x: 7, y: 9, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'bookshelf-guild-quests', type: 'bookshelf', x: 3, y: 1, category: 'phrases' },
     { id: 'sign-guild-board', type: 'sign', x: 7, y: 2, textArabic: 'لَوحَة المَهام', textEnglish: 'Quest Board' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'lantern-guild-1', type: 'lantern', x: 4, y: 4, labelArabic: 'فانوس', labelEnglish: 'Guild Lantern', descriptionEnglish: 'A hanging lantern lighting the guild hall where adventurers gather.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'crate-guild-1', type: 'crate', x: 10, y: 3, labelArabic: 'صندوق', labelEnglish: 'Supply Crate', descriptionEnglish: 'A crate of supplies donated by grateful villagers for adventurers.', vocabWordId: null, vocabCategory: null, loot: { type: 'dirhams', min: 5, max: 15 }, repeatable: false, stateChange: 'inspected' },
+    { id: 'painting-guild-1', type: 'painting', x: 10, y: 1, labelArabic: 'لوحة', labelEnglish: 'Map of Zones', descriptionEnglish: 'A hand-painted map showing all eight zones of the world.', vocabWordId: null, vocabCategory: null, repeatable: true },
   ],
 };
 
@@ -223,6 +234,10 @@ const library_archive_interior = {
     { id: 'bookshelf-archive-2', type: 'bookshelf', x: 11, y: 2, category: 'colors' },
     { id: 'bookshelf-archive-3', type: 'bookshelf', x: 4, y: 8, category: 'phrases' },
     { id: 'bookshelf-archive-4', type: 'bookshelf', x: 11, y: 8, category: 'greetings' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'lantern-archive-1', type: 'lantern', x: 7, y: 3, labelArabic: 'فانوس', labelEnglish: 'Archive Lantern', descriptionEnglish: 'A tall lantern keeping the archive dimly lit to preserve the ancient manuscripts.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'crate-archive-1', type: 'crate', x: 7, y: 7, labelArabic: 'صندوق', labelEnglish: 'Manuscript Crate', descriptionEnglish: 'A crate of uncatalogued scrolls and codices from the golden age of learning.', culturalNote: 'The House of Wisdom in Baghdad translated Greek, Persian, and Indian texts into Arabic.', vocabWordId: null, vocabCategory: 'numbers', loot: { type: 'dirhams', min: 10, max: 25 }, repeatable: false, stateChange: 'inspected' },
+    { id: 'painting-archive-1', type: 'painting', x: 8, y: 2, labelArabic: 'لوحة', labelEnglish: 'Illuminated Map', descriptionEnglish: 'A beautifully illuminated medieval map showing the known world.', vocabWordId: null, vocabCategory: 'colors', repeatable: true },
   ],
 };
 
@@ -248,6 +263,9 @@ const library_study_interior = {
     { id: 'exit-door', type: 'door', x: 5, y: 7, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'bookshelf-study-1', type: 'bookshelf', x: 3, y: 1, category: 'numbers' },
     { id: 'bookshelf-study-2', type: 'bookshelf', x: 6, y: 1, category: 'phrases' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'lantern-study-1', type: 'lantern', x: 5, y: 3, labelArabic: 'فانوس', labelEnglish: 'Reading Lantern', descriptionEnglish: 'A small oil lantern placed on the study desk for late-night reading.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'pot-study-1', type: 'pot', x: 8, y: 4, labelArabic: 'قِدر', labelEnglish: 'Ink Pot', descriptionEnglish: 'A pot of black ink with a reed pen resting beside it.', vocabWordId: null, vocabCategory: null, repeatable: true },
   ],
 };
 
@@ -279,6 +297,10 @@ const spice_shop_interior = {
   interactables: [
     { id: 'exit-door', type: 'door', x: 6, y: 9, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'sign-spice-counter', type: 'sign', x: 6, y: 2, textArabic: 'بُهارات طازَجَة', textEnglish: 'Fresh Spices' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'barrel-spice-1', type: 'barrel', x: 3, y: 3, labelArabic: 'برميل', labelEnglish: 'Cinnamon Barrel', descriptionEnglish: 'A barrel overflowing with fragrant cinnamon sticks from distant lands.', culturalNote: 'Arab traders kept their spice sources secret to maintain monopoly pricing.', vocabWordId: null, vocabCategory: 'food', repeatable: true },
+    { id: 'pot-spice-1', type: 'pot', x: 9, y: 3, labelArabic: 'قِدر', labelEnglish: 'Spice Pot', descriptionEnglish: 'A pot of freshly ground turmeric, its golden colour bright and vivid.', vocabWordId: null, vocabCategory: 'food', repeatable: true },
+    { id: 'pot-spice-2', type: 'pot', x: 4, y: 7, labelArabic: 'قِدر', labelEnglish: 'Saffron Pot', descriptionEnglish: 'A tiny pot of precious saffron threads, worth more than gold by weight.', vocabWordId: null, vocabCategory: 'trade', repeatable: true },
   ],
 };
 
@@ -306,6 +328,10 @@ const textile_shop_interior = {
   interactables: [
     { id: 'exit-door', type: 'door', x: 6, y: 9, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'sign-textile-counter', type: 'sign', x: 6, y: 2, textArabic: 'أَقمِشَة فاخِرَة', textEnglish: 'Fine Textiles' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'crate-textile-1', type: 'crate', x: 3, y: 3, labelArabic: 'صندوق', labelEnglish: 'Silk Crate', descriptionEnglish: 'A crate of imported Chinese silk, soft to the touch and richly dyed.', vocabWordId: null, vocabCategory: 'trade', repeatable: true },
+    { id: 'barrel-textile-1', type: 'barrel', x: 9, y: 4, labelArabic: 'برميل', labelEnglish: 'Dye Barrel', descriptionEnglish: 'A barrel of indigo dye, staining the wood a deep blue.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'painting-textile-1', type: 'painting', x: 3, y: 7, labelArabic: 'لوحة', labelEnglish: 'Pattern Display', descriptionEnglish: 'A sample board showing intricate weaving patterns available for order.', vocabWordId: null, vocabCategory: 'trade', repeatable: true },
   ],
 };
 
@@ -334,6 +360,9 @@ const market_warehouse_interior = {
     { id: 'exit-door', type: 'door', x: 7, y: 9, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'chest-warehouse-1', type: 'chest', x: 2, y: 1, minDirhams: 20, maxDirhams: 60 },
     { id: 'chest-warehouse-2', type: 'chest', x: 11, y: 1, minDirhams: 25, maxDirhams: 70 },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'barrel-warehouse-1', type: 'barrel', x: 4, y: 4, labelArabic: 'برميل', labelEnglish: 'Trade Barrel', descriptionEnglish: 'A heavy barrel of olive oil ready for export to the coastal port.', vocabWordId: null, vocabCategory: 'trade', repeatable: true },
+    { id: 'crate-warehouse-1', type: 'crate', x: 9, y: 4, labelArabic: 'صندوق', labelEnglish: 'Goods Crate', descriptionEnglish: 'A crate packed with textiles and spices for the next trade caravan.', vocabWordId: null, vocabCategory: 'trade', loot: { type: 'dirhams', min: 8, max: 20 }, repeatable: false, stateChange: 'inspected' },
   ],
 };
 
@@ -364,6 +393,9 @@ const farmhouse_interior = {
   interactables: [
     { id: 'exit-door', type: 'door', x: 5, y: 7, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'bookshelf-farmhouse', type: 'bookshelf', x: 4, y: 1, category: 'nature' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'pot-farmhouse-1', type: 'pot', x: 7, y: 3, labelArabic: 'قِدر', labelEnglish: 'Stew Pot', descriptionEnglish: 'A pot of thick farm stew simmering over the hearth. It smells of onions and lamb.', vocabWordId: null, vocabCategory: 'nature', repeatable: true },
+    { id: 'barrel-farmhouse-1', type: 'barrel', x: 2, y: 4, labelArabic: 'برميل', labelEnglish: 'Grain Barrel', descriptionEnglish: 'A barrel of stored grain to last through the dry season.', vocabWordId: null, vocabCategory: null, repeatable: true },
   ],
 };
 
@@ -395,6 +427,10 @@ const bedouin_tent_interior = {
   interactables: [
     { id: 'exit-door', type: 'door', x: 6, y: 9, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'bookshelf-tent', type: 'bookshelf', x: 5, y: 1, category: 'time' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'lantern-tent-1', type: 'lantern', x: 3, y: 3, labelArabic: 'فانوس', labelEnglish: 'Tent Lantern', descriptionEnglish: 'A small oil lantern casting warm light inside the tent during long desert nights.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'pot-tent-1', type: 'pot', x: 8, y: 3, labelArabic: 'قِدر', labelEnglish: 'Coffee Dallah', descriptionEnglish: 'A traditional dallah coffee pot, its long spout polished from years of use.', culturalNote: 'The dallah coffee pot is a symbol of Arab hospitality, featured on Saudi and Emirati currency.', vocabWordId: null, vocabCategory: 'time', repeatable: true },
+    { id: 'painting-tent-1', type: 'painting', x: 8, y: 1, labelArabic: 'لوحة', labelEnglish: 'Desert Tapestry', descriptionEnglish: 'A woven tapestry showing a caravan crossing dunes under a crescent moon.', vocabWordId: null, vocabCategory: 'phrases', repeatable: true },
   ],
 };
 
@@ -424,6 +460,9 @@ const mountain_home_interior = {
   interactables: [
     { id: 'exit-door', type: 'door', x: 5, y: 7, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'bookshelf-mountain-home', type: 'bookshelf', x: 4, y: 1, category: 'adjectives' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'pot-mthome-1', type: 'pot', x: 7, y: 3, labelArabic: 'قِدر', labelEnglish: 'Herbal Tea Pot', descriptionEnglish: 'A pot of mountain sage tea, brewed fresh each morning.', vocabWordId: null, vocabCategory: 'adjectives', repeatable: true },
+    { id: 'painting-mthome-1', type: 'painting', x: 2, y: 3, labelArabic: 'لوحة', labelEnglish: 'Mountain Vista', descriptionEnglish: 'A painting showing the view from the village looking down across misty valleys.', vocabWordId: null, vocabCategory: null, repeatable: true },
   ],
 };
 
@@ -455,6 +494,10 @@ const mountain_mosque_interior = {
     { id: 'bookshelf-mosque-1', type: 'bookshelf', x: 5, y: 2, category: 'greetings' },
     { id: 'bookshelf-mosque-2', type: 'bookshelf', x: 12, y: 2, category: 'phrases' },
     { id: 'sign-mihrab', type: 'sign', x: 9, y: 2, textArabic: 'المِحراب', textEnglish: 'The Mihrab' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'lantern-mosque-1', type: 'lantern', x: 6, y: 5, labelArabic: 'فانوس', labelEnglish: 'Prayer Lantern', descriptionEnglish: 'A beautiful glass lantern hanging in the prayer hall, its light warm and inviting.', culturalNote: 'Mosque lamps are a major art form in Islamic culture, often decorated with Quranic verses.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'lantern-mosque-2', type: 'lantern', x: 11, y: 5, labelArabic: 'فانوس', labelEnglish: 'Prayer Lantern', descriptionEnglish: 'A matching lantern illuminating the eastern side of the prayer hall.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'painting-mosque-1', type: 'painting', x: 9, y: 4, labelArabic: 'لوحة', labelEnglish: 'Geometric Panel', descriptionEnglish: 'An intricate geometric tile panel with interlocking stars and hexagons.', culturalNote: 'Islamic geometric patterns use mathematics to create infinite, repeating designs symbolising the infinite nature of God.', vocabWordId: null, vocabCategory: 'phrases', repeatable: true },
   ],
 };
 
@@ -487,6 +530,10 @@ const port_tavern_interior = {
     { id: 'exit-door', type: 'door', x: 7, y: 9, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'bookshelf-tavern', type: 'bookshelf', x: 3, y: 1, category: 'food' },
     { id: 'sign-tavern-menu', type: 'sign', x: 7, y: 1, textArabic: 'قائِمَة الطَّعام', textEnglish: 'Menu' },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'barrel-tavern-1', type: 'barrel', x: 10, y: 1, labelArabic: 'برميل', labelEnglish: 'Date Wine Barrel', descriptionEnglish: 'A barrel of sweet date wine, a favourite among the port sailors.', vocabWordId: null, vocabCategory: 'food', repeatable: true },
+    { id: 'lantern-tavern-1', type: 'lantern', x: 4, y: 5, labelArabic: 'فانوس', labelEnglish: 'Tavern Lantern', descriptionEnglish: 'A flickering lantern above the tavern counter, its light warm and hazy.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'painting-tavern-1', type: 'painting', x: 10, y: 4, labelArabic: 'لوحة', labelEnglish: 'Sea Monster Painting', descriptionEnglish: 'A dramatic painting of a sailor battling a sea serpent, likely exaggerated.', vocabWordId: null, vocabCategory: 'food', repeatable: true },
   ],
 };
 
@@ -515,6 +562,9 @@ const port_warehouse_interior = {
     { id: 'exit-door', type: 'door', x: 7, y: 9, isExit: true, labelArabic: 'خروج', labelEnglish: 'Exit' },
     { id: 'chest-port-wh-1', type: 'chest', x: 2, y: 1, minDirhams: 30, maxDirhams: 100 },
     { id: 'chest-port-wh-2', type: 'chest', x: 11, y: 1, minDirhams: 35, maxDirhams: 110 },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'barrel-portwh-1', type: 'barrel', x: 5, y: 3, labelArabic: 'برميل', labelEnglish: 'Cargo Barrel', descriptionEnglish: 'A sealed barrel of imported goods awaiting collection by merchants.', vocabWordId: null, vocabCategory: 'trade', loot: { type: 'dirhams', min: 10, max: 25 }, repeatable: false, stateChange: 'inspected' },
+    { id: 'crate-portwh-1', type: 'crate', x: 9, y: 5, labelArabic: 'صندوق', labelEnglish: 'Shipping Crate', descriptionEnglish: 'A large crate of ceramics packed in straw for safe transport.', vocabWordId: null, vocabCategory: 'trade', repeatable: true },
   ],
 };
 
@@ -554,6 +604,13 @@ const palace_throne_interior = {
     { id: 'bookshelf-throne-2', type: 'bookshelf', x: 12, y: 2, category: 'colors' },
     { id: 'sign-throne', type: 'sign', x: 9, y: 2, textArabic: 'عَرش المَلِك', textEnglish: "The King's Throne" },
     { id: 'chest-throne-room', type: 'chest', x: 16, y: 11, minDirhams: 80, maxDirhams: 250 },
+    // --- Phase 23: Interactive Objects ---
+    { id: 'lantern-throne-1', type: 'lantern', x: 6, y: 3, labelArabic: 'فانوس', labelEnglish: 'Royal Lantern', descriptionEnglish: 'A magnificent golden lantern encrusted with rubies, illuminating the throne room.', culturalNote: 'Royal courts in the Islamic golden age were renowned for their opulent lighting and decoration.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'lantern-throne-2', type: 'lantern', x: 11, y: 3, labelArabic: 'فانوس', labelEnglish: 'Royal Lantern', descriptionEnglish: 'A matching golden lantern on the eastern side of the throne.', vocabWordId: null, vocabCategory: null, repeatable: true },
+    { id: 'painting-throne-1', type: 'painting', x: 6, y: 6, labelArabic: 'لوحة', labelEnglish: 'Dynasty Painting', descriptionEnglish: 'A sweeping painting depicting the royal dynasty across five generations.', vocabWordId: null, vocabCategory: 'adjectives', repeatable: true },
+    { id: 'painting-throne-2', type: 'painting', x: 11, y: 6, labelArabic: 'لوحة', labelEnglish: 'Coronation Painting', descriptionEnglish: 'A grand scene of the current ruler\'s coronation, attended by scholars and poets.', vocabWordId: null, vocabCategory: 'colors', repeatable: true },
+    { id: 'statue-throne-1', type: 'statue', x: 7, y: 9, labelArabic: 'تمثال', labelEnglish: 'Eagle Statue', descriptionEnglish: 'A bronze eagle with outstretched wings, the royal emblem of the palace.', vocabWordId: null, vocabCategory: 'adjectives', repeatable: true },
+    { id: 'pot-throne-1', type: 'pot', x: 2, y: 10, labelArabic: 'قِدر', labelEnglish: 'Oud Burner', descriptionEnglish: 'An ornate oud burner filling the throne room with the scent of agarwood.', culturalNote: 'Burning oud is a traditional greeting of honour for important guests in the Arab world.', vocabWordId: null, vocabCategory: null, repeatable: true },
   ],
 };
 

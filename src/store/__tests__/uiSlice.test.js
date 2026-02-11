@@ -25,9 +25,11 @@ describe('uiSlice', () => {
         quizOpen: false,
         menuOpen: false,
         signOpen: false,
+        objectInspectOpen: false,
         quizConfig: null,
         dialogueConfig: null,
         signData: null,
+        objectInspectData: null,
         notification: null,
       });
     });

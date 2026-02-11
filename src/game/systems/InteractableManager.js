@@ -7,15 +7,35 @@ import { stripDiacritics } from '../../utils/arabicUtils.js';
 // Interactable proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
 
+// Sprite key mapping for the 8 new interactive object types
+const WORLD_OBJECT_SPRITES = {
+  fountain: 'rock2',
+  statue: 'ruin-pillar',
+  painting: 'gate-pillar',
+  lantern: 'rock1',
+  stall: 'house-small',
+  barrel: 'rock1',
+  crate: 'rock2',
+  pot: 'rock1',
+};
+
+// Set of all new world object types (behavior composition, not class-per-type)
+const WORLD_OBJECT_TYPES = new Set(Object.keys(WORLD_OBJECT_SPRITES));
+
+// One-time (non-repeatable) object types — once interacted, they are "used up"
+const ONE_TIME_TYPES = new Set(['barrel', 'crate', 'pot']);
+
 /**
  * InteractableManager
- * Manages chests, bookshelves, signs — anything the player can interact with that isn't an NPC
+ * Manages chests, bookshelves, signs, doors, and 8 new world object types
+ * (fountain, statue, painting, lantern, stall, barrel, crate, pot).
  */
 export class InteractableManager {
   constructor(scene) {
     this.scene = scene;
     this.interactables = [];
     this.doorTweens = [];
+    this.objectTweens = [];
   }
 
   /**
@@ -34,6 +54,7 @@ export class InteractableManager {
       else if (cfg.type === 'bookshelf') spriteKey = 'ruin-pillar';
       else if (cfg.type === 'chest') spriteKey = 'rock1';
       else if (cfg.type === 'door') spriteKey = 'house-small';
+      else if (WORLD_OBJECT_TYPES.has(cfg.type)) spriteKey = WORLD_OBJECT_SPRITES[cfg.type];
 
       const sprite = this.scene.add.image(px, py, spriteKey).setOrigin(0.5, 0.8);
       sprite.setScale(0.7);
@@ -45,15 +66,42 @@ export class InteractableManager {
           sprite.setTint(0x666666);
         }
       }
+
+      // Tint already-interacted one-time world objects from narrativeSlice
+      if (WORLD_OBJECT_TYPES.has(cfg.type)) {
+        const worldObjectStates = store.getState().narrative?.worldObjectStates || {};
+        const objectState = worldObjectStates[cfg.id];
+        const repeatable = cfg.repeatable !== false && !ONE_TIME_TYPES.has(cfg.type);
+        if (!repeatable && objectState === 'used') {
+          sprite.setTint(0x666666);
+        }
+      }
+
       objectSprites.push(sprite);
 
       // Label above the object (respects harakat setting)
       const showDiacritics = store.getState().settings?.showDiacritics ?? true;
-      const rawLabel = cfg.type === 'sign' ? cfg.textArabic
-        : cfg.type === 'bookshelf' ? 'Bookshelf'
-        : cfg.type === 'door' ? (cfg.labelArabic || 'Door')
-        : 'Chest';
-      const useArabicFont = cfg.type === 'sign' || (cfg.type === 'door' && cfg.labelArabic);
+      let rawLabel;
+      let useArabicFont = false;
+
+      if (cfg.type === 'sign') {
+        rawLabel = cfg.textArabic;
+        useArabicFont = true;
+      } else if (cfg.type === 'bookshelf') {
+        rawLabel = 'Bookshelf';
+      } else if (cfg.type === 'door') {
+        rawLabel = cfg.labelArabic || 'Door';
+        useArabicFont = !!cfg.labelArabic;
+      } else if (WORLD_OBJECT_TYPES.has(cfg.type) && cfg.labelArabic) {
+        rawLabel = cfg.labelArabic;
+        useArabicFont = true;
+      } else if (WORLD_OBJECT_TYPES.has(cfg.type)) {
+        // Fallback to type name capitalized
+        rawLabel = cfg.type.charAt(0).toUpperCase() + cfg.type.slice(1);
+      } else {
+        rawLabel = 'Chest';
+      }
+
       const labelText = (useArabicFont && !showDiacritics) ? stripDiacritics(rawLabel) : rawLabel;
       const label = this.scene.add.text(px, py - 50, labelText, {
         fontFamily: useArabicFont ? "'Noto Naskh Arabic', serif" : "'Press Start 2P', monospace",
@@ -99,6 +147,25 @@ export class InteractableManager {
           sprite.setTint(0x888888);
         }
       }
+
+      // Visual cue for new world object types: subtle pulsing alpha tween
+      if (WORLD_OBJECT_TYPES.has(cfg.type)) {
+        const worldObjectStates = store.getState().narrative?.worldObjectStates || {};
+        const objectState = worldObjectStates[cfg.id];
+        const repeatable = cfg.repeatable !== false && !ONE_TIME_TYPES.has(cfg.type);
+        // Only pulse if the object is still interactive (repeatable or not yet used)
+        if (repeatable || objectState !== 'used') {
+          const tween = this.scene.tweens.add({
+            targets: sprite,
+            alpha: { from: 0.8, to: 1.0 },
+            duration: 1500,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut',
+          });
+          this.objectTweens.push(tween);
+        }
+      }
     });
   }
 
@@ -136,7 +203,7 @@ export class InteractableManager {
   }
 
   /**
-   * Handle interaction with an object (sign, chest, bookshelf)
+   * Handle interaction with an object (sign, chest, bookshelf, door, or world object)
    */
   handleInteractable(obj) {
     const playerState = store.getState().player;
@@ -201,6 +268,49 @@ export class InteractableManager {
       } else {
         EventBus.emit(EVENTS.DOOR_OPENED, { id: obj.id });
       }
+    } else if (WORLD_OBJECT_TYPES.has(obj.type)) {
+      this.handleWorldObject(obj);
+    }
+  }
+
+  /**
+   * Handle interaction with a world object (fountain, statue, painting, etc.)
+   * Uses unified OBJECT_INTERACT event with behavior composition.
+   */
+  handleWorldObject(obj) {
+    const worldObjectStates = store.getState().narrative?.worldObjectStates || {};
+    const objectState = worldObjectStates[obj.id];
+    const repeatable = obj.repeatable !== false && !ONE_TIME_TYPES.has(obj.type);
+
+    // Already used and non-repeatable — show "already inspected" notification
+    if (!repeatable && objectState === 'used') {
+      EventBus.emit(EVENTS.SFX_CLICK);
+      return;
+    }
+
+    // Determine the state change to dispatch
+    const stateChange = (!repeatable) ? 'used' : null;
+
+    // Emit unified OBJECT_INTERACT event with full payload
+    EventBus.emit(EVENTS.OBJECT_INTERACT, {
+      id: obj.id,
+      type: obj.type,
+      labelArabic: obj.labelArabic || null,
+      labelEnglish: obj.labelEnglish || null,
+      descriptionArabic: obj.descriptionArabic || null,
+      descriptionEnglish: obj.descriptionEnglish || null,
+      culturalNote: obj.culturalNote || null,
+      vocabWordId: obj.vocabWordId || null,
+      vocabCategory: obj.vocabCategory || null,
+      loot: obj.loot || null,
+      stateChange,
+      repeatable,
+    });
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+
+    // Visual feedback for one-time objects: tint after interaction
+    if (!repeatable && obj.sprite) {
+      obj.sprite.setTint(0x666666);
     }
   }
 
@@ -210,6 +320,9 @@ export class InteractableManager {
   destroy() {
     this.doorTweens.forEach((t) => { if (t) t.remove(); });
     this.doorTweens = [];
+
+    this.objectTweens.forEach((t) => { if (t) t.remove(); });
+    this.objectTweens = [];
 
     this.interactables.forEach((obj) => {
       if (obj.sprite) obj.sprite.destroy();

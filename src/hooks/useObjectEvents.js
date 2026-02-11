@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   openSign,
+  openObjectInspect,
   showNotification,
 } from '../store/slices/uiSlice.js';
 import {
@@ -12,6 +13,7 @@ import {
   markBookRead,
 } from '../store/slices/playerSlice.js';
 import { addFsrsCard } from '../store/slices/vocabularySlice.js';
+import { setWorldObjectState } from '../store/slices/narrativeSlice.js';
 import {
   updateQuestProgress,
   completeQuest,
@@ -27,7 +29,7 @@ import { EVENTS } from '../utils/eventBusTypes.js';
 import { store } from '../store/store.js';
 
 /**
- * useObjectEvents — Sign, bookshelf, chest, and door event handlers
+ * useObjectEvents — Sign, bookshelf, chest, door, and world object event handlers
  */
 export function useObjectEvents(playSFX) {
   const dispatch = useDispatch();
@@ -173,11 +175,63 @@ export function useObjectEvents(playSFX) {
       }));
     };
 
+    /**
+     * Handle OBJECT_INTERACT — unified handler for all 8 new world object types.
+     * Processes rewards (vocab, loot), persists state, then opens the overlay.
+     */
+    const handleObjectInteract = (payload) => {
+      playSFX('click');
+
+      const {
+        id,
+        vocabWordId,
+        vocabCategory,
+        loot,
+        stateChange,
+      } = payload;
+
+      // Build enriched payload for the overlay
+      const overlayData = { ...payload };
+
+      // Teach vocab word if specified
+      if (vocabWordId) {
+        const currentCards = store.getState().vocabulary.fsrsCards;
+        const word = vocabulary.find((w) => w.id === vocabWordId);
+        if (word && !currentCards[word.id]) {
+          dispatch(addFsrsCard({ wordId: word.id, card: createNewCard() }));
+          dispatch(incrementWordsLearned());
+          dispatch(addXP(XP_REWARDS.NEW_WORD));
+          if (vocabCategory) {
+            trackWordLearned(vocabCategory);
+          }
+          overlayData.taughtWord = { arabic: word.arabic, english: word.english };
+        } else if (word) {
+          // Word already known — still show it in overlay for reference
+          overlayData.taughtWord = { arabic: word.arabic, english: word.english };
+        }
+      }
+
+      // Give loot (dirhams) if specified
+      if (loot && loot.dirhams) {
+        dispatch(addDirhams(loot.dirhams));
+        overlayData.lootMessage = `Found ${loot.dirhams} dirhams!`;
+      }
+
+      // Persist state change in narrativeSlice.worldObjectStates
+      if (stateChange) {
+        dispatch(setWorldObjectState({ objectId: id, objectState: stateChange }));
+      }
+
+      // Open the object inspection overlay
+      dispatch(openObjectInspect(overlayData));
+    };
+
     EventBus.on(EVENTS.SIGN_SHOW, handleShowSign);
     EventBus.on(EVENTS.BOOKSHELF_INTERACT, handleBookshelfInteract);
     EventBus.on(EVENTS.CHEST_OPENED, handleChestOpened);
     EventBus.on(EVENTS.CHEST_EMPTY, handleChestEmpty);
     EventBus.on(EVENTS.DOOR_LOCKED, handleDoorLocked);
+    EventBus.on(EVENTS.OBJECT_INTERACT, handleObjectInteract);
 
     return () => {
       EventBus.off(EVENTS.SIGN_SHOW, handleShowSign);
@@ -185,6 +239,7 @@ export function useObjectEvents(playSFX) {
       EventBus.off(EVENTS.CHEST_OPENED, handleChestOpened);
       EventBus.off(EVENTS.CHEST_EMPTY, handleChestEmpty);
       EventBus.off(EVENTS.DOOR_LOCKED, handleDoorLocked);
+      EventBus.off(EVENTS.OBJECT_INTERACT, handleObjectInteract);
     };
   }, [dispatch, fsrsCards, quests, playSFX]);
 }

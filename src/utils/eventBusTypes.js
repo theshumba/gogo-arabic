@@ -104,6 +104,8 @@ export const EVENTS = Object.freeze({
   DOOR_LOCKED: 'phaser:object:door-locked',
   /** Phaser → React: player opened an unlocked door */
   DOOR_OPENED: 'phaser:object:door-opened',
+  /** Phaser → React: player interacted with a world object (fountain, statue, etc.) */
+  OBJECT_INTERACT: 'phaser:object:world-interact',
 
   // ────────────────────────────────────────────────
   // QUIZ / LEARNING — quiz lifecycle and navigation
