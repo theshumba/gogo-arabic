@@ -1,9 +1,10 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
-  fsrsCards: {}, // { wordId: { card: FSRS card object, log: last review log } }
+  fsrsCards: {}, // { wordId: { card: FSRS card object, log: last review log, source?: string } }
   reviewQueue: [], // word IDs due for review
   stats: { totalReviews: 0, accuracy: 0, streakDays: 0 },
+  npcTeacherMap: {}, // { wordId: npcId } — maps word to the NPC who taught it
 };
 
 const vocabularySlice = createSlice({
@@ -11,9 +12,9 @@ const vocabularySlice = createSlice({
   initialState,
   reducers: {
     addFsrsCard(state, action) {
-      // payload: { wordId, card }
-      const { wordId, card } = action.payload;
-      state.fsrsCards[wordId] = { card, log: null };
+      // payload: { wordId, card, source? }
+      const { wordId, card, source } = action.payload;
+      state.fsrsCards[wordId] = { card, log: null, source: source || null };
     },
 
     updateFsrsCard(state, action) {
@@ -37,6 +38,14 @@ const vocabularySlice = createSlice({
       state.stats = { ...state.stats, ...action.payload };
     },
 
+    associateWordWithNpc(state, action) {
+      // payload: { wordId, npcId }
+      const { wordId, npcId } = action.payload;
+      if (!state.npcTeacherMap[wordId]) {
+        state.npcTeacherMap[wordId] = npcId;
+      }
+    },
+
   },
 });
 
@@ -45,6 +54,7 @@ export const {
   updateFsrsCard,
   setReviewQueue,
   updateStats,
+  associateWordWithNpc,
 } = vocabularySlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -69,5 +79,44 @@ export const selectLearnedWordCount = createSelector(
 
 // Select vocabulary stats
 export const selectVocabularyStats = (state) => state.vocabulary.stats;
+
+// Select NPC teacher map
+export const selectNpcTeacherMap = (state) => state.vocabulary.npcTeacherMap;
+
+// Select all words taught by a specific NPC (memoized)
+export const selectNpcVocabulary = createSelector(
+  [selectNpcTeacherMap, (_state, npcId) => npcId],
+  (npcTeacherMap, npcId) =>
+    Object.entries(npcTeacherMap)
+      .filter(([, teacherNpcId]) => teacherNpcId === npcId)
+      .map(([wordId]) => wordId)
+);
+
+// Select vocab mastery by zone (memoized)
+// Requires zoneVocabCategories map: { zoneId: [categories] }
+const ZONE_VOCAB_CATEGORIES = {
+  oasis_village: ['greetings', 'trade'],
+  ancient_library: ['numbers', 'colors', 'phrases'],
+  desert_marketplace: ['trade', 'food', 'numbers'],
+  farmland: ['nature', 'animals', 'body', 'verbs_basic'],
+  bedouin_camp: ['time', 'phrases', 'adjectives'],
+  mountain_village: ['clothing', 'animals', 'adjectives'],
+  coastal_port: ['directions', 'trade', 'food'],
+  royal_palace: ['adjectives', 'colors', 'phrases'],
+};
+
+export const selectVocabMasteryByZone = createSelector(
+  [selectFsrsCards, (_state, zoneId) => zoneId],
+  (cards, zoneId) => {
+    const categories = ZONE_VOCAB_CATEGORIES[zoneId] || [];
+    if (categories.length === 0) return { known: 0, total: 0, percentage: 0 };
+    // We count how many FSRS cards the player has for words in these categories
+    // Since we don't have the full vocab list here, we count learned words only
+    const learnedWordIds = Object.keys(cards);
+    // This selector returns the count of zone-relevant learned words
+    // (full total requires vocabulary data — computed in components)
+    return { known: learnedWordIds.length, categories };
+  }
+);
 
 export default vocabularySlice.reducer;

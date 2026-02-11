@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeDialogue, openQuiz, showNotification } from '../store/slices/uiSlice.js';
 import { updateDialogueState, teachWord as npcTeachWord } from '../store/slices/npcSlice.js';
-import { addFsrsCard } from '../store/slices/vocabularySlice.js';
+import { addFsrsCard, associateWordWithNpc } from '../store/slices/vocabularySlice.js';
 import { addXP, incrementWordsLearned } from '../store/slices/playerSlice.js';
 import { updateQuestProgress, completeQuest, checkPrerequisites } from '../store/slices/questSlice.js';
 import { createNewCard } from '../services/fsrs.js';
@@ -172,7 +172,8 @@ export function useDialogue(npc) {
 
     if (isNew && word) {
       EventBus.emit(EVENTS.SFX_WORDLEARNED);
-      dispatch(addFsrsCard({ wordId, card: createNewCard() }));
+      dispatch(addFsrsCard({ wordId, card: createNewCard(), source: 'dialogue' }));
+      dispatch(associateWordWithNpc({ wordId, npcId: npc.id }));
       dispatch(incrementWordsLearned());
       dispatch(addXP(XP_REWARDS.NEW_WORD));
 
@@ -245,6 +246,16 @@ export function useDialogue(npc) {
 
         let quizWords;
 
+        // Adaptive difficulty based on words learned (VCAB-11)
+        let numChoices;
+        if (wordsLearned < 20) {
+          numChoices = 3; // Easy: 2-3 choices
+        } else if (wordsLearned <= 100) {
+          numChoices = 4; // Medium: 4 choices
+        } else {
+          numChoices = 4; // Hard: 4 choices with same-category distractors
+        }
+
         if (nextLine.words === 'random_learned_10') {
           const learnedIds = Object.keys(cards);
           const shuffled = shuffle(learnedIds).slice(0, 10);
@@ -268,7 +279,7 @@ export function useDialogue(npc) {
               ]
             : nextLine.quizType;
 
-        dispatch(openQuiz({ words: quizWords, quizType }));
+        dispatch(openQuiz({ words: quizWords, quizType, numChoices }));
         EventBus.emit(EVENTS.DIALOGUE_QUIZ_REQUESTED, {
           npcId: npc.id,
           quizType,

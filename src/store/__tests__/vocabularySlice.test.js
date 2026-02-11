@@ -17,6 +17,7 @@ describe('vocabularySlice', () => {
   beforeEach(() => {
     initialState = {
       fsrsCards: {},
+      npcTeacherMap: {},
       reviewQueue: [],
       stats: { totalReviews: 0, accuracy: 0, streakDays: 0 },
     };

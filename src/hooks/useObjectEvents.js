@@ -107,7 +107,7 @@ export function useObjectEvents(playSFX) {
       if (word && !reread) {
         // Teach the word if it's new
         if (!fsrsCards[word.id]) {
-          dispatch(addFsrsCard({ wordId: word.id, card: createNewCard() }));
+          dispatch(addFsrsCard({ wordId: word.id, card: createNewCard(), source: 'bookshelf' }));
           dispatch(incrementWordsLearned());
           dispatch(addXP(XP_REWARDS.NEW_WORD));
           // Track quest progress
@@ -198,7 +198,7 @@ export function useObjectEvents(playSFX) {
         const currentCards = store.getState().vocabulary.fsrsCards;
         const word = vocabulary.find((w) => w.id === vocabWordId);
         if (word && !currentCards[word.id]) {
-          dispatch(addFsrsCard({ wordId: word.id, card: createNewCard() }));
+          dispatch(addFsrsCard({ wordId: word.id, card: createNewCard(), source: 'object' }));
           dispatch(incrementWordsLearned());
           dispatch(addXP(XP_REWARDS.NEW_WORD));
           if (vocabCategory) {

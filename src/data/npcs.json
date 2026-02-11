@@ -430,11 +430,13 @@
       "mood": "serious"
     },
     "zone": "oasis_village",
-    "topics": [
-      "lore",
-      "teaching",
-      "quests"
-    ]
+    "vocabWords": ["salaam", "shukran", "marhaba", "ahlan", "afwan", "ma_a_salama", "sabah_al_khayr", "masa_al_khayr", "kayfa_haluk", "bi_khayr", "na_am", "la", "bismillah", "alhamdulillah"],
+    "storyArc": {
+      "arc": "main_storyline",
+      "role": "knowledge_keeper",
+      "branchPoint": "scholars_dilemma"
+    },
+    "topics": ["lore", "teaching", "quests", "personal"]
   },
   {
     "id": "merchant-fatima",
@@ -793,6 +795,7 @@
       "mood": "cheerful"
     },
     "zone": "oasis_village",
+    "vocabWords": ["shop_w28", "market_w29", "money_w30", "price_w31", "cheap_w32", "expensive_w33", "buy_w34", "sell_w35", "gold_w36", "silver_w37", "carpet_w38", "merchant_w44", "customer_w45"],
     "topics": [
       "teaching",
       "gossip",
@@ -1026,6 +1029,7 @@
       "mood": "excited"
     },
     "zone": "oasis_village",
+    "vocabWords": ["min_fadlak", "inshallah", "mashallah", "jazakallah", "tayyib", "yalla", "spice_w39", "perfume_w40", "soap_w41", "cloth_w42", "gift_w43", "scale_w46", "coin_w47"],
     "topics": [
       "teaching",
       "lore",
@@ -1394,6 +1398,7 @@
       "mood": "neutral"
     },
     "zone": "ancient_library",
+    "vocabWords": ["num_1", "num_2", "num_3", "num_4", "num_5", "num_6", "num_7", "num_8", "num_9", "num_10", "num_11", "num_12", "num_13", "num_14", "num_15"],
     "topics": [
       "teaching",
       "lore",
@@ -1745,6 +1750,7 @@
       "mood": "serious"
     },
     "zone": "ancient_library",
+    "vocabWords": ["color_red", "color_blue", "color_green", "color_yellow", "color_white", "color_black", "color_orange", "color_brown", "color_pink", "color_purple", "color_grey", "color_golden", "what_is_your_name_1", "how_are_you_1", "i_am_learning_arabic_1"],
     "topics": [
       "teaching",
       "lore",
@@ -2074,6 +2080,7 @@
       "mood": "cheerful"
     },
     "zone": "desert_marketplace",
+    "vocabWords": ["water_1", "bread_1", "rice_1", "meat_1", "chicken_1", "fish_food_1", "milk_1", "tea_1", "coffee_1", "sugar_1", "salt_1", "dates_1", "olive_1", "honey_1", "spice_w39"],
     "topics": [
       "teaching",
       "gossip",
@@ -2404,6 +2411,7 @@
       "mood": "neutral"
     },
     "zone": "desert_marketplace",
+    "vocabWords": ["shop_w28", "market_w29", "money_w30", "price_w31", "cheap_w32", "expensive_w33", "buy_w34", "sell_w35", "carpet_w38", "cloth_w42", "gift_w43", "coin_w47", "num_1", "num_2", "num_3"],
     "topics": [
       "teaching",
       "gossip",
@@ -2736,6 +2744,7 @@
       "mood": "serious"
     },
     "zone": "oasis_village",
+    "vocabWords": ["num_4", "num_5", "num_6", "num_7", "num_8", "num_9", "num_10", "where_is_1", "what_is_this_1", "this_is_1", "please_1", "excuse_me_1", "welcome_1"],
     "topics": [
       "lore",
       "quests",
@@ -3065,6 +3074,7 @@
       "mood": "cheerful"
     },
     "zone": "oasis_village",
+    "vocabWords": ["water_w13", "sun_w14", "rain_w25", "tree_w27", "palm_tree_w20", "oasis_w19", "cat_1", "dog_1", "horse_1", "camel_1", "bird_1", "sheep_1", "goat_1", "cow_1", "donkey_1"],
     "topics": [
       "teaching",
       "lore",
@@ -3428,6 +3438,7 @@
       "mood": "neutral"
     },
     "zone": "oasis_village",
+    "vocabWords": ["head_1", "hand_1", "eye_1", "ear_1", "mouth_1", "nose_1", "foot_1", "heart_1", "back_1", "stomach_1", "finger_1", "tooth_1", "eat_1", "drink_1", "sleep_1"],
     "topics": [
       "teaching",
       "lore",
@@ -3799,6 +3810,7 @@
       "mood": "serious"
     },
     "zone": "oasis_village",
+    "vocabWords": ["day_1", "night_1", "morning_1", "evening_1", "today_1", "tomorrow_1", "yesterday_1", "hour_1", "week_1", "month_1", "good_morning_1", "good_evening_1", "goodbye_1", "see_you_later_1"],
     "topics": [
       "lore",
       "quests",
@@ -4189,6 +4201,7 @@
       "mood": "cheerful"
     },
     "zone": "oasis_village",
+    "vocabWords": ["big_1", "small_1", "beautiful_1", "old_1", "new_1", "happy_1", "sad_1", "strong_1", "weak_1", "easy_1", "difficult_1", "long_tall_1", "i_am_fine_1", "i_want_1", "congratulations_1"],
     "topics": [
       "lore",
       "teaching",
@@ -4540,6 +4553,7 @@
       "mood": "excited"
     },
     "zone": "desert_marketplace",
+    "vocabWords": ["go_1", "come_1", "see_1", "hear_1", "speak_1", "walk_1", "run_1", "know_1", "understand_1", "right_1", "left_1", "north_1", "south_1", "east_1", "west_1"],
     "topics": [
       "lore",
       "gossip",
@@ -4936,6 +4950,7 @@
       "mood": "cheerful"
     },
     "zone": "oasis_village",
+    "vocabWords": ["cat_1", "dog_1", "horse_1", "camel_1", "lion_1", "eagle_1", "rabbit_1", "snake_1", "hot_1", "cold_1", "fast_1", "slow_1", "near_1", "far_1", "above_1"],
     "topics": [
       "teaching",
       "lore",
@@ -5313,6 +5328,7 @@
       "mood": "neutral"
     },
     "zone": "desert_marketplace",
+    "vocabWords": ["thobe_w1", "shoes_w2", "hat_w3", "dress_w4", "shirt_w5", "pants_w6", "scarf_w7", "ring_w8", "belt_w9", "socks_w10", "glasses_w11", "bag_w12", "clean_1", "dirty_1", "beautiful_1"],
     "topics": [
       "teaching",
       "lore",
@@ -5733,6 +5749,7 @@
       "mood": "cheerful"
     },
     "zone": "oasis_village",
+    "vocabWords": ["ugly_1", "short_1", "big_1", "small_1", "strong_1", "weak_1", "read_1", "write_1", "learn_1", "open_1", "close_1", "help_1", "give_1", "take_1", "work_1"],
     "topics": [
       "teaching",
       "lore",
@@ -6190,6 +6207,7 @@
       "mood": "serious"
     },
     "zone": "coastal_port",
+    "vocabWords": ["right_1", "left_1", "above_1", "below_1", "north_1", "south_1", "east_1", "west_1", "near_1", "far_1", "sea_w23", "wind_w26", "star_w16", "moon_w15"],
     "topics": [
       "teaching",
       "lore",
@@ -6593,6 +6611,7 @@
       "mood": "cheerful"
     },
     "zone": "coastal_port",
+    "vocabWords": ["fish_food_1", "egg_1", "cheese_1", "fruit_1", "apple_1", "soup_1", "juice_1", "salt_1", "sugar_1", "bread_1", "water_1", "how_much_1", "i_want_1", "i_dont_want_1"],
     "topics": [
       "teaching",
       "lore",
@@ -6969,6 +6988,7 @@
       "mood": "neutral"
     },
     "zone": "coastal_port",
+    "vocabWords": ["gold_w36", "silver_w37", "scale_w46", "coin_w47", "money_w30", "price_w31", "buy_w34", "sell_w35", "mountain_w21", "sand_w17", "desert_w18", "stand_1", "sit_1", "wake_up_1"],
     "topics": [
       "teaching",
       "lore",
@@ -7377,6 +7397,7 @@
       "mood": "serious"
     },
     "zone": "royal_palace",
+    "vocabWords": ["what_is_your_name_1", "my_name_is_1", "how_are_you_1", "i_am_fine_1", "please_1", "excuse_me_1", "im_sorry_1", "welcome_1", "i_understand_1", "i_dont_understand_1", "can_you_help_me_1", "thank_god_1", "god_willing_1", "in_the_name_of_god_1"],
     "topics": [
       "lore",
       "quests",
@@ -7836,6 +7857,7 @@
       "mood": "cheerful"
     },
     "zone": "royal_palace",
+    "vocabWords": ["family_father", "family_mother", "family_brother", "family_sister", "family_son", "family_daughter", "family_grandfather", "family_grandmother", "family_uncle_paternal", "family_aunt_paternal", "family_husband", "family_wife", "family_child", "color_golden", "color_purple"],
     "topics": [
       "teaching",
       "lore",
@@ -8251,6 +8273,7 @@
       "mood": "excited"
     },
     "zone": "garden_district",
+    "vocabWords": ["beautiful_1", "happy_1", "sad_1", "big_1", "small_1", "color_red", "color_blue", "color_green", "color_white", "color_black", "what_god_has_willed_1", "congratulations_1", "see_you_later_1", "i_am_learning_arabic_1"],
     "topics": [
       "teaching",
       "lore",
@@ -8671,6 +8694,7 @@
       "mood": "neutral"
     },
     "zone": "oasis_village",
+    "vocabWords": ["alhamdulillah", "bismillah", "inshallah", "mashallah", "jazakallah", "thank_god_1", "god_willing_1", "what_god_has_willed_1", "in_the_name_of_god_1", "morning_1", "evening_1", "day_1", "night_1", "week_1", "month_1"],
     "topics": [
       "teaching",
       "lore",
@@ -8684,6 +8708,7 @@
     "portrait": "portrait-baker-yasmin",
     "role": "Teaches food vocabulary through baking",
     "zone": "oasis_village",
+    "vocabWords": ["bread_1", "rice_1", "meat_1", "chicken_1", "milk_1", "tea_1", "coffee_1", "sugar_1", "honey_1", "dates_1", "olive_1", "fruit_1", "apple_1", "egg_1", "cheese_1"],
     "personality": {
       "tone": "cheerful_farmer",
       "catchphrase": "بِسْمِ الله — bismillaah (In God's name)",
@@ -8892,6 +8917,7 @@
     "portrait": "portrait-astronomer-zain",
     "role": "Teaches number and sky vocabulary through astronomy",
     "zone": "ancient_library",
+    "vocabWords": ["star_w16", "moon_w15", "sun_w14", "sky_w22", "num_1", "num_2", "num_3", "num_4", "num_5", "num_10", "night_1", "morning_1", "evening_1", "today_1"],
     "personality": {
       "tone": "formal_scholar",
       "catchphrase": "النُّجومُ لا تَكذِب — an-nujuumu laa takdhib (The stars do not lie)",
@@ -9126,6 +9152,7 @@
     "portrait": "portrait-carpet-seller-jamal",
     "role": "Teaches color vocabulary through carpet trading",
     "zone": "desert_marketplace",
+    "vocabWords": ["color_red", "color_blue", "color_green", "color_yellow", "color_white", "color_black", "color_orange", "color_brown", "color_pink", "carpet_w38", "cloth_w42", "cheap_w32", "expensive_w33", "how_much_1"],
     "personality": {
       "tone": "casual_merchant",
       "catchphrase": "يا سلام! — ya salaam! (Oh wow!)",
@@ -9329,6 +9356,7 @@
     "portrait": "portrait-dockmaster-nadia",
     "role": "Teaches direction vocabulary through port management",
     "zone": "coastal_port",
+    "vocabWords": ["right_1", "left_1", "north_1", "south_1", "east_1", "west_1", "above_1", "below_1", "near_1", "far_1", "go_1", "come_1", "walk_1", "run_1"],
     "personality": {
       "tone": "authoritative_vizier",
       "catchphrase": "بِنِظام! — bi-nizaam! (In order!)",
@@ -9539,6 +9567,7 @@
     "portrait": "portrait-mountain-hermit-idris",
     "role": "Teaches nature vocabulary through mountain wisdom",
     "zone": "mountain_pass",
+    "vocabWords": ["water_w13", "mountain_w21", "river_w24", "rain_w25", "wind_w26", "tree_w27", "sky_w22", "sand_w17", "desert_w18", "oasis_w19", "palm_tree_w20", "sea_w23", "sun_w14"],
     "personality": {
       "tone": "wise_storyteller",
       "catchphrase": "الجَبَلُ يَعلَم — al-jabalu ya'lam (The mountain knows)",
@@ -9775,6 +9804,7 @@
     "portrait": "portrait-stable-master-yara",
     "role": "Teaches animal vocabulary through horse care",
     "zone": "oasis_village",
+    "vocabWords": ["horse_1", "camel_1", "dog_1", "cat_1", "bird_1", "sheep_1", "goat_1", "cow_1", "donkey_1", "lion_1", "rabbit_1", "eagle_1", "fish_animal_1", "ant_1", "snake_1"],
     "personality": {
       "tone": "cheerful_farmer",
       "catchphrase": "هَيّا يا حُصان! — hayyaa ya husaan! (Come on, horse!)",
@@ -9991,6 +10021,7 @@
     "portrait": "portrait-garden-keeper-leila",
     "role": "Teaches nature and plant vocabulary",
     "zone": "garden_district",
+    "vocabWords": ["tree_w27", "water_w13", "sun_w14", "rain_w25", "wind_w26", "palm_tree_w20", "oasis_w19", "mountain_w21", "river_w24", "color_green", "color_yellow", "color_brown", "beautiful_1", "big_1"],
     "personality": {
       "tone": "gentle_healer",
       "catchphrase": "الحَديقَة جَنَّة — al-hadiiqa janna (The garden is paradise)",
@@ -10194,6 +10225,7 @@
     "portrait": "portrait-guide-amira",
     "role": "Mentor and guide for new travelers",
     "personality": { "tone": "warm_mentor", "mood": "cheerful" },
+    "vocabWords": ["salaam", "marhaba", "ahlan", "shukran", "afwan", "ma_a_salama", "sabah_al_khayr", "na_am", "la", "tayyib", "yalla"],
     "greeting": {
       "arabic": "أَهْلاً وَسَهْلاً يا مُسافِر! أَنا أَميرَة",
       "english": "Welcome, traveler! I am Amira.",
@@ -10448,6 +10480,7 @@
     "portrait": "portrait-scholar-yusuf",
     "role": "Teaches advanced greetings and formal expressions",
     "personality": { "tone": "formal_scholar", "mood": "serious" },
+    "vocabWords": ["kayfa_haluk", "bi_khayr", "min_fadlak", "inshallah", "mashallah", "alhamdulillah", "bismillah", "jazakallah"],
     "greeting": {
       "arabic": "أَهْلاً بِكَ في مَكتَبَتي الخاصَّة",
       "english": "Welcome to my private study.",
@@ -10547,6 +10580,7 @@
     "portrait": "portrait-merchant-fatima",
     "role": "Teaches family-related vocabulary",
     "personality": { "tone": "warm_friendly", "mood": "cheerful" },
+    "vocabWords": ["family_father", "family_mother", "family_brother", "family_sister", "family_son", "family_daughter"],
     "greeting": {
       "arabic": "أَهْلاً! تَعالَ اِجلِس مَعَنا",
       "english": "Hello! Come sit with us.",
@@ -10661,6 +10695,7 @@
     },
     "zone": "ancient_library",
     "interior": "library_archive_interior",
+    "vocabWords": ["num_1", "num_2", "num_3", "num_4", "num_5", "num_6", "num_7", "num_8", "num_9", "num_10", "num_11", "num_12", "num_13", "num_14", "num_15"],
     "dialogueTrees": [
       {
         "id": "intro",
@@ -10761,6 +10796,7 @@
     },
     "zone": "desert_marketplace",
     "interior": "spice_shop_interior",
+    "vocabWords": ["water_1", "bread_1", "rice_1", "meat_1", "fish_1", "fruit_1", "vegetables_1", "milk_1", "egg_1", "salt_1", "pepper_1", "oil_1", "honey_1", "tea_1", "coffee_1"],
     "dialogueTrees": [
       {
         "id": "intro",
@@ -10861,6 +10897,7 @@
     },
     "zone": "desert_marketplace",
     "interior": "textile_shop_interior",
+    "vocabWords": ["thobe_w1", "headscarf_w2", "sandals_w3", "belt_w4", "cloak_w5", "dress_w6", "turban_w7", "veil_w8", "robe_w9", "socks_w10", "gloves_w11", "bag_w12"],
     "dialogueTrees": [
       {
         "id": "intro",
@@ -10961,6 +10998,7 @@
     },
     "zone": "farmland",
     "interior": "farmhouse_interior",
+    "vocabWords": ["water_w13", "rain_w14", "river_w15", "mountain_w16", "desert_w17", "sky_w18", "sun_w19", "moon_w20", "star_w21", "earth_w22", "sea_w23", "wind_w24", "fire_w25", "flower_w26", "tree_w27"],
     "dialogueTrees": [
       {
         "id": "intro",
@@ -11061,6 +11099,7 @@
     },
     "zone": "bedouin_camp",
     "interior": "bedouin_tent_interior",
+    "vocabWords": ["day_1", "night_1", "morning_1", "evening_1", "hour_1", "week_1", "month_1", "year_1", "today_1", "tomorrow_1"],
     "dialogueTrees": [
       {
         "id": "intro",
@@ -11161,6 +11200,7 @@
     },
     "zone": "mountain_village",
     "interior": "mountain_home_interior",
+    "vocabWords": ["big_1", "small_1", "new_1", "old_1", "beautiful_1", "ugly_1", "hot_1", "cold_1", "fast_1", "slow_1", "strong_1", "weak_1", "tall_1", "short_1", "heavy_1"],
     "dialogueTrees": [
       {
         "id": "intro",
@@ -11261,6 +11301,7 @@
     },
     "zone": "mountain_village",
     "interior": "mountain_mosque_interior",
+    "vocabWords": ["salaam", "marhaba", "shukran", "bismillaah", "alhamdulillaah", "inshaallaah", "maasalama", "ahlan", "sabah_al_khayr", "masaa_al_khayr", "what_is_your_name_1", "my_name_is_1", "please_1", "thank_you_very_much_1"],
     "dialogueTrees": [
       {
         "id": "intro",
@@ -11361,6 +11402,7 @@
     },
     "zone": "coastal_port",
     "interior": "port_tavern_interior",
+    "vocabWords": ["water_1", "bread_1", "rice_1", "meat_1", "fish_1", "fruit_1", "milk_1", "tea_1", "coffee_1", "juice_1", "chicken_1", "soup_1", "sugar_1", "cheese_1"],
     "dialogueTrees": [
       {
         "id": "intro",
@@ -11461,6 +11503,7 @@
     },
     "zone": "royal_palace",
     "interior": "palace_throne_interior",
+    "vocabWords": ["what_is_your_name_1", "my_name_is_1", "how_are_you_1", "i_am_fine_1", "please_1", "thank_you_very_much_1", "excuse_me_1", "yes_1", "no_1", "welcome_1", "goodbye_1", "good_morning_1", "good_evening_1", "i_dont_understand_1"],
     "dialogueTrees": [
       {
         "id": "intro",
