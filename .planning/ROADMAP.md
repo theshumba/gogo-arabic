@@ -98,10 +98,15 @@ Plans:
   3. NPC dialogue changes based on quest state and story progression with new topics unlocking dynamically
   4. Player choices in dialogue affect NPC relationship levels tracked as 0-5 trust meter per NPC
   5. Dialogue can trigger effects: start/complete quests, give items, unlock areas, teach words, change NPC state
-**Plans**: TBD
+**Plans:** 6 plans
 
 Plans:
-- [ ] 20-01: TBD
+- [ ] 20-01-PLAN.md — DialogueEngine Phaser system + extended Zod schema + EVENTS constants
+- [ ] 20-02-PLAN.md — useDialogue hub-and-spoke rewrite + effect execution wiring
+- [ ] 20-03-PLAN.md — DialogueOverlay redesign + TopicSelectionMenu + VocabularyHighlight + RelationshipIndicator
+- [ ] 20-04-PLAN.md — Upgrade 15 existing NPCs with personality, topics, conditions, effects
+- [ ] 20-05-PLAN.md — Upgrade remaining 8 NPCs + add 7 new NPCs (30 total)
+- [ ] 20-06-PLAN.md — WorldScene integration + test updates + manual verification
 
 ### Phase 21: Guided Onboarding & Mentor
 **Goal**: Player knows exactly what to do from second one — mentor-driven 90-second tutorial that teaches core loop and establishes purpose
@@ -219,7 +224,7 @@ Phases execute in numeric order: 19 → 20 → 21 → 22 → 23 → 24 → 25 �
 | 17. Progression Clarity | v4.0 | 2/2 | Complete | 2026-02-10 |
 | 18. World Life | v4.0 | 1/1 | Complete | 2026-02-10 |
 | 19. Infrastructure & Architecture | v5.0 | 0/4 | Not started | - |
-| 20. Dialogue System | v5.0 | 0/TBD | Not started | - |
+| 20. Dialogue System | v5.0 | 0/6 | Not started | - |
 | 21. Guided Onboarding & Mentor | v5.0 | 0/TBD | Not started | - |
 | 22. Buildings & Interiors | v5.0 | 0/TBD | Not started | - |
 | 23. Interactive Objects & World Life | v5.0 | 0/TBD | Not started | - |
@@ -229,4 +234,4 @@ Phases execute in numeric order: 19 → 20 → 21 → 22 → 23 → 24 → 25 �
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-10 — Phase 19 planned with 4 plans in 2 waves*
+*Last updated: 2026-02-11 — Phase 20 planned with 6 plans in 4 waves*
