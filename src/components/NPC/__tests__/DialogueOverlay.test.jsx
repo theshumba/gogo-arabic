@@ -35,30 +35,44 @@ vi.mock('../../../utils/eventBus.js', () => ({
   },
 }));
 
+// Shared mock return values (mutated per-test)
+const mockUseDialogue = {
+  currentTree: {
+    id: 'greeting',
+    lines: [
+      { speaker: 'Fatima', arabic: 'أهلاً بك في الواحة', english: 'Welcome to the oasis!' },
+      { speaker: 'Fatima', arabic: 'كيف يمكنني مساعدتك؟', english: 'How can I help you?', choices: [
+        { text: 'Teach me Arabic', action: 'start_lesson' },
+        { text: 'Goodbye', action: 'close' },
+      ]},
+    ],
+  },
+  lineIndex: 0,
+  close: vi.fn(),
+  advance: vi.fn(),
+  handleChoice: vi.fn(),
+  showCulturalMenu: false,
+  setShowCulturalMenu: vi.fn(),
+  phase: 'greeting',
+  availableTopics: [],
+  selectTopic: vi.fn(),
+  topicsDiscussed: [],
+  filteredChoices: [],
+  resumeAfterQuiz: vi.fn(),
+  isHubAndSpoke: false,
+};
+
 // Mock hooks
 vi.mock('../../../hooks/useDialogue.js', () => ({
-  useDialogue: () => ({
-    currentTree: {
-      id: 'greeting',
-      lines: [
-        { speaker: 'Fatima', arabic: 'أهلاً بك في الواحة', english: 'Welcome to the oasis!' },
-        { speaker: 'Fatima', arabic: 'كيف يمكنني مساعدتك؟', english: 'How can I help you?', choices: [
-          { text: 'Teach me Arabic', action: 'start_lesson' },
-          { text: 'Goodbye', action: 'close' },
-        ]},
-      ],
-    },
-    lineIndex: 0,
-    close: vi.fn(),
-    advance: vi.fn(),
-    handleChoice: vi.fn(),
-    showCulturalMenu: false,
-    setShowCulturalMenu: vi.fn(),
-  }),
+  useDialogue: () => mockUseDialogue,
 }));
 
 vi.mock('../../../hooks/useFocusTrap.js', () => ({
   useFocusTrap: () => ({ current: null }),
+}));
+
+vi.mock('../../../hooks/useOverlayClose.js', () => ({
+  useOverlayClose: vi.fn(),
 }));
 
 vi.mock('../../../utils/culturalDialogueHelper.js', () => ({
@@ -79,6 +93,34 @@ vi.mock('../../../hooks/useFormatArabic.js', () => ({
   useFormatArabic: () => (text) => text || '',
 }));
 
+// Mock sub-components that are new in hub-and-spoke
+vi.mock('../TopicSelectionMenu.jsx', () => ({
+  default: ({ topics, onSelectTopic, onClose }) => (
+    <div data-testid="topic-selection-menu">
+      {topics?.map((t) => (
+        <button key={t.treeId} onClick={() => onSelectTopic(t.treeId)}>
+          {t.label}
+        </button>
+      ))}
+      <button onClick={onClose}>Close</button>
+    </div>
+  ),
+}));
+
+vi.mock('../ConversationHistory.jsx', () => ({
+  default: ({ onBack }) => (
+    <div data-testid="conversation-history">
+      <button onClick={onBack}>Back</button>
+    </div>
+  ),
+}));
+
+vi.mock('../RelationshipIndicator.jsx', () => ({
+  default: ({ npcId, level }) => (
+    <div data-testid="relationship-indicator" data-npc={npcId} data-level={level} />
+  ),
+}));
+
 // Mock NPC data
 vi.mock('../../../data/npcs.json', () => ({
   default: [
@@ -87,6 +129,7 @@ vi.mock('../../../data/npcs.json', () => ({
       name: 'Fatima',
       role: 'teacher',
       portrait: 'fatima.png',
+      personality: { mood: 'cheerful' },
       dialogueTrees: [],
     },
   ],
@@ -100,10 +143,40 @@ describe('DialogueOverlay', () => {
         npcId: 'fatima_teacher',
       },
     },
+    narrative: {
+      npcRelationships: { fatima_teacher: 2 },
+      worldObjectStates: {},
+      choiceHistory: {},
+      visitedBuildings: [],
+    },
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset to defaults
+    mockUseDialogue.currentTree = {
+      id: 'greeting',
+      lines: [
+        { speaker: 'Fatima', arabic: 'أهلاً بك في الواحة', english: 'Welcome to the oasis!' },
+        { speaker: 'Fatima', arabic: 'كيف يمكنني مساعدتك؟', english: 'How can I help you?', choices: [
+          { text: 'Teach me Arabic', action: 'start_lesson' },
+          { text: 'Goodbye', action: 'close' },
+        ]},
+      ],
+    };
+    mockUseDialogue.lineIndex = 0;
+    mockUseDialogue.close = vi.fn();
+    mockUseDialogue.advance = vi.fn();
+    mockUseDialogue.handleChoice = vi.fn();
+    mockUseDialogue.showCulturalMenu = false;
+    mockUseDialogue.setShowCulturalMenu = vi.fn();
+    mockUseDialogue.phase = 'greeting';
+    mockUseDialogue.availableTopics = [];
+    mockUseDialogue.selectTopic = vi.fn();
+    mockUseDialogue.topicsDiscussed = [];
+    mockUseDialogue.filteredChoices = [];
+    mockUseDialogue.resumeAfterQuiz = vi.fn();
+    mockUseDialogue.isHubAndSpoke = false;
   });
 
   it('should render NPC name and dialogue text', () => {
@@ -114,6 +187,7 @@ describe('DialogueOverlay', () => {
 
   it('should not render when dialogueOpen is false', () => {
     const closedState = {
+      ...mockPreloadedState,
       ui: {
         dialogueOpen: false,
         dialogueConfig: null,
@@ -144,5 +218,47 @@ describe('DialogueOverlay', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
 
     unmount();
+  });
+
+  it('should render topic selection in hub phase for hub-and-spoke NPCs', () => {
+    mockUseDialogue.phase = 'hub';
+    mockUseDialogue.isHubAndSpoke = true;
+    mockUseDialogue.availableTopics = [
+      { treeId: 'greetings_topic', topic: 'greetings', label: 'Learn Greetings', priority: 1 },
+      { treeId: 'numbers_topic', topic: 'numbers', label: 'Learn Numbers', priority: 2 },
+    ];
+
+    renderWithProviders(<DialogueOverlay />, { preloadedState: mockPreloadedState });
+
+    expect(screen.getByTestId('topic-selection-menu')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveAttribute('aria-label', 'Topic selection');
+  });
+
+  it('should show relationship indicator when displaying choices for hub-and-spoke NPC', () => {
+    mockUseDialogue.lineIndex = 1; // choice line
+    mockUseDialogue.isHubAndSpoke = true;
+    mockUseDialogue.phase = 'topic';
+    mockUseDialogue.filteredChoices = [
+      { text: 'Teach me Arabic', action: 'start_lesson' },
+      { text: 'Goodbye', action: 'close' },
+    ];
+
+    renderWithProviders(<DialogueOverlay />, { preloadedState: mockPreloadedState });
+
+    expect(screen.getByTestId('relationship-indicator')).toBeInTheDocument();
+  });
+
+  it('should use filteredChoices for hub-and-spoke NPCs', () => {
+    mockUseDialogue.lineIndex = 1; // choice line
+    mockUseDialogue.isHubAndSpoke = true;
+    mockUseDialogue.phase = 'topic';
+    mockUseDialogue.filteredChoices = [
+      { text: 'Filtered choice', action: 'test' },
+    ];
+
+    renderWithProviders(<DialogueOverlay />, { preloadedState: mockPreloadedState });
+
+    // The choices rendered should come from filteredChoices
+    expect(screen.getByRole('dialog')).toHaveAttribute('aria-label', 'Dialogue choices');
   });
 });

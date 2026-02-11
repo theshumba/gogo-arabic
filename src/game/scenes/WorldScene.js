@@ -10,6 +10,7 @@ import { MapLoader } from '../systems/MapLoader.js';
 import ScreenShake from '../systems/ScreenShake.js';
 import ParticleEffectManager from '../systems/ParticleEffectManager.js';
 import { SceneStackManager } from '../systems/SceneStackManager.js';
+import { DialogueEngine } from '../systems/DialogueEngine.js';
 import { ZONES, TILE } from '../../data/zones.js';
 
 // ============================================================
@@ -35,6 +36,7 @@ export class WorldScene extends Phaser.Scene {
     this.screenShake = null;
     this.particleEffects = null;
     this.sceneStackManager = null;
+    this.dialogueEngine = null;
 
     // Input
     this.interactKey = null;
@@ -52,6 +54,7 @@ export class WorldScene extends Phaser.Scene {
     this.screenShake = new ScreenShake(this);
     this.particleEffects = new ParticleEffectManager(this);
     this.sceneStackManager = new SceneStackManager(this);
+    this.dialogueEngine = new DialogueEngine(this);
 
     // Load the default zone
     const zone = ZONES.oasis_village;
@@ -283,6 +286,11 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   shutdown() {
+    if (this.dialogueEngine) {
+      this.dialogueEngine.destroy();
+      this.dialogueEngine = null;
+    }
+
     if (this.sceneStackManager) {
       this.sceneStackManager.destroy();
       this.sceneStackManager = null;
