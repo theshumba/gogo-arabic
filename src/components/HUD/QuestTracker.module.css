@@ -37,13 +37,31 @@
 .questObjective {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+}
+
+.objectiveHint {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--color-light);
+  opacity: 0.85;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .progressText {
   font-family: var(--font-pixel);
   font-size: 9px;
   color: var(--color-white);
+}
+
+.progressPct {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--color-xp-gold);
+  opacity: 0.9;
 }
 
 .progressBar {

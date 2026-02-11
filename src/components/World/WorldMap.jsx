@@ -46,7 +46,24 @@ export default function WorldMap({ onBack }) {
   const npcsVisited = useSelector((s) => s.quests.npcsVisited || []);
   const zonesVisited = useSelector((s) => s.quests.zonesVisited || []);
   const fsrsCards = useSelector((s) => s.vocabulary.fsrsCards || {});
+  const playerLevel = useSelector((s) => s.player.level);
+  const wordsLearned = useSelector((s) => s.player.wordsLearned);
   const [hoveredZone, setHoveredZone] = useState(null);
+  const [recentlyUnlocked, setRecentlyUnlocked] = useState(null);
+
+  // Track zone unlocks and flash animation
+  const [prevUnlockedZones, setPrevUnlockedZones] = useState(unlockedZones);
+  useEffect(() => {
+    if (unlockedZones.length > prevUnlockedZones.length) {
+      const newZone = unlockedZones.find((z) => !prevUnlockedZones.includes(z));
+      if (newZone) {
+        setRecentlyUnlocked(newZone);
+        const timer = setTimeout(() => setRecentlyUnlocked(null), 2500);
+        return () => clearTimeout(timer);
+      }
+    }
+    setPrevUnlockedZones(unlockedZones);
+  }, [unlockedZones, prevUnlockedZones]);
 
   // Escape key handler
   useEffect(() => {
@@ -171,6 +188,8 @@ export default function WorldMap({ onBack }) {
     const isHovered = hoveredZone === zoneId;
     const stats = getZoneStats(zoneId);
 
+    const isRecentlyUnlocked = recentlyUnlocked === zoneId;
+
     let dotClassName = styles.zoneDot;
     let statusIndicator = null;
 
@@ -180,10 +199,28 @@ export default function WorldMap({ onBack }) {
     } else if (isUnlocked) {
       if (stats.completionPercent === 100) {
         dotClassName = `${styles.zoneDot} ${styles.zoneDotCompleted}`;
-        statusIndicator = <div className={styles.completedIndicator}>✓</div>;
+        statusIndicator = <div className={styles.completedIndicator}>&#10003;</div>;
       } else {
         dotClassName = `${styles.zoneDot} ${styles.zoneDotUnlocked}`;
       }
+    }
+
+    // Calculate unlock progress for locked zones
+    let unlockProgress = null;
+    if (!isUnlocked && zone.unlock) {
+      const reqs = [];
+      if (zone.unlock.quest) {
+        const questState = completedQuests[zone.unlock.quest];
+        const questDone = questState?.status === 'completed';
+        reqs.push({ label: 'Quest', met: questDone });
+      }
+      if (zone.unlock.minLevel) {
+        reqs.push({ label: `Lv.${zone.unlock.minLevel}`, met: playerLevel >= zone.unlock.minLevel });
+      }
+      if (zone.unlock.minWords) {
+        reqs.push({ label: `${wordsLearned}/${zone.unlock.minWords} words`, met: wordsLearned >= zone.unlock.minWords });
+      }
+      unlockProgress = reqs;
     }
 
     const ariaLabel = isUnlocked
@@ -209,6 +246,31 @@ export default function WorldMap({ onBack }) {
         </div>
         <div className={styles.zoneLabelArabic} lang="ar" aria-hidden="true">{zone.nameArabic}</div>
         <div className={styles.zoneLabel} aria-hidden="true">{zone.name}</div>
+
+        {/* PROG-06: Locked zone vocab progress below label */}
+        {!isUnlocked && unlockProgress && (
+          <div className={styles.vocabGateProgress} aria-hidden="true">
+            {unlockProgress.map((req, i) => (
+              <span key={i} className={req.met ? styles.reqMet : styles.reqUnmet}>
+                {req.met ? '\u2713' : '\u2717'} {req.label}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Completion % for unlocked zones */}
+        {isUnlocked && !isCurrent && stats.completionPercent < 100 && (
+          <div className={styles.zoneCompletionBadge} aria-hidden="true">
+            {stats.completionPercent}%
+          </div>
+        )}
+
+        {/* UNLOCKED flash animation */}
+        {isRecentlyUnlocked && (
+          <div className={styles.unlockedFlash} aria-label={`${zone.name} is now unlocked`}>
+            UNLOCKED
+          </div>
+        )}
 
         {/* Zone Info Tooltip (WMAP-02: Enhanced with NPCs and Words) */}
         {isHovered && isUnlocked && (

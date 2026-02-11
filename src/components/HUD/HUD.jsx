@@ -13,6 +13,7 @@ import styles from './HUD.module.css';
 import AchievementPanel from '../Achievements/AchievementPanel.jsx';
 import DailyGoalsPanel from '../Goals/DailyGoalsPanel.jsx';
 import QuestTracker from './QuestTracker.jsx';
+import NextObjectiveIndicator from './NextObjectiveIndicator.jsx';
 
 function HUD({ onMenu }) {
   const dispatch = useDispatch();
@@ -278,6 +279,9 @@ function HUD({ onMenu }) {
 
       {/* Active quest tracker - below HUD bar */}
       <QuestTracker />
+
+      {/* Next objective indicator - below quest tracker */}
+      <NextObjectiveIndicator />
 
       {/* Achievement Panel Overlay */}
       {achievementPanelOpen && (

@@ -86,6 +86,8 @@ export const EVENTS = Object.freeze({
   ZONE_TRANSITION: 'phaser:zone:transition',
   /** Phaser → React: player stepped on exit trigger, check unlock requirements */
   ZONE_CHECK_UNLOCK: 'phaser:zone:check-unlock',
+  /** React → React: zone gate blocked, show requirements to player */
+  ZONE_GATE_BLOCKED: 'react:zone:gate-blocked',
   /** React → Phaser: fast travel from world map to target zone */
   FAST_TRAVEL: 'react:zone:fast-travel',
 

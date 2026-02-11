@@ -238,6 +238,7 @@ export const selectCompletedQuests = createSelector(
 );
 
 // Select NPC quest markers (! for available, ? for turn-in)
+// PROG-10: Also shows markers for story/active quests, not just locked ones
 export const selectNpcQuestMarkers = createSelector(
   [selectAllQuests],
   (quests) => {
@@ -252,13 +253,20 @@ export const selectNpcQuestMarkers = createSelector(
       const npcId = NPC_GIVER_TO_ID[`${qd.npcGiver}_${qd.zone}`];
       if (!npcId) continue;
 
-      // Priority 1: Turn-in (green ?)
+      // Priority 1: Turn-in (green ?) — completed but reward not claimed
       if (questState.status === 'completed' && !questState.rewardClaimed) {
         markers[npcId] = 'question';
         continue;
       }
 
-      // Priority 2: Available (golden !) - only if not already marked for turn-in
+      // Priority 2: Active quest in progress (golden !) — NPC has an active quest
+      // This ensures story quest NPCs also show markers while their quest is active
+      if (questState.status === 'active' && !markers[npcId]) {
+        markers[npcId] = 'exclamation';
+        continue;
+      }
+
+      // Priority 3: Available (golden !) — locked but prerequisites met, ready to pick up
       if (questState.status === 'locked' && !markers[npcId]) {
         const allPrerequisitesMet = qd.prerequisites.every((preId) => {
           const pre = quests[preId];
