@@ -9,7 +9,7 @@ import { useDialogue } from '../../hooks/useDialogue.js';
 import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { getEnhancedDialogueChoices } from '../../utils/culturalDialogueHelper.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
-import npcsData from '../../data/npcs.json';
+import npcsData from '../../data/npcsEnriched.js';
 import DialoguePortrait from './DialoguePortrait.jsx';
 import DialogueBox from './DialogueBox.jsx';
 import DialogueChoices from './DialogueChoices.jsx';

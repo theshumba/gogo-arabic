@@ -30,7 +30,7 @@ export default function DialogueChoices({ choices, onChoiceSelect, portrait }) {
                 {c.english}
               </div>
               {c.arabic && (
-                <div className={styles.choiceArabic} lang="ar">
+                <div className={styles.choiceArabic} lang="ar" dir="rtl">
                   {formatArabic(c.arabic)}
                 </div>
               )}

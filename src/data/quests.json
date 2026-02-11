@@ -795,5 +795,241 @@
     "reward": { "xp": 300, "dirhams": 200 },
     "npcGiver": "merchant",
     "requirements": { "chestsOpened": 10 }
+  },
+
+  {
+    "id": "scholars_dilemma",
+    "title": "The Scholar's Dilemma",
+    "titleArabic": "مُعضِلَة العالِم",
+    "description": "Scholar Yusuf's precious manuscript has gone missing. Merchant Fatima claims she found it at the market. Decide who should keep it.",
+    "descriptionArabic": "مَخطوطَة الشَّيْخ يوسُف الثَّمينَة اِختَفَت. التّاجِرَة فاطِمَة تَدَّعي أَنَّها وَجَدَتها في السّوق. قَرِّر مَن يَحتَفِظ بِها",
+    "zone": "oasis_village",
+    "type": "story",
+    "target": 1,
+    "trackEvent": "story_choice_made",
+    "autoStart": false,
+    "prerequisites": ["words_of_oasis"],
+    "reward": { "xp": 400, "dirhams": 150 },
+    "npcGiver": "scholar",
+    "choices": [
+      {
+        "id": "return_to_scholar",
+        "description": "Return the manuscript to Scholar Yusuf",
+        "descriptionArabic": "أَعِد المَخطوطَة إلى الشَّيْخ يوسُف",
+        "storyFlag": "manuscript_returned_scholar",
+        "effects": [
+          { "type": "relationship_change", "npcId": "scholar-yusuf", "amount": 2 },
+          { "type": "relationship_change", "npcId": "merchant-fatima", "amount": -1 },
+          { "type": "story_flag", "flag": "scholar_path", "value": true },
+          { "type": "reward", "xp": 200, "dirhams": 0 }
+        ]
+      },
+      {
+        "id": "side_with_merchant",
+        "description": "Let Merchant Fatima keep the manuscript — finders keepers",
+        "descriptionArabic": "دَع التّاجِرَة فاطِمَة تَحتَفِظ بِها — مَن وَجَد شَيئاً فَهُوَ لَه",
+        "storyFlag": "manuscript_kept_merchant",
+        "effects": [
+          { "type": "relationship_change", "npcId": "merchant-fatima", "amount": 2 },
+          { "type": "relationship_change", "npcId": "scholar-yusuf", "amount": -1 },
+          { "type": "story_flag", "flag": "merchant_path", "value": true },
+          { "type": "reward", "xp": 100, "dirhams": 200 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "scholars_dilemma_aftermath",
+    "title": "Aftermath of the Dilemma",
+    "titleArabic": "ما بَعدَ المُعضِلَة",
+    "description": "Return to the one you sided with to learn the manuscript's secrets.",
+    "descriptionArabic": "عُد إلى مَن ناصَرتَهُ لِتَتَعَلَّم أَسرارَ المَخطوطَة",
+    "zone": "oasis_village",
+    "type": "story",
+    "target": 1,
+    "trackEvent": "dialogue_completed",
+    "autoStart": false,
+    "prerequisites": ["scholars_dilemma"],
+    "reward": { "xp": 300, "dirhams": 100 },
+    "npcGiver": "scholar"
+  },
+  {
+    "id": "desert_crossing",
+    "title": "The Desert Crossing",
+    "titleArabic": "عُبور الصَّحراء",
+    "description": "Elder Tariq warns of two routes to the Mountain Village. Choose the safe caravan route or the risky shortcut through ancient ruins.",
+    "descriptionArabic": "الشَّيخ طارِق يُحَذِّر مِن طَريقَين إلى قَرية الجَبَل. اِختَر طَريق القافِلَة الآمِن أَو الطَّريق المُختَصَر عَبرَ الأَطلال القَديمَة",
+    "zone": "bedouin_camp",
+    "type": "story",
+    "target": 1,
+    "trackEvent": "story_choice_made",
+    "autoStart": false,
+    "prerequisites": ["tales_of_desert"],
+    "reward": { "xp": 600, "dirhams": 200 },
+    "npcGiver": "elder",
+    "choices": [
+      {
+        "id": "safe_caravan",
+        "description": "Take the safe caravan route with Wanderer Ali",
+        "descriptionArabic": "اِسلُك طَريق القافِلَة الآمِن مَع الرَّحّالَة عَلي",
+        "storyFlag": "chose_caravan_route",
+        "effects": [
+          { "type": "relationship_change", "npcId": "wanderer-ali", "amount": 2 },
+          { "type": "relationship_change", "npcId": "elder-tariq", "amount": 1 },
+          { "type": "story_flag", "flag": "caravan_path", "value": true },
+          { "type": "world_state", "objectId": "desert_bridge", "objectState": "open" }
+        ]
+      },
+      {
+        "id": "risky_shortcut",
+        "description": "Take the risky shortcut through the ancient ruins — rare vocabulary awaits",
+        "descriptionArabic": "اِسلُك الطَّريق المُختَصَر عَبرَ الأَطلال — كَلِمات نادِرَة بِانتِظارِك",
+        "storyFlag": "chose_ruins_shortcut",
+        "effects": [
+          { "type": "relationship_change", "npcId": "storyteller-noor", "amount": 2 },
+          { "type": "story_flag", "flag": "ruins_path", "value": true },
+          { "type": "story_flag", "flag": "learned_ancient_script", "value": true },
+          { "type": "reward", "xp": 300, "dirhams": 0 },
+          { "type": "world_state", "objectId": "ruins_gate", "objectState": "explored" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "desert_crossing_convergence",
+    "title": "Reunited Paths",
+    "titleArabic": "اِلتِقاء الطُّرُق",
+    "description": "Both routes lead to the Mountain Village entrance. Share what you learned on your journey.",
+    "descriptionArabic": "كِلا الطَّريقَين يُؤَدّيانِ إلى مَدخَل قَرية الجَبَل. شارِك ما تَعَلَّمتَهُ في رِحلَتِك",
+    "zone": "mountain_village",
+    "type": "story",
+    "target": 1,
+    "trackEvent": "dialogue_completed",
+    "autoStart": false,
+    "prerequisites": ["desert_crossing"],
+    "reward": { "xp": 400, "dirhams": 150 },
+    "npcGiver": "guide"
+  },
+  {
+    "id": "palace_audience",
+    "title": "The Palace Audience",
+    "titleArabic": "مُقابَلَة القَصر",
+    "description": "Present yourself to the royal court. Will you approach as a scholar of language, or as a merchant bearing gifts?",
+    "descriptionArabic": "قَدِّم نَفسَكَ لِلبَلاط المَلَكي. هَل تَقتَرِبُ كَعالِمِ لُغَة أَم كَتاجِرٍ يَحمِلُ هَدايا؟",
+    "zone": "royal_palace",
+    "type": "story",
+    "target": 1,
+    "trackEvent": "story_choice_made",
+    "autoStart": false,
+    "prerequisites": ["port_of_knowledge"],
+    "reward": { "xp": 800, "dirhams": 300 },
+    "npcGiver": "vizier",
+    "choices": [
+      {
+        "id": "present_as_scholar",
+        "description": "Present yourself as a scholar seeking wisdom",
+        "descriptionArabic": "قَدِّم نَفسَكَ كَعالِمٍ يَبحَثُ عَن الحِكمَة",
+        "storyFlag": "palace_scholar_identity",
+        "effects": [
+          { "type": "relationship_change", "npcId": "vizier-abbas", "amount": 2 },
+          { "type": "relationship_change", "npcId": "poet-rumi", "amount": 1 },
+          { "type": "story_flag", "flag": "palace_scholar", "value": true },
+          { "type": "story_flag", "flag": "palace_audience_granted", "value": true },
+          { "type": "reward", "xp": 400, "dirhams": 0 }
+        ]
+      },
+      {
+        "id": "present_as_merchant",
+        "description": "Present yourself as a merchant bearing exotic gifts",
+        "descriptionArabic": "قَدِّم نَفسَكَ كَتاجِرٍ يَحمِلُ هَدايا غَريبَة",
+        "storyFlag": "palace_merchant_identity",
+        "effects": [
+          { "type": "relationship_change", "npcId": "princess-aisha", "amount": 2 },
+          { "type": "relationship_change", "npcId": "imam-muhammad", "amount": 1 },
+          { "type": "story_flag", "flag": "palace_merchant", "value": true },
+          { "type": "story_flag", "flag": "palace_audience_granted", "value": true },
+          { "type": "reward", "xp": 200, "dirhams": 500 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "palace_audience_convergence",
+    "title": "The Court's Verdict",
+    "titleArabic": "حُكمُ البَلاط",
+    "description": "Regardless of your approach, the court recognizes your mastery of Arabic. The final trial awaits.",
+    "descriptionArabic": "بِغَضِّ النَّظَر عَن طَريقَتِك، يَعتَرِفُ البَلاط بِإِتقانِكَ لِلعَرَبِيَّة. الاِختِبار الأَخير يَنتَظِر",
+    "zone": "royal_palace",
+    "type": "story",
+    "target": 1,
+    "trackEvent": "dialogue_completed",
+    "autoStart": false,
+    "prerequisites": ["palace_audience"],
+    "reward": { "xp": 500, "dirhams": 200 },
+    "npcGiver": "vizier"
+  },
+  {
+    "id": "library_lost_chapter",
+    "title": "The Lost Chapter",
+    "titleArabic": "الفَصل المَفقود",
+    "description": "Librarian Ibrahim discovers a missing chapter from an ancient grammar book. Help him piece together the fragments.",
+    "descriptionArabic": "أَمين المَكتَبَة إبراهيم يَكتَشِفُ فَصلاً مَفقوداً مِن كِتاب نَحوٍ قَديم. ساعِدهُ في تَجميع الأَجزاء",
+    "zone": "ancient_library",
+    "type": "story",
+    "target": 5,
+    "trackEvent": "fragment_found",
+    "autoStart": false,
+    "prerequisites": ["library_numbers", "library_colors"],
+    "reward": { "xp": 350, "dirhams": 175 },
+    "npcGiver": "librarian",
+    "storyArc": "library_mysteries"
+  },
+  {
+    "id": "marketplace_rivalry",
+    "title": "The Market Rivalry",
+    "titleArabic": "مُنافَسَة السّوق",
+    "description": "Spice Seller Layla and Trader Hassan are in a trade dispute. Use your vocabulary to mediate.",
+    "descriptionArabic": "بائِعَة التَّوابِل لَيلى وَالتّاجِر حَسَّان في خِلاف تِجاري. اِستَخدِم مُفرَداتِكَ لِلتَّوَسُّط",
+    "zone": "desert_marketplace",
+    "type": "story",
+    "target": 1,
+    "trackEvent": "mediation_complete",
+    "autoStart": false,
+    "prerequisites": ["spice_knowledge", "trader_bargains"],
+    "reward": { "xp": 400, "dirhams": 250 },
+    "npcGiver": "spice-seller",
+    "storyArc": "marketplace_harmony"
+  },
+  {
+    "id": "bedouin_star_map",
+    "title": "The Bedouin Star Map",
+    "titleArabic": "خَريطَة نُجوم البَدو",
+    "description": "Storyteller Noor tells of a star map that reveals hidden paths. Learn the Arabic names of stars to unlock its secrets.",
+    "descriptionArabic": "الحَكّاءَة نور تُخبِرُ عَن خَريطَة نُجوم تَكشِفُ طُرُقاً مَخفِيَّة. تَعَلَّم أَسماء النُّجوم بِالعَرَبِيَّة لِفَتح أَسرارِها",
+    "zone": "bedouin_camp",
+    "type": "story",
+    "target": 8,
+    "trackEvent": "word_learned_astronomy",
+    "autoStart": false,
+    "prerequisites": ["bedouin_stories"],
+    "reward": { "xp": 500, "dirhams": 200 },
+    "npcGiver": "storyteller",
+    "storyArc": "desert_legends"
+  },
+  {
+    "id": "mountain_healer_trial",
+    "title": "The Healer's Trial",
+    "titleArabic": "اِمتِحان المُعالِجَة",
+    "description": "Healer Khadija tests your knowledge of body and health vocabulary to earn her trust and unlock healing recipes.",
+    "descriptionArabic": "المُعالِجَة خَديجَة تَختَبِرُ مَعرِفَتَكَ بِمُفرَدات الجِسم وَالصِّحَّة لِتَكسِبَ ثِقَتَها وَتَفتَح وَصَفات العِلاج",
+    "zone": "mountain_village",
+    "type": "story",
+    "target": 1,
+    "trackEvent": "trial_passed",
+    "autoStart": false,
+    "prerequisites": ["mountain_healing"],
+    "reward": { "xp": 450, "dirhams": 180 },
+    "npcGiver": "healer",
+    "storyArc": "mountain_wisdom_arc"
   }
 ]

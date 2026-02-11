@@ -4,6 +4,7 @@ import { store } from '../../store/store.js';
 import {
   incrementNpcRelationship,
   setStoryFlag,
+  setWorldObjectState,
   recordChoice,
 } from '../../store/slices/narrativeSlice.js';
 import {
@@ -222,6 +223,24 @@ export class DialogueEngine {
         case 'open_shop': {
           EventBus.emit(EVENTS.SHOP_OPEN, {
             npcId: this.currentNpcId,
+          });
+          break;
+        }
+
+        case 'world_state': {
+          store.dispatch(setWorldObjectState({
+            objectId: effect.objectId,
+            objectState: effect.objectState,
+          }));
+          break;
+        }
+
+        case 'reward': {
+          // Emit reward event for player slice to handle (XP + dirhams)
+          EventBus.emit(EVENTS.DIALOGUE_EFFECT_EXECUTED, {
+            type: 'reward',
+            xp: effect.xp || 0,
+            dirhams: effect.dirhams || 0,
           });
           break;
         }

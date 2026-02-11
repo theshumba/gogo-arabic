@@ -35,7 +35,7 @@ export default function ObjectInteractionOverlay() {
     : 'Object';
 
   return (
-    <div ref={focusTrapRef} className={styles.overlay} onClick={handleOverlayClose}>
+    <div ref={focusTrapRef} className={styles.overlay} onClick={handleOverlayClose} role="dialog" aria-label={`${typeName} inspection`}>
       <div className={styles.card} onClick={(e) => e.stopPropagation()}>
         {/* Type badge */}
         <div className={styles.typeBadge}>{typeName}</div>

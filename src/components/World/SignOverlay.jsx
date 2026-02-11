@@ -20,9 +20,9 @@ export default function SignOverlay() {
   if (!signData) return null;
 
   return (
-    <div ref={focusTrapRef} className={styles.overlay} onClick={handleOverlayClose}>
+    <div ref={focusTrapRef} className={styles.overlay} onClick={handleOverlayClose} role="dialog" aria-label="Sign">
       <div className={styles.card} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.arabic}>{signData.arabic}</div>
+        <div className={styles.arabic} lang="ar" dir="rtl">{signData.arabic}</div>
         <div className={styles.english}>{signData.english}</div>
         <button className={styles.closeBtn} onClick={handleOverlayClose}>
           Continue

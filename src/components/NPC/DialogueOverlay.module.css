@@ -83,12 +83,13 @@
 }
 
 .portraitNameArabic {
-  font-family: var(--font-arabic);
+  font-family: var(--font-arabic-display), var(--font-arabic), sans-serif;
   font-size: 16px;
   text-align: center;
   margin-top: 2px;
   color: var(--color-xp-gold);
   direction: rtl;
+  unicode-bidi: isolate;
 }
 
 .content {
@@ -111,15 +112,19 @@
 
 .arabicLine {
   font-size: 28px;
-  font-family: var(--font-arabic);
+  font-family: var(--font-arabic-body), var(--font-arabic), sans-serif;
   direction: rtl;
+  unicode-bidi: isolate;
   text-align: right;
-  line-height: 1.7;
+  line-height: 1.8;
   margin-bottom: 6px;
   color: var(--color-xp-gold);
   overflow-wrap: break-word;
   word-break: break-word;
   max-width: 100%;
+  /* Prevent diacritics (tashkeel) from causing overflow */
+  padding-top: 4px;
+  padding-bottom: 2px;
 }
 
 .englishLine {
@@ -178,12 +183,14 @@
 }
 
 .wordCardArabic {
-  font-family: var(--font-arabic);
+  font-family: var(--font-arabic-body), var(--font-arabic), sans-serif;
   font-size: 24px;
   direction: rtl;
+  unicode-bidi: isolate;
   text-align: right;
   color: var(--color-xp-gold);
-  line-height: 1.5;
+  line-height: 1.6;
+  padding-top: 2px;
 }
 
 .wordCardEnglish {
@@ -218,6 +225,8 @@
   flex: 1;
   text-align: center;
   min-width: 100px;
+  /* UXPL-06: WCAG 2.1 minimum touch target */
+  min-height: 44px;
   box-shadow:
     inset -3px -3px 0px 0px rgba(0, 0, 0, 0.15),
     inset 3px 3px 0px 0px rgba(255, 255, 255, 0.4),
@@ -308,6 +317,8 @@
   font-family: var(--font-pixel);
   font-size: 10px;
   text-align: left;
+  /* UXPL-06: WCAG 2.1 minimum touch target */
+  min-height: 44px;
   box-shadow:
     inset -3px -3px 0px 0px rgba(0, 0, 0, 0.15),
     inset 3px 3px 0px 0px rgba(255, 255, 255, 0.4),
@@ -496,6 +507,8 @@
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  /* UXPL-06: WCAG 2.1 minimum touch target */
+  min-height: 44px;
 }
 
 .endConversationBtn:hover {
@@ -519,6 +532,12 @@
   font-family: var(--font-pixel);
   margin-top: 8px;
   padding: 4px;
+  /* UXPL-06: WCAG 2.1 minimum touch target */
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .historyBtn:hover {
@@ -555,10 +574,14 @@
 
 .choiceArabic {
   font-size: 18px;
-  font-family: var(--font-arabic);
+  font-family: var(--font-arabic-body), var(--font-arabic), sans-serif;
   direction: rtl;
+  unicode-bidi: isolate;
+  text-align: right;
   margin-top: 6px;
   color: var(--color-brown);
+  line-height: 1.6;
+  padding-top: 2px;
 }
 
 /* Responsive design */

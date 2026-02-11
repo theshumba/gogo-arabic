@@ -122,7 +122,7 @@ vi.mock('../RelationshipIndicator.jsx', () => ({
 }));
 
 // Mock NPC data
-vi.mock('../../../data/npcs.json', () => ({
+vi.mock('../../../data/npcsEnriched.js', () => ({
   default: [
     {
       id: 'fatima_teacher',
