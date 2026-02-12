@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { toggleMenu, selectAnyOverlayOpen } from '../../store/slices/uiSlice.js';
+import { toggleMenu, selectAnyOverlayOpen, selectInventoryOpen, closeInventory } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { audioManager } from '../../services/audio.js';
@@ -30,6 +30,7 @@ import BattleOverlay from '../Battle/BattleOverlay.jsx';
 import MagicOverlay from '../Magic/MagicOverlay.jsx';
 import SpellMenu from '../Magic/SpellMenu.jsx';
 import RootDiscoveryToast from '../Magic/RootDiscoveryToast.jsx';
+import InventoryUI from '../Inventory/InventoryUI.jsx';
 import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate }) {
@@ -172,6 +173,7 @@ export default function GameLayout() {
   const menuOpen = useSelector((state) => state.ui.menuOpen);
   const signOpen = useSelector((state) => state.ui.signOpen);
   const objectInspectOpen = useSelector((state) => state.ui.objectInspectOpen);
+  const inventoryOpen = useSelector(selectInventoryOpen);
   const onboardingComplete = useSelector((state) => state.player.onboardingComplete ?? true);
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
@@ -251,6 +253,11 @@ export default function GameLayout() {
 
       {/* Root discovery toast */}
       <RootDiscoveryToast />
+
+      {/* Inventory overlay (v6.0 equipment & inventory) */}
+      <AnimatePresence>
+        {inventoryOpen && <InventoryUI onClose={() => dispatch(closeInventory())} />}
+      </AnimatePresence>
 
       {/* Wardrobe overlay */}
       <AnimatePresence>

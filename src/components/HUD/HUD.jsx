@@ -1,12 +1,13 @@
 import { useState, useCallback, useMemo, memo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { openDialogue } from '../../store/slices/uiSlice.js';
+import { openDialogue, openInventory } from '../../store/slices/uiSlice.js';
 import { selectUnlockedCount } from '../../store/slices/achievementSlice.js';
 import { selectPlayerStats } from '../../store/slices/playerSlice.js';
 import { selectActiveQuestCount } from '../../store/slices/questSlice.js';
 import { selectReviewQueueCount, selectLearnedWordCount } from '../../store/slices/vocabularySlice.js';
 import { selectCompletedGoalsCount, selectTotalGoalsCount } from '../../store/slices/dailyGoalsSlice.js';
+import { selectInventoryCount } from '../../store/slices/inventorySlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import styles from './HUD.module.css';
@@ -31,6 +32,7 @@ function HUD({ onMenu }) {
   const achievementCount = useSelector(selectUnlockedCount);
   const completedGoalsCount = useSelector(selectCompletedGoalsCount);
   const totalGoalsCount = useSelector(selectTotalGoalsCount);
+  const inventoryCount = useSelector(selectInventoryCount);
   const completedGroups = useSelector((s) => s.alphabet.completedGroups || []);
   const wordsLearned = useSelector(selectLearnedWordCount);
   const completedQuestCount = useSelector((s) => {
@@ -123,6 +125,11 @@ function HUD({ onMenu }) {
   const openReviewSession = useCallback(() => {
     EventBus.emit(EVENTS.REVIEW_SESSION_OPEN);
   }, []);
+
+  const openInventoryPanel = useCallback(() => {
+    dispatch(openInventory());
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+  }, [dispatch]);
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const buttonProps = reduceMotion
@@ -218,6 +225,21 @@ function HUD({ onMenu }) {
             {activeQuestCount > 0 && (
               <span className={`${styles.badge} ${styles.questBadge}`} aria-hidden="true">
                 {activeQuestCount}
+              </span>
+            )}
+          </motion.button>
+
+          {/* Inventory button (v6.0 equipment system) */}
+          <motion.button
+            className={styles.btn}
+            onClick={openInventoryPanel}
+            aria-label={`Inventory ${inventoryCount}/200 items. Press I key.`}
+            {...buttonProps}
+          >
+            <span className={styles.inventoryIcon} aria-hidden="true">حقيبة</span>
+            {inventoryCount > 0 && (
+              <span className={`${styles.badge} ${styles.inventoryBadge}`} aria-hidden="true">
+                {inventoryCount}
               </span>
             )}
           </motion.button>

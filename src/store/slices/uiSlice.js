@@ -6,6 +6,7 @@ const initialState = {
   menuOpen: false,
   signOpen: false,
   objectInspectOpen: false,
+  inventoryOpen: false,
   quizConfig: null, // { type, words, context, timer }
   dialogueConfig: null, // { npcId, npcName }
   signData: null, // { arabic, english }
@@ -67,6 +68,14 @@ const uiSlice = createSlice({
       state.objectInspectData = null;
     },
 
+    openInventory(state) {
+      state.inventoryOpen = true;
+    },
+
+    closeInventory(state) {
+      state.inventoryOpen = false;
+    },
+
     showNotification(state, action) {
       // payload: { message, type }
       state.notification = action.payload;
@@ -82,6 +91,7 @@ const uiSlice = createSlice({
       state.menuOpen = false;
       state.signOpen = false;
       state.objectInspectOpen = false;
+      state.inventoryOpen = false;
       state.quizConfig = null;
       state.dialogueConfig = null;
       state.signData = null;
@@ -100,6 +110,8 @@ export const {
   closeSign,
   openObjectInspect,
   closeObjectInspect,
+  openInventory,
+  closeInventory,
   showNotification,
   clearNotification,
   closeAllOverlays,
@@ -116,6 +128,7 @@ export const selectSignData = (state) => state.ui.signData;
 export const selectObjectInspectOpen = (state) => state.ui.objectInspectOpen;
 export const selectObjectInspectData = (state) => state.ui.objectInspectData;
 export const selectNotification = (state) => state.ui.notification;
+export const selectInventoryOpen = (state) => state.ui.inventoryOpen;
 export const selectAnyOverlayOpen = createSelector(
   [
     (state) => state.ui.dialogueOpen,
@@ -123,9 +136,10 @@ export const selectAnyOverlayOpen = createSelector(
     (state) => state.ui.menuOpen,
     (state) => state.ui.signOpen,
     (state) => state.ui.objectInspectOpen,
+    (state) => state.ui.inventoryOpen,
   ],
-  (dialogueOpen, quizOpen, menuOpen, signOpen, objectInspectOpen) =>
-    dialogueOpen || quizOpen || menuOpen || signOpen || objectInspectOpen
+  (dialogueOpen, quizOpen, menuOpen, signOpen, objectInspectOpen, inventoryOpen) =>
+    dialogueOpen || quizOpen || menuOpen || signOpen || objectInspectOpen || inventoryOpen
 );
 
 export default uiSlice.reducer;
