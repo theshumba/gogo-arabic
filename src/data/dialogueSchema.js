@@ -26,7 +26,7 @@ const effectSchema = z.object({
   type: z.enum([
     'quest_start', 'quest_complete', 'relationship_change',
     'story_flag', 'teach_word', 'give_item', 'unlock_area',
-    'change_npc_state', 'open_shop'
+    'change_npc_state', 'open_shop', 'world_state', 'reward'
   ]),
   questId: z.string().optional(),
   amount: z.number().optional(),

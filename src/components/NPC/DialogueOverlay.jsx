@@ -68,24 +68,13 @@ export default function DialogueOverlay() {
   // Centralized overlay close with ESC key and unmount safety net
   useOverlayClose(close);
 
-  // Early return if invalid data
-  if (!npc || !currentTree) {
-    if (npc || overlayData) {
-      dispatch(closeDialogue());
-      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
-    }
-    return null;
-  }
-
-  const line = currentTree.lines[lineIndex];
-  if (!line) {
-    close();
-    return null;
-  }
+  const line = (npc && currentTree) ? currentTree.lines[lineIndex] : null;
 
   /* ---- keyboard shortcuts (Space/Enter to advance, number keys for choices) ---- */
   /* NOTE: ESC is handled by useOverlayClose above (capture phase) */
   useEffect(() => {
+    if (!line) return;
+
     const handleKeyDown = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
@@ -117,6 +106,20 @@ export default function DialogueOverlay() {
     return () => window.removeEventListener('keydown', handleKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [line, lineIndex, currentTree, isHubAndSpoke, filteredChoices]);
+
+  // Early return if invalid data
+  if (!npc || !currentTree) {
+    if (npc || overlayData) {
+      dispatch(closeDialogue());
+      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+    }
+    return null;
+  }
+
+  if (!line) {
+    close();
+    return null;
+  }
 
   // Check for reduced motion preference
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

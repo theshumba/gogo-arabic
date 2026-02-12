@@ -212,9 +212,10 @@ export function useObjectEvents(playSFX) {
       }
 
       // Give loot (dirhams) if specified
-      if (loot && loot.dirhams) {
-        dispatch(addDirhams(loot.dirhams));
-        overlayData.lootMessage = `Found ${loot.dirhams} dirhams!`;
+      if (loot && loot.type === 'dirhams') {
+        const amount = Math.floor(Math.random() * (loot.max - loot.min + 1)) + loot.min;
+        dispatch(addDirhams(amount));
+        overlayData.lootMessage = `Found ${amount} dirhams!`;
       }
 
       // Persist state change in narrativeSlice.worldObjectStates
