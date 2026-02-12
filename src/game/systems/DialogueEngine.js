@@ -13,6 +13,7 @@ import {
   checkPrerequisites,
 } from '../../store/slices/questSlice.js';
 import { showNotification } from '../../store/slices/uiSlice.js';
+import { discoverRoot, recordAffinityChoice } from '../../store/slices/magicSlice.js';
 import questsData from '../../data/quests.json';
 
 /**
@@ -29,6 +30,10 @@ export class DialogueEngine {
   constructor(scene) {
     this.scene = scene;
     this.currentNpcId = null;
+
+    // Track affinity lock state to emit event only once
+    const affinityState = store.getState().magic?.affinity;
+    this._affinityWasLocked = !!(affinityState?.primary);
   }
 
   /**
@@ -240,6 +245,52 @@ export class DialogueEngine {
             type: 'reward',
             xp: effect.xp || 0,
             dirhams: effect.dirhams || 0,
+          });
+          break;
+        }
+
+        case 'discover_root': {
+          store.dispatch(
+            discoverRoot({
+              rootId: effect.rootId,
+              element: effect.element,
+            })
+          );
+          EventBus.emit(EVENTS.MAGIC_ROOT_DISCOVERED, {
+            rootId: effect.rootId,
+            element: effect.element,
+          });
+          store.dispatch(
+            showNotification({
+              message: `Discovered the root ${effect.rootId} (${effect.element})!`,
+              type: 'success',
+            })
+          );
+          break;
+        }
+
+        case 'affinity_choice': {
+          store.dispatch(
+            recordAffinityChoice({
+              choiceId: effect.choiceId || `choice_${this.currentNpcId}_${Date.now()}`,
+              element: effect.element,
+              weight: effect.weight || 1,
+            })
+          );
+
+          // Check if affinity just locked
+          const affinityState = store.getState().magic?.affinity;
+          if (affinityState?.primary && !this._affinityWasLocked) {
+            this._affinityWasLocked = true;
+            EventBus.emit(EVENTS.MAGIC_AFFINITY_LOCKED, {
+              primary: affinityState.primary,
+              secondary: affinityState.secondary,
+            });
+          }
+
+          EventBus.emit(EVENTS.MAGIC_AFFINITY_CHOICE, {
+            element: effect.element,
+            weight: effect.weight || 1,
           });
           break;
         }

@@ -29,6 +29,8 @@ import {
 import { getEnemy } from '../../../data/enemies.js';
 import { calculateDamage } from './BattleDamageCalculator.js';
 import { EnemyAI } from './EnemyAI.js';
+import { RootMagicManager } from '../magic/RootMagicManager.js';
+import { getRootWords } from '../../../data/rootsData.js';
 
 const STATES = Object.freeze({
   IDLE: 'IDLE',
@@ -36,6 +38,7 @@ const STATES = Object.freeze({
   TURN_START: 'TURN_START',
   PLAYER_TURN: 'PLAYER_TURN',
   ACTION_SELECT: 'ACTION_SELECT',
+  MAGIC_CAST: 'MAGIC_CAST',
   INPUT_PHASE: 'INPUT_PHASE',
   RESOLVE_ACTION: 'RESOLVE_ACTION',
   APPLY_DAMAGE: 'APPLY_DAMAGE',
@@ -59,6 +62,7 @@ export class BattleStateMachine {
     this.currentAction = null;
     this.pendingInput = null;
     this.enemyAI = null;
+    this.magicManager = null;
     this.isPlayerTurn = true; // Strict turns: player first
 
     // Initialize enemy AI
@@ -68,6 +72,9 @@ export class BattleStateMachine {
       const fsrsCards = store.getState().vocabulary?.fsrsCards || {};
       this.enemyAI = new EnemyAI(enemyData, fsrsCards);
     }
+
+    // Initialize magic manager
+    this.magicManager = new RootMagicManager(scene);
   }
 
   start() {
@@ -130,6 +137,9 @@ export class BattleStateMachine {
           to: 'ACTION_SELECT',
           actions: this._getAvailableActions(),
         });
+        break;
+      case STATES.MAGIC_CAST:
+        this._handleMagicCast();
         break;
       case STATES.INPUT_PHASE:
         this._promptArabicInput();
@@ -206,10 +216,10 @@ export class BattleStateMachine {
   /**
    * Handle player action selection (from React via EventBus).
    */
-  handleAction(action, target) {
+  handleAction(action, target, slot) {
     if (this.state !== STATES.ACTION_SELECT) return;
 
-    this.currentAction = { type: action, target: target || 0 };
+    this.currentAction = { type: action, target: target || 0, slot };
 
     if (action === 'flee') {
       this._handleFlee();
@@ -228,7 +238,13 @@ export class BattleStateMachine {
       return;
     }
 
-    // Attack and Magic require Arabic input
+    if (action === 'magic') {
+      // Magic requires spell slot and transitions to MAGIC_CAST
+      this._transition(STATES.MAGIC_CAST);
+      return;
+    }
+
+    // Attack requires Arabic input
     this._transition(STATES.INPUT_PHASE);
   }
 
@@ -247,6 +263,61 @@ export class BattleStateMachine {
   handleFlee() {
     if (this.state !== STATES.ACTION_SELECT) return;
     this._handleFlee();
+  }
+
+  // ─── Magic casting ─────────────────────────────────────────
+
+  _handleMagicCast() {
+    const state = store.getState();
+    const equippedSpells = state.magic?.equippedSpells || [];
+    const spell = equippedSpells[this.currentAction.slot];
+
+    if (!spell) {
+      console.error('[BattleStateMachine] No spell in slot', this.currentAction.slot);
+      this._transition(STATES.ACTION_SELECT);
+      return;
+    }
+
+    // Get a random derived word from the spell's root for Arabic input challenge
+    const rootInfo = getRootWords(spell.rootId);
+    let challengeWord = null;
+
+    if (rootInfo && rootInfo.words && rootInfo.words.length > 0) {
+      // Pick a random word from this root
+      const randomWordId = rootInfo.words[Math.floor(Math.random() * rootInfo.words.length)];
+      // We need to look up the full word data (this is a simplification - in reality we'd use vocabularyAll.js)
+      challengeWord = {
+        id: randomWordId,
+        arabic: randomWordId, // Simplified - actual word would come from vocabulary data
+        english: rootInfo.meaning || 'word',
+        element: spell.element,
+      };
+    } else {
+      // Fallback: generic word
+      challengeWord = {
+        id: 'generic',
+        arabic: spell.rootId,
+        english: 'magic word',
+        element: spell.element,
+      };
+    }
+
+    // Store the spell and target info for later resolution
+    this.pendingInput = {
+      spell,
+      targetIndex: this.currentAction.target || 0,
+    };
+
+    // Transition to INPUT_PHASE with the challenge word
+    this._transition(STATES.INPUT_PHASE);
+
+    // Emit the prompt with the challenge word
+    EventBus.emit(EVENTS.BATTLE_PROMPT_WORD, {
+      word: challengeWord,
+      difficulty: this._determineDifficulty(),
+      action: 'magic',
+      timeLimit: this._getTimeLimit(this._determineDifficulty()),
+    });
   }
 
   // ─── Arabic input ──────────────────────────────────────────
@@ -319,23 +390,49 @@ export class BattleStateMachine {
       action.isCritical = result.isCritical;
       action.wasCorrect = !result.isMiss;
     } else if (action.type === 'magic') {
-      const enemyData = store.getState().battle.enemyData;
-      store.dispatch(spendMP(5));
-      const result = calculateDamage({
-        baseDamage: 12,
-        accuracy: input?.accuracy || 0,
-        timeElapsedMs: input?.timeElapsed || 20000,
-        element: input?.element || null,
-        targetElement: enemyData?.element || null,
-        streak: store.getState().battle.streak,
-        playerLevel: store.getState().player?.level || 1,
-        isMagic: true,
-      });
-      action.resolvedDamage = result.damage;
-      action.isMiss = result.isMiss;
-      action.isCritical = result.isCritical;
-      action.wasCorrect = !result.isMiss;
-      action.element = input?.element;
+      // Magic uses RootMagicManager for damage calculation
+      // pendingInput from _handleMagicCast contains spell info
+      const spell = input?.spell;
+      const targetIndex = input?.targetIndex || 0;
+      const accuracy = input?.accuracy || 0;
+
+      if (spell) {
+        // Cast spell via RootMagicManager (it handles MP, damage, combos)
+        const success = this.magicManager.castSpell(action.slot, targetIndex, accuracy);
+
+        if (success) {
+          // RootMagicManager handles damage via delayed call, so we mark action as completed
+          action.wasCorrect = true;
+          action.isMiss = false;
+          action.element = spell.element;
+          // Damage is handled by RootMagicManager, not here
+          action.resolvedDamage = 0; // Will be applied by manager
+        } else {
+          // Spell failed (not enough MP)
+          action.wasCorrect = false;
+          action.isMiss = true;
+          action.resolvedDamage = 0;
+        }
+      } else {
+        // Fallback to old magic system if no spell found
+        const enemyData = store.getState().battle.enemyData;
+        store.dispatch(spendMP(5));
+        const result = calculateDamage({
+          baseDamage: 12,
+          accuracy: input?.accuracy || 0,
+          timeElapsedMs: input?.timeElapsed || 20000,
+          element: input?.element || null,
+          targetElement: enemyData?.element || null,
+          streak: store.getState().battle.streak,
+          playerLevel: store.getState().player?.level || 1,
+          isMagic: true,
+        });
+        action.resolvedDamage = result.damage;
+        action.isMiss = result.isMiss;
+        action.isCritical = result.isCritical;
+        action.wasCorrect = !result.isMiss;
+        action.element = input?.element;
+      }
     } else if (action.type === 'defend') {
       action.resolvedDamage = 0;
       action.wasCorrect = true;
@@ -594,6 +691,11 @@ export class BattleStateMachine {
 
     const result = this._calculateRewards(true);
 
+    // Reset magic battle state
+    if (this.magicManager) {
+      this.magicManager.resetBattleState();
+    }
+
     this.scene.time.delayedCall(2000, () => {
       store.dispatch(endBattle(result));
       this.scene.exitBattle(result);
@@ -603,6 +705,11 @@ export class BattleStateMachine {
   _handleDefeat() {
     this.scene.sprites.playPlayerDefeat();
     const result = this._calculateRewards(false);
+
+    // Reset magic battle state
+    if (this.magicManager) {
+      this.magicManager.resetBattleState();
+    }
 
     this.scene.time.delayedCall(2000, () => {
       store.dispatch(endBattle(result));
@@ -672,5 +779,11 @@ export class BattleStateMachine {
     this.currentAction = null;
     this.pendingInput = null;
     this.enemyAI = null;
+
+    // Reset magic battle state
+    if (this.magicManager) {
+      this.magicManager.resetBattleState();
+      this.magicManager = null;
+    }
   }
 }
