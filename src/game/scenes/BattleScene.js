@@ -117,6 +117,18 @@ export class BattleScene extends Phaser.Scene {
     EventBus.on(EVENTS.BATTLE_FLEE_REQUESTED, this._onFleeRequested);
     EventBus.on(EVENTS.BATTLE_ITEM_USED, this._onItemUsed);
 
+    // Listen for magic VFX events
+    this._onMagicVFXStart = ({ element, rootId, targetIndex }) => {
+      this.effects.playSpellEffect(element, rootId, targetIndex);
+    };
+    this._onMagicComboTriggered = (combo) => {
+      const targetSprite = this.sprites.getEnemy(0);
+      this.effects.playComboEffect(combo, targetSprite?.x || 400, targetSprite?.y || 300);
+    };
+
+    EventBus.on(EVENTS.MAGIC_VFX_START, this._onMagicVFXStart);
+    EventBus.on(EVENTS.MAGIC_COMBO_TRIGGERED, this._onMagicComboTriggered);
+
     // Notify React that battle is active
     EventBus.emit(EVENTS.BATTLE_STARTED, this.battleConfig);
   }
@@ -154,6 +166,8 @@ export class BattleScene extends Phaser.Scene {
     EventBus.off(EVENTS.BATTLE_ARABIC_INPUT, this._onArabicInput);
     EventBus.off(EVENTS.BATTLE_FLEE_REQUESTED, this._onFleeRequested);
     EventBus.off(EVENTS.BATTLE_ITEM_USED, this._onItemUsed);
+    EventBus.off(EVENTS.MAGIC_VFX_START, this._onMagicVFXStart);
+    EventBus.off(EVENTS.MAGIC_COMBO_TRIGGERED, this._onMagicComboTriggered);
 
     // Destroy subsystems
     this.stateMachine?.destroy();

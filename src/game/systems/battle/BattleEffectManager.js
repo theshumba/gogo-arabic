@@ -6,6 +6,10 @@
  * Respects prefers-reduced-motion for accessibility.
  */
 
+import { ELEMENT_INFO } from '../../../data/rootMagic.js';
+import { EventBus } from '../../../utils/eventBus.js';
+import { EVENTS } from '../../../utils/eventBusTypes.js';
+
 // Element-specific particle configurations
 const ELEMENT_CONFIGS = {
   fire: {
@@ -213,6 +217,149 @@ export class BattleEffectManager {
     gfx.fillRect(0, 0, 4, 4);
     gfx.generateTexture('particle-dot', 4, 4);
     gfx.destroy();
+  }
+
+  /**
+   * Play spell effect with Arabic calligraphy at target position.
+   * @param {string} element - Element name (fire, water, earth, etc.)
+   * @param {string} rootId - Arabic root ID (e.g., 'ك-ت-ب')
+   * @param {number} targetIndex - Target enemy index
+   */
+  playSpellEffect(element, rootId, targetIndex) {
+    if (this.reduceMotion) return;
+
+    const config = ELEMENT_CONFIGS[element];
+    if (!config) {
+      console.warn(`[BattleEffectManager] Unknown element: ${element}`);
+      return;
+    }
+
+    // Get target sprite position
+    // Note: BattleScene.sprites.getEnemy() pattern would be used in actual integration
+    // For now, use a default position (center-right where enemies typically are)
+    const x = 600;
+    const y = 300;
+
+    this._ensureTexture();
+
+    // Create particle burst
+    const emitter = this.scene.add.particles(x, y, 'particle-dot', {
+      speed: config.speed,
+      lifespan: config.lifespan,
+      scale: config.scale,
+      tint: config.tint,
+      gravityY: config.gravityY ?? 0,
+      angle: config.angle ?? { min: 0, max: 360 },
+      emitting: false,
+    });
+
+    emitter.explode(config.count);
+
+    // Create Arabic calligraphy text
+    const elementInfo = ELEMENT_INFO[element];
+    const hexColor = `#${elementInfo.color.toString(16).padStart(6, '0')}`;
+
+    const text = this.scene.add
+      .text(x, y - 50, rootId, {
+        fontSize: '32px',
+        fontFamily: 'Amiri, serif',
+        color: hexColor,
+        stroke: '#000000',
+        strokeThickness: 2,
+      })
+      .setOrigin(0.5);
+
+    // Animate text floating up
+    this.scene.tweens.add({
+      targets: text,
+      y: y - 100,
+      alpha: 0,
+      duration: 800,
+      ease: 'Cubic.easeOut',
+      onComplete: () => text.destroy(),
+    });
+
+    // Screen flash if configured
+    if (config.screenFlash) {
+      this.screenFlash(config.screenFlashColor, config.screenFlashDuration);
+    }
+
+    // Play SFX
+    EventBus.emit(EVENTS.SFX_CORRECT);
+
+    // Clean up particles
+    const timer = this.scene.time.delayedCall(config.lifespan + 200, () => {
+      emitter.destroy();
+      this._removeTimer(timer);
+    });
+    this.pendingTimers.push(timer);
+  }
+
+  /**
+   * Play combo effect with enhanced VFX.
+   * @param {Object} combo - Combo object with nameArabic, vfxType
+   * @param {number} targetX - Target X position
+   * @param {number} targetY - Target Y position
+   */
+  playComboEffect(combo, targetX, targetY) {
+    if (this.reduceMotion) return;
+
+    // Use first element's config as base, enhanced
+    const baseElement = combo.elements?.[0] || 'fire';
+    const config = ELEMENT_CONFIGS[baseElement];
+    if (!config) return;
+
+    this._ensureTexture();
+
+    // Create larger particle burst (2x count, 1.5x duration)
+    const emitter = this.scene.add.particles(targetX, targetY, 'particle-dot', {
+      speed: { min: config.speed.min * 1.5, max: config.speed.max * 1.5 },
+      lifespan: config.lifespan * 1.5,
+      scale: { start: (config.scale.start || 1) * 1.2, end: 0 },
+      tint: config.tint,
+      gravityY: config.gravityY ?? 0,
+      angle: { min: 0, max: 360 },
+      emitting: false,
+    });
+
+    emitter.explode(config.count * 2);
+
+    // Create combo name text in Arabic
+    const comboColor = combo.vfxType ? `#${ELEMENT_INFO[combo.vfxType]?.color.toString(16).padStart(6, '0')}` : '#FFD700';
+
+    const text = this.scene.add
+      .text(targetX, targetY - 70, combo.nameArabic || 'COMBO!', {
+        fontSize: '48px',
+        fontFamily: 'Amiri, serif',
+        color: comboColor,
+        stroke: '#000000',
+        strokeThickness: 3,
+      })
+      .setOrigin(0.5);
+
+    // Animate text with larger scale
+    this.scene.tweens.add({
+      targets: text,
+      y: targetY - 140,
+      alpha: 0,
+      scale: 1.2,
+      duration: 1200,
+      ease: 'Cubic.easeOut',
+      onComplete: () => text.destroy(),
+    });
+
+    // Enhanced screen flash
+    this.screenFlash(0xFFD700, 150);
+
+    // Play SFX
+    EventBus.emit(EVENTS.SFX_CORRECT);
+
+    // Clean up particles
+    const timer = this.scene.time.delayedCall(config.lifespan * 1.5 + 200, () => {
+      emitter.destroy();
+      this._removeTimer(timer);
+    });
+    this.pendingTimers.push(timer);
   }
 
   _removeTimer(timer) {
