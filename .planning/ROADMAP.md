@@ -188,10 +188,14 @@ Plans:
 10. Player can view companion roster UI showing all 12 companions (recruited/unrecruited), relationship bars, teaching specializations, and recruitment hints
 11. All existing 592 tests pass after each phase — no regressions in core game systems
 
-**Plans:** TBD
+**Plans:** 5 plans
 
 Plans:
-- [ ] 30-01: TBD
+- [ ] 30-01-PLAN.md — Data foundation: companionSlice (IndexedDB), 12 companion definitions, 2,400+ dialogue lines, utility functions, EventBus events
+- [ ] 30-02-PLAN.md — Battle AI: CompanionBattleAI behavior tree (4 roles), BattleStateMachine COMPANION_TURN integration, battleSlice companion state
+- [ ] 30-03-PLAN.md — Phaser integration: Companion sprite (extends NPC), CompanionManager, CompanionDialogueManager, CompanionContext, DialogueEngine recruit effect
+- [ ] 30-04-PLAN.md — React UI: CompanionUI roster, CompanionCard, PartyPanel, RelationshipBar, CompanionCommentBubble, BattleOverlay companion turn
+- [ ] 30-05-PLAN.md — Tests: companionSlice, CompanionBattleAI, CompanionManager, CompanionContext, utilities, data integrity, full regression
 
 ---
 
@@ -231,7 +235,7 @@ Phases execute in numeric order: 1-26 (complete) -> 27.1 -> 28 -> 29 -> 30
 | 27.1. IndexedDB Migration | v6.0 | 2/2 | Complete | 2026-02-12 |
 | 28. Root Magic & Elemental Affinity | v6.0 | 4/4 | Complete | 2026-02-12 |
 | 29. Equipment, Inventory & Economy | v6.0 | 5/5 | Complete | 2026-02-12 |
-| 30. Companion System | v6.0 | 0/? | Not started | - |
+| 30. Companion System | v6.0 | 0/5 | Not started | - |
 
 **Coverage:**
 - v6.0 requirements: 45 total (3 STOR, 12 MGIC, 12 EQUP, 12 COMP, 6 INTG)
