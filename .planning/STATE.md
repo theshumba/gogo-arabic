@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 Milestone: v6.0 Combat & RPG
 Phase: 28 of 4 phases (Root Magic & Elemental Affinity)
-Plan: 2 of 5 plans complete
-Status: Phase 28 IN PROGRESS — Plan 02 complete, ready for Plan 03
-Last activity: 2026-02-12 — Completed 28-02 (Phaser managers: RootMagicManager, AffinityTracker, FSRS sync, battle/dialogue integration)
+Plan: 3 of 5 plans complete
+Status: Phase 28 IN PROGRESS — Plan 03 complete, ready for Plan 04
+Last activity: 2026-02-12 — Completed 28-03 (magic UI & VFX: MagicOverlay, SpellMenu, RootDiscoveryToast, spell VFX)
 
-Progress: [█████████████████████████░░░░░] 85% (51 of 60 estimated plans complete across all milestones)
+Progress: [██████████████████████████░░░░] 87% (52 of 60 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -38,8 +38,8 @@ Progress: [███████████████████████
 ## Test & Build Status
 
 - Tests: 647 passing, 0 failures (baseline 592 + 55 new storage tests)
-- Build: Succeeds, main bundle 525.67KB (144.45KB gzipped, under warning threshold)
-- Git: 2 commits from Plan 02 (da7217e managers, 0cb687f integration, plus SUMMARY commit pending)
+- Build: Succeeds, main bundle 527.91KB (144.96KB gzipped, under warning threshold)
+- Git: 2 commits from Plan 03 (fea9851 UI components, 95d632d spell VFX, plus SUMMARY commit pending)
 
 ## Accumulated Context
 
@@ -82,6 +82,14 @@ Key v6.0 roadmap decisions:
 - BattleStateMachine MAGIC_CAST state prompts random word from spell's root via getRootWords
 - Magic damage delegated to RootMagicManager with 800ms VFX delay
 - DialogueEngine affinity lock emits MAGIC_AFFINITY_LOCKED only once per session
+
+**Phase 28 Plan 03 decisions (magic UI & VFX):**
+- MP bar color gradient: green (>50%), yellow (20-50%), red (<20%)
+- Spell hotbar only visible during player turn (useSelector state.battle.currentTurn === 'player')
+- SpellMenu uses click-to-assign: click slot then spell, or auto-assign to next empty
+- Arabic calligraphy VFX: 32px root text floats up 50px over 800ms with element color
+- Combo VFX enhanced: 2x particle count, 1.5x duration, 48px combo name text
+- All 10 elements have distinct particle configs (ELEMENT_CONFIGS)
 
 ### Phase 27 Foundation (already committed)
 
@@ -133,10 +141,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 28 Plan 02 complete)
-Stopped at: .planning/phases/28-root-magic-elemental-affinity/28-02-SUMMARY.md created
-Next step: Execute Phase 28 Plan 03 (React UI) via /gsd:execute-phase 28
+Last session: 2026-02-12 (Phase 28 Plan 03 complete)
+Stopped at: .planning/phases/28-root-magic-elemental-affinity/28-03-SUMMARY.md created
+Next step: Execute Phase 28 Plan 04 (integration & testing) or Plan 05 (documentation) via /gsd:execute-phase 28
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 28 Plan 02 complete (2/5 plans), ready for Plan 03*
+*Last updated: 2026-02-12 — Phase 28 Plan 03 complete (3/5 plans), ready for Plan 04*
