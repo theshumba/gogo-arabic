@@ -1,5 +1,37 @@
 # Project Milestones: GoGo Arabic
 
+## v5.0 The Real Game (Shipped: 2026-02-11)
+
+**Delivered:** Transformed GoGo Arabic from a learning app with game skin into an actual game — with narrative infrastructure, rich NPC dialogue system, mentor-driven onboarding, enterable buildings, 142 interactive objects, structured progression gates, vocabulary integration across the world, and narrative branching with player choices.
+
+**Phases completed:** 19-26 (14 plans total)
+
+**Key accomplishments:**
+- Built EventBus architecture with 35 namespaced constants and 5 domain-specific hooks (22 LOC orchestrator)
+- Created narrativeSlice for story flags, NPC relationships (0-5), world object states, choice history
+- Built DialogueEngine Phaser system with condition evaluation, effect execution, hub-and-spoke topic filtering
+- Redesigned DialogueOverlay with TopicSelectionMenu, VocabularyHighlight, and RelationshipIndicator
+- Upgraded 30 NPCs with distinct personality, multi-topic conversation trees, and culturally authentic catchphrases
+- Replaced modal OnboardingFlow with mentor-driven in-world guided first mission (90-second tutorial)
+- Built SceneStackManager + InteriorScene for 15 enterable buildings across zones
+- Placed 142 interactive objects across 8 zones and 15 interiors with contextual information
+- Added zone gates with vocabulary mastery requirements, quest tracker objectives, and next objective indicator
+- Integrated vocabulary on 42 NPCs (vocabWords) and 142 objects (vocabWordIds) with teacher tracking
+- Added story arcs spanning all zones, branching quests, relationship-gated dialogue, and RTL Arabic polish
+- Zod validation of npcs.json dialogue data at build time via Vite plugin
+
+**Stats:**
+- 8 phases, 14 plans
+- Tests: 589 passing (592 total, 3 pre-existing failures)
+- Bundle: ~403KB main (under 500KB limit)
+- 1 day (2026-02-11)
+
+**Git range:** `feat(19-01)` → `feat(26)`
+
+**What's next:** v6.0 — Combat & RPG expansion (Phases 27-32). Full expansion research complete for v6.0-v10.0 (710K+ LOC target across 31 phases).
+
+---
+
 ## v4.0 Game Soul & Polish (Shipped: 2026-02-10)
 
 **Delivered:** Complete sensory overhaul — audio system with zone BGM and SFX, visual juice with particles and screen shake, clear learning progression path, NPC idle animations and world interactivity, and critical bug fixes for overlay/movement/transition freezes.
@@ -75,29 +107,5 @@
 **Git range:** `feat(01-01)` → `feat(integration)` + cleanup
 
 **What's next:** v3.0 — Infrastructure hardening (testing, architecture, backend), performance optimization, and content expansion.
-
----
-
-## v3.0 Infrastructure & Polish (Partial: 2026-02-09)
-
-**Delivered:** Testing foundation and architecture cleanup. Backend hardening and visual polish deferred to v4.0 priorities.
-
-**Phases completed:** 10-11 of 13 (11 plans total)
-
-**Key accomplishments:**
-- Built 548-test suite across 31 files (unit, component, integration, E2E)
-- Coverage thresholds enforced (25% stmts / 70% branch / 50% funcs / 25% lines)
-- Refactored GameLayout from 607 to 209 lines via 3 custom hooks
-- Configured ESLint 9 flat config + Prettier 3 with 4 npm scripts
-- Added 33 named selectors to 5 Redux slices (createSelector for transformations)
-- Migrated 7 components from inline styles to CSS Modules
-
-**Deferred:** Phases 12 (Backend Hardening) and 13 (Visual Polish) — user pivoted to game experience overhaul
-
-**Stats:**
-- 11 plans completed across 2 phases
-- Testing + architecture infrastructure established
-
-**What's next:** v4.0 — Game Soul & Polish (fix bugs, add audio, improve world feel, letter learning discoverability)
 
 ---

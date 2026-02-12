@@ -5,7 +5,7 @@
 - SHIPPED **v2.0 Player Experience Overhaul** — Phases 1-9 (shipped 2026-02-08) → [archive](milestones/v2.0-ROADMAP.md)
 - PARTIAL **v3.0 Infrastructure & Polish** — Phases 10-11 complete, 12-13 deferred (2026-02-09) → [archive](milestones/v3.0-ROADMAP.md)
 - SHIPPED **v4.0 Game Soul & Polish** — Phases 14-18 (shipped 2026-02-10) → [archive](milestones/v4.0-ROADMAP.md)
-- 🚧 **v5.0 The Real Game** — Phases 19-26 (in progress)
+- SHIPPED **v5.0 The Real Game** — Phases 19-26 (shipped 2026-02-11)
 
 ## Overview
 
@@ -55,18 +55,18 @@ v5.0 transforms GoGo Arabic from a learning app with game skin into an actual ga
 
 </details>
 
-### 🚧 v5.0 The Real Game (In Progress)
+### v5.0 The Real Game (Shipped 2026-02-11)
 
 **Milestone Goal:** Transform GoGo Arabic from a learning app with game skin into an actual game — epic personalized narrative, living interactive world, and guided structure from minute one.
 
 - [x] **Phase 19: Infrastructure & Architecture** - EventBus refactor, narrativeSlice, foundation systems
-- [ ] **Phase 20: Dialogue System** - DialogueEngine, rich NPC conversations, branching
-- [ ] **Phase 21: Guided Onboarding & Mentor** - 90-second tutorial, mentor character, first mission
-- [ ] **Phase 22: Buildings & Interiors** - SceneStackManager, enterable buildings, 15 interior maps
-- [ ] **Phase 23: Interactive Objects & World Life** - 100+ objects, world depth, exploration rewards
-- [ ] **Phase 24: Structured Progression & Gates** - Zone gates, quest chains, "what to do next"
-- [ ] **Phase 25: Vocabulary Integration** - Contextualized learning, dialogue-taught words, semantic clusters
-- [ ] **Phase 26: Narrative Branching & Polish** - Personalized story, choices, UX polish
+- [x] **Phase 20: Dialogue System** - DialogueEngine, rich NPC conversations, branching
+- [x] **Phase 21: Guided Onboarding & Mentor** - 90-second tutorial, mentor character, first mission
+- [x] **Phase 22: Buildings & Interiors** - SceneStackManager, enterable buildings, 15 interior maps
+- [x] **Phase 23: Interactive Objects & World Life** - 142 objects, world depth, exploration rewards
+- [x] **Phase 24: Structured Progression & Gates** - Zone gates, quest chains, "what to do next"
+- [x] **Phase 25: Vocabulary Integration** - Contextualized learning, dialogue-taught words, semantic clusters
+- [x] **Phase 26: Narrative Branching & Polish** - Personalized story, choices, UX polish
 
 ## Phase Details
 
@@ -98,15 +98,15 @@ Plans:
   3. NPC dialogue changes based on quest state and story progression with new topics unlocking dynamically
   4. Player choices in dialogue affect NPC relationship levels tracked as 0-5 trust meter per NPC
   5. Dialogue can trigger effects: start/complete quests, give items, unlock areas, teach words, change NPC state
-**Plans:** 6 plans
+**Plans:** 6/6 complete
 
 Plans:
-- [ ] 20-01-PLAN.md — DialogueEngine Phaser system + extended Zod schema + EVENTS constants
-- [ ] 20-02-PLAN.md — useDialogue hub-and-spoke rewrite + effect execution wiring
-- [ ] 20-03-PLAN.md — DialogueOverlay redesign + TopicSelectionMenu + VocabularyHighlight + RelationshipIndicator
-- [ ] 20-04-PLAN.md — Upgrade 15 existing NPCs with personality, topics, conditions, effects
-- [ ] 20-05-PLAN.md — Upgrade remaining 8 NPCs + add 7 new NPCs (30 total)
-- [ ] 20-06-PLAN.md — WorldScene integration + test updates + manual verification
+- [x] 20-01-PLAN.md — DialogueEngine Phaser system + extended Zod schema + EVENTS constants
+- [x] 20-02-PLAN.md — useDialogue hub-and-spoke rewrite + effect execution wiring
+- [x] 20-03-PLAN.md — DialogueOverlay redesign + TopicSelectionMenu + VocabularyHighlight + RelationshipIndicator
+- [x] 20-04-PLAN.md — Upgrade 15 existing NPCs with personality, topics, conditions, effects
+- [x] 20-05-PLAN.md — Upgrade remaining 8 NPCs + add 7 new NPCs (30 total)
+- [x] 20-06-PLAN.md — WorldScene integration + test updates + manual verification
 
 ### Phase 21: Guided Onboarding & Mentor
 **Goal**: Player knows exactly what to do from second one — mentor-driven 90-second tutorial that teaches core loop and establishes purpose
@@ -118,10 +118,10 @@ Plans:
   3. Player learns first Arabic word through narrative context within first minute
   4. Old 6-step OnboardingFlow modal completely replaced with in-world mentor-driven playable quest
   5. Mentor character findable throughout game for hints and guidance on what to do next
-**Plans**: TBD
+**Plans:** 1/1 complete
 
 Plans:
-- [ ] 21-01: TBD
+- [x] 21-01-PLAN.md — Mentor NPC, guided first mission, in-world onboarding replacing modal
 
 ### Phase 22: Buildings & Interiors
 **Goal**: World depth — buildings become explorable spaces with NPCs, objects, and purpose instead of decorative facades
@@ -133,12 +133,12 @@ Plans:
   3. Each interior has distinct purpose: shops, library, homes, guild, mosque with relevant NPCs and content
   4. Player exits seamlessly by walking to door and returns to exact exterior position they entered from
   5. Audio crossfades between exterior zone BGM and interior ambient when entering/exiting
-**Plans:** 3 plans
+**Plans:** 3/3 complete
 
 Plans:
-- [ ] 22-01-PLAN.md — InteriorScene class + Phaser config + door-to-interior wiring + audio crossfade
-- [ ] 22-02-PLAN.md — 15 interior map configs (5 templates) + zones.js door updates + building locks
-- [ ] 22-03-PLAN.md — Interior NPC dialogue data + dynamic unlock hardening + integration verification
+- [x] 22-01-PLAN.md — InteriorScene class + Phaser config + door-to-interior wiring + audio crossfade
+- [x] 22-02-PLAN.md — 15 interior map configs (5 templates) + zones.js door updates + building locks
+- [x] 22-03-PLAN.md — Interior NPC dialogue data + dynamic unlock hardening + integration verification
 
 ### Phase 23: Interactive Objects & World Life
 **Goal**: World feels alive and worth exploring — 100+ objects teach vocabulary, reward curiosity, and fill empty space with meaning
@@ -150,10 +150,10 @@ Plans:
   3. Objects teach vocabulary in semantic clusters aligned with zone themes (market = trade, library = knowledge)
   4. Some objects change state based on quest progress (locked chest → unlockable, broken bridge → repaired)
   5. Object discovery aided by subtle visual cues (sparkle, glow) from existing VFX system
-**Plans**: TBD
+**Plans:** 1/1 complete
 
 Plans:
-- [ ] 23-01: TBD
+- [x] 23-01-PLAN.md — 142 interactive objects across 8 zones and 15 interiors
 
 ### Phase 24: Structured Progression & Gates
 **Goal**: Player always knows what to do next — structured progression with zone gates, quest chains, and visible objectives
@@ -165,10 +165,10 @@ Plans:
   3. Quest log shows clear next-step instructions for each active quest with progress percentage
   4. Zone gates unlock visibly in world with animations (bridges repair, gates open, paths clear)
   5. World Map shows zone lock/unlock status with specific requirements to unlock each zone
-**Plans**: TBD
+**Plans:** 1/1 complete
 
 Plans:
-- [ ] 24-01: TBD
+- [x] 24-01-PLAN.md — Quest tracker objectives, world map gates, next objective indicator
 
 ### Phase 25: Vocabulary Integration & Contextualized Learning
 **Goal**: Arabic learning happens naturally through exploration — vocabulary taught in dialogue, objects, and quests instead of isolated quizzes
@@ -180,10 +180,10 @@ Plans:
   3. Each zone's NPCs teach vocabulary relevant to zone theme with each NPC owning 10-20 words
   4. Arabic words in dialogue automatically added to FSRS review queue same as quiz-taught words
   5. Difficulty of Arabic in dialogue adapts to player's mastery level (more known words → more Arabic)
-**Plans**: TBD
+**Plans:** 1/1 complete
 
 Plans:
-- [ ] 25-01: TBD
+- [x] 25-01-PLAN.md — vocabWords on 42 NPCs, vocabWordIds on 142 objects, teacher tracking
 
 ### Phase 26: Narrative Branching & Polish
 **Goal**: Personalized journey — player choices matter, story branches, NPCs react, world changes, all with final UX polish
@@ -195,10 +195,10 @@ Plans:
   3. NPC relationship levels unlock exclusive dialogue topics, quests, and rewards at higher trust tiers
   4. World state changes persist permanently (unlocked bridges, opened gates, completed transformations)
   5. All new overlays accessible via keyboard with focus management and RTL Arabic text handling
-**Plans**: TBD
+**Plans:** 1/1 complete
 
 Plans:
-- [ ] 26-01: TBD
+- [x] 26-01-PLAN.md — Story arcs, branching quests, relationship-gated dialogue, RTL polish
 
 ## Progress
 
@@ -226,14 +226,14 @@ Phases execute in numeric order: 19 → 20 → 21 → 22 → 23 → 24 → 25 �
 | 17. Progression Clarity | v4.0 | 2/2 | Complete | 2026-02-10 |
 | 18. World Life | v4.0 | 1/1 | Complete | 2026-02-10 |
 | 19. Infrastructure & Architecture | v5.0 | 4/4 | Complete | 2026-02-11 |
-| 20. Dialogue System | v5.0 | 0/6 | Planned | - |
-| 21. Guided Onboarding & Mentor | v5.0 | 0/TBD | Not started | - |
-| 22. Buildings & Interiors | v5.0 | 0/TBD | Not started | - |
-| 23. Interactive Objects & World Life | v5.0 | 0/TBD | Not started | - |
-| 24. Structured Progression & Gates | v5.0 | 0/TBD | Not started | - |
-| 25. Vocabulary Integration | v5.0 | 0/TBD | Not started | - |
-| 26. Narrative Branching & Polish | v5.0 | 0/TBD | Not started | - |
+| 20. Dialogue System | v5.0 | 6/6 | Complete | 2026-02-11 |
+| 21. Guided Onboarding & Mentor | v5.0 | 1/1 | Complete | 2026-02-11 |
+| 22. Buildings & Interiors | v5.0 | 3/3 | Complete | 2026-02-11 |
+| 23. Interactive Objects & World Life | v5.0 | 1/1 | Complete | 2026-02-11 |
+| 24. Structured Progression & Gates | v5.0 | 1/1 | Complete | 2026-02-11 |
+| 25. Vocabulary Integration | v5.0 | 1/1 | Complete | 2026-02-11 |
+| 26. Narrative Branching & Polish | v5.0 | 1/1 | Complete | 2026-02-11 |
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-11 — Phase 20 planned with 6 plans in 4 waves*
+*Last updated: 2026-02-12 — v5.0 SHIPPED, all 8 phases (19-26) complete*
