@@ -27,6 +27,9 @@ import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
 import AchievementToast from '../Achievements/AchievementToast.jsx';
 import Wardrobe from '../Wardrobe/Wardrobe.jsx';
 import BattleOverlay from '../Battle/BattleOverlay.jsx';
+import MagicOverlay from '../Magic/MagicOverlay.jsx';
+import SpellMenu from '../Magic/SpellMenu.jsx';
+import RootDiscoveryToast from '../Magic/RootDiscoveryToast.jsx';
 import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate }) {
@@ -239,6 +242,15 @@ export default function GameLayout() {
 
       {/* Battle overlay (v6.0 turn-based combat) */}
       <BattleOverlay />
+
+      {/* Magic overlay (v6.0 spell hotbar) */}
+      <MagicOverlay />
+
+      {/* Spell menu overlay */}
+      <SpellMenu />
+
+      {/* Root discovery toast */}
+      <RootDiscoveryToast />
 
       {/* Wardrobe overlay */}
       <AnimatePresence>
