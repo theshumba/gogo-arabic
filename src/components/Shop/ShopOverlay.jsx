@@ -2,20 +2,36 @@ import { useState, useMemo, useCallback, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { closeDialogue } from '../../store/slices/uiSlice.js';
-import { spendDirhams, addToInventory, setOutfit, setHeadCovering } from '../../store/slices/playerSlice.js';
+import { spendDirhams, addDirhams } from '../../store/slices/playerSlice.js';
 import { recordShopPurchase } from '../../store/slices/achievementSlice.js';
-import { selectInventoryIds } from '../../store/slices/playerSlice.js';
+import { addItem, removeItem, unlockAffix, selectInventoryItems, selectIsInventoryFull } from '../../store/slices/inventorySlice.js';
+import { recordPurchase, recordHaggle } from '../../store/slices/economySlice.js';
+import { addFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
-import itemsData from '../../data/items.json';
+import { getShopInventory } from '../../data/shopGenerator.js';
+import { EQUIPMENT_DATA } from '../../data/equipment.js';
+import { AFFIXES } from '../../data/affixes.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
+import EventBus from '../../utils/eventBus.js';
+import store from '../../store/store.js';
+import ShopInventory from './ShopInventory.jsx';
+import HagglingGame from './HagglingGame.jsx';
 import styles from './ShopOverlay.module.css';
 
 function ShopOverlay() {
   const dispatch = useDispatch();
   const player = useSelector((s) => s.player);
-  const inventoryIds = useSelector(selectInventoryIds);
-  const [tab, setTab] = useState('clothing');
+  const vocabularyState = useSelector((s) => s.vocabulary);
+  const completedQuests = useSelector((s) => s.quests.completed);
+  const inventoryItems = useSelector(selectInventoryItems);
+  const inventoryFull = useSelector(selectIsInventoryFull);
+  const dialogueConfig = useSelector((s) => s.ui.dialogueConfig);
+
+  const [tab, setTab] = useState('buy');
   const [toast, setToast] = useState(null);
+  const [hagglingItem, setHagglingItem] = useState(null);
+  const [confirmSell, setConfirmSell] = useState(null);
 
   const focusTrapRef = useFocusTrap(true, null);
 
@@ -25,32 +41,226 @@ function ShopOverlay() {
 
   const handleOverlayClose = useOverlayClose(handleClose);
 
-  const handleBuy = useCallback((item) => {
-    if (player.dirhams < item.price) return;
-    if (inventoryIds.includes(item.id)) return;
-    dispatch(spendDirhams(item.price));
-    dispatch(addToInventory(item.id));
-    dispatch(recordShopPurchase(item.price));
-    setToast(`Purchased ${item.name}!`);
-    setTimeout(() => setToast(null), 2000);
-  }, [player.dirhams, inventoryIds, dispatch]);
+  // Dynamic shop inventory based on player level and world state
+  const shopInventory = useMemo(() => {
+    const state = store.getState();
+    const shopId = dialogueConfig?.shopId || 'oasis_village_shop';
+    return getShopInventory(shopId, state);
+  }, [dialogueConfig, player.level, completedQuests]);
 
-  const handleEquip = useCallback((item) => {
-    if (item.type === 'clothing') {
-      dispatch(setOutfit(item.id));
-    } else if (item.type === 'headwear') {
-      dispatch(setHeadCovering(item.id));
+  // Shopkeeper info
+  const shopId = dialogueConfig?.shopId || 'oasis_village_shop';
+  const shopName = dialogueConfig?.shopName || "Merchant Fatima's Shop";
+  const shopGreeting = dialogueConfig?.shopGreeting || 'مرحبا! Welcome to my shop!';
+
+  const handleBuy = useCallback((itemId, price) => {
+    if (player.dirhams < price) {
+      setToast('Not enough dirhams!');
+      setTimeout(() => setToast(null), 2000);
+      return;
     }
-    setToast(`Equipped ${item.name}!`);
-    setTimeout(() => setToast(null), 2000);
-  }, [dispatch]);
 
-  const filteredItems = useMemo(() => {
-    return itemsData.filter((i) => {
-      if (tab === 'clothing') return i.type === 'clothing' || i.type === 'headwear';
-      return i.type === 'boost';
-    });
-  }, [tab]);
+    if (inventoryFull) {
+      setToast('Inventory full (200 items)!');
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+
+    // Deduct dirhams
+    dispatch(spendDirhams(price));
+
+    // Add item to inventory
+    dispatch(addItem({ itemId, quantity: 1 }));
+
+    // Record purchase
+    dispatch(recordPurchase({ shopId, itemId, price, haggled: false }));
+    dispatch(recordShopPurchase(price));
+
+    // Emit shop purchase event
+    EventBus.emit(EVENTS.SHOP_PURCHASE, { shopId, itemId, price });
+
+    // Check for affix discovery
+    const itemData = EQUIPMENT_DATA[itemId];
+    const unlearnedAffixes = [];
+
+    if (itemData && itemData.affixes) {
+      for (const affix of itemData.affixes) {
+        const wordId = affix.wordId;
+        const fsrsCard = vocabularyState.fsrsCards[wordId];
+        const isLearned = fsrsCard && fsrsCard.state === 'Review';
+
+        if (!isLearned) {
+          const affixData = AFFIXES[wordId];
+          if (affixData) {
+            // Add to FSRS queue
+            dispatch(addFsrsCard({
+              wordId,
+              word: affixData.arabic,
+              translation: affixData.english,
+              transliteration: affixData.transliteration,
+              category: 'adjectives',
+              teacherNpc: shopId,
+            }));
+
+            // Unlock affix
+            dispatch(unlockAffix(wordId));
+
+            // Track for toast
+            unlearnedAffixes.push(affixData);
+
+            // Emit discovery event
+            EventBus.emit(EVENTS.AFFIX_DISCOVERED, { wordId, affix: affixData, itemId });
+          }
+        }
+      }
+    }
+
+    // Show toast
+    if (unlearnedAffixes.length > 0) {
+      const affixNames = unlearnedAffixes.map(a => `${a.arabic} (${a.english})`).join(', ');
+      setToast(`New word discovered: ${affixNames} — practice to unlock full power!`);
+      setTimeout(() => setToast(null), 4000);
+    } else {
+      setToast(`Purchased ${itemData.name}!`);
+      setTimeout(() => setToast(null), 2000);
+    }
+  }, [player.dirhams, inventoryFull, dispatch, shopId, vocabularyState]);
+
+  const handleSell = useCallback((itemId, sellPrice, rarity, itemName) => {
+    // Rare+ items require confirmation
+    if ((rarity === 'rare' || rarity === 'epic' || rarity === 'legendary') && !confirmSell) {
+      setConfirmSell({ itemId, sellPrice, itemName });
+      return;
+    }
+
+    // Remove from inventory
+    dispatch(removeItem({ itemId, quantity: 1 }));
+
+    // Add dirhams
+    dispatch(addDirhams(sellPrice));
+
+    // Emit shop sell event
+    EventBus.emit(EVENTS.SHOP_SELL, { shopId, itemId, sellPrice });
+
+    // Clear confirmation
+    setConfirmSell(null);
+
+    // Show toast
+    setToast(`Sold ${itemName} for ${sellPrice} dirhams!`);
+    setTimeout(() => setToast(null), 2000);
+  }, [dispatch, shopId, confirmSell]);
+
+  const handleHaggle = useCallback((itemId, price, itemName, itemNameArabic) => {
+    setHagglingItem({ itemId, price, itemName, itemNameArabic });
+  }, []);
+
+  const handleHaggleSuccess = useCallback((finalPrice) => {
+    const { itemId } = hagglingItem;
+
+    // Record haggle
+    dispatch(recordHaggle({
+      shopId,
+      itemId,
+      offered: finalPrice,
+      accepted: true,
+      success: true,
+    }));
+
+    // Emit haggle result
+    EventBus.emit(EVENTS.SHOP_HAGGLE_RESULT, { shopId, itemId, originalPrice: hagglingItem.price, finalPrice, success: true });
+
+    // Close haggling modal
+    setHagglingItem(null);
+
+    // Purchase at discounted price (reuse buy logic but with different price)
+    if (player.dirhams < finalPrice) {
+      setToast('Not enough dirhams!');
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+
+    if (inventoryFull) {
+      setToast('Inventory full (200 items)!');
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+
+    // Deduct dirhams
+    dispatch(spendDirhams(finalPrice));
+
+    // Add item to inventory
+    dispatch(addItem({ itemId, quantity: 1 }));
+
+    // Record purchase with haggle flag
+    dispatch(recordPurchase({ shopId, itemId, price: finalPrice, haggled: true }));
+    dispatch(recordShopPurchase(finalPrice));
+
+    // Emit shop purchase event
+    EventBus.emit(EVENTS.SHOP_PURCHASE, { shopId, itemId, price: finalPrice, haggled: true });
+
+    // Check for affix discovery
+    const itemData = EQUIPMENT_DATA[itemId];
+    const unlearnedAffixes = [];
+
+    if (itemData && itemData.affixes) {
+      for (const affix of itemData.affixes) {
+        const wordId = affix.wordId;
+        const fsrsCard = vocabularyState.fsrsCards[wordId];
+        const isLearned = fsrsCard && fsrsCard.state === 'Review';
+
+        if (!isLearned) {
+          const affixData = AFFIXES[wordId];
+          if (affixData) {
+            // Add to FSRS queue
+            dispatch(addFsrsCard({
+              wordId,
+              word: affixData.arabic,
+              translation: affixData.english,
+              transliteration: affixData.transliteration,
+              category: 'adjectives',
+              teacherNpc: shopId,
+            }));
+
+            // Unlock affix
+            dispatch(unlockAffix(wordId));
+
+            // Track for toast
+            unlearnedAffixes.push(affixData);
+
+            // Emit discovery event
+            EventBus.emit(EVENTS.AFFIX_DISCOVERED, { wordId, affix: affixData, itemId });
+          }
+        }
+      }
+    }
+
+    // Show toast
+    const discount = hagglingItem.price - finalPrice;
+    if (unlearnedAffixes.length > 0) {
+      const affixNames = unlearnedAffixes.map(a => `${a.arabic} (${a.english})`).join(', ');
+      setToast(`Haggled! Saved ${discount} dirhams! New word: ${affixNames}`);
+      setTimeout(() => setToast(null), 4000);
+    } else {
+      setToast(`Haggled successfully! Saved ${discount} dirhams!`);
+      setTimeout(() => setToast(null), 2000);
+    }
+  }, [hagglingItem, player.dirhams, inventoryFull, dispatch, shopId, vocabularyState]);
+
+  const handleHaggleCancel = useCallback(() => {
+    setHagglingItem(null);
+  }, []);
+
+  const handleConfirmSellYes = useCallback(() => {
+    if (confirmSell) {
+      const { itemId, sellPrice, itemName } = confirmSell;
+      const itemData = EQUIPMENT_DATA[itemId];
+      handleSell(itemId, sellPrice, itemData.rarity, itemName);
+    }
+  }, [confirmSell, handleSell]);
+
+  const handleConfirmSellNo = useCallback(() => {
+    setConfirmSell(null);
+  }, []);
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -96,77 +306,51 @@ function ShopOverlay() {
         transition={transition}
       >
         <div className={styles.header}>
-          <div className={styles.title}>Merchant Fatima's Shop</div>
+          <div className={styles.headerLeft}>
+            <div className={styles.title}>{shopName}</div>
+            <div className={styles.greeting}>{shopGreeting}</div>
+          </div>
           <div className={styles.balance}>Dirhams: {player.dirhams}</div>
         </div>
 
         <div className={styles.tabRow}>
           <button
-            className={tab === 'clothing' ? styles.tabBtnActive : styles.tabBtn}
-            onClick={() => setTab('clothing')}
+            className={tab === 'buy' ? styles.tabBtnActive : styles.tabBtn}
+            onClick={() => setTab('buy')}
           >
-            Clothing
+            Buy
           </button>
           <button
-            className={tab === 'boosts' ? styles.tabBtnActive : styles.tabBtn}
-            onClick={() => setTab('boosts')}
+            className={tab === 'sell' ? styles.tabBtnActive : styles.tabBtn}
+            onClick={() => setTab('sell')}
           >
-            Boosts
+            Sell
           </button>
           <button className={styles.closeBtn} onClick={handleOverlayClose}>Close</button>
         </div>
 
-        <div className={styles.grid}>
-          {filteredItems.map((item) => {
-            const owned = player.inventory.includes(item.id);
-            const canAfford = player.dirhams >= item.price;
-            const isEquipped = player.outfit === item.id || player.headCovering === item.id;
-            const locked = item.unlockLevel && player.level < item.unlockLevel;
+        {tab === 'buy' && (
+          <ShopInventory
+            items={shopInventory}
+            mode="buy"
+            onBuy={handleBuy}
+            onHaggle={handleHaggle}
+            playerDirhams={player.dirhams}
+            vocabularyState={vocabularyState}
+            inventoryFull={inventoryFull}
+          />
+        )}
 
-            return (
-              <div key={item.id} className={`${styles.item} ${owned ? styles.itemOwned : ''}`}>
-                {item.nameArabic && (
-                  <div className={styles.itemNameArabic}>{item.nameArabic}</div>
-                )}
-                <div className={styles.itemName}>{item.name}</div>
-                <div className={styles.itemDesc}>{item.description}</div>
-
-                {!owned && (
-                  <>
-                    <div className={styles.itemPrice}>{item.price} Dirhams</div>
-                    {locked ? (
-                      <div className={styles.lockedText}>
-                        Requires Lv.{item.unlockLevel}
-                      </div>
-                    ) : (
-                      <button
-                        className={`${styles.buyBtn} ${!canAfford ? styles.buyBtnDisabled : ''}`}
-                        onClick={() => handleBuy(item)}
-                        disabled={!canAfford}
-                      >
-                        Buy
-                      </button>
-                    )}
-                  </>
-                )}
-
-                {owned && !isEquipped && (item.type === 'clothing' || item.type === 'headwear') && (
-                  <button className={styles.equipBtn} onClick={() => handleEquip(item)}>
-                    Equip
-                  </button>
-                )}
-
-                {owned && isEquipped && (
-                  <span className={styles.equippedBadge}>Equipped</span>
-                )}
-
-                {owned && item.type === 'boost' && (
-                  <span className={styles.equippedBadge}>Owned</span>
-                )}
-              </div>
-            );
-          })}
-        </div>
+        {tab === 'sell' && (
+          <ShopInventory
+            items={inventoryItems}
+            mode="sell"
+            onSell={handleSell}
+            playerDirhams={player.dirhams}
+            vocabularyState={vocabularyState}
+            inventoryFull={false}
+          />
+        )}
       </motion.div>
 
       {toast && (
@@ -178,6 +362,47 @@ function ShopOverlay() {
           transition={{ duration: 0.2 }}
         >
           {toast}
+        </motion.div>
+      )}
+
+      {hagglingItem && (
+        <HagglingGame
+          itemPrice={hagglingItem.price}
+          itemName={hagglingItem.itemName}
+          itemNameArabic={hagglingItem.itemNameArabic}
+          shopkeeperId={shopId}
+          onSuccess={handleHaggleSuccess}
+          onCancel={handleHaggleCancel}
+        />
+      )}
+
+      {confirmSell && (
+        <motion.div
+          className={styles.confirmOverlay}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={handleConfirmSellNo}
+        >
+          <motion.div
+            className={styles.confirmDialog}
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.confirmTitle}>Are you sure?</div>
+            <div className={styles.confirmMessage}>
+              This item is rare! Sell {confirmSell.itemName} for {confirmSell.sellPrice} dirhams?
+            </div>
+            <div className={styles.confirmActions}>
+              <button className={styles.confirmYes} onClick={handleConfirmSellYes}>
+                Yes, Sell
+              </button>
+              <button className={styles.confirmNo} onClick={handleConfirmSellNo}>
+                Cancel
+              </button>
+            </div>
+          </motion.div>
         </motion.div>
       )}
     </motion.div>
