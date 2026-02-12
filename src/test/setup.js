@@ -1,5 +1,18 @@
 import '@testing-library/jest-dom';
 import { beforeEach, afterEach, vi } from 'vitest';
+import 'fake-indexeddb/auto';
+
+// Ensure window.indexedDB is set for adapter (fake-indexeddb/auto sets global.indexedDB)
+if (typeof window !== 'undefined' && typeof indexedDB !== 'undefined') {
+  window.indexedDB = indexedDB;
+  window.IDBKeyRange = IDBKeyRange;
+  window.IDBCursor = IDBCursor;
+  window.IDBDatabase = IDBDatabase;
+  window.IDBIndex = IDBIndex;
+  window.IDBObjectStore = IDBObjectStore;
+  window.IDBRequest = IDBRequest;
+  window.IDBTransaction = IDBTransaction;
+}
 
 // Mock Phaser module to prevent loading errors
 vi.mock('phaser', () => ({
@@ -119,6 +132,17 @@ afterEach(async () => {
   if (EventBus && EventBus.removeAllListeners) {
     EventBus.removeAllListeners();
   }
+
+  // Clean up IndexedDB between tests
+  // Delete all test databases to ensure clean state
+  if (typeof indexedDB !== 'undefined') {
+    // Delete adapter test database
+    indexedDB.deleteDatabase('gogo-arabic-idb');
+    // Delete persist test databases
+    indexedDB.deleteDatabase('gogo-arabic-vocabulary');
+    indexedDB.deleteDatabase('gogo-arabic-battle');
+  }
+
   vi.clearAllMocks();
   vi.useRealTimers();
 });
