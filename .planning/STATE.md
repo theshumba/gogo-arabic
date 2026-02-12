@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 Milestone: v6.0 Combat & RPG
 Phase: 28 of 4 phases (Root Magic & Elemental Affinity)
-Plan: 1 of 5 plans complete
-Status: Phase 28 IN PROGRESS — Plan 01 complete, ready for Plan 02
-Last activity: 2026-02-12 — Completed 28-01 (magic data foundation: magicSlice, 50 spells, 20 combos, 15 events)
+Plan: 2 of 5 plans complete
+Status: Phase 28 IN PROGRESS — Plan 02 complete, ready for Plan 03
+Last activity: 2026-02-12 — Completed 28-02 (Phaser managers: RootMagicManager, AffinityTracker, FSRS sync, battle/dialogue integration)
 
-Progress: [█████████████████████████░░░░░] 83% (50 of 60 estimated plans complete across all milestones)
+Progress: [█████████████████████████░░░░░] 85% (51 of 60 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -38,8 +38,8 @@ Progress: [███████████████████████
 ## Test & Build Status
 
 - Tests: 647 passing, 0 failures (baseline 592 + 55 new storage tests)
-- Build: Succeeds, main bundle 458KB (127KB gzipped, under 500KB limit)
-- Git: 2 commits from Plan 02 (784512b test suite, plus SUMMARY commit pending)
+- Build: Succeeds, main bundle 525.67KB (144.45KB gzipped, under warning threshold)
+- Git: 2 commits from Plan 02 (da7217e managers, 0cb687f integration, plus SUMMARY commit pending)
 
 ## Accumulated Context
 
@@ -73,6 +73,15 @@ Key v6.0 roadmap decisions:
 - All spells start at Form I with 5 MP cost and 16-30 base damage
 - Combos require minimum root levels (2-4) and match element pairs alphabetically
 - magicSlice uses IndexedDB nested persistReducer (same pattern as vocabulary and battle)
+
+**Phase 28 Plan 02 decisions (Phaser managers & middleware):**
+- RootMagicManager damage formula: base (tier * 20) * mastery (1.0 + level * 0.1) * affinity (2.0/1.5/1.0) * grammar (1.2/1.0/0.5)
+- FSRS sync weights: 70% in-game casting, 30% FSRS reviews (rating 3+ = 0.8 accuracy * 0.3 = 0.24 effective)
+- Root level-up suggests max 3 derived words to avoid flooding FSRS queue
+- Form unlock thresholds: Level 3 → II, Level 5 → III, Level 7 → IV, Level 9 → V
+- BattleStateMachine MAGIC_CAST state prompts random word from spell's root via getRootWords
+- Magic damage delegated to RootMagicManager with 800ms VFX delay
+- DialogueEngine affinity lock emits MAGIC_AFFINITY_LOCKED only once per session
 
 ### Phase 27 Foundation (already committed)
 
@@ -124,10 +133,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 28 Plan 01 complete)
-Stopped at: .planning/phases/28-root-magic-elemental-affinity/28-01-SUMMARY.md created
-Next step: Execute Phase 28 Plan 02 (Phaser managers) via /gsd:execute-phase 28
+Last session: 2026-02-12 (Phase 28 Plan 02 complete)
+Stopped at: .planning/phases/28-root-magic-elemental-affinity/28-02-SUMMARY.md created
+Next step: Execute Phase 28 Plan 03 (React UI) via /gsd:execute-phase 28
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 28 Plan 01 complete (1/5 plans), ready for Plan 02*
+*Last updated: 2026-02-12 — Phase 28 Plan 02 complete (2/5 plans), ready for Plan 03*
