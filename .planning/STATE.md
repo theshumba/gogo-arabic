@@ -119,6 +119,16 @@ Key v6.0 roadmap decisions:
 - Battle rewards middleware placed AFTER rootFsrsSyncMiddleware (FSRS sync before affix auto-teach)
 - Graceful degradation for missing equipment textures (development can continue without all 64 sprites)
 
+**Phase 29 Plan 04 decisions (shop UI with haggling):**
+- Haggle button only shows for items over 100 dirhams (avoid clutter for cheap items)
+- Rare+ items require confirmation before selling (prevent accidental valuable item sales)
+- Affix discovery toast shows both Arabic and English word, 4s duration for multiple affixes
+- Shopkeeper mood emoji changes based on offer quality (neutral/thinking/pleased/offended)
+- Prices display in both Eastern Arabic (٨٠٠) and Western (800) numerals
+- Haggling discount range: 10-30% via MIN_PRICE/SWEET_SPOT/MERCHANT_TARGET logic
+- Reusable ShopInventory component accepts mode prop ('buy'|'sell') for different UIs
+- Affix learn status: green dot = learned, yellow dot + 50% badge = unlearned
+
 ### Phase 27 Foundation (already committed)
 
 - Turn-based BattleScene with 17-state FSM (BattleStateMachine)
@@ -161,7 +171,7 @@ Key v6.0 roadmap decisions:
 
 ### Blockers/Concerns
 
-None. Phase 29 Plan 02 (Phaser integration) complete. Plan 04 (Shop UI) also complete.
+None. Phase 29 Plans 01-04 complete (3 of 4 plans done, 02/03 completed in parallel with 04).
 
 ### Pending Todos
 
@@ -169,10 +179,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 29 Plans 02 and 04 complete)
-Stopped at: 29-04-PLAN.md complete (Shop UI with haggling)
-Next step: .planning/phases/29-equipment-inventory-economy/29-03-PLAN.md (Inventory UI) or Phase 30 (Companion System)
+Last session: 2026-02-12 (Phase 29 Plans 01-04 complete)
+Stopped at: 29-04-PLAN.md complete (2 tasks, 2 commits, SUMMARY created)
+Next step: Phase 29 complete — ready for Phase 30 (Companion System)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 29 Plans 02 and 04 complete (Phaser integration + Shop UI)*
+*Last updated: 2026-02-12 — Phase 29 Plans 01-04 complete (equipment data, Phaser integration, inventory UI, shop UI), ready for Phase 30*
