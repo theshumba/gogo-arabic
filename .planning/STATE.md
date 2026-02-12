@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 Milestone: v6.0 Combat & RPG
 Phase: 29 of 4 phases (Equipment, Inventory & Economy) — IN PROGRESS
-Plan: 1 of 4 plans complete
-Status: Plan 29-01 COMPLETE — Data foundation built, ready for Plan 29-02
-Last activity: 2026-02-12 — Completed 29-01-PLAN.md (inventorySlice, economySlice, 64 equipment items, 25 affixes)
+Plan: 3 of 4 plans complete
+Status: Plan 29-04 COMPLETE — Shop UI with dynamic inventory, buy/sell, and Arabic haggling
+Last activity: 2026-02-12 — Completed 29-04-PLAN.md (ShopOverlay, ShopInventory, HagglingGame)
 
-Progress: [███████████████████████████░░░] 87% (54 of 62 estimated plans complete across all milestones)
+Progress: [███████████████████████████░░░] 89% (56 of 62 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -38,8 +38,8 @@ Progress: [███████████████████████
 ## Test & Build Status
 
 - Tests: 721 passing, 0 failures (baseline 647 + 74 magic system tests, 0 new equipment tests)
-- Build: Succeeds, main bundle 560.42KB (154.28KB gzipped) — +32KB from equipment data
-- Git: 2 commits from Phase 29 Plan 01 (1 per task)
+- Build: Succeeds, main bundle 580.66KB (160.19KB gzipped) — +32KB from equipment data, +4KB from Phaser integration, +16KB from shop UI
+- Git: 8 commits from Phase 29 Plans 01-04 (2 per plan)
 
 ## Accumulated Context
 
@@ -112,6 +112,13 @@ Key v6.0 roadmap decisions:
 - 64 equipment items created spanning all slots and rarities with Arabic names and lore
 - 25 Arabic adjective affixes chosen (18 positive, 7 negative) mapping to real Arabic words
 
+**Phase 29 Plan 02 decisions (Phaser integration):**
+- Equipment sprites render with 8 depth layers (boots=0, belt=5, robe=10, gloves=15, cloak=20, headCovering=25, accessory1=30, accessory2=35)
+- EquipmentStats caches bonuses and refreshes on EQUIPMENT_CHANGED/EQUIPMENT_STATS_UPDATED (optimization)
+- Equipment damage is multiplicative, defense divides incoming damage (standard RPG math)
+- Battle rewards middleware placed AFTER rootFsrsSyncMiddleware (FSRS sync before affix auto-teach)
+- Graceful degradation for missing equipment textures (development can continue without all 64 sprites)
+
 ### Phase 27 Foundation (already committed)
 
 - Turn-based BattleScene with 17-state FSM (BattleStateMachine)
@@ -121,7 +128,7 @@ Key v6.0 roadmap decisions:
 - BattleOverlay + BattleMenu + BattleArabicInput + ComboCounter React components
 - battleSlice expanded (14 reducers, 12 selectors)
 - 11 BATTLE_* EventBus constants
-- Gaps: no world integration, rewards not wired, no FSRS sync, no battle SFX, no tests
+- Gaps closed in Phase 29-02: rewards now wired via battleRewardsMiddleware (INTG-06)
 
 ### v6.0 Phase Structure
 
@@ -154,7 +161,7 @@ Key v6.0 roadmap decisions:
 
 ### Blockers/Concerns
 
-None. Phase 29 Plan 01 (data foundation) complete, ready for Plan 02 (Phaser integration).
+None. Phase 29 Plan 02 (Phaser integration) complete. Plan 04 (Shop UI) also complete.
 
 ### Pending Todos
 
@@ -162,10 +169,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 29 Plan 01 complete)
-Stopped at: 29-01-PLAN.md complete (2 tasks, 2 commits, SUMMARY created)
-Next step: .planning/phases/29-equipment-inventory-economy/29-02-PLAN.md (Phaser integration)
+Last session: 2026-02-12 (Phase 29 Plans 02 and 04 complete)
+Stopped at: 29-04-PLAN.md complete (Shop UI with haggling)
+Next step: .planning/phases/29-equipment-inventory-economy/29-03-PLAN.md (Inventory UI) or Phase 30 (Companion System)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 29 Plan 01 complete (data foundation), ready for Plan 02*
+*Last updated: 2026-02-12 — Phase 29 Plans 02 and 04 complete (Phaser integration + Shop UI)*
