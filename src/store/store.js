@@ -16,6 +16,8 @@ import grammarReducer from './slices/grammarSlice.js';
 import battleReducer from './slices/battleSlice.js';
 import narrativeReducer from './slices/narrativeSlice.js';
 import magicReducer from './slices/magicSlice.js';
+import inventoryReducer from './slices/inventorySlice.js';
+import economyReducer from './slices/economySlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -26,11 +28,11 @@ import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 /**
  * HYBRID STORAGE ARCHITECTURE
  *
- * Heavy data (vocabulary, battle, magic) persists to IndexedDB via nested persistReducer.
- * Lightweight data (player, settings, quests, etc.) persists to localStorage via root persistReducer.
+ * Heavy data (vocabulary, battle, magic, inventory) persists to IndexedDB via nested persistReducer.
+ * Lightweight data (player, settings, quests, economy, etc.) persists to localStorage via root persistReducer.
  *
  * Why nested persistReducer instead of split namespaces?
- * - Preserves existing selector paths (state.vocabulary.*, state.battle.*, state.magic.*)
+ * - Preserves existing selector paths (state.vocabulary.*, state.battle.*, state.magic.*, state.inventory.*)
  * - No breaking changes for 50K LOC of existing code
  * - Transparent to all consumers of Redux state
  *
@@ -38,10 +40,11 @@ import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
  * - Version 0 (implicit): All state in localStorage 'persist:gogo-arabic'
  * - Version 1: vocabulary + battle moved to IndexedDB, others remain in localStorage
  * - Version 2 (Phase 28): magic added to IndexedDB
+ * - Version 3 (Phase 29): inventory added to IndexedDB, economy added to localStorage
  *
  * Storage backends:
- * - localStorage (root): player, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, narrative
- * - IndexedDB (nested): vocabulary, battle, magic
+ * - localStorage (root): player, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, narrative, economy
+ * - IndexedDB (nested): vocabulary, battle, magic, inventory
  * - Not persisted (transient): ui, sync
  */
 
@@ -67,17 +70,25 @@ const magicPersistConfig = {
   migrate,
 };
 
+const inventoryPersistConfig = {
+  key: 'gogo-arabic-inventory',
+  storage: indexedDBStorage,
+  version: CURRENT_VERSION,
+  migrate,
+};
+
 // Wrap heavy reducers with nested persistReducer
 const persistedVocabularyReducer = persistReducer(vocabularyPersistConfig, vocabularyReducer);
 const persistedBattleReducer = persistReducer(battlePersistConfig, battleReducer);
 const persistedMagicReducer = persistReducer(magicPersistConfig, magicReducer);
+const persistedInventoryReducer = persistReducer(inventoryPersistConfig, inventoryReducer);
 
-// Root persist config (localStorage) — vocabulary, battle, and magic excluded (they have nested configs)
+// Root persist config (localStorage) — vocabulary, battle, magic, and inventory excluded (they have nested configs)
 const persistConfig = {
   key: 'gogo-arabic',
   storage, // localStorage
-  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative'],
-  // NOTE: vocabulary, battle, and magic REMOVED from whitelist — they use nested persistReducer with IndexedDB
+  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative', 'economy'],
+  // NOTE: vocabulary, battle, magic, and inventory REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
 
 const rootReducer = combineReducers({
@@ -95,6 +106,8 @@ const rootReducer = combineReducers({
   battle: persistedBattleReducer, // IndexedDB (nested)
   narrative: narrativeReducer,
   magic: persistedMagicReducer, // IndexedDB (nested)
+  inventory: persistedInventoryReducer, // IndexedDB (nested)
+  economy: economyReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

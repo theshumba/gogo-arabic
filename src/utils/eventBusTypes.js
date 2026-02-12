@@ -239,4 +239,36 @@ export const EVENTS = Object.freeze({
   MAGIC_VFX_START: 'phaser:magic:vfx-start',
   /** Phaser → React: spell VFX ended (enable input) */
   MAGIC_VFX_END: 'phaser:magic:vfx-end',
+
+  // ────────────────────────────────────────────────
+  // EQUIPMENT — Equipment and inventory events (Phase 29)
+  // ────────────────────────────────────────────────
+
+  /** React → Phaser: equipment slot changed */
+  EQUIPMENT_CHANGED: 'react:equipment:changed',
+  /** React → Phaser: recalculate bonuses */
+  EQUIPMENT_STATS_UPDATED: 'react:equipment:stats-updated',
+  /** React → React: new item acquired */
+  INVENTORY_ITEM_ADDED: 'react:inventory:item-added',
+  /** React → React: item removed/sold */
+  INVENTORY_ITEM_REMOVED: 'react:inventory:item-removed',
+  /** React → React: inventory at 200 cap */
+  INVENTORY_FULL: 'react:inventory:full',
+
+  // ────────────────────────────────────────────────
+  // SHOP — Shop and economy events (Phase 29)
+  // ────────────────────────────────────────────────
+
+  /** React → React: item bought */
+  SHOP_PURCHASE: 'react:shop:purchase',
+  /** React → React: item sold */
+  SHOP_SELL: 'react:shop:sell',
+  /** React → React: haggling began */
+  SHOP_HAGGLE_START: 'react:shop:haggle-start',
+  /** React → React: haggle success/fail */
+  SHOP_HAGGLE_RESULT: 'react:shop:haggle-result',
+  /** React → React: shop inventory refreshed */
+  SHOP_RESTOCK: 'react:shop:restock',
+  /** React → React: new Arabic word from equipment */
+  AFFIX_DISCOVERED: 'react:equipment:affix-discovered',
 });
