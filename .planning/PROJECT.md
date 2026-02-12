@@ -47,17 +47,19 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
-## Current Milestone: v5.0 The Real Game
+## Current Milestone: v6.0 Combat & RPG
 
-**Goal:** Transform GoGo Arabic from a learning app with a game skin into an actual game — epic personalized narrative, living interactive world, and guided structure from minute one.
+**Goal:** Build the combat and RPG core — root-based magic system where Arabic roots become spells, equipment with Arabic-named items, and 12 AI companions that teach Arabic through conversation and battle.
 
 **Target features:**
-- Complete onboarding overhaul with guide character, first mission, and clear purpose
-- Personalized branching narrative that adapts to player choices and learning path
-- Living world with enterable buildings, interactive objects, market stalls, signs, fountains
-- Structured progression so players always know what to do and why
-- Rich zone environments that feel like real places worth exploring
-- NPC conversations that feel meaningful — tips, warnings, stories, personality
+- Root Magic system mapping Arabic trilateral roots to 10 elemental spells
+- Affinity discovery through gameplay choices (primary/secondary elements)
+- Equipment system with 8 slots, rarity tiers, and Arabic affix vocabulary
+- Inventory management with grid UI, sorting, and item comparison
+- Economy with zone shops, Arabic numeral haggling, and gold currency
+- 12 recruitable companions with unique personalities, battle roles, and Arabic teaching specialties
+- Companion AI for battle actions and contextual exploration dialogue
+- Party management (2 active companions) with relationship system
 
 ### Out of Scope
 
@@ -90,16 +92,15 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - ~~No audio~~ -> Fixed (zone BGM, SFX, volume controls, mobile unlock)
 - ~~Doesn't feel like a "real game"~~ -> Fixed (screen shake, particles, celebrations, toasts, transitions)
 
-**v5.0 user feedback driving this milestone:**
-- Onboarding is useless — only teaches controls, not purpose. Player has no idea what to do.
-- World feels empty — just houses, pillars, a pond, trees. Nothing interactive.
-- Can't enter buildings, chests are just rocks with text.
-- No story or narrative pulling the player forward.
-- No structure — player doesn't know who to talk to, where to go, or how to find Arabic learning.
-- NPCs feel like signposts, not characters.
-- Zones exist on map but feel disconnected and empty.
-- "Every other game I play, I know where I'm supposed to go. I can't do that here."
-- Audio assets (MP3 files) still need to be created/sourced
+**v6.0 context driving this milestone:**
+- Battle engine exists (Phase 27) but has no world integration (can't trigger from exploration)
+- Rewards not wired — XP/gold from battles don't award to player slice
+- FSRS not updated after battle vocabulary usage
+- No equipment, inventory, or economy system
+- No companion system — player always alone
+- Root magic concept exists in data (50 roots mapped) but no spell casting UI or mastery tracking
+- No battle SFX beyond correct/wrong sounds
+- No tests for ~2.6K LOC of battle code
 
 ## Constraints
 
@@ -132,4 +133,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Parallel execution of all v4.0 phases | User preference for speed, independent features | Good — shipped 5 phases in 1 day, minor cleanup needed |
 
 ---
-*Last updated: 2026-02-10 after v5.0 milestone started*
+*Last updated: 2026-02-12 after v6.0 milestone started*
