@@ -19,6 +19,7 @@ import magicReducer from './slices/magicSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
+import { rootFsrsSyncMiddleware } from './middleware/rootFsrsSyncMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -106,7 +107,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware),
 });
 
 export const persistor = persistStore(store);
