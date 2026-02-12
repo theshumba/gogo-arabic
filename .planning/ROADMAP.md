@@ -156,14 +156,14 @@ Plans:
 10. Player benefits from set bonuses when wearing matching themed sets (Scholar's Set, Merchant's Set, etc.) with bonus indicators in equipment UI
 11. Battle rewards (XP, gold, items) from Phase 27 engine wire into player progression and inventory systems
 
-**Plans:** 5 plans in 3 waves
+**Plans:** 5/5 complete
 
 Plans:
-- [ ] 29-01-PLAN.md — Data foundation: inventorySlice (IndexedDB), economySlice, equipment/affixes/shops data, utility functions, EventBus events
-- [ ] 29-02-PLAN.md — Phaser integration: EquipmentManager (sprite rendering), EquipmentStats (battle bonuses), battleRewardsMiddleware (XP/gold/items)
-- [ ] 29-03-PLAN.md — Inventory & Equipment UI: InventoryUI grid, EquipmentSlots, ItemTooltip, stat comparison, set bonuses, accessibility
-- [ ] 29-04-PLAN.md — Shop & Haggling: extend ShopOverlay with dynamic inventory, buy/sell, HagglingGame (Arabic numerals), affix auto-teach
-- [ ] 29-05-PLAN.md — Tests: inventorySlice, economySlice, utilities, EquipmentManager, battleRewardsMiddleware, data integrity, full regression
+- [x] 29-01-PLAN.md — Data foundation: inventorySlice (IndexedDB), economySlice, equipment/affixes/shops data, utility functions, EventBus events
+- [x] 29-02-PLAN.md — Phaser integration: EquipmentManager (sprite rendering), EquipmentStats (battle bonuses), battleRewardsMiddleware (XP/gold/items)
+- [x] 29-03-PLAN.md — Inventory & Equipment UI: InventoryUI grid, EquipmentSlots, ItemTooltip, stat comparison, set bonuses, accessibility
+- [x] 29-04-PLAN.md — Shop & Haggling: extend ShopOverlay with dynamic inventory, buy/sell, HagglingGame (Arabic numerals), affix auto-teach
+- [x] 29-05-PLAN.md — Tests: inventorySlice, economySlice, utilities, EquipmentManager, battleRewardsMiddleware, data integrity, full regression
 
 ---
 
@@ -230,7 +230,7 @@ Phases execute in numeric order: 1-26 (complete) -> 27.1 -> 28 -> 29 -> 30
 | 26. Narrative Branching & Polish | v5.0 | 1/1 | Complete | 2026-02-11 |
 | 27.1. IndexedDB Migration | v6.0 | 2/2 | Complete | 2026-02-12 |
 | 28. Root Magic & Elemental Affinity | v6.0 | 4/4 | Complete | 2026-02-12 |
-| 29. Equipment, Inventory & Economy | v6.0 | 0/? | Not started | - |
+| 29. Equipment, Inventory & Economy | v6.0 | 5/5 | Complete | 2026-02-12 |
 | 30. Companion System | v6.0 | 0/? | Not started | - |
 
 **Coverage:**
@@ -240,4 +240,4 @@ Phases execute in numeric order: 1-26 (complete) -> 27.1 -> 28 -> 29 -> 30
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 28 complete (4/4 plans, 13/13 must-haves verified)*
+*Last updated: 2026-02-12 — Phase 29 complete (5/5 plans, 11/11 must-haves verified, 874 tests)*
