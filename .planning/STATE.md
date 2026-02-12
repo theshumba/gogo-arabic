@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 Milestone: v6.0 Combat & RPG
 Phase: 27.1 of 4 phases (IndexedDB Migration)
-Plan: 1 of 1
-Status: Phase 27.1 complete
-Last activity: 2026-02-12 — Completed 27.1-01-PLAN.md (IndexedDB migration)
+Plan: 2 of 2 plans complete
+Status: Phase 27.1 COMPLETE — ready to plan Phase 28 (Root Magic & Elemental Affinity)
+Last activity: 2026-02-12 — Completed 27.1-02-SUMMARY.md (IndexedDB migration test suite)
 
-Progress: [████████████████████████░░░░░░] 80% (48 of 60 estimated plans complete across all milestones)
+Progress: [████████████████████████░░░░░░] 82% (49 of 60 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -37,9 +37,9 @@ Progress: [███████████████████████
 
 ## Test & Build Status
 
-- Tests: 589 passing / 3 pre-existing failures (DailyDashboard x2, HUD x1) — 592 total
-- Build: Succeeds, main bundle ~403KB (under 500KB limit)
-- Git: Clean working tree on main
+- Tests: 647 passing, 0 failures (baseline 592 + 55 new storage tests)
+- Build: Succeeds, main bundle 458KB (127KB gzipped, under 500KB limit)
+- Git: 2 commits from Plan 02 (784512b test suite, plus SUMMARY commit pending)
 
 ## Accumulated Context
 
@@ -60,6 +60,12 @@ Key v6.0 roadmap decisions:
 - Versioned schema (DB_VERSION=1) with upgrade path for future stores
 - 80% quota threshold for storage warnings
 - 5-second cleanup delay for old localStorage data after migration
+
+**Phase 27.1 Plan 02 decisions (test suite):**
+- Real timers required for IndexedDB tests (fake timers prevent async event loop)
+- window.indexedDB polyfill in setup.js for adapter compatibility
+- Module reset pattern (vi.resetModules + dynamic import) for session flag testing
+- vi.mock() at module level for proper mock isolation in middleware tests
 
 ### Phase 27 Foundation (already committed)
 
@@ -99,8 +105,7 @@ Key v6.0 roadmap decisions:
 - Audio asset files (MP3s) need to be created/sourced
 - Only 4 locked doors across 8 zones (partial coverage)
 - Backend hardening deferred since v3.0 (Phases 12-13)
-- 3 pre-existing test failures not resolved (DailyDashboard x2, HUD x1)
-- No tests for Phase 27 battle code (~2.6K LOC)
+- No tests for Phase 27 battle code (~2.6K LOC) — deferred to Phase 31/32 (Advanced Combat)
 
 ### Blockers/Concerns
 
@@ -112,10 +117,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 27.1 complete)
-Stopped at: .planning/phases/27-indexeddb-migration/27.1-01-SUMMARY.md created
+Last session: 2026-02-12 (Phase 27.1 Plan 02 complete)
+Stopped at: .planning/phases/27-indexeddb-migration/27.1-02-SUMMARY.md created
 Next step: Plan Phase 28 (Root Magic & Elemental Affinity) via /gsd:plan-phase 28
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 27.1 complete, ready to plan Phase 28*
+*Last updated: 2026-02-12 — Phase 27.1 fully complete (2/2 plans), ready to plan Phase 28*
