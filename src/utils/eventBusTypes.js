@@ -204,4 +204,39 @@ export const EVENTS = Object.freeze({
   BATTLE_ENEMY_ACTION: 'phaser:battle:enemy-action',
   /** Phaser → React: combo counter changed */
   BATTLE_COMBO_UPDATE: 'phaser:battle:combo-update',
+
+  // ────────────────────────────────────────────────
+  // MAGIC — Root magic system events (Phase 28)
+  // ────────────────────────────────────────────────
+
+  /** React → Phaser: player selected spell from hotbar */
+  MAGIC_CAST_REQUESTED: 'react:magic:cast-requested',
+  /** Phaser → React: spell cast resolved, update UI */
+  MAGIC_CAST_COMPLETE: 'phaser:magic:cast-complete',
+  /** Phaser → React: new root unlocked, show toast */
+  MAGIC_ROOT_DISCOVERED: 'phaser:magic:root-discovered',
+  /** React → Phaser: hotbar slot changed */
+  MAGIC_SPELL_EQUIPPED: 'react:magic:spell-equipped',
+  /** React → Phaser: hotbar slot cleared */
+  MAGIC_SPELL_UNEQUIPPED: 'react:magic:spell-unequipped',
+  /** Phaser → React: combo detected, show combo VFX */
+  MAGIC_COMBO_TRIGGERED: 'phaser:magic:combo-triggered',
+  /** React → Redux: affinity choice made */
+  MAGIC_AFFINITY_CHOICE: 'react:magic:affinity-choice',
+  /** Redux → React: primary/secondary affinity locked */
+  MAGIC_AFFINITY_LOCKED: 'react:magic:affinity-locked',
+  /** Phaser → React: root mastery leveled up */
+  MAGIC_ROOT_LEVEL_UP: 'phaser:magic:root-level-up',
+  /** Phaser → React: new verb form unlocked */
+  MAGIC_FORM_UNLOCKED: 'phaser:magic:form-unlocked',
+  /** Phaser → React: not enough MP warning */
+  MAGIC_MP_DEPLETED: 'phaser:magic:mp-depleted',
+  /** React → Phaser: freeze game while viewing spells */
+  MAGIC_SPELL_MENU_OPEN: 'react:magic:spell-menu-open',
+  /** React → Phaser: resume game */
+  MAGIC_SPELL_MENU_CLOSE: 'react:magic:spell-menu-close',
+  /** Phaser → React: spell VFX started (disable input) */
+  MAGIC_VFX_START: 'phaser:magic:vfx-start',
+  /** Phaser → React: spell VFX ended (enable input) */
+  MAGIC_VFX_END: 'phaser:magic:vfx-end',
 });
