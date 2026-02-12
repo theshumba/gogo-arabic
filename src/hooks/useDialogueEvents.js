@@ -87,10 +87,10 @@ export function useDialogueEvents(playSFX) {
         if (import.meta.env.DEV) {
           console.log('[useDialogueEvents] give_item effect:', payload);
         }
-      } else if (payload.effectCount) {
-        // Summary event after multiple effects
+      } else if (payload.type === 'reward') {
+        // Reward effect feedback
         if (import.meta.env.DEV) {
-          console.log('[useDialogueEvents] Effects executed:', payload.effectCount);
+          console.log('[useDialogueEvents] reward effect:', payload);
         }
       }
     };

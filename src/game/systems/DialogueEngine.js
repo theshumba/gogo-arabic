@@ -162,7 +162,6 @@ export class DialogueEngine {
         }
 
         case 'relationship_change': {
-          const oldLevel = store.getState().narrative.npcRelationships[this.currentNpcId] ?? 0;
           store.dispatch(incrementNpcRelationship({
             npcId: this.currentNpcId,
             amount: effect.amount,
@@ -250,11 +249,7 @@ export class DialogueEngine {
       }
     });
 
-    // Emit summary event after all effects
-    EventBus.emit(EVENTS.DIALOGUE_EFFECT_EXECUTED, {
-      npcId: this.currentNpcId,
-      effectCount: effects.length,
-    });
+    // Summary logged in individual handlers (useDialogueEvents.js)
   }
 
   /**

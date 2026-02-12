@@ -6,6 +6,7 @@ import { addFsrsCard, associateWordWithNpc } from '../store/slices/vocabularySli
 import { addXP, incrementWordsLearned } from '../store/slices/playerSlice.js';
 import { updateQuestProgress, completeQuest, checkPrerequisites } from '../store/slices/questSlice.js';
 import { createNewCard } from '../services/fsrs.js';
+import { store } from '../store/store.js';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
 import { XP_REWARDS } from '../utils/xpCalculator.js';
@@ -196,11 +197,13 @@ export function useDialogue(npc) {
         phrases: 'word_learned_phrases',
       };
       const event = categoryToEvent[word.category];
+      // Read fresh quest state from store to avoid stale closure on rapid dispatches
+      const freshQuests = store.getState().quests.quests;
       if (event) {
         for (const qd of questsData) {
-          if (qd.trackEvent === event && quests[qd.id]?.status === 'active') {
+          if (qd.trackEvent === event && freshQuests[qd.id]?.status === 'active') {
             dispatch(updateQuestProgress({ questId: qd.id, amount: 1 }));
-            const current = (quests[qd.id]?.progress || 0) + 1;
+            const current = (freshQuests[qd.id]?.progress || 0) + 1;
             if (current >= qd.target) {
               dispatch(completeQuest(qd.id));
               dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
@@ -211,9 +214,9 @@ export function useDialogue(npc) {
       }
       // Always track "word_learned_any"
       for (const qd of questsData) {
-        if (qd.trackEvent === 'word_learned_any' && quests[qd.id]?.status === 'active') {
+        if (qd.trackEvent === 'word_learned_any' && freshQuests[qd.id]?.status === 'active') {
           dispatch(updateQuestProgress({ questId: qd.id, amount: 1 }));
-          const current = (quests[qd.id]?.progress || 0) + 1;
+          const current = (freshQuests[qd.id]?.progress || 0) + 1;
           if (current >= qd.target) {
             dispatch(completeQuest(qd.id));
             dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
@@ -224,7 +227,7 @@ export function useDialogue(npc) {
     }
     // Track in NPC slice regardless (idempotent)
     dispatch(npcTeachWord({ npcId: npc.id, wordId }));
-  }, [cards, dispatch, npc, quests]);
+  }, [cards, dispatch, npc]);
 
   /* ---- advance to next line ---- */
   const advance = useCallback(() => {

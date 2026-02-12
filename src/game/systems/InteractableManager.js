@@ -23,7 +23,8 @@ const WORLD_OBJECT_SPRITES = {
 const WORLD_OBJECT_TYPES = new Set(Object.keys(WORLD_OBJECT_SPRITES));
 
 // One-time (non-repeatable) object types — once interacted, they are "used up"
-const ONE_TIME_TYPES = new Set(['barrel', 'crate', 'pot']);
+// Note: pot removed — all 23 pot entries explicitly set repeatable: true
+const ONE_TIME_TYPES = new Set(['barrel', 'crate']);
 
 /**
  * InteractableManager
@@ -71,7 +72,7 @@ export class InteractableManager {
       if (WORLD_OBJECT_TYPES.has(cfg.type)) {
         const worldObjectStates = store.getState().narrative?.worldObjectStates || {};
         const objectState = worldObjectStates[cfg.id];
-        const repeatable = cfg.repeatable !== false && !ONE_TIME_TYPES.has(cfg.type);
+        const repeatable = cfg.repeatable === true || (cfg.repeatable !== false && !ONE_TIME_TYPES.has(cfg.type));
         if (!repeatable && objectState === 'used') {
           sprite.setTint(0x666666);
         }
@@ -152,7 +153,7 @@ export class InteractableManager {
       if (WORLD_OBJECT_TYPES.has(cfg.type)) {
         const worldObjectStates = store.getState().narrative?.worldObjectStates || {};
         const objectState = worldObjectStates[cfg.id];
-        const repeatable = cfg.repeatable !== false && !ONE_TIME_TYPES.has(cfg.type);
+        const repeatable = cfg.repeatable === true || (cfg.repeatable !== false && !ONE_TIME_TYPES.has(cfg.type));
         // Only pulse if the object is still interactive (repeatable or not yet used)
         if (repeatable || objectState !== 'used') {
           const tween = this.scene.tweens.add({
@@ -280,7 +281,7 @@ export class InteractableManager {
   handleWorldObject(obj) {
     const worldObjectStates = store.getState().narrative?.worldObjectStates || {};
     const objectState = worldObjectStates[obj.id];
-    const repeatable = obj.repeatable !== false && !ONE_TIME_TYPES.has(obj.type);
+    const repeatable = obj.repeatable === true || (obj.repeatable !== false && !ONE_TIME_TYPES.has(obj.type));
 
     // Already used and non-repeatable — show "already inspected" notification
     if (!repeatable && objectState === 'used') {
@@ -288,8 +289,8 @@ export class InteractableManager {
       return;
     }
 
-    // Determine the state change to dispatch
-    const stateChange = (!repeatable) ? 'used' : null;
+    // Determine the state change to dispatch (respect config, default to 'used')
+    const stateChange = (!repeatable) ? (obj.stateChange || 'used') : null;
 
     // Emit unified OBJECT_INTERACT event with full payload
     EventBus.emit(EVENTS.OBJECT_INTERACT, {

@@ -70,7 +70,8 @@ function ShopOverlay() {
 
   // Dynamic background image
   const overlayStyle = {
-    backgroundImage: 'url(/img/shop-bg2.gif)',
+    backgroundColor: '#16213e',
+    backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(212, 168, 67, 0.1) 0%, transparent 50%), repeating-conic-gradient(rgba(212, 168, 67, 0.04) 0% 25%, transparent 0% 50%) 0 0 / 48px 48px',
   };
 
   return (

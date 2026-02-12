@@ -80,6 +80,10 @@ describe('DailyDashboard', () => {
       },
       activeQuestId: 'quest1',
     },
+    alphabet: {
+      groups: ['group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7'],
+      completedGroups: ['group1'],
+    },
   };
 
   beforeEach(() => {

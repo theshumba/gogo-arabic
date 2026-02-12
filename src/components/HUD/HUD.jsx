@@ -10,6 +10,7 @@ import { selectCompletedGoalsCount, selectTotalGoalsCount } from '../../store/sl
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import styles from './HUD.module.css';
+import questsData from '../../data/quests.json';
 import AchievementPanel from '../Achievements/AchievementPanel.jsx';
 import DailyGoalsPanel from '../Goals/DailyGoalsPanel.jsx';
 import QuestTracker from './QuestTracker.jsx';
@@ -173,7 +174,7 @@ function HUD({ onMenu }) {
             <span className={styles.progressSep} aria-hidden="true">|</span>
             <span className={styles.progressItem} title="Quests completed">
               <span className={styles.progressIcon} aria-hidden="true">Q</span>
-              <span className={styles.progressValue}>{completedQuestCount}/52</span>
+              <span className={styles.progressValue}>{completedQuestCount}/{questsData.length}</span>
             </span>
           </div>
         </div>

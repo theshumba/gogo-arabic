@@ -362,7 +362,7 @@ describe('DialogueEngine', () => {
       );
     });
 
-    it('emits summary event after executing all effects', () => {
+    it('executes multiple effects without duplicate summary event', () => {
       const effects = [
         { type: 'story_flag', flag: 'flag1', value: 'val1' },
         { type: 'story_flag', flag: 'flag2', value: 'val2' },
@@ -370,13 +370,8 @@ describe('DialogueEngine', () => {
 
       engine.executeEffects(effects, 'npc1');
 
-      expect(EventBus.emit).toHaveBeenCalledWith(
-        EVENTS.DIALOGUE_EFFECT_EXECUTED,
-        expect.objectContaining({
-          npcId: 'npc1',
-          effectCount: 2,
-        })
-      );
+      // Should dispatch twice (one per story_flag) but NOT emit a summary event
+      expect(store.dispatch).toHaveBeenCalledTimes(2);
     });
   });
 

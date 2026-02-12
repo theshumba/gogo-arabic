@@ -3,11 +3,11 @@
 .container {
   width: 100%;
   height: 100%;
-  background-image: url('/img/char-bg.gif');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  image-rendering: pixelated;
+  background-color: #1a1a2e;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(212, 168, 67, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(139, 105, 20, 0.06) 0%, transparent 50%),
+    repeating-conic-gradient(rgba(212, 168, 67, 0.04) 0% 25%, transparent 0% 50%) 0 0 / 64px 64px;
   display: flex;
   flex-direction: column;
   align-items: center;

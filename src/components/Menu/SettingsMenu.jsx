@@ -17,7 +17,8 @@ export default function SettingsMenu({ onBack }) {
 
   // Dynamic background image (fullScreenBg function pattern)
   const containerStyle = {
-    backgroundImage: 'url(/img/pixel-sepia.gif)',
+    backgroundColor: '#1a1a2e',
+    backgroundImage: 'radial-gradient(circle at 60% 30%, rgba(139, 105, 20, 0.08) 0%, transparent 50%), repeating-linear-gradient(60deg, rgba(212, 168, 67, 0.03) 0px, rgba(212, 168, 67, 0.03) 1px, transparent 1px, transparent 40px)',
   };
 
   return (
