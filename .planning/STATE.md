@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 Milestone: v6.0 Combat & RPG
 Phase: 27.1 of 4 phases (IndexedDB Migration)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-02-12 — v6.0 roadmap created
+Plan: 1 of 1
+Status: Phase 27.1 complete
+Last activity: 2026-02-12 — Completed 27.1-01-PLAN.md (IndexedDB migration)
 
-Progress: [████████████████████████░░░░░░] 79% (47 of 60 estimated plans complete across all milestones)
+Progress: [████████████████████████░░░░░░] 80% (48 of 60 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -53,6 +53,13 @@ Key v6.0 roadmap decisions:
 - Magic before equipment: Root magic is educational core, equipment enhances magic via affinity bonuses
 - Equipment before companions: Companions have equipment slots and give gifts requiring inventory
 - All 45 requirements mapped to phases (100% coverage), no orphans
+
+**Phase 27.1 decisions (IndexedDB migration):**
+- Nested persistReducer for hybrid storage instead of split namespaces (preserves selector paths)
+- Cached IndexedDB connection pattern to avoid repeated open() calls
+- Versioned schema (DB_VERSION=1) with upgrade path for future stores
+- 80% quota threshold for storage warnings
+- 5-second cleanup delay for old localStorage data after migration
 
 ### Phase 27 Foundation (already committed)
 
@@ -105,10 +112,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (v6.0 roadmap created)
-Stopped at: ROADMAP.md and STATE.md created
-Next step: Plan Phase 27.1 (IndexedDB Migration) via /gsd:plan-phase 27.1
+Last session: 2026-02-12 (Phase 27.1 complete)
+Stopped at: .planning/phases/27-indexeddb-migration/27.1-01-SUMMARY.md created
+Next step: Plan Phase 28 (Root Magic & Elemental Affinity) via /gsd:plan-phase 28
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — v6.0 roadmap complete, ready to plan Phase 27.1*
+*Last updated: 2026-02-12 — Phase 27.1 complete, ready to plan Phase 28*
