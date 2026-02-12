@@ -5,17 +5,17 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v6.0 Combat & RPG — Phase 28 (Root Magic & Elemental Affinity)
+**Current focus:** v6.0 Combat & RPG — Phase 28 COMPLETE, ready for Phase 29
 
 ## Current Position
 
 Milestone: v6.0 Combat & RPG
-Phase: 28 of 4 phases (Root Magic & Elemental Affinity)
-Plan: 4 of 5 plans complete
-Status: Phase 28 IN PROGRESS — Plan 04 complete, ready for Plan 05
-Last activity: 2026-02-12 — Completed 28-04 (magic system test suite: 74 tests, full regression, zero regressions)
+Phase: 28 of 4 phases (Root Magic & Elemental Affinity) — COMPLETE
+Plan: 4 of 4 plans complete
+Status: Phase 28 VERIFIED ✓ — 13/13 must-haves passed, ready to plan Phase 29
+Last activity: 2026-02-12 — Phase 28 verified (721 tests, 13/13 must-haves, 528KB bundle)
 
-Progress: [███████████████████████████░░░] 88% (53 of 60 estimated plans complete across all milestones)
+Progress: [██████████████████████████░░░░] 85% (53 of 62 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -38,8 +38,8 @@ Progress: [███████████████████████
 ## Test & Build Status
 
 - Tests: 721 passing, 0 failures (baseline 647 + 74 new magic system tests)
-- Build: Succeeds, main bundle 527.91KB (144.96KB gzipped, under warning threshold)
-- Git: 2 commits from Plan 04 (6a47286 slice/data tests, 7a9dd66 middleware/manager tests)
+- Build: Succeeds, main bundle 527.91KB (144.96KB gzipped)
+- Git: 12 commits from Phase 28 (3 per plan + 1 metadata each)
 
 ## Accumulated Context
 
@@ -140,7 +140,7 @@ Key v6.0 roadmap decisions:
 
 ### Blockers/Concerns
 
-None blocking Phase 28 start. Phase 27.1 (IndexedDB migration) verified and complete.
+None blocking Phase 29 start. Phase 28 (Root Magic) verified and complete.
 
 ### Pending Todos
 
@@ -148,10 +148,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 28 Plan 04 complete)
-Stopped at: .planning/phases/28-root-magic-elemental-affinity/28-04-SUMMARY.md created
-Next step: Execute Phase 28 Plan 05 (documentation) via /gsd:execute-phase 28, or verify work via /gsd:verify-work
+Last session: 2026-02-12 (Phase 28 complete)
+Stopped at: Phase 28 verified (13/13 must-haves)
+Next step: Plan Phase 29 (Equipment, Inventory & Economy) via /gsd:plan-phase 29
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 28 Plan 04 complete (4/5 plans), ready for Plan 05*
+*Last updated: 2026-02-12 — Phase 28 complete (4/4 plans, 13/13 verified), ready to plan Phase 29*
