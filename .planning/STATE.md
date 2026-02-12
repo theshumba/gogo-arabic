@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 Milestone: v6.0 Combat & RPG
 Phase: 28 of 4 phases (Root Magic & Elemental Affinity)
-Plan: 3 of 5 plans complete
-Status: Phase 28 IN PROGRESS — Plan 03 complete, ready for Plan 04
-Last activity: 2026-02-12 — Completed 28-03 (magic UI & VFX: MagicOverlay, SpellMenu, RootDiscoveryToast, spell VFX)
+Plan: 4 of 5 plans complete
+Status: Phase 28 IN PROGRESS — Plan 04 complete, ready for Plan 05
+Last activity: 2026-02-12 — Completed 28-04 (magic system test suite: 74 tests, full regression, zero regressions)
 
-Progress: [██████████████████████████░░░░] 87% (52 of 60 estimated plans complete across all milestones)
+Progress: [███████████████████████████░░░] 88% (53 of 60 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -37,9 +37,9 @@ Progress: [███████████████████████
 
 ## Test & Build Status
 
-- Tests: 647 passing, 0 failures (baseline 592 + 55 new storage tests)
+- Tests: 721 passing, 0 failures (baseline 647 + 74 new magic system tests)
 - Build: Succeeds, main bundle 527.91KB (144.96KB gzipped, under warning threshold)
-- Git: 2 commits from Plan 03 (fea9851 UI components, 95d632d spell VFX, plus SUMMARY commit pending)
+- Git: 2 commits from Plan 04 (6a47286 slice/data tests, 7a9dd66 middleware/manager tests)
 
 ## Accumulated Context
 
@@ -91,6 +91,13 @@ Key v6.0 roadmap decisions:
 - Combo VFX enhanced: 2x particle count, 1.5x duration, 48px combo name text
 - All 10 elements have distinct particle configs (ELEMENT_CONFIGS)
 
+**Phase 28 Plan 04 decisions (magic system tests):**
+- Reducer testing: Use reducer(initialState, action) directly to avoid IndexedDB persistence issues
+- Middleware testing: Mock store with vi.fn() for getState/dispatch, verify via store.dispatch.mock.calls
+- RootMagicManager testing: Override scene.time.delayedCall to execute callbacks immediately
+- Full regression: 721 tests (647 existing + 74 new), zero regressions, build succeeds
+- DialogueEngine test fix: Initialize mock state BEFORE creating engine instance
+
 ### Phase 27 Foundation (already committed)
 
 - Turn-based BattleScene with 17-state FSM (BattleStateMachine)
@@ -141,10 +148,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 28 Plan 03 complete)
-Stopped at: .planning/phases/28-root-magic-elemental-affinity/28-03-SUMMARY.md created
-Next step: Execute Phase 28 Plan 04 (integration & testing) or Plan 05 (documentation) via /gsd:execute-phase 28
+Last session: 2026-02-12 (Phase 28 Plan 04 complete)
+Stopped at: .planning/phases/28-root-magic-elemental-affinity/28-04-SUMMARY.md created
+Next step: Execute Phase 28 Plan 05 (documentation) via /gsd:execute-phase 28, or verify work via /gsd:verify-work
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 28 Plan 03 complete (3/5 plans), ready for Plan 04*
+*Last updated: 2026-02-12 — Phase 28 Plan 04 complete (4/5 plans), ready for Plan 05*
