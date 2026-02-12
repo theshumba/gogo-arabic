@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Milestone: v6.0 Combat & RPG
-Phase: 27.1 of 4 phases (IndexedDB Migration)
-Plan: 2 of 2 plans complete
-Status: Phase 27.1 VERIFIED ✓ — ready to plan Phase 28 (Root Magic & Elemental Affinity)
-Last activity: 2026-02-12 — Phase 27.1 verified (15/15 must-haves, 647 tests, 458KB bundle)
+Phase: 28 of 4 phases (Root Magic & Elemental Affinity)
+Plan: 1 of 5 plans complete
+Status: Phase 28 IN PROGRESS — Plan 01 complete, ready for Plan 02
+Last activity: 2026-02-12 — Completed 28-01 (magic data foundation: magicSlice, 50 spells, 20 combos, 15 events)
 
-Progress: [████████████████████████░░░░░░] 82% (49 of 60 estimated plans complete across all milestones)
+Progress: [█████████████████████████░░░░░] 83% (50 of 60 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -67,6 +67,13 @@ Key v6.0 roadmap decisions:
 - Module reset pattern (vi.resetModules + dynamic import) for session flag testing
 - vi.mock() at module level for proper mock isolation in middleware tests
 
+**Phase 28 Plan 01 decisions (magic data foundation):**
+- XP-based leveling: 100 XP per level, accuracy-based XP gain (5/10/15 for partial/good/perfect)
+- Affinity locking after 50 choices with weighted histogram (primary 2x, secondary 1.5x)
+- All spells start at Form I with 5 MP cost and 16-30 base damage
+- Combos require minimum root levels (2-4) and match element pairs alphabetically
+- magicSlice uses IndexedDB nested persistReducer (same pattern as vocabulary and battle)
+
 ### Phase 27 Foundation (already committed)
 
 - Turn-based BattleScene with 17-state FSM (BattleStateMachine)
@@ -117,10 +124,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 27.1 Plan 02 complete)
-Stopped at: .planning/phases/27-indexeddb-migration/27.1-02-SUMMARY.md created
-Next step: Plan Phase 28 (Root Magic & Elemental Affinity) via /gsd:plan-phase 28
+Last session: 2026-02-12 (Phase 28 Plan 01 complete)
+Stopped at: .planning/phases/28-root-magic-elemental-affinity/28-01-SUMMARY.md created
+Next step: Execute Phase 28 Plan 02 (Phaser managers) via /gsd:execute-phase 28
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 27.1 fully complete (2/2 plans), ready to plan Phase 28*
+*Last updated: 2026-02-12 — Phase 28 Plan 01 complete (1/5 plans), ready for Plan 02*
