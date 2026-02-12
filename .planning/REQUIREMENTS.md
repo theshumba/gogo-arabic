@@ -112,13 +112,63 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| — | — | — |
+| STOR-01 | Phase 27.1 | Pending |
+| STOR-02 | Phase 27.1 | Pending |
+| STOR-03 | Phase 27.1 | Pending |
+| MGIC-01 | Phase 28 | Pending |
+| MGIC-02 | Phase 28 | Pending |
+| MGIC-03 | Phase 28 | Pending |
+| MGIC-04 | Phase 28 | Pending |
+| MGIC-05 | Phase 28 | Pending |
+| MGIC-06 | Phase 28 | Pending |
+| MGIC-07 | Phase 28 | Pending |
+| MGIC-08 | Phase 28 | Pending |
+| MGIC-09 | Phase 28 | Pending |
+| MGIC-10 | Phase 28 | Pending |
+| MGIC-11 | Phase 28 | Pending |
+| MGIC-12 | Phase 28 | Pending |
+| EQUP-01 | Phase 29 | Pending |
+| EQUP-02 | Phase 29 | Pending |
+| EQUP-03 | Phase 29 | Pending |
+| EQUP-04 | Phase 29 | Pending |
+| EQUP-05 | Phase 29 | Pending |
+| EQUP-06 | Phase 29 | Pending |
+| EQUP-07 | Phase 29 | Pending |
+| EQUP-08 | Phase 29 | Pending |
+| EQUP-09 | Phase 29 | Pending |
+| EQUP-10 | Phase 29 | Pending |
+| EQUP-11 | Phase 29 | Pending |
+| EQUP-12 | Phase 29 | Pending |
+| COMP-01 | Phase 30 | Pending |
+| COMP-02 | Phase 30 | Pending |
+| COMP-03 | Phase 30 | Pending |
+| COMP-04 | Phase 30 | Pending |
+| COMP-05 | Phase 30 | Pending |
+| COMP-06 | Phase 30 | Pending |
+| COMP-07 | Phase 30 | Pending |
+| COMP-08 | Phase 30 | Pending |
+| COMP-09 | Phase 30 | Pending |
+| COMP-10 | Phase 30 | Pending |
+| COMP-11 | Phase 30 | Pending |
+| COMP-12 | Phase 30 | Pending |
+| INTG-01 | Phase 28 | Pending |
+| INTG-02 | Phase 30 | Pending |
+| INTG-03 | Phase 29 | Pending |
+| INTG-04 | Phase 29 | Pending |
+| INTG-05 | Phase 29 | Pending |
+| INTG-06 | Phase 29 | Pending |
 
 **Coverage:**
 - v6.0 requirements: 45 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 45
+- Mapped to phases: 45/45 (100%)
+- Unmapped: 0
+
+**Distribution:**
+- Phase 27.1 (Storage): 3 requirements
+- Phase 28 (Magic): 13 requirements (12 MGIC + 1 INTG)
+- Phase 29 (Equipment): 16 requirements (12 EQUP + 4 INTG)
+- Phase 30 (Companions): 13 requirements (12 COMP + 1 INTG)
 
 ---
 *Requirements defined: 2026-02-12*
-*Last updated: 2026-02-12 after initial definition*
+*Last updated: 2026-02-12 — traceability complete, 100% coverage*

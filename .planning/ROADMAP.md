@@ -2,23 +2,24 @@
 
 ## Milestones
 
-- SHIPPED **v2.0 Player Experience Overhaul** — Phases 1-9 (shipped 2026-02-08) → [archive](milestones/v2.0-ROADMAP.md)
-- PARTIAL **v3.0 Infrastructure & Polish** — Phases 10-11 complete, 12-13 deferred (2026-02-09) → [archive](milestones/v3.0-ROADMAP.md)
-- SHIPPED **v4.0 Game Soul & Polish** — Phases 14-18 (shipped 2026-02-10) → [archive](milestones/v4.0-ROADMAP.md)
-- SHIPPED **v5.0 The Real Game** — Phases 19-26 (shipped 2026-02-11)
+- ✅ **v2.0 Player Experience Overhaul** — Phases 1-9 (shipped 2026-02-08) → [archive](milestones/v2.0-ROADMAP.md)
+- ✅ **v3.0 Infrastructure & Polish** — Phases 10-11 complete, 12-13 deferred (2026-02-09) → [archive](milestones/v3.0-ROADMAP.md)
+- ✅ **v4.0 Game Soul & Polish** — Phases 14-18 (shipped 2026-02-10) → [archive](milestones/v4.0-ROADMAP.md)
+- ✅ **v5.0 The Real Game** — Phases 19-26 (shipped 2026-02-11)
+- 🚧 **v6.0 Combat & RPG** — Phases 27.1, 28-30 (in progress)
 
 ## Overview
 
-v5.0 transforms GoGo Arabic from a learning app with game skin into an actual game. Players will enter a world that feels alive, purposeful, and structured — where every building can be explored, every object tells a story, and every NPC conversation teaches Arabic in meaningful context. The transformation happens across 8 phases: first establishing narrative infrastructure, then building the dialogue engine that powers all interactions, redesigning onboarding to hook players in 90 seconds, making buildings enterable with interior maps, filling the world with 100+ interactive objects, creating structured progression that always tells players what to do next, integrating vocabulary into the world so learning feels natural, and finally weaving personalized narrative branching throughout.
+v6.0 transforms the battle engine foundation (Phase 27) into a complete combat RPG system. Players will master Arabic through root-based magic where trilateral roots become spells, manage equipment with Arabic affix vocabulary, and recruit 12 AI companions who teach Arabic through conversation and battle. The roadmap addresses the critical localStorage overflow blocker first, then builds the three core systems in dependency order: magic (the educational core), equipment (enhances magic via affinity bonuses), and companions (interact with both systems).
 
 ## Phases
 
 **Phase Numbering:**
-- Integer phases (19-26): Planned v5.0 milestone work
-- Decimal phases (e.g., 19.1): Urgent insertions (marked with INSERTED)
+- Integer phases (1-30): Planned milestone work
+- Decimal phases (27.1): Urgent insertions between phases (marked INSERTED)
 
 <details>
-<summary>v2.0 Player Experience Overhaul (Phases 1-9) — SHIPPED 2026-02-08</summary>
+<summary>✅ v2.0 Player Experience Overhaul (Phases 1-9) — SHIPPED 2026-02-08</summary>
 
 - [x] Phase 1: Critical Fixes (2/2 plans) — 2026-02-08
 - [x] Phase 2: Player Guidance (2/2 plans) — 2026-02-08
@@ -33,7 +34,7 @@ v5.0 transforms GoGo Arabic from a learning app with game skin into an actual ga
 </details>
 
 <details>
-<summary>v3.0 Infrastructure & Polish (Phases 10-11) — PARTIAL 2026-02-09</summary>
+<summary>✅ v3.0 Infrastructure & Polish (Phases 10-11) — PARTIAL 2026-02-09</summary>
 
 - [x] Phase 10: Testing Foundation (6/6 plans) — 2026-02-09
 - [x] Phase 11: Architecture Cleanup (5/5 plans) — 2026-02-09
@@ -43,7 +44,7 @@ v5.0 transforms GoGo Arabic from a learning app with game skin into an actual ga
 </details>
 
 <details>
-<summary>v4.0 Game Soul & Polish (Phases 14-18) — SHIPPED 2026-02-10</summary>
+<summary>✅ v4.0 Game Soul & Polish (Phases 14-18) — SHIPPED 2026-02-10</summary>
 
 **Milestone Goal:** Transform GoGo Arabic from a learning app with RPG graphics into a game that feels alive — with audio, atmosphere, clear progression, interactive world, and triple-A polish.
 
@@ -55,155 +56,141 @@ v5.0 transforms GoGo Arabic from a learning app with game skin into an actual ga
 
 </details>
 
-### v5.0 The Real Game (Shipped 2026-02-11)
+<details>
+<summary>✅ v5.0 The Real Game (Phases 19-26) — SHIPPED 2026-02-11</summary>
 
 **Milestone Goal:** Transform GoGo Arabic from a learning app with game skin into an actual game — epic personalized narrative, living interactive world, and guided structure from minute one.
 
-- [x] **Phase 19: Infrastructure & Architecture** - EventBus refactor, narrativeSlice, foundation systems
-- [x] **Phase 20: Dialogue System** - DialogueEngine, rich NPC conversations, branching
-- [x] **Phase 21: Guided Onboarding & Mentor** - 90-second tutorial, mentor character, first mission
-- [x] **Phase 22: Buildings & Interiors** - SceneStackManager, enterable buildings, 15 interior maps
-- [x] **Phase 23: Interactive Objects & World Life** - 142 objects, world depth, exploration rewards
-- [x] **Phase 24: Structured Progression & Gates** - Zone gates, quest chains, "what to do next"
-- [x] **Phase 25: Vocabulary Integration** - Contextualized learning, dialogue-taught words, semantic clusters
-- [x] **Phase 26: Narrative Branching & Polish** - Personalized story, choices, UX polish
+- [x] Phase 19: Infrastructure & Architecture (4/4 plans) — 2026-02-11
+- [x] Phase 20: Dialogue System (6/6 plans) — 2026-02-11
+- [x] Phase 21: Guided Onboarding & Mentor (1/1 plan) — 2026-02-11
+- [x] Phase 22: Buildings & Interiors (3/3 plans) — 2026-02-11
+- [x] Phase 23: Interactive Objects & World Life (1/1 plan) — 2026-02-11
+- [x] Phase 24: Structured Progression & Gates (1/1 plan) — 2026-02-11
+- [x] Phase 25: Vocabulary Integration (1/1 plan) — 2026-02-11
+- [x] Phase 26: Narrative Branching & Polish (1/1 plan) — 2026-02-11
 
-## Phase Details
+</details>
 
-### Phase 19: Infrastructure & Architecture
-**Goal**: Establish narrative state management and EventBus architecture to support all v5.0 features without technical debt
-**Depends on**: Nothing (foundation for v5.0)
-**Requirements**: INFR-01, INFR-02, INFR-03, INFR-04, INFR-05, INFR-06, INFR-07, INFR-08, INFR-09, INFR-10
+### 🚧 v6.0 Combat & RPG (In Progress)
+
+**Milestone Goal:** Build the combat and RPG core — root-based magic system where Arabic roots become spells, equipment with Arabic-named items, and 12 AI companions that teach Arabic through conversation and battle.
+
+**Foundation:** Phase 27 battle engine already committed (~2.6K LOC) with BattleScene, 17-state FSM, 5 player actions, Arabic accuracy = damage, 10 elemental VFX, 21 enemies, battleSlice, BattleOverlay/BattleMenu React components.
+
+**Note:** Phase 27 exists but has gaps (no world integration, rewards not wired, no FSRS sync). These gaps are addressed by v6.0 integration requirements.
+
+---
+
+### Phase 27.1: IndexedDB Migration (INSERTED)
+
+**Goal:** Prevent save data loss by migrating FSRS cards and battle history to IndexedDB before adding new equipment/companion/magic state.
+
+**Depends on:** Phase 27 (battle engine foundation)
+
+**Requirements:** STOR-01, STOR-02, STOR-03
+
 **Success Criteria** (what must be TRUE):
-  1. useEventBusListeners refactored from monolithic 380 LOC into 4+ domain-specific hooks with consistent cleanup
-  2. narrativeSlice exists in Redux store tracking story flags, NPC relationships, and world object states with full persistence
-  3. All existing 548 tests pass without regressions after infrastructure changes
-  4. EventBus uses namespaced naming convention with centralized registry preventing event conflicts
-  5. Build bundle remains under 500KB after all infrastructure additions
-**Plans:** 4 plans
+1. Player's existing FSRS cards (up to 5,000+) are stored in IndexedDB, not localStorage
+2. Player's battle history is stored in IndexedDB with query API for recent battles
+3. Player sees a warning toast when storage usage exceeds 80% of quota
+4. Player's existing save data auto-migrates from localStorage to IndexedDB on first load after update with zero data loss
+5. Redux-persist continues to work with hybrid storage (lightweight state in localStorage, heavy data in IndexedDB)
+
+**Plans:** TBD
 
 Plans:
-- [x] 19-01-PLAN.md — EventBus namespaced registry + atomic rename across 21 files
-- [x] 19-02-PLAN.md — narrativeSlice creation + store/test tooling updates + sceneMock extension
-- [x] 19-03-PLAN.md — useEventBusListeners refactor into 5 domain sub-hooks
-- [x] 19-04-PLAN.md — SceneStackManager + Zod dialogue JSON validation
+- [ ] 27.1-01: TBD
 
-### Phase 20: Dialogue System
-**Goal**: NPCs become real characters with personality, multi-topic conversations, and the ability to teach vocabulary through meaningful dialogue
-**Depends on**: Phase 19 (needs narrativeSlice for relationship tracking, condition evaluation)
-**Requirements**: DLGE-01, DLGE-02, DLGE-03, DLGE-04, DLGE-05, DLGE-06, DLGE-07, DLGE-08, DLGE-09, DLGE-10, DLGE-11, DLGE-12, DLGE-13, DLGE-14
+---
+
+### Phase 28: Root Magic & Elemental Affinity
+
+**Goal:** Players master Arabic trilateral roots through spell casting, where root mastery and FSRS vocabulary accuracy determine spell power, and elemental affinity emerges through gameplay choices.
+
+**Depends on:** Phase 27.1 (IndexedDB migration prevents state overflow)
+
+**Requirements:** MGIC-01, MGIC-02, MGIC-03, MGIC-04, MGIC-05, MGIC-06, MGIC-07, MGIC-08, MGIC-09, MGIC-10, MGIC-11, MGIC-12, INTG-01
+
 **Success Criteria** (what must be TRUE):
-  1. Player can have hub-and-spoke conversations with NPCs selecting from 3+ topics (lore, teaching, gossip, quests)
-  2. At least 30 NPCs across zones have deep conversation trees with distinct personality and speech patterns
-  3. NPC dialogue changes based on quest state and story progression with new topics unlocking dynamically
-  4. Player choices in dialogue affect NPC relationship levels tracked as 0-5 trust meter per NPC
-  5. Dialogue can trigger effects: start/complete quests, give items, unlock areas, teach words, change NPC state
-**Plans:** 6/6 complete
+1. Player can discover 50 Arabic root-element mappings through NPC dialogue and exploration (e.g., ك-ت-ب = knowledge element)
+2. Player can cast spells in battle by selecting a discovered root, with spell damage scaling based on root mastery (FSRS vocabulary accuracy for derived words)
+3. Player has an MP bar that depletes on spell cast and fully recovers between battles
+4. Player can equip up to 6 spells in a hotbar for quick access during battle turn
+5. Player discovers primary and secondary elemental affinity through 50+ weighted choices (dialogue options, quest decisions, exploration behavior)
+6. Player's affinity grants observable spell power bonuses (2x for primary, 1.5x for secondary) shown in battle damage numbers
+7. Player can combine roots from different elements for combo effects (20 initial combos with distinct VFX)
+8. Player sees Arabic calligraphy particle VFX when casting spells, with 10 distinct element visuals
+9. Player's root mastery syncs bidirectionally with FSRS — learning derived words increments root XP, high root mastery suggests new derived words for review
+10. Player can upgrade spells by learning higher verb forms (Form I-X) of the same root, with visible tier indicators
+
+**Plans:** TBD
 
 Plans:
-- [x] 20-01-PLAN.md — DialogueEngine Phaser system + extended Zod schema + EVENTS constants
-- [x] 20-02-PLAN.md — useDialogue hub-and-spoke rewrite + effect execution wiring
-- [x] 20-03-PLAN.md — DialogueOverlay redesign + TopicSelectionMenu + VocabularyHighlight + RelationshipIndicator
-- [x] 20-04-PLAN.md — Upgrade 15 existing NPCs with personality, topics, conditions, effects
-- [x] 20-05-PLAN.md — Upgrade remaining 8 NPCs + add 7 new NPCs (30 total)
-- [x] 20-06-PLAN.md — WorldScene integration + test updates + manual verification
+- [ ] 28-01: TBD
 
-### Phase 21: Guided Onboarding & Mentor
-**Goal**: Player knows exactly what to do from second one — mentor-driven 90-second tutorial that teaches core loop and establishes purpose
-**Depends on**: Phase 20 (mentor uses DialogueEngine for all interactions)
-**Requirements**: ONBR-01, ONBR-02, ONBR-03, ONBR-04, ONBR-05, ONBR-06, ONBR-07, ONBR-08, ONBR-09, ONBR-10
+---
+
+### Phase 29: Equipment, Inventory & Economy
+
+**Goal:** Players manage equipment across 8 slots with stat bonuses, build a 200-item inventory with Arabic affix vocabulary, and practice Arabic numerals through shop haggling.
+
+**Depends on:** Phase 28 (equipment affects root spell power via affinity bonuses)
+
+**Requirements:** EQUP-01, EQUP-02, EQUP-03, EQUP-04, EQUP-05, EQUP-06, EQUP-07, EQUP-08, EQUP-09, EQUP-10, EQUP-11, EQUP-12, INTG-03, INTG-04, INTG-05, INTG-06
+
 **Success Criteria** (what must be TRUE):
-  1. New player meets mentor character within 30 seconds who explains purpose through in-world dialogue
-  2. Player completes guided first mission teaching core loop (explore → talk → quest → learn) in under 90 seconds
-  3. Player learns first Arabic word through narrative context within first minute
-  4. Old 6-step OnboardingFlow modal completely replaced with in-world mentor-driven playable quest
-  5. Mentor character findable throughout game for hints and guidance on what to do next
-**Plans:** 1/1 complete
+1. Player can equip items in 8 slots (head covering, robe, cloak, belt, boots, gloves, accessory 1, accessory 2) with visual updates to character sprite in both WorldScene and BattleScene
+2. Player can view stat comparison tooltips when inspecting equipment vs currently equipped items (HP/MP/damage/defense differences)
+3. Player can manage 200-item inventory with grid UI, sort by type/rarity/Arabic alphabetical order (abjad)
+4. Player sees items in 5 rarity tiers with Arabic color names (أبيض/أخضر/أزرق/بنفسجي/ذهبي for common/uncommon/rare/epic/legendary)
+5. Player can buy and sell items at zone-specific shops with dynamic inventory based on player level and world state (quest completion, zone unlocks)
+6. Player can haggle with shopkeepers using Arabic numerals (0-9999) in a negotiation mini-game, practicing number recognition
+7. Player's equipment bonuses only fully activate (100%) for items with Arabic affix words the player has learned via FSRS; unlearned affixes grant 50% bonus
+8. Player automatically learns new Arabic vocabulary when discovering items with unknown affix words, with immediate FSRS queue addition
+9. Player can view item lore snippets with historical/cultural context for each equipment piece
+10. Player benefits from set bonuses when wearing matching themed sets (Scholar's Set, Merchant's Set, etc.) with bonus indicators in equipment UI
+11. Battle rewards (XP, gold, items) from Phase 27 engine wire into player progression and inventory systems
+
+**Plans:** TBD
 
 Plans:
-- [x] 21-01-PLAN.md — Mentor NPC, guided first mission, in-world onboarding replacing modal
+- [ ] 29-01: TBD
 
-### Phase 22: Buildings & Interiors
-**Goal**: World depth — buildings become explorable spaces with NPCs, objects, and purpose instead of decorative facades
-**Depends on**: Phase 20 (interior NPCs need dialogue system), Phase 19 (scene lifecycle managed by proper architecture)
-**Requirements**: BLDG-01, BLDG-02, BLDG-03, BLDG-04, BLDG-05, BLDG-06, BLDG-07, BLDG-08, BLDG-09, BLDG-10, BLDG-11, BLDG-12
+---
+
+### Phase 30: Companion System
+
+**Goal:** Players recruit 12 faceless companions who act as AI allies in battle and language teachers in exploration, with relationship progression and adaptive Arabic dialogue.
+
+**Depends on:** Phase 29 (companions have equipment slots, give gifts requiring inventory)
+
+**Requirements:** COMP-01, COMP-02, COMP-03, COMP-04, COMP-05, COMP-06, COMP-07, COMP-08, COMP-09, COMP-10, COMP-11, COMP-12, INTG-02
+
 **Success Criteria** (what must be TRUE):
-  1. Player can enter at least 15 buildings across zones by interacting with doors
-  2. SceneStackManager handles building entry/exit via pause/launch/resume without memory leaks or freezes
-  3. Each interior has distinct purpose: shops, library, homes, guild, mosque with relevant NPCs and content
-  4. Player exits seamlessly by walking to door and returns to exact exterior position they entered from
-  5. Audio crossfades between exterior zone BGM and interior ambient when entering/exiting
-**Plans:** 3/3 complete
+1. Player can recruit 12 companions across zones (minimum 2 per major zone) through story/quest progression
+2. Player can form a party with max 2 active companions (1 for battle, 1 for exploration) and swap at any camp/rest point
+3. Player's battle companion acts autonomously during player turn using role-based AI (healer prioritizes low HP, attacker targets weakest enemy, defender protects player, support applies buffs)
+4. Player can track relationship level (0-100) with each companion via relationship bars in UI, affecting dialogue options and battle performance (higher relationship = better AI decisions)
+5. Player can give gifts to companions to increase relationship level (+5 to +20 based on gift quality/preference match)
+6. Player's exploration companion follows them in WorldScene and makes contextual Arabic comments about zones, objects, and events (200+ unique lines per companion)
+7. Each companion has a language teaching specialization (grammar/vocabulary/pronunciation/culture) that influences their dialogue content and corrections
+8. Companion dialogue complexity adapts to player's Arabic proficiency level (more Arabic at higher CEFR levels, more English/transliteration at A1)
+9. Companion sprites are faceless (Islamic art style) with distinctive silhouettes, flowing robes, and unique color palettes
+10. Player can view companion roster UI showing all 12 companions (recruited/unrecruited), relationship bars, teaching specializations, and recruitment hints
+11. All existing 592 tests pass after each phase — no regressions in core game systems
+
+**Plans:** TBD
 
 Plans:
-- [x] 22-01-PLAN.md — InteriorScene class + Phaser config + door-to-interior wiring + audio crossfade
-- [x] 22-02-PLAN.md — 15 interior map configs (5 templates) + zones.js door updates + building locks
-- [x] 22-03-PLAN.md — Interior NPC dialogue data + dynamic unlock hardening + integration verification
+- [ ] 30-01: TBD
 
-### Phase 23: Interactive Objects & World Life
-**Goal**: World feels alive and worth exploring — 100+ objects teach vocabulary, reward curiosity, and fill empty space with meaning
-**Depends on**: Phase 22 (objects live inside buildings), Phase 20 (object lore uses dialogue patterns)
-**Requirements**: OBJT-01, OBJT-02, OBJT-03, OBJT-04, OBJT-05, OBJT-06, OBJT-07, OBJT-08, OBJT-09, OBJT-10, OBJT-11, OBJT-12
-**Success Criteria** (what must be TRUE):
-  1. InteractableManager supports 8 new object types: market stalls, statues, paintings, fountains, lanterns, crates, barrels, cooking pots
-  2. At least 100 interactive objects placed across zones and interiors with contextual information
-  3. Objects teach vocabulary in semantic clusters aligned with zone themes (market = trade, library = knowledge)
-  4. Some objects change state based on quest progress (locked chest → unlockable, broken bridge → repaired)
-  5. Object discovery aided by subtle visual cues (sparkle, glow) from existing VFX system
-**Plans:** 1/1 complete
-
-Plans:
-- [x] 23-01-PLAN.md — 142 interactive objects across 8 zones and 15 interiors
-
-### Phase 24: Structured Progression & Gates
-**Goal**: Player always knows what to do next — structured progression with zone gates, quest chains, and visible objectives
-**Depends on**: Phase 22, Phase 23 (needs content to gate), Phase 20 (quest guidance uses dialogue)
-**Requirements**: PROG-01, PROG-02, PROG-03, PROG-04, PROG-05, PROG-06, PROG-07, PROG-08, PROG-09, PROG-10, PROG-11, PROG-12
-**Success Criteria** (what must be TRUE):
-  1. Zones gated by vocabulary mastery milestones with visible unlock requirements (e.g., "Learn 50 words to cross")
-  2. Player always has visible "next objective" indicator showing where to go (compass arrow, quest marker, HUD prompt)
-  3. Quest log shows clear next-step instructions for each active quest with progress percentage
-  4. Zone gates unlock visibly in world with animations (bridges repair, gates open, paths clear)
-  5. World Map shows zone lock/unlock status with specific requirements to unlock each zone
-**Plans:** 1/1 complete
-
-Plans:
-- [x] 24-01-PLAN.md — Quest tracker objectives, world map gates, next objective indicator
-
-### Phase 25: Vocabulary Integration & Contextualized Learning
-**Goal**: Arabic learning happens naturally through exploration — vocabulary taught in dialogue, objects, and quests instead of isolated quizzes
-**Depends on**: Phase 20 (dialogue system), Phase 23 (objects), Phase 24 (quest structure)
-**Requirements**: VCAB-01, VCAB-02, VCAB-03, VCAB-04, VCAB-05, VCAB-06, VCAB-07, VCAB-08, VCAB-09, VCAB-10, VCAB-11, VCAB-12, NARR-01, NARR-02
-**Success Criteria** (what must be TRUE):
-  1. At least 200 of 1,220 vocabulary words integrated into dialogue and world objects with narrative context
-  2. NPC dialogue teaches vocabulary naturally with highlighted Arabic words and inline translation hints
-  3. Each zone's NPCs teach vocabulary relevant to zone theme with each NPC owning 10-20 words
-  4. Arabic words in dialogue automatically added to FSRS review queue same as quiz-taught words
-  5. Difficulty of Arabic in dialogue adapts to player's mastery level (more known words → more Arabic)
-**Plans:** 1/1 complete
-
-Plans:
-- [x] 25-01-PLAN.md — vocabWords on 42 NPCs, vocabWordIds on 142 objects, teacher tracking
-
-### Phase 26: Narrative Branching & Polish
-**Goal**: Personalized journey — player choices matter, story branches, NPCs react, world changes, all with final UX polish
-**Depends on**: Phases 20-25 (needs all systems functional to branch meaningfully)
-**Requirements**: NARR-03, NARR-04, NARR-05, NARR-06, NARR-07, NARR-08, NARR-09, NARR-10, NARR-11, NARR-12, UXPL-01, UXPL-02, UXPL-03, UXPL-04, UXPL-05, UXPL-06
-**Success Criteria** (what must be TRUE):
-  1. At least 3 major branching points in main storyline where player choices lead to different quest outcomes
-  2. Main storyline spans all 8 zones with zone-specific arcs that tie into overarching goal
-  3. NPC relationship levels unlock exclusive dialogue topics, quests, and rewards at higher trust tiers
-  4. World state changes persist permanently (unlocked bridges, opened gates, completed transformations)
-  5. All new overlays accessible via keyboard with focus management and RTL Arabic text handling
-**Plans:** 1/1 complete
-
-Plans:
-- [x] 26-01-PLAN.md — Story arcs, branching quests, relationship-gated dialogue, RTL polish
+---
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 19 → 20 → 21 → 22 → 23 → 24 → 25 → 26
+Phases execute in numeric order: 1-26 (complete) → 27.1 → 28 → 29 → 30
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -233,7 +220,16 @@ Phases execute in numeric order: 19 → 20 → 21 → 22 → 23 → 24 → 25 �
 | 24. Structured Progression & Gates | v5.0 | 1/1 | Complete | 2026-02-11 |
 | 25. Vocabulary Integration | v5.0 | 1/1 | Complete | 2026-02-11 |
 | 26. Narrative Branching & Polish | v5.0 | 1/1 | Complete | 2026-02-11 |
+| 27.1. IndexedDB Migration | v6.0 | 0/? | Not started | - |
+| 28. Root Magic & Elemental Affinity | v6.0 | 0/? | Not started | - |
+| 29. Equipment, Inventory & Economy | v6.0 | 0/? | Not started | - |
+| 30. Companion System | v6.0 | 0/? | Not started | - |
+
+**Coverage:**
+- v6.0 requirements: 45 total (3 STOR, 12 MGIC, 12 EQUP, 12 COMP, 6 INTG)
+- Mapped to phases: 45/45 (100%)
+- Unmapped: 0
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-12 — v5.0 SHIPPED, all 8 phases (19-26) complete*
+*Last updated: 2026-02-12 — v6.0 roadmap created, phases 27.1, 28-30*

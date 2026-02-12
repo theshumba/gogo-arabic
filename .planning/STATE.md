@@ -5,15 +5,17 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v6.0 Combat & RPG — defining requirements
+**Current focus:** v6.0 Combat & RPG — Phase 27.1 (IndexedDB Migration)
 
 ## Current Position
 
 Milestone: v6.0 Combat & RPG
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-12 — Milestone v6.0 started
+Phase: 27.1 of 4 phases (IndexedDB Migration)
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-02-12 — v6.0 roadmap created
+
+Progress: [████████████████████████░░░░░░] 79% (47 of 60 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -45,16 +47,15 @@ Last activity: 2026-02-12 — Milestone v6.0 started
 
 All v2.0-v5.0 decisions logged in PROJECT.md Key Decisions table.
 
-Key v5.0 decisions:
-- EventBus: 35 namespaced constants, source:category:action format, frozen EVENTS object
-- narrativeSlice: story flags (50 max), NPC relationships (0-5 clamped), world object states
-- DialogueEngine: AND-combination conditions, event-based effects (teach_word, give_item)
-- useDialogue: greeting -> hub -> topic -> returning state machine
-- Hub-spoke: backward compatible with legacy linear flow
-- NPC personality: 8 distinct tones, culturally authentic Arabic catchphrases
-- All existing dialogue trees kept intact, new trees added alongside
+Key v6.0 roadmap decisions:
+- Phase 27.1 inserted as blocker before Phase 28 — localStorage overflow requires IndexedDB migration FIRST
+- Phase ordering: 27.1 (storage) → 28 (magic) → 29 (equipment) → 30 (companions) based on dependencies
+- Magic before equipment: Root magic is educational core, equipment enhances magic via affinity bonuses
+- Equipment before companions: Companions have equipment slots and give gifts requiring inventory
+- All 45 requirements mapped to phases (100% coverage), no orphans
 
 ### Phase 27 Foundation (already committed)
+
 - Turn-based BattleScene with 17-state FSM (BattleStateMachine)
 - 5 player actions (Attack/Magic/Item/Defend/Flee)
 - Arabic accuracy = damage multiplier (miss/partial/good/perfect)
@@ -64,7 +65,30 @@ Key v5.0 decisions:
 - 11 BATTLE_* EventBus constants
 - Gaps: no world integration, rewards not wired, no FSRS sync, no battle SFX, no tests
 
+### v6.0 Phase Structure
+
+**Phase 27.1: IndexedDB Migration (INSERTED)**
+- Requirements: STOR-01, STOR-02, STOR-03
+- 5 success criteria (FSRS cards to IndexedDB, battle history to IndexedDB, 80% quota warning, auto-migration, redux-persist hybrid)
+- Blocker for all other phases — prevents localStorage overflow
+
+**Phase 28: Root Magic & Elemental Affinity**
+- Requirements: MGIC-01 through MGIC-12, INTG-01
+- 10 success criteria (root discovery, spell casting, MP system, spell hotbar, affinity discovery, power bonuses, combos, VFX, FSRS sync, spell upgrades)
+- Depends on: Phase 27.1
+
+**Phase 29: Equipment, Inventory & Economy**
+- Requirements: EQUP-01 through EQUP-12, INTG-03, INTG-04, INTG-05, INTG-06
+- 11 success criteria (8 equipment slots, stat comparisons, 200-item inventory, rarity tiers, shops, haggling, vocab-locked affixes, auto-teach, item lore, set bonuses, battle rewards wiring)
+- Depends on: Phase 28
+
+**Phase 30: Companion System**
+- Requirements: COMP-01 through COMP-12, INTG-02
+- 11 success criteria (12 recruitable companions, party formation, battle AI, relationship tracking, gifting, exploration dialogue, teaching specializations, adaptive difficulty, faceless sprites, roster UI, regression testing)
+- Depends on: Phase 29
+
 ### Open Items Carried Forward
+
 - Audio asset files (MP3s) need to be created/sourced
 - Only 4 locked doors across 8 zones (partial coverage)
 - Backend hardening deferred since v3.0 (Phases 12-13)
@@ -72,17 +96,19 @@ Key v5.0 decisions:
 - No tests for Phase 27 battle code (~2.6K LOC)
 
 ### Blockers/Concerns
-None blocking. Phase 27 gaps will be addressed as needed.
+
+None blocking Phase 27.1 start.
 
 ### Pending Todos
+
 None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (v6.0 milestone started)
-Stopped at: Defining requirements
-Next step: Complete requirements definition and roadmap
+Last session: 2026-02-12 (v6.0 roadmap created)
+Stopped at: ROADMAP.md and STATE.md created
+Next step: Plan Phase 27.1 (IndexedDB Migration) via /gsd:plan-phase 27.1
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — v6.0 milestone started*
+*Last updated: 2026-02-12 — v6.0 roadmap complete, ready to plan Phase 27.1*
