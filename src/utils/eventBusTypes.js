@@ -170,8 +170,38 @@ export const EVENTS = Object.freeze({
   BUILDING_EXITED: 'phaser:scene:building-exited',
 
   // ────────────────────────────────────────────────
-  // BATTLE — Word Duel boss fight events
+  // BATTLE — Word Duel boss fight events (v5.0 legacy)
   // ────────────────────────────────────────────────
   /** React → React: display boss dialogue line during battle */
   BOSS_DIALOGUE: 'react:battle:boss-dialogue',
+
+  // ────────────────────────────────────────────────
+  // BATTLE v6.0 — Turn-based BattleScene events
+  // ────────────────────────────────────────────────
+
+  // React → Phaser BattleScene
+  /** React → Phaser: player selected an action (Attack/Magic/Item/Defend/Flee) */
+  BATTLE_ACTION_SELECTED: 'react:battle:action-selected',
+  /** React → Phaser: player submitted Arabic answer */
+  BATTLE_ARABIC_INPUT: 'react:battle:arabic-input',
+  /** React → Phaser: player chose to flee */
+  BATTLE_FLEE_REQUESTED: 'react:battle:flee-requested',
+  /** React → Phaser: player used an item */
+  BATTLE_ITEM_USED: 'react:battle:item-used',
+
+  // Phaser BattleScene → React
+  /** Phaser → React: battle initialized, show battle UI */
+  BATTLE_STARTED: 'phaser:battle:started',
+  /** Phaser → React: battle over, show results overlay */
+  BATTLE_ENDED: 'phaser:battle:ended',
+  /** Phaser → React: FSM state transition, update React menu */
+  BATTLE_STATE_CHANGED: 'phaser:battle:state-changed',
+  /** Phaser → React: show Arabic input prompt to player */
+  BATTLE_PROMPT_WORD: 'phaser:battle:prompt-word',
+  /** Phaser → React: animation done, enable next input */
+  BATTLE_TURN_RESOLVED: 'phaser:battle:turn-resolved',
+  /** Phaser → React: enemy is acting, show enemy intent */
+  BATTLE_ENEMY_ACTION: 'phaser:battle:enemy-action',
+  /** Phaser → React: combo counter changed */
+  BATTLE_COMBO_UPDATE: 'phaser:battle:combo-update',
 });
