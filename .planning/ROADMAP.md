@@ -72,7 +72,7 @@ v6.0 transforms the battle engine foundation (Phase 27) into a complete combat R
 
 </details>
 
-### 🚧 v6.0 Combat & RPG (In Progress)
+### v6.0 Combat & RPG (In Progress)
 
 **Milestone Goal:** Build the combat and RPG core — root-based magic system where Arabic roots become spells, equipment with Arabic-named items, and 12 AI companions that teach Arabic through conversation and battle.
 
@@ -97,10 +97,11 @@ v6.0 transforms the battle engine foundation (Phase 27) into a complete combat R
 4. Player's existing save data auto-migrates from localStorage to IndexedDB on first load after update with zero data loss
 5. Redux-persist continues to work with hybrid storage (lightweight state in localStorage, heavy data in IndexedDB)
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 27.1-01: TBD
+- [ ] 27.1-01-PLAN.md — IndexedDB adapter, quota service, and store migration to hybrid persistence
+- [ ] 27.1-02-PLAN.md — Tests for storage infrastructure and full regression verification
 
 ---
 
@@ -190,7 +191,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1-26 (complete) → 27.1 → 28 → 29 → 30
+Phases execute in numeric order: 1-26 (complete) -> 27.1 -> 28 -> 29 -> 30
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -220,7 +221,7 @@ Phases execute in numeric order: 1-26 (complete) → 27.1 → 28 → 29 → 30
 | 24. Structured Progression & Gates | v5.0 | 1/1 | Complete | 2026-02-11 |
 | 25. Vocabulary Integration | v5.0 | 1/1 | Complete | 2026-02-11 |
 | 26. Narrative Branching & Polish | v5.0 | 1/1 | Complete | 2026-02-11 |
-| 27.1. IndexedDB Migration | v6.0 | 0/? | Not started | - |
+| 27.1. IndexedDB Migration | v6.0 | 0/2 | Not started | - |
 | 28. Root Magic & Elemental Affinity | v6.0 | 0/? | Not started | - |
 | 29. Equipment, Inventory & Economy | v6.0 | 0/? | Not started | - |
 | 30. Companion System | v6.0 | 0/? | Not started | - |
@@ -232,4 +233,4 @@ Phases execute in numeric order: 1-26 (complete) → 27.1 → 28 → 29 → 30
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-12 — v6.0 roadmap created, phases 27.1, 28-30*
+*Last updated: 2026-02-12 — Phase 27.1 planned (2 plans)*
