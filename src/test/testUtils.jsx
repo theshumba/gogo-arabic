@@ -20,6 +20,7 @@ import narrativeReducer from '../store/slices/narrativeSlice.js';
 import magicReducer from '../store/slices/magicSlice.js';
 import inventoryReducer from '../store/slices/inventorySlice.js';
 import economyReducer from '../store/slices/economySlice.js';
+import companionReducer from '../store/slices/companionSlice.js';
 
 /**
  * Creates a test store with optional preloaded state.
@@ -45,6 +46,7 @@ export function createTestStore(preloadedState = {}) {
     magic: magicReducer,
     inventory: inventoryReducer,
     economy: economyReducer,
+    companions: companionReducer,
   });
 
   return configureStore({

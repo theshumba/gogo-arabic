@@ -271,4 +271,33 @@ export const EVENTS = Object.freeze({
   SHOP_RESTOCK: 'react:shop:restock',
   /** React → React: new Arabic word from equipment */
   AFFIX_DISCOVERED: 'react:equipment:affix-discovered',
+
+  // ────────────────────────────────────────────────
+  // COMPANION — Companion system events (Phase 30)
+  // ────────────────────────────────────────────────
+
+  /** React → Phaser: companion joined party */
+  COMPANION_RECRUITED: 'react:companion:recruited',
+  /** React → Phaser: companion removed from active party */
+  COMPANION_DISMISSED: 'react:companion:dismissed',
+  /** React → Phaser: active battle/exploration companion changed */
+  COMPANION_PARTY_CHANGED: 'react:companion:party-changed',
+  /** React → React: player gave gift to companion */
+  COMPANION_GIFT_GIVEN: 'react:companion:gift-given',
+  /** React → React: relationship level increased */
+  COMPANION_RELATIONSHIP_UP: 'react:companion:relationship-up',
+  /** Phaser → React: companion makes zone/object comment */
+  COMPANION_CONTEXTUAL_COMMENT: 'phaser:companion:contextual-comment',
+  /** Phaser → React: companion selected battle action */
+  COMPANION_BATTLE_ACTION: 'phaser:companion:battle-action',
+  /** Phaser → React: companion's turn began */
+  COMPANION_BATTLE_TURN_START: 'phaser:companion:turn-start',
+  /** Phaser → React: companion's turn ended */
+  COMPANION_BATTLE_TURN_END: 'phaser:companion:turn-end',
+  /** Phaser → React: companion started following player */
+  COMPANION_FOLLOW_START: 'phaser:companion:follow-start',
+  /** Phaser → React: companion stopped following */
+  COMPANION_FOLLOW_STOP: 'phaser:companion:follow-stop',
+  /** React → React: companion mood shifted */
+  COMPANION_MOOD_CHANGED: 'react:companion:mood-changed',
 });

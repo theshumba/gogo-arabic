@@ -18,6 +18,7 @@ import narrativeReducer from './slices/narrativeSlice.js';
 import magicReducer from './slices/magicSlice.js';
 import inventoryReducer from './slices/inventorySlice.js';
 import economyReducer from './slices/economySlice.js';
+import companionReducer from './slices/companionSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -42,10 +43,11 @@ import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
  * - Version 1: vocabulary + battle moved to IndexedDB, others remain in localStorage
  * - Version 2 (Phase 28): magic added to IndexedDB
  * - Version 3 (Phase 29): inventory added to IndexedDB, economy added to localStorage
+ * - Version 4 (Phase 30): companions added to IndexedDB
  *
  * Storage backends:
  * - localStorage (root): player, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, narrative, economy
- * - IndexedDB (nested): vocabulary, battle, magic, inventory
+ * - IndexedDB (nested): vocabulary, battle, magic, inventory, companions
  * - Not persisted (transient): ui, sync
  */
 
@@ -78,11 +80,19 @@ const inventoryPersistConfig = {
   migrate,
 };
 
+const companionPersistConfig = {
+  key: 'gogo-arabic-companions',
+  storage: indexedDBStorage,
+  version: CURRENT_VERSION,
+  migrate,
+};
+
 // Wrap heavy reducers with nested persistReducer
 const persistedVocabularyReducer = persistReducer(vocabularyPersistConfig, vocabularyReducer);
 const persistedBattleReducer = persistReducer(battlePersistConfig, battleReducer);
 const persistedMagicReducer = persistReducer(magicPersistConfig, magicReducer);
 const persistedInventoryReducer = persistReducer(inventoryPersistConfig, inventoryReducer);
+const persistedCompanionReducer = persistReducer(companionPersistConfig, companionReducer);
 
 // Root persist config (localStorage) — vocabulary, battle, magic, and inventory excluded (they have nested configs)
 const persistConfig = {
@@ -109,6 +119,7 @@ const rootReducer = combineReducers({
   magic: persistedMagicReducer, // IndexedDB (nested)
   inventory: persistedInventoryReducer, // IndexedDB (nested)
   economy: economyReducer,
+  companions: persistedCompanionReducer, // IndexedDB (nested)
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
