@@ -125,10 +125,13 @@ Plans:
 9. Player's root mastery syncs bidirectionally with FSRS — learning derived words increments root XP, high root mastery suggests new derived words for review
 10. Player can upgrade spells by learning higher verb forms (Form I-X) of the same root, with visible tier indicators
 
-**Plans:** TBD
+**Plans:** 4 plans
 
 Plans:
-- [ ] 28-01: TBD
+- [ ] 28-01-PLAN.md — Data foundation: magicSlice, spellData, elementCombos, EventBus events, store wiring
+- [ ] 28-02-PLAN.md — Core mechanics: RootMagicManager, AffinityTracker, rootFsrsSyncMiddleware, BattleStateMachine + DialogueEngine integration
+- [ ] 28-03-PLAN.md — UI + VFX: MagicOverlay hotbar, SpellMenu, RootDiscoveryToast, spell VFX in BattleEffectManager
+- [ ] 28-04-PLAN.md — Tests: magicSlice, middleware, manager, data integrity, full regression
 
 ---
 
@@ -222,7 +225,7 @@ Phases execute in numeric order: 1-26 (complete) -> 27.1 -> 28 -> 29 -> 30
 | 25. Vocabulary Integration | v5.0 | 1/1 | Complete | 2026-02-11 |
 | 26. Narrative Branching & Polish | v5.0 | 1/1 | Complete | 2026-02-11 |
 | 27.1. IndexedDB Migration | v6.0 | 2/2 | Complete | 2026-02-12 |
-| 28. Root Magic & Elemental Affinity | v6.0 | 0/? | Not started | - |
+| 28. Root Magic & Elemental Affinity | v6.0 | 0/4 | Planned | - |
 | 29. Equipment, Inventory & Economy | v6.0 | 0/? | Not started | - |
 | 30. Companion System | v6.0 | 0/? | Not started | - |
 
@@ -233,4 +236,4 @@ Phases execute in numeric order: 1-26 (complete) -> 27.1 -> 28 -> 29 -> 30
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 27.1 planned (2 plans)*
+*Last updated: 2026-02-12 — Phase 28 planned (4 plans)*
