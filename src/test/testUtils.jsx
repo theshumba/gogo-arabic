@@ -17,6 +17,9 @@ import dailyGoalsReducer from '../store/slices/dailyGoalsSlice.js';
 import battleReducer from '../store/slices/battleSlice.js';
 import grammarReducer from '../store/slices/grammarSlice.js';
 import narrativeReducer from '../store/slices/narrativeSlice.js';
+import magicReducer from '../store/slices/magicSlice.js';
+import inventoryReducer from '../store/slices/inventorySlice.js';
+import economyReducer from '../store/slices/economySlice.js';
 
 /**
  * Creates a test store with optional preloaded state.
@@ -39,6 +42,9 @@ export function createTestStore(preloadedState = {}) {
     battle: battleReducer,
     grammar: grammarReducer,
     narrative: narrativeReducer,
+    magic: magicReducer,
+    inventory: inventoryReducer,
+    economy: economyReducer,
   });
 
   return configureStore({

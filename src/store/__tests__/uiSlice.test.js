@@ -31,6 +31,7 @@ describe('uiSlice', () => {
         signData: null,
         objectInspectData: null,
         notification: null,
+        inventoryOpen: false,
       });
     });
   });
