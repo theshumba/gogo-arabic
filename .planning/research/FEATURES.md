@@ -1,282 +1,457 @@
-# Feature Landscape
+# Feature Research: Root Magic, Equipment, & Companion Systems
 
-**Domain:** Language Learning RPG (v5.0 — The Real Game)
-**Researched:** 2026-02-10
+**Domain:** Arabic Learning RPG — Language-based spell systems, inventory/economy, AI companions
+**Researched:** 2026-02-12
+**Confidence:** MEDIUM (based on RPG genre conventions + existing game architecture analysis)
 
-## Table Stakes
-
-Features users expect. Missing = product feels incomplete.
-
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| **Guided Onboarding with Mentor** | Players expect to know where to go and what to do. Research shows "reducing friction" and "bite-sized interactive guidance" are critical. Pokemon/Zelda establish world rules through mentor figures. Owner feedback: "I don't know what I'm doing." | Medium | Already have 6-step control tutorial. Need narrative mentor NPC who explains game loop (explore → talk to NPCs → accept quests → learn Arabic → progress). Tutorial research: "Playable game tutorials immerse players in interactive learning experiences where they learn while completing a mission or quest." Requires new mentor character, extended dialogue system, 30-60 minute tutorial quest chain. Affects: NPCManager, DialogueBox, quest system. |
-| **Clear Quest Progression Markers** | Players expect "I know where I'm supposed to go" (owner feedback). Research: "Add mini-goals...clear visual cues to show progress." Pokemon uses badge system, Zelda uses dungeons. | Low | Already have quest markers (!/?) + compass + active quest HUD. Need: quest log with progress tracking, "next step" clarity in quest descriptions, zone-level objectives visible in world map, quest chain visualization. Quick win: enhance existing UI. Affects: UI components, quest slice. |
-| **Enterable Buildings / Interior Maps** | Empty world syndrome: "just houses and pillars" (owner feedback). Research: "preventing empty, boring spaces that feel lifeless" is cardinal sin of open-world design. RPGs establish world depth through explorable interiors. Pokemon gyms, Zelda temples, Stardew Valley shops all use interiors. | High | Currently all buildings are decorative facades. Need interior map system (separate Phaser scenes), zone transition triggers on doors, interior tilemap assets. Research: "For exploration/puzzles, separate areas are better." Estimated 15-20 key interiors (shops, homes, library, mosque, guild halls) across 8 zones. Interior design principles: "central focus point for each map, consideration of what purpose player has to enter." Affects: MapLoader, InteractableManager, zones.js, art pipeline. |
-| **Rich NPC Conversations** | "NPCs don't feel like people" (owner feedback). Research: "hub-and-spoke dialogue structures, condition-based branching create authentic interactions." Modern 2026 systems use "NPCs to understand and respond to player commands and inquiries naturally." Pokemon NPCs give world lore + hints, Stardew Valley NPCs remember player actions. | High | Currently NPCs only give quests or are decorative. Need branching dialogue system with hub-and-spoke structure (central hub node with topic spokes), personality traits per NPC, relationship tracking, multiple conversation topics per NPC (greetings, lore, teaching, gossip). Research: "Conditions are logical checks...based on player stats, quest completion, possession of items." Estimated 140 NPCs need personality pass, 30-40 need deep multi-topic conversations. Requires new DialogueManager system, conversation state tracking in Redux NPC slice. Affects: NPCManager, new dialogue UI components, npc slice. |
-| **Interactive World Objects** | Research: "Interactive environmental triggers actively respond to player presence...doors that creak open or symbols revealed...foster moments of discovery." Zelda's core design pillar is "thinking about how to proceed" via interactive objects. Players expect pixel-art RPG objects to be inspectable. | Medium | Currently world is static except NPCs/doors. Need: inspectable objects (signs, bookshelves, chests, containers), collectibles (hidden items, lore scrolls), environmental storytelling props (posters, inscriptions). Research: "Environmental storytelling uses design of environments, buildings, objects to expand narrative." Extend InteractableManager to support object types beyond quest triggers. Estimated 100-150 interactive objects across 8 zones. Affects: InteractableManager, new ItemManager system, asset creation pipeline. |
-| **Contextualized Vocabulary in Narrative** | Research: "Vocabulary learning is more effective when learners engage with words through multiple sensory modalities such as images, sounds, and actions." Krashen's Input Hypothesis: "language is acquired by understanding input that contains material slightly beyond current level (i+1), with help of context." Optimal comprehensibility: 95-98% of input should be known. | High | Currently vocabulary is siloed in quiz system (decontextualized). Research shows "contextualized and decontextualized word-focused instruction benefit vocabulary learning in a complementary way." Need: target words appear in NPC dialogue with in-line translation hints, quest descriptions use learned vocabulary, world signage/objects teach words in semantic clusters (market vocabulary in market zone, home vocabulary in residential areas). Rethink vocab delivery across all 1,220 words. Affects: quest content, NPC dialogue system, vocabulary slice, UI tooltip system. |
-| **Structured Learning Progression** | "There's no structure" (owner feedback). Research: "levels themselves become narrative vehicles" with "spatial layout and interactive objects convey plot and context." Pokemon gates progress with gym badges, Zelda with dungeon items. Educational games need "always know what to do next." | Medium | Have Learning Path UI (alphabet → vocab → grammar) but not enforced in world. Need: zone gating based on vocabulary mastery (blocked paths open when milestones reached), unlock progression visible in world state (bridge repairs when quest complete, gates open at level threshold), achievement-based access to new areas. Research: "reducing friction...begin with basic elements and allow players to demonstrate competency before moving to advanced objectives." Affects: zone transitions, quest prerequisites, player progression logic, world state in Redux. |
-| **Narrative-Driven Tutorials** | Research: "Playable game tutorials immerse players...integrated seamlessly into game's initial stages." "Invisible tutorials integrate gameplay instructions subtly into mechanics." Core principle: teach while playing, don't interrupt play to teach. | Medium | Current tutorial is mechanical (movement controls only, 6 basic steps). Need: first 30-60 minutes as narrative quest chain teaching game loop + Arabic basics through story. Mentor character guides through first vocabulary lessons as part of narrative arc. Research best practices: "teach one step at a time using short and clear instructions" and "blend tutorial into game's narrative to create stronger connection." Tutorial should feel like prologue chapter, not separate mode. Affects: onboarding flow, mentor NPC system, tutorial quest design. |
-
-## Differentiators
-
-Features that set product apart. Not expected, but valued.
-
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| **Branching Personalized Narrative** | Research: "AI algorithms enable NPCs to adjust behavioral patterns" based on player choices. "Machine learning models analyze player decisions in real time and adjust behavioral patterns." Makes each playthrough unique, increases replayability, creates emotional investment. | High | Track player learning style preferences (visual/auditory/kinesthetic based on quiz performance), dialogue tone choices (formal/casual), quest approach (completionist vs speedrunner, helper vs solo). Unlock unique quest branches, NPC relationship outcomes, zone storylines based on personality profile. Research: "Companion characters whose dialogue and reactions evolve over time—not just through branching scripts, but through learned understanding of player choices." Requires player profile analysis system in Redux + conditional quest/dialogue variants + relationship tracking. Estimated 3-5 major branching points across main storyline. High differentiation in language learning space. Affects: quest system, dialogue system, new personality tracking slice. |
-| **FSRS-Integrated Quest Rewards** | Already have FSRS spaced repetition for vocab + 52 quests. Differentiator: quests dynamically unlock based on spaced repetition schedule. "Ready to review Market vocabulary? A merchant in Zone 3 needs help!" Transforms "review session" into "new narrative moment." | Medium | Research: "Spaced repetition is proven to have positive effect on long-term retention...game-based learning maintains learner motivation by reducing boredom of repetition-based learning." Bridge existing systems intelligently: when FSRS schedules review session, generate contextual quest that uses those target words. Player experiences review as gameplay, not studying. Requires FSRS → quest generation pipeline, dynamic quest templates with vocab slots, quest scheduling system. Estimated 20-30 dynamic quest templates across zones. Affects: FSRS integration, quest system, new quest generation logic. |
-| **Living World Events** | Research: "dynamically generate worlds, quests, and narratives tailored to individual player preferences." Time-of-day NPCs, seasonal festivals, dynamic NPC schedules create "NPCs feel like people" (addresses owner feedback). | High | NPCs have daily routines (morning market, afternoon home, evening tavern). Special events trigger contextualized vocab reviews (festival = food vocabulary day, celebration = greeting vocabulary focus). Research: "For environment to feel alive, it needs to be ecosystem that could live without player being there." Requires NPC schedule system (time-of-day position mapping), time-of-day world state changes, event calendar with triggers. Stardew Valley does this extensively. Estimated 30-40 NPCs with schedules, 8-12 annual events. High implementation cost but creates unique "living Arabic world" feeling. Affects: NPC system, new time system, event calendar, world state management. |
-| **Environmental Arabic** | Research: "Environmental storytelling arranging objects so they suggest a story." Differentiator: all world text (signs, books, posters, shop names) in Arabic with hover/inspect translation. Creates "living in Arabic-speaking world" immersion. Aligns with comprehensible input theory (95-98% known, 2-5% new in context). | Medium | Zone signage, shop names, book text, posters, graffiti all display Arabic script. Hover/inspect shows translation + highlights related vocabulary words player knows/is learning. Research: "contextual diversity...number of texts a word appears in improves recall and recognition." Creates naturalistic exposure to written Arabic in varied contexts. Affects all 8 zones, asset creation pipeline (Arabic text rendering), new translation tooltip UI, vocabulary tracking. Educational literature strongly supports this approach. |
-| **Adaptive Difficulty Paths** | Research: games need "the right level of complexity so learners should not be bored or frustrated." "Games must be well-designed and with right level of complexity." Beginners get more scaffolding, advanced learners get challenge mode quests. | Medium | Track player performance metrics (quiz accuracy, review frequency, time-to-completion, hint usage). Dynamically adjust: hint frequency in quests, quest complexity (number of steps), vocabulary density in NPC dialogue, enemy difficulty in Word Duels. Offer explicit "Easy/Normal/Hard" path choices for same content. Research: "adjusting difficulty as you move from area to area, mirroring rising and falling action of storytelling...because of variety in moods, no one mood overstays welcome." Requires analytics pipeline in Redux, difficulty modifier system, performance tracking. Affects: quest system, quiz system, battle system, UI difficulty selector. |
-| **Voice Acting for Key NPCs** | Research: "multimodal learning strategies...vocabulary acquisition...through multiple sensory modalities such as images, sounds, and actions." Hearing native Arabic pronunciation in narrative context > text alone. 2026 language acquisition research emphasizes multimodal approaches. | Medium | 10-15 key NPCs (mentor, zone leaders, recurring quest characters) have voiced Arabic dialogue with Arabic + English subtitles. Reinforces listening comprehension, provides pronunciation modeling, creates emotional connection to characters. Research: "repeated exposure to target vocabulary and immersive nature of game environment" improves retention. Requires voice actor recording pipeline (native Arabic speakers), audio file management, subtitle sync system. Estimated 200-300 dialogue lines voiced. Affects: dialogue system, audio pipeline, subtitle UI. Production complexity but high educational + immersion value. |
-| **Co-op Learning Mode** | Research: "cooperation...and motivation" improve in multiplayer educational games. Two players progress through world together, quiz together, share vocabulary progress, unlock cosmetics together. Social accountability increases retention. | Very High | Multiplayer RPG architecture: requires dedicated game server (Express backend extension or dedicated game server), real-time position sync, co-op quest design (both players must contribute), shared progress tracking, voice chat or text chat for practice. HIGH COMPLEXITY: networking, latency handling, synchronization, anti-cheat for quiz mode. Likely Phase 2-3 feature within v5.0 or separate v6.0 milestone. Very high differentiation (no language learning RPG offers true co-op). Affects: entire architecture (client-server model), all game systems need multiplayer variants. Defer to later milestone or separate roadmap item. |
-
-## Anti-Features
-
-Features to explicitly NOT build.
-
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| **Jeopardy-Style Quiz Mini-Games** | Research: educational games suffer from "Jeopardification...most educational games resemble some sort of Jeopardy format." Problem: "designers have leaned too far towards making games educational rather than entertaining and engaging." Already have 6 quiz types. | Integrate vocabulary review into narrative through contextual quests. Quiz sessions should feel like quest challenges, not separate mini-game distractions. Keep existing Word Duel (battle system) as it's Pokemon-style integration. Don't add more isolated quiz modes. Focus on contextualized learning through gameplay. |
-| **Leaderboards / Competitive Rankings** | Research: "Badges, leaderboards, competitions, and points are the game design elements most often reported as causing negative effects" including "lack of effect, worsened performance, motivational issues, lack of understanding, and irrelevance." Educational context: can create anxiety, undermine intrinsic motivation. Pokemon recent criticism: competitive features create stress. | Keep existing achievements + daily goals (personal progress tracking). Show opt-in friend progress (cooperative not competitive). No global leaderboards or competitive rankings. Research: "relying too heavily on extrinsic motivators may undermine intrinsic motivation." Focus on cooperative multiplayer (if implemented), not competitive rankings. |
-| **Dialogue Choices That Don't Matter** | Research: "failure to achieve meaningful gamification" is key problem. Fake choices = player distrust, breaks immersion. "Dynamic world should feel responsive to player actions." Zelda gives real progression consequences. If adding branching dialogue, choices must have consequences. | Only add dialogue branches if they affect: quest outcomes, NPC relationships, vocabulary learning context, or world state changes. Fewer meaningful choices > many shallow choices. Research: hub-and-spoke dialogue works when conditions actually gate content. Track relationship scores, quest flags, learning progress to make choices meaningful. |
-| **Gatcha / Loot Box Cosmetics** | Creates "overpriced and low quality product" perception (Pokemon recent criticism about quality). Predatory monetization undermines educational product trust. Parents/educators won't recommend game with gambling mechanics. Free-to-play language learning apps already criticized for aggressive monetization. | Keep existing Wardrobe system (12 outfits earned through achievements). New cosmetics = quest rewards, milestone unlocks, achievement rewards, not randomized. Transparent progression: player knows how to earn every cosmetic. Educational games should be ethical in monetization if monetization exists at all. |
-| **Daily Login Rewards (Skinner Box)** | Research: "relying too heavily on extrinsic motivators may undermine intrinsic motivation." Daily streaks with passive rewards create obligation not engagement, guilt if missed. Can backfire by making learning feel like chore, not choice. | Keep daily goals system (active engagement: complete quests, practice words, earn XP). Don't add passive "log in for gems/coins" mechanics. Reward play time and learning activity, not login time. Research supports active engagement over passive rewards for educational outcomes. Spaced repetition should feel like natural practice rhythm, not guilt-inducing streak pressure. |
-| **Explanatory Cutscenes** | Research: "levels themselves become narrative vehicles...players explore and interpret stories through their interactions with the world." 2026 trend: "Immersion will no longer depend solely on dialogue or cutscenes." Show don't tell principle. Long exposition dumps bore players. | Use environmental storytelling, NPC conversations (player-initiated, not forced), discoverable lore items (books, inscriptions). No 5-minute unskippable exposition cutscenes. Pokemon's "wish fulfillment by world design" works because you experience it. Tutorial should be playable, not cinematic. Research: "invisible tutorials integrate instructions subtly into gameplay mechanics." |
-| **Sandbox Mode Without Structure** | Research: "simply dropping a person into an empty sandbox yields limited fun" and "players need toys, prompts, or challenges to give their creativity direction." Owner feedback confirms: "no structure" is current problem. | Always provide "next objective" clarity even in open world. Offer optional guided path (recommended quest order) + free exploration, not forced linearity. Research: "best player-driven worlds strike balance by transforming predetermined narrative into dynamic, responsive narrative, preserving sense of purpose while allowing players to deviate." Clear objectives + freedom to approach how you want = good structure. |
-| **Decontextualized Flashcard Mode** | Research: "games that are too text-heavy will turn students off" and traditional flashcard apps lack engagement. "contextualized and decontextualized...benefit vocabulary learning in a complementary way" BUT game's value is contextualized learning (differentiator). | Don't add pure flashcard deck mode separate from game. Vocabulary must appear in game context first (NPC dialogue, quests, world objects), quiz mode second for reinforcement. Already have quiz system for decontextualized practice. Don't duplicate Anki/Quizlet—they do flashcards better. Focus on what game does uniquely: context-rich immersive learning. |
-| **Every Building Interior** | Sounds comprehensive but research warns: "art/design workload explosion, most interiors would be empty filler." RPG design: functional buildings > decorative interiors. Stardew Valley has ~30 interiors across entire town, not 100+. | Focus on 10-15 key building interiors with narrative/gameplay purpose (shops for items, library for books/lore, mosque for cultural lessons, guild for quests, mentor's home for tutorial, 5-8 NPC homes for relationship quests). Rest are exterior-only with signage or locked doors with "Locked" feedback. Quality over quantity. Research: "For simple vendors, avoid area transitions." |
-
-## Feature Dependencies
-
-```
-Guided Onboarding with Mentor
-  ├─→ Rich NPC Conversations (mentor needs dialogue system)
-  ├─→ Narrative-Driven Tutorials (mentor character delivers tutorial narrative)
-  └─→ Clear Quest Progression Markers (mentor teaches quest system mechanics)
-
-Rich NPC Conversations
-  ├─→ Branching Personalized Narrative (conversations track player preferences)
-  ├─→ Contextualized Vocabulary in Narrative (conversations use target words)
-  └─→ Living World Events (NPCs reference events in dialogue, schedules affect availability)
-
-Enterable Buildings / Interior Maps
-  ├─→ Interactive World Objects (interiors contain inspectable objects, lore items)
-  ├─→ Environmental Arabic (interiors have Arabic signage, books, posters)
-  └─→ Rich NPC Conversations (interior locations enable private/important conversations)
-
-Structured Learning Progression
-  ├─→ Clear Quest Progression Markers (progression system unlocks new quest markers)
-  ├─→ FSRS-Integrated Quest Rewards (progression triggers FSRS review quests)
-  └─→ Narrative-Driven Tutorials (early progression teaches structured path)
-
-Contextualized Vocabulary in Narrative
-  ├─→ Rich NPC Conversations (dialogue is primary context delivery)
-  ├─→ Interactive World Objects (objects teach vocabulary through inspection)
-  └─→ Environmental Arabic (world text provides passive vocabulary exposure)
-
-Living World Events
-  ├─→ Rich NPC Conversations (NPCs discuss events, schedules affect dialogue availability)
-  └─→ FSRS-Integrated Quest Rewards (events trigger themed review quests)
-
-Adaptive Difficulty Paths
-  ├─→ Structured Learning Progression (difficulty affects progression pacing)
-  └─→ Rich NPC Conversations (difficulty adjusts hint density in dialogue)
-
-Voice Acting for Key NPCs
-  └─→ Rich NPC Conversations (voiced dialogue is subset of conversation system)
-
-Branching Personalized Narrative
-  ├─→ Rich NPC Conversations (choices happen in dialogue)
-  └─→ Structured Learning Progression (branches affect progression paths)
-
-Co-op Learning Mode
-  ├─→ ALL SYSTEMS (requires multiplayer variants of all features)
-  └─→ Architectural change (client-server model, sync systems)
-```
-
-## MVP Recommendation
-
-Prioritize these for v5.0 "The Real Game":
-
-### Phase 1: Foundation (Core Narrative Systems)
-1. **Guided Onboarding with Mentor** — Solves "I don't know what I'm doing" immediately. Foundation for all other narrative features. Creates player attachment to guide character.
-2. **Rich NPC Conversations** — Solves "NPCs don't feel like people." Core to RPG genre expectations. Enables all other narrative features.
-3. **Narrative-Driven Tutorials** — Replaces existing weak onboarding (control tutorial only). Medium complexity, critical path to first-hour experience.
-
-### Phase 2: World Depth (Exploration Systems)
-4. **Enterable Buildings / Interior Maps** — Solves "world is empty" (owner feedback). Highest impact for exploration feel. Creates 3D depth to 2D world.
-5. **Interactive World Objects** — Enhances exploration loop, enables environmental storytelling. Medium complexity, builds on InteractableManager.
-6. **Clear Quest Progression Markers** — Solves "no structure." Low complexity, high value. Quick win for UX clarity.
-
-### Phase 3: Educational Integration (Learning Systems)
-7. **Contextualized Vocabulary in Narrative** — Core educational value. Transforms vocabulary learning from studying to storytelling. Research-backed for retention.
-8. **Structured Learning Progression** — Enforces Learning Path in world (gates, unlocks). Prevents overwhelm, creates sense of achievement.
-
-**Defer to v5.1 or v5.2:**
-- **Branching Personalized Narrative** (needs conversation system foundation from Phase 1 first)
-- **Living World Events** (polish feature, not MVP; adds replayability after core loop proven)
-- **FSRS-Integrated Quest Rewards** (innovative but not table stakes; enhance existing FSRS after v5.0)
-- **Environmental Arabic** (nice-to-have immersion feature; add after core systems stable)
-- **Adaptive Difficulty Paths** (needs analytics foundation + player data from v5.0 launch)
-- **Voice Acting** (production complexity, budget; add incrementally as milestone polish)
-- **Co-op Learning Mode** (v6.0+ separate milestone; architectural change requires dedicated roadmap)
-
-**Rationale:**
-v5.0 focuses on transforming "learning app with game skin" (current state after v4.0 polish) into "real game that teaches Arabic." Priority = solve owner's pain points in order: (1) onboarding clarity, (2) NPC depth, (3) world emptiness, (4) learning structure + (5) align with language acquisition research (contextualized input, comprehensible i+1, multimodal learning).
-
-Phase 1 is narrative foundation. Phase 2 is world depth. Phase 3 ties learning to gameplay. This ordering creates "real game feel" first, then ensures educational effectiveness.
-
-## Complexity Analysis
-
-| Feature | Complexity | Estimated Implementation | Dependencies |
-|---------|------------|-------------------------|--------------|
-| **HIGH COMPLEXITY** ||||
-| Enterable Buildings / Interior Maps | High | 3-4 weeks (15-20 interior scenes + transition system + MapLoader rewrite) | Interior tilemap assets, zone transition architecture, InteractableManager extension |
-| Rich NPC Conversations | High | 3-4 weeks (DialogueManager system, 140 NPC personality data, 30-40 deep conversations, branching UI) | Dialogue data structure, conversation state Redux slice, new UI components |
-| Contextualized Vocabulary in Narrative | High | 3-4 weeks (1,220 words mapped to contexts, quest/dialogue content rewrite, vocab tracking) | Vocabulary slice extension, NPC dialogue system, quest content, tooltip UI |
-| Branching Personalized Narrative | High | 3-4 weeks (player profiling system, conditional quest variants, choice tracking, relationship system) | Rich NPC Conversations foundation, Redux personality slice, quest variants |
-| Living World Events | High | 3 weeks (NPC schedule system, time-of-day state, event calendar, schedule data for 30-40 NPCs) | Time system, NPC schedule data, world state management |
-| Co-op Learning Mode | Very High | 8-12 weeks (server architecture, real-time sync, co-op quest design, multiplayer variants of all systems) | Separate milestone; architectural rewrite to client-server model |
-| **MEDIUM COMPLEXITY** ||||
-| Guided Onboarding with Mentor | Medium | 2-3 weeks (mentor character creation, extended tutorial quest chain 10-15 steps, dialogue integration) | Rich NPC Conversations system (or simplified dialogue for mentor only) |
-| Interactive World Objects | Medium | 2-3 weeks (InteractableManager extension, 100-150 inspectable objects, item data, new UI) | Object interaction data structure, tooltip UI, asset creation |
-| Structured Learning Progression | Medium | 2 weeks (zone gating logic, unlock conditions, progression tracking, world state changes) | Quest system, player progression slice, zone transition logic |
-| Narrative-Driven Tutorials | Medium | 2 weeks (tutorial quest chain design, pacing, integration with mentor, first-hour experience flow) | Guided Onboarding with Mentor (mentor character), tutorial quest content |
-| FSRS-Integrated Quest Rewards | Medium | 2 weeks (FSRS → quest pipeline, dynamic quest templates, review scheduling integration) | Existing FSRS system, quest generation logic, template system |
-| Environmental Arabic | Medium | 2-3 weeks (asset creation for Arabic text signage/posters, translation tooltip UI, rendering pipeline) | Arabic text assets, hover/inspect UI, vocabulary tracking for hints |
-| Adaptive Difficulty Paths | Medium | 2 weeks (analytics pipeline, performance tracking, difficulty modifiers, UI difficulty selector) | Redux analytics slice, quest/quiz/battle difficulty parameters |
-| Voice Acting for Key NPCs | Medium | 2-3 weeks production time (script writing 200-300 lines, voice actor recording, audio integration, subtitle sync) | Rich NPC Conversations system, audio file management, subtitle UI |
-| **LOW COMPLEXITY** ||||
-| Clear Quest Progression Markers | Low | 1 week (quest log UI enhancement, progress % tracking, "next step" display, quest chain visualization) | Existing quest system, UI components |
-
-## Research Confidence
-
-| Category | Confidence | Notes |
-|----------|------------|-------|
-| Table Stakes Features | HIGH | Multiple research sources (game design best practices, Pokemon/Zelda/Stardew Valley analysis, educational game UX) confirm these are genre expectations. Owner feedback validates missing features cause "empty/boring/no direction" perception. |
-| Educational Best Practices | HIGH | Peer-reviewed research on contextualized learning (Krashen's Input Hypothesis), comprehensible input (95-98% known), spaced repetition integration, multimodal learning. Language acquisition literature strongly supports these approaches. |
-| Language Learning Game Criticism | MEDIUM-HIGH | Research on gamification pitfalls (leaderboards/badges negative effects), "Jeopardification" problem, retention challenges. Multiple sources cite same issues. Some findings from single sources but align with broader educational research. |
-| RPG Game Design Patterns | HIGH | Stardew Valley, Pokemon, Zelda design analysis well-documented. 2026 trends (environmental storytelling, AI-driven NPCs, dynamic content) from multiple game design sources. Interior map design principles from RPG dev community. |
-| Complexity Estimates | MEDIUM | Based on existing GoGo Arabic architecture (React 19 + Phaser 3 + Redux Toolkit) + typical game dev timelines + Phaser 3 capabilities. Actual may vary with implementation challenges, asset creation speed, team size. Estimates assume 1 full-time developer. |
-| Differentiators Effectiveness | MEDIUM | Research supports effectiveness (personalization, spaced repetition, multimodal input, living worlds) but innovation features have less precedent in language learning RPG space specifically. Educational research backs approaches, but implementation in game context is novel. |
-| 2026 Trends | MEDIUM | AI-driven NPC dialogue, environmental storytelling emphasis, procedural content are documented 2026 trends. Some sources discuss future possibilities vs proven implementations. Treat cutting-edge features (AI NPCs) as experimental. |
-
-## Feature Priority by Owner Pain Point
-
-| Owner Feedback | Root Cause Analysis | Feature Solution | Implementation Phase | Rationale |
-|----------------|-------------------|------------------|---------------------|-----------|
-| "I enter the game and don't know what I'm doing." | Onboarding teaches controls only (WASD, interact), not game loop or learning objectives. No mentor guidance. | Guided Onboarding with Mentor + Narrative-Driven Tutorials | Phase 1 | Tutorial research: "reducing friction...bite-sized interactive guidance." Mentor establishes expectations, explains systems, guides first learning session. First-hour experience determines retention. |
-| "The onboarding is rubbish. It only tells me how to move." | Tutorial is mechanical (6 control steps), not educational or narrative. Doesn't teach where to learn Arabic. | Narrative-Driven Tutorials | Phase 1 | Research: "Playable game tutorials immerse players...integrated seamlessly into game's initial stages." Need 30-60 minute tutorial quest teaching game loop through story. |
-| "I don't know where to go to learn Arabic." | Learning Path UI exists but not discoverable. Alphabet learning hidden in Activities menu. No next-step guidance. | Clear Quest Progression Markers + Structured Learning Progression | Phase 2 & 3 | Educational UX: "Always know what to do next." Need quest log clarity + enforced progression gates. Low complexity, high impact. |
-| "There's no structure." | Open world + quest markers but no enforced progression. Player can wander but learning path isn't gated/visible in world. | Structured Learning Progression | Phase 3 | Research: "players need toys, prompts, or challenges to give their creativity direction." Zelda/Pokemon gate progress to create structure. Need zone unlocks based on mastery. |
-| "Every other game I play, I know where I'm supposed to go." | Quest markers exist but quest log doesn't show "next step" clearly. No recommended quest highlighting. | Clear Quest Progression Markers | Phase 2 | Research: "clear visual cues to show progress" and "next-step indicators." Quick win: enhance existing UI with better clarity. |
-| "The world is empty — just houses and pillars." | All buildings are decorative facades. No interiors, no interactive objects beyond quest chests. Static world. | Enterable Buildings / Interior Maps + Interactive World Objects | Phase 2 | Research: "preventing empty, boring spaces that feel lifeless" is cardinal sin. Pokemon/Zelda/Stardew all have rich interiors. Need 15-20 key interiors + 100-150 inspectable objects. |
-| "NPCs don't feel like people." | NPCs only give quests or stand idle. No personality, no multiple conversation topics, no relationship progression. | Rich NPC Conversations | Phase 1 | Research: hub-and-spoke dialogue + personality traits + relationship tracking. Pokemon: "shared enthusiasm makes world fun." Need 30-40 deep NPC conversations. |
-| "It's boring." | Combination of: empty world (no interiors/objects), static NPCs (no personality), missing learning integration (vocab isolated in quizzes), no structure (wander aimlessly). | ALL Phase 1-3 features address this | Phases 1-3 | "Boring" is symptom of missing table stakes. Need narrative depth (Phase 1) + world interactivity (Phase 2) + learning integration (Phase 3) to create engagement loop. |
-| "Make it feel like Pokémon." | Pokemon has: mentor (Professor Oak), rich NPC conversations (everyone talks about Pokemon), gym progression structure (badges), interactive world (gyms/shops/houses), NPC personality. GoGo Arabic missing all these. | Guided Onboarding + Rich NPCs + Structured Progression + Enterable Buildings | Phases 1-3 | Pokemon analysis: core is "wish fulfillment by world design" + "everyone you meet is excited about this." Need mentor guide, enthusiastic NPCs, clear progression gates, explorable buildings to match Pokemon feel. |
-
-**Validation:** All Phase 1-3 features directly address owner pain points. No speculative features in MVP. Phase ordering creates compounding impact: Phase 1 (narrative foundation) → Phase 2 (world depth) → Phase 3 (learning integration) = "real game that teaches Arabic."
-
-## Competitor Feature Comparison
-
-| Feature | Pokemon (RPG Benchmark) | Zelda (Exploration Benchmark) | Duolingo (Language Learning Benchmark) | Stardew Valley (Cozy RPG Benchmark) | GoGo Arabic v4.0 (Current) | GoGo Arabic v5.0 (Target) |
-|---------|-------------|---------|----------|----------------------|-------------------|-------------------|
-| Mentor character guides player | Yes (Professor Oak) | Yes (varies by game: Navi, King of Red Lions, etc.) | Yes (Duo owl, explicit guidance) | No (player discovery) | No | **Yes (Phase 1)** |
-| Rich NPC conversations (multi-topic) | Yes (NPCs talk about Pokemon, give hints, show personality) | Moderate (NPCs give lore, hints; less personality) | N/A (app-based, no NPCs) | Yes (extensive dialogue, relationship system) | No (quest-only dialogue) | **Yes (Phase 1)** |
-| Enterable buildings / interior maps | Yes (gyms, Pokemon Centers, shops, houses) | Yes (temples, shrines, houses, shops) | N/A | Yes (extensive: 30+ buildings) | No (all facades) | **Yes (Phase 2, 15-20 key)** |
-| Interactive world objects | Yes (items, signs, trainers, cuttable trees) | Yes (core mechanic: bombs, hookshot, puzzles) | N/A | Yes (chests, foragables, machines) | Minimal (quest chests only) | **Yes (Phase 2, 100-150 objects)** |
-| Structured progression with gates | Yes (gym badges unlock HMs/routes) | Yes (items unlock new areas, dungeons in sequence) | Yes (explicit skill tree, lessons locked) | No (open from start) | Partial (quest prerequisites, no world gates) | **Yes (Phase 3, zone gates)** |
-| Clear quest/objective markers | Yes (next gym location, Pokedex goals) | Yes (dungeon locations, quest log in recent games) | Yes (next lesson always visible) | Partial (quest log, but discovery-focused) | Partial (quest markers, but next-step unclear) | **Yes (Phase 2, enhanced)** |
-| Contextualized learning | N/A (not educational) | N/A | No (isolated lessons, no narrative context) | N/A | Partial (quests mention vocab, but isolated quiz mode) | **Yes (Phase 3, vocab in narrative)** |
-| Narrative-driven tutorial | Yes (Oak teaches catching, rival battle) | Yes (early game teaches mechanics through challenges) | Partial (tutorial but mechanical, not narrative) | Minimal (basic controls, discovery-focused) | No (control tutorial only) | **Yes (Phase 1, 30-60 min quest)** |
-| Branching narrative / player choices | Minimal (mostly linear story) | Minimal (exploration order varies, story mostly linear) | No | No (linear narrative, relationship choices only) | No | **Future (v5.1+)** |
-| Voice acting | No (text-based dialogue) | Minimal (grunts, recent games have some VO) | No | No | No | **Future (v5.1+, 10-15 key NPCs)** |
-| Living world / NPC schedules | No (static NPC positions) | No (static NPCs) | N/A | Yes (hallmark feature: NPCs have daily schedules) | No | **Future (v5.1+)** |
-| Adaptive difficulty | Minimal (level scaling in some games) | Optional (hero mode, difficulty settings) | Yes (adaptive algorithm adjusts lesson difficulty) | Minimal (fishing/combat difficulty, but mostly static) | No | **Future (v5.1+)** |
-
-**Key Insights:**
-1. **Pokemon has ALL table stakes features** for RPG genre: mentor, rich NPCs, interiors, interactive objects, structured progression. GoGo Arabic v4.0 has NONE of these → explains "boring" / "no soul" feedback.
-2. **Zelda prioritizes exploration over NPCs**: interiors and interactive objects are core (dungeons, puzzles), but NPC conversations are lighter. GoGo Arabic should lean more Pokemon (NPC-heavy) for language learning context.
-3. **Duolingo has zero game feel** but exceptional progression clarity (skill tree, next lesson always visible, adaptive difficulty). GoGo Arabic needs to match Duolingo's clarity PLUS add RPG table stakes.
-4. **Stardew Valley's living world** (NPC schedules, relationships) is advanced feature (v5.1+), not MVP. Focus on static but personality-rich NPCs first (Phase 1).
-5. **Voice acting is rare** even in polished RPGs. Low priority (v5.1+). Focus on text-based dialogue systems first.
-
-**Conclusion:** v5.0 MVP should achieve Pokemon-level table stakes (mentor, NPCs, interiors, progression) + Duolingo-level clarity (quest markers, learning path). Defer Stardew-level living world and Zelda-level puzzle complexity to future versions.
-
-## Sources
-
-### Game Design & RPG Best Practices
-- [I Have Some Nice Things To Say About Pokémon's Game Design](https://medium.com/@Urzashottub/i-have-some-nice-things-to-say-about-pok%C3%A9mons-game-design-62ad5d7d9964) — Pokemon's engagement mechanics, wish fulfillment by world design, elemental combat, pacing through difficulty variation
-- [5 Game Design Decisions That Made the Original Pokémon Games Classics](https://uwmpost.com/arts-and-culture/5-game-design-decisions-that-made-the-original-pokemon-games-classics) — Accessibility (fainting not dying), experimentation without stress, adventure feeling through varied pacing
-- [The Themes and Design Pillars of Zelda over time](http://namelessquality.com/693-2/) — Zelda's evolution from freeform exploration to metroidvania gating to BotW/TotK freedom, design pillars: exploration, treasure hunting, thinking, puzzle satisfaction
-- [What Designers Can Learn From "The Legend of Zelda"](https://medium.com/@jupelletier/what-designers-can-learn-from-the-legend-of-zelda-9a5d6dfacef9) — "Boy becoming a hero" narrative, hiking/exploration as core, Zelda as myth/legend storytelling
-
-### Tutorial & Onboarding Design
-- [Game UX: Best practices for video game onboarding 2024](https://inworld.ai/blog/game-ux-best-practices-for-video-game-onboarding) — Simplify tutorials, bite-sized interactive guidance, reduce friction, begin with basic elements, demonstrate competency before advancing
-- [Game UX: Best practices for video game tutorial design](https://inworld.ai/blog/game-ux-best-practices-for-video-game-tutorial-design) — Playable game tutorials immerse players, invisible tutorials integrate subtly, mixed approach (explain + experience), meaningful rewards
-- [Best Practices For Mobile Game Onboarding](https://adriancrook.com/best-practices-for-mobile-game-onboarding/) — Most significant part of first-time user experience, impacts early retention, progressive disclosure
-- [What UX Designers Can Learn from Game Onboarding](https://www.imaginarycloud.com/blog/videogame-onboarding-design-lessons) — Mini-goals during onboarding, clear visual cues for progress, context-sensitive help
-- [How Onboarding Should be Applied to Tutorials](https://www.gamedeveloper.com/design/how-onboarding-should-be-applied-to-tutorials) — Balance fun gameplay immediately while teaching, educating players about core loop and progression mechanics
-- [A Comprehensive Guide to Character Design in Video Games](https://www.juegostudio.com/blog/video-game-character-design) — Character archetypes (mentor) help players quickly relate and understand, archetypes are universal (heroes, mentors, villains)
-- [How to Design a Mobile Game Tutorial + Examples](https://www.blog.udonis.co/mobile-marketing/mobile-games/mobile-game-tutorial) — Using protagonist as tutorial character creates connection, spread tutorial throughout gameplay (teach new features when introduced)
-
-### NPC Dialogue & Branching Conversations
-- [Branching Conversation Systems and the Working Writer, Part 2](https://www.gamedeveloper.com/design/branching-conversation-systems-and-the-working-writer-part-2-design-considerations) — Hub-and-spoke structures (central hub with topic spokes), waterfall structures, consistency in approach
-- [RPGs and their Dialogue Systems](https://konradhughes.com/dev-blog/rpgs-and-their-dialogue-systems) — Nodes (dialogue units, player choices, events, condition checks), conditions (logical checks based on game state)
-- [Dialogue Trees: Creating Branching Narratives in Games](https://www.designthegame.com/learning/tutorial/dialogue-trees-creating-branching-narratives-games) — Hub-and-spoke for quest-givers/vendors, conditions based on player stats/reputation/quest completion/items
-- [The Future of Game Intelligence (2026)](https://cogconnected.com/2026/02/the-future-of-game-intelligence-how-ai-is-revolutionizing-play-design-and-community/) — 2026 innovation: machine learning models analyze player decisions real-time and adjust behavioral patterns, companion characters whose dialogue evolves through learned understanding
-- [Real-time NPC Interaction and Dialogue Systems](https://www.acldigital.com/blogs/real-time-npc-interaction-and-dialogue-systems-in-games) — AI algorithms enable NPCs to understand and respond naturally, NLP models like GPT-4 generate context-aware responses
-
-### Environmental Storytelling & Interactive Worlds
-- [Environmental Storytelling in Video Games](https://gamedesignskills.com/game-design/environmental-storytelling/) — Arranging careful selection of objects so they suggest a story, interactive environmental triggers respond to player presence (doors creak, symbols revealed)
-- [Environmental Storytelling: Creating Immersive 3D Worlds](https://www.gamedeveloper.com/design/environmental-storytelling-creating-immersive-3d-worlds-using-lessons-learned-from-the-theme-park-industry) — Composition, contrast, implied cause-and-effect direct player's eye, layout + props + lighting + audio work together
-- [The Future of Game Design: Emerging Trends for 2026](https://allthatsepic.com/blog/the-future-of-game-design-emerging-trends-for-2026/) — 2026 trend: levels become narrative vehicles, immersion through environmental storytelling not just dialogue/cutscenes, players explore and interpret stories through world interaction
-- [The Art of World-Building: Creating Immersive Game Environments](https://gamepill.com/the-art-of-world-building-creating-immersive-game-environments/) — For environment to feel alive, needs to be ecosystem that could live without player being there
-
-### Open World & Empty World Syndrome
-- [Inside Open-World Game Development (2026)](https://www.techtimes.com/articles/314497/20260206/inside-open-world-game-development-how-game-design-process-creates-immersive-maps-npc-systems.htm) — Cardinal sin: preventing empty, boring spaces that feel lifeless, heightmaps for terrain, AI-driven procedural generation for content
-- [Player-Generated Worlds](https://medium.com/@Jamesroha/player-generated-worlds-aa40324f92d6) — Simply dropping person into empty sandbox yields limited fun ("sand by itself is not much fun"), players need toys/prompts/challenges, best worlds strike balance preserving purpose while allowing deviation
-- [How To Do RPG Interiors](https://www.gamedev.net/forums/topic/668452-how-to-do-rpg-interiors/) — Good interior maps have central focus point, consider what purpose player has to enter, sense of progression, separate rooms/floors as different maps feel less cramped
-
-### Language Acquisition Research
-- [The Effectiveness of Gamified Tools for Foreign Language Learning (FLL)](https://pmc.ncbi.nlm.nih.gov/articles/PMC10135444/) — Systematic review: computer games effective for vocabulary acquisition, educational videogames enhance cooperation/scaffolding/motivation, alleviate language anxiety
-- [Gamifying language education: impact of digital game-based learning](https://www.nature.com/articles/s41599-024-04073-3) — Interactive/immersive nature fosters confidence, enables risk-taking without fear of judgment, repeated exposure + immersive environment = effectiveness
-- [Digital game-based language learning for vocabulary development](https://www.sciencedirect.com/science/article/pii/S2666557324000028) — Effectiveness attributed to repeated exposure to target vocabulary and immersive game environment, genre is crucial factor
-- [Journal of Education and Learning Vol. 15, No. 1; 2026](https://ccsenet.org/journal/index.php/jel/article/download/0/0/52174/56814) — 2026 research: multimodal learning strategies crucial for vocabulary acquisition, effective when learners engage through multiple sensory modalities (images, sounds, actions)
-- [Comprehensible Input Hypothesis](https://jacoblaguerre.com/language-learning/comprehensible-input-hypothesis/) — Krashen's Input Hypothesis: language acquired by understanding input slightly beyond current level (i+1) with context/extra-linguistic information
-- [Why input must be 95-98% comprehensible](https://gianfrancoconti.com/2025/02/27/why-the-input-we-give-our-learners-must-be-95-98-comprehensible-in-order-to-enhance-language-acquisition-the-theory-and-the-research-evidence/) — Optimal comprehensibility 95-98% allows learners to make hypotheses about rules, learners need to understand vast majority of input for optimal learning
-- [Vocabulary Learning During Reading: Contextual Inferences](https://pmc.ncbi.nlm.nih.gov/articles/PMC9285746/) — Contextual diversity qualifies value of diversity across languages, number of texts a word appears in improves recall/recognition/meaning-matching
-- [Combining contextualized and word-focused instruction](https://www.cambridge.org/core/journals/studies-in-second-language-acquisition/article/abs/combining-explicit-and-sensitive-indices-for-measuring-l2-vocabulary-learning-through-contextualized-input-and-wordfocused-instruction/6A39C54FA3C9BDF77D5CF2647C30EB0A) — Contextualized and decontextualized instruction benefit vocabulary learning in complementary way
-
-### Spaced Repetition Integration
-- [Spaced repetition learning games on mobile devices](https://www.researchgate.net/publication/268130455_Spaced_repetition_learning_games_on_mobile_devices_Foundations_and_perspectives) — Spaced repetition has positive effect on long-term retention, game-based learning maintains motivation by reducing boredom, combining both is promising
-- [The Impact of Spaced Repetition Learning on Learning Success](https://ieeexplore.ieee.org/document/9665803/) — Auxiliary algorithm needed to support common spaced repetition algorithms in mobile learning games, SM2 algorithm for content selection and scheduling
-- [How to Use Spaced Repetition to Boost Learner Retention](https://maestrolearning.com/blogs/how-to-use-spaced-repetition/) — Multimedia support (images/audio/video) helps information stick, track daily streaks/cards mastered/struggle areas, habit triggers (streaks/points/levels) keep learners returning
-- [Spaced and Interleaved Practice](https://mlpp.pressbooks.pub/mavlearn/chapter/spaced-and-interleaved-practice/) — Weaving intermittent practice activities/quizzes throughout learning experience tests retention, intentional spacing with progressive layering helps retention
-
-### Educational Game Criticism
-- [Gamification in language learning apps: Hidden negative effects](https://www.taalhammer.com/gamification-in-language-learning-apps/) — Badges/leaderboards/competitions/points most often cause negative effects: lack of effect, worsened performance, motivational issues, lack of understanding, irrelevance
-- [EWA English Language Learning Complaints](https://www.complaintsboard.com/ewa-english-language-learning-b149581) — Player complaints: games/vocabulary very basic with no way to test out, pop-up translations lazy and bad, app doesn't work consistently
-- [Addressing Influent's Steam User Reviews](https://steamcommunity.com/app/274980/discussions/0/224446340335923705/) — Language learning game criticism: limited content, poor translation quality, technical issues, difficulty simultaneously attending to gameplay and vocabulary
-- [Problems and solutions of educational game development](https://www.researchgate.net/publication/252001134_Problems_and_solutions_of_educational_game_development) — Main criticism: designers lean too far toward educational rather than entertaining ("Jeopardification"), little scientific design, insufficient pedagogical methods
-- [Think Games on the Fly, Not Gamify](https://pmc.ncbi.nlm.nih.gov/articles/PMC4477550/) — Games too text-heavy turn students off, mindless entertainment keeps occupied only briefly, games create illusion of learning if exercises aren't challenging
-- [The Effect of Educational Games on Learning Outcomes](https://journals.sagepub.com/doi/10.1177/0735633120969214) — Games must be well-designed with right level of complexity so learners not bored or frustrated, strong narrative increases immersion over weaker narrative, inquiry-based methods engage students, relying heavily on extrinsic motivators may undermine intrinsic motivation
-
-### RPG Interior Map Design
-- [Tutorial - Mapping: Interior (RPG Maker)](https://www.rpgmakerweb.com/blog/tutorial-mapping-interior) — Interior design principles, consideration of purpose
-- [2D RPG - Interior Layout & Design](https://www.tumblr.com/enhousestudios/141618240859/2d-rpg-interior-layout-design) — Layout and design patterns for 2D RPG interiors
-- [One Map Town/Shopping District Idea (RPG Maker)](https://steamcommunity.com/app/363890/discussions/0/1737715419892661163/) — Approach to interiors: separate areas for exploration/puzzles, avoid area transitions for simple vendors
-- [DUNGEONFOG - Free RPG Battle map editor](https://www.dungeonfog.com/) — Vector-based editor for drawing dungeons/buildings/terrain, 3,000+ assets library
+**Note on Sources:** This research is based on training data knowledge of RPG systems (Final Fantasy, Pokemon, Persona, Skyrim, Divinity), language learning games (Duolingo, Babbel), and hybrid systems. No live web research was available, so findings are marked MEDIUM confidence and should be validated against current 2026 game design trends.
 
 ---
 
-**Research Confidence:** MEDIUM-HIGH overall
-- HIGH confidence: Table stakes features, language acquisition research, RPG design patterns, tutorial best practices
-- MEDIUM confidence: 2026 trends (AI NPCs), complexity estimates, differentiator effectiveness in language learning context specifically
-- Sources: 50+ articles from game design experts, peer-reviewed language acquisition research, case studies of Pokemon/Zelda/Stardew Valley, 2026 game design trend forecasts, educational game UX research
+## Feature Landscape
 
-*Feature research for: GoGo Arabic v5.0 "The Real Game"*
-*Researched: 2026-02-10*
-*Researcher: Claude (GSD Project Research Agent)*
+### 1. ROOT MAGIC SYSTEM (Language-Based Spell Casting)
+
+#### Table Stakes (Users Expect These)
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| **Spell Discovery** | Players expect to unlock spells through gameplay, not have everything from start | MEDIUM | Already mapped: 50 root-element mappings exist. Need unlock progression. |
+| **Mana/Resource System** | Spell casting needs cost/limitation to prevent spam | LOW | Already exists: playerMP/playerMaxMP in battleSlice |
+| **Damage Scaling** | Spell power must scale with player level/mastery | MEDIUM | Requires: root mastery level × grammar accuracy × affinity bonus |
+| **Visual Feedback** | Distinct visual for each element/root family | HIGH | 10 elements = 10+ particle systems. Currently: basic ParticleEffectManager exists. |
+| **Spell List UI** | Browse, search, filter learned spells | MEDIUM | Similar to existing Root Explorer. Dependencies: vocabulary mastery data. |
+| **MP Recovery** | In-battle and out-of-battle MP restoration | LOW | Already stubbed: restoreMP action. Need: rest points, items, turn regen. |
+| **Elemental Weaknesses** | Rock-paper-scissors interactions (fire > plant, water > fire) | MEDIUM | Need: enemy element data + weakness multiplier matrix (10x10) |
+| **Target Selection** | Single target vs multi-target spells | MEDIUM | Depends on Phase 32 multi-target battles |
+| **Spell Upgrade Path** | Same root → stronger forms (Form I → Form X verbs) | HIGH | Requires: Arabic morphology system + 10 verb forms per root family |
+
+**Dependencies:**
+- Root Explorer (exists in v5.0)
+- FSRS vocabulary mastery (exists)
+- Grammar lesson completion tracking (partial — 7 lessons exist, need 50)
+- Affinity discovery system (planned Phase 28)
+
+#### Differentiators (Competitive Advantage)
+
+| Feature | Value Proposition | Complexity | Notes |
+|---------|-------------------|------------|-------|
+| **Root Derivation Combos** | Combining different words from same root creates combo effects (ك-ت-ب: كِتَاب + كَاتِب = scholar's blessing) | HIGH | Core pedagogical value: teaches morphological relationships. Requires derivation graph data. |
+| **Grammar-Based Modifiers** | Correct conjugation/declension adds effects (dual = hits 2 enemies, plural = AOE, passive = reflect) | VERY HIGH | Unique to language learning. Teaches grammatical concepts through mechanics. Complex validation. |
+| **Calligraphic Casting** | Trace Arabic letters during spell cast for power boost (touchscreen/mouse mini-game) | MEDIUM | Tactile learning, teaches letter forms. Similar to DS game letter tracing. |
+| **Sentence Construction Ultimates** | Building grammatically correct sentences = most powerful attacks | HIGH | Ultimate teaching moment. Already planned in Phase 32 combos. |
+| **Semantic Field Synergies** | Casting related roots in sequence (all water-meaning roots) creates chain bonus | MEDIUM | Teaches semantic relationships. Requires semantic tagging of 5,000+ words. |
+| **Arabic Pronunciation Power** | (Future) Speaking word aloud correctly amplifies spell (Web Speech API) | VERY HIGH | Deferred until voice infrastructure. Would be groundbreaking for pronunciation. |
+
+**Unique Selling Point:** No other RPG teaches a real language through magic. Every spell cast is a learning moment.
+
+#### Anti-Features (Commonly Requested, Often Problematic)
+
+| Feature | Why Requested | Why Problematic | Alternative |
+|---------|---------------|-----------------|-------------|
+| **Free-form Spell Creation** | "Let players invent their own spells!" | Arabic has ~10K roots, exponential combinations = balance nightmare, impossible to validate | **Structured discovery:** Predefined spells from authentic root meanings, player unlocks through mastery |
+| **Dual-Language Casting** | "Let players cast in English or Arabic for accessibility" | Undermines core learning loop, creates crutch | **Difficulty tiers:** Easy mode = multiple choice Arabic, never English casting |
+| **Pure Element System (no language)** | "Just pick fire/water element, skip the Arabic" | Defeats entire purpose of game, reduces to generic RPG | **Hard constraint:** Every spell requires Arabic input, period. |
+| **Real-Time Spell Input** | "Type Arabic word during action time limit" | Too stressful for learners, creates negative affect, violates Krashen low-filter principle | **Turn-based prompts:** Arabic input during player turn with no time pressure (optional challenge mode) |
+| **Automatic Best Spell Selection** | "AI picks optimal spell for me" | Removes decision-making, no exposure to vocabulary variety | **Spell recommendations:** Suggest 3 options with Arabic meanings, player chooses |
+
+---
+
+### 2. EQUIPMENT & INVENTORY SYSTEM
+
+#### Table Stakes (Users Expect These)
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| **Equipment Slots** | Standard body parts with gear | LOW | Already planned: 8 slots (head, robe, cloak, belt, boots, gloves, 2 accessories) |
+| **Stat Comparisons** | See current vs new gear stats | LOW | Standard RPG pattern: green/red numbers, side-by-side panel |
+| **Rarity Tiers** | Visual distinction between common/rare/legendary | LOW | Already planned: 5 tiers with Arabic color names |
+| **Sort & Filter** | By type, rarity, stats, acquisition date | MEDIUM | Already planned: includes Arabic alphabetical (teaches abjad order) |
+| **Auto-Sort/Auto-Equip** | QOL for managing 200+ items | LOW | Standard convenience feature |
+| **Equipment Durability** | Gear wears out or requires repair | MEDIUM | Common in survival/crafting RPGs. Drives economy loop. |
+| **Weight/Carry Limit** | Can't hoard infinitely | LOW | Or use slot limit (200 items). Weight more realistic but finicky. |
+| **Quick-Equip Loadouts** | Save/swap equipment sets | MEDIUM | Essential for elemental strategy (fire set vs water enemy) |
+| **Tooltips** | Hover for full item details | LOW | Already standard in existing UI patterns |
+| **Stacking** | Consumables stack to save space | LOW | Already planned for consumables |
+
+**Dependencies:**
+- Crafting system (Phase 31) for gear sources
+- Economy/shops (Phase 29) for buying/selling
+- Battle system (Phase 27) for stat effects
+
+#### Differentiators (Competitive Advantage)
+
+| Feature | Value Proposition | Complexity | Notes |
+|---------|-------------------|------------|-------|
+| **Vocabulary-Locked Affixes** | Item bonus only activates after learning the Arabic adjective (حاد sharp, مبارك blessed) | MEDIUM | Directly teaches adjectives, creates motivation to learn. FSRS integration. |
+| **Historical Item Lore** | Every item has Arabic cultural/historical context snippet | MEDIUM | Educational value. Teaches Islamic Golden Age history, crafts, trade. |
+| **Arabic Naming Rights** | Player names crafted items in Arabic (keyboard input, validation) | MEDIUM | Writing practice, ownership, creative expression. |
+| **Haggling Mini-Game** | Arabic number negotiation at shops (type price in Eastern Arabic numerals) | HIGH | Teaches numbers 0-9999, practical haggling phrases, cultural practice. |
+| **Set Bonuses with Themes** | Scholar's Set, Merchant's Set, Artisan's Set (teach domain vocabulary) | MEDIUM | Thematic vocabulary clusters (profession-specific words). |
+| **Equipment as Quest Items** | Some gear pieces are quest objectives (find the lost sword = learn weapon vocab) | LOW | Story integration, vocabulary exposure. |
+| **Inscription System** | Engrave Arabic phrases onto weapons (player types phrase, gets custom stat) | HIGH | Creative writing, teaches blessing/protection phrases. |
+
+**Unique Angle:** Every piece of equipment is a vocabulary lesson with cultural context.
+
+#### Anti-Features (Commonly Requested, Often Problematic)
+
+| Feature | Why Requested | Why Problematic | Alternative |
+|---------|---------------|-----------------|-------------|
+| **Loot Box Gacha** | "Exciting random rewards!" | Predatory monetization, removes agency, gambling mechanics inappropriate for educational game | **Crafting + Discovery:** Deterministic rewards from exploration, quests, crafting |
+| **Infinite Inventory** | "Just let me keep everything" | Removes strategic decisions, analysis paralysis with 1000+ items | **200-slot limit:** Forces curation, selling creates economy engagement |
+| **Transmog/Cosmetic Override** | "Wear stats but look different" | Already solved by outfit system (12 outfits cosmetic, equipment stats separate) | **Layered system:** Outfit = appearance, equipment = stats (don't merge) |
+| **Real-Money Item Shop** | "Monetization through gear sales" | Pay-to-win, undermines learning loop, inappropriate for education | **Earned progression:** All gear through gameplay, crafting, quests |
+| **Weapon Durability on Hit** | "Realistic wear and tear" | Tedious micromanagement, punishes experimentation, creates anxiety | **Optional repair:** Gear has condition, low = reduced stats, repair at blacksmith (not breakage) |
+
+---
+
+### 3. COMPANION SYSTEM (AI Party Members)
+
+#### Table Stakes (Users Expect These)
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| **Companion Recruitment** | Find/unlock companions through story | LOW | Already planned: 12 companions, 2 per major zone |
+| **Party Formation** | Choose active companion(s) from roster | LOW | Already planned: max 2 active (1 battle, 1 exploration) |
+| **Battle AI** | Companions act autonomously in combat | MEDIUM | Already planned: CompanionBattleAI by role (attacker/defender/healer/support) |
+| **Companion Stats** | Each has unique abilities, strengths, weaknesses | MEDIUM | Level progression, equipment slots, skill trees |
+| **Relationship Meter** | Friendship/trust increases through interaction | LOW | Standard 0-100 meter, affects dialogue/abilities |
+| **Companion Quests** | Personal storylines for each companion | HIGH | Already planned: 3-5 quests each = 36-60 quests total |
+| **Gifting System** | Give items to raise relationship | LOW | Pokemon Amie, Stardew Valley pattern |
+| **Dialogue Variety** | Context-aware comments during exploration | MEDIUM | Already planned: 200+ lines per companion |
+| **Swap Anywhere** | Change active companion at camps/towns | LOW | Prevents backtracking frustration |
+| **Companion Dismissal** | Send companion away if player wants solo | LOW | Player agency, optional challenge |
+
+**Dependencies:**
+- NPC dialogue system (exists in v5.0: hub-and-spoke, conditions, effects)
+- Quest system (exists: 52 quests, need expansion to 250+)
+- Battle system (Phase 27)
+- Relationship tracking (new slice needed)
+
+#### Differentiators (Competitive Advantage)
+
+| Feature | Value Proposition | Complexity | Notes |
+|---------|-------------------|------------|-------|
+| **Language Teaching Roles** | Each companion specializes (grammar, vocabulary, pronunciation, culture) | MEDIUM | Persona-style social link + education. 12 companions = 12 Arabic sub-domains. |
+| **Adaptive Dialogue Difficulty** | Companion Arabic complexity scales with player CEFR level | HIGH | Early: mostly English. Mid: bilingual. Late: mostly Arabic. Drives immersion. |
+| **Mistake Correction** | Companion gently corrects player's Arabic errors in dialogue choices | MEDIUM | Pedagogical value: immediate feedback, low-pressure. Shows correct form. |
+| **Conversational Practice** | Dialogue trees are language practice (player types Arabic responses) | HIGH | Beyond multiple choice: free-form input with validation. Advanced feature. |
+| **Cultural Mentorship** | Companions explain cultural context of words, phrases, customs | MEDIUM | Educational content delivery through relationship. Builds cultural competency. |
+| **Companion Memory** | Remembers previous conversations, player's learning progress, past events | HIGH | Creates continuity, personalization. Requires event tracking + dialogue state. |
+| **Battle Combo Synergies** | Specific companion + player spell combos (teach paired vocabulary) | MEDIUM | Fire companion + water player = steam (بخار). Teaches related concepts. |
+| **Mood-Based Teaching** | Companion mood affects teaching style (encouraging, challenging, playful) | MEDIUM | Emotional intelligence, adapts to player performance. |
+| **Idle Conversations** | Companions chat with each other in player's party (teach natural dialogue) | HIGH | Realistic language exposure, social dynamics. Multiple companions = interactions. |
+
+**Unique Value:** No other game combines JRPG companion depth with language pedagogy.
+
+#### Anti-Features (Commonly Requested, Often Problematic)
+
+| Feature | Why Requested | Why Problematic | Alternative |
+|---------|---------------|-----------------|-------------|
+| **Romance Options** | "Persona/Fire Emblem have romance!" | Cultural insensitivity (Islamic context), scope creep, inappropriate for some age groups | **Deep Friendship:** Meaningful platonic bonds, mentorship, found family themes |
+| **Permadeath** | "Stakes and tension!" | Too punishing for educational game, losing language teacher = frustration | **Defeat = Temporary:** Companion unavailable until rest, no permanent loss |
+| **Companion PvP** | "Let companions fight each other" | Tonal mismatch (collaborative learning game), narrative dissonance | **Cooperative Focus:** Companions train together, spar for practice (friendly) |
+| **Full Party Control** | "Manual control all 3 party members" | Overwhelming for learners, slows combat, complex UI | **Trust the AI:** Player controls self, companions act autonomously (can suggest actions) |
+| **Companion Karma/Evil Paths** | "Morality system for companions" | Binary good/evil inappropriate for nuanced cultural teaching | **Personality Differences:** Companions have perspectives, not morality meters |
+
+---
+
+## Feature Dependencies
+
+### Dependency Graph
+
+```
+ROOT MAGIC SYSTEM
+    └──requires──> FSRS Vocabulary Data (exists)
+    └──requires──> Root Explorer (exists)
+    └──requires──> Grammar Lessons (partial: 7/50)
+    └──requires──> Affinity System (Phase 28)
+    └──enhances──> Battle System (Phase 27)
+    └──enhances──> Companion Combos (Phase 30)
+
+EQUIPMENT SYSTEM
+    └──requires──> Battle Stats (Phase 27)
+    └──requires──> Economy/Shops (Phase 29)
+    └──requires──> Crafting System (Phase 31)
+    └──requires──> Inventory Slice (new)
+    └──enhances──> Player Customization (outfit system exists)
+    └──conflicts──> Outfit cosmetics (need separation)
+
+COMPANION SYSTEM
+    └──requires──> NPC Dialogue Engine (exists)
+    └──requires──> Quest System (exists, needs expansion)
+    └──requires──> Battle System (Phase 27)
+    └──requires──> Relationship Slice (new)
+    └──requires──> Party Formation System (new)
+    └──enhances──> Language Teaching (core value)
+    └──enhances──> Narrative Depth (Phase 45)
+    └──enhances──> Root Magic (combos)
+    └──enhances──> Equipment (companion gear)
+```
+
+### Critical Paths
+
+1. **Root Magic** MUST come after Battle Engine (Phase 27) and concurrent with Affinity (Phase 28)
+2. **Equipment** MUST come after Battle Stats and before Crafting provides gear sources (Phases 27 → 29 → 31)
+3. **Companions** CAN start after Battle + Dialogue both exist (Phases 27 + 20 complete → Phase 30)
+
+### System Interactions
+
+| System A | System B | Interaction Type | Notes |
+|----------|----------|------------------|-------|
+| Root Magic | FSRS | Data Dependency | Spell power scales with vocabulary mastery |
+| Root Magic | Grammar | Mechanic Enhancement | Grammar accuracy = spell modifiers |
+| Root Magic | Companions | Combo System | Paired spell casting with companion |
+| Equipment | Vocabulary | Learning Gate | Affix bonuses locked behind word knowledge |
+| Equipment | Economy | Resource Sink | Buying/selling/repairing drives dirham use |
+| Equipment | Crafting | Supply Chain | Crafted gear is endgame best-in-slot |
+| Companions | Quests | Content Source | Each companion = 3-5 quests |
+| Companions | Dialogue | Teaching Delivery | Companions teach through conversation |
+| Companions | Battle | Tactical Depth | AI companions provide strategic options |
+| All Three | Battle | Convergence | Root magic + equipment stats + companion AI = core combat loop |
+
+---
+
+## Complexity Assessment
+
+### Root Magic System
+- **Total Estimated LOC:** 22,000 (per Phase 28 estimate)
+- **High Complexity Components:**
+  - Root derivation validation (Arabic morphology engine)
+  - Grammar-based modifiers (conjugation/declension checking)
+  - Affinity calculation from gameplay choices
+  - Semantic field tagging for synergies
+- **Medium Complexity:**
+  - Spell unlock progression
+  - Element weakness matrix
+  - MP management
+  - Visual effects per element
+- **Low Complexity:**
+  - Spell list UI
+  - Basic damage scaling
+  - Target selection
+
+### Equipment & Inventory System
+- **Total Estimated LOC:** 24,000 (per Phase 29 estimate)
+- **High Complexity Components:**
+  - Haggling mini-game (number input + validation + NPC AI negotiation)
+  - Item generation with affixes (procedural + vocabulary lookup)
+  - Inscription system (free-form Arabic text validation)
+- **Medium Complexity:**
+  - Vocabulary-locked affixes (FSRS integration)
+  - Set bonus calculations
+  - Equipment durability
+  - Quick-equip loadouts
+- **Low Complexity:**
+  - Basic inventory CRUD
+  - Stat comparisons
+  - Sort/filter
+  - Tooltips
+
+### Companion System
+- **Total Estimated LOC:** 28,000 (per Phase 30 estimate)
+- **High Complexity Components:**
+  - Adaptive dialogue difficulty (CEFR-based language scaling)
+  - Companion memory (event tracking + dialogue state persistence)
+  - Battle combo synergies (paired action detection)
+  - Idle conversations (multi-NPC dialogue engine)
+  - Conversational practice (free-form Arabic input validation)
+- **Medium Complexity:**
+  - Companion battle AI (role-based decision trees)
+  - Context-aware comments (trigger system)
+  - Mood system (state machine)
+  - Relationship progression
+  - Teaching role specialization
+- **Low Complexity:**
+  - Recruitment flags
+  - Party formation swapping
+  - Gifting system
+  - Basic dialogue delivery
+
+---
+
+## MVP Definition for v6.0 (Phases 27-32)
+
+### Root Magic: Launch With (Phase 28)
+
+- [x] 50 root-element mappings (already planned)
+- [x] 10 elemental affinities with weakness matrix
+- [x] Affinity discovery system (50+ weighted choices)
+- [x] MP cost + recovery mechanics
+- [x] Spell damage scaling (root mastery × grammar accuracy × affinity)
+- [x] Basic particle effects per element
+- [x] Spell list UI with search/filter
+- [ ] **DEFER:** Calligraphic casting (tactile but high complexity, save for v11.0 polish)
+- [ ] **DEFER:** Voice pronunciation casting (infrastructure not ready)
+
+### Equipment: Launch With (Phase 29)
+
+- [x] 8 equipment slots with stat bonuses
+- [x] 5 rarity tiers (Arabic color names)
+- [x] Inventory system (200 slot limit, sort/filter including abjad order)
+- [x] Shop system with zone-themed inventory
+- [x] Haggling mini-game (Arabic numbers 0-9999)
+- [x] Vocabulary-locked affixes (FSRS integration)
+- [x] Equipment sets with thematic bonuses
+- [x] Item lore snippets (cultural/historical context)
+- [ ] **DEFER:** Arabic inscription system (high complexity, diminishing returns for v6.0)
+- [ ] **DEFER:** Equipment durability (Phase 31 crafting has repair, add then)
+
+### Companions: Launch With (Phase 30)
+
+- [x] 12 recruitable companions (2 per major zone)
+- [x] Party formation (max 2 active: 1 battle, 1 exploration)
+- [x] Companion battle AI (4 role patterns)
+- [x] Relationship meter (0-100, affects dialogue/abilities)
+- [x] 3-5 personal quests per companion (36-60 total)
+- [x] Gifting system (100+ gifts planned Phase 49)
+- [x] 200+ dialogue lines per companion (2,400+ total)
+- [x] Language teaching specialization (each has domain)
+- [x] Adaptive difficulty (Arabic complexity scales with player level)
+- [x] Contextual exploration comments
+- [ ] **DEFER:** Conversational practice (free-form input too complex for Phase 30, revisit Phase 41 grammar lessons)
+- [ ] **DEFER:** Idle companion-to-companion chatter (nice-to-have, Phase 47 NPC schedules)
+- [ ] **DEFER:** Mistake correction in dialogue choices (Phase 41 grammar expansion)
+
+---
+
+## Feature Prioritization Matrix
+
+### Root Magic Features
+
+| Feature | User Value | Implementation Cost | Priority | Phase |
+|---------|------------|---------------------|----------|-------|
+| Spell unlock progression | HIGH | MEDIUM | P1 | 28 |
+| MP system | HIGH | LOW | P1 | 28 |
+| Element weaknesses | HIGH | MEDIUM | P1 | 28 |
+| Damage scaling | HIGH | MEDIUM | P1 | 28 |
+| Visual effects | HIGH | HIGH | P1 | 28 |
+| Spell list UI | HIGH | MEDIUM | P1 | 28 |
+| Root derivation combos | VERY HIGH | HIGH | P1 | 28 |
+| Grammar modifiers | VERY HIGH | VERY HIGH | P1 | 32 |
+| Semantic synergies | MEDIUM | MEDIUM | P2 | 39 |
+| Calligraphic casting | MEDIUM | MEDIUM | P3 | 58+ |
+| Voice casting | HIGH | VERY HIGH | P3 | Future |
+
+### Equipment Features
+
+| Feature | User Value | Implementation Cost | Priority | Phase |
+|---------|------------|---------------------|----------|-------|
+| Equipment slots + stats | HIGH | LOW | P1 | 29 |
+| Inventory management | HIGH | LOW | P1 | 29 |
+| Shop system | HIGH | MEDIUM | P1 | 29 |
+| Haggling mini-game | HIGH | HIGH | P1 | 29 |
+| Vocabulary-locked affixes | VERY HIGH | MEDIUM | P1 | 29 |
+| Rarity tiers | MEDIUM | LOW | P1 | 29 |
+| Set bonuses | MEDIUM | MEDIUM | P1 | 29 |
+| Item lore | MEDIUM | MEDIUM | P1 | 29 |
+| Quick-equip loadouts | MEDIUM | MEDIUM | P2 | 32 |
+| Durability/repair | MEDIUM | MEDIUM | P2 | 31 |
+| Inscription system | MEDIUM | HIGH | P3 | 58+ |
+| Arabic naming | MEDIUM | MEDIUM | P3 | 58+ |
+
+### Companion Features
+
+| Feature | User Value | Implementation Cost | Priority | Phase |
+|---------|------------|---------------------|----------|-------|
+| 12 companions recruit | HIGH | LOW | P1 | 30 |
+| Party formation | HIGH | LOW | P1 | 30 |
+| Battle AI | HIGH | MEDIUM | P1 | 30 |
+| Relationship meter | HIGH | LOW | P1 | 30 |
+| Personal quests | VERY HIGH | HIGH | P1 | 30 |
+| 200+ dialogue/companion | HIGH | HIGH | P1 | 30 |
+| Teaching specialization | VERY HIGH | MEDIUM | P1 | 30 |
+| Adaptive difficulty | VERY HIGH | HIGH | P1 | 30 |
+| Contextual comments | HIGH | MEDIUM | P1 | 30 |
+| Gifting system | MEDIUM | LOW | P1 | 30/49 |
+| Mistake correction | HIGH | MEDIUM | P2 | 41 |
+| Companion memory | HIGH | HIGH | P2 | 47 |
+| Battle combos | MEDIUM | MEDIUM | P2 | 32 |
+| Mood system | MEDIUM | MEDIUM | P2 | 47 |
+| Conversational practice | HIGH | VERY HIGH | P3 | 41+ |
+| Idle chatter | MEDIUM | HIGH | P3 | 47+ |
+
+**Priority Key:**
+- **P1:** Must have for v6.0 launch (Phases 27-32)
+- **P2:** Should have, add during expansion (Phases 33-51)
+- **P3:** Nice to have, polish phase (Phases 58-63) or future
+
+---
+
+## Competitor/Reference Analysis
+
+### Language-Based Magic Systems
+
+| Game | Approach | Lessons for GoGo Arabic |
+|------|----------|-------------------------|
+| **Scribblenauts** | Type any English word, object appears | Creativity inspiring but no structured learning. We need: guided discovery + mastery reinforcement. |
+| **Epistory** | Type words to defeat enemies (action typing) | Real-time typing too stressful for learners. We use: turn-based prompts, no time pressure. |
+| **BookWorm Adventures** | Spell words from letter tiles (Scrabble-like) | Word-building is engaging but requires existing English literacy. We need: Arabic input from prompts, teach vocabulary first. |
+| **Ni no Kuni** | Spell names are pseudo-language, no real learning | Beautiful aesthetic but missed educational opportunity. We do: real Arabic, every spell teaches. |
+| **Final Fantasy VIII** | Draw/Junction magic system (complex) | Deep but overwhelming for new players. We balance: simple MP cost, complex mastery/grammar layers optional. |
+
+**Our Differentiator:** Only game where spell mechanics teach real language morphology and grammar.
+
+### Equipment/Inventory Systems
+
+| Game | Approach | Lessons for GoGo Arabic |
+|------|----------|-------------------------|
+| **Pokemon** | Simple bag with category tabs, minimal stats | Accessible for all ages. We adopt: clear categories, minimal cognitive load. |
+| **Skyrim** | Weight-based, grid-less, extensive sorting | Weight can be tedious. We use: slot limit (200) simpler than weight math. |
+| **Stardew Valley** | Grid-based, expandable, chest storage | Grid intuitive for organization. We add: Arabic alphabetical sort teaches abjad. |
+| **Divinity Original Sin 2** | Complex crafting recipes, item combinations | Depth for enthusiasts. We include: 6 professions with recipes (Phase 31). |
+| **Persona 5** | Equipment with unique skills, no durability | Skill-focused gear interesting. We do: vocabulary-locked affixes similar concept. |
+
+**Our Differentiator:** Every item is vocabulary/culture lesson with lore snippets.
+
+### Companion/Party Systems
+
+| Game | Approach | Lessons for GoGo Arabic |
+|------|----------|-------------------------|
+| **Persona 5** | Social links, confidant abilities, deep personal stories | Gold standard for companion depth. We adopt: relationship progression, personal quests, unlockable abilities. |
+| **Fire Emblem Three Houses** | Support conversations, tea time, gifts, class mentorship | Mentorship angle perfect for our teaching companions. We use: companions as teachers. |
+| **Pokemon** | Simple party swap, minimal personality (until recent games) | Too shallow for our narrative needs. We go deeper: full personalities, dialogue. |
+| **Mass Effect 2** | Loyalty missions, relationship affects ending, squad banter | Loyalty missions = companion quests. Squad banter = contextual comments. We adopt both. |
+| **Final Fantasy X** | Sphere Grid shared progression, swap mid-battle | Mid-battle swap too complex for learners. We use: swap at camps only. |
+| **Dragon Age Origins** | Approval system, companion gifts, origin stories | Approval = our relationship meter. Gifts work well. We include: 100+ gifts. |
+
+**Our Differentiator:** Companions are language teachers with pedagogical specializations, adaptive to learner CEFR level.
+
+---
+
+## Sources
+
+**Existing Game Architecture Analysis:**
+- `/src/store/slices/battleSlice.js` — Battle state (HP, MP, status effects, turns)
+- `/src/store/slices/playerSlice.js` — Player progression (level, XP, inventory, dirhams, outfit)
+- `/src/store/slices/npcSlice.js` — NPC dialogue tracking
+- `/src/data/enemies.js` — Enemy data (21 enemies, elements, zones, AI patterns)
+- `.planning/research/EXPANSION-COMBAT-RPG.md` — Phase 27-32 specifications (148K LOC)
+- `.planning/research/AAA-QUALITY-GAPS.md` — Polish requirements (60 gaps, 88K LOC)
+
+**RPG Genre Knowledge (Training Data, MEDIUM Confidence):**
+- Final Fantasy series (I-XV) — magic systems, equipment, party mechanics
+- Pokemon (Gen I-VIII) — companion systems, type weaknesses, progression
+- Persona (3-5) — social links, confidants, turn-based combat
+- Fire Emblem — support systems, relationship mechanics
+- Mass Effect — loyalty missions, squad dynamics
+- Skyrim, Divinity Original Sin — inventory systems, crafting
+- Scribblenauts, Epistory — word-based gameplay (not educational)
+
+**Educational Game Knowledge (Training Data, MEDIUM Confidence):**
+- Duolingo — gamification patterns, adaptive difficulty, spaced repetition
+- Babbel — conversation practice structures
+- Rosetta Stone — immersion principles
+- Language learning research (Krashen, Nation, FSRS) — pedagogical foundations
+
+**Limitations:**
+- No live web research conducted (WebSearch/WebFetch unavailable)
+- Cannot verify 2026 current trends in game design
+- Relying on training data through early 2025
+- Recommend validation against current RPG releases, language learning apps, and game design postmortems
+
+---
+
+*Feature research for: Arabic Learning RPG (Root Magic, Equipment, Companions)*
+*Researched: 2026-02-12*
+*Confidence: MEDIUM (genre conventions + architecture analysis, no live web validation)*
