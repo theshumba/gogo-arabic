@@ -156,10 +156,14 @@ Plans:
 10. Player benefits from set bonuses when wearing matching themed sets (Scholar's Set, Merchant's Set, etc.) with bonus indicators in equipment UI
 11. Battle rewards (XP, gold, items) from Phase 27 engine wire into player progression and inventory systems
 
-**Plans:** TBD
+**Plans:** 5 plans in 3 waves
 
 Plans:
-- [ ] 29-01: TBD
+- [ ] 29-01-PLAN.md — Data foundation: inventorySlice (IndexedDB), economySlice, equipment/affixes/shops data, utility functions, EventBus events
+- [ ] 29-02-PLAN.md — Phaser integration: EquipmentManager (sprite rendering), EquipmentStats (battle bonuses), battleRewardsMiddleware (XP/gold/items)
+- [ ] 29-03-PLAN.md — Inventory & Equipment UI: InventoryUI grid, EquipmentSlots, ItemTooltip, stat comparison, set bonuses, accessibility
+- [ ] 29-04-PLAN.md — Shop & Haggling: extend ShopOverlay with dynamic inventory, buy/sell, HagglingGame (Arabic numerals), affix auto-teach
+- [ ] 29-05-PLAN.md — Tests: inventorySlice, economySlice, utilities, EquipmentManager, battleRewardsMiddleware, data integrity, full regression
 
 ---
 
