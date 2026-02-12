@@ -17,18 +17,61 @@ import battleReducer from './slices/battleSlice.js';
 import narrativeReducer from './slices/narrativeSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
+import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
+import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
+import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
-// Persisted slices: player, vocabulary, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, battle, narrative
-// Non-persisted (transient UI state): ui, sync
+/**
+ * HYBRID STORAGE ARCHITECTURE
+ *
+ * Heavy data (vocabulary, battle) persists to IndexedDB via nested persistReducer.
+ * Lightweight data (player, settings, quests, etc.) persists to localStorage via root persistReducer.
+ *
+ * Why nested persistReducer instead of split namespaces?
+ * - Preserves existing selector paths (state.vocabulary.*, state.battle.*)
+ * - No breaking changes for 50K LOC of existing code
+ * - Transparent to all consumers of Redux state
+ *
+ * Migration:
+ * - Version 0 (implicit): All state in localStorage 'persist:gogo-arabic'
+ * - Version 1: vocabulary + battle moved to IndexedDB, others remain in localStorage
+ *
+ * Storage backends:
+ * - localStorage (root): player, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, narrative
+ * - IndexedDB (nested): vocabulary, battle
+ * - Not persisted (transient): ui, sync
+ */
+
+// Nested persist configs for heavy slices (IndexedDB)
+const vocabularyPersistConfig = {
+  key: 'gogo-arabic-vocabulary',
+  storage: indexedDBStorage,
+  version: CURRENT_VERSION,
+  migrate,
+};
+
+const battlePersistConfig = {
+  key: 'gogo-arabic-battle',
+  storage: indexedDBStorage,
+  version: CURRENT_VERSION,
+  migrate,
+};
+
+// Wrap heavy reducers with nested persistReducer
+const persistedVocabularyReducer = persistReducer(vocabularyPersistConfig, vocabularyReducer);
+const persistedBattleReducer = persistReducer(battlePersistConfig, battleReducer);
+
+// Root persist config (localStorage) — vocabulary and battle excluded (they have nested configs)
 const persistConfig = {
   key: 'gogo-arabic',
-  storage,
-  whitelist: ['player', 'vocabulary', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'battle', 'narrative'],
+  storage, // localStorage
+  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative'],
+  // NOTE: vocabulary and battle REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
 
 const rootReducer = combineReducers({
   player: playerReducer,
-  vocabulary: vocabularyReducer,
+  vocabulary: persistedVocabularyReducer, // IndexedDB (nested)
   quests: questReducer,
   npc: npcReducer,
   alphabet: alphabetReducer,
@@ -38,7 +81,7 @@ const rootReducer = combineReducers({
   achievements: achievementReducer,
   dailyGoals: dailyGoalsReducer,
   grammar: grammarReducer,
-  battle: battleReducer,
+  battle: persistedBattleReducer, // IndexedDB (nested)
   narrative: narrativeReducer,
 });
 
@@ -49,9 +92,10 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        // Ignore all redux-persist actions (root + nested persistReducers generate their own)
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware),
 });
 
 export const persistor = persistStore(store);

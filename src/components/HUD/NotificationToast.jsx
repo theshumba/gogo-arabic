@@ -12,6 +12,7 @@ import styles from './NotificationToast.module.css';
  * - quest: green for quest progress/completion
  * - word: blue for new words learned
  * - level-up: special gradient for level-up celebrations
+ * - warning: orange/amber for storage quota warnings and system alerts
  */
 const TYPE_STYLES = {
   xp: {
@@ -44,6 +45,12 @@ const TYPE_STYLES = {
     color: COLORS.xpGold,
     icon: 'LV',
     isLevelUp: true,
+  },
+  warning: {
+    background: '#2b1a0d',
+    border: '3px solid #ff9800',
+    color: '#ff9800',
+    icon: '!',
   },
 };
 
