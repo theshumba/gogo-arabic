@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Milestone: v6.0 Combat & RPG
-Phase: 28 of 4 phases (Root Magic & Elemental Affinity) — COMPLETE
-Plan: 4 of 4 plans complete
-Status: Phase 28 VERIFIED ✓ — 13/13 must-haves passed, ready to plan Phase 29
-Last activity: 2026-02-12 — Phase 28 verified (721 tests, 13/13 must-haves, 528KB bundle)
+Phase: 29 of 4 phases (Equipment, Inventory & Economy) — IN PROGRESS
+Plan: 1 of 4 plans complete
+Status: Plan 29-01 COMPLETE — Data foundation built, ready for Plan 29-02
+Last activity: 2026-02-12 — Completed 29-01-PLAN.md (inventorySlice, economySlice, 64 equipment items, 25 affixes)
 
-Progress: [██████████████████████████░░░░] 85% (53 of 62 estimated plans complete across all milestones)
+Progress: [███████████████████████████░░░] 87% (54 of 62 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -37,9 +37,9 @@ Progress: [███████████████████████
 
 ## Test & Build Status
 
-- Tests: 721 passing, 0 failures (baseline 647 + 74 new magic system tests)
-- Build: Succeeds, main bundle 527.91KB (144.96KB gzipped)
-- Git: 12 commits from Phase 28 (3 per plan + 1 metadata each)
+- Tests: 721 passing, 0 failures (baseline 647 + 74 magic system tests, 0 new equipment tests)
+- Build: Succeeds, main bundle 560.42KB (154.28KB gzipped) — +32KB from equipment data
+- Git: 2 commits from Phase 29 Plan 01 (1 per task)
 
 ## Accumulated Context
 
@@ -98,6 +98,20 @@ Key v6.0 roadmap decisions:
 - Full regression: 721 tests (647 existing + 74 new), zero regressions, build succeeds
 - DialogueEngine test fix: Initialize mock state BEFORE creating engine instance
 
+**Phase 29 Plan 01 decisions (equipment data foundation):**
+- inventorySlice uses IndexedDB nested persistReducer (same pattern as magic/battle/vocabulary) at key 'gogo-arabic-inventory'
+- economySlice uses localStorage via root whitelist (shop cache is lightweight compared to 200-item inventory)
+- 200-item inventory cap enforced in addItem reducer (prevents infinite hoarding)
+- Equipment data stored as flat object keyed by itemId for O(1) lookup (not array)
+- Affix bonus multipliers: 0.5 for unlearned/learning words, 1.0 for Review state (vocabulary-gated progression)
+- Arabic numeral conversion handles U+0660-U+0669 range (Eastern Arabic ٠-٩)
+- Set bonuses apply highest threshold met (e.g., 4-piece bonus active if player has 5 pieces equipped)
+- Shop pricing formula: item.sellPrice * 2 * reputation modifier
+- 8 equipment slots chosen: headCovering, robe, cloak, belt, boots, gloves, accessory1, accessory2 (culturally appropriate)
+- 5 rarity tiers: common (white), uncommon (green), rare (blue), epic (purple), legendary (gold) with 0/1/1/2/2 max affixes
+- 64 equipment items created spanning all slots and rarities with Arabic names and lore
+- 25 Arabic adjective affixes chosen (18 positive, 7 negative) mapping to real Arabic words
+
 ### Phase 27 Foundation (already committed)
 
 - Turn-based BattleScene with 17-state FSM (BattleStateMachine)
@@ -140,7 +154,7 @@ Key v6.0 roadmap decisions:
 
 ### Blockers/Concerns
 
-None blocking Phase 29 start. Phase 28 (Root Magic) verified and complete.
+None. Phase 29 Plan 01 (data foundation) complete, ready for Plan 02 (Phaser integration).
 
 ### Pending Todos
 
@@ -148,10 +162,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 28 complete)
-Stopped at: Phase 28 verified (13/13 must-haves)
-Next step: Plan Phase 29 (Equipment, Inventory & Economy) via /gsd:plan-phase 29
+Last session: 2026-02-12 (Phase 29 Plan 01 complete)
+Stopped at: 29-01-PLAN.md complete (2 tasks, 2 commits, SUMMARY created)
+Next step: .planning/phases/29-equipment-inventory-economy/29-02-PLAN.md (Phaser integration)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 28 complete (4/4 plans, 13/13 verified), ready to plan Phase 29*
+*Last updated: 2026-02-12 — Phase 29 Plan 01 complete (data foundation), ready for Plan 02*
