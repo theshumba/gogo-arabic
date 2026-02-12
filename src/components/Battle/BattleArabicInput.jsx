@@ -1,0 +1,258 @@
+/**
+ * BattleArabicInput.jsx — Arabic input overlay during combat.
+ *
+ * Appears when player selects Attack or Magic.
+ * Two modes: 'choice' (multiple choice for beginners) and 'type' (free typing).
+ * Timer bar counts down. Accuracy determines damage.
+ */
+
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { useFormatArabic } from '../../hooks/useFormatArabic.js';
+import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
+import { audioManager } from '../../services/audio.js';
+
+const reduceMotion =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * Calculate accuracy of Arabic input vs target.
+ * Strips diacritics for comparison, uses Levenshtein distance for partial credit.
+ */
+function calculateAccuracy(input, word) {
+  if (!input || !word?.arabic) return 0;
+  const normalize = (s) => s.replace(/[\u064B-\u065F\u0670]/g, '').trim();
+  const normalizedInput = normalize(input);
+  const normalizedTarget = normalize(word.arabic);
+
+  if (normalizedInput === normalizedTarget) return 1.0;
+
+  const maxLen = Math.max(normalizedInput.length, normalizedTarget.length);
+  if (maxLen === 0) return 0;
+
+  const distance = levenshtein(normalizedInput, normalizedTarget);
+  return Math.max(0, 1 - distance / maxLen);
+}
+
+function levenshtein(a, b) {
+  const matrix = Array.from({ length: b.length + 1 }, (_, i) =>
+    Array.from({ length: a.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      const cost = a[j - 1] === b[i - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+export default function BattleArabicInput({ prompt, onSubmit }) {
+  const [input, setInput] = useState('');
+  const [timeRemaining, setTimeRemaining] = useState(prompt?.timeLimit || 15000);
+  const inputRef = useRef(null);
+  const startTimeRef = useRef(Date.now());
+  const submittedRef = useRef(false);
+  const formatArabic = useFormatArabic();
+
+  // Reset on new prompt
+  useEffect(() => {
+    if (!prompt) return;
+    setInput('');
+    setTimeRemaining(prompt.timeLimit || 15000);
+    startTimeRef.current = Date.now();
+    submittedRef.current = false;
+    inputRef.current?.focus();
+  }, [prompt]);
+
+  const handleSubmit = useCallback(
+    (value, isTimeout = false) => {
+      if (submittedRef.current) return;
+      submittedRef.current = true;
+
+      const timeElapsed = Date.now() - startTimeRef.current;
+      const finalValue = isTimeout ? '' : value || input;
+      const accuracy = isTimeout ? 0 : calculateAccuracy(finalValue, prompt?.word);
+
+      audioManager.playSFX(accuracy >= 0.8 ? 'correct' : 'wrong');
+
+      EventBus.emit(EVENTS.BATTLE_ARABIC_INPUT, {
+        input: finalValue,
+        wordId: prompt?.word?.id,
+        accuracy,
+        timeElapsed,
+        element: prompt?.word?.element || null,
+      });
+
+      onSubmit?.();
+      setInput('');
+    },
+    [input, prompt, onSubmit]
+  );
+
+  // Timer countdown
+  useEffect(() => {
+    if (!prompt) return;
+
+    const interval = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 100) {
+          clearInterval(interval);
+          handleSubmit('', true);
+          return 0;
+        }
+        return prev - 100;
+      });
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [prompt, handleSubmit]);
+
+  if (!prompt) return null;
+
+  const timerPercent = (timeRemaining / (prompt.timeLimit || 15000)) * 100;
+  const timerColor = timerPercent > 50 ? '#44CC44' : timerPercent > 25 ? '#CCCC44' : '#CC4444';
+
+  return (
+    <motion.div
+      className="battle-input-overlay"
+      initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: reduceMotion ? 0.1 : 0.15 }}
+      style={{
+        position: 'absolute',
+        bottom: '100px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        direction: 'rtl',
+        zIndex: 1001,
+        background: 'rgba(26, 26, 46, 0.95)',
+        border: '2px solid rgba(226, 182, 89, 0.6)',
+        padding: '20px',
+        minWidth: '320px',
+        maxWidth: '440px',
+      }}
+    >
+      {/* Timer bar */}
+      <div
+        style={{
+          width: '100%',
+          height: '6px',
+          background: 'rgba(255,255,255,0.1)',
+          marginBottom: '16px',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            width: `${timerPercent}%`,
+            height: '100%',
+            background: timerColor,
+            transition: 'width 100ms linear',
+          }}
+        />
+      </div>
+
+      {/* Choice mode */}
+      {prompt.difficulty === 'choice' && (
+        <div>
+          <p
+            style={{
+              fontFamily: "'Amiri', serif",
+              fontSize: '24px',
+              color: '#f5f0e8',
+              textAlign: 'center',
+              marginBottom: '16px',
+            }}
+            lang="ar"
+          >
+            {formatArabic(prompt.word?.arabic || '')}
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {(prompt.choices || []).map((choice, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSubmit(choice.value)}
+                style={{
+                  padding: '10px 16px',
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(226, 182, 89, 0.4)',
+                  color: '#f5f0e8',
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: '10px',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                }}
+              >
+                {choice.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Type mode */}
+      {prompt.difficulty === 'type' && (
+        <div>
+          <p
+            style={{
+              fontFamily: "'Press Start 2P', monospace",
+              fontSize: '12px',
+              color: '#f5f0e8',
+              textAlign: 'center',
+              marginBottom: '12px',
+            }}
+          >
+            {prompt.word?.english || ''}
+          </p>
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSubmit();
+            }}
+            placeholder="...اكتب بالعربية"
+            dir="rtl"
+            autoComplete="off"
+            style={{
+              width: '100%',
+              padding: '10px 14px',
+              fontFamily: "'Amiri', serif",
+              fontSize: '20px',
+              color: '#f5f0e8',
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(226, 182, 89, 0.5)',
+              outline: 'none',
+              direction: 'rtl',
+              marginBottom: '10px',
+              boxSizing: 'border-box',
+            }}
+          />
+          <button
+            onClick={() => handleSubmit()}
+            style={{
+              width: '100%',
+              padding: '10px',
+              background: 'rgba(226, 182, 89, 0.8)',
+              border: 'none',
+              color: '#1A1A2E',
+              fontFamily: "'Press Start 2P', monospace",
+              fontSize: '11px',
+              cursor: 'pointer',
+            }}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </motion.div>
+  );
+}

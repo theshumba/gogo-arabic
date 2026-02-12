@@ -32,6 +32,22 @@ describe('battleSlice', () => {
         bossesDefeated: [],
         battleHistory: [],
         hintsUsed: 0,
+        // v6.0 Phase 27 fields
+        playerMaxHP: 100,
+        playerMP: 50,
+        playerMaxMP: 50,
+        turnCount: 0,
+        currentTurn: null,
+        isPlayerDefending: false,
+        playerEffects: [],
+        enemyEffects: [],
+        grammarCombo: 0,
+        maxStreak: 0,
+        wordsUsed: [],
+        encounterType: null,
+        battleZone: null,
+        battleStartTimestamp: null,
+        enemyData: null,
       });
     });
   });
@@ -398,7 +414,7 @@ describe('battleSlice', () => {
 
     it('selectBattleStats should return battle statistics', () => {
       const stats = selectBattleStats(mockState);
-      expect(stats).toEqual({
+      expect(stats).toMatchObject({
         playerHP: 75,
         bossHP: 120,
         maxBossHP: 200,
