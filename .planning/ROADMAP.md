@@ -97,11 +97,11 @@ v6.0 transforms the battle engine foundation (Phase 27) into a complete combat R
 4. Player's existing save data auto-migrates from localStorage to IndexedDB on first load after update with zero data loss
 5. Redux-persist continues to work with hybrid storage (lightweight state in localStorage, heavy data in IndexedDB)
 
-**Plans:** 2 plans
+**Plans:** 2/2 complete
 
 Plans:
-- [ ] 27.1-01-PLAN.md — IndexedDB adapter, quota service, and store migration to hybrid persistence
-- [ ] 27.1-02-PLAN.md — Tests for storage infrastructure and full regression verification
+- [x] 27.1-01-PLAN.md — IndexedDB adapter, quota service, and store migration to hybrid persistence
+- [x] 27.1-02-PLAN.md — Tests for storage infrastructure and full regression verification
 
 ---
 
@@ -221,7 +221,7 @@ Phases execute in numeric order: 1-26 (complete) -> 27.1 -> 28 -> 29 -> 30
 | 24. Structured Progression & Gates | v5.0 | 1/1 | Complete | 2026-02-11 |
 | 25. Vocabulary Integration | v5.0 | 1/1 | Complete | 2026-02-11 |
 | 26. Narrative Branching & Polish | v5.0 | 1/1 | Complete | 2026-02-11 |
-| 27.1. IndexedDB Migration | v6.0 | 0/2 | Not started | - |
+| 27.1. IndexedDB Migration | v6.0 | 2/2 | Complete | 2026-02-12 |
 | 28. Root Magic & Elemental Affinity | v6.0 | 0/? | Not started | - |
 | 29. Equipment, Inventory & Economy | v6.0 | 0/? | Not started | - |
 | 30. Companion System | v6.0 | 0/? | Not started | - |

@@ -5,15 +5,15 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v6.0 Combat & RPG — Phase 27.1 (IndexedDB Migration)
+**Current focus:** v6.0 Combat & RPG — Phase 28 (Root Magic & Elemental Affinity)
 
 ## Current Position
 
 Milestone: v6.0 Combat & RPG
 Phase: 27.1 of 4 phases (IndexedDB Migration)
 Plan: 2 of 2 plans complete
-Status: Phase 27.1 COMPLETE — ready to plan Phase 28 (Root Magic & Elemental Affinity)
-Last activity: 2026-02-12 — Completed 27.1-02-SUMMARY.md (IndexedDB migration test suite)
+Status: Phase 27.1 VERIFIED ✓ — ready to plan Phase 28 (Root Magic & Elemental Affinity)
+Last activity: 2026-02-12 — Phase 27.1 verified (15/15 must-haves, 647 tests, 458KB bundle)
 
 Progress: [████████████████████████░░░░░░] 82% (49 of 60 estimated plans complete across all milestones)
 
@@ -109,7 +109,7 @@ Key v6.0 roadmap decisions:
 
 ### Blockers/Concerns
 
-None blocking Phase 27.1 start.
+None blocking Phase 28 start. Phase 27.1 (IndexedDB migration) verified and complete.
 
 ### Pending Todos
 

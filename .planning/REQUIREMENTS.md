@@ -9,9 +9,9 @@ Requirements for v6.0 milestone. Each maps to roadmap phases.
 
 ### Storage & Infrastructure
 
-- [ ] **STOR-01**: Player can save games without localStorage overflow — FSRS cards and battle history migrated to IndexedDB
-- [ ] **STOR-02**: Player sees a warning when storage usage exceeds 80% of quota
-- [ ] **STOR-03**: Player's existing save data auto-migrates from localStorage to IndexedDB on first load after update
+- [x] **STOR-01**: Player can save games without localStorage overflow — FSRS cards and battle history migrated to IndexedDB ✓
+- [x] **STOR-02**: Player sees a warning when storage usage exceeds 80% of quota ✓
+- [x] **STOR-03**: Player's existing save data auto-migrates from localStorage to IndexedDB on first load after update ✓
 
 ### Root Magic & Elemental Affinity
 
@@ -112,9 +112,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| STOR-01 | Phase 27.1 | Pending |
-| STOR-02 | Phase 27.1 | Pending |
-| STOR-03 | Phase 27.1 | Pending |
+| STOR-01 | Phase 27.1 | Complete |
+| STOR-02 | Phase 27.1 | Complete |
+| STOR-03 | Phase 27.1 | Complete |
 | MGIC-01 | Phase 28 | Pending |
 | MGIC-02 | Phase 28 | Pending |
 | MGIC-03 | Phase 28 | Pending |
