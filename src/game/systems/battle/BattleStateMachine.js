@@ -82,6 +82,11 @@ export class BattleStateMachine {
     const enemyId = this.config.enemyParty?.[0];
     const enemyData = getEnemy(enemyId);
 
+    // Get equipment bonuses from scene's EquipmentStats (HP/MP are additive)
+    const equipmentBonuses = this.scene.equipmentStats?.getTotalBonuses() || { hp: 0, mp: 0 };
+    const baseMaxHP = 100;
+    const baseMaxMP = 50;
+
     store.dispatch(
       startBattle({
         bossId: enemyId,
@@ -89,8 +94,8 @@ export class BattleStateMachine {
         encounterType: this.config.encounterType || 'random',
         zone: this.config.zone,
         enemyData: enemyData || null,
-        playerMaxHP: 100,
-        playerMaxMP: 50,
+        playerMaxHP: baseMaxHP + equipmentBonuses.hp,
+        playerMaxMP: baseMaxMP + equipmentBonuses.mp,
       })
     );
 
@@ -375,6 +380,10 @@ export class BattleStateMachine {
 
     if (action.type === 'attack') {
       const enemyData = store.getState().battle.enemyData;
+
+      // Get equipment damage bonus from scene's EquipmentStats
+      const equipmentDamageMult = this.scene.equipmentStats?.getStatForBattle('damage') || 1.0;
+
       const result = calculateDamage({
         baseDamage: 10,
         accuracy: input?.accuracy || 0,
@@ -384,6 +393,7 @@ export class BattleStateMachine {
         streak: store.getState().battle.streak,
         playerLevel: store.getState().player?.level || 1,
         isMagic: false,
+        equipmentDamageMult,
       });
       action.resolvedDamage = result.damage;
       action.isMiss = result.isMiss;
@@ -593,7 +603,13 @@ export class BattleStateMachine {
     const screenShake = this.scene.screenShake;
 
     const isDefending = store.getState().battle.isPlayerDefending;
-    const finalDamage = isDefending ? Math.floor(damage * 0.5) : damage;
+
+    // Apply equipment defense bonus (reduces incoming damage)
+    const equipmentDefenseMult = this.scene.equipmentStats?.getStatForBattle('defense') || 1.0;
+    let reducedDamage = Math.floor(damage / equipmentDefenseMult);
+
+    // Apply defend bonus (50% reduction)
+    const finalDamage = isDefending ? Math.floor(reducedDamage * 0.5) : reducedDamage;
 
     store.dispatch(dealDamageToPlayer({ damage: finalDamage }));
 

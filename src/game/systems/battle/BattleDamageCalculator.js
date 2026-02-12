@@ -20,6 +20,7 @@ import { getElementMultiplier } from '../../../data/rootMagic.js';
  * @param {number} params.streak - Current combo streak count
  * @param {number} params.playerLevel - Player's current level
  * @param {boolean} params.isMagic - Whether this is a magic attack
+ * @param {number} params.equipmentDamageMult - Equipment damage multiplier (default 1.0)
  * @returns {{ damage: number, isMiss: boolean, isCritical: boolean, accuracyMult: number, speedMult: number, elementMult: number, comboMult: number }}
  */
 export function calculateDamage({
@@ -31,6 +32,7 @@ export function calculateDamage({
   streak = 0,
   playerLevel = 1,
   isMagic = false,
+  equipmentDamageMult = 1.0,
 }) {
   // Base damage scales with level
   let damage = baseDamage + playerLevel * 2;
@@ -79,7 +81,8 @@ export function calculateDamage({
     comboMult = 1.1;
   }
 
-  damage = Math.floor(damage * accuracyMult * speedMult * elementMult * comboMult);
+  // Apply equipment damage multiplier (Phase 29)
+  damage = Math.floor(damage * accuracyMult * speedMult * elementMult * comboMult * equipmentDamageMult);
 
   return {
     damage: Math.max(1, damage), // Minimum 1 damage on hit

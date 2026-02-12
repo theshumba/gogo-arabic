@@ -11,6 +11,7 @@ import ScreenShake from '../systems/ScreenShake.js';
 import ParticleEffectManager from '../systems/ParticleEffectManager.js';
 import { SceneStackManager } from '../systems/SceneStackManager.js';
 import { DialogueEngine } from '../systems/DialogueEngine.js';
+import { EquipmentManager } from '../systems/equipment/EquipmentManager.js';
 import { ZONES, TILE } from '../../data/zones.js';
 
 // ============================================================
@@ -38,6 +39,7 @@ export class WorldScene extends Phaser.Scene {
     this.particleEffects = null;
     this.sceneStackManager = null;
     this.dialogueEngine = null;
+    this.equipmentManager = null;
 
     // Input
     this.interactKey = null;
@@ -116,6 +118,12 @@ export class WorldScene extends Phaser.Scene {
       this.domOverlay.init();
     }
 
+    // Destroy equipment manager before player controller
+    if (this.equipmentManager) {
+      this.equipmentManager.destroy();
+      this.equipmentManager = null;
+    }
+
     // Destroy subsystems
     this.mapLoader.destroy();
     this.npcManager.destroy();
@@ -141,6 +149,9 @@ export class WorldScene extends Phaser.Scene {
 
     // Spawn player
     const player = this.playerController.create(spawnX, spawnY, wallGroup);
+
+    // Create equipment manager to render equipment sprites on player
+    this.equipmentManager = new EquipmentManager(this, player);
 
     // Spawn NPCs
     this.npcManager.create(zone.npcs, player, wallGroup, this.domOverlay);
@@ -218,6 +229,9 @@ export class WorldScene extends Phaser.Scene {
 
     // Update player movement
     this.playerController.update();
+
+    // Update equipment sprites to follow player
+    if (this.equipmentManager) this.equipmentManager.update();
 
     // Y-sort all sprites for depth ordering
     const player = this.playerController.getPlayer();
@@ -315,6 +329,11 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   shutdown() {
+    if (this.equipmentManager) {
+      this.equipmentManager.destroy();
+      this.equipmentManager = null;
+    }
+
     if (this.dialogueEngine) {
       this.dialogueEngine.destroy();
       this.dialogueEngine = null;

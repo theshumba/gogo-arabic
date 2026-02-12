@@ -19,6 +19,8 @@ import { BattleSpriteManager } from '../systems/battle/BattleSpriteManager.js';
 import { BattleEffectManager } from '../systems/battle/BattleEffectManager.js';
 import { BattleHUDManager } from '../systems/battle/BattleHUDManager.js';
 import { BattleDamagePool } from '../systems/battle/BattleDamagePool.js';
+import { EquipmentManager } from '../systems/equipment/EquipmentManager.js';
+import { EquipmentStats } from '../systems/equipment/EquipmentStats.js';
 import ScreenShake from '../systems/ScreenShake.js';
 
 export class BattleScene extends Phaser.Scene {
@@ -35,6 +37,8 @@ export class BattleScene extends Phaser.Scene {
     this.hud = null;
     this.damagePool = null;
     this.stateMachine = null;
+    this.equipmentManager = null;
+    this.equipmentStats = null;
   }
 
   init(data) {
@@ -91,6 +95,10 @@ export class BattleScene extends Phaser.Scene {
     this.sprites.spawnPlayer();
     this.sprites.spawnEnemies(this.battleConfig.enemyParty || []);
 
+    // Create equipment systems
+    this.equipmentManager = new EquipmentManager(this, this.sprites.playerSprite);
+    this.equipmentStats = new EquipmentStats();
+
     // Initialize HUD
     this.hud.create();
 
@@ -136,6 +144,7 @@ export class BattleScene extends Phaser.Scene {
   update(time, delta) {
     this.stateMachine?.update(time, delta);
     this.sprites?.update(time, delta);
+    this.equipmentManager?.update();
     this.hud?.update(time, delta);
     this.damagePool?.update(time, delta);
   }
@@ -170,6 +179,8 @@ export class BattleScene extends Phaser.Scene {
     EventBus.off(EVENTS.MAGIC_COMBO_TRIGGERED, this._onMagicComboTriggered);
 
     // Destroy subsystems
+    this.equipmentManager?.destroy();
+    this.equipmentStats?.destroy();
     this.stateMachine?.destroy();
     this.arena?.destroy();
     this.sprites?.destroy();
@@ -177,6 +188,8 @@ export class BattleScene extends Phaser.Scene {
     this.hud?.destroy();
     this.damagePool?.destroy();
 
+    this.equipmentManager = null;
+    this.equipmentStats = null;
     this.screenShake = null;
     this.arena = null;
     this.sprites = null;
