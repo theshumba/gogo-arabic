@@ -29,9 +29,8 @@ describe('DialogueEngine', () => {
 
   beforeEach(() => {
     scene = createMockScene();
-    engine = new DialogueEngine(scene);
 
-    // Default mock state
+    // Default mock state (set BEFORE creating engine)
     mockState = {
       quests: {
         quests: {
@@ -59,11 +58,27 @@ describe('DialogueEngine', () => {
           word2: { wordId: 'word2', due: Date.now() },
         },
       },
+      magic: {
+        discoveredRoots: [],
+        rootMastery: {},
+        affinity: {
+          primary: null,
+          secondary: null,
+          discoveryChoices: [],
+          choiceCount: 0,
+        },
+        equippedSpells: [null, null, null, null, null, null],
+        activeCombos: [],
+        lastCastTimestamp: null,
+      },
     };
 
     store.getState.mockReturnValue(mockState);
     store.dispatch.mockClear();
     vi.spyOn(EventBus, 'emit').mockImplementation(() => {});
+
+    // Create engine AFTER mock state is set
+    engine = new DialogueEngine(scene);
   });
 
   describe('evaluateCondition', () => {
