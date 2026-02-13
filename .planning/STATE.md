@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 32 of 32 (Advanced Combat)
-Plan: 8 of 11
+Plan: 9 of 11
 Status: In progress
-Last activity: 2026-02-13 — Completed 32-08-PLAN.md (BossRushController + PuzzleBattleManager)
+Last activity: 2026-02-13 — Completed 32-09-PLAN.md (PostBattleReview + ArenaLeaderboard)
 
-Progress: [████████████████████████████████████████████████████████████░░░] 8/11 Phase 32 plans
+Progress: [██████████████████████████████████████████████████████████████░░] 9/11 Phase 32 plans
 
 ### Shipped Milestones
 
@@ -111,6 +111,11 @@ v6.1 Phase 32 decisions:
 - Fixed puzzle damage = enemyHP / puzzlesRequired prevents stat brute-forcing (32-08)
 - Embedded puzzle content pools in PuzzleBattleManager rather than external data files (32-08)
 - Auto-advance interludes after 5s with manual dismiss option (32-08)
+- PostBattleReview sorts vocabulary by accuracy ascending (weakest first) for learning prioritization (32-09)
+- ArenaLeaderboard accepts data via props (not Redux) since arenaSlice not in store until 32-11 (32-09)
+- toArabicNumerals() recreated locally in PostBattleReview and ArenaLeaderboard (independent from ComboMeter) (32-09)
+- Practice Weak Words button emits EVENTS.REVIEW_SESSION_OPEN with weak word IDs array (32-09)
+- Top 3 arena ranks get gold/silver/bronze styling with star decoration for 1st place (32-09)
 
 ### Open Items Carried Forward
 
@@ -133,8 +138,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 32 execution)
-Stopped at: Completed 32-08-PLAN.md (BossRushController + PuzzleBattleManager)
-Resume file: .planning/phases/32-advanced-combat/32-09-PLAN.md (next)
+Stopped at: Completed 32-09-PLAN.md (PostBattleReview + ArenaLeaderboard)
+Resume file: .planning/phases/32-advanced-combat/32-10-PLAN.md (next)
 
 **Phase 32 Progress:**
 - 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
@@ -145,11 +150,12 @@ Resume file: .planning/phases/32-advanced-combat/32-09-PLAN.md (next)
 - 32-06: Battle UI Components — COMPLETE (GrammarComboInput 3 modes, BattleItemMenu, TargetSelector, flee mode, 2 commits)
 - 32-07: ArenaController + ArenaHUD — COMPLETE (ArenaController wave management, ArenaHUD Arabic overlay, 2 commits)
 - 32-08: BossRushController + PuzzleBattleManager — COMPLETE (boss rush sequencing, 3 puzzle types, BossRushInterlude, 8 EventBus constants, 2 commits)
+- 32-09: PostBattleReview + ArenaLeaderboard — COMPLETE (per-word accuracy analytics, 3-mode leaderboard, Arabic-Indic numerals, 2 commits)
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
-- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (8/11 plans)
+- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (9/11 plans)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 32-08 (BossRushController + PuzzleBattleManager)*
+*Last updated: 2026-02-13 — Completed plan 32-09 (PostBattleReview + ArenaLeaderboard)*
