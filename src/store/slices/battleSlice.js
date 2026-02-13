@@ -38,6 +38,14 @@ const initialState = {
 
   // Enemy details (cached from data for quick access)
   enemyData: null, // { id, name, nameArabic, element, ... }
+
+  // --- Companion battle state (Phase 30) ---
+  companionHP: null, // null = no companion in battle
+  companionMaxHP: null,
+  companionMP: null,
+  companionMaxMP: null,
+  companionEffects: [],
+  companionDefending: false,
 };
 
 const battleSlice = createSlice({
@@ -203,6 +211,13 @@ const battleSlice = createSlice({
       state.battleZone = null;
       state.battleStartTimestamp = null;
       state.enemyData = null;
+      // Clear companion battle state
+      state.companionHP = null;
+      state.companionMaxHP = null;
+      state.companionMP = null;
+      state.companionMaxMP = null;
+      state.companionEffects = [];
+      state.companionDefending = false;
     },
 
     resetBattle(state) {
@@ -226,6 +241,81 @@ const battleSlice = createSlice({
       state.battleZone = null;
       state.battleStartTimestamp = null;
       state.enemyData = null;
+      state.companionHP = null;
+      state.companionMaxHP = null;
+      state.companionMP = null;
+      state.companionMaxMP = null;
+      state.companionEffects = [];
+      state.companionDefending = false;
+    },
+
+    // ─── Companion battle reducers (Phase 30) ─────────────
+
+    initCompanionBattle(state, action) {
+      // payload: { hp, mp }
+      const { hp, mp } = action.payload;
+      state.companionHP = hp;
+      state.companionMaxHP = hp;
+      state.companionMP = mp;
+      state.companionMaxMP = mp;
+      state.companionEffects = [];
+      state.companionDefending = false;
+    },
+
+    spendCompanionMP(state, action) {
+      // payload: amount (number)
+      const amount = action.payload;
+      state.companionMP = Math.max(0, state.companionMP - amount);
+    },
+
+    healCompanion(state, action) {
+      // payload: amount (number)
+      const amount = action.payload;
+      state.companionHP = Math.min(state.companionMaxHP, state.companionHP + amount);
+    },
+
+    healPlayer(state, action) {
+      // payload: amount (number)
+      const amount = action.payload;
+      state.playerHP = Math.min(state.playerMaxHP, state.playerHP + amount);
+    },
+
+    damageCompanion(state, action) {
+      // payload: amount (number)
+      const amount = action.payload;
+      const finalDamage = state.companionDefending ? Math.floor(amount * 0.5) : amount;
+      state.companionHP = Math.max(0, state.companionHP - finalDamage);
+    },
+
+    setCompanionDefending(state, action) {
+      // payload: defending (boolean)
+      state.companionDefending = action.payload;
+    },
+
+    applyPlayerEffect(state, action) {
+      // payload: { id, duration, source }
+      const { id, duration, source } = action.payload;
+      // Remove existing instance of same effect (no stacking)
+      const filtered = state.playerEffects.filter((e) => e.id !== id);
+      filtered.push({ id, remainingTurns: duration, source: source || 'companion' });
+      state.playerEffects = filtered;
+    },
+
+    removeEnemyEffect(state, action) {
+      // payload: enemyIndex (number) — removes first status effect from enemy
+      // For now, we only have 1 enemy, so just remove first effect
+      if (state.enemyEffects.length > 0) {
+        state.enemyEffects = state.enemyEffects.slice(1);
+      }
+    },
+
+    clearCompanionBattle(state) {
+      state.companionHP = null;
+      state.companionMaxHP = null;
+      state.companionMP = null;
+      state.companionMaxMP = null;
+      state.companionEffects = [];
+      state.companionDefending = false;
     },
   },
 });
@@ -246,6 +336,15 @@ export const {
   useHint,
   endBattle,
   resetBattle,
+  initCompanionBattle,
+  spendCompanionMP,
+  healCompanion,
+  healPlayer,
+  damageCompanion,
+  setCompanionDefending,
+  applyPlayerEffect,
+  removeEnemyEffect,
+  clearCompanionBattle,
 } = battleSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -289,5 +388,14 @@ export const selectBattleWinRate = createSelector(
     return Math.round((wins / history.length) * 100);
   }
 );
+
+export const selectCompanionBattleState = (state) => ({
+  companionHP: state.battle.companionHP,
+  companionMaxHP: state.battle.companionMaxHP,
+  companionMP: state.battle.companionMP,
+  companionMaxMP: state.battle.companionMaxMP,
+  companionEffects: state.battle.companionEffects,
+  companionDefending: state.battle.companionDefending,
+});
 
 export default battleSlice.reducer;

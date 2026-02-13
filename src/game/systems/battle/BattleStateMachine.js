@@ -25,12 +25,21 @@ import {
   recordWordUsed,
   incrementTurn,
   endBattle,
+  initCompanionBattle,
+  spendCompanionMP,
+  healCompanion,
+  healPlayer,
+  damageCompanion,
+  setCompanionDefending,
+  applyPlayerEffect,
+  removeEnemyEffect,
 } from '../../../store/slices/battleSlice.js';
 import { getEnemy } from '../../../data/enemies.js';
 import { calculateDamage } from './BattleDamageCalculator.js';
 import { EnemyAI } from './EnemyAI.js';
 import { RootMagicManager } from '../magic/RootMagicManager.js';
 import { getRootWords } from '../../../data/rootsData.js';
+import { CompanionBattleAI } from '../companions/CompanionBattleAI.js';
 
 const STATES = Object.freeze({
   IDLE: 'IDLE',
@@ -43,6 +52,8 @@ const STATES = Object.freeze({
   RESOLVE_ACTION: 'RESOLVE_ACTION',
   APPLY_DAMAGE: 'APPLY_DAMAGE',
   ANIMATE_HIT: 'ANIMATE_HIT',
+  COMPANION_TURN: 'COMPANION_TURN',
+  COMPANION_ACTION: 'COMPANION_ACTION',
   ENEMY_TURN: 'ENEMY_TURN',
   ENEMY_ANIMATE: 'ENEMY_ANIMATE',
   APPLY_ENEMY_DAMAGE: 'APPLY_ENEMY_DAMAGE',
@@ -63,6 +74,7 @@ export class BattleStateMachine {
     this.pendingInput = null;
     this.enemyAI = null;
     this.magicManager = null;
+    this.companionBattleAI = null;
     this.isPlayerTurn = true; // Strict turns: player first
 
     // Initialize enemy AI
@@ -75,6 +87,12 @@ export class BattleStateMachine {
 
     // Initialize magic manager
     this.magicManager = new RootMagicManager(scene);
+
+    // Initialize companion AI if active battle companion exists
+    const activeParty = store.getState().companions?.activeParty;
+    if (activeParty?.battle) {
+      this.companionBattleAI = new CompanionBattleAI(activeParty.battle);
+    }
   }
 
   start() {
@@ -98,6 +116,16 @@ export class BattleStateMachine {
         playerMaxMP: baseMaxMP + equipmentBonuses.mp,
       })
     );
+
+    // Initialize companion battle state if companion exists
+    if (this.companionBattleAI) {
+      store.dispatch(
+        initCompanionBattle({
+          hp: this.companionBattleAI.baseStats.hp,
+          mp: this.companionBattleAI.baseStats.mp,
+        })
+      );
+    }
 
     this._transition(STATES.INTRO);
   }
@@ -157,6 +185,9 @@ export class BattleStateMachine {
         break;
       case STATES.ANIMATE_HIT:
         this._animateHit();
+        break;
+      case STATES.COMPANION_TURN:
+        this._startCompanionTurn();
         break;
       case STATES.ENEMY_TURN:
         this._startEnemyTurn();
@@ -557,6 +588,91 @@ export class BattleStateMachine {
     }
   }
 
+  // ─── Companion turn ────────────────────────────────────────
+
+  _startCompanionTurn() {
+    if (!this.companionBattleAI) {
+      // No companion, skip to enemy turn
+      this._transition(STATES.ENEMY_TURN);
+      return;
+    }
+
+    // Emit companion turn start event
+    EventBus.emit(EVENTS.COMPANION_BATTLE_TURN_START, {
+      companionId: this.companionBattleAI.companionId,
+    });
+
+    // Build battleState object from Redux
+    const battleState = store.getState().battle;
+    const companionState = {
+      playerHP: battleState.playerHP,
+      playerMaxHP: battleState.playerMaxHP,
+      companionHP: battleState.companionHP ?? this.companionBattleAI.baseStats.hp,
+      companionMaxHP: this.companionBattleAI.baseStats.hp,
+      companionMP: battleState.companionMP ?? this.companionBattleAI.baseStats.mp,
+      enemyHP: battleState.bossHP || 0,
+      enemyMaxHP: battleState.maxBossHP || 100,
+      playerEffects: battleState.playerEffects ?? [],
+      companionEffects: battleState.companionEffects ?? [],
+      enemyEffects: battleState.enemyEffects ?? [],
+    };
+
+    // Get AI decision
+    const action = this.companionBattleAI.selectAction(companionState);
+
+    // Emit action for React UI display
+    EventBus.emit(EVENTS.COMPANION_BATTLE_ACTION, {
+      companionId: this.companionBattleAI.companionId,
+      action,
+    });
+
+    // 500ms delay before resolving (gives React time to show companion action)
+    this.scene.time.delayedCall(500, () => {
+      this._resolveCompanionAction(action);
+    });
+  }
+
+  _resolveCompanionAction(action) {
+    switch (action.action) {
+      case 'attack':
+        store.dispatch(dealDamage({ damage: action.damage, correct: true }));
+        break;
+      case 'skill':
+        store.dispatch(dealDamage({ damage: action.damage, correct: true }));
+        store.dispatch(spendCompanionMP(action.mpCost));
+        break;
+      case 'heal':
+        if (action.target === 'player') {
+          store.dispatch(healPlayer(action.healAmount));
+        } else {
+          store.dispatch(healCompanion(action.healAmount));
+        }
+        store.dispatch(spendCompanionMP(action.mpCost));
+        break;
+      case 'defend':
+        store.dispatch(setCompanionDefending(true));
+        break;
+      case 'buff':
+        store.dispatch(
+          applyPlayerEffect({ id: action.effectId, duration: action.duration, source: 'companion' })
+        );
+        store.dispatch(spendCompanionMP(action.mpCost));
+        break;
+      case 'dispel':
+        store.dispatch(removeEnemyEffect(0)); // Remove first enemy buff
+        store.dispatch(spendCompanionMP(action.mpCost));
+        break;
+    }
+
+    // Emit turn end
+    EventBus.emit(EVENTS.COMPANION_BATTLE_TURN_END, {
+      companionId: this.companionBattleAI.companionId,
+    });
+
+    // Transition to ENEMY_TURN
+    this._transition(STATES.ENEMY_TURN);
+  }
+
   // ─── Enemy turn ────────────────────────────────────────────
 
   _startEnemyTurn() {
@@ -655,6 +771,13 @@ export class BattleStateMachine {
   _endTurn() {
     this.currentAction = null;
     this.pendingInput = null;
+
+    // Check if player turn just ended and we have companion
+    if (this.isPlayerTurn && this.companionBattleAI) {
+      // Player turn done, companion turn next
+      this._transition(STATES.COMPANION_TURN);
+      return;
+    }
 
     // Alternate turns (strict turn mode)
     this.isPlayerTurn = !this.isPlayerTurn;
