@@ -32,14 +32,18 @@ const narrativeSlice = createSlice({
     setNpcRelationship(state, action) {
       // payload: { npcId, level }
       const { npcId, level } = action.payload;
-      state.npcRelationships[npcId] = Math.max(0, Math.min(5, level));
+      const isCompanion = npcId.startsWith('companion_');
+      const maxValue = isCompanion ? 100 : 5;
+      state.npcRelationships[npcId] = Math.max(0, Math.min(maxValue, level));
     },
 
     incrementNpcRelationship(state, action) {
       // payload: { npcId, amount } — amount defaults to 1
       const { npcId, amount = 1 } = action.payload;
       const current = state.npcRelationships[npcId] ?? 0;
-      state.npcRelationships[npcId] = Math.max(0, Math.min(5, current + amount));
+      const isCompanion = npcId.startsWith('companion_');
+      const maxValue = isCompanion ? 100 : 5;
+      state.npcRelationships[npcId] = Math.max(0, Math.min(maxValue, current + amount));
     },
 
     setWorldObjectState(state, action) {

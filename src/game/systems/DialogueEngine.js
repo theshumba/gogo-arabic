@@ -136,14 +136,14 @@ export class DialogueEngine {
    * @param {Array} effects - Array of effect objects from dialogue schema
    * @param {string} npcId - Optional NPC ID (uses currentNpcId if not provided)
    */
-  executeEffects(effects, npcId) {
+  async executeEffects(effects, npcId) {
     if (!effects || effects.length === 0) return;
 
     if (npcId) {
       this.currentNpcId = npcId;
     }
 
-    effects.forEach(effect => {
+    for (const effect of effects) {
       switch (effect.type) {
         case 'quest_start': {
           // Find quest in questsData and activate it
@@ -295,10 +295,20 @@ export class DialogueEngine {
           break;
         }
 
+        case 'recruit_companion': {
+          // Dynamic import to avoid circular dependency
+          const { recruitCompanion } = await import('../../store/slices/companionSlice.js');
+          store.dispatch(recruitCompanion(effect.companionId));
+          EventBus.emit(EVENTS.COMPANION_RECRUITED, {
+            companionId: effect.companionId,
+          });
+          break;
+        }
+
         default:
           console.warn('[DialogueEngine] Unknown effect type:', effect.type);
       }
-    });
+    }
 
     // Summary logged in individual handlers (useDialogueEvents.js)
   }
