@@ -151,7 +151,7 @@ Plans:
 - [ ] 32-04-PLAN.md — Multi-target battleSlice (enemies array, combo meter) + MultiTargetManager
 - [ ] 32-05-PLAN.md — StatusEffectBar + ComboMeter UI components
 - [ ] 32-06-PLAN.md — GrammarComboInput + BattleItemMenu + TargetSelector + BattleArabicInput flee mode
-- [ ] 32-07-PLAN.md — ArenaController (wave survival) + ArenaHUD
+- [x] 32-07-PLAN.md — ArenaController (wave survival) + ArenaHUD
 - [ ] 32-08-PLAN.md — BossRushController + PuzzleBattleManager + BossRushInterlude
 - [ ] 32-09-PLAN.md — PostBattleReview + ArenaLeaderboard
 - [ ] 32-10-PLAN.md — BattleStateMachine FSM integration + arabicUsedThisBattle capture
@@ -195,7 +195,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 | 29. Equipment, Inventory & Economy | v6.0 | 5/5 | Complete | 2026-02-12 |
 | 30. Companion System | v6.0 | 5/5 | Complete | 2026-02-13 |
 | 31. Crafting & Professions | v6.1 | 8/8 | Complete | 2026-02-13 |
-| 32. Status Effects & Advanced Combat | v6.1 | 0/TBD | Not started | - |
+| 32. Status Effects & Advanced Combat | v6.1 | 7/11 | In progress | - |
 
 **Cumulative:** 31 phases shipped, 76 plans complete, 6 milestones
 

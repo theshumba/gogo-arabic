@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 32 of 32 (Advanced Combat)
-Plan: 6 of 11
+Plan: 7 of 11
 Status: In progress
-Last activity: 2026-02-13 — Completed 32-06-PLAN.md (Battle UI Components)
+Last activity: 2026-02-13 — Completed 32-07-PLAN.md (ArenaController + ArenaHUD)
 
-Progress: [████████████████████████████████████████████████░░░] 6/11 Phase 32 plans
+Progress: [██████████████████████████████████████████████████████░░░░] 7/11 Phase 32 plans
 
 ### Shipped Milestones
 
@@ -104,6 +104,9 @@ v6.1 Phase 32 decisions:
 - BattleItemMenu filters via isBattleUsable() function — extensible when consumable data added (32-06)
 - TargetSelector single-click selects, double-click confirms — common RPG targeting UX (32-06)
 - Flee mode: 3 changes to BattleArabicInput (mode prop, 10s timer, red header) — minimal footprint (32-06)
+- ArenaHUD reads EventBus events (not Redux) since arenaSlice not in store until 32-11 (32-07)
+- Enemy difficulty string-to-numeric mapping (easy=1, medium=2, hard=3, expert=4) for wave tier filtering (32-07)
+- toArabicNumerals recreated locally in ArenaHUD (independent from ComboMeter) (32-07)
 
 ### Open Items Carried Forward
 
@@ -126,8 +129,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 32 execution)
-Stopped at: Completed 32-06-PLAN.md (Battle UI Components)
-Resume file: .planning/phases/32-advanced-combat/32-07-PLAN.md (next)
+Stopped at: Completed 32-07-PLAN.md (ArenaController + ArenaHUD)
+Resume file: .planning/phases/32-advanced-combat/32-08-PLAN.md (next)
 
 **Phase 32 Progress:**
 - 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
@@ -136,11 +139,12 @@ Resume file: .planning/phases/32-advanced-combat/32-07-PLAN.md (next)
 - 32-04: Multi-Target & Combo Meter — COMPLETE (enemies[] array, 11 new reducers, 7 new selectors, MultiTargetManager, 2 commits)
 - 32-05: Battle Effect & Combo UI — COMPLETE (StatusEffectBar + ComboMeter components, CSS Modules, Arabic-Indic numerals, 2 commits)
 - 32-06: Battle UI Components — COMPLETE (GrammarComboInput 3 modes, BattleItemMenu, TargetSelector, flee mode, 2 commits)
+- 32-07: ArenaController + ArenaHUD — COMPLETE (ArenaController wave management, ArenaHUD Arabic overlay, 2 commits)
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
-- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (6/11 plans)
+- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (7/11 plans)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 32-06 (Battle UI Components)*
+*Last updated: 2026-02-13 — Completed plan 32-07 (ArenaController + ArenaHUD)*
