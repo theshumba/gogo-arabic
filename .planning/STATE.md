@@ -5,17 +5,17 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v6.0 Combat & RPG — Phase 28 COMPLETE, ready for Phase 29
+**Current focus:** v6.0 Combat & RPG — Phase 29 COMPLETE, Phase 30 in progress
 
 ## Current Position
 
 Milestone: v6.0 Combat & RPG
-Phase: 29 of 4 phases (Equipment, Inventory & Economy) — COMPLETE
-Plan: 5 of 5 plans complete
-Status: Phase 29 COMPLETE — Equipment, inventory, and economy systems with 153 new tests (874 total)
-Last activity: 2026-02-12 — Completed 29-05-PLAN.md (comprehensive test suite, zero regressions)
+Phase: 30 of 4 phases (Companion System) — IN PROGRESS
+Plan: 1 of 5 plans complete
+Status: Companion data foundation complete — companionSlice, 12 companions, 2,400+ dialogue lines, CEFR scaling, relationship tiers
+Last activity: 2026-02-13 — Completed 30-01-PLAN.md (companion data foundation, IndexedDB persistence, 12 COMPANION_* events)
 
-Progress: [████████████████████████████░░] 92% (57 of 62 estimated plans complete across all milestones)
+Progress: [█████████████████████████████░] 94% (58 of 62 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -37,9 +37,9 @@ Progress: [███████████████████████
 
 ## Test & Build Status
 
-- Tests: 874 passing, 0 failures (721 existing + 153 new Phase 29 tests)
-- Build: Succeeds, main bundle 581.22KB (160.34KB gzipped) — under 600KB target
-- Git: 12 commits from Phase 29 (2-3 per plan, 2 for tests)
+- Tests: 874 passing, 0 failures (awaiting Phase 30 Plan 05 test suite)
+- Build: Succeeds, main bundle 585.09KB (161.36KB gzipped) — under 600KB target
+- Git: 2 commits from Phase 30 Plan 01 (2 tasks, 2 commits)
 
 ## Accumulated Context
 
@@ -137,6 +137,20 @@ Key v6.0 roadmap decisions:
 - Test reducers directly via reducer(initialState, action) to avoid IndexedDB persistence issues
 - Mock window.matchMedia for Phaser managers with prefers-reduced-motion checks
 
+**Phase 30 Plan 01 decisions (companion data foundation):**
+- companionSlice uses IndexedDB nested persistReducer at 'gogo-arabic-companions' (6th slice with IndexedDB: vocabulary, battle, magic, inventory, companions)
+- 12 companions initialized in initial state with recruited=false (all start unrecruited)
+- Active party has 2 slots: battle (for combat) and exploration (for world following)
+- A companion can only fill ONE slot at a time - setting in one slot clears the other
+- Relationship tracking uses 0-100 scale mapped to 5 tiers (stranger/acquaintance/friend/closeFriend/bestFriend)
+- Battle bonuses scale from 0% (stranger) to 20% (bestFriend) for companion damage/healing
+- Gift bonuses: 1.5x relationship gain for preferred gifts (defined in companion.preferredGifts array)
+- Dialogue history keeps last 50 entries per companion (FIFO)
+- CEFR dialogue scaling: A1-B1 (English primary), B1+ (Arabic primary), C1+ (Arabic only, immersion mode)
+- Transliteration shown only below B2 (ratio < 0.7) to aid pronunciation learning
+- All timestamps passed via action payloads (never Date.now() in reducers)
+- 12 new COMPANION_* events follow strict source:category:action namespacing (74 total events)
+
 ### Phase 27 Foundation (already committed)
 
 - Turn-based BattleScene with 17-state FSM (BattleStateMachine)
@@ -179,7 +193,7 @@ Key v6.0 roadmap decisions:
 
 ### Blockers/Concerns
 
-None. Phase 29 complete, ready for Phase 30 (Companion System).
+None. Phase 30 Plan 01 complete, ready for Plan 02 (Companion Battle AI).
 
 ### Pending Todos
 
@@ -187,10 +201,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (Phase 29 complete)
-Stopped at: 29-05-PLAN.md complete (2 tasks, 2 commits, 153 new tests, SUMMARY created)
-Next step: Phase 30 (Companion System)
+Last session: 2026-02-13 (Phase 30 Plan 01 complete)
+Stopped at: 30-01-PLAN.md complete (2 tasks, 2 commits, SUMMARY created)
+Next step: Phase 30 Plan 02 (Companion Battle AI)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-12 — Phase 29 COMPLETE (equipment, inventory, economy + 153 tests), ready for Phase 30*
+*Last updated: 2026-02-13 — Phase 30 Plan 01 COMPLETE (companion data foundation, IndexedDB, 2,400+ dialogue lines), ready for Plan 02*
