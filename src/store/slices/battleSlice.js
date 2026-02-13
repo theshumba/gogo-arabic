@@ -196,6 +196,7 @@ const battleSlice = createSlice({
       }
 
       // Record battle in history (keep last 20)
+      // arabicReview: captures all Arabic words used this battle for PostBattleReview (Plan 32-09/32-10)
       state.battleHistory.unshift({
         bossId: state.activeBattle,
         victory,
@@ -205,7 +206,7 @@ const battleSlice = createSlice({
         maxStreak: state.maxStreak,
         wordsUsed: state.wordsUsed.length,
         encounterType: state.encounterType,
-        arabicUsedThisBattle: state.arabicUsedThisBattle,
+        arabicReview: state.arabicUsedThisBattle,
         timestamp: Date.now(),
       });
       state.battleHistory = state.battleHistory.slice(0, 20);
