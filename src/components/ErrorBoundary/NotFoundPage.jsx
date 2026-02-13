@@ -80,7 +80,7 @@ export default function NotFoundPage() {
       <div style={arabicTextStyle}>الصفحة غير موجودة</div>
 
       <div style={messageStyle}>
-        This page doesn't exist in the desert.
+        This page doesn&apos;t exist in the desert.
         <br />
         Perhaps it was lost in a sandstorm...
       </div>

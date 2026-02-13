@@ -6,7 +6,7 @@ import styles from './DialogueOverlay.module.css';
  * VocabularyHighlight
  * Inline Arabic word highlight with hover/tap translation tooltip
  */
-export default function VocabularyHighlight({ wordId, arabicText, children }) {
+export default function VocabularyHighlight({ wordId, _arabicText, children }) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const word = vocabulary.find((w) => w.id === wordId);

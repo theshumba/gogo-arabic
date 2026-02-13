@@ -52,7 +52,7 @@ export class Companion extends NPC {
     this.isFollowing = !!target;
   }
 
-  update(time, delta) {
+  update(time, _delta) {
     if (!this.followTarget || !this.isFollowing) return;
 
     // Lazy update: only recalculate every 200ms

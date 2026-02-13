@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { updateFsrsCard } from '../../store/slices/vocabularySlice.js';
@@ -15,8 +15,6 @@ import ProgressBar from '../Quiz/ProgressBar.jsx';
 import SentenceBuilder from './SentenceBuilder.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
 import styles from './ReviewSession.module.css';
-
-const QUIZ_TYPES = ['ar-to-en', 'en-to-ar', 'en-to-type-ar', 'sentence-building'];
 
 function generateChoices(correctWord) {
   const others = shuffle(
@@ -123,11 +121,6 @@ export default function ReviewSession({ onBack }) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
-  };
-
-  const contentVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 },
   };
 
   const transition = reduceMotion
@@ -341,7 +334,7 @@ export default function ReviewSession({ onBack }) {
               <div className={styles.transliteration} aria-label={`Transliteration: ${currentWord.transliteration}`}>{currentWord.transliteration}</div>
             )}
             <div className={styles.choicesGrid} role="group" aria-label="Answer choices">
-              {choices.map((w, idx) => {
+              {choices.map((w, _idx) => {
                 let extraClass = '';
                 let ariaLabel = w.english;
                 if (answered) {

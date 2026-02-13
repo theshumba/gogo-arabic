@@ -7,7 +7,6 @@ import { selectFsrsCards, selectLearnedWordCount } from '../../store/slices/voca
 import { selectDailyGoals } from '../../store/slices/dailyGoalsSlice.js';
 import { selectActiveQuest, selectCompletedQuests } from '../../store/slices/questSlice.js';
 import { selectAlphabetProgress } from '../../store/slices/alphabetSlice.js';
-import { selectGrammarProgress } from '../../store/slices/grammarSlice.js';
 import { getGoalProgress } from '../../data/dailyGoals.js';
 import styles from './DailyDashboard.module.css';
 
@@ -36,7 +35,6 @@ export default function DailyDashboard() {
   const playerName = useSelector((state) => state.player.name);
   const alphabetProgress = useSelector(selectAlphabetProgress);
   const learnedWordCount = useSelector(selectLearnedWordCount);
-  const grammarProgress = useSelector(selectGrammarProgress);
   const completedQuests = useSelector(selectCompletedQuests);
 
   // Calculate reviews due

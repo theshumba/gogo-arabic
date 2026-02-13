@@ -39,7 +39,7 @@ export function getWordRoot(arabicWord) {
   }
 
   // Then search through root map
-  for (const [rootKey, rootInfo] of Object.entries(ROOT_MAP)) {
+  for (const [_rootKey, rootInfo] of Object.entries(ROOT_MAP)) {
     if (rootInfo.words && rootInfo.words.includes(arabicWord)) {
       return rootInfo;
     }

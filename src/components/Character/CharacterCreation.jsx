@@ -31,14 +31,6 @@ const STARTING_OUTFITS = [
   { id: 'travellers-cloak', label: 'Cloak', labelAr: 'عباءة', desc: 'Brown' },
 ];
 
-// Skin tone tint CSS filters (approximate visual match)
-const SKIN_TINT_FILTERS = [
-  'brightness(1.2) saturate(0.8)',        // light
-  'none',                                  // medium (default)
-  'brightness(0.85) saturate(1.1)',        // tan
-  'brightness(0.6) saturate(1.2)',         // dark
-];
-
 // ---- Styles removed - now using CSS Module ----
 
 /**

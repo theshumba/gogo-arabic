@@ -7,6 +7,7 @@
 import { completeQuest, checkPrerequisites } from '../store/slices/questSlice.js';
 import { showNotification } from '../store/slices/uiSlice.js';
 import questsData from '../data/quests.json';
+import vocabulary from '../data/vocabularyAll.js';
 
 /**
  * Check and complete exploration quests based on NPC visits
@@ -199,7 +200,7 @@ export function checkCollectionQuests(store, dispatch, category) {
     if (qd.type === 'collection' && quests[qd.id]?.status === 'active') {
       if (qd.requirements?.wordsFromCategory === category) {
         // Count learned words in this category
-        const vocabulary = require('../data/vocabularyAll.js').default;
+
         const categoryWords = vocabulary.filter(w => w.category === category);
         const learnedInCategory = categoryWords.filter(w => fsrsCards[w.id]).length;
 
@@ -273,7 +274,7 @@ export function getQuestProgress(quest, state) {
 
     case 'collection': {
       if (quest.requirements?.wordsFromCategory) {
-        const vocabulary = require('../data/vocabularyAll.js').default;
+
         const fsrsCards = state.vocabulary.fsrsCards || {};
         const category = quest.requirements.wordsFromCategory;
         const categoryWords = vocabulary.filter(w => w.category === category);

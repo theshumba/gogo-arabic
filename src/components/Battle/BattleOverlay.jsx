@@ -12,7 +12,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
-import { COMPANIONS } from '../../data/companions.js';
+
 import BattleMenu from './BattleMenu.jsx';
 import BattleArabicInput from './BattleArabicInput.jsx';
 import ComboCounter from './ComboCounter.jsx';
@@ -66,12 +66,12 @@ export default function BattleOverlay() {
       setPhase('result');
     };
 
-    const onCompanionTurnStart = ({ companionId }) => {
+    const onCompanionTurnStart = ({ companionId: _companionId }) => {
       setIsCompanionTurn(true);
       setCompanionAction(null);
     };
 
-    const onCompanionAction = ({ companionId, action }) => {
+    const onCompanionAction = ({ companionId: _companionId, action }) => {
       setCompanionAction(action);
     };
 
@@ -172,7 +172,7 @@ export default function BattleOverlay() {
           }}
         >
           <div style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', color: '#4A90D9', marginBottom: '6px' }}>
-            Companion's Turn
+            Companion&apos;s Turn
           </div>
           {companionAction && (
             <div style={{ fontSize: '11px', color: '#f4fefa' }}>

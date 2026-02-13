@@ -5,7 +5,7 @@ import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { shuffle } from '../../utils/shuffle.js';
 import ArabicKeyboard from '../Keyboard/ArabicKeyboard.jsx';
 import alphabetData from '../../data/alphabet.json';
-import { COLORS, FONTS, pixelBtn, pixelBtnGold, pixelBtnDark, pixelPanel } from '../../styles/theme.js';
+import { COLORS, FONTS, pixelBtnGold, pixelBtnDark, pixelPanel } from '../../styles/theme.js';
 
 const { letters, groups } = alphabetData;
 
@@ -328,7 +328,7 @@ const styles = {
 
 export default function AlphabetModule({ onBack }) {
   const dispatch = useDispatch();
-  const completedLetters = useSelector((s) => s.player.lettersLearned);
+  useSelector((s) => s.player.lettersLearned);
   const [completedIds, setCompletedIds] = useState(new Set());
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [currentLetterIdx, setCurrentLetterIdx] = useState(0);
@@ -345,6 +345,21 @@ export default function AlphabetModule({ onBack }) {
     });
     return map;
   }, []);
+
+  // Generate quiz choices (must be before early returns to satisfy hook rules)
+  const quizChoices = useMemo(() => {
+    if (selectedGroup === null) return [];
+    const gl = groupedLetters[selectedGroup] || [];
+    const cl = gl[currentLetterIdx];
+    if (!cl) return [];
+    const sameGroup = gl.filter((l) => l.id !== cl.id);
+    const otherLetters = letters.filter(
+      (l) => l.group !== selectedGroup && l.id !== cl.id
+    );
+    const pool = [...sameGroup, ...shuffle(otherLetters)];
+    const distractors = pool.slice(0, 3);
+    return shuffle([...distractors, cl]);
+  }, [selectedGroup, currentLetterIdx, groupedLetters]);
 
   // Group list view
   if (selectedGroup === null) {
@@ -428,20 +443,6 @@ export default function AlphabetModule({ onBack }) {
     }
   };
 
-  // Generate distractors for recognition quiz
-  const getDistractorLetters = () => {
-    const sameGroup = groupLettersList.filter((l) => l.id !== currentLetter.id);
-    const otherLetters = letters.filter(
-      (l) => l.group !== selectedGroup && l.id !== currentLetter.id
-    );
-    const pool = [...sameGroup, ...shuffle(otherLetters)];
-    const distractors = pool.slice(0, 3);
-    const choices = shuffle([...distractors, currentLetter]);
-    return choices;
-  };
-
-  const [quizChoices] = useState(() => getDistractorLetters());
-
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -476,7 +477,7 @@ export default function AlphabetModule({ onBack }) {
           <>
             <div style={styles.bigLetter}>{currentLetter.letter}</div>
             <div style={styles.letterName}>
-              {currentLetter.name} — "{currentLetter.transliteration}"
+              {currentLetter.name} — &ldquo;{currentLetter.transliteration}&rdquo;
             </div>
             <button style={styles.nextBtn} onClick={goNextStep}>
               Next: Four Forms
@@ -529,7 +530,7 @@ export default function AlphabetModule({ onBack }) {
         {currentStep === 'recognition' && (
           <>
             <div style={styles.quizPrompt}>
-              Find the letter "{currentLetter.name}" ({currentLetter.transliteration})
+              Find the letter &ldquo;{currentLetter.name}&rdquo; ({currentLetter.transliteration})
             </div>
             <div style={styles.quizChoices}>
               {quizChoices.map((l) => {
@@ -564,7 +565,7 @@ export default function AlphabetModule({ onBack }) {
         {currentStep === 'writing' && (
           <>
             <div style={styles.quizPrompt}>
-              Type the letter "{currentLetter.name}" ({currentLetter.transliteration})
+              Type the letter &ldquo;{currentLetter.name}&rdquo; ({currentLetter.transliteration})
             </div>
             <div style={{
               ...styles.writingDisplay,

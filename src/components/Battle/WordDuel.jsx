@@ -20,7 +20,7 @@ export default function WordDuel({ bossId, onClose }) {
     initBattle,
     handleAnswer,
     nextRound,
-    useHint,
+    useHint: activateHint,
   } = useBattle(bossId);
 
   const formatArabic = useFormatArabic();
@@ -66,11 +66,11 @@ export default function WordDuel({ bossId, onClose }) {
 
   // Handle hint usage
   const handleHint = useCallback(() => {
-    const used = useHint();
+    const used = activateHint();
     if (used) {
       setBossDialogue('One wrong answer has been eliminated!');
     }
-  }, [useHint]);
+  }, [activateHint]);
 
   // Handle keyboard shortcuts
   useEffect(() => {

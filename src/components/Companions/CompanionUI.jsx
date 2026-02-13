@@ -15,7 +15,7 @@ import {
   giveGift,
 } from '../../store/slices/companionSlice.js';
 import { selectInventoryItems, removeItem } from '../../store/slices/inventorySlice.js';
-import { COMPANIONS, COMPANION_ROLES, TEACHING_SPECIALTIES, GIFT_CATEGORIES } from '../../data/companions.js';
+import { COMPANIONS, COMPANION_ROLES, TEACHING_SPECIALTIES } from '../../data/companions.js';
 import { getGiftBonus } from '../../utils/companionRelationship.js';
 import { EQUIPMENT_DATA } from '../../data/equipment.js';
 import { EventBus } from '../../utils/eventBus.js';

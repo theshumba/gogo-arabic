@@ -36,7 +36,7 @@ export function getAffixMultiplier(wordId, vocabularyState) {
  * @param {Object} vocabularyState - The vocabulary slice state
  * @returns {Array} Array of unlearned affix wordIds
  */
-export function getUnlearnedAffixes(itemId, vocabularyState) {
+export function getUnlearnedAffixes(_itemId, _vocabularyState) {
   // Note: This function requires EQUIPMENT_DATA import, which would create
   // a circular dependency if imported here. Instead, it's intended to be
   // called from components that already have access to both.

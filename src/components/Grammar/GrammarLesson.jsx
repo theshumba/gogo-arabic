@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { completeLesson, recordExerciseProgress, recordQuizProgress } from '../../store/slices/grammarSlice.js';
 import { addXP } from '../../store/slices/playerSlice.js';
@@ -31,30 +31,9 @@ export default function GrammarLesson({ lessonId, onBack }) {
   const [exerciseScore, setExerciseScore] = useState(0);
   const [quizScore, setQuizScore] = useState(0);
 
-  if (!lesson) {
-    return (
-      <div
-        style={{
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: COLORS.beige,
-          fontFamily: FONTS.pixel,
-          color: COLORS.dark,
-        }}
-      >
-        <div>Lesson not found</div>
-        <button onClick={onBack} style={{ ...pixelBtnDark, marginLeft: '20px' }}>
-          Back
-        </button>
-      </div>
-    );
-  }
-
-  // Keyboard shortcuts
+  // Keyboard shortcuts (must be before early returns for hook rules)
   useEffect(() => {
+    if (!lesson) return;
     const handleKeyPress = (e) => {
       if (e.key === 'Escape') {
         onBack();
@@ -82,7 +61,30 @@ export default function GrammarLesson({ lessonId, onBack }) {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [stage, currentExerciseIndex, currentQuizIndex, showFeedback]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, currentExerciseIndex, currentQuizIndex, showFeedback, lesson, onBack]);
+
+  if (!lesson) {
+    return (
+      <div
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: COLORS.beige,
+          fontFamily: FONTS.pixel,
+          color: COLORS.dark,
+        }}
+      >
+        <div>Lesson not found</div>
+        <button onClick={onBack} style={{ ...pixelBtnDark, marginLeft: '20px' }}>
+          Back
+        </button>
+      </div>
+    );
+  }
 
   const handleAnswerSelect = (answer) => {
     if (showFeedback) return;
@@ -111,7 +113,7 @@ export default function GrammarLesson({ lessonId, onBack }) {
     setShowFeedback(true);
   };
 
-  const handleMatchSelect = (index, value) => {
+  const handleMatchSelect = (index, _value) => {
     if (showFeedback) return;
 
     const exercise = lesson.exercises[currentExerciseIndex];

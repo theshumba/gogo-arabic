@@ -6,7 +6,7 @@
  * Higher forms unlock as root mastery increases.
  */
 
-import { ROOT_ELEMENTS, SPELL_TIERS } from './rootMagic.js';
+import { SPELL_TIERS } from './rootMagic.js';
 
 export const SPELLS = [
   // ========== FIRE SPELLS (5 roots) ==========
@@ -687,9 +687,6 @@ export const SPELLS = [
  * @returns {object|null} Spell object or null if not found
  */
 export function getSpellByRoot(rootId, form = 'I') {
-  const rootCompact = rootId.replace(/-/g, '');
-  const spellId = `spell_${rootCompact}_${form}`;
-
   // Currently all spells are Form I
   // TODO: Generate higher form variants dynamically or add them to SPELLS array
   return SPELLS.find((s) => s.rootId === rootId && s.form === form) || null;

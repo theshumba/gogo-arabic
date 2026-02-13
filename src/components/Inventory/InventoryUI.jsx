@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import {
   selectInventoryItems,
   selectEquippedItems,
-  selectAffixesUnlocked,
   selectInventoryCount,
   equipItem,
   unequipItem,
@@ -14,7 +13,7 @@ import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
-import { EQUIPMENT_DATA, RARITY_COLORS, RARITY_TIERS } from '../../data/equipment.js';
+import { EQUIPMENT_DATA, RARITY_COLORS } from '../../data/equipment.js';
 import { getSetBonus } from '../../data/itemSets.js';
 import EquipmentSlots from './EquipmentSlots.jsx';
 import ItemTooltip from './ItemTooltip.jsx';
@@ -34,7 +33,6 @@ function InventoryUI({ onClose }) {
   // Redux selectors
   const inventoryItems = useSelector(selectInventoryItems);
   const equipped = useSelector(selectEquippedItems);
-  const affixesUnlocked = useSelector(selectAffixesUnlocked);
   const vocabularyState = useSelector((state) => state.vocabulary);
   const playerLevel = useSelector((state) => state.player.level);
   const itemCount = useSelector(selectInventoryCount);

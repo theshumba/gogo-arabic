@@ -56,7 +56,7 @@ export default function DialogueOverlay() {
     currentTree, lineIndex, close, advance, handleChoice,
     showCulturalMenu, setShowCulturalMenu,
     phase, availableTopics, selectTopic, topicsDiscussed,
-    filteredChoices, resumeAfterQuiz, isHubAndSpoke,
+    filteredChoices, isHubAndSpoke,
   } = useDialogue(npc);
 
   const relationshipLevel = useSelector(selectNpcRelationship(npcId || ''));

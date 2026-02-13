@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { startBattle as startBattleAction, dealDamage, useHint as useHintAction, endBattle, resetBattle } from '../store/slices/battleSlice.js';
+import { startBattle as startBattleAction, dealDamage, useHint as activateHintAction, endBattle, resetBattle } from '../store/slices/battleSlice.js';
 import { addXP, addDirhams, spendDirhams } from '../store/slices/playerSlice.js';
 import { addFsrsCard, updateFsrsCard } from '../store/slices/vocabularySlice.js';
 import { createNewCard, reviewCard, Rating } from '../services/fsrs.js';
@@ -205,7 +205,7 @@ export function useBattle(bossId) {
     if (playerDirhams < HINT_COST || choices.length <= 2) return false;
 
     dispatch(spendDirhams(HINT_COST));
-    dispatch(useHintAction());
+    dispatch(activateHintAction());
 
     // Remove one wrong answer
     const wrongChoices = choices.filter(c => !c.correct);

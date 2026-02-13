@@ -13,7 +13,6 @@ import EnglishToTypeArabic from './EnglishToTypeArabic.jsx';
 import ListenAndChoose from './ListenAndChoose.jsx';
 import MatchPairs from './MatchPairs.jsx';
 import ProgressBar from './ProgressBar.jsx';
-import { shuffle } from '../../utils/shuffle.js';
 import vocabulary from '../../data/vocabularyAll.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './QuizOverlay.module.css';
@@ -126,6 +125,12 @@ export default function QuizOverlay() {
     ? {}
     : { whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 } };
 
+  const handleQuit = useCallback(() => {
+    if (window.confirm('Quit quiz? Progress will be lost.')) {
+      handleClose();
+    }
+  }, [handleClose]);
+
   if (showSummary) {
     return (
       <motion.div
@@ -169,12 +174,6 @@ export default function QuizOverlay() {
       </motion.div>
     );
   }
-
-  const handleQuit = useCallback(() => {
-    if (window.confirm('Quit quiz? Progress will be lost.')) {
-      handleClose();
-    }
-  }, [handleClose]);
 
   // Match Pairs mode: show all 4 words at once
   if (quiz.active && quiz.quizType === 'match') {

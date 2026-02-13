@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useGameNavigation } from '../../hooks/useGameNavigation.js';
-import { selectAlphabetProgress, selectCompletedGroups } from '../../store/slices/alphabetSlice.js';
+import { selectCompletedGroups } from '../../store/slices/alphabetSlice.js';
 import { selectLearnedWordCount, selectReviewQueueCount } from '../../store/slices/vocabularySlice.js';
 import { selectGrammarProgress } from '../../store/slices/grammarSlice.js';
 import styles from './LearningPath.module.css';
@@ -24,7 +24,6 @@ export default function LearningPath({ onBack }) {
   const { goToAlphabet, goToReview, goToGrammar } = useGameNavigation();
 
   // Redux state
-  const alphabetProgress = useSelector(selectAlphabetProgress);
   const completedGroups = useSelector(selectCompletedGroups);
   const learnedWordCount = useSelector(selectLearnedWordCount);
   const reviewQueueCount = useSelector(selectReviewQueueCount);

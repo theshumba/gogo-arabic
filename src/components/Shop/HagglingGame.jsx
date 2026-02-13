@@ -14,7 +14,7 @@ import styles from './ShopOverlay.module.css';
  * - onSuccess: (finalPrice: number) => void — Called when haggling succeeds
  * - onCancel: () => void — Called when haggling is cancelled
  */
-function HagglingGame({ itemPrice, itemName, itemNameArabic, shopkeeperId, onSuccess, onCancel }) {
+function HagglingGame({ itemPrice, itemName, itemNameArabic, shopkeeperId: _shopkeeperId, onSuccess, onCancel }) {
   const [offerInput, setOfferInput] = useState('');
   const [offerValue, setOfferValue] = useState(0);
   const [attempts, setAttempts] = useState(0);

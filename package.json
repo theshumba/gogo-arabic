@@ -1,6 +1,7 @@
 {
   "name": "gogo-arabic",
   "version": "0.1.0",
+  "description": "Arabic learning RPG built with React, Phaser 3, and Redux Toolkit",
   "private": true,
   "type": "module",
   "scripts": {

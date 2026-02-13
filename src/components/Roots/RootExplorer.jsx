@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import {
-  getAllRoots,
   getRootWords,
   ROOT_CATEGORIES,
   getRootsByCategory,

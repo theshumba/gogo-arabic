@@ -48,7 +48,7 @@ function ItemTooltip({
   onEquip,
   onUnequip,
   onClose,
-  isEquipped,
+  _isEquipped,
   position,
 }) {
   const [showLore, setShowLore] = useState(false);

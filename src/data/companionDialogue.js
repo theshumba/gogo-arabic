@@ -502,7 +502,7 @@ export function getDialogueForContext(companionId, context) {
   return null;
 }
 
-export function getTeachingDialogue(companionId, topic) {
+export function getTeachingDialogue(companionId, _topic) {
   const companionDialogue = COMPANION_DIALOGUE[companionId];
   if (!companionDialogue?.teaching) return null;
 

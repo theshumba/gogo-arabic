@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { COLORS, FONTS, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
-import { grammarLessons, grammarCategories } from '../../data/grammar.js';
+import { COLORS, FONTS, pixelBtnDark } from '../../styles/theme.js';
+import { grammarCategories } from '../../data/grammar.js';
 import { selectLessonsByCategory, selectGrammarProgress } from '../../store/slices/grammarSlice.js';
 import GrammarLesson from './GrammarLesson.jsx';
 
@@ -107,20 +107,6 @@ export default function GrammarModule({ onBack }) {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
     gap: '20px',
-  };
-
-  const lessonCardStyle = (isCompleted) => ({
-    background: COLORS.white,
-    border: `4px solid ${isCompleted ? COLORS.green : COLORS.brown}`,
-    padding: '20px',
-    cursor: 'pointer',
-    transition: 'transform 0.1s, box-shadow 0.1s',
-    position: 'relative',
-  });
-
-  const lessonCardHoverStyle = {
-    transform: 'translateY(-2px)',
-    boxShadow: `0 4px 8px ${COLORS.darkBrown}`,
   };
 
   return (

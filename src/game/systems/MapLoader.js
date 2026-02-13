@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import { TILE, GRASS, WATER, ICE_GRASS } from '../../data/zones.js';
 
 /**
@@ -225,7 +224,7 @@ export class MapLoader {
   /**
    * Build a set of edge:tile keys where exits exist (to leave gaps in border walls)
    */
-  buildExitEdgeSet(exits, mapW, mapH) {
+  buildExitEdgeSet(exits, _mapW, _mapH) {
     const set = new Set();
     for (const exit of exits) {
       const [start, end] = exit.tileRange;

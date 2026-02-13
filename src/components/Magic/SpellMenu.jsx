@@ -18,8 +18,7 @@ import {
   unequipSpell,
 } from '../../store/slices/magicSlice.js';
 import { ELEMENT_INFO } from '../../data/rootMagic.js';
-import { SPELLS, getSpellsByElement } from '../../data/spellData.js';
-import { SPELL_TIERS } from '../../data/rootMagic.js';
+import { SPELLS } from '../../data/spellData.js';
 
 const ELEMENT_ORDER = [
   'fire',

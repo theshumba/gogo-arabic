@@ -225,7 +225,7 @@ export class BattleEffectManager {
    * @param {string} rootId - Arabic root ID (e.g., 'ك-ت-ب')
    * @param {number} targetIndex - Target enemy index
    */
-  playSpellEffect(element, rootId, targetIndex) {
+  playRootSpellEffect(element, rootId, targetIndex) {
     if (this.reduceMotion) return;
 
     const config = ELEMENT_CONFIGS[element];

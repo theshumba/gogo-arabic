@@ -51,7 +51,7 @@ class ZoneTransition {
       // Force camera to normal state on error
       try {
         this.scene.cameras.main.resetFX();
-      } catch (_) {
+      } catch (_unused) {
         // Camera may not exist if scene was destroyed
       }
     } finally {

@@ -175,7 +175,7 @@ export class InteriorScene extends Phaser.Scene {
       const worldScene = this.scene.get(this.returnSceneKey);
       const zone = worldScene?.currentZone || 'oasis_village';
       audioManager.playBGM(ZONE_BGM_MAP[zone] || 'oasis');
-    } catch (e) {
+    } catch (_e) {
       // Audio not critical
     }
 

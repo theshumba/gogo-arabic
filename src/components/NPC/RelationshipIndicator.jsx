@@ -4,7 +4,7 @@ import styles from './DialogueOverlay.module.css';
  * RelationshipIndicator
  * Renders a 0-5 trust meter with star icons for NPC relationship level
  */
-export default function RelationshipIndicator({ npcId, level = 0 }) {
+export default function RelationshipIndicator({ _npcId, level = 0 }) {
   const stars = [];
   for (let i = 0; i < 5; i++) {
     stars.push(

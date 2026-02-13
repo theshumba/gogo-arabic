@@ -73,7 +73,6 @@ export class BattleScene extends Phaser.Scene {
 
     // Suppress load errors for missing battle sprites (assets not yet created)
     this.load.on('loaderror', (fileObj) => {
-      // eslint-disable-next-line no-console
       console.warn(`[BattleScene] Asset not found (fallback will be used): ${fileObj.key}`);
     });
   }
@@ -115,7 +114,7 @@ export class BattleScene extends Phaser.Scene {
     this._onFleeRequested = () => {
       this.stateMachine.handleFlee();
     };
-    this._onItemUsed = ({ itemId }) => {
+    this._onItemUsed = ({ itemId: _itemId }) => {
       // Phase 29 stub
       this.stateMachine.handleAction('item', 0);
     };
@@ -127,7 +126,7 @@ export class BattleScene extends Phaser.Scene {
 
     // Listen for magic VFX events
     this._onMagicVFXStart = ({ element, rootId, targetIndex }) => {
-      this.effects.playSpellEffect(element, rootId, targetIndex);
+      this.effects.playRootSpellEffect(element, rootId, targetIndex);
     };
     this._onMagicComboTriggered = (combo) => {
       const targetSprite = this.sprites.getEnemy(0);

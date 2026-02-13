@@ -61,7 +61,7 @@ function NextObjectiveIndicator() {
     return (
       <div className={styles.indicator} role="status" aria-label="Free to explore">
         <span className={styles.icon} aria-hidden="true">&#x2728;</span>
-        <span className={styles.text}>You're free to explore!</span>
+        <span className={styles.text}>You&apos;re free to explore!</span>
       </div>
     );
   }

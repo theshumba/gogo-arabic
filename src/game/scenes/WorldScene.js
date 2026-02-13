@@ -191,14 +191,14 @@ export class WorldScene extends Phaser.Scene {
   // BUILDING ENTRY
   // ============================================================
 
-  async handleDoorOpened({ id, interiorId, entryPosition }) {
+  async handleDoorOpened({ id: _id, interiorId, entryPosition }) {
     if (!interiorId) return; // Legacy door without interior
     try {
       const { audioManager } = await import('../../services/audio.js');
       const { INTERIOR_BGM } = await import('../../data/audioConfig.js');
       const bgmTrack = INTERIOR_BGM[interiorId] || INTERIOR_BGM.default || 'interior';
       audioManager.playBGM(bgmTrack);
-    } catch (e) { /* audio not critical */ }
+    } catch (_e) { /* audio not critical */ }
     this.sceneStackManager.pushScene('InteriorScene', { interiorId, entryPosition });
     EventBus.emit(EVENTS.BUILDING_ENTERED, { interiorId });
   }

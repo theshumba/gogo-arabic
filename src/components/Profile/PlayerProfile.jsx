@@ -204,7 +204,7 @@ function PlayerProfile() {
 
             {/* 7-day streak calendar */}
             <div className={styles.streakCalendar}>
-              {streakHistory.map((day, index) => (
+              {streakHistory.map((day, _index) => (
                 <div
                   key={day.date}
                   className={`${styles.streakDay} ${day.isActive ? styles.streakDayActive : ''}`}

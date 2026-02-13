@@ -25,7 +25,10 @@ export const CURRENT_VERSION = 1;
 const migrations = {
   // Version 0 -> 1: localStorage-only to IndexedDB hybrid
   1: (state) => {
-    console.log('[Migration] Starting v0 -> v1: localStorage to IndexedDB hybrid');
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] Starting v0 -> v1: localStorage to IndexedDB hybrid');
+    }
 
     try {
       // redux-persist has already deserialized the state from localStorage
@@ -48,7 +51,10 @@ const migrations = {
 
             // Write back the cleaned root key
             localStorage.setItem(rootKey, JSON.stringify(parsed));
-            console.log('[Migration] Cleaned up old localStorage vocabulary + battle data');
+            if (import.meta.env.DEV) {
+              // eslint-disable-next-line no-console
+              console.log('[Migration] Cleaned up old localStorage vocabulary + battle data');
+            }
           }
         } catch (cleanupError) {
           console.warn('[Migration] Failed to cleanup old localStorage data:', cleanupError);
@@ -56,7 +62,10 @@ const migrations = {
         }
       }, 5000);
 
-      console.log('[Migration] v0 -> v1 complete');
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.log('[Migration] v0 -> v1 complete');
+      }
       return state;
     } catch (error) {
       console.error('[Migration] v0 -> v1 failed, returning state unchanged:', error);

@@ -72,7 +72,8 @@ export function calculateTotalEquipmentStats(equippedItems, vocabularyState) {
   };
 
   // Sum stats from each equipped item
-  for (const [slot, itemId] of Object.entries(equippedItems)) {
+  // eslint-disable-next-line no-unused-vars
+  for (const [_slot, itemId] of Object.entries(equippedItems)) {
     if (!itemId) continue; // Skip empty slots
 
     const itemStats = calculateItemStats(itemId, vocabularyState);

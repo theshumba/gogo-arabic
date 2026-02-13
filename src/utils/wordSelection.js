@@ -44,7 +44,7 @@ export function getPlayerDifficultyRange(playerLevel) {
  * @param {number} wordsLearned - Number of words learned so far
  * @returns {Object} Weights for each difficulty level {1: weight, 2: weight, 3: weight, 4: weight, 5: weight}
  */
-export function getDifficultyWeights(playerLevel, wordsLearned) {
+export function getDifficultyWeights(playerLevel, _wordsLearned) {
   const { weights } = getPlayerDifficultyRange(playerLevel);
 
   // Normalize weights to ensure all difficulties 1-5 have a value

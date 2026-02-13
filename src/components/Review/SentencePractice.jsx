@@ -132,7 +132,7 @@ const CATEGORIES = ['all', 'adjectives', 'greetings', 'numbers', 'food', 'colors
 const DIFFICULTIES = [1, 2, 3, 4, 5];
 
 function SentencePractice({ onBack }) {
-  const settings = useSelector((s) => s.settings);
+  useSelector((s) => s.settings);
   const [started, setStarted] = useState(false);
   const [done, setDone] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');

@@ -19,7 +19,7 @@ export default function CulturalDialogueMenu({ npc, onCulturalSelect, onBack, po
             {npc.name}
           </div>
           <div className={styles.englishLine}>
-            I don't have any cultural stories to share right now.
+            I don&apos;t have any cultural stories to share right now.
           </div>
           <div className={styles.choices}>
             <button

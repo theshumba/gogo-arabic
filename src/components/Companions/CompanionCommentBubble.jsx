@@ -17,7 +17,6 @@ export default function CompanionCommentBubble() {
   const [currentComment, setCurrentComment] = useState(null);
   const [queue, setQueue] = useState([]);
 
-  const playerCEFR = useSelector((state) => state.player.cefrLevel) || 'A1';
   const vocabularyRatio = useSelector((state) => state.vocabulary.learnedRatio) || 0;
 
   // Listen to comment events

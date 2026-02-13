@@ -95,7 +95,7 @@ export function RouteErrorBoundary() {
       <div style={messageStyle}>
         An error occurred while loading this page.
         <br />
-        Don't worry, your progress is saved!
+        Don&apos;t worry, your progress is saved!
       </div>
 
       {error && (
@@ -154,7 +154,7 @@ export default class ErrorBoundaryClass extends Component {
           <div style={messageStyle}>
             An error occurred in the application.
             <br />
-            Don't worry, your progress is saved!
+            Don&apos;t worry, your progress is saved!
           </div>
 
           {this.state.error && (

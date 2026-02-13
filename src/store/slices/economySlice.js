@@ -39,12 +39,9 @@ const economySlice = createSlice({
       }
     },
 
-    recordPurchase(state, action) {
+    recordPurchase(_state, _action) {
       // payload: { shopId, itemId, price, haggled }
-      const { shopId, itemId, price, haggled } = action.payload;
-
-      // Track for analytics (currently just logged, could expand to analytics slice)
-      console.log(`[economySlice] Purchase: ${itemId} from ${shopId} for ${price} (haggled: ${haggled})`);
+      // Analytics tracking placeholder — expand to analytics slice in v10.0
     },
 
     setPriceModifier(state, action) {

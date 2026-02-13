@@ -42,7 +42,6 @@ function getRandomLetter() {
  */
 function canFitHorizontal(grid, word, row, col) {
   const letters = word.split('');
-  const size = grid.length;
 
   // Check if word extends beyond left boundary (RTL)
   if (col - letters.length + 1 < 0) return false;

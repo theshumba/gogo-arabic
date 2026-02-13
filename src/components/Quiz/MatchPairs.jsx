@@ -91,11 +91,9 @@ export default function MatchPairs({ words, onComplete }) {
   const [selectedEnglish, setSelectedEnglish] = useState(null);
   const [matched, setMatched] = useState(new Set());
   const [wrongPair, setWrongPair] = useState(null);
-  const [attempts, setAttempts] = useState(0);
   const [errors, setErrors] = useState(0);
 
   const checkMatch = useCallback((arId, enId) => {
-    setAttempts((a) => a + 1);
     if (arId === enId) {
       const newMatched = new Set(matched);
       newMatched.add(arId);
