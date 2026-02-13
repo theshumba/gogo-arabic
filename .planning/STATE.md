@@ -5,17 +5,17 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Planning next milestone
+**Current focus:** v6.1 Crafting & Advanced Combat
 
 ## Current Position
 
-Milestone: v6.0 Combat & RPG — COMPLETE
-Phase: 30 of 30 (all phases complete)
-Plan: All complete
-Status: v6.0 milestone archived, ready for next milestone
-Last activity: 2026-02-13 — v6.0 milestone complete
+Milestone: v6.1 Crafting & Advanced Combat
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-13 — Milestone v6.1 started
 
-Progress: [██████████████████████████████] 100% (68 plans complete across 6 milestones)
+Progress: [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% (v6.1 milestone)
 
 ### Shipped Milestones
 
@@ -61,10 +61,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (v6.0 milestone completion)
-Stopped at: Milestone archived, tag created
-Next step: `/gsd:new-milestone` — start next milestone cycle
+Last session: 2026-02-13 (v6.1 milestone start)
+Stopped at: Defining requirements
+Next step: Research → Requirements → Roadmap
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — v6.0 milestone complete, archived*
+*Last updated: 2026-02-13 — v6.1 milestone started*

@@ -62,7 +62,16 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
-Planning next milestone. See `/gsd:new-milestone`.
+## Current Milestone: v6.1 Crafting & Advanced Combat
+
+**Goal:** Add crafting professions with Arabic recipes and advanced combat mechanics including status effects, grammar-based combos, and arena challenges.
+
+**Target features:**
+- 6 crafting professions (calligraphy, cooking, alchemy, smithing, weaving, herbalism) with Arabic recipe names and vocabulary integration
+- Status effects system tied to Arabic vocabulary mastery
+- Grammar pattern combat combos (sentence structures = attack chains)
+- Wave-based arena challenges with progressive difficulty
+- Crafting-combat integration (crafted items enhance combat abilities)
 
 ### Out of Scope
 
@@ -138,4 +147,4 @@ Planning next milestone. See `/gsd:new-milestone`.
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-02-13 after v6.0 milestone*
+*Last updated: 2026-02-13 after v6.1 milestone start*
