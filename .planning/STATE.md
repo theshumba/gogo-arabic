@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 Milestone: v6.0 Combat & RPG
 Phase: 30 of 4 phases (Companion System) — IN PROGRESS
-Plan: 1 of 5 plans complete
-Status: Companion data foundation complete — companionSlice, 12 companions, 2,400+ dialogue lines, CEFR scaling, relationship tiers
-Last activity: 2026-02-13 — Completed 30-01-PLAN.md (companion data foundation, IndexedDB persistence, 12 COMPANION_* events)
+Plan: 2 of 5 plans complete
+Status: Companion battle AI integrated — role-based behavior trees, COMPANION_TURN FSM state, autonomous actions
+Last activity: 2026-02-13 — Completed 30-02-PLAN.md (CompanionBattleAI, COMPANION_TURN integration, 9 battleSlice reducers)
 
-Progress: [█████████████████████████████░] 94% (58 of 62 estimated plans complete across all milestones)
+Progress: [█████████████████████████████░] 95% (59 of 62 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -38,8 +38,8 @@ Progress: [███████████████████████
 ## Test & Build Status
 
 - Tests: 874 passing, 0 failures (awaiting Phase 30 Plan 05 test suite)
-- Build: Succeeds, main bundle 585.09KB (161.36KB gzipped) — under 600KB target
-- Git: 2 commits from Phase 30 Plan 01 (2 tasks, 2 commits)
+- Build: Succeeds, main bundle 658.47KB (179.07KB gzipped) — slightly over 600KB target (+73.38KB from companion AI)
+- Git: 4 commits from Phase 30 Plans 01-02 (4 tasks, 4 commits)
 
 ## Accumulated Context
 
@@ -151,6 +151,14 @@ Key v6.0 roadmap decisions:
 - All timestamps passed via action payloads (never Date.now() in reducers)
 - 12 new COMPANION_* events follow strict source:category:action namespacing (74 total events)
 
+**Phase 30 Plan 02 decisions (companion battle AI):**
+- Behavior tree over state machine for companion AI (priority-based decision making is clearer)
+- Companion turn inserted AFTER player turn, BEFORE enemy turn (player sees immediate companion reaction)
+- 500ms delay before companion action resolution (gives React UI time to display action message)
+- Companion damage/heal uses relationship multiplier 1.0 to 1.2 (rewards relationship building per COMP-04)
+- applyPlayerEffect creates new reducer instead of extending applyStatusEffect (simplified signature for companion buffs)
+- removeEnemyEffect removes first effect only (defender dispel removes strongest buff first, future enhancement can add priority)
+
 ### Phase 27 Foundation (already committed)
 
 - Turn-based BattleScene with 17-state FSM (BattleStateMachine)
@@ -201,10 +209,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (Phase 30 Plan 01 complete)
-Stopped at: 30-01-PLAN.md complete (2 tasks, 2 commits, SUMMARY created)
-Next step: Phase 30 Plan 02 (Companion Battle AI)
+Last session: 2026-02-13 (Phase 30 Plan 02 complete)
+Stopped at: 30-02-PLAN.md complete (2 tasks, 2 commits, SUMMARY created)
+Next step: Phase 30 Plan 03 (Companion Sprite & World Following)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Phase 30 Plan 01 COMPLETE (companion data foundation, IndexedDB, 2,400+ dialogue lines), ready for Plan 02*
+*Last updated: 2026-02-13 — Phase 30 Plan 02 COMPLETE (CompanionBattleAI with 4 behavior trees, COMPANION_TURN state, 9 battleSlice reducers), ready for Plan 03*
