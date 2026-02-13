@@ -11,7 +11,10 @@
  * @returns {string} Quality tier: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
  */
 export function calculateCraftQuality(accuracy) {
-  // TODO: Implement quality calculation
+  if (accuracy >= 0.95) return 'legendary';
+  if (accuracy > 0.80) return 'epic';
+  if (accuracy > 0.60) return 'rare';
+  if (accuracy > 0.40) return 'uncommon';
   return 'common';
 }
 
@@ -22,8 +25,17 @@ export function calculateCraftQuality(accuracy) {
  * @returns {number} Final XP (integer)
  */
 export function calculateXPGain(baseXP, accuracy) {
-  // TODO: Implement XP calculation
-  return 0;
+  let multiplier;
+  if (accuracy >= 0.95) {
+    multiplier = 1.5; // Perfect bonus
+  } else if (accuracy >= 0.80) {
+    multiplier = 1.2; // Good bonus
+  } else if (accuracy >= 0.60) {
+    multiplier = 1.0; // Standard
+  } else {
+    multiplier = 0.5; // Poor penalty
+  }
+  return Math.floor(baseXP * multiplier);
 }
 
 /**
@@ -34,8 +46,20 @@ export function calculateXPGain(baseXP, accuracy) {
  * @returns {boolean} True if resource unlocked and word reviewed
  */
 export function canUseIngredient(resourceId, fsrsCards, RESOURCES = null) {
-  // TODO: Implement vocabulary gating
-  return false;
+  // Check if resource exists
+  if (!RESOURCES || !RESOURCES[resourceId]) {
+    return false;
+  }
+
+  const resource = RESOURCES[resourceId];
+  const wordId = resource.wordId;
+
+  // Check if word is in FSRS and has been reviewed
+  if (!fsrsCards[wordId] || !fsrsCards[wordId].card || fsrsCards[wordId].card.reps === 0) {
+    return false;
+  }
+
+  return true;
 }
 
 /**
@@ -47,8 +71,27 @@ export function canUseIngredient(resourceId, fsrsCards, RESOURCES = null) {
  * @returns {array} Array of { resourceId, quantity, canUse, displayName, hint }
  */
 export function getDisplayableIngredients(recipeId, fsrsCards, RECIPES = null, RESOURCES = null) {
-  // TODO: Implement ingredient display logic
-  return [];
+  if (!RECIPES || !RECIPES[recipeId]) {
+    return [];
+  }
+
+  const recipe = RECIPES[recipeId];
+  if (!recipe.ingredients || recipe.ingredients.length === 0) {
+    return [];
+  }
+
+  return recipe.ingredients.map(ingredient => {
+    const canUse = canUseIngredient(ingredient.resourceId, fsrsCards, RESOURCES);
+    const resource = RESOURCES ? RESOURCES[ingredient.resourceId] : null;
+
+    return {
+      resourceId: ingredient.resourceId,
+      quantity: ingredient.quantity,
+      canUse,
+      displayName: canUse && resource ? resource.nameArabic : '???',
+      hint: canUse || !resource ? null : `Learn "${resource.nameEnglish}" to unlock`,
+    };
+  });
 }
 
 /**
@@ -59,8 +102,40 @@ export function getDisplayableIngredients(recipeId, fsrsCards, RECIPES = null, R
  * @returns {object} { canCraft: boolean, missing: array }
  */
 export function hasRequiredResources(recipeId, resources, RECIPES = null) {
-  // TODO: Implement resource sufficiency check
-  return { canCraft: false, missing: [] };
+  if (!RECIPES || !RECIPES[recipeId]) {
+    return { canCraft: false, missing: [] };
+  }
+
+  const recipe = RECIPES[recipeId];
+  if (!recipe.ingredients || recipe.ingredients.length === 0) {
+    return { canCraft: true, missing: [] };
+  }
+
+  // Build a map of player resources for quick lookup
+  const resourceMap = {};
+  resources.forEach(r => {
+    resourceMap[r.resourceId] = r.quantity;
+  });
+
+  const missing = [];
+  recipe.ingredients.forEach(ingredient => {
+    const have = resourceMap[ingredient.resourceId] || 0;
+    const needed = ingredient.quantity;
+
+    if (have < needed) {
+      missing.push({
+        resourceId: ingredient.resourceId,
+        needed,
+        have,
+        shortfall: needed - have,
+      });
+    }
+  });
+
+  return {
+    canCraft: missing.length === 0,
+    missing,
+  };
 }
 
 /**
@@ -70,8 +145,16 @@ export function hasRequiredResources(recipeId, resources, RECIPES = null) {
  * @returns {object} { current, required, percent }
  */
 export function calculateProfessionXP(currentXP, currentLevel) {
-  // TODO: Implement XP progress calculation
-  return { current: 0, required: 0, percent: 0 };
+  // Level 0 requires 50 XP to reach level 1
+  // Levels 1-10 require 100 XP × level
+  const required = currentLevel === 0 ? 50 : currentLevel * 100;
+  const percent = Math.floor((currentXP / required) * 100);
+
+  return {
+    current: currentXP,
+    required,
+    percent,
+  };
 }
 
 /**
@@ -81,6 +164,32 @@ export function calculateProfessionXP(currentXP, currentLevel) {
  * @returns {string} Quality tier: 'normal' | 'high' | 'pristine' | 'perfect'
  */
 export function calculateGatheringQuality(professionLevel, roll) {
-  // TODO: Implement gathering quality distribution
-  return 'normal';
+  const randomValue = roll !== undefined ? roll : Math.random();
+
+  // Level 0-2: 80% normal, 20% high
+  if (professionLevel <= 2) {
+    if (randomValue < 0.80) return 'normal';
+    return 'high';
+  }
+
+  // Level 3-5: 60% normal, 30% high, 10% pristine
+  if (professionLevel <= 5) {
+    if (randomValue < 0.60) return 'normal';
+    if (randomValue < 0.90) return 'high';
+    return 'pristine';
+  }
+
+  // Level 6-8: 40% normal, 35% high, 20% pristine, 5% perfect
+  if (professionLevel <= 8) {
+    if (randomValue < 0.40) return 'normal';
+    if (randomValue < 0.75) return 'high';
+    if (randomValue < 0.95) return 'pristine';
+    return 'perfect';
+  }
+
+  // Level 9-10: 20% normal, 30% high, 30% pristine, 20% perfect
+  if (randomValue < 0.20) return 'normal';
+  if (randomValue < 0.50) return 'high';
+  if (randomValue < 0.80) return 'pristine';
+  return 'perfect';
 }
