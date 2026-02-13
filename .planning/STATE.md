@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 Milestone: v6.0 Combat & RPG
 Phase: 30 of 4 phases (Companion System) — IN PROGRESS
-Plan: 2 of 5 plans complete
-Status: Companion battle AI integrated — role-based behavior trees, COMPANION_TURN FSM state, autonomous actions
-Last activity: 2026-02-13 — Completed 30-02-PLAN.md (CompanionBattleAI, COMPANION_TURN integration, 9 battleSlice reducers)
+Plan: 3 of 5 plans complete
+Status: Companion Phaser integration complete — Companion sprite follows player, CompanionManager lifecycle, context-aware dialogue
+Last activity: 2026-02-13 — Completed 30-03-PLAN.md (Companion sprite, CompanionManager, CompanionDialogueManager, recruit_companion effect)
 
-Progress: [█████████████████████████████░] 95% (59 of 62 estimated plans complete across all milestones)
+Progress: [█████████████████████████████░] 96% (60 of 62 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
