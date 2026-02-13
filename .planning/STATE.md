@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 Milestone: v6.0 Combat & RPG
 Phase: 30 of 4 phases (Companion System) — IN PROGRESS
-Plan: 3 of 5 plans complete
-Status: Companion Phaser integration complete — Companion sprite follows player, CompanionManager lifecycle, context-aware dialogue
-Last activity: 2026-02-13 — Completed 30-03-PLAN.md (Companion sprite, CompanionManager, CompanionDialogueManager, recruit_companion effect)
+Plan: 4 of 5 plans complete
+Status: Companion UI complete — CompanionUI roster, PartyPanel, RelationshipBar, CompanionCommentBubble, BattleOverlay companion integration
+Last activity: 2026-02-13 — Completed 30-04-PLAN.md (5 React components for companion roster, party management, gift-giving, and battle display)
 
-Progress: [█████████████████████████████░] 96% (60 of 62 estimated plans complete across all milestones)
+Progress: [█████████████████████████████░] 97% (61 of 62 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -38,8 +38,8 @@ Progress: [███████████████████████
 ## Test & Build Status
 
 - Tests: 874 passing, 0 failures (awaiting Phase 30 Plan 05 test suite)
-- Build: Succeeds, main bundle 658.47KB (179.07KB gzipped) — slightly over 600KB target (+73.38KB from companion AI)
-- Git: 4 commits from Phase 30 Plans 01-02 (4 tasks, 4 commits)
+- Build: Succeeds, main bundle 661.57KB (179.77KB gzipped) — slightly over 600KB target (+3KB from companion UI)
+- Git: 5 commits from Phase 30 Plans 01-04 (6 tasks, 5 commits)
 
 ## Accumulated Context
 
@@ -159,6 +159,14 @@ Key v6.0 roadmap decisions:
 - applyPlayerEffect creates new reducer instead of extending applyStatusEffect (simplified signature for companion buffs)
 - removeEnemyEffect removes first effect only (defender dispel removes strongest buff first, future enhancement can add priority)
 
+**Phase 30 Plan 04 decisions (companion UI):**
+- Gift category mapping: accessories = gems, all else = crafts (Phase 31 will add proper gift items)
+- Companion HP/MP bars positioned top-right to avoid blocking battle action area
+- Comment bubble queue max 2 items to prevent screen clutter
+- Relationship bar tier colors: gray/blue/green/purple/gold matching tier progression
+- Detail view modal stacks on top of main roster (z-index 1001 vs 1000)
+- Party validation: cannot assign same companion to both slots
+
 ### Phase 27 Foundation (already committed)
 
 - Turn-based BattleScene with 17-state FSM (BattleStateMachine)
@@ -209,10 +217,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (Phase 30 Plan 02 complete)
-Stopped at: 30-02-PLAN.md complete (2 tasks, 2 commits, SUMMARY created)
-Next step: Phase 30 Plan 03 (Companion Sprite & World Following)
+Last session: 2026-02-13 (Phase 30 Plan 04 complete)
+Stopped at: 30-04-PLAN.md complete (2 tasks, 1 commit, SUMMARY created)
+Next step: Phase 30 Plan 05 (Companion System Test Suite)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Phase 30 Plan 02 COMPLETE (CompanionBattleAI with 4 behavior trees, COMPANION_TURN state, 9 battleSlice reducers), ready for Plan 03*
+*Last updated: 2026-02-13 — Phase 30 Plan 04 COMPLETE (5 React components: CompanionUI roster, PartyPanel, RelationshipBar, CompanionCommentBubble, BattleOverlay companion integration), ready for Plan 05*
