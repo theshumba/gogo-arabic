@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 31 of 32 (Crafting & Professions)
-Plan: 7 of 8 (31-01 through 31-07 complete)
-Status: In progress
-Last activity: 2026-02-13 — Completed 31-07-PLAN.md (Crafted Items & Result Screen)
+Plan: 8 of 8 (31-01 through 31-08 complete)
+Status: Phase complete
+Last activity: 2026-02-13 — Completed 31-08-PLAN.md (Crafting System Integration)
 
-Progress: [████████████████████████████░░] 93% (30/32 phases complete)
+Progress: [███████████████████████████████] 96% (31/32 phases complete)
 
 ### Shipped Milestones
 
@@ -28,12 +28,12 @@ Progress: [███████████████████████
 | v5.0 The Real Game | 19-26 | 18 | 2026-02-11 |
 | v6.0 Combat & RPG | 27.1, 28-30 | 16 | 2026-02-13 |
 
-**Cumulative:** 30 phases, 68 plans, 6 milestones, 5 days
+**Cumulative:** 31 phases, 69 plans, 6 milestones, 5 days
 
 ## Test & Build Status
 
 - Tests: 1,072 passing, 0 failures
-- Build: Succeeds, main bundle 849KB (219KB gzipped)
+- Build: Succeeds, main bundle 850KB (220KB gzipped)
 - Git: Tagged v6.0
 
 ## Accumulated Context
@@ -76,6 +76,11 @@ v6.1 Phase 31 decisions:
 - enchantments stored separately from equipped items — immutable EQUIPMENT_DATA, easy serialization (31-07)
 - calculateTotalBattleStats vs calculateTotalEquipmentStats separation — static equipment stats vs dynamic battle stats (31-07)
 - CraftingResult uses Arabic numerals for all numbers — XP, accuracy, durations displayed in ٠-٩ (31-07)
+- Crafting UI state in uiSlice (not local state) — consistent with overlays, enables keyboard shortcuts, integrates with player freeze (31-08)
+- GatheringSpotManager lifecycle follows InteractableManager pattern — clean zone transitions, no memory leaks (31-08)
+- craftingVocabMiddleware for auto-sync (not direct dispatch) — separation of concerns, follows rootFsrsSyncMiddleware pattern (31-08)
+- NPC profession teaching via data merge (not npcs.json modification) — composable, preserves existing data (31-08)
+- Minimal companion crafting dialogue (10 lines) — pattern established, remaining 50 lines deferred (31-08)
 
 ### Open Items Carried Forward
 
@@ -98,8 +103,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 31 execution)
-Stopped at: Completed 31-07-PLAN.md (Crafted Items & Result Screen)
-Resume file: .planning/phases/31-crafting-professions/31-08-PLAN.md (next)
+Stopped at: Completed 31-08-PLAN.md (Crafting System Integration — Phase 31 complete)
+Resume file: .planning/phases/32-advanced-combat/32-01-PLAN.md (next)
 
 **Phase 31 Progress:**
 - 31-01: Data Foundation — COMPLETE (6 professions, 205 resources, 100 recipes, craftingSlice, IndexedDB, 3 commits)
@@ -108,8 +113,8 @@ Resume file: .planning/phases/31-crafting-professions/31-08-PLAN.md (next)
 - 31-04: Crafting UI Components — COMPLETE (RecipeBook, ProfessionPanel, IngredientSelector, 2 commits)
 - 31-05: Crafting Mini-Games — COMPLETE (CraftingMiniGame container, CalligraphyTracing, CookingRecipeOrder, SmithingRhythm, 2 commits)
 - 31-06: Crafting Mini-Games — COMPLETE (PlantIdentification, PatternMatching, DirectionalPlacement, CraftingMiniGame update, 2 commits)
-- 31-07: Crafted Items & Result Screen — COMPLETE (41 crafted equipment, activeBuffs system, enchantments, CraftingResult component, 2 commits)
-- 31-08: CraftingOverlay, integration — PENDING
+- 31-07: Crafted Equipment & Result Screen — COMPLETE (41 crafted equipment, activeBuffs system, enchantments, CraftingResult component, 2 commits)
+- 31-08: Crafting Integration — COMPLETE (GameLayout wiring, GatheringSpotManager in WorldScene, craftingVocabMiddleware, NPC/companion support, 3 commits)
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions (14 requirements, 9 success criteria)
@@ -118,4 +123,4 @@ Resume file: .planning/phases/31-crafting-professions/31-08-PLAN.md (next)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 31-07 (Crafted Items & Result Screen)*
+*Last updated: 2026-02-13 — Completed plan 31-08 (Crafting System Integration — Phase 31 complete)*
