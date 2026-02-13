@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 32 of 32 (Advanced Combat)
-Plan: 1 of 11
+Plan: 2 of 11
 Status: In progress
-Last activity: 2026-02-13 — Completed 32-01-PLAN.md (Status Effects Foundation)
+Last activity: 2026-02-13 — Completed 32-02-PLAN.md (Grammar Combos & Arena Data)
 
-Progress: [███████████████████████████████░░░░░░░░░░░] 1/11 Phase 32 plans
+Progress: [██████████████████████████████████░░░░░░░░] 2/11 Phase 32 plans
 
 ### Shipped Milestones
 
@@ -86,6 +86,10 @@ v6.1 Phase 32 decisions:
 - 24 effects total (not 22) — original file had 16 effects (not 14 as plan assumed), adding 8 yields 24 (32-01)
 - Level gating tiers: 10/16/24 — tier 2 returns original 16, tier 3 includes all Phase 32 additions (32-01)
 - Compound wordId prefix 'compound_' vs status prefix 'status_' — namespace separation for FSRS cards (32-01)
+- Used actual grammar.js lesson IDs (noun-adjective-agreement, basic-verb-conjugation) instead of plan-specified shortened IDs (32-02)
+- 6 bosses in rush sequence (all existing bosses in story order) — covers full game progression (32-02)
+- CEFR level gating: A1=level 1, A2=level 3, B1=level 7 — prevents powerful combos too early (32-02)
+- arenaSlice in localStorage (not IndexedDB) — lightweight enough, deferred store integration to 32-11 (32-02)
 
 ### Open Items Carried Forward
 
@@ -108,16 +112,17 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 32 execution)
-Stopped at: Completed 32-01-PLAN.md (Status Effects Foundation)
-Resume file: .planning/phases/32-advanced-combat/32-02-PLAN.md (next)
+Stopped at: Completed 32-02-PLAN.md (Grammar Combos & Arena Data)
+Resume file: .planning/phases/32-advanced-combat/32-03-PLAN.md (next)
 
 **Phase 32 Progress:**
 - 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
+- 32-02: Grammar Combos & Arena Data — COMPLETE (17 grammar combos, 3 arena modes, 6-boss rush, 5 puzzles, arenaSlice, 2 commits)
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
-- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (1/11 plans)
+- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (2/11 plans)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 32-01 (Status Effects Foundation)*
+*Last updated: 2026-02-13 — Completed plan 32-02 (Grammar Combos & Arena Data)*
