@@ -26,12 +26,16 @@ describe('uiSlice', () => {
         menuOpen: false,
         signOpen: false,
         objectInspectOpen: false,
+        inventoryOpen: false,
+        recipeBookOpen: false,
+        craftingMiniGameActive: false,
         quizConfig: null,
         dialogueConfig: null,
         signData: null,
         objectInspectData: null,
         notification: null,
-        inventoryOpen: false,
+        craftingRecipeId: null,
+        craftingProfessionId: null,
       });
     });
   });

@@ -55,6 +55,8 @@ describe('battleSlice', () => {
         companionMaxMP: null,
         companionEffects: [],
         companionDefending: false,
+        // v6.1 Phase 31 crafting buffs
+        activeBuffs: [],
       });
     });
   });
