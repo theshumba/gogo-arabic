@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 31 of 32 (Crafting & Professions)
-Plan: 0 of TBD
-Status: Ready to plan
-Last activity: 2026-02-13 — v6.1 roadmap created
+Plan: 2 of 8 (31-01 pending, 31-02 complete)
+Status: In progress
+Last activity: 2026-02-13 — Completed 31-02-PLAN.md (Crafting Logic TDD)
 
 Progress: [████████████████████████████░░] 93% (30/32 phases complete)
 
@@ -32,7 +32,7 @@ Progress: [███████████████████████
 
 ## Test & Build Status
 
-- Tests: 1,023 passing, 0 failures
+- Tests: 1,060 passing, 0 failures (+37 from 31-02)
 - Build: Succeeds, main bundle 661KB (179KB gzipped)
 - Git: Tagged v6.0
 
@@ -47,6 +47,11 @@ Recent v6.0 decisions affecting v6.1:
 - Phase ordering (storage → magic → equipment → companions) — established clean dependency chain
 - Equipment vocabulary-gated bonuses — pattern extends to crafting profession recipes
 - Arabic numeral haggling — pattern extends to resource trading/crafting costs
+
+v6.1 Phase 31 decisions:
+- Dependency injection for RECIPES/RESOURCES in crafting logic — enables TDD with mocks while data files created in parallel (31-01/31-02)
+- Level 0 profession requires 50 XP, levels 1-10 require 100×level — faster initial progression, linear scaling
+- 4-tier gathering quality vs 5-tier crafting quality — gathering simpler (profession level only), crafting has mini-game accuracy
 
 ### Open Items Carried Forward
 
@@ -68,9 +73,14 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (v6.1 roadmap creation)
-Stopped at: Roadmap created with 2 phases (31-32) and 32 requirements mapped
-Next step: `/gsd:plan-phase 31` to break down crafting & professions
+Last session: 2026-02-13 (Phase 31 execution)
+Stopped at: Completed 31-02-PLAN.md (Crafting Logic TDD)
+Resume file: .planning/phases/31-crafting-professions/31-03-PLAN.md (next)
+
+**Phase 31 Progress:**
+- 31-01: Data files (professions/recipes/resources) — PENDING (parallel execution)
+- 31-02: Crafting Logic (TDD) — COMPLETE (7 functions, 37 tests, 3 commits)
+- 31-03-08: UI, mini-games, integration — PENDING
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions (14 requirements, 9 success criteria)
@@ -79,4 +89,4 @@ Next step: `/gsd:plan-phase 31` to break down crafting & professions
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — v6.1 roadmap created*
+*Last updated: 2026-02-13 — Completed plan 31-02 (Crafting Logic TDD)*
