@@ -7,11 +7,15 @@ const initialState = {
   signOpen: false,
   objectInspectOpen: false,
   inventoryOpen: false,
+  recipeBookOpen: false,
+  craftingMiniGameActive: false,
   quizConfig: null, // { type, words, context, timer }
   dialogueConfig: null, // { npcId, npcName }
   signData: null, // { arabic, english }
   objectInspectData: null, // { id, type, labelArabic, labelEnglish, ... }
   notification: null, // { message, type }
+  craftingRecipeId: null, // Recipe ID for crafting mini-game
+  craftingProfessionId: null, // Profession ID for crafting mini-game
 };
 
 const uiSlice = createSlice({
@@ -76,6 +80,28 @@ const uiSlice = createSlice({
       state.inventoryOpen = false;
     },
 
+    openRecipeBook(state) {
+      state.recipeBookOpen = true;
+    },
+
+    closeRecipeBook(state) {
+      state.recipeBookOpen = false;
+    },
+
+    startCraftingMiniGame(state, action) {
+      // payload: { recipeId, professionId }
+      const { recipeId, professionId } = action.payload;
+      state.craftingMiniGameActive = true;
+      state.craftingRecipeId = recipeId;
+      state.craftingProfessionId = professionId;
+    },
+
+    endCraftingMiniGame(state) {
+      state.craftingMiniGameActive = false;
+      state.craftingRecipeId = null;
+      state.craftingProfessionId = null;
+    },
+
     showNotification(state, action) {
       // payload: { message, type }
       state.notification = action.payload;
@@ -92,10 +118,14 @@ const uiSlice = createSlice({
       state.signOpen = false;
       state.objectInspectOpen = false;
       state.inventoryOpen = false;
+      state.recipeBookOpen = false;
+      state.craftingMiniGameActive = false;
       state.quizConfig = null;
       state.dialogueConfig = null;
       state.signData = null;
       state.objectInspectData = null;
+      state.craftingRecipeId = null;
+      state.craftingProfessionId = null;
     },
   },
 });
@@ -112,6 +142,10 @@ export const {
   closeObjectInspect,
   openInventory,
   closeInventory,
+  openRecipeBook,
+  closeRecipeBook,
+  startCraftingMiniGame,
+  endCraftingMiniGame,
   showNotification,
   clearNotification,
   closeAllOverlays,
@@ -129,6 +163,10 @@ export const selectObjectInspectOpen = (state) => state.ui.objectInspectOpen;
 export const selectObjectInspectData = (state) => state.ui.objectInspectData;
 export const selectNotification = (state) => state.ui.notification;
 export const selectInventoryOpen = (state) => state.ui.inventoryOpen;
+export const selectRecipeBookOpen = (state) => state.ui.recipeBookOpen;
+export const selectCraftingMiniGameActive = (state) => state.ui.craftingMiniGameActive;
+export const selectCraftingRecipeId = (state) => state.ui.craftingRecipeId;
+export const selectCraftingProfessionId = (state) => state.ui.craftingProfessionId;
 export const selectAnyOverlayOpen = createSelector(
   [
     (state) => state.ui.dialogueOpen,
@@ -137,9 +175,11 @@ export const selectAnyOverlayOpen = createSelector(
     (state) => state.ui.signOpen,
     (state) => state.ui.objectInspectOpen,
     (state) => state.ui.inventoryOpen,
+    (state) => state.ui.recipeBookOpen,
+    (state) => state.ui.craftingMiniGameActive,
   ],
-  (dialogueOpen, quizOpen, menuOpen, signOpen, objectInspectOpen, inventoryOpen) =>
-    dialogueOpen || quizOpen || menuOpen || signOpen || objectInspectOpen || inventoryOpen
+  (dialogueOpen, quizOpen, menuOpen, signOpen, objectInspectOpen, inventoryOpen, recipeBookOpen, craftingMiniGameActive) =>
+    dialogueOpen || quizOpen || menuOpen || signOpen || objectInspectOpen || inventoryOpen || recipeBookOpen || craftingMiniGameActive
 );
 
 export default uiSlice.reducer;

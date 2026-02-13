@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { toggleMenu, selectAnyOverlayOpen, selectInventoryOpen, closeInventory } from '../../store/slices/uiSlice.js';
+import { toggleMenu, selectAnyOverlayOpen, selectInventoryOpen, closeInventory, selectRecipeBookOpen, closeRecipeBook, selectCraftingMiniGameActive, selectCraftingRecipeId, selectCraftingProfessionId, startCraftingMiniGame, endCraftingMiniGame } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { audioManager } from '../../services/audio.js';
@@ -31,6 +31,8 @@ import MagicOverlay from '../Magic/MagicOverlay.jsx';
 import SpellMenu from '../Magic/SpellMenu.jsx';
 import RootDiscoveryToast from '../Magic/RootDiscoveryToast.jsx';
 import InventoryUI from '../Inventory/InventoryUI.jsx';
+import RecipeBook from '../Crafting/RecipeBook.jsx';
+import CraftingMiniGame from '../Crafting/CraftingMiniGame.jsx';
 import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate }) {
@@ -174,6 +176,10 @@ export default function GameLayout() {
   const signOpen = useSelector((state) => state.ui.signOpen);
   const objectInspectOpen = useSelector((state) => state.ui.objectInspectOpen);
   const inventoryOpen = useSelector(selectInventoryOpen);
+  const recipeBookOpen = useSelector(selectRecipeBookOpen);
+  const craftingMiniGameActive = useSelector(selectCraftingMiniGameActive);
+  const craftingRecipeId = useSelector(selectCraftingRecipeId);
+  const craftingProfessionId = useSelector(selectCraftingProfessionId);
   const onboardingComplete = useSelector((state) => state.player.onboardingComplete ?? true);
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
@@ -262,6 +268,33 @@ export default function GameLayout() {
       {/* Wardrobe overlay */}
       <AnimatePresence>
         {showWardrobe && <Wardrobe onClose={() => setShowWardrobe(false)} />}
+      </AnimatePresence>
+
+      {/* RecipeBook overlay (v6.1 crafting) */}
+      <AnimatePresence>
+        {recipeBookOpen && (
+          <RecipeBook
+            onClose={() => dispatch(closeRecipeBook())}
+            onSelectRecipe={(recipeId, professionId) => {
+              dispatch(closeRecipeBook());
+              dispatch(startCraftingMiniGame({ recipeId, professionId }));
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* CraftingMiniGame overlay (v6.1 crafting) */}
+      <AnimatePresence>
+        {craftingMiniGameActive && craftingRecipeId && craftingProfessionId && (
+          <CraftingMiniGame
+            professionId={craftingProfessionId}
+            recipeId={craftingRecipeId}
+            onComplete={() => {
+              dispatch(endCraftingMiniGame());
+            }}
+            onCancel={() => dispatch(endCraftingMiniGame())}
+          />
+        )}
       </AnimatePresence>
 
       {/* Outlet for nested routes (e.g., /game/map) with AnimatePresence */}
