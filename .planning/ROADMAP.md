@@ -142,11 +142,19 @@ Plans:
   15. Puzzle battles require specific Arabic knowledge patterns (not brute-forceable with stats alone)
   16. Arena has a leaderboard tracking player performance metrics and win streaks
 
-**Plans**: TBD
+**Plans**: 10 plans in 6 waves
 
 Plans:
-- [ ] 32-01: TBD
-- [ ] 32-02: TBD
+- [ ] 32-01-PLAN.md — Status effects expansion (22 effects + compounds) + FSRS middleware + EventBus constants
+- [ ] 32-02-PLAN.md — Grammar combo data (noun+adj, verb chains, sentences) + arena challenges + arenaSlice
+- [ ] 32-03-PLAN.md — TDD: GrammarComboDetector + CompoundEffectResolver
+- [ ] 32-04-PLAN.md — Multi-target battleSlice (enemies array, combo meter) + MultiTargetManager
+- [ ] 32-05-PLAN.md — StatusEffectBar + ComboMeter UI components
+- [ ] 32-06-PLAN.md — GrammarComboInput + BattleItemMenu + TargetSelector UI components
+- [ ] 32-07-PLAN.md — ArenaController (wave survival) + ArenaHUD
+- [ ] 32-08-PLAN.md — BossRushController + PuzzleBattleManager + BossRushInterlude
+- [ ] 32-09-PLAN.md — PostBattleReview + ArenaLeaderboard
+- [ ] 32-10-PLAN.md — Integration: BattleStateMachine + BattleOverlay wiring + store registration
 
 ## Progress
 
