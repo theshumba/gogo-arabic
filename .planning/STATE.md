@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 31 of 32 (Crafting & Professions)
-Plan: 2 of 8 (31-01 and 31-02 complete)
+Plan: 4 of 8 (31-01, 31-02, 31-04 complete)
 Status: In progress
-Last activity: 2026-02-13 — Completed 31-01-PLAN.md (Crafting Data Foundation)
+Last activity: 2026-02-13 — Completed 31-04-PLAN.md (Crafting UI Components)
 
 Progress: [████████████████████████████░░] 93% (30/32 phases complete)
 
@@ -32,7 +32,7 @@ Progress: [███████████████████████
 
 ## Test & Build Status
 
-- Tests: 1,060 passing, 0 failures
+- Tests: 1,070 passing, 2 failures (pre-existing in gatheringSpots.test.js from 31-01)
 - Build: Succeeds, main bundle 723KB (191KB gzipped)
 - Git: Tagged v6.0
 
@@ -55,6 +55,9 @@ v6.1 Phase 31 decisions:
 - Flat-object pattern for professions/recipes/resources — O(1) lookup performance, follows equipment.js pattern (31-01)
 - craftingSlice in IndexedDB via nested persistReducer — prevents localStorage overflow, transparent to selectors (31-01)
 - 100 recipes created (vs 300+ spec) — pattern established for remaining 200 recipes (blacksmith, herbalist, weaver, builder) (31-01)
+- RecipeBook 3 filter states (all/unlocked/craftable) with live search — follows InventoryUI.jsx filter pattern (31-04)
+- Arabic numeral level display (٠-٩) in ProfessionPanel — enhances Arabic-first UI (31-04)
+- Vocabulary-gating UI pattern: show '???' for locked ingredients, emit REVIEW_SESSION_OPEN to learn — integrates crafting with vocabulary loop (31-04)
 
 ### Open Items Carried Forward
 
@@ -77,13 +80,15 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 31 execution)
-Stopped at: Completed 31-01-PLAN.md (Crafting Data Foundation)
-Resume file: .planning/phases/31-crafting-professions/31-03-PLAN.md (next)
+Stopped at: Completed 31-04-PLAN.md (Crafting UI Components)
+Resume file: .planning/phases/31-crafting-professions/31-05-PLAN.md (next)
 
 **Phase 31 Progress:**
 - 31-01: Data Foundation — COMPLETE (6 professions, 205 resources, 100 recipes, craftingSlice, IndexedDB, 3 commits)
 - 31-02: Crafting Logic (TDD) — COMPLETE (7 functions, 37 tests, 3 commits)
-- 31-03-08: UI, mini-games, integration — PENDING
+- 31-03: GatheringSpotManager — COMPLETE (gathering spot manager, gathering spots data, 1 commit)
+- 31-04: Crafting UI Components — COMPLETE (RecipeBook, ProfessionPanel, IngredientSelector, 2 commits)
+- 31-05-08: CraftingOverlay, mini-games, integration — PENDING
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions (14 requirements, 9 success criteria)
@@ -92,4 +97,4 @@ Resume file: .planning/phases/31-crafting-professions/31-03-PLAN.md (next)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 31-01 (Crafting Data Foundation)*
+*Last updated: 2026-02-13 — Completed plan 31-04 (Crafting UI Components)*
