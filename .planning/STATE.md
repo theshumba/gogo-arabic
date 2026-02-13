@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 32 of 32 (Advanced Combat)
-Plan: 9 of 11
+Plan: 10 of 11
 Status: In progress
-Last activity: 2026-02-13 — Completed 32-09-PLAN.md (PostBattleReview + ArenaLeaderboard)
+Last activity: 2026-02-13 — Completed 32-10-PLAN.md (BattleStateMachine FSM Integration)
 
-Progress: [██████████████████████████████████████████████████████████████░░] 9/11 Phase 32 plans
+Progress: [████████████████████████████████████████████████████████████████░] 10/11 Phase 32 plans
 
 ### Shipped Milestones
 
@@ -116,6 +116,12 @@ v6.1 Phase 32 decisions:
 - toArabicNumerals() recreated locally in PostBattleReview and ArenaLeaderboard (independent from ComboMeter) (32-09)
 - Practice Weak Words button emits EVENTS.REVIEW_SESSION_OPEN with weak word IDs array (32-09)
 - Top 3 arena ranks get gold/silver/bronze styling with star decoration for 1st place (32-09)
+- Flee uses Arabic challenge (accuracy >= 0.8) instead of random chance (32-10)
+- Grammar combo listener uses BATTLE_ARABIC_INPUT event for async response (32-10)
+- Flee word selection favors top 30% most familiar words (higher FSRS stability) (32-10)
+- Multi-target applies dealDamageToEnemy with row modifier, plus dealDamage(0, correct: true) for streak (32-10)
+- Compound effect check occurs after tickStatusEffects in _endTurn (32-10)
+- arabicReview (renamed from arabicUsedThisBattle) in battleHistory for PostBattleReview (32-10)
 
 ### Open Items Carried Forward
 
@@ -138,8 +144,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 32 execution)
-Stopped at: Completed 32-09-PLAN.md (PostBattleReview + ArenaLeaderboard)
-Resume file: .planning/phases/32-advanced-combat/32-10-PLAN.md (next)
+Stopped at: Completed 32-10-PLAN.md (BattleStateMachine FSM Integration)
+Resume file: .planning/phases/32-advanced-combat/32-11-PLAN.md (next)
 
 **Phase 32 Progress:**
 - 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
@@ -151,11 +157,12 @@ Resume file: .planning/phases/32-advanced-combat/32-10-PLAN.md (next)
 - 32-07: ArenaController + ArenaHUD — COMPLETE (ArenaController wave management, ArenaHUD Arabic overlay, 2 commits)
 - 32-08: BossRushController + PuzzleBattleManager — COMPLETE (boss rush sequencing, 3 puzzle types, BossRushInterlude, 8 EventBus constants, 2 commits)
 - 32-09: PostBattleReview + ArenaLeaderboard — COMPLETE (per-word accuracy analytics, 3-mode leaderboard, Arabic-Indic numerals, 2 commits)
+- 32-10: BattleStateMachine FSM Integration — COMPLETE (6 new states, multi-target, grammar combos, Arabic flee, item use, compound effects, arabicReview, 2 commits)
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
-- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (9/11 plans)
+- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (10/11 plans)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 32-09 (PostBattleReview + ArenaLeaderboard)*
+*Last updated: 2026-02-13 — Completed plan 32-10 (BattleStateMachine FSM Integration)*
