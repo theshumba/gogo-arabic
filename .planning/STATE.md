@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 31 of 32 (Crafting & Professions)
-Plan: 5 of 8 (31-01, 31-02, 31-03, 31-04, 31-05 complete)
+Plan: 6 of 8 (31-01 through 31-06 complete)
 Status: In progress
-Last activity: 2026-02-13 — Completed 31-05-PLAN.md (Crafting Mini-Games)
+Last activity: 2026-02-13 — Completed 31-06-PLAN.md (Crafting Mini-Games: PlantIdentification, PatternMatching, DirectionalPlacement)
 
 Progress: [████████████████████████████░░] 93% (30/32 phases complete)
 
@@ -67,6 +67,10 @@ v6.1 Phase 31 decisions:
 - SmithingRhythm uses requestAnimationFrame instead of setInterval — prevents timing drift (31-05)
 - Mini-game difficulty scaling: 3 tiers (1-3, 4-7, 8-10) — balances complexity vs progression (31-05)
 - Centralized result screen in CraftingMiniGame — consistent UX, reduces duplication (31-05)
+- PlantIdentification uses embedded descriptions (not RESOURCES data) — simplifies implementation, no data coupling (31-06)
+- PatternMatching uses Unicode shape icons (■●▲★◆) — no sprite assets needed, accessible (31-06)
+- DirectionalPlacement uses emoji for building elements (🚪🪟🧱) — clear visual feedback without sprites (31-06)
+- All mini-games use CSS Grid (not Canvas) — accessible, performant, easier to style (31-06)
 
 ### Open Items Carried Forward
 
@@ -89,8 +93,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 31 execution)
-Stopped at: Completed 31-05-PLAN.md (Crafting Mini-Games)
-Resume file: .planning/phases/31-crafting-professions/31-06-PLAN.md (next)
+Stopped at: Completed 31-06-PLAN.md (Crafting Mini-Games: PlantIdentification, PatternMatching, DirectionalPlacement)
+Resume file: .planning/phases/31-crafting-professions/31-07-PLAN.md (next)
 
 **Phase 31 Progress:**
 - 31-01: Data Foundation — COMPLETE (6 professions, 205 resources, 100 recipes, craftingSlice, IndexedDB, 3 commits)
@@ -98,7 +102,8 @@ Resume file: .planning/phases/31-crafting-professions/31-06-PLAN.md (next)
 - 31-03: Gathering Spot Manager & Data — COMPLETE (GatheringSpotManager, 59 gathering spots, zones.js flags, 12 tests, 2 commits)
 - 31-04: Crafting UI Components — COMPLETE (RecipeBook, ProfessionPanel, IngredientSelector, 2 commits)
 - 31-05: Crafting Mini-Games — COMPLETE (CraftingMiniGame container, CalligraphyTracing, CookingRecipeOrder, SmithingRhythm, 2 commits)
-- 31-06-08: Remaining mini-games, CraftingOverlay, integration — PENDING
+- 31-06: Crafting Mini-Games — COMPLETE (PlantIdentification, PatternMatching, DirectionalPlacement, CraftingMiniGame update, 2 commits)
+- 31-07-08: CraftingOverlay, integration — PENDING
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions (14 requirements, 9 success criteria)
@@ -107,4 +112,4 @@ Resume file: .planning/phases/31-crafting-professions/31-06-PLAN.md (next)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 31-05 (Crafting Mini-Games)*
+*Last updated: 2026-02-13 — Completed plan 31-06 (Crafting Mini-Games: PlantIdentification, PatternMatching, DirectionalPlacement)*
