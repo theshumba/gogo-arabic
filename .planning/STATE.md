@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 32 of 32 (Advanced Combat)
-Plan: 2 of 11
+Plan: 4 of 11
 Status: In progress
-Last activity: 2026-02-13 — Completed 32-02-PLAN.md (Grammar Combos & Arena Data)
+Last activity: 2026-02-13 — Completed 32-04-PLAN.md (Multi-Target & Combo Meter)
 
-Progress: [██████████████████████████████████░░░░░░░░] 2/11 Phase 32 plans
+Progress: [██████████████████████████████████████░░░░] 4/11 Phase 32 plans
 
 ### Shipped Milestones
 
@@ -90,6 +90,10 @@ v6.1 Phase 32 decisions:
 - 6 bosses in rush sequence (all existing bosses in story order) — covers full game progression (32-02)
 - CEFR level gating: A1=level 1, A2=level 3, B1=level 7 — prevents powerful combos too early (32-02)
 - arenaSlice in localStorage (not IndexedDB) — lightweight enough, deferred store integration to 32-11 (32-02)
+- bossHP kept as sum of all enemies[] HP for full backward compatibility with single-enemy code (32-04)
+- enemies[] first 2 entries default to front row, remaining to back — typical RPG party layout (32-04)
+- MultiTargetManager does not read Redux — data-push pattern keeps it testable (32-04)
+- Back row sprites use 1.6x scale (vs 2x front) for visual depth perception (32-04)
 
 ### Open Items Carried Forward
 
@@ -112,17 +116,18 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 32 execution)
-Stopped at: Completed 32-02-PLAN.md (Grammar Combos & Arena Data)
-Resume file: .planning/phases/32-advanced-combat/32-03-PLAN.md (next)
+Stopped at: Completed 32-04-PLAN.md (Multi-Target & Combo Meter)
+Resume file: .planning/phases/32-advanced-combat/32-05-PLAN.md (next)
 
 **Phase 32 Progress:**
 - 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
 - 32-02: Grammar Combos & Arena Data — COMPLETE (17 grammar combos, 3 arena modes, 6-boss rush, 5 puzzles, arenaSlice, 2 commits)
+- 32-04: Multi-Target & Combo Meter — COMPLETE (enemies[] array, 11 new reducers, 7 new selectors, MultiTargetManager, 2 commits)
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
-- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (2/11 plans)
+- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (4/11 plans)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 32-02 (Grammar Combos & Arena Data)*
+*Last updated: 2026-02-13 — Completed plan 32-04 (Multi-Target & Combo Meter)*
