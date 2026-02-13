@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 31 of 32 (Crafting & Professions)
-Plan: 6 of 8 (31-01 through 31-06 complete)
+Plan: 7 of 8 (31-01 through 31-07 complete)
 Status: In progress
-Last activity: 2026-02-13 — Completed 31-06-PLAN.md (Crafting Mini-Games: PlantIdentification, PatternMatching, DirectionalPlacement)
+Last activity: 2026-02-13 — Completed 31-07-PLAN.md (Crafted Items & Result Screen)
 
 Progress: [████████████████████████████░░] 93% (30/32 phases complete)
 
@@ -33,7 +33,7 @@ Progress: [███████████████████████
 ## Test & Build Status
 
 - Tests: 1,072 passing, 0 failures
-- Build: Succeeds, main bundle 723KB (191KB gzipped)
+- Build: Succeeds, main bundle 849KB (219KB gzipped)
 - Git: Tagged v6.0
 
 ## Accumulated Context
@@ -71,6 +71,11 @@ v6.1 Phase 31 decisions:
 - PatternMatching uses Unicode shape icons (■●▲★◆) — no sprite assets needed, accessible (31-06)
 - DirectionalPlacement uses emoji for building elements (🚪🪟🧱) — clear visual feedback without sprites (31-06)
 - All mini-games use CSS Grid (not Canvas) — accessible, performant, easier to style (31-06)
+- 41 crafted equipment items across 6 professions — best-in-slot at levels 8-10, competitive with shop legendaries (31-07)
+- activeBuffs in battleSlice with timestamp-based expiration — consumable buffs applied during battle (31-07)
+- enchantments stored separately from equipped items — immutable EQUIPMENT_DATA, easy serialization (31-07)
+- calculateTotalBattleStats vs calculateTotalEquipmentStats separation — static equipment stats vs dynamic battle stats (31-07)
+- CraftingResult uses Arabic numerals for all numbers — XP, accuracy, durations displayed in ٠-٩ (31-07)
 
 ### Open Items Carried Forward
 
@@ -93,8 +98,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 31 execution)
-Stopped at: Completed 31-06-PLAN.md (Crafting Mini-Games: PlantIdentification, PatternMatching, DirectionalPlacement)
-Resume file: .planning/phases/31-crafting-professions/31-07-PLAN.md (next)
+Stopped at: Completed 31-07-PLAN.md (Crafted Items & Result Screen)
+Resume file: .planning/phases/31-crafting-professions/31-08-PLAN.md (next)
 
 **Phase 31 Progress:**
 - 31-01: Data Foundation — COMPLETE (6 professions, 205 resources, 100 recipes, craftingSlice, IndexedDB, 3 commits)
@@ -103,7 +108,8 @@ Resume file: .planning/phases/31-crafting-professions/31-07-PLAN.md (next)
 - 31-04: Crafting UI Components — COMPLETE (RecipeBook, ProfessionPanel, IngredientSelector, 2 commits)
 - 31-05: Crafting Mini-Games — COMPLETE (CraftingMiniGame container, CalligraphyTracing, CookingRecipeOrder, SmithingRhythm, 2 commits)
 - 31-06: Crafting Mini-Games — COMPLETE (PlantIdentification, PatternMatching, DirectionalPlacement, CraftingMiniGame update, 2 commits)
-- 31-07-08: CraftingOverlay, integration — PENDING
+- 31-07: Crafted Items & Result Screen — COMPLETE (41 crafted equipment, activeBuffs system, enchantments, CraftingResult component, 2 commits)
+- 31-08: CraftingOverlay, integration — PENDING
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions (14 requirements, 9 success criteria)
@@ -112,4 +118,4 @@ Resume file: .planning/phases/31-crafting-professions/31-07-PLAN.md (next)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 31-06 (Crafting Mini-Games: PlantIdentification, PatternMatching, DirectionalPlacement)*
+*Last updated: 2026-02-13 — Completed plan 31-07 (Crafted Items & Result Screen)*
