@@ -48,6 +48,13 @@ describe('battleSlice', () => {
         battleZone: null,
         battleStartTimestamp: null,
         enemyData: null,
+        // v6.0 Phase 30 companion fields
+        companionHP: null,
+        companionMaxHP: null,
+        companionMP: null,
+        companionMaxMP: null,
+        companionEffects: [],
+        companionDefending: false,
       });
     });
   });
