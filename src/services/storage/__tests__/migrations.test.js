@@ -41,8 +41,8 @@ describe('Storage Migrations', () => {
   });
 
   describe('Migration version', () => {
-    it('CURRENT_VERSION equals 1', () => {
-      expect(CURRENT_VERSION).toBe(1);
+    it('CURRENT_VERSION equals 5', () => {
+      expect(CURRENT_VERSION).toBe(5);
     });
 
     it('migrate is a function', () => {
