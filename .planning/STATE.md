@@ -6,17 +6,17 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
 
-**Current focus:** Phase 31 - Crafting & Professions
+**Current focus:** Phase 32 - Advanced Combat
 
 ## Current Position
 
 Milestone: v6.1 Crafting & Advanced Combat
-Phase: 31 of 32 (Crafting & Professions)
-Plan: 8 of 8 (31-01 through 31-08 complete)
-Status: Phase complete
-Last activity: 2026-02-13 — Completed 31-08-PLAN.md (Crafting System Integration)
+Phase: 32 of 32 (Advanced Combat)
+Plan: 1 of 11
+Status: In progress
+Last activity: 2026-02-13 — Completed 32-01-PLAN.md (Status Effects Foundation)
 
-Progress: [███████████████████████████████] 96% (31/32 phases complete)
+Progress: [███████████████████████████████░░░░░░░░░░░] 1/11 Phase 32 plans
 
 ### Shipped Milestones
 
@@ -82,6 +82,11 @@ v6.1 Phase 31 decisions:
 - NPC profession teaching via data merge (not npcs.json modification) — composable, preserves existing data (31-08)
 - Minimal companion crafting dialogue (10 lines) — pattern established, remaining 50 lines deferred (31-08)
 
+v6.1 Phase 32 decisions:
+- 24 effects total (not 22) — original file had 16 effects (not 14 as plan assumed), adding 8 yields 24 (32-01)
+- Level gating tiers: 10/16/24 — tier 2 returns original 16, tier 3 includes all Phase 32 additions (32-01)
+- Compound wordId prefix 'compound_' vs status prefix 'status_' — namespace separation for FSRS cards (32-01)
+
 ### Open Items Carried Forward
 
 - Bundle 850KB (exceeds 500KB target) — needs lazy loading / code splitting
@@ -102,25 +107,17 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (Phase 31 execution)
-Stopped at: Completed 31-08-PLAN.md (Crafting System Integration — Phase 31 complete)
-Resume file: .planning/phases/32-advanced-combat/32-01-PLAN.md (next)
+Last session: 2026-02-13 (Phase 32 execution)
+Stopped at: Completed 32-01-PLAN.md (Status Effects Foundation)
+Resume file: .planning/phases/32-advanced-combat/32-02-PLAN.md (next)
 
-**Phase 31 Progress:**
-- 31-01: Data Foundation — COMPLETE (6 professions, 205 resources, 100 recipes, craftingSlice, IndexedDB, 3 commits)
-- 31-02: Crafting Logic (TDD) — COMPLETE (7 functions, 37 tests, 3 commits)
-- 31-03: Gathering Spot Manager & Data — COMPLETE (GatheringSpotManager, 59 gathering spots, zones.js flags, 12 tests, 2 commits)
-- 31-04: Crafting UI Components — COMPLETE (RecipeBook, ProfessionPanel, IngredientSelector, 2 commits)
-- 31-05: Crafting Mini-Games — COMPLETE (CraftingMiniGame container, CalligraphyTracing, CookingRecipeOrder, SmithingRhythm, 2 commits)
-- 31-06: Crafting Mini-Games — COMPLETE (PlantIdentification, PatternMatching, DirectionalPlacement, CraftingMiniGame update, 2 commits)
-- 31-07: Crafted Equipment & Result Screen — COMPLETE (41 crafted equipment, activeBuffs system, enchantments, CraftingResult component, 2 commits)
-- 31-08: Crafting Integration — COMPLETE (GameLayout wiring, GatheringSpotManager in WorldScene, craftingVocabMiddleware, NPC/companion support, 3 commits)
+**Phase 32 Progress:**
+- 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
 
 **v6.1 Roadmap Summary:**
-- Phase 31: Crafting & Professions (14 requirements, 9 success criteria)
-- Phase 32: Status Effects & Advanced Combat (18 requirements, 16 success criteria)
-- 100% requirement coverage: 32/32 mapped
+- Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
+- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (1/11 plans)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 31-08 (Crafting System Integration — Phase 31 complete)*
+*Last updated: 2026-02-13 — Completed plan 32-01 (Status Effects Foundation)*
