@@ -54,12 +54,25 @@ export class GatheringSpotManager {
       const rawLabel = resource ? resource.nameArabic : '???';
       const labelText = showDiacritics ? rawLabel : stripDiacritics(rawLabel);
 
+      // Background rectangle for text readability
+      const tempText = this.scene.add.text(0, 0, labelText, {
+        fontFamily: "'Noto Naskh Arabic', serif",
+        fontSize: '18px',
+      });
+      const textWidth = tempText.width + 12;
+      const textHeight = tempText.height + 6;
+      tempText.destroy();
+
+      const labelBg = this.scene.add.rectangle(px, py - 50, textWidth, textHeight, 0x1a1a2e, 0.75)
+        .setOrigin(0.5)
+        .setDepth(9998);
+
       const label = this.scene.add.text(px, py - 50, labelText, {
         fontFamily: "'Noto Naskh Arabic', serif",
-        fontSize: '14px',
-        color: '#e2b659',
-        stroke: '#2b292c',
-        strokeThickness: 3,
+        fontSize: '18px',
+        color: '#ffffff',
+        stroke: '#1a1a2e',
+        strokeThickness: 4,
         align: 'center',
       }).setOrigin(0.5).setDepth(9999);
 
@@ -76,6 +89,7 @@ export class GatheringSpotManager {
         ...cfg,
         sprite,
         label,
+        labelBg,
         hintText,
         worldX: px,
         worldY: py,
@@ -256,6 +270,7 @@ export class GatheringSpotManager {
     // Destroy sprites and labels
     this.spots.forEach((spot) => {
       if (spot.sprite) spot.sprite.destroy();
+      if (spot.labelBg) spot.labelBg.destroy();
       if (spot.label) spot.label.destroy();
       if (spot.hintText) spot.hintText.destroy();
     });

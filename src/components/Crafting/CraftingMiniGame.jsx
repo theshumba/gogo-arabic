@@ -5,7 +5,7 @@
  * handles completion callbacks with quality/XP/inventory dispatch.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { EventBus } from '../../utils/eventBus.js';
@@ -61,6 +61,25 @@ export default function CraftingMiniGame({ professionId, recipeId, onComplete, o
   const dispatch = useDispatch();
   const [phase, setPhase] = useState('playing'); // 'playing' | 'result'
   const [result, setResult] = useState(null); // { quality, accuracy, xpGained, itemId, itemQuantity }
+
+  // Freeze player on mount, unfreeze on unmount
+  useEffect(() => {
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+    return () => {
+      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+    };
+  }, []);
+
+  // ESC key to cancel
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onCancel?.();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onCancel]);
 
   const professions = useSelector((state) => state.crafting.professions);
   const profession = professions[professionId];

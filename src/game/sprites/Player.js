@@ -107,8 +107,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.footstepTimer = 0;
     this.footstepInterval = 320; // ms between footstep sounds at normal speed
 
-    // Apply skin tone tint to body
-    this.setTint(skinTint);
+    // NOTE: Skin tint is only applied to head sprite (not body).
+    // Body sprite contains clothing that gets ruined by multiply tint on darker skin tones.
 
     // --- Head covering sprite (non-physics, follows body) ---
     const headTextureKey = scene.textures.exists(headKey) ? headKey : null;
