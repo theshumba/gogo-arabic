@@ -30,6 +30,14 @@ function Wardrobe({ onClose }) {
 
   const focusTrapRef = useFocusTrap(true, onClose);
 
+  // Freeze player while wardrobe is open
+  useEffect(() => {
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+    return () => {
+      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+    };
+  }, []);
+
   // Get owned outfit IDs from inventory
   const ownedOutfits = useMemo(() => {
     const outfitIds = player.inventory

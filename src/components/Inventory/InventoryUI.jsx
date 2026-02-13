@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, memo } from 'react';
+import { useState, useCallback, useMemo, useEffect, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import {
@@ -52,6 +52,14 @@ function InventoryUI({ onClose }) {
 
   const focusTrapRef = useFocusTrap(true, handleClose);
   const handleOverlayClose = useOverlayClose(handleClose);
+
+  // Freeze player while inventory is open
+  useEffect(() => {
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+    return () => {
+      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+    };
+  }, []);
 
   // Sort handler
   const handleSort = useCallback((sortType) => {

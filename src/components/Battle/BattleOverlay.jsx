@@ -33,6 +33,18 @@ export default function BattleOverlay() {
   const allCompanions = useSelector((s) => s.companions?.companions);
   const battleState = useSelector((s) => s.battle);
 
+  // Freeze player when battle is active, unfreeze when component unmounts
+  useEffect(() => {
+    if (battleActive) {
+      EventBus.emit(EVENTS.PLAYER_FREEZE);
+    }
+    return () => {
+      if (battleActive) {
+        EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+      }
+    };
+  }, [battleActive]);
+
   useEffect(() => {
     const onBattleStarted = () => {
       setBattleActive(true);

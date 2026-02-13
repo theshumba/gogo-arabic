@@ -177,9 +177,10 @@ export const selectAnyOverlayOpen = createSelector(
     (state) => state.ui.inventoryOpen,
     (state) => state.ui.recipeBookOpen,
     (state) => state.ui.craftingMiniGameActive,
+    (state) => !!state.battle?.activeBattle,
   ],
-  (dialogueOpen, quizOpen, menuOpen, signOpen, objectInspectOpen, inventoryOpen, recipeBookOpen, craftingMiniGameActive) =>
-    dialogueOpen || quizOpen || menuOpen || signOpen || objectInspectOpen || inventoryOpen || recipeBookOpen || craftingMiniGameActive
+  (dialogueOpen, quizOpen, menuOpen, signOpen, objectInspectOpen, inventoryOpen, recipeBookOpen, craftingMiniGameActive, activeBattle) =>
+    dialogueOpen || quizOpen || menuOpen || signOpen || objectInspectOpen || inventoryOpen || recipeBookOpen || craftingMiniGameActive || activeBattle
 );
 
 export default uiSlice.reducer;
