@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Milestone: v6.0 Combat & RPG
-Phase: 30 of 4 phases (Companion System) — IN PROGRESS
-Plan: 4 of 5 plans complete
-Status: Companion UI complete — CompanionUI roster, PartyPanel, RelationshipBar, CompanionCommentBubble, BattleOverlay companion integration
-Last activity: 2026-02-13 — Completed 30-04-PLAN.md (5 React components for companion roster, party management, gift-giving, and battle display)
+Phase: 30 of 4 phases (Companion System) — COMPLETE ✓
+Plan: 5 of 5 plans complete
+Status: Phase 30 complete — Full companion system with 149 comprehensive tests, 1023/1023 tests passing
+Last activity: 2026-02-13 — Completed 30-05-PLAN.md (companion test suite: 149 new tests, zero regressions)
 
-Progress: [█████████████████████████████░] 97% (61 of 62 estimated plans complete across all milestones)
+Progress: [██████████████████████████████] 100% (62 of 62 estimated plans complete across all milestones)
 
 ### Shipped Milestones
 
@@ -25,6 +25,7 @@ Progress: [███████████████████████
 | v3.0 Infrastructure | 10-11 | 11 | 2026-02-09 |
 | v4.0 Game Soul & Polish | 14-18 | 8 | 2026-02-10 |
 | v5.0 The Real Game | 19-26 | 14 | 2026-02-11 |
+| v6.0 Combat & RPG | 27.1, 28-30 | 16 | 2026-02-13 |
 
 ## Performance Metrics
 
@@ -37,9 +38,9 @@ Progress: [███████████████████████
 
 ## Test & Build Status
 
-- Tests: 874 passing, 0 failures (awaiting Phase 30 Plan 05 test suite)
+- Tests: 1023 passing, 0 failures (874 existing + 149 new companion tests)
 - Build: Succeeds, main bundle 661.57KB (179.77KB gzipped) — slightly over 600KB target (+3KB from companion UI)
-- Git: 5 commits from Phase 30 Plans 01-04 (6 tasks, 5 commits)
+- Git: 7 commits from Phase 30 Plans 01-05 (8 tasks, 7 commits)
 
 ## Accumulated Context
 
@@ -209,7 +210,7 @@ Key v6.0 roadmap decisions:
 
 ### Blockers/Concerns
 
-None. Phase 30 Plan 01 complete, ready for Plan 02 (Companion Battle AI).
+None. Phase 30 complete, v6.0 Combat & RPG milestone complete.
 
 ### Pending Todos
 
@@ -217,10 +218,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (Phase 30 Plan 04 complete)
-Stopped at: 30-04-PLAN.md complete (2 tasks, 1 commit, SUMMARY created)
-Next step: Phase 30 Plan 05 (Companion System Test Suite)
+Last session: 2026-02-13 (Phase 30 Plan 05 complete)
+Stopped at: 30-05-PLAN.md complete (2 tasks, 2 commits, SUMMARY created, STATE.md updated)
+Next step: v6.0 milestone complete — ready for v6.1 (Phases 31-32) or v7.0 planning
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Phase 30 Plan 04 COMPLETE (5 React components: CompanionUI roster, PartyPanel, RelationshipBar, CompanionCommentBubble, BattleOverlay companion integration), ready for Plan 05*
+*Last updated: 2026-02-13 — Phase 30 COMPLETE (all 5 plans), v6.0 Combat & RPG milestone complete ✓*

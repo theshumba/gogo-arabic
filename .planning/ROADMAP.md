@@ -190,12 +190,14 @@ Plans:
 
 **Plans:** 5 plans
 
+**Status:** ✅ Complete (2026-02-13)
+
 Plans:
-- [ ] 30-01-PLAN.md — Data foundation: companionSlice (IndexedDB), 12 companion definitions, 2,400+ dialogue lines, utility functions, EventBus events
-- [ ] 30-02-PLAN.md — Battle AI: CompanionBattleAI behavior tree (4 roles), BattleStateMachine COMPANION_TURN integration, battleSlice companion state
-- [ ] 30-03-PLAN.md — Phaser integration: Companion sprite (extends NPC), CompanionManager, CompanionDialogueManager, CompanionContext, DialogueEngine recruit effect
-- [ ] 30-04-PLAN.md — React UI: CompanionUI roster, CompanionCard, PartyPanel, RelationshipBar, CompanionCommentBubble, BattleOverlay companion turn
-- [ ] 30-05-PLAN.md — Tests: companionSlice, CompanionBattleAI, CompanionManager, CompanionContext, utilities, data integrity, full regression
+- [x] 30-01-PLAN.md — Data foundation: companionSlice (IndexedDB), 12 companion definitions, 2,400+ dialogue lines, utility functions, EventBus events
+- [x] 30-02-PLAN.md — Battle AI: CompanionBattleAI behavior tree (4 roles), BattleStateMachine COMPANION_TURN integration, battleSlice companion state
+- [x] 30-03-PLAN.md — Phaser integration: Companion sprite (extends NPC), CompanionManager, CompanionDialogueManager, CompanionContext, DialogueEngine recruit effect
+- [x] 30-04-PLAN.md — React UI: CompanionUI roster, CompanionCard, PartyPanel, RelationshipBar, CompanionCommentBubble, BattleOverlay companion turn
+- [x] 30-05-PLAN.md — Tests: companionSlice, CompanionBattleAI, CompanionManager, CompanionContext, utilities, data integrity, full regression
 
 ---
 
