@@ -88,44 +88,46 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CRAFT-01 | — | Pending |
-| CRAFT-02 | — | Pending |
-| CRAFT-03 | — | Pending |
-| CRAFT-04 | — | Pending |
-| CRAFT-05 | — | Pending |
-| CRAFT-06 | — | Pending |
-| CRAFT-07 | — | Pending |
-| RSRC-01 | — | Pending |
-| RSRC-02 | — | Pending |
-| RSRC-03 | — | Pending |
-| CINT-01 | — | Pending |
-| CINT-02 | — | Pending |
-| CINT-03 | — | Pending |
-| CINT-04 | — | Pending |
-| STAT-01 | — | Pending |
-| STAT-02 | — | Pending |
-| STAT-03 | — | Pending |
-| STAT-04 | — | Pending |
-| COMBO-01 | — | Pending |
-| COMBO-02 | — | Pending |
-| COMBO-03 | — | Pending |
-| COMBO-04 | — | Pending |
-| COMBO-05 | — | Pending |
-| ADVB-01 | — | Pending |
-| ADVB-02 | — | Pending |
-| ADVB-03 | — | Pending |
-| ADVB-04 | — | Pending |
-| ADVB-05 | — | Pending |
-| ARENA-01 | — | Pending |
-| ARENA-02 | — | Pending |
-| ARENA-03 | — | Pending |
-| ARENA-04 | — | Pending |
+| CRAFT-01 | Phase 31 | Pending |
+| CRAFT-02 | Phase 31 | Pending |
+| CRAFT-03 | Phase 31 | Pending |
+| CRAFT-04 | Phase 31 | Pending |
+| CRAFT-05 | Phase 31 | Pending |
+| CRAFT-06 | Phase 31 | Pending |
+| CRAFT-07 | Phase 31 | Pending |
+| RSRC-01 | Phase 31 | Pending |
+| RSRC-02 | Phase 31 | Pending |
+| RSRC-03 | Phase 31 | Pending |
+| CINT-01 | Phase 31 | Pending |
+| CINT-02 | Phase 31 | Pending |
+| CINT-03 | Phase 31 | Pending |
+| CINT-04 | Phase 31 | Pending |
+| STAT-01 | Phase 32 | Pending |
+| STAT-02 | Phase 32 | Pending |
+| STAT-03 | Phase 32 | Pending |
+| STAT-04 | Phase 32 | Pending |
+| COMBO-01 | Phase 32 | Pending |
+| COMBO-02 | Phase 32 | Pending |
+| COMBO-03 | Phase 32 | Pending |
+| COMBO-04 | Phase 32 | Pending |
+| COMBO-05 | Phase 32 | Pending |
+| ADVB-01 | Phase 32 | Pending |
+| ADVB-02 | Phase 32 | Pending |
+| ADVB-03 | Phase 32 | Pending |
+| ADVB-04 | Phase 32 | Pending |
+| ADVB-05 | Phase 32 | Pending |
+| ARENA-01 | Phase 32 | Pending |
+| ARENA-02 | Phase 32 | Pending |
+| ARENA-03 | Phase 32 | Pending |
+| ARENA-04 | Phase 32 | Pending |
 
 **Coverage:**
 - v6.1 requirements: 32 total
-- Mapped to phases: 0
-- Unmapped: 32 (awaiting roadmap)
+- Mapped to phases: 32 (100%)
+- Phase 31: 14 requirements
+- Phase 32: 18 requirements
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-13*
-*Last updated: 2026-02-13 after initial definition*
+*Last updated: 2026-02-13 — Traceability complete for v6.1 roadmap*

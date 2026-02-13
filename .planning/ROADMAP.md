@@ -7,11 +7,13 @@
 - ✅ **v4.0 Game Soul & Polish** — Phases 14-18 (shipped 2026-02-10) → [archive](milestones/v4.0-ROADMAP.md)
 - ✅ **v5.0 The Real Game** — Phases 19-26 (shipped 2026-02-11) → [archive](milestones/v5.0-ROADMAP.md)
 - ✅ **v6.0 Combat & RPG** — Phases 27.1, 28-30 (shipped 2026-02-13) → [archive](milestones/v6.0-ROADMAP.md)
+- 🚧 **v6.1 Crafting & Advanced Combat** — Phases 31-32 (in progress)
+- 📋 **v7.0 World & Content** — Phases 33-38 (planned)
 
 ## Phases
 
 **Phase Numbering:**
-- Integer phases (1-30): Planned milestone work
+- Integer phases (1-32): Planned milestone work
 - Decimal phases (27.1): Urgent insertions between phases (marked INSERTED)
 
 <details>
@@ -74,7 +76,76 @@
 
 </details>
 
+### 🚧 v6.1 Crafting & Advanced Combat (In Progress)
+
+**Milestone Goal:** Add crafting professions with Arabic recipes and advanced combat mechanics including status effects, grammar-based combos, and arena challenges.
+
+**Target Features:**
+- 6 crafting professions with Arabic recipe names and vocabulary integration
+- Status effects system tied to Arabic vocabulary mastery
+- Grammar pattern combat combos (sentence structures = attack chains)
+- Wave-based arena challenges with progressive difficulty
+- Crafting-combat integration (crafted items enhance combat abilities)
+
+#### Phase 31: Crafting & Professions
+**Goal**: Players master 6 crafting professions with Arabic recipes that enhance combat
+
+**Depends on**: Phase 30 (companions can teach professions, economy established for crafted goods)
+
+**Requirements**: CRAFT-01, CRAFT-02, CRAFT-03, CRAFT-04, CRAFT-05, CRAFT-06, CRAFT-07, RSRC-01, RSRC-02, RSRC-03, CINT-01, CINT-02, CINT-03, CINT-04
+
+**Success Criteria** (what must be TRUE):
+  1. Player can learn and level up 6 crafting professions (خطاط/Calligrapher, طباخ/Cook, حداد/Blacksmith, عطار/Herbalist, نساج/Weaver, بناء/Builder) with Arabic skill names
+  2. Player can discover recipes through exploration and NPC teaching, viewing them in RecipeBook UI with Arabic ingredient names
+  3. Crafting mini-game requires Arabic vocabulary knowledge — ingredient usable only if word is learned
+  4. Player can gather zone-specific resources with Arabic names from respawning gathering spots in the world
+  5. Crafted equipment integrates with existing equipment system (can be best-in-slot)
+  6. Crafted consumables (food from Cook, potions from Herbalist) provide battle buffs when used in combat
+  7. Calligraphy profession creates enchantment scrolls that enhance equipment with Arabic inscriptions
+  8. Each profession teaches approximately 50 domain-specific Arabic vocabulary words integrated with FSRS system
+  9. Profession mastery contributes to zone reputation and unlocks new NPC dialogue branches
+
+**Plans**: TBD
+
+Plans:
+- [ ] 31-01: TBD
+- [ ] 31-02: TBD
+
+#### Phase 32: Status Effects & Advanced Combat
+**Goal**: Players use Arabic vocabulary to apply status effects, chain grammar combos, and conquer arena challenges
+
+**Depends on**: Phase 31 (crafted consumables used in advanced battles, profession buffs affect combat)
+
+**Requirements**: STAT-01, STAT-02, STAT-03, STAT-04, COMBO-01, COMBO-02, COMBO-03, COMBO-04, COMBO-05, ADVB-01, ADVB-02, ADVB-03, ADVB-04, ADVB-05, ARENA-01, ARENA-02, ARENA-03, ARENA-04
+
+**Success Criteria** (what must be TRUE):
+  1. Battle system supports 20+ status effects with Arabic names (حيرة/Confusion, قوة/Strength, سرعة/Speed, حماية/Protection, سم/Poison, صمت/Silence, عمى/Blindness, شجاعة/Courage, حكمة/Wisdom, بركة/Blessing, etc.)
+  2. Applying a status effect in battle requires knowing the Arabic vocabulary word
+  3. Status effect vocabulary is auto-added to FSRS review queue when first encountered in battle
+  4. Status effect combinations create compound effects (e.g., سرعة + قوة = devastating attack bonus)
+  5. Player can execute noun+adjective combos (إضافة constructions) by describing targets accurately for bonus damage
+  6. Player can chain verb conjugations across forms (Form I → Form II → Form IV) for escalating damage multipliers
+  7. Player can construct complete Arabic sentences for ultimate attacks with combo meter tracking
+  8. Combo meter displays with Arabic numerals and builds with consecutive correct Arabic answers
+  9. Battle system supports multi-target encounters (up to 4 enemies) with front/back row positioning
+  10. Player can use crafted battle items (potions, scrolls, food) during combat via item menu
+  11. Player can retreat from battle by correctly answering an Arabic question (vocabulary or grammar)
+  12. Post-battle review screen shows all Arabic vocabulary and grammar used with accuracy statistics
+  13. Player can enter wave-based survival arena with increasing Arabic difficulty each wave
+  14. Player can attempt boss rush mode (all bosses sequentially) with story interludes between battles
+  15. Puzzle battles require specific Arabic knowledge patterns (not brute-forceable with stats alone)
+  16. Arena has a leaderboard tracking player performance metrics and win streaks
+
+**Plans**: TBD
+
+Plans:
+- [ ] 32-01: TBD
+- [ ] 32-02: TBD
+
 ## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -108,9 +179,11 @@
 | 28. Root Magic & Elemental Affinity | v6.0 | 4/4 | Complete | 2026-02-12 |
 | 29. Equipment, Inventory & Economy | v6.0 | 5/5 | Complete | 2026-02-12 |
 | 30. Companion System | v6.0 | 5/5 | Complete | 2026-02-13 |
+| 31. Crafting & Professions | v6.1 | 0/TBD | Not started | - |
+| 32. Status Effects & Advanced Combat | v6.1 | 0/TBD | Not started | - |
 
 **Cumulative:** 30 phases shipped, 68 plans complete, 6 milestones
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-13 — v6.0 Combat & RPG milestone complete*
+*Last updated: 2026-02-13 — v6.1 Crafting & Advanced Combat milestone started*

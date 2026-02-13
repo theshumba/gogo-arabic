@@ -5,17 +5,18 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v6.1 Crafting & Advanced Combat
+
+**Current focus:** Phase 31 - Crafting & Professions
 
 ## Current Position
 
 Milestone: v6.1 Crafting & Advanced Combat
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-13 — Milestone v6.1 started
+Phase: 31 of 32 (Crafting & Professions)
+Plan: 0 of TBD
+Status: Ready to plan
+Last activity: 2026-02-13 — v6.1 roadmap created
 
-Progress: [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0% (v6.1 milestone)
+Progress: [████████████████████████████░░] 93% (30/32 phases complete)
 
 ### Shipped Milestones
 
@@ -24,7 +25,7 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░░░
 | v2.0 Player Experience | 1-9 | 14 | 2026-02-08 |
 | v3.0 Infrastructure | 10-11 | 11 | 2026-02-09 |
 | v4.0 Game Soul & Polish | 14-18 | 8 | 2026-02-10 |
-| v5.0 The Real Game | 19-26 | 14 | 2026-02-11 |
+| v5.0 The Real Game | 19-26 | 18 | 2026-02-11 |
 | v6.0 Combat & RPG | 27.1, 28-30 | 16 | 2026-02-13 |
 
 **Cumulative:** 30 phases, 68 plans, 6 milestones, 5 days
@@ -40,6 +41,12 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░░░
 ### Decisions
 
 All v2.0-v6.0 decisions logged in PROJECT.md Key Decisions table.
+
+Recent v6.0 decisions affecting v6.1:
+- IndexedDB hybrid persistence (5 slices migrated) — prevents localStorage overflow for crafting data
+- Phase ordering (storage → magic → equipment → companions) — established clean dependency chain
+- Equipment vocabulary-gated bonuses — pattern extends to crafting profession recipes
+- Arabic numeral haggling — pattern extends to resource trading/crafting costs
 
 ### Open Items Carried Forward
 
@@ -61,10 +68,15 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (v6.1 milestone start)
-Stopped at: Defining requirements
-Next step: Research → Requirements → Roadmap
+Last session: 2026-02-13 (v6.1 roadmap creation)
+Stopped at: Roadmap created with 2 phases (31-32) and 32 requirements mapped
+Next step: `/gsd:plan-phase 31` to break down crafting & professions
+
+**v6.1 Roadmap Summary:**
+- Phase 31: Crafting & Professions (14 requirements, 9 success criteria)
+- Phase 32: Status Effects & Advanced Combat (18 requirements, 16 success criteria)
+- 100% requirement coverage: 32/32 mapped
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — v6.1 milestone started*
+*Last updated: 2026-02-13 — v6.1 roadmap created*
