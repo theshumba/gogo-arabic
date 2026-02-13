@@ -20,10 +20,9 @@ import { PROFESSIONS } from '../../data/professions.js';
 import CalligraphyTracing from './minigames/CalligraphyTracing.jsx';
 import CookingRecipeOrder from './minigames/CookingRecipeOrder.jsx';
 import SmithingRhythm from './minigames/SmithingRhythm.jsx';
-// Plan 06 mini-games (stub imports - will be implemented later)
-const PlantIdentification = null;
-const PatternMatching = null;
-const DirectionalPlacement = null;
+import PlantIdentification from './minigames/PlantIdentification.jsx';
+import PatternMatching from './minigames/PatternMatching.jsx';
+import DirectionalPlacement from './minigames/DirectionalPlacement.jsx';
 
 import styles from './CraftingMiniGame.module.css';
 
