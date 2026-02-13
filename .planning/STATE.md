@@ -32,8 +32,8 @@ Progress: [███████████████████████
 
 ## Test & Build Status
 
-- Tests: 1,072 passing, 0 failures
-- Build: Succeeds, main bundle 850KB (220KB gzipped)
+- Tests: 1,121 passing, 0 failures
+- Build: Succeeds, main bundle 862KB (223KB gzipped)
 - Git: Tagged v6.0
 
 ## Accumulated Context
@@ -90,6 +90,9 @@ v6.1 Phase 32 decisions:
 - 6 bosses in rush sequence (all existing bosses in story order) — covers full game progression (32-02)
 - CEFR level gating: A1=level 1, A2=level 3, B1=level 7 — prevents powerful combos too early (32-02)
 - arenaSlice in localStorage (not IndexedDB) — lightweight enough, deferred store integration to 32-11 (32-02)
+- Exact-match-first for verb forms: diacritics distinguish Form I from Form II, normalized fallback for user flexibility (32-03)
+- Lesson gate checked before template matching in detectSentenceCombo for specific error messages (32-03)
+- resolveCompounds picks first compound match in COMPOUND_EFFECTS iteration order (32-03)
 - bossHP kept as sum of all enemies[] HP for full backward compatibility with single-enemy code (32-04)
 - enemies[] first 2 entries default to front row, remaining to back — typical RPG party layout (32-04)
 - MultiTargetManager does not read Redux — data-push pattern keeps it testable (32-04)
@@ -122,6 +125,7 @@ Resume file: .planning/phases/32-advanced-combat/32-05-PLAN.md (next)
 **Phase 32 Progress:**
 - 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
 - 32-02: Grammar Combos & Arena Data — COMPLETE (17 grammar combos, 3 arena modes, 6-boss rush, 5 puzzles, arenaSlice, 2 commits)
+- 32-03: Grammar Combo Detector & Compound Resolver — COMPLETE (TDD, GrammarComboDetector + CompoundEffectResolver, 49 tests, 4 commits)
 - 32-04: Multi-Target & Combo Meter — COMPLETE (enemies[] array, 11 new reducers, 7 new selectors, MultiTargetManager, 2 commits)
 
 **v6.1 Roadmap Summary:**
