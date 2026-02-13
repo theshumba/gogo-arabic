@@ -1,5 +1,31 @@
 # Project Milestones: GoGo Arabic
 
+## v6.0 Combat & RPG (Shipped: 2026-02-13)
+
+**Delivered:** Built the complete combat RPG core — root-based magic system where 50 Arabic trilateral roots become elemental spells, equipment system with 64 items across 8 slots and Arabic affix vocabulary, economy with zone shops and Arabic numeral haggling, and 12 AI companions with role-based battle AI and CEFR-adaptive Arabic dialogue teaching.
+
+**Phases completed:** 27.1, 28-30 (16 plans total)
+
+**Key accomplishments:**
+- Migrated 5 Redux slices to IndexedDB hybrid persistence, eliminating localStorage overflow risk
+- Built root magic system: 50 spells, 20 combos, affinity discovery, bidirectional FSRS sync, Arabic calligraphy VFX
+- Created equipment & economy: 64 items, 8 slots, 5 rarity tiers, vocabulary-gated bonuses, Arabic numeral haggling
+- Shipped 12 AI companions with 4 role-based behavior trees, CEFR-scaled dialogue, relationship-based battle bonuses
+- Integrated COMPANION_TURN into battle FSM (Player → Companion → Enemy) with relationship multiplier
+- Added 149 new tests bringing total to 1,023 with zero regressions across all systems
+
+**Stats:**
+- 160 files created/modified
+- 30,270 lines inserted, 311 deleted
+- 4 phases, 16 plans, 81 commits
+- 2 days (2026-02-11 → 2026-02-13)
+
+**Git range:** `feat(27.1-01)` → `chore: repo quality cleanup`
+
+**What's next:** v6.1 — Crafting & Professions (Phase 31) + Advanced Combat (Phase 32). Then v7.0 World & Content expansion.
+
+---
+
 ## v5.0 The Real Game (Shipped: 2026-02-11)
 
 **Delivered:** Transformed GoGo Arabic from a learning app with game skin into an actual game — with narrative infrastructure, rich NPC dialogue system, mentor-driven onboarding, enterable buildings, 142 interactive objects, structured progression gates, vocabulary integration across the world, and narrative branching with player choices.

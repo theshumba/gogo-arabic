@@ -2,7 +2,7 @@
 
 ## What This Is
 
-An Arabic language learning RPG built with React 19, Phaser 3, Redux Toolkit, and Express 5 + MongoDB. Players explore a pixel-art world with 8 zones, 140 NPCs, and 52 quests while learning 1,220 Arabic vocabulary words and 28 letters through FSRS spaced repetition, 6 quiz types, sentence building, grammar lessons, and word duel battles. The game features zone-specific background music with crossfade, screen shake and particle effects, a 3-stage learning path (alphabet -> vocabulary -> grammar), quest guidance systems, daily dashboard, fast-travel world map, player profile with stats, NPC idle animations, and outfit customization.
+An Arabic language learning RPG built with React 19, Phaser 3, Redux Toolkit, and Express 5 + MongoDB. Players explore a pixel-art world with 8 zones, 140 NPCs, and 52 quests while learning 1,220 Arabic vocabulary words and 28 letters through FSRS spaced repetition, 6 quiz types, sentence building, grammar lessons, and word duel battles. The game features a root-based magic system where Arabic trilateral roots become elemental spells, equipment with 64 Arabic-named items across 8 slots, an economy with zone shops and Arabic numeral haggling, 12 AI companions with battle roles and CEFR-adaptive Arabic dialogue, zone-specific ambient audio with SFX, screen shake and particle effects, a 3-stage learning path, quest guidance systems, daily dashboard, fast-travel world map, player profile with stats, NPC idle animations, and outfit customization.
 
 ## Core Value
 
@@ -44,22 +44,25 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - Learning Path menu (3-stage) + DailyDashboard progress metrics + HUD progress strip + onboarding reorder — v4.0
 - NPC idle animations (desynchronized) + locked door feedback + lerp camera follow — v4.0
 - Overlay close guarantees + movement unlock safety nets + zone transition timeout + empty quiz states + dialogue overflow — v4.0
+- EventBus (74 namespaced constants) + narrativeSlice + DialogueEngine + 30 NPCs with dialogue trees — v5.0
+- Mentor-driven in-world onboarding + 15 enterable buildings + 142 interactive objects — v5.0
+- Zone gates with mastery requirements + vocabulary integration on 42 NPCs and 142 objects — v5.0
+- Story arcs spanning all zones + branching quests + relationship-gated dialogue — v5.0
+- IndexedDB hybrid persistence (5 slices) + auto-migration from localStorage + 80% quota warning — v6.0
+- Root magic: 50 spells from Arabic trilateral roots, 10 elements, 20 combos, verb form upgrades, calligraphy VFX — v6.0
+- Affinity discovery through 50+ gameplay choices, primary 2x / secondary 1.5x spell power bonuses — v6.0
+- Bidirectional FSRS-root mastery sync + grammar accuracy damage multiplier — v6.0
+- Equipment: 8 slots, 64 items, 5 rarity tiers (Arabic color names), stat comparisons, set bonuses — v6.0
+- Inventory: 200-item grid UI, sort by type/rarity/Arabic order, vocabulary-gated affix bonuses — v6.0
+- Economy: 8 zone shops, dynamic inventory, Arabic numeral haggling, auto-teach affixes — v6.0
+- 12 AI companions: 4 battle roles, CEFR-scaled dialogue, relationship 0-100, gift system — v6.0
+- Companion battle AI (behavior trees) + COMPANION_TURN state in battle FSM — v6.0
+- Companion following (lazy pathfinding) + contextual Arabic comments + teaching specializations — v6.0
+- battleRewardsMiddleware wiring XP/gold/items from battles to progression — v6.0
 
 ### Active
 
-## Current Milestone: v6.0 Combat & RPG
-
-**Goal:** Build the combat and RPG core — root-based magic system where Arabic roots become spells, equipment with Arabic-named items, and 12 AI companions that teach Arabic through conversation and battle.
-
-**Target features:**
-- Root Magic system mapping Arabic trilateral roots to 10 elemental spells
-- Affinity discovery through gameplay choices (primary/secondary elements)
-- Equipment system with 8 slots, rarity tiers, and Arabic affix vocabulary
-- Inventory management with grid UI, sorting, and item comparison
-- Economy with zone shops, Arabic numeral haggling, and gold currency
-- 12 recruitable companions with unique personalities, battle roles, and Arabic teaching specialties
-- Companion AI for battle actions and contextual exploration dialogue
-- Party management (2 active companions) with relationship system
+Planning next milestone. See `/gsd:new-milestone`.
 
 ### Out of Scope
 
@@ -73,42 +76,43 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - Day/night cycle — Complex, not core to "soul" feeling
 - Procedural quests — Educational content needs curation
 - Arabic dialect switching — Confuses learners, exponential content
+- Romance options for companions — Cultural sensitivity (Islamic context)
+- Companion permadeath — Too punishing for educational game
+- Loot boxes / gacha mechanics — Predatory, undermines educational trust
+- Real-money item shop — Pay-to-win, inappropriate for education
+- Free-form spell creation — Balance nightmare, curated 50 canonical spells
+- Voice pronunciation casting — Infrastructure not ready
+- Calligraphic tactile spell casting — Defer to v11.0 AAA polish
 
 ## Context
 
-**v4.0 shipped (2026-02-10):** 5 phases, 8 plans, 28 files, 1,526 insertions. Audio system (BGM + SFX), visual juice (particles, shake, celebrations), learning progression (Learning Path + dashboard), world life (NPC idle, doors, camera), bug fixes (overlays, freezes, movement). All 20 requirements satisfied, all cross-phase integrations verified.
+**v6.0 shipped (2026-02-13):** 4 phases (27.1, 28-30), 16 plans, 160 files, 30,270 insertions. IndexedDB hybrid persistence, root magic system (50 spells, 20 combos, FSRS sync), equipment/inventory/economy (64 items, 8 slots, shops, haggling), 12 AI companions (battle AI, CEFR dialogue, relationships). All 1,023 tests pass. Bundle: 661KB.
 
-**v3.0 partial (2026-02-09):** Testing foundation + architecture cleanup complete. 548 tests, ESLint/Prettier, GameLayout refactored, CSS Modules migration. Backend hardening and visual polish deferred.
+**v5.0 shipped (2026-02-11):** 8 phases, 14 plans. Narrative infrastructure, dialogue system, mentor onboarding, buildings, interactive objects, progression gates, vocabulary integration, narrative branching.
 
-**v2.0 shipped (2026-02-08):** 9 phases, 14 plans, 253 files modified. Quest guidance, feature discoverability, daily dashboard, world map, player profile, outfits.
+**v4.0 shipped (2026-02-10):** 5 phases, 8 plans. Audio system, visual juice, learning progression, world life, bug fixes.
 
-**Codebase:** 36,000+ LOC (JS/JSX/CSS frontend). React 19 + Phaser 3 + Redux Toolkit (12 slices, 2 middleware) + Express 5 + MongoDB.
+**v3.0 partial (2026-02-09):** 2 phases. Testing foundation (548 tests), architecture cleanup. Backend hardening deferred.
 
-**User feedback addressed in v4.0:**
-- ~~Game freezes/gets stuck~~ -> Fixed (overlay close guarantees, movement safety nets, transition timeouts)
-- ~~No sense of direction~~ -> Fixed (Learning Path menu, dashboard metrics, onboarding reorder)
-- ~~Can't find letter/alphabet learning~~ -> Fixed (alphabet is onboarding step 2, Learning Path)
-- ~~World feels empty~~ -> Fixed (NPC idle animations, locked door feedback, smooth camera)
-- ~~No audio~~ -> Fixed (zone BGM, SFX, volume controls, mobile unlock)
-- ~~Doesn't feel like a "real game"~~ -> Fixed (screen shake, particles, celebrations, toasts, transitions)
+**v2.0 shipped (2026-02-08):** 9 phases, 14 plans. Quest guidance, feature discoverability, daily dashboard, world map, player profile, outfits.
 
-**v6.0 context driving this milestone:**
-- Battle engine exists (Phase 27) but has no world integration (can't trigger from exploration)
-- Rewards not wired — XP/gold from battles don't award to player slice
-- FSRS not updated after battle vocabulary usage
-- No equipment, inventory, or economy system
-- No companion system — player always alone
-- Root magic concept exists in data (50 roots mapped) but no spell casting UI or mastery tracking
-- No battle SFX beyond correct/wrong sounds
-- No tests for ~2.6K LOC of battle code
+**Codebase:** ~133K LOC (JS/JSX/CSS/JSON frontend). React 19 + Phaser 3 + Redux Toolkit (17 slices, 5 middleware) + Express 5 + MongoDB.
+
+**Known tech debt:**
+- Bundle 661KB (exceeds 500KB target, approaching 700KB warning)
+- BootScene loads ALL assets upfront (77 calls) — needs zone-based lazy loading
+- No tests for Phase 27 battle code (~2.6K LOC)
+- ShopOverlay + CompanionUI not wired to GameLayout (~25 lines to fix)
+- 573 missing companion dialogue lines, 12 missing companion sprite PNGs (content/art gaps)
 
 ## Constraints
 
 - **Tech stack**: React 19 + Phaser 3 + Redux Toolkit + Express 5 + MongoDB (established, no changes)
 - **Browser**: Modern browsers, no IE11
 - **Mobile**: Responsive web, minimum 375px viewport
-- **Performance**: Main bundle < 500KB after splitting (achieved: 264KB)
+- **Performance**: Main bundle < 500KB after splitting (currently 661KB — needs optimization)
 - **Accessibility**: WCAG AA compliance for all overlays, prefers-reduced-motion for all VFX
+- **Cultural**: No music, no eyes/faces, no deity characters. Arabic-first, culturally respectful, historically accurate.
 
 ## Key Decisions
 
@@ -119,18 +123,19 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Phaser DOMOverlay for NPC markers | Existing system, minimal overhead | Good — quest markers render cleanly |
 | Custom Framer Motion tooltips (not react-joyride) | React 19 incompatibility with joyride | Good — zero new dependencies |
 | Skip TypeScript migration | UX fixes are higher priority, too large | Good — avoided scope creep |
-| Defer infrastructure to v3.0 | Player-facing features more impactful | Good — shipped fast, debt tracked |
-| 5-agent parallel execution for phases 5-9 | Independent features, speed | Good — all 5 features shipped simultaneously |
+| 5-agent parallel execution | Independent features, speed | Good — shipped simultaneously |
 | Vocabulary data imported directly (not in Redux) | Reduces store size, simplifies selectors | Good — cleaner architecture |
-| HTML escaping in DOMOverlay | XSS prevention for NPC label names | Good — security hardening |
-| Random dev JWT secret | Avoid hardcoded secrets in dev mode | Good — better security posture |
-| Zero new dependencies for v4.0 | Howler.js + Phaser 3 + Framer Motion already installed | Good — no bloat, all features built with existing stack |
-| audioManager singleton pattern | Central audio control, easy volume sync from Redux | Good — clean separation of concerns |
-| Timer-based NPC idle (not state machines) | Simplicity, desynchronized via random delays | Good — natural-looking idle without complexity |
-| useOverlayClose hook for overlay management | Centralize ESC/click-outside, prevent stuck states | Good — used in 6 overlays, eliminated freeze bugs |
-| CSS keyframes for infinite animations | More performant than Framer Motion for continuous effects | Good — shimmer, sparkle, glow run smoothly |
+| Zero new dependencies for v4.0 | Howler.js + Phaser 3 + Framer Motion already installed | Good — no bloat |
+| audioManager singleton pattern | Central audio control, easy volume sync | Good — clean separation |
+| useOverlayClose hook for overlay management | Centralize ESC/click-outside, prevent stuck states | Good — 6 overlays, no freezes |
 | prefers-reduced-motion gate for all VFX | WCAG AA, respect user preferences | Good — 27 files check preference |
-| Parallel execution of all v4.0 phases | User preference for speed, independent features | Good — shipped 5 phases in 1 day, minor cleanup needed |
+| Nested persistReducer for IndexedDB | Preserves selector paths while using IndexedDB backend | Good — transparent to components |
+| Phase ordering: storage → magic → equipment → companions | Dependency chain: IndexedDB prevents overflow, magic is educational core, equipment enhances magic, companions use both | Good — clean layered build |
+| Behavior trees for companion AI | Priority-based decisions clearer than state machines for NPC roles | Good — 4 role-based trees |
+| CompanionDialogueManager composition (not modification) | Avoids coupling to DialogueEngine internals | Good — clean separation |
+| CEFR-based dialogue scaling | Adaptive Arabic/English ratios match learner level | Good — A1-C2 progression |
+| Equipment vocabulary-gated bonuses | Motivates learning: 50% unlearned, 100% learned | Good — educational incentive |
+| Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-02-12 after v6.0 milestone started*
+*Last updated: 2026-02-13 after v6.0 milestone*
