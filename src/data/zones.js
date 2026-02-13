@@ -43,6 +43,7 @@ const oasis_village = {
   buildMap: buildOasisMap,
   spawnPoint: { x: 14, y: 20 },
   vocabCategories: ['greetings', 'trade'],
+  gatheringSpots: true,
 
   objects: [
     { key: 'palm', x: 15, y: 11, collide: true, collideW: 30, collideH: 20 },
@@ -170,6 +171,7 @@ const ancient_library = {
   buildMap: buildLibraryMap,
   spawnPoint: { x: 17, y: 27 },
   vocabCategories: ['numbers', 'colors', 'phrases'],
+  gatheringSpots: true,
 
   objects: [
     // Library building structures
@@ -297,6 +299,7 @@ const desert_marketplace = {
   buildMap: buildMarketplaceMap,
   spawnPoint: { x: 5, y: 17 },
   vocabCategories: ['trade', 'food', 'numbers'],
+  gatheringSpots: true,
 
   objects: [
     // Market stalls (houses)
@@ -428,6 +431,7 @@ const farmland = {
   buildMap: buildFarmlandMap,
   spawnPoint: { x: 22, y: 33 },
   vocabCategories: ['nature', 'animals', 'body', 'verbs_basic'],
+  gatheringSpots: true,
 
   objects: [
     // Farm buildings
@@ -546,6 +550,7 @@ const bedouin_camp = {
   buildMap: buildBedouinMap,
   spawnPoint: { x: 3, y: 13 },
   vocabCategories: ['time', 'phrases', 'adjectives'],
+  gatheringSpots: true,
 
   objects: [
     // Tent structures
@@ -658,6 +663,7 @@ const mountain_village = {
   buildMap: buildMountainMap,
   spawnPoint: { x: 20, y: 27 },
   vocabCategories: ['clothing', 'animals', 'adjectives'],
+  gatheringSpots: true,
 
   objects: [
     // Village buildings
@@ -777,6 +783,7 @@ const coastal_port = {
   buildMap: buildPortMap,
   spawnPoint: { x: 3, y: 17 },
   vocabCategories: ['directions', 'trade', 'food'],
+  gatheringSpots: true,
 
   objects: [
     // Port buildings
@@ -907,6 +914,7 @@ const royal_palace = {
   buildMap: buildPalaceMap,
   spawnPoint: { x: 25, y: 37 },
   vocabCategories: ['adjectives', 'colors', 'phrases'],
+  gatheringSpots: true,
 
   objects: [
     // Palace structures
