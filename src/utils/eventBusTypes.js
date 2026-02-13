@@ -327,4 +327,40 @@ export const EVENTS = Object.freeze({
   GATHERING_SPOT_READY: 'phaser:crafting:gathering-spot-ready',
   /** Phaser → React: gathering spot depleted (on cooldown) */
   GATHERING_SPOT_DEPLETED: 'phaser:crafting:gathering-spot-depleted',
+
+  // ────────────────────────────────────────────────
+  // BATTLE PHASE 32 — Status Effects & Advanced Combat
+  // ────────────────────────────────────────────────
+
+  /** Phaser → React: status effect applied to player or enemy */
+  BATTLE_STATUS_APPLIED: 'phaser:battle:status-applied',
+  /** Phaser → React: compound effect triggered from two components */
+  BATTLE_COMPOUND_TRIGGERED: 'phaser:battle:compound-triggered',
+  /** Phaser → React: combo chain built from consecutive correct answers */
+  BATTLE_COMBO_CHAIN: 'phaser:battle:combo-chain',
+  /** Phaser → React: grammar combo triggered (sentence-level attack) */
+  BATTLE_GRAMMAR_COMBO: 'phaser:battle:grammar-combo',
+  /** Phaser → React: flee challenge initiated */
+  BATTLE_FLEE_CHALLENGE: 'phaser:battle:flee-challenge',
+  /** Phaser → React: flee attempt failed */
+  BATTLE_FLEE_FAILED: 'phaser:battle:flee-failed',
+  /** React → Phaser: player selected a target in multi-enemy battle */
+  BATTLE_TARGET_SELECT: 'phaser:battle:target-select',
+  /** React → Phaser: item menu opened during battle */
+  BATTLE_ITEM_MENU_OPEN: 'phaser:battle:item-menu-open',
+  /** React → React: post-battle vocabulary review started */
+  BATTLE_POST_REVIEW: 'phaser:battle:post-review',
+
+  // ────────────────────────────────────────────────
+  // ARENA — Arena wave-based combat (Phase 32)
+  // ────────────────────────────────────────────────
+
+  /** Phaser → React: new arena wave starting */
+  ARENA_WAVE_START: 'phaser:arena:wave-start',
+  /** Phaser → React: arena wave completed */
+  ARENA_WAVE_COMPLETE: 'phaser:arena:wave-complete',
+  /** Phaser → React: arena fully completed (all waves cleared) */
+  ARENA_COMPLETE: 'phaser:arena:complete',
+  /** Redux → React: arena score submitted to leaderboard */
+  ARENA_SCORE_SUBMITTED: 'redux:arena:score-submitted',
 });

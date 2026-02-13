@@ -26,6 +26,7 @@ import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
 import { rootFsrsSyncMiddleware } from './middleware/rootFsrsSyncMiddleware.js';
 import { battleRewardsMiddleware } from './middleware/battleRewardsMiddleware.js';
 import { craftingVocabMiddleware } from './middleware/craftingVocabMiddleware.js';
+import { statusEffectVocabMiddleware } from './middleware/statusEffectVocabMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -144,7 +145,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware),
 });
 
 export const persistor = persistStore(store);
