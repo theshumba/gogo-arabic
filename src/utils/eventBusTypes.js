@@ -363,4 +363,30 @@ export const EVENTS = Object.freeze({
   ARENA_COMPLETE: 'phaser:arena:complete',
   /** Redux → React: arena score submitted to leaderboard */
   ARENA_SCORE_SUBMITTED: 'redux:arena:score-submitted',
+
+  // ────────────────────────────────────────────────
+  // BOSS RUSH — Sequential boss fights with story interludes (Phase 32)
+  // ────────────────────────────────────────────────
+
+  /** Phaser → React: show story interlude between boss rush fights */
+  BOSS_RUSH_INTERLUDE: 'phaser:boss-rush:interlude',
+  /** React → Phaser: player dismissed interlude, continue to next boss */
+  BOSS_RUSH_CONTINUE: 'react:boss-rush:continue',
+  /** Phaser → React: boss rush started */
+  BOSS_RUSH_STARTED: 'phaser:boss-rush:started',
+  /** Phaser → React: individual boss defeated in rush */
+  BOSS_RUSH_BOSS_DEFEATED: 'phaser:boss-rush:boss-defeated',
+
+  // ────────────────────────────────────────────────
+  // PUZZLE BATTLE — Arabic knowledge-gated encounters (Phase 32)
+  // ────────────────────────────────────────────────
+
+  /** Phaser → React: puzzle challenge presented to player */
+  PUZZLE_CHALLENGE: 'phaser:puzzle:challenge',
+  /** React → Phaser: player submitted puzzle answer */
+  PUZZLE_ANSWER_SUBMITTED: 'react:puzzle:answer-submitted',
+  /** Phaser → React: puzzle answer result (correct/incorrect + damage) */
+  PUZZLE_ANSWER_RESULT: 'phaser:puzzle:answer-result',
+  /** Phaser → React: puzzle battle completed (victory or defeat) */
+  PUZZLE_COMPLETE: 'phaser:puzzle:complete',
 });
