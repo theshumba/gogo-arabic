@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 32 of 32 (Advanced Combat)
-Plan: 4 of 11
+Plan: 5 of 11
 Status: In progress
-Last activity: 2026-02-13 — Completed 32-04-PLAN.md (Multi-Target & Combo Meter)
+Last activity: 2026-02-13 — Completed 32-05-PLAN.md (Battle Effect & Combo UI)
 
-Progress: [██████████████████████████████████████░░░░] 4/11 Phase 32 plans
+Progress: [██████████████████████████████████████████░░] 5/11 Phase 32 plans
 
 ### Shipped Milestones
 
@@ -97,6 +97,9 @@ v6.1 Phase 32 decisions:
 - enemies[] first 2 entries default to front row, remaining to back — typical RPG party layout (32-04)
 - MultiTargetManager does not read Redux — data-push pattern keeps it testable (32-04)
 - Back row sprites use 1.6x scale (vs 2x front) for visual depth perception (32-04)
+- Amiri font for StatusEffectBar Arabic labels (12px icons, 16px tooltips) — matches ComboCounter Arabic styling (32-05)
+- 3-char truncation for effect icon Arabic labels, full name in tooltip — fits 36x36 icon constraint (32-05)
+- ComboMeter hidden when comboMeter=0 and no grammarComboState — avoids visual clutter (32-05)
 
 ### Open Items Carried Forward
 
@@ -119,19 +122,20 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 32 execution)
-Stopped at: Completed 32-04-PLAN.md (Multi-Target & Combo Meter)
-Resume file: .planning/phases/32-advanced-combat/32-05-PLAN.md (next)
+Stopped at: Completed 32-05-PLAN.md (Battle Effect & Combo UI)
+Resume file: .planning/phases/32-advanced-combat/32-06-PLAN.md (next)
 
 **Phase 32 Progress:**
 - 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
 - 32-02: Grammar Combos & Arena Data — COMPLETE (17 grammar combos, 3 arena modes, 6-boss rush, 5 puzzles, arenaSlice, 2 commits)
 - 32-03: Grammar Combo Detector & Compound Resolver — COMPLETE (TDD, GrammarComboDetector + CompoundEffectResolver, 49 tests, 4 commits)
 - 32-04: Multi-Target & Combo Meter — COMPLETE (enemies[] array, 11 new reducers, 7 new selectors, MultiTargetManager, 2 commits)
+- 32-05: Battle Effect & Combo UI — COMPLETE (StatusEffectBar + ComboMeter components, CSS Modules, Arabic-Indic numerals, 2 commits)
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
-- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (4/11 plans)
+- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (5/11 plans)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 32-04 (Multi-Target & Combo Meter)*
+*Last updated: 2026-02-13 — Completed plan 32-05 (Battle Effect & Combo UI)*
