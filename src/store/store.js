@@ -19,6 +19,7 @@ import magicReducer from './slices/magicSlice.js';
 import inventoryReducer from './slices/inventorySlice.js';
 import economyReducer from './slices/economySlice.js';
 import companionReducer from './slices/companionSlice.js';
+import craftingReducer from './slices/craftingSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -30,11 +31,11 @@ import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 /**
  * HYBRID STORAGE ARCHITECTURE
  *
- * Heavy data (vocabulary, battle, magic, inventory) persists to IndexedDB via nested persistReducer.
+ * Heavy data (vocabulary, battle, magic, inventory, crafting) persists to IndexedDB via nested persistReducer.
  * Lightweight data (player, settings, quests, economy, etc.) persists to localStorage via root persistReducer.
  *
  * Why nested persistReducer instead of split namespaces?
- * - Preserves existing selector paths (state.vocabulary.*, state.battle.*, state.magic.*, state.inventory.*)
+ * - Preserves existing selector paths (state.vocabulary.*, state.battle.*, state.magic.*, state.inventory.*, state.crafting.*)
  * - No breaking changes for 50K LOC of existing code
  * - Transparent to all consumers of Redux state
  *
@@ -44,10 +45,11 @@ import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
  * - Version 2 (Phase 28): magic added to IndexedDB
  * - Version 3 (Phase 29): inventory added to IndexedDB, economy added to localStorage
  * - Version 4 (Phase 30): companions added to IndexedDB
+ * - Version 5 (Phase 31): crafting added to IndexedDB
  *
  * Storage backends:
  * - localStorage (root): player, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, narrative, economy
- * - IndexedDB (nested): vocabulary, battle, magic, inventory, companions
+ * - IndexedDB (nested): vocabulary, battle, magic, inventory, companions, crafting
  * - Not persisted (transient): ui, sync
  */
 
@@ -87,19 +89,27 @@ const companionPersistConfig = {
   migrate,
 };
 
+const craftingPersistConfig = {
+  key: 'gogo-arabic-crafting',
+  storage: indexedDBStorage,
+  version: CURRENT_VERSION,
+  migrate,
+};
+
 // Wrap heavy reducers with nested persistReducer
 const persistedVocabularyReducer = persistReducer(vocabularyPersistConfig, vocabularyReducer);
 const persistedBattleReducer = persistReducer(battlePersistConfig, battleReducer);
 const persistedMagicReducer = persistReducer(magicPersistConfig, magicReducer);
 const persistedInventoryReducer = persistReducer(inventoryPersistConfig, inventoryReducer);
 const persistedCompanionReducer = persistReducer(companionPersistConfig, companionReducer);
+const persistedCraftingReducer = persistReducer(craftingPersistConfig, craftingReducer);
 
-// Root persist config (localStorage) — vocabulary, battle, magic, and inventory excluded (they have nested configs)
+// Root persist config (localStorage) — vocabulary, battle, magic, inventory, crafting excluded (they have nested configs)
 const persistConfig = {
   key: 'gogo-arabic',
   storage, // localStorage
   whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative', 'economy'],
-  // NOTE: vocabulary, battle, magic, and inventory REMOVED from whitelist — they use nested persistReducer with IndexedDB
+  // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
 
 const rootReducer = combineReducers({
@@ -120,6 +130,7 @@ const rootReducer = combineReducers({
   inventory: persistedInventoryReducer, // IndexedDB (nested)
   economy: economyReducer,
   companions: persistedCompanionReducer, // IndexedDB (nested)
+  crafting: persistedCraftingReducer, // IndexedDB (nested)
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -6,6 +6,10 @@
  * Migration path:
  * - Version 0 (implicit): All state in localStorage under 'persist:gogo-arabic'
  * - Version 1: vocabulary + battle moved to IndexedDB, lightweight slices remain in localStorage
+ * - Version 2 (Phase 28): magic added to IndexedDB
+ * - Version 3 (Phase 29): inventory + economy added
+ * - Version 4 (Phase 30): companions added to IndexedDB
+ * - Version 5 (Phase 31): crafting added to IndexedDB
  *
  * Key design:
  * - Migration function receives already-deserialized state from redux-persist
@@ -17,7 +21,7 @@
 
 import { createMigrate } from 'redux-persist';
 
-export const CURRENT_VERSION = 1;
+export const CURRENT_VERSION = 5;
 
 /**
  * Migration definitions
@@ -72,6 +76,28 @@ const migrations = {
       // Graceful degradation — return state as-is and let app continue
       return state;
     }
+  },
+
+  // Version 2-4: Handled by individual nested persistReducers (no-op migrations)
+  2: (state) => state,
+  3: (state) => state,
+  4: (state) => state,
+
+  // Version 5: Crafting added to IndexedDB (Phase 31)
+  5: (state) => {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] Starting v4 -> v5: crafting added to IndexedDB');
+    }
+
+    // New slice, no data to migrate
+    // Crafting data will be initialized via nested persistReducer
+
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] v4 -> v5 complete');
+    }
+    return state;
   },
 };
 

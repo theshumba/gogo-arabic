@@ -300,4 +300,31 @@ export const EVENTS = Object.freeze({
   COMPANION_FOLLOW_STOP: 'phaser:companion:follow-stop',
   /** React → React: companion mood shifted */
   COMPANION_MOOD_CHANGED: 'react:companion:mood-changed',
+
+  // ────────────────────────────────────────────────
+  // CRAFTING — Crafting and profession events (Phase 31)
+  // ────────────────────────────────────────────────
+
+  /** React → Redux: player learned a new profession */
+  CRAFTING_PROFESSION_LEARNED: 'react:crafting:profession-learned',
+  /** React → Redux: profession leveled up */
+  CRAFTING_PROFESSION_LEVEL_UP: 'react:crafting:profession-level-up',
+  /** React → Redux: new recipe unlocked */
+  CRAFTING_RECIPE_UNLOCKED: 'react:crafting:recipe-unlocked',
+  /** React → Phaser: player crafted an item */
+  CRAFTING_ITEM_CRAFTED: 'react:crafting:item-crafted',
+  /** React → React: crafting minigame started */
+  CRAFTING_MINIGAME_START: 'react:crafting:minigame-start',
+  /** React → React: crafting minigame completed */
+  CRAFTING_MINIGAME_COMPLETE: 'react:crafting:minigame-complete',
+  /** Phaser → React: player gathered resource from spot */
+  CRAFTING_RESOURCE_GATHERED: 'phaser:crafting:resource-gathered',
+  /** React → React: recipe book UI opened */
+  CRAFTING_RECIPE_BOOK_OPEN: 'react:crafting:recipe-book-open',
+  /** React → React: recipe book UI closed */
+  CRAFTING_RECIPE_BOOK_CLOSE: 'react:crafting:recipe-book-close',
+  /** Phaser → React: gathering spot became available */
+  GATHERING_SPOT_READY: 'phaser:crafting:gathering-spot-ready',
+  /** Phaser → React: gathering spot depleted (on cooldown) */
+  GATHERING_SPOT_DEPLETED: 'phaser:crafting:gathering-spot-depleted',
 });
