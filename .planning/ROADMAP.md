@@ -152,7 +152,7 @@ Plans:
 - [ ] 32-05-PLAN.md — StatusEffectBar + ComboMeter UI components
 - [ ] 32-06-PLAN.md — GrammarComboInput + BattleItemMenu + TargetSelector + BattleArabicInput flee mode
 - [x] 32-07-PLAN.md — ArenaController (wave survival) + ArenaHUD
-- [ ] 32-08-PLAN.md — BossRushController + PuzzleBattleManager + BossRushInterlude
+- [x] 32-08-PLAN.md — BossRushController + PuzzleBattleManager + BossRushInterlude
 - [ ] 32-09-PLAN.md — PostBattleReview + ArenaLeaderboard
 - [ ] 32-10-PLAN.md — BattleStateMachine FSM integration + arabicUsedThisBattle capture
 - [ ] 32-11-PLAN.md — BattleOverlay UI wiring + BattleMenu/BattleResult + arenaSlice store registration
