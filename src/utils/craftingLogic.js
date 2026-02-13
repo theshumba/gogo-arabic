@@ -25,17 +25,14 @@ export function calculateCraftQuality(accuracy) {
  * @returns {number} Final XP (integer)
  */
 export function calculateXPGain(baseXP, accuracy) {
-  let multiplier;
-  if (accuracy >= 0.95) {
-    multiplier = 1.5; // Perfect bonus
-  } else if (accuracy >= 0.80) {
-    multiplier = 1.2; // Good bonus
-  } else if (accuracy >= 0.60) {
-    multiplier = 1.0; // Standard
-  } else {
-    multiplier = 0.5; // Poor penalty
-  }
-  return Math.floor(baseXP * multiplier);
+  // Perfect bonus (≥0.95): 1.5x
+  if (accuracy >= 0.95) return Math.floor(baseXP * 1.5);
+  // Good bonus (≥0.80): 1.2x
+  if (accuracy >= 0.80) return Math.floor(baseXP * 1.2);
+  // Standard (≥0.60): 1.0x
+  if (accuracy >= 0.60) return Math.floor(baseXP * 1.0);
+  // Poor penalty (<0.60): 0.5x
+  return Math.floor(baseXP * 0.5);
 }
 
 /**
