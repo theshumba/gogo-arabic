@@ -49,6 +49,15 @@ const initialState = {
 
   // --- Active buffs from crafted consumables (Phase 31) ---
   activeBuffs: [], // [{ buffId, stat, value, duration, startTime, source }]
+
+  // --- Phase 32: Multi-target & combo meter ---
+  enemies: [], // [{ enemyId, hp, maxHp, effects: [], row: 'front'|'back', defeated: false }]
+  comboMeter: 0, // 0-100 combo charge (fills with consecutive correct answers)
+  maxComboMeter: 100,
+  grammarComboState: null, // { type: 'noun_adj'|'verb_chain'|'sentence', chain: [], multiplier: 1.0 }
+  targetIndex: 0, // Currently selected target enemy index
+  playerRow: 'front', // Player positioning
+  arabicUsedThisBattle: [], // [{ word, accuracy, timestamp, comboType? }] for post-battle review
 };
 
 const battleSlice = createSlice({
@@ -80,6 +89,13 @@ const battleSlice = createSlice({
       state.battleZone = zone || null;
       state.battleStartTimestamp = Date.now();
       state.enemyData = enemyData || null;
+      // Phase 32: Reset multi-target & combo fields
+      state.enemies = [];
+      state.comboMeter = 0;
+      state.grammarComboState = null;
+      state.targetIndex = 0;
+      state.playerRow = 'front';
+      state.arabicUsedThisBattle = [];
     },
 
     dealDamage(state, action) {
@@ -189,6 +205,7 @@ const battleSlice = createSlice({
         maxStreak: state.maxStreak,
         wordsUsed: state.wordsUsed.length,
         encounterType: state.encounterType,
+        arabicUsedThisBattle: state.arabicUsedThisBattle,
         timestamp: Date.now(),
       });
       state.battleHistory = state.battleHistory.slice(0, 20);
@@ -222,6 +239,13 @@ const battleSlice = createSlice({
       state.companionEffects = [];
       state.companionDefending = false;
       state.activeBuffs = [];
+      // Phase 32: Reset multi-target & combo fields
+      state.enemies = [];
+      state.comboMeter = 0;
+      state.grammarComboState = null;
+      state.targetIndex = 0;
+      state.playerRow = 'front';
+      state.arabicUsedThisBattle = [];
     },
 
     resetBattle(state) {
@@ -251,6 +275,13 @@ const battleSlice = createSlice({
       state.companionMaxMP = null;
       state.companionEffects = [];
       state.companionDefending = false;
+      // Phase 32: Reset multi-target & combo fields
+      state.enemies = [];
+      state.comboMeter = 0;
+      state.grammarComboState = null;
+      state.targetIndex = 0;
+      state.playerRow = 'front';
+      state.arabicUsedThisBattle = [];
     },
 
     // ─── Companion battle reducers (Phase 30) ─────────────
@@ -355,6 +386,98 @@ const battleSlice = createSlice({
         (buff) => now < buff.startTime + buff.duration
       );
     },
+
+    // ─── Phase 32: Multi-target & combo reducers ─────────────
+
+    initMultiTargetBattle(state, action) {
+      // payload: { enemyParty: [{ enemyId, hp, maxHp, row? }] }
+      const { enemyParty } = action.payload;
+      state.enemies = enemyParty.map((enemy, idx) => ({
+        enemyId: enemy.enemyId,
+        hp: enemy.hp || enemy.maxHp || 100,
+        maxHp: enemy.maxHp || enemy.hp || 100,
+        effects: [],
+        row: enemy.row || (idx < 2 ? 'front' : 'back'),
+        defeated: false,
+      }));
+      // Sync bossHP for backward compat (sum of all enemy HP)
+      state.bossHP = state.enemies.reduce((sum, e) => sum + e.hp, 0);
+      state.maxBossHP = state.enemies.reduce((sum, e) => sum + e.maxHp, 0);
+      state.targetIndex = 0;
+    },
+
+    dealDamageToEnemy(state, action) {
+      // payload: { enemyIndex, damage }
+      const { enemyIndex, damage } = action.payload;
+      const enemy = state.enemies[enemyIndex];
+      if (!enemy || enemy.defeated) return;
+
+      enemy.hp = Math.max(0, enemy.hp - damage);
+      if (enemy.hp <= 0) {
+        enemy.defeated = true;
+      }
+      // Sync bossHP for backward compat (sum of living enemy HP)
+      state.bossHP = state.enemies.reduce((sum, e) => sum + e.hp, 0);
+    },
+
+    applyEnemyEffectMulti(state, action) {
+      // payload: { enemyIndex, effect: { id, remainingTurns, ... } }
+      const { enemyIndex, effect } = action.payload;
+      const enemy = state.enemies[enemyIndex];
+      if (!enemy || enemy.defeated) return;
+
+      // Remove existing instance of same effect (no stacking)
+      enemy.effects = enemy.effects.filter((e) => e.id !== effect.id);
+      enemy.effects.push(effect);
+    },
+
+    tickEnemyEffectsMulti(state) {
+      // Tick effects for all enemies
+      for (const enemy of state.enemies) {
+        if (enemy.defeated) continue;
+        enemy.effects = enemy.effects
+          .map((e) => ({ ...e, remainingTurns: e.remainingTurns - 1 }))
+          .filter((e) => e.remainingTurns > 0);
+      }
+    },
+
+    setTargetIndex(state, action) {
+      state.targetIndex = action.payload;
+    },
+
+    setPlayerRow(state, action) {
+      state.playerRow = action.payload;
+    },
+
+    updateComboMeter(state, action) {
+      // payload: { amount }
+      const { amount } = action.payload;
+      state.comboMeter = Math.min(state.maxComboMeter, Math.max(0, state.comboMeter + amount));
+    },
+
+    resetComboMeter(state) {
+      state.comboMeter = 0;
+    },
+
+    setGrammarComboState(state, action) {
+      // payload: { type, chain, multiplier }
+      state.grammarComboState = action.payload;
+    },
+
+    clearGrammarComboState(state) {
+      state.grammarComboState = null;
+    },
+
+    recordArabicUsed(state, action) {
+      // payload: { word, accuracy, comboType? }
+      const { word, accuracy, comboType } = action.payload;
+      state.arabicUsedThisBattle.push({
+        word,
+        accuracy,
+        timestamp: Date.now(),
+        comboType: comboType || null,
+      });
+    },
   },
 });
 
@@ -386,6 +509,18 @@ export const {
   applyBuff,
   removeBuff,
   clearExpiredBuffs,
+  // Phase 32: Multi-target & combo
+  initMultiTargetBattle,
+  dealDamageToEnemy,
+  applyEnemyEffectMulti,
+  tickEnemyEffectsMulti,
+  setTargetIndex,
+  setPlayerRow,
+  updateComboMeter,
+  resetComboMeter,
+  setGrammarComboState,
+  clearGrammarComboState,
+  recordArabicUsed,
 } = battleSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -462,6 +597,24 @@ export const selectBuffBonuses = createSelector(
 
     return bonuses;
   }
+);
+
+// Phase 32 — Multi-target & combo selectors
+export const selectEnemies = (state) => state.battle.enemies;
+export const selectActiveEnemies = createSelector(
+  [selectEnemies],
+  (enemies) => enemies.filter((e) => !e.defeated)
+);
+export const selectTargetEnemy = (state) => state.battle.enemies[state.battle.targetIndex] || null;
+export const selectComboMeter = (state) => ({
+  comboMeter: state.battle.comboMeter,
+  maxComboMeter: state.battle.maxComboMeter,
+});
+export const selectGrammarComboState = (state) => state.battle.grammarComboState;
+export const selectArabicUsedThisBattle = (state) => state.battle.arabicUsedThisBattle;
+export const selectAllEnemiesDefeated = createSelector(
+  [selectEnemies],
+  (enemies) => enemies.length > 0 && enemies.every((e) => e.defeated)
 );
 
 export default battleSlice.reducer;

@@ -57,6 +57,14 @@ describe('battleSlice', () => {
         companionDefending: false,
         // v6.1 Phase 31 crafting buffs
         activeBuffs: [],
+        // v6.1 Phase 32 multi-target & combo
+        enemies: [],
+        comboMeter: 0,
+        maxComboMeter: 100,
+        grammarComboState: null,
+        targetIndex: 0,
+        playerRow: 'front',
+        arabicUsedThisBattle: [],
       });
     });
   });
