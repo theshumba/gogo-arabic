@@ -12,6 +12,7 @@ import ParticleEffectManager from '../systems/ParticleEffectManager.js';
 import { SceneStackManager } from '../systems/SceneStackManager.js';
 import { DialogueEngine } from '../systems/DialogueEngine.js';
 import { EquipmentManager } from '../systems/equipment/EquipmentManager.js';
+import { CompanionManager } from '../systems/companions/CompanionManager.js';
 import { ZONES, TILE } from '../../data/zones.js';
 
 // ============================================================
@@ -40,6 +41,7 @@ export class WorldScene extends Phaser.Scene {
     this.sceneStackManager = null;
     this.dialogueEngine = null;
     this.equipmentManager = null;
+    this.companionManager = null;
 
     // Input
     this.interactKey = null;
@@ -58,6 +60,9 @@ export class WorldScene extends Phaser.Scene {
     this.particleEffects = new ParticleEffectManager(this);
     this.sceneStackManager = new SceneStackManager(this);
     this.dialogueEngine = new DialogueEngine(this);
+
+    // Companion system — must be after PlayerController is created
+    this.companionManager = new CompanionManager(this);
 
     // Load the default zone
     const zone = ZONES.oasis_village;
@@ -233,6 +238,11 @@ export class WorldScene extends Phaser.Scene {
     // Update equipment sprites to follow player
     if (this.equipmentManager) this.equipmentManager.update();
 
+    // Update companion system
+    if (this.companionManager) {
+      this.companionManager.update(this.time.now, this.game.loop.delta);
+    }
+
     // Y-sort all sprites for depth ordering
     const player = this.playerController.getPlayer();
     const npcs = this.npcManager.getNPCs();
@@ -329,6 +339,11 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   shutdown() {
+    if (this.companionManager) {
+      this.companionManager.destroy();
+      this.companionManager = null;
+    }
+
     if (this.equipmentManager) {
       this.equipmentManager.destroy();
       this.equipmentManager = null;
