@@ -46,6 +46,9 @@ const initialState = {
   companionMaxMP: null,
   companionEffects: [],
   companionDefending: false,
+
+  // --- Active buffs from crafted consumables (Phase 31) ---
+  activeBuffs: [], // [{ buffId, stat, value, duration, startTime, source }]
 };
 
 const battleSlice = createSlice({
@@ -218,6 +221,7 @@ const battleSlice = createSlice({
       state.companionMaxMP = null;
       state.companionEffects = [];
       state.companionDefending = false;
+      state.activeBuffs = [];
     },
 
     resetBattle(state) {
@@ -316,6 +320,40 @@ const battleSlice = createSlice({
       state.companionMaxMP = null;
       state.companionEffects = [];
       state.companionDefending = false;
+      state.activeBuffs = [];
+    },
+
+    // ─── Crafted consumable buff reducers (Phase 31) ─────────────
+
+    applyBuff(state, action) {
+      // payload: { buffId, stat, value, duration, source }
+      const { buffId, stat, value, duration, source } = action.payload;
+
+      // Remove existing buff with same buffId (no stacking)
+      state.activeBuffs = state.activeBuffs.filter((b) => b.buffId !== buffId);
+
+      // Add new buff
+      state.activeBuffs.push({
+        buffId,
+        stat,
+        value,
+        duration,
+        startTime: Date.now(),
+        source: source || 'consumable',
+      });
+    },
+
+    removeBuff(state, action) {
+      // payload: { buffId }
+      const { buffId } = action.payload;
+      state.activeBuffs = state.activeBuffs.filter((b) => b.buffId !== buffId);
+    },
+
+    clearExpiredBuffs(state) {
+      const now = Date.now();
+      state.activeBuffs = state.activeBuffs.filter(
+        (buff) => now < buff.startTime + buff.duration
+      );
     },
   },
 });
@@ -345,6 +383,9 @@ export const {
   applyPlayerEffect,
   removeEnemyEffect,
   clearCompanionBattle,
+  applyBuff,
+  removeBuff,
+  clearExpiredBuffs,
 } = battleSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -397,5 +438,30 @@ export const selectCompanionBattleState = (state) => ({
   companionEffects: state.battle.companionEffects,
   companionDefending: state.battle.companionDefending,
 });
+
+// Phase 31 — Crafted consumable buff selectors
+export const selectActiveBuffs = (state) => state.battle.activeBuffs;
+
+export const selectBuffBonuses = createSelector(
+  [selectActiveBuffs],
+  (activeBuffs) => {
+    const bonuses = {
+      hpRegen: 0,
+      mpRegen: 0,
+      damageBoost: 0,
+      defenseBoost: 0,
+      accuracyBoost: 0,
+      xpBoost: 0,
+    };
+
+    for (const buff of activeBuffs) {
+      if (bonuses[buff.stat] !== undefined) {
+        bonuses[buff.stat] += buff.value;
+      }
+    }
+
+    return bonuses;
+  }
+);
 
 export default battleSlice.reducer;

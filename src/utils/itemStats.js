@@ -60,9 +60,10 @@ export function calculateItemStats(itemId, vocabularyState) {
  * Calculate total stats from all equipped items including set bonuses
  * @param {Object} equippedItems - Object with slot keys and itemId values
  * @param {Object} vocabularyState - The vocabulary slice state
+ * @param {Object} enchantments - Optional enchantments object (Phase 31)
  * @returns {Object} Total stats: { hp, mp, damage, defense, setBonuses: [...] }
  */
-export function calculateTotalEquipmentStats(equippedItems, vocabularyState) {
+export function calculateTotalEquipmentStats(equippedItems, vocabularyState, enchantments = null) {
   const totals = {
     hp: 0,
     mp: 0,
@@ -73,7 +74,7 @@ export function calculateTotalEquipmentStats(equippedItems, vocabularyState) {
 
   // Sum stats from each equipped item
   // eslint-disable-next-line no-unused-vars
-  for (const [_slot, itemId] of Object.entries(equippedItems)) {
+  for (const [slot, itemId] of Object.entries(equippedItems)) {
     if (!itemId) continue; // Skip empty slots
 
     const itemStats = calculateItemStats(itemId, vocabularyState);
@@ -82,6 +83,18 @@ export function calculateTotalEquipmentStats(equippedItems, vocabularyState) {
     totals.mp += itemStats.mp;
     totals.damage += itemStats.damage; // Multiplicative: 1.0 + 0.05 + 0.03 = 1.08
     totals.defense += itemStats.defense;
+
+    // Add enchantment bonus if present (Phase 31)
+    if (enchantments && enchantments[slot]) {
+      const enchantment = enchantments[slot];
+      if (enchantment.bonus) {
+        const { stat, value } = enchantment.bonus;
+        if (stat === 'hp') totals.hp += value;
+        else if (stat === 'mp') totals.mp += value;
+        else if (stat === 'damage') totals.damage += value;
+        else if (stat === 'defense') totals.defense += value;
+      }
+    }
   }
 
   // Calculate and apply set bonuses
@@ -117,4 +130,38 @@ export function compareItemStats(newItemId, currentItemId, vocabularyState) {
     damage: newStats.damage - currentStats.damage,
     defense: newStats.defense - currentStats.defense,
   };
+}
+
+/**
+ * Calculate total battle stats including equipment, enchantments, and active buffs (Phase 31)
+ * @param {Object} equippedItems - Object with slot keys and itemId values
+ * @param {Object} vocabularyState - The vocabulary slice state
+ * @param {Object} enchantments - Enchantments object
+ * @param {Array} activeBuffs - Active buffs from battleSlice
+ * @returns {Object} Total stats: { hp, mp, damage, defense }
+ */
+export function calculateTotalBattleStats(equippedItems, vocabularyState, enchantments = null, activeBuffs = []) {
+  // Get equipment stats (including enchantments)
+  const equipStats = calculateTotalEquipmentStats(equippedItems, vocabularyState, enchantments);
+
+  const totals = {
+    hp: equipStats.hp,
+    mp: equipStats.mp,
+    damage: equipStats.damage,
+    defense: equipStats.defense,
+  };
+
+  // Add buff bonuses
+  for (const buff of activeBuffs) {
+    // Buff stats: hpRegen, mpRegen, damageBoost, defenseBoost, accuracyBoost, xpBoost
+    if (buff.stat === 'damageBoost') {
+      totals.damage += buff.value;
+    } else if (buff.stat === 'defenseBoost') {
+      totals.defense += buff.value;
+    }
+    // hpRegen and mpRegen are applied per-turn, not to base stats
+    // accuracyBoost and xpBoost are meta-stats, not base stats
+  }
+
+  return totals;
 }

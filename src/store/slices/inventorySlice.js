@@ -15,6 +15,7 @@ const initialState = {
   },
   items: [],           // [{ itemId: string, quantity: number, locked: boolean }] — max 200
   affixesUnlocked: [], // wordIds the player has discovered via equipment
+  enchantments: {},    // { [slot]: { inscription, bonus: { stat, value } } } — Phase 31
 };
 
 const inventorySlice = createSlice({
@@ -193,6 +194,65 @@ const inventorySlice = createSlice({
       // Reset to initial state (for testing/reset)
       Object.assign(state, initialState);
     },
+
+    // ─── Phase 31 crafting consumable and enchantment reducers ───
+
+    useConsumable(state, action) {
+      // payload: { itemId }
+      // Decrements quantity. Caller must apply buff via battleSlice.applyBuff
+      const { itemId } = action.payload;
+
+      const item = state.items.find((i) => i.itemId === itemId);
+      if (!item) {
+        console.warn(`[inventorySlice] Cannot use non-existent consumable '${itemId}'`);
+        return;
+      }
+
+      item.quantity -= 1;
+
+      // Remove from inventory if quantity reaches 0
+      if (item.quantity <= 0) {
+        state.items = state.items.filter((i) => i.itemId !== itemId);
+      }
+    },
+
+    applyEnchantment(state, action) {
+      // payload: { scrollItemId, targetSlot, inscription, bonus: { stat, value } }
+      // Consumes scroll, adds enchantment to equipped item in slot
+      const { scrollItemId, targetSlot, inscription, bonus } = action.payload;
+
+      // Validate slot exists
+      if (!Object.prototype.hasOwnProperty.call(state.equipped, targetSlot)) {
+        console.error(`[inventorySlice] Invalid equipment slot '${targetSlot}'`);
+        return;
+      }
+
+      // Check if slot has equipped item
+      const equippedItemId = state.equipped[targetSlot];
+      if (!equippedItemId) {
+        console.warn(`[inventorySlice] Cannot enchant empty slot '${targetSlot}'`);
+        return;
+      }
+
+      // Check if scroll exists in inventory
+      const scrollItem = state.items.find((i) => i.itemId === scrollItemId);
+      if (!scrollItem) {
+        console.warn(`[inventorySlice] Enchantment scroll '${scrollItemId}' not found`);
+        return;
+      }
+
+      // Consume scroll
+      scrollItem.quantity -= 1;
+      if (scrollItem.quantity <= 0) {
+        state.items = state.items.filter((i) => i.itemId !== scrollItemId);
+      }
+
+      // Add enchantment to slot (replaces existing if any)
+      state.enchantments[targetSlot] = {
+        inscription: inscription || 'بسم الله الرحمن الرحيم', // Default Arabic inscription
+        bonus: bonus || { stat: 'hp', value: 5 },
+      };
+    },
   },
 });
 
@@ -206,6 +266,8 @@ export const {
   lockItem,
   unlockItem,
   clearInventory,
+  useConsumable,
+  applyEnchantment,
 } = inventorySlice.actions;
 
 // ────────────────────────────────────────────────
@@ -223,13 +285,34 @@ export const selectInventoryCount = (state) => state.inventory.items.length;
 export const selectIsInventoryFull = (state) => state.inventory.items.length >= 200;
 
 /**
- * Compute total equipment stats including affixes and set bonuses
+ * Compute total equipment stats including affixes, set bonuses, and enchantments
  * Requires access to vocabularySlice for affix multiplier calculation
  */
 export const selectEquipmentStats = createSelector(
-  [selectEquippedItems, (state) => state.vocabulary],
-  (equipped, vocabularyState) => {
-    return calculateTotalEquipmentStats(equipped, vocabularyState);
+  [selectEquippedItems, (state) => state.vocabulary, (state) => state.inventory.enchantments],
+  (equipped, vocabularyState, enchantments) => {
+    return calculateTotalEquipmentStats(equipped, vocabularyState, enchantments);
+  }
+);
+
+/**
+ * Select enchanted equipment (Phase 31)
+ * Returns equipped items with their enchantments
+ */
+export const selectEnchantedEquipment = createSelector(
+  [selectEquippedItems, (state) => state.inventory.enchantments],
+  (equipped, enchantments) => {
+    const enchantedItems = {};
+    // eslint-disable-next-line no-unused-vars
+    for (const [slot, itemId] of Object.entries(equipped)) {
+      if (itemId && enchantments[slot]) {
+        enchantedItems[slot] = {
+          itemId,
+          enchantment: enchantments[slot],
+        };
+      }
+    }
+    return enchantedItems;
   }
 );
 
