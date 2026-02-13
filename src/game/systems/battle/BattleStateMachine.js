@@ -6,8 +6,17 @@
  *   INPUT_PHASE -> RESOLVE_ACTION -> APPLY_DAMAGE -> ANIMATE_HIT ->
  *   TURN_END -> CHECK_END -> VICTORY/DEFEAT or back to TURN_START
  *
+ * Phase 32 additions:
+ *   GRAMMAR_COMBO: grammar combo input (noun+adj, verb chain, sentence)
+ *   TARGET_SELECT: multi-enemy target selection
+ *   ITEM_USE: battle item selection and consumption
+ *   FLEE_CHALLENGE: Arabic-based flee (replaces random chance)
+ *   COMPOUND_CHECK: compound effect resolution after status application
+ *   ARENA_WAVE_TRANSITION: between arena waves
+ *
  * Communicates with React UI via EventBus and reads/writes Redux store directly.
  * Arabic input accuracy is the primary damage multiplier.
+ * EVERY Arabic word typed during battle is captured via recordArabicUsed for PostBattleReview.
  */
 
 import { EventBus } from '../../../utils/eventBus.js';
@@ -16,6 +25,7 @@ import { store } from '../../../store/store.js';
 import {
   startBattle,
   dealDamage,
+  dealDamageToEnemy,
   dealDamageToPlayer,
   healEnemy,
   setPlayerDefending,
@@ -23,9 +33,11 @@ import {
   spendMP,
   tickStatusEffects,
   recordWordUsed,
+  recordArabicUsed,
   incrementTurn,
   endBattle,
   initCompanionBattle,
+  initMultiTargetBattle,
   spendCompanionMP,
   healCompanion,
   healPlayer,
@@ -33,13 +45,26 @@ import {
   setCompanionDefending,
   applyPlayerEffect,
   removeEnemyEffect,
+  applyStatusEffect,
+  applyBuff,
+  updateComboMeter,
+  resetComboMeter,
+  setGrammarComboState,
+  clearGrammarComboState,
+  selectArabicUsedThisBattle,
+  selectAllEnemiesDefeated,
+  selectActiveEnemies,
 } from '../../../store/slices/battleSlice.js';
+import { useConsumable } from '../../../store/slices/inventorySlice.js';
 import { getEnemy } from '../../../data/enemies.js';
 import { calculateDamage } from './BattleDamageCalculator.js';
 import { EnemyAI } from './EnemyAI.js';
 import { RootMagicManager } from '../magic/RootMagicManager.js';
 import { getRootWords } from '../../../data/rootsData.js';
 import { CompanionBattleAI } from '../companions/CompanionBattleAI.js';
+import { GrammarComboDetector } from './GrammarComboDetector.js';
+import { CompoundEffectResolver } from './CompoundEffectResolver.js';
+import { MultiTargetManager } from './MultiTargetManager.js';
 
 const STATES = Object.freeze({
   IDLE: 'IDLE',
@@ -61,6 +86,13 @@ const STATES = Object.freeze({
   CHECK_END: 'CHECK_END',
   VICTORY: 'VICTORY',
   DEFEAT: 'DEFEAT',
+  // Phase 32: New states
+  GRAMMAR_COMBO: 'GRAMMAR_COMBO',
+  TARGET_SELECT: 'TARGET_SELECT',
+  ITEM_USE: 'ITEM_USE',
+  FLEE_CHALLENGE: 'FLEE_CHALLENGE',
+  COMPOUND_CHECK: 'COMPOUND_CHECK',
+  ARENA_WAVE_TRANSITION: 'ARENA_WAVE_TRANSITION',
 });
 
 export { STATES as BATTLE_STATES };
@@ -77,9 +109,26 @@ export class BattleStateMachine {
     this.companionBattleAI = null;
     this.isPlayerTurn = true; // Strict turns: player first
 
+    // Phase 32: Multi-target manager
+    this.multiTargetManager = null;
+    this.isMultiTarget = false;
+
+    // Phase 32: Grammar combo detector
+    const completedLessons = store.getState().grammar?.completedLessons || [];
+    this.grammarComboDetector = new GrammarComboDetector(completedLessons);
+
+    // Phase 32: EventBus listeners for async responses
+    this._grammarComboListener = null;
+    this._fleeResponseListener = null;
+    this._itemSelectListener = null;
+    this._targetSelectListener = null;
+
+    // Track the current word for Arabic input (for recordArabicUsed)
+    this._currentBattleWord = null;
+
     // Initialize enemy AI
     const enemyId = battleConfig.enemyParty?.[0];
-    const enemyData = getEnemy(enemyId);
+    const enemyData = typeof enemyId === 'string' ? getEnemy(enemyId) : null;
     if (enemyData) {
       const fsrsCards = store.getState().vocabulary?.fsrsCards || {};
       this.enemyAI = new EnemyAI(enemyData, fsrsCards);
@@ -93,29 +142,69 @@ export class BattleStateMachine {
     if (activeParty?.battle) {
       this.companionBattleAI = new CompanionBattleAI(activeParty.battle);
     }
+
+    // Phase 32: Initialize multi-target if enemy party has multiple enemies
+    if (battleConfig.enemyParty && battleConfig.enemyParty.length > 1) {
+      this.isMultiTarget = true;
+      this.multiTargetManager = new MultiTargetManager(scene);
+    }
   }
 
   start() {
     // Dispatch startBattle to Redux
     const enemyId = this.config.enemyParty?.[0];
-    const enemyData = getEnemy(enemyId);
+    const firstEnemyId = typeof enemyId === 'string' ? enemyId : enemyId?.enemyId || enemyId;
+    const enemyData = getEnemy(firstEnemyId);
 
     // Get equipment bonuses from scene's EquipmentStats (HP/MP are additive)
     const equipmentBonuses = this.scene.equipmentStats?.getTotalBonuses() || { hp: 0, mp: 0 };
     const baseMaxHP = 100;
     const baseMaxMP = 50;
 
-    store.dispatch(
-      startBattle({
-        bossId: enemyId,
-        bossHP: enemyData?.baseHP || 100,
-        encounterType: this.config.encounterType || 'random',
-        zone: this.config.zone,
-        enemyData: enemyData || null,
-        playerMaxHP: baseMaxHP + equipmentBonuses.hp,
-        playerMaxMP: baseMaxMP + equipmentBonuses.mp,
-      })
-    );
+    if (this.isMultiTarget) {
+      // Multi-enemy: dispatch startBattle with first enemy, then initMultiTargetBattle
+      store.dispatch(
+        startBattle({
+          bossId: firstEnemyId,
+          bossHP: enemyData?.baseHP || 100,
+          encounterType: this.config.encounterType || 'random',
+          zone: this.config.zone,
+          enemyData: enemyData || null,
+          playerMaxHP: baseMaxHP + equipmentBonuses.hp,
+          playerMaxMP: baseMaxMP + equipmentBonuses.mp,
+        })
+      );
+
+      // Build enemy party data for initMultiTargetBattle
+      const enemyPartyData = this.config.enemyParty.map((entry) => {
+        const id = typeof entry === 'string' ? entry : entry.enemyId || entry;
+        const data = getEnemy(id);
+        return {
+          enemyId: id,
+          hp: data?.baseHP || 100,
+          maxHp: data?.baseHP || 100,
+          row: typeof entry === 'object' ? entry.row : undefined,
+        };
+      });
+
+      store.dispatch(initMultiTargetBattle({ enemyParty: enemyPartyData }));
+
+      // Initialize MultiTargetManager with positions
+      this.multiTargetManager.initEnemies(this.config.enemyParty);
+    } else {
+      // Single enemy: standard startBattle
+      store.dispatch(
+        startBattle({
+          bossId: firstEnemyId,
+          bossHP: enemyData?.baseHP || 100,
+          encounterType: this.config.encounterType || 'random',
+          zone: this.config.zone,
+          enemyData: enemyData || null,
+          playerMaxHP: baseMaxHP + equipmentBonuses.hp,
+          playerMaxMP: baseMaxMP + equipmentBonuses.mp,
+        })
+      );
+    }
 
     // Initialize companion battle state if companion exists
     if (this.companionBattleAI) {
@@ -207,6 +296,22 @@ export class BattleStateMachine {
       case STATES.DEFEAT:
         this._handleDefeat();
         break;
+      // Phase 32: New state handlers
+      case STATES.GRAMMAR_COMBO:
+        this._handleGrammarCombo();
+        break;
+      case STATES.ITEM_USE:
+        this._handleItemUse();
+        break;
+      case STATES.FLEE_CHALLENGE:
+        this._handleFleeChallenge();
+        break;
+      case STATES.COMPOUND_CHECK:
+        this._handleCompoundCheck();
+        break;
+      case STATES.ARENA_WAVE_TRANSITION:
+        // Handled externally by ArenaController
+        break;
     }
   }
 
@@ -240,8 +345,22 @@ export class BattleStateMachine {
       actions.push('magic');
     }
 
-    // Items stub (Phase 29)
-    actions.push('item');
+    // Phase 32: Grammar combo if player has available combos
+    const playerLevel = store.getState().player?.level || 1;
+    const availableComboTypes = this.grammarComboDetector.getAvailableComboTypes(playerLevel);
+    if (availableComboTypes.length > 0) {
+      actions.push('combo');
+    }
+
+    // Phase 32: Item available if player has usable battle items
+    const inventoryItems = store.getState().inventory?.items || [];
+    const hasBattleItems = inventoryItems.some((item) => {
+      // Check for usableInBattle flag (same logic as BattleItemMenu)
+      return item.quantity > 0;
+    });
+    if (hasBattleItems) {
+      actions.push('item');
+    }
 
     // Flee always available
     actions.push('flee');
@@ -258,7 +377,8 @@ export class BattleStateMachine {
     this.currentAction = { type: action, target: target || 0, slot };
 
     if (action === 'flee') {
-      this._handleFlee();
+      // Phase 32: Flee now uses Arabic challenge instead of random chance
+      this._transition(STATES.FLEE_CHALLENGE);
       return;
     }
 
@@ -269,8 +389,14 @@ export class BattleStateMachine {
     }
 
     if (action === 'item') {
-      // Item use: stub for Phase 29
-      this._transition(STATES.RESOLVE_ACTION);
+      // Phase 32: Item use via ITEM_USE state
+      this._transition(STATES.ITEM_USE);
+      return;
+    }
+
+    if (action === 'combo') {
+      // Phase 32: Grammar combo
+      this._transition(STATES.GRAMMAR_COMBO);
       return;
     }
 
@@ -286,10 +412,22 @@ export class BattleStateMachine {
 
   /**
    * Handle Arabic input result (from React via EventBus).
+   * CRITICAL: Captures every Arabic word used via recordArabicUsed.
    */
   handleArabicInput(result) {
     if (this.state !== STATES.INPUT_PHASE) return;
+
     this.pendingInput = result;
+
+    // Phase 32 CRITICAL: Record Arabic word used for PostBattleReview
+    if (this._currentBattleWord) {
+      store.dispatch(recordArabicUsed({
+        word: this._currentBattleWord.arabic,
+        accuracy: result?.accuracy || 0,
+        comboType: null, // Normal attack, not a combo
+      }));
+    }
+
     this._transition(STATES.RESOLVE_ACTION);
   }
 
@@ -298,7 +436,255 @@ export class BattleStateMachine {
    */
   handleFlee() {
     if (this.state !== STATES.ACTION_SELECT) return;
-    this._handleFlee();
+    this.currentAction = { type: 'flee', target: 0 };
+    this._transition(STATES.FLEE_CHALLENGE);
+  }
+
+  // ─── Phase 32: Grammar Combo ────────────────────────────────
+
+  _handleGrammarCombo() {
+    const playerLevel = store.getState().player?.level || 1;
+    const availableTypes = this.grammarComboDetector.getAvailableComboTypes(playerLevel);
+
+    // Emit grammar combo event for React GrammarComboInput
+    EventBus.emit(EVENTS.BATTLE_GRAMMAR_COMBO, {
+      availableTypes,
+      playerLevel,
+    });
+
+    // Listen for response from React GrammarComboInput
+    this._grammarComboListener = (comboResult) => {
+      EventBus.off(EVENTS.BATTLE_ARABIC_INPUT, this._grammarComboListener);
+      this._grammarComboListener = null;
+
+      if (!comboResult || comboResult.cancelled) {
+        // Player cancelled combo, return to action select
+        this._transition(STATES.ACTION_SELECT);
+        return;
+      }
+
+      const { comboType, arabicInput, sentenceParts, previousVerbs } = comboResult;
+      let result = null;
+
+      // Validate the combo via GrammarComboDetector
+      if (comboType === 'noun_adjective') {
+        result = this.grammarComboDetector.detectNounAdjectiveCombo(arabicInput);
+      } else if (comboType === 'verb_chain') {
+        result = this.grammarComboDetector.detectVerbConjugationChain(arabicInput, previousVerbs || []);
+      } else if (comboType === 'ultimate_sentence') {
+        result = this.grammarComboDetector.detectSentenceCombo(sentenceParts || {});
+      }
+
+      // CRITICAL: Record Arabic used for PostBattleReview regardless of validity
+      const arabicWord = arabicInput || (sentenceParts ? Object.values(sentenceParts).join(' ') : '');
+      if (arabicWord) {
+        store.dispatch(recordArabicUsed({
+          word: arabicWord,
+          accuracy: result?.valid ? (result.accuracy || 1.0) : 0,
+          comboType: comboType || 'grammar',
+        }));
+      }
+
+      if (result?.valid) {
+        // Apply combo multiplier to damage
+        const baseDamage = 10;
+        const equipmentDamageMult = this.scene.equipmentStats?.getStatForBattle('damage') || 1.0;
+        const comboDamage = Math.floor(baseDamage * result.damageMultiplier * equipmentDamageMult);
+
+        this.currentAction = {
+          type: 'combo',
+          target: this.currentAction?.target || 0,
+          resolvedDamage: comboDamage,
+          wasCorrect: true,
+          isMiss: false,
+          comboType: result.comboType,
+          damageMultiplier: result.damageMultiplier,
+        };
+
+        // Update combo meter: +25 for grammar combo
+        store.dispatch(updateComboMeter({ amount: 25 }));
+
+        // Set grammar combo state in Redux
+        store.dispatch(setGrammarComboState({
+          type: comboType,
+          chain: [arabicWord],
+          multiplier: result.damageMultiplier,
+        }));
+
+        this._transition(STATES.APPLY_DAMAGE);
+      } else {
+        // Combo failed — return to action select
+        store.dispatch(resetComboMeter());
+        this._transition(STATES.ACTION_SELECT);
+      }
+    };
+
+    EventBus.on(EVENTS.BATTLE_ARABIC_INPUT, this._grammarComboListener);
+  }
+
+  // ─── Phase 32: Flee Challenge (Arabic-based) ────────────────
+
+  _handleFleeChallenge() {
+    // Select a word for the flee challenge (prefer easier/familiar words)
+    const fleeWord = this._selectFleeWord();
+
+    // Emit flee challenge event for React BattleArabicInput in flee mode
+    EventBus.emit(EVENTS.BATTLE_FLEE_CHALLENGE, {
+      word: fleeWord,
+      timeLimit: 10000, // 10 second limit for flee
+    });
+
+    // Listen for flee response
+    this._fleeResponseListener = (result) => {
+      EventBus.off(EVENTS.BATTLE_ARABIC_INPUT, this._fleeResponseListener);
+      this._fleeResponseListener = null;
+
+      // CRITICAL: Record Arabic used for PostBattleReview regardless of success
+      store.dispatch(recordArabicUsed({
+        word: fleeWord.arabic,
+        accuracy: result?.accuracy || 0,
+        comboType: 'flee',
+      }));
+
+      if (result?.accuracy >= 0.8) {
+        // Successful flee
+        const battleResult = this._calculateRewards(false);
+        battleResult.fled = true;
+        store.dispatch(endBattle(battleResult));
+        this.scene.exitBattle(battleResult);
+      } else {
+        // Failed flee — enemy gets free turn
+        EventBus.emit(EVENTS.BATTLE_FLEE_FAILED, {
+          accuracy: result?.accuracy || 0,
+          word: fleeWord,
+        });
+        this.isPlayerTurn = false;
+        this._transition(STATES.TURN_END);
+      }
+    };
+
+    EventBus.on(EVENTS.BATTLE_ARABIC_INPUT, this._fleeResponseListener);
+  }
+
+  /**
+   * Select a word for flee challenge — prefer words with higher familiarity (easier).
+   */
+  _selectFleeWord() {
+    const vocabState = store.getState().vocabulary;
+    const learnedWords = vocabState?.learnedWords || [];
+
+    if (learnedWords.length === 0) {
+      return { id: 'hello', arabic: '\u0645\u0631\u062D\u0628\u0627', english: 'Hello', element: null };
+    }
+
+    // Prefer words with higher stability (more familiar) for flee — should be easier
+    const fsrsCards = vocabState?.fsrsCards || {};
+    const sortedByStability = [...learnedWords].sort((a, b) => {
+      const stabilityA = fsrsCards[a.id]?.card?.stability || 0;
+      const stabilityB = fsrsCards[b.id]?.card?.stability || 0;
+      return stabilityB - stabilityA; // Higher stability first (more familiar)
+    });
+
+    // Pick from top 30% most familiar words
+    const easyPoolSize = Math.max(1, Math.floor(sortedByStability.length * 0.3));
+    const easyPool = sortedByStability.slice(0, easyPoolSize);
+    return easyPool[Math.floor(Math.random() * easyPool.length)];
+  }
+
+  // ─── Phase 32: Item Use ─────────────────────────────────────
+
+  _handleItemUse() {
+    // Emit item menu open event for React BattleItemMenu
+    EventBus.emit(EVENTS.BATTLE_ITEM_MENU_OPEN, {});
+
+    // Listen for item selection from React
+    this._itemSelectListener = (itemResult) => {
+      EventBus.off(EVENTS.BATTLE_ITEM_USED, this._itemSelectListener);
+      this._itemSelectListener = null;
+
+      if (!itemResult || itemResult.cancelled) {
+        // Player cancelled item use, return to action select
+        this._transition(STATES.ACTION_SELECT);
+        return;
+      }
+
+      const { itemId, effect } = itemResult;
+
+      // Consume the item from inventory
+      store.dispatch(useConsumable({ itemId }));
+
+      // Apply buff if the item has stat effects
+      if (effect) {
+        store.dispatch(applyBuff({
+          buffId: itemId,
+          stat: effect.stat || 'hpRegen',
+          value: effect.value || 0,
+          duration: effect.duration || 60000,
+          source: 'consumable',
+        }));
+      }
+
+      // Item use counts as the player's turn action
+      this.currentAction = {
+        type: 'item',
+        target: 0,
+        resolvedDamage: 0,
+        wasCorrect: true,
+        isMiss: false,
+      };
+
+      this._transition(STATES.RESOLVE_ACTION);
+    };
+
+    EventBus.on(EVENTS.BATTLE_ITEM_USED, this._itemSelectListener);
+  }
+
+  // ─── Phase 32: Compound Effect Check ────────────────────────
+
+  _handleCompoundCheck() {
+    const battleState = store.getState().battle;
+
+    // Check player effects for compounds
+    const playerCompound = CompoundEffectResolver.checkForCompounds(battleState.playerEffects);
+    if (playerCompound) {
+      // Apply compound effect to player
+      store.dispatch(applyStatusEffect({
+        target: 'player',
+        effect: {
+          id: playerCompound.id,
+          remainingTurns: playerCompound.turns,
+          compound: true,
+          ...(playerCompound.effect || {}),
+        },
+      }));
+
+      EventBus.emit(EVENTS.BATTLE_COMPOUND_TRIGGERED, {
+        target: 'player',
+        compound: playerCompound,
+      });
+    }
+
+    // Check enemy effects for compounds
+    const enemyCompound = CompoundEffectResolver.checkForCompounds(battleState.enemyEffects);
+    if (enemyCompound) {
+      store.dispatch(applyStatusEffect({
+        target: 'enemy',
+        effect: {
+          id: enemyCompound.id,
+          remainingTurns: enemyCompound.turns,
+          compound: true,
+          ...(enemyCompound.effect || {}),
+        },
+      }));
+
+      EventBus.emit(EVENTS.BATTLE_COMPOUND_TRIGGERED, {
+        target: 'enemy',
+        compound: enemyCompound,
+      });
+    }
+
+    // Continue to CHECK_END
+    this._transition(STATES.CHECK_END);
   }
 
   // ─── Magic casting ─────────────────────────────────────────
@@ -344,6 +730,9 @@ export class BattleStateMachine {
       targetIndex: this.currentAction.target || 0,
     };
 
+    // Track current word for recordArabicUsed
+    this._currentBattleWord = challengeWord;
+
     // Transition to INPUT_PHASE with the challenge word
     this._transition(STATES.INPUT_PHASE);
 
@@ -362,6 +751,9 @@ export class BattleStateMachine {
     const word = this._selectBattleWord();
     const difficulty = this._determineDifficulty();
 
+    // Track current word for recordArabicUsed
+    this._currentBattleWord = word;
+
     EventBus.emit(EVENTS.BATTLE_PROMPT_WORD, {
       word,
       difficulty,
@@ -377,7 +769,7 @@ export class BattleStateMachine {
 
     if (learnedWords.length === 0) {
       // Fallback: a simple word for new players
-      return { id: 'hello', arabic: 'مرحبا', english: 'Hello', element: null };
+      return { id: 'hello', arabic: '\u0645\u0631\u062D\u0628\u0627', english: 'Hello', element: null };
     }
 
     // Prefer words that are due for review (FSRS integration)
@@ -430,6 +822,13 @@ export class BattleStateMachine {
       action.isMiss = result.isMiss;
       action.isCritical = result.isCritical;
       action.wasCorrect = !result.isMiss;
+
+      // Phase 32: Update combo meter based on result
+      if (action.wasCorrect) {
+        store.dispatch(updateComboMeter({ amount: 10 }));
+      } else {
+        store.dispatch(resetComboMeter());
+      }
     } else if (action.type === 'magic') {
       // Magic uses RootMagicManager for damage calculation
       // pendingInput from _handleMagicCast contains spell info
@@ -480,6 +879,9 @@ export class BattleStateMachine {
     } else if (action.type === 'item') {
       action.resolvedDamage = 0;
       action.wasCorrect = true;
+    } else if (action.type === 'combo') {
+      // Phase 32: Combo damage already resolved in _handleGrammarCombo
+      // Just pass through
     }
 
     // Update FSRS for the word used
@@ -491,14 +893,35 @@ export class BattleStateMachine {
   }
 
   _applyDamage() {
-    const { resolvedDamage, wasCorrect, isMiss } = this.currentAction;
+    const { resolvedDamage, wasCorrect, isMiss, target } = this.currentAction;
 
     if (isMiss || !wasCorrect) {
       // Player takes counter-damage on miss
       const counterDamage = Math.max(1, Math.floor((resolvedDamage || 5) * 0.5));
       store.dispatch(dealDamage({ damage: counterDamage, correct: false }));
     } else if (resolvedDamage > 0) {
-      store.dispatch(dealDamage({ damage: resolvedDamage, correct: true }));
+      if (this.isMultiTarget && store.getState().battle.enemies.length > 1) {
+        // Phase 32: Multi-target — use dealDamageToEnemy with row modifier
+        const battleState = store.getState().battle;
+        const targetIdx = target || battleState.targetIndex || 0;
+        const targetEnemy = battleState.enemies[targetIdx];
+        const playerRow = battleState.playerRow || 'front';
+        const targetRow = targetEnemy?.row || 'front';
+
+        // Apply row damage modifier from MultiTargetManager
+        const rowModifier = this.multiTargetManager
+          ? this.multiTargetManager.getRowDamageModifier(playerRow, targetRow)
+          : 1.0;
+        const modifiedDamage = Math.floor(resolvedDamage * rowModifier);
+
+        store.dispatch(dealDamageToEnemy({ enemyIndex: targetIdx, damage: modifiedDamage }));
+
+        // Also update single-enemy tracking for streak
+        store.dispatch(dealDamage({ damage: 0, correct: true }));
+      } else {
+        // Single target: standard damage
+        store.dispatch(dealDamage({ damage: resolvedDamage, correct: true }));
+      }
       const streak = store.getState().battle.streak;
       EventBus.emit(EVENTS.BATTLE_COMBO_UPDATE, { streak });
     }
@@ -771,6 +1194,7 @@ export class BattleStateMachine {
   _endTurn() {
     this.currentAction = null;
     this.pendingInput = null;
+    this._currentBattleWord = null;
 
     // Check if player turn just ended and we have companion
     if (this.isPlayerTurn && this.companionBattleAI) {
@@ -785,15 +1209,33 @@ export class BattleStateMachine {
     // Tick status effects
     store.dispatch(tickStatusEffects());
 
-    this._transition(STATES.CHECK_END);
+    // Phase 32: Check for compound effects after tick
+    const battleState = store.getState().battle;
+    const playerCompound = CompoundEffectResolver.checkForCompounds(battleState.playerEffects);
+    const enemyCompound = CompoundEffectResolver.checkForCompounds(battleState.enemyEffects);
+
+    if (playerCompound || enemyCompound) {
+      this._transition(STATES.COMPOUND_CHECK);
+    } else {
+      this._transition(STATES.CHECK_END);
+    }
   }
 
   _checkBattleEnd() {
     const battleState = store.getState().battle;
 
-    if (battleState.bossHP <= 0) {
+    // Phase 32: Multi-target check
+    if (this.isMultiTarget && battleState.enemies.length > 0) {
+      if (selectAllEnemiesDefeated({ battle: battleState })) {
+        this._transition(STATES.VICTORY);
+        return;
+      }
+    } else if (battleState.bossHP <= 0) {
       this._transition(STATES.VICTORY);
-    } else if (battleState.playerHP <= 0) {
+      return;
+    }
+
+    if (battleState.playerHP <= 0) {
       this._transition(STATES.DEFEAT);
     } else {
       this._transition(STATES.TURN_START);
@@ -835,6 +1277,17 @@ export class BattleStateMachine {
       this.magicManager.resetBattleState();
     }
 
+    // Phase 32: Clear grammar combo state
+    store.dispatch(clearGrammarComboState());
+
+    // Phase 32: Emit post-battle review data for React PostBattleReview
+    const arabicUsed = selectArabicUsedThisBattle(store.getState());
+    EventBus.emit(EVENTS.BATTLE_POST_REVIEW, {
+      arabicUsed,
+      victory: true,
+      rewards: result.rewards,
+    });
+
     this.scene.time.delayedCall(2000, () => {
       store.dispatch(endBattle(result));
       this.scene.exitBattle(result);
@@ -849,6 +1302,17 @@ export class BattleStateMachine {
     if (this.magicManager) {
       this.magicManager.resetBattleState();
     }
+
+    // Phase 32: Clear grammar combo state
+    store.dispatch(clearGrammarComboState());
+
+    // Phase 32: Emit post-battle review data even on defeat
+    const arabicUsed = selectArabicUsedThisBattle(store.getState());
+    EventBus.emit(EVENTS.BATTLE_POST_REVIEW, {
+      arabicUsed,
+      victory: false,
+      rewards: result.rewards,
+    });
 
     this.scene.time.delayedCall(2000, () => {
       store.dispatch(endBattle(result));
@@ -891,26 +1355,11 @@ export class BattleStateMachine {
     };
   }
 
-  // ─── Flee ──────────────────────────────────────────────────
+  // ─── Flee (legacy wrapper) ──────────────────────────────────
 
   _handleFlee() {
-    // 50% base flee chance, higher for random encounters
-    const fleeChance = this.config.encounterType === 'boss' ? 0.1 : 0.5;
-    const success = Math.random() < fleeChance;
-
-    if (success) {
-      const result = this._calculateRewards(false);
-      result.fled = true;
-      store.dispatch(endBattle(result));
-      this.scene.exitBattle(result);
-    } else {
-      // Failed flee — enemy gets a free turn
-      EventBus.emit(EVENTS.BATTLE_STATE_CHANGED, {
-        to: 'FLEE_FAILED',
-      });
-      this.isPlayerTurn = false;
-      this._transition(STATES.TURN_END);
-    }
+    // Phase 32: Delegate to flee challenge (Arabic-based)
+    this._transition(STATES.FLEE_CHALLENGE);
   }
 
   destroy() {
@@ -918,11 +1367,38 @@ export class BattleStateMachine {
     this.currentAction = null;
     this.pendingInput = null;
     this.enemyAI = null;
+    this._currentBattleWord = null;
+
+    // Clean up Phase 32 EventBus listeners
+    if (this._grammarComboListener) {
+      EventBus.off(EVENTS.BATTLE_ARABIC_INPUT, this._grammarComboListener);
+      this._grammarComboListener = null;
+    }
+    if (this._fleeResponseListener) {
+      EventBus.off(EVENTS.BATTLE_ARABIC_INPUT, this._fleeResponseListener);
+      this._fleeResponseListener = null;
+    }
+    if (this._itemSelectListener) {
+      EventBus.off(EVENTS.BATTLE_ITEM_USED, this._itemSelectListener);
+      this._itemSelectListener = null;
+    }
+    if (this._targetSelectListener) {
+      EventBus.off(EVENTS.BATTLE_TARGET_SELECT, this._targetSelectListener);
+      this._targetSelectListener = null;
+    }
 
     // Reset magic battle state
     if (this.magicManager) {
       this.magicManager.resetBattleState();
       this.magicManager = null;
     }
+
+    // Phase 32: Destroy multi-target manager
+    if (this.multiTargetManager) {
+      this.multiTargetManager.destroy();
+      this.multiTargetManager = null;
+    }
+
+    this.grammarComboDetector = null;
   }
 }
