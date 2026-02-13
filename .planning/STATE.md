@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 31 of 32 (Crafting & Professions)
-Plan: 4 of 8 (31-01, 31-02, 31-03, 31-04 complete)
+Plan: 5 of 8 (31-01, 31-02, 31-03, 31-04, 31-05 complete)
 Status: In progress
-Last activity: 2026-02-13 — Completed 31-03-PLAN.md (Gathering Spot Manager & Data)
+Last activity: 2026-02-13 — Completed 31-05-PLAN.md (Crafting Mini-Games)
 
 Progress: [████████████████████████████░░] 93% (30/32 phases complete)
 
@@ -62,6 +62,11 @@ v6.1 Phase 31 decisions:
 - scene.time.delayedCall() for gathering respawns — event-driven, not polling (31-03)
 - 4hr/8hr respawn intervals (not 24hr) — accessible gameplay loop (31-03)
 - Cook profession accepted for herb_patch/water_source spots — cook uses herbs/spices/oils (31-03)
+- CalligraphyTracing pixel-overlap algorithm with tolerance scaling — flexible accuracy for letter complexity (31-05)
+- CookingRecipeOrder Fisher-Yates shuffle — prevents pattern memorization (31-05)
+- SmithingRhythm uses requestAnimationFrame instead of setInterval — prevents timing drift (31-05)
+- Mini-game difficulty scaling: 3 tiers (1-3, 4-7, 8-10) — balances complexity vs progression (31-05)
+- Centralized result screen in CraftingMiniGame — consistent UX, reduces duplication (31-05)
 
 ### Open Items Carried Forward
 
@@ -84,15 +89,16 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 31 execution)
-Stopped at: Completed 31-03-PLAN.md (Gathering Spot Manager & Data)
-Resume file: .planning/phases/31-crafting-professions/31-05-PLAN.md (next)
+Stopped at: Completed 31-05-PLAN.md (Crafting Mini-Games)
+Resume file: .planning/phases/31-crafting-professions/31-06-PLAN.md (next)
 
 **Phase 31 Progress:**
 - 31-01: Data Foundation — COMPLETE (6 professions, 205 resources, 100 recipes, craftingSlice, IndexedDB, 3 commits)
 - 31-02: Crafting Logic (TDD) — COMPLETE (7 functions, 37 tests, 3 commits)
 - 31-03: Gathering Spot Manager & Data — COMPLETE (GatheringSpotManager, 59 gathering spots, zones.js flags, 12 tests, 2 commits)
 - 31-04: Crafting UI Components — COMPLETE (RecipeBook, ProfessionPanel, IngredientSelector, 2 commits)
-- 31-05-08: CraftingOverlay, mini-games, integration — PENDING
+- 31-05: Crafting Mini-Games — COMPLETE (CraftingMiniGame container, CalligraphyTracing, CookingRecipeOrder, SmithingRhythm, 2 commits)
+- 31-06-08: Remaining mini-games, CraftingOverlay, integration — PENDING
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions (14 requirements, 9 success criteria)
@@ -101,4 +107,4 @@ Resume file: .planning/phases/31-crafting-professions/31-05-PLAN.md (next)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 31-03 (Gathering Spot Manager & Data)*
+*Last updated: 2026-02-13 — Completed plan 31-05 (Crafting Mini-Games)*
