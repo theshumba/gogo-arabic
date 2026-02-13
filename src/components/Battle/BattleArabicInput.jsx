@@ -53,9 +53,10 @@ function levenshtein(a, b) {
   return matrix[b.length][a.length];
 }
 
-export default function BattleArabicInput({ prompt, onSubmit }) {
+export default function BattleArabicInput({ prompt, onSubmit, mode = 'attack' }) {
+  const timerDuration = mode === 'flee' ? 10000 : (prompt?.timeLimit || 15000);
   const [input, setInput] = useState('');
-  const [timeRemaining, setTimeRemaining] = useState(prompt?.timeLimit || 15000);
+  const [timeRemaining, setTimeRemaining] = useState(timerDuration);
   const inputRef = useRef(null);
   const startTimeRef = useRef(Date.now());
   const submittedRef = useRef(false);
@@ -65,7 +66,7 @@ export default function BattleArabicInput({ prompt, onSubmit }) {
   useEffect(() => {
     if (!prompt) return;
     setInput('');
-    setTimeRemaining(prompt.timeLimit || 15000);
+    setTimeRemaining(mode === 'flee' ? 10000 : (prompt.timeLimit || 15000));
     startTimeRef.current = Date.now();
     submittedRef.current = false;
     inputRef.current?.focus();
@@ -116,7 +117,8 @@ export default function BattleArabicInput({ prompt, onSubmit }) {
 
   if (!prompt) return null;
 
-  const timerPercent = (timeRemaining / (prompt.timeLimit || 15000)) * 100;
+  const timerBase = mode === 'flee' ? 10000 : (prompt.timeLimit || 15000);
+  const timerPercent = (timeRemaining / timerBase) * 100;
   const timerColor = timerPercent > 50 ? '#44CC44' : timerPercent > 25 ? '#CCCC44' : '#CC4444';
 
   return (
@@ -158,6 +160,22 @@ export default function BattleArabicInput({ prompt, onSubmit }) {
           }}
         />
       </div>
+
+      {/* Flee mode header */}
+      {mode === 'flee' && (
+        <p
+          style={{
+            fontFamily: "'Amiri', serif",
+            fontSize: '16px',
+            color: '#CC4444',
+            textAlign: 'center',
+            marginBottom: '10px',
+          }}
+          lang="ar"
+        >
+          {'!أجب للهروب — Answer to Flee'}
+        </p>
+      )}
 
       {/* Choice mode */}
       {prompt.difficulty === 'choice' && (
