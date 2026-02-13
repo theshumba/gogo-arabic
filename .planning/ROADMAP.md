@@ -105,11 +105,17 @@
   8. Each profession teaches approximately 50 domain-specific Arabic vocabulary words integrated with FSRS system
   9. Profession mastery contributes to zone reputation and unlocks new NPC dialogue branches
 
-**Plans**: TBD
+**Plans**: 8 plans in 4 waves
 
 Plans:
-- [ ] 31-01: TBD
-- [ ] 31-02: TBD
+- [ ] 31-01-PLAN.md — craftingSlice + data files (professions/recipes/resources) + IndexedDB persistence + EventBus events
+- [ ] 31-02-PLAN.md — TDD crafting logic (quality calc, XP gains, vocab gating, resource checks)
+- [ ] 31-03-PLAN.md — GatheringSpotManager (Phaser system) + gathering spot data
+- [ ] 31-04-PLAN.md — RecipeBook + ProfessionPanel + IngredientSelector UI
+- [ ] 31-05-PLAN.md — Mini-games: CalligraphyTracing + CookingRecipeOrder + SmithingRhythm
+- [ ] 31-06-PLAN.md — Mini-games: PlantIdentification + PatternMatching + DirectionalPlacement
+- [ ] 31-07-PLAN.md — Combat integration (crafted equipment, consumable buffs, enchantment scrolls)
+- [ ] 31-08-PLAN.md — GameLayout wiring + GatheringSpotManager in WorldScene + NPC/companion integration
 
 #### Phase 32: Status Effects & Advanced Combat
 **Goal**: Players use Arabic vocabulary to apply status effects, chain grammar combos, and conquer arena challenges
