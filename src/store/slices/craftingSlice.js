@@ -307,6 +307,27 @@ export const selectResourcesSummed = createSelector(
   }
 );
 
+/**
+ * Memoized selector: Get profession mastery reputation bonus
+ * Used by npcSlice for zone reputation calculations
+ * Level 1-3: +1 reputation
+ * Level 4-7: +2 reputation
+ * Level 8-10: +5 reputation
+ */
+export const selectProfessionMasteryBonus = createSelector(
+  [selectProfessions, (state, professionId) => professionId],
+  (professions, professionId) => {
+    const profession = professions[professionId];
+    if (!profession) return 0;
+
+    const level = profession.level;
+    if (level >= 8) return 5;
+    if (level >= 4) return 2;
+    if (level >= 1) return 1;
+    return 0;
+  }
+);
+
 // ────────────────────────────────────────────────
 // EXPORTS
 // ────────────────────────────────────────────────

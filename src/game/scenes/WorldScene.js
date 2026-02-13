@@ -13,6 +13,7 @@ import { SceneStackManager } from '../systems/SceneStackManager.js';
 import { DialogueEngine } from '../systems/DialogueEngine.js';
 import { EquipmentManager } from '../systems/equipment/EquipmentManager.js';
 import { CompanionManager } from '../systems/companions/CompanionManager.js';
+import { GatheringSpotManager } from '../systems/GatheringSpotManager.js';
 import { ZONES, TILE } from '../../data/zones.js';
 
 // ============================================================
@@ -42,6 +43,7 @@ export class WorldScene extends Phaser.Scene {
     this.dialogueEngine = null;
     this.equipmentManager = null;
     this.companionManager = null;
+    this.gatheringSpotManager = null;
 
     // Input
     this.interactKey = null;
@@ -129,6 +131,12 @@ export class WorldScene extends Phaser.Scene {
       this.equipmentManager = null;
     }
 
+    // Destroy gathering spot manager before zone swap
+    if (this.gatheringSpotManager) {
+      this.gatheringSpotManager.destroy();
+      this.gatheringSpotManager = null;
+    }
+
     // Destroy subsystems
     this.mapLoader.destroy();
     this.npcManager.destroy();
@@ -163,6 +171,12 @@ export class WorldScene extends Phaser.Scene {
 
     // Spawn interactables
     this.interactableManager.create(zone.interactables, this.mapLoader.getObjectSprites());
+
+    // Initialize gathering spots if zone supports crafting
+    if (zone.gatheringSpots) {
+      this.gatheringSpotManager = new GatheringSpotManager(this);
+      this.gatheringSpotManager.create(zoneName);
+    }
   }
 
   // ============================================================
@@ -274,6 +288,16 @@ export class WorldScene extends Phaser.Scene {
       this.setInteractCooldown.bind(this)
     );
 
+    // Update gathering spots
+    if (this.gatheringSpotManager) {
+      this.gatheringSpotManager.update(
+        player,
+        this.interactKey,
+        this.interactCooldown,
+        this.setInteractCooldown.bind(this)
+      );
+    }
+
     // Check exit trigger zones
     this.checkExitTriggers();
 
@@ -347,6 +371,11 @@ export class WorldScene extends Phaser.Scene {
     if (this.equipmentManager) {
       this.equipmentManager.destroy();
       this.equipmentManager = null;
+    }
+
+    if (this.gatheringSpotManager) {
+      this.gatheringSpotManager.destroy();
+      this.gatheringSpotManager = null;
     }
 
     if (this.dialogueEngine) {

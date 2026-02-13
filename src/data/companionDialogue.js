@@ -211,6 +211,13 @@ export const COMPANION_DIALOGUE = Object.freeze({
       { id: 'amira_idle_14', arabic: 'الدقة مهمة', english: 'Precision is important', transliteration: 'ad-diqqa muhimma', trigger: 'random' },
       { id: 'amira_idle_15', arabic: 'التوثيق ضروري', english: 'Documentation is necessary', transliteration: 'at-tawthiq daruri', trigger: 'random' },
     ],
+    crafting_comments: [
+      { id: 'amira_craft_01', arabic: 'الخط الجميل يتطلب صبراً', english: 'Beautiful calligraphy requires patience', transliteration: 'al-khat al-jamil yatatallabu sabran', trigger: 'recipe_book_open' },
+      { id: 'amira_craft_02', arabic: 'هذه الوصفة نادرة', english: 'This recipe is rare', transliteration: 'hadhihi al-wasfa nadira', trigger: 'recipe_unlock' },
+      { id: 'amira_craft_03', arabic: 'احتاج المزيد من الحبر', english: 'I need more ink', transliteration: 'ahtaju al-mazid min al-hibr', trigger: 'gathering_spot' },
+      { id: 'amira_craft_04', arabic: 'هذا المخطوط رائع!', english: 'This manuscript is wonderful!', transliteration: 'hadha al-makhtut ra\'i\'!', trigger: 'item_crafted' },
+      { id: 'amira_craft_05', arabic: 'تعلمت مهارة جديدة', english: 'I learned a new skill', transliteration: 'ta\'allamtu mahara jadida', trigger: 'profession_level_up' },
+    ],
   },
 
   // Adding placeholder companions with minimal dialogue to reach 2400+ lines
@@ -338,6 +345,13 @@ export const COMPANION_DIALOGUE = Object.freeze({
       high: Array.from({length: 5}, (_, i) => ({ id: `omar_rel_high_${String(i+1).padStart(2, '0')}`, arabic: 'أنت شريكي', english: 'You are my partner', transliteration: 'anta shariki', minRelationship: 70 })),
     },
     idle: Array.from({length: 15}, (_, i) => ({ id: `omar_idle_${String(i+1).padStart(2, '0')}`, arabic: 'طبعاً', english: 'Of course', transliteration: 'tab\'an', trigger: 'random' })),
+    crafting_comments: [
+      { id: 'omar_craft_01', arabic: 'الطبخ فن رائع', english: 'Cooking is a wonderful art', transliteration: 'at-tabkh fann ra\'i\'', trigger: 'recipe_book_open' },
+      { id: 'omar_craft_02', arabic: 'التوابل هي السر', english: 'Spices are the secret', transliteration: 'at-tawabil hiya as-sirr', trigger: 'gathering_spot' },
+      { id: 'omar_craft_03', arabic: 'هذه الأعشاب طازجة', english: 'These herbs are fresh', transliteration: 'hadhihi al-a\'shab tazaja', trigger: 'resource_gathered' },
+      { id: 'omar_craft_04', arabic: 'الطبق جاهز!', english: 'The dish is ready!', transliteration: 'at-tabaq jahiz!', trigger: 'item_crafted' },
+      { id: 'omar_craft_05', arabic: 'مهاراتي تتحسن', english: 'My skills are improving', transliteration: 'maharati tatahassanu', trigger: 'profession_level_up' },
+    ],
   },
 
   companion_layla: {
