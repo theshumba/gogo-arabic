@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 32 of 32 (Advanced Combat)
-Plan: 5 of 11
+Plan: 6 of 11
 Status: In progress
-Last activity: 2026-02-13 — Completed 32-05-PLAN.md (Battle Effect & Combo UI)
+Last activity: 2026-02-13 — Completed 32-06-PLAN.md (Battle UI Components)
 
-Progress: [██████████████████████████████████████████░░] 5/11 Phase 32 plans
+Progress: [████████████████████████████████████████████████░░░] 6/11 Phase 32 plans
 
 ### Shipped Milestones
 
@@ -100,6 +100,10 @@ v6.1 Phase 32 decisions:
 - Amiri font for StatusEffectBar Arabic labels (12px icons, 16px tooltips) — matches ComboCounter Arabic styling (32-05)
 - 3-char truncation for effect icon Arabic labels, full name in tooltip — fits 36x36 icon constraint (32-05)
 - ComboMeter hidden when comboMeter=0 and no grammarComboState — avoids visual clutter (32-05)
+- GrammarComboInput uses internal sub-components per mode (NounAdjMode, VerbChainMode, SentenceMode) — co-located logic (32-06)
+- BattleItemMenu filters via isBattleUsable() function — extensible when consumable data added (32-06)
+- TargetSelector single-click selects, double-click confirms — common RPG targeting UX (32-06)
+- Flee mode: 3 changes to BattleArabicInput (mode prop, 10s timer, red header) — minimal footprint (32-06)
 
 ### Open Items Carried Forward
 
@@ -122,8 +126,8 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 32 execution)
-Stopped at: Completed 32-05-PLAN.md (Battle Effect & Combo UI)
-Resume file: .planning/phases/32-advanced-combat/32-06-PLAN.md (next)
+Stopped at: Completed 32-06-PLAN.md (Battle UI Components)
+Resume file: .planning/phases/32-advanced-combat/32-07-PLAN.md (next)
 
 **Phase 32 Progress:**
 - 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
@@ -131,11 +135,12 @@ Resume file: .planning/phases/32-advanced-combat/32-06-PLAN.md (next)
 - 32-03: Grammar Combo Detector & Compound Resolver — COMPLETE (TDD, GrammarComboDetector + CompoundEffectResolver, 49 tests, 4 commits)
 - 32-04: Multi-Target & Combo Meter — COMPLETE (enemies[] array, 11 new reducers, 7 new selectors, MultiTargetManager, 2 commits)
 - 32-05: Battle Effect & Combo UI — COMPLETE (StatusEffectBar + ComboMeter components, CSS Modules, Arabic-Indic numerals, 2 commits)
+- 32-06: Battle UI Components — COMPLETE (GrammarComboInput 3 modes, BattleItemMenu, TargetSelector, flee mode, 2 commits)
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
-- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (5/11 plans)
+- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (6/11 plans)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 32-05 (Battle Effect & Combo UI)*
+*Last updated: 2026-02-13 — Completed plan 32-06 (Battle UI Components)*
