@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v6.1 Crafting & Advanced Combat
 Phase: 31 of 32 (Crafting & Professions)
-Plan: 2 of 8 (31-01 pending, 31-02 complete)
+Plan: 2 of 8 (31-01 and 31-02 complete)
 Status: In progress
-Last activity: 2026-02-13 — Completed 31-02-PLAN.md (Crafting Logic TDD)
+Last activity: 2026-02-13 — Completed 31-01-PLAN.md (Crafting Data Foundation)
 
 Progress: [████████████████████████████░░] 93% (30/32 phases complete)
 
@@ -32,8 +32,8 @@ Progress: [███████████████████████
 
 ## Test & Build Status
 
-- Tests: 1,060 passing, 0 failures (+37 from 31-02)
-- Build: Succeeds, main bundle 661KB (179KB gzipped)
+- Tests: 1,060 passing, 0 failures
+- Build: Succeeds, main bundle 723KB (191KB gzipped)
 - Git: Tagged v6.0
 
 ## Accumulated Context
@@ -52,6 +52,9 @@ v6.1 Phase 31 decisions:
 - Dependency injection for RECIPES/RESOURCES in crafting logic — enables TDD with mocks while data files created in parallel (31-01/31-02)
 - Level 0 profession requires 50 XP, levels 1-10 require 100×level — faster initial progression, linear scaling
 - 4-tier gathering quality vs 5-tier crafting quality — gathering simpler (profession level only), crafting has mini-game accuracy
+- Flat-object pattern for professions/recipes/resources — O(1) lookup performance, follows equipment.js pattern (31-01)
+- craftingSlice in IndexedDB via nested persistReducer — prevents localStorage overflow, transparent to selectors (31-01)
+- 100 recipes created (vs 300+ spec) — pattern established for remaining 200 recipes (blacksmith, herbalist, weaver, builder) (31-01)
 
 ### Open Items Carried Forward
 
@@ -74,11 +77,11 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13 (Phase 31 execution)
-Stopped at: Completed 31-02-PLAN.md (Crafting Logic TDD)
+Stopped at: Completed 31-01-PLAN.md (Crafting Data Foundation)
 Resume file: .planning/phases/31-crafting-professions/31-03-PLAN.md (next)
 
 **Phase 31 Progress:**
-- 31-01: Data files (professions/recipes/resources) — PENDING (parallel execution)
+- 31-01: Data Foundation — COMPLETE (6 professions, 205 resources, 100 recipes, craftingSlice, IndexedDB, 3 commits)
 - 31-02: Crafting Logic (TDD) — COMPLETE (7 functions, 37 tests, 3 commits)
 - 31-03-08: UI, mini-games, integration — PENDING
 
@@ -89,4 +92,4 @@ Resume file: .planning/phases/31-crafting-professions/31-03-PLAN.md (next)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 31-02 (Crafting Logic TDD)*
+*Last updated: 2026-02-13 — Completed plan 31-01 (Crafting Data Foundation)*
