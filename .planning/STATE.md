@@ -28,7 +28,7 @@ Progress: [███████████████████████
 | v5.0 The Real Game | 19-26 | 18 | 2026-02-11 |
 | v6.0 Combat & RPG | 27.1, 28-30 | 16 | 2026-02-13 |
 
-**Cumulative:** 31 phases, 69 plans, 6 milestones, 5 days
+**Cumulative:** 31 phases, 76 plans, 6 milestones, 5 days
 
 ## Test & Build Status
 
@@ -84,7 +84,7 @@ v6.1 Phase 31 decisions:
 
 ### Open Items Carried Forward
 
-- Bundle 661KB (exceeds 500KB target) — needs lazy loading / code splitting
+- Bundle 850KB (exceeds 500KB target) — needs lazy loading / code splitting
 - BootScene loads ALL assets upfront (77 calls) — needs zone-based lazy loading
 - No tests for Phase 27 battle code (~2.6K LOC)
 - ShopOverlay + CompanionUI not wired to GameLayout (~25 lines to fix)

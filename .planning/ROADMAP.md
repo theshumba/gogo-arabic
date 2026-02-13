@@ -108,14 +108,14 @@
 **Plans**: 8 plans in 4 waves
 
 Plans:
-- [ ] 31-01-PLAN.md — craftingSlice + data files (professions/recipes/resources) + IndexedDB persistence + EventBus events
-- [ ] 31-02-PLAN.md — TDD crafting logic (quality calc, XP gains, vocab gating, resource checks)
-- [ ] 31-03-PLAN.md — GatheringSpotManager (Phaser system) + gathering spot data
-- [ ] 31-04-PLAN.md — RecipeBook + ProfessionPanel + IngredientSelector UI
-- [ ] 31-05-PLAN.md — Mini-games: CalligraphyTracing + CookingRecipeOrder + SmithingRhythm
-- [ ] 31-06-PLAN.md — Mini-games: PlantIdentification + PatternMatching + DirectionalPlacement
-- [ ] 31-07-PLAN.md — Combat integration (crafted equipment, consumable buffs, enchantment scrolls)
-- [ ] 31-08-PLAN.md — GameLayout wiring + GatheringSpotManager in WorldScene + NPC/companion integration
+- [x] 31-01-PLAN.md — craftingSlice + data files (professions/recipes/resources) + IndexedDB persistence + EventBus events
+- [x] 31-02-PLAN.md — TDD crafting logic (quality calc, XP gains, vocab gating, resource checks)
+- [x] 31-03-PLAN.md — GatheringSpotManager (Phaser system) + gathering spot data
+- [x] 31-04-PLAN.md — RecipeBook + ProfessionPanel + IngredientSelector UI
+- [x] 31-05-PLAN.md — Mini-games: CalligraphyTracing + CookingRecipeOrder + SmithingRhythm
+- [x] 31-06-PLAN.md — Mini-games: PlantIdentification + PatternMatching + DirectionalPlacement
+- [x] 31-07-PLAN.md — Combat integration (crafted equipment, consumable buffs, enchantment scrolls)
+- [x] 31-08-PLAN.md — GameLayout wiring + GatheringSpotManager in WorldScene + NPC/companion integration
 
 #### Phase 32: Status Effects & Advanced Combat
 **Goal**: Players use Arabic vocabulary to apply status effects, chain grammar combos, and conquer arena challenges
@@ -185,11 +185,11 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 | 28. Root Magic & Elemental Affinity | v6.0 | 4/4 | Complete | 2026-02-12 |
 | 29. Equipment, Inventory & Economy | v6.0 | 5/5 | Complete | 2026-02-12 |
 | 30. Companion System | v6.0 | 5/5 | Complete | 2026-02-13 |
-| 31. Crafting & Professions | v6.1 | 0/TBD | Not started | - |
+| 31. Crafting & Professions | v6.1 | 8/8 | Complete | 2026-02-13 |
 | 32. Status Effects & Advanced Combat | v6.1 | 0/TBD | Not started | - |
 
-**Cumulative:** 30 phases shipped, 68 plans complete, 6 milestones
+**Cumulative:** 31 phases shipped, 76 plans complete, 6 milestones
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-13 — v6.1 Crafting & Advanced Combat milestone started*
+*Last updated: 2026-02-13 — Phase 31 Crafting & Professions complete (8/8 plans)*
