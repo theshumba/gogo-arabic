@@ -33,6 +33,7 @@ import RootDiscoveryToast from '../Magic/RootDiscoveryToast.jsx';
 import InventoryUI from '../Inventory/InventoryUI.jsx';
 import RecipeBook from '../Crafting/RecipeBook.jsx';
 import CraftingMiniGame from '../Crafting/CraftingMiniGame.jsx';
+import ShopOverlay from '../Shop/ShopOverlay.jsx';
 import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate }) {
@@ -226,7 +227,8 @@ export default function GameLayout() {
 
       {/* Conditional overlays */}
       {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}
-      {dialogueOpen && dialogueConfig?.type !== 'quest-log' && <DialogueOverlay />}
+      {dialogueOpen && dialogueConfig?.type === 'shop' && <ShopOverlay />}
+      {dialogueOpen && dialogueConfig?.type !== 'quest-log' && dialogueConfig?.type !== 'shop' && <DialogueOverlay />}
       {quizOpen && <QuizOverlay />}
       {signOpen && <SignOverlay />}
       {objectInspectOpen && <ObjectInteractionOverlay />}

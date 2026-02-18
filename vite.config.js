@@ -1,3 +1,4 @@
+/* global process */
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -43,7 +44,7 @@ export default defineConfig({
         manualChunks(id) {
           // Large vocabulary data file (~932KB JSON)
           if (id.includes('src/data/vocabulary-final.json') ||
-              id.includes('src/data/vocabularyAll.js')) {
+            id.includes('src/data/vocabularyAll.js')) {
             return 'vocabulary-data';
           }
           // Large NPC data file (~220KB JSON)
@@ -62,14 +63,14 @@ export default defineConfig({
             }
             // React ecosystem (~400KB) - check scheduler separately to avoid circular deps
             if (id.includes('node_modules/react/') ||
-                id.includes('node_modules/react-dom') ||
-                id.includes('node_modules/framer-motion')) {
+              id.includes('node_modules/react-dom') ||
+              id.includes('node_modules/framer-motion')) {
               return 'react-vendor';
             }
             // Redux ecosystem (~200KB)
             if (id.includes('node_modules/redux') ||
-                id.includes('node_modules/@reduxjs') ||
-                id.includes('node_modules/react-redux')) {
+              id.includes('node_modules/@reduxjs') ||
+              id.includes('node_modules/react-redux')) {
               return 'redux-vendor';
             }
             // React Router (~100KB)

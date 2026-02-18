@@ -55,7 +55,7 @@ import {
   selectAllEnemiesDefeated,
   selectActiveEnemies,
 } from '../../../store/slices/battleSlice.js';
-import { useConsumable } from '../../../store/slices/inventorySlice.js';
+import { consumeItem } from '../../../store/slices/inventorySlice.js';
 import { getEnemy } from '../../../data/enemies.js';
 import { calculateDamage } from './BattleDamageCalculator.js';
 import { EnemyAI } from './EnemyAI.js';
@@ -611,7 +611,7 @@ export class BattleStateMachine {
       const { itemId, effect } = itemResult;
 
       // Consume the item from inventory
-      store.dispatch(useConsumable({ itemId }));
+      store.dispatch(consumeItem({ itemId }));
 
       // Apply buff if the item has stat effects
       if (effect) {
@@ -1159,7 +1159,7 @@ export class BattleStateMachine {
     if (type === 'special' && this.currentAction.element) {
       const playerSprite = sprites.playerSprite;
       if (playerSprite) {
-        effects.playSpellEffect(this.currentAction.element, playerSprite.x, playerSprite.y, () => {});
+        effects.playSpellEffect(this.currentAction.element, playerSprite.x, playerSprite.y, () => { });
       }
     }
 
@@ -1267,7 +1267,7 @@ export class BattleStateMachine {
     sprites.playPlayerVictory();
 
     sprites.enemySprites.forEach((_, idx) => {
-      sprites.playEnemyDefeat(idx, () => {});
+      sprites.playEnemyDefeat(idx, () => { });
     });
 
     const result = this._calculateRewards(true);

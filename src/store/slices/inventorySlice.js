@@ -197,7 +197,7 @@ const inventorySlice = createSlice({
 
     // ─── Phase 31 crafting consumable and enchantment reducers ───
 
-    useConsumable(state, action) {
+    consumeItem(state, action) {
       // payload: { itemId }
       // Decrements quantity. Caller must apply buff via battleSlice.applyBuff
       const { itemId } = action.payload;
@@ -266,7 +266,7 @@ export const {
   lockItem,
   unlockItem,
   clearInventory,
-  useConsumable,
+  consumeItem,
   applyEnchantment,
 } = inventorySlice.actions;
 
@@ -303,7 +303,6 @@ export const selectEnchantedEquipment = createSelector(
   [selectEquippedItems, (state) => state.inventory.enchantments],
   (equipped, enchantments) => {
     const enchantedItems = {};
-    // eslint-disable-next-line no-unused-vars
     for (const [slot, itemId] of Object.entries(equipped)) {
       if (itemId && enchantments[slot]) {
         enchantedItems[slot] = {

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { openQuiz } from '../store/slices/uiSlice.js';
+import { openQuiz, openDialogue } from '../store/slices/uiSlice.js';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
 import { audioManager } from '../services/audio.js';
@@ -62,6 +62,12 @@ export function useMiscEvents(phaserRef, playSFX, navigate) {
     EventBus.on(EVENTS.SFX_QUEST, handleSfxQuest);
     EventBus.on(EVENTS.SFX_CLICK, handleSfxClick);
 
+    // Shop open handler — bridges EventBus SHOP_OPEN to Redux dialogue state
+    const handleShopOpen = ({ npcId }) => {
+      dispatch(openDialogue({ type: 'shop', npcId }));
+    };
+    EventBus.on(EVENTS.SHOP_OPEN, handleShopOpen);
+
     return () => {
       EventBus.off(EVENTS.QUIZ_OPEN, handleOpenQuiz);
       EventBus.off(EVENTS.QUIZ_CLOSED, handleQuizClosed);
@@ -74,6 +80,7 @@ export function useMiscEvents(phaserRef, playSFX, navigate) {
       EventBus.off(EVENTS.SFX_LEVELUP, handleSfxLevelup);
       EventBus.off(EVENTS.SFX_QUEST, handleSfxQuest);
       EventBus.off(EVENTS.SFX_CLICK, handleSfxClick);
+      EventBus.off(EVENTS.SHOP_OPEN, handleShopOpen);
     };
   }, [dispatch, playSFX, phaserRef, navigate]);
 
