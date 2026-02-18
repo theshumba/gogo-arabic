@@ -21,7 +21,7 @@
 - 2 phases, 19 plans, ~34 commits
 - 5 days (2026-02-13 → 2026-02-18)
 
-**Git range:** `docs(31): create phase plan` → `feat(32-11): wire Phase 32 UI into BattleOverlay + register arenaSlice`
+**Git range:** `docs(31): create phase plan` → `fix: rename useConsumable→consumeItem, wire ShopOverlay, fix vite globals`
 
 **What's next:** v7.0 — World & Content expansion (Phases 33-38). 24 zones, weather/time system, 100+ building interiors, dynamic world state, 200+ secrets, transport system.
 
