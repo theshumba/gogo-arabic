@@ -7,7 +7,7 @@
 - ✅ **v4.0 Game Soul & Polish** — Phases 14-18 (shipped 2026-02-10) → [archive](milestones/v4.0-ROADMAP.md)
 - ✅ **v5.0 The Real Game** — Phases 19-26 (shipped 2026-02-11) → [archive](milestones/v5.0-ROADMAP.md)
 - ✅ **v6.0 Combat & RPG** — Phases 27.1, 28-30 (shipped 2026-02-13) → [archive](milestones/v6.0-ROADMAP.md)
-- 🚧 **v6.1 Crafting & Advanced Combat** — Phases 31-32 (in progress)
+- ✅ **v6.1 Crafting & Advanced Combat** — Phases 31-32 (shipped 2026-02-18) → [archive](milestones/v6.1-ROADMAP.md)
 - 📋 **v7.0 World & Content** — Phases 33-38 (planned)
 
 ## Phases
@@ -76,7 +76,8 @@
 
 </details>
 
-### 🚧 v6.1 Crafting & Advanced Combat (In Progress)
+<details>
+<summary>✅ v6.1 Crafting & Advanced Combat (Phases 31-32) — SHIPPED 2026-02-18</summary>
 
 **Milestone Goal:** Add crafting professions with Arabic recipes and advanced combat mechanics including status effects, grammar-based combos, and arena challenges.
 
@@ -145,17 +146,19 @@ Plans:
 **Plans**: 11 plans in 7 waves
 
 Plans:
-- [ ] 32-01-PLAN.md — Status effects expansion (22 effects + compounds) + FSRS middleware + EventBus constants
-- [ ] 32-02-PLAN.md — Grammar combo data (noun+adj, verb chains, sentences) + arena challenges + arenaSlice
-- [ ] 32-03-PLAN.md — TDD: GrammarComboDetector + CompoundEffectResolver
-- [ ] 32-04-PLAN.md — Multi-target battleSlice (enemies array, combo meter) + MultiTargetManager
-- [ ] 32-05-PLAN.md — StatusEffectBar + ComboMeter UI components
-- [ ] 32-06-PLAN.md — GrammarComboInput + BattleItemMenu + TargetSelector + BattleArabicInput flee mode
+- [x] 32-01-PLAN.md — Status effects expansion (24 effects + compounds) + FSRS middleware + EventBus constants
+- [x] 32-02-PLAN.md — Grammar combo data (noun+adj, verb chains, sentences) + arena challenges + arenaSlice
+- [x] 32-03-PLAN.md — TDD: GrammarComboDetector + CompoundEffectResolver
+- [x] 32-04-PLAN.md — Multi-target battleSlice (enemies array, combo meter) + MultiTargetManager
+- [x] 32-05-PLAN.md — StatusEffectBar + ComboMeter UI components
+- [x] 32-06-PLAN.md — GrammarComboInput + BattleItemMenu + TargetSelector + BattleArabicInput flee mode
 - [x] 32-07-PLAN.md — ArenaController (wave survival) + ArenaHUD
 - [x] 32-08-PLAN.md — BossRushController + PuzzleBattleManager + BossRushInterlude
-- [ ] 32-09-PLAN.md — PostBattleReview + ArenaLeaderboard
-- [ ] 32-10-PLAN.md — BattleStateMachine FSM integration + arabicUsedThisBattle capture
-- [ ] 32-11-PLAN.md — BattleOverlay UI wiring + BattleMenu/BattleResult + arenaSlice store registration
+- [x] 32-09-PLAN.md — PostBattleReview + ArenaLeaderboard
+- [x] 32-10-PLAN.md — BattleStateMachine FSM integration + arabicUsedThisBattle capture
+- [x] 32-11-PLAN.md — BattleOverlay UI wiring + BattleMenu/BattleResult + arenaSlice store registration
+
+</details>
 
 ## Progress
 
@@ -195,10 +198,10 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 | 29. Equipment, Inventory & Economy | v6.0 | 5/5 | Complete | 2026-02-12 |
 | 30. Companion System | v6.0 | 5/5 | Complete | 2026-02-13 |
 | 31. Crafting & Professions | v6.1 | 8/8 | Complete | 2026-02-13 |
-| 32. Status Effects & Advanced Combat | v6.1 | 7/11 | In progress | - |
+| 32. Status Effects & Advanced Combat | v6.1 | 11/11 | Complete | 2026-02-18 |
 
-**Cumulative:** 31 phases shipped, 76 plans complete, 6 milestones
+**Cumulative:** 32 phases shipped, 95 plans complete, 7 milestones
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-13 — Phase 31 Crafting & Professions complete (8/8 plans)*
+*Last updated: 2026-02-18 — v6.1 Crafting & Advanced Combat shipped (Phases 31-32, 19 plans)*

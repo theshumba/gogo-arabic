@@ -1,5 +1,32 @@
 # Project Milestones: GoGo Arabic
 
+## v6.1 Crafting & Advanced Combat (Shipped: 2026-02-18)
+
+**Delivered:** Complete crafting system with 6 Arabic-named professions, 100 recipes, 6 mini-games, and vocabulary-gated ingredients. Advanced combat with 24 Arabic status effects, grammar combo attacks (noun+adjective, verb chains, full sentences), multi-target battles, wave-based arena, boss rush mode, puzzle battles, and post-battle Arabic vocabulary review.
+
+**Phases completed:** 31-32 (19 plans total)
+
+**Key accomplishments:**
+- Built 6 crafting professions with Arabic recipe names and CSS Grid mini-games
+- Created 24 status effects with Arabic names tied to FSRS vocabulary review
+- Implemented grammar combo system (3 modes: إضافة, verb conjugation, sentence construction)
+- Added multi-target battles with up to 4 enemies and front/back row positioning
+- Built arena mode: wave survival, 6-boss rush with story interludes, 3 puzzle battle types
+- Created post-battle Arabic review with per-word accuracy analytics
+- Added arena leaderboard with ranked performance tracking
+- Integrated crafted consumables and equipment into combat system
+- Added 98 new tests bringing total to 1,121 with zero regressions
+
+**Stats:**
+- 2 phases, 19 plans, ~34 commits
+- 5 days (2026-02-13 → 2026-02-18)
+
+**Git range:** `docs(31): create phase plan` → `feat(32-11): wire Phase 32 UI into BattleOverlay + register arenaSlice`
+
+**What's next:** v7.0 — World & Content expansion (Phases 33-38). 24 zones, weather/time system, 100+ building interiors, dynamic world state, 200+ secrets, transport system.
+
+---
+
 ## v6.0 Combat & RPG (Shipped: 2026-02-13)
 
 **Delivered:** Built the complete combat RPG core — root-based magic system where 50 Arabic trilateral roots become elemental spells, equipment system with 64 items across 8 slots and Arabic affix vocabulary, economy with zone shops and Arabic numeral haggling, and 12 AI companions with role-based battle AI and CEFR-adaptive Arabic dialogue teaching.

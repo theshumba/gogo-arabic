@@ -6,17 +6,17 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
 
-**Current focus:** Phase 32 - Advanced Combat
+**Current focus:** v7.0 Planning — World & Content
 
 ## Current Position
 
-Milestone: v6.1 Crafting & Advanced Combat
-Phase: 32 of 32 (Advanced Combat)
-Plan: 10 of 11
-Status: In progress
-Last activity: 2026-02-13 — Completed 32-10-PLAN.md (BattleStateMachine FSM Integration)
+Milestone: v7.0 World & Content (planning)
+Phase: Next up — Phase 33 (24 Zones)
+Plan: —
+Status: Ready to plan
+Last activity: 2026-02-18 — Completed 32-11 (Phase 32 UI wiring + arenaSlice), shipped v6.1
 
-Progress: [████████████████████████████████████████████████████████████████░] 10/11 Phase 32 plans
+Progress: [████████████████████████████████████████████████████████████████] 11/11 Phase 32 plans — v6.1 SHIPPED
 
 ### Shipped Milestones
 
@@ -27,14 +27,15 @@ Progress: [███████████████████████
 | v4.0 Game Soul & Polish | 14-18 | 8 | 2026-02-10 |
 | v5.0 The Real Game | 19-26 | 18 | 2026-02-11 |
 | v6.0 Combat & RPG | 27.1, 28-30 | 16 | 2026-02-13 |
+| v6.1 Crafting & Advanced Combat | 31-32 | 19 | 2026-02-18 |
 
-**Cumulative:** 31 phases, 76 plans, 6 milestones, 5 days
+**Cumulative:** 32 phases, 95 plans, 7 milestones, 6 days
 
 ## Test & Build Status
 
 - Tests: 1,121 passing, 0 failures
 - Build: Succeeds, main bundle 862KB (223KB gzipped)
-- Git: Tagged v6.0
+- Git: Tagged v6.0, v6.1 ready to tag
 
 ## Accumulated Context
 
@@ -143,26 +144,27 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-13 (Phase 32 execution)
-Stopped at: Completed 32-10-PLAN.md (BattleStateMachine FSM Integration)
-Resume file: .planning/phases/32-advanced-combat/32-11-PLAN.md (next)
+Last session: 2026-02-18 (Phase 32 completion, v6.1 shipped)
+Stopped at: v6.1 archived, ready to start v7.0 planning
+Resume file: .planning/MASTER-PLAN.md + .planning/research/EXPANSION-WORLD-CONTENT.md
 
-**Phase 32 Progress:**
-- 32-01: Status Effects Foundation — COMPLETE (24 status effects, 6 compound effects, statusEffectVocabMiddleware, 13 EventBus constants, 2 commits)
-- 32-02: Grammar Combos & Arena Data — COMPLETE (17 grammar combos, 3 arena modes, 6-boss rush, 5 puzzles, arenaSlice, 2 commits)
-- 32-03: Grammar Combo Detector & Compound Resolver — COMPLETE (TDD, GrammarComboDetector + CompoundEffectResolver, 49 tests, 4 commits)
-- 32-04: Multi-Target & Combo Meter — COMPLETE (enemies[] array, 11 new reducers, 7 new selectors, MultiTargetManager, 2 commits)
-- 32-05: Battle Effect & Combo UI — COMPLETE (StatusEffectBar + ComboMeter components, CSS Modules, Arabic-Indic numerals, 2 commits)
-- 32-06: Battle UI Components — COMPLETE (GrammarComboInput 3 modes, BattleItemMenu, TargetSelector, flee mode, 2 commits)
-- 32-07: ArenaController + ArenaHUD — COMPLETE (ArenaController wave management, ArenaHUD Arabic overlay, 2 commits)
-- 32-08: BossRushController + PuzzleBattleManager — COMPLETE (boss rush sequencing, 3 puzzle types, BossRushInterlude, 8 EventBus constants, 2 commits)
-- 32-09: PostBattleReview + ArenaLeaderboard — COMPLETE (per-word accuracy analytics, 3-mode leaderboard, Arabic-Indic numerals, 2 commits)
-- 32-10: BattleStateMachine FSM Integration — COMPLETE (6 new states, multi-target, grammar combos, Arabic flee, item use, compound effects, arabicReview, 2 commits)
+**Phase 32 Progress: COMPLETE (11/11)**
+- 32-01: Status Effects Foundation — COMPLETE
+- 32-02: Grammar Combos & Arena Data — COMPLETE
+- 32-03: Grammar Combo Detector & Compound Resolver — COMPLETE
+- 32-04: Multi-Target & Combo Meter — COMPLETE
+- 32-05: Battle Effect & Combo UI — COMPLETE
+- 32-06: Battle UI Components — COMPLETE
+- 32-07: ArenaController + ArenaHUD — COMPLETE
+- 32-08: BossRushController + PuzzleBattleManager — COMPLETE
+- 32-09: PostBattleReview + ArenaLeaderboard — COMPLETE
+- 32-10: BattleStateMachine FSM Integration — COMPLETE
+- 32-11: BattleOverlay UI Wiring + arenaSlice Store Registration — COMPLETE
 
 **v6.1 Roadmap Summary:**
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
-- Phase 32: Status Effects & Advanced Combat — IN PROGRESS (10/11 plans)
+- Phase 32: Status Effects & Advanced Combat — COMPLETE (11/11 plans)
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-13 — Completed plan 32-10 (BattleStateMachine FSM Integration)*
+*Last updated: 2026-02-18 — v6.1 Crafting & Advanced Combat shipped*
