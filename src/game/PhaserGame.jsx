@@ -22,6 +22,8 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) 
 
     const game = new Phaser.Game(config);
     gameRef.current = game;
+    // Expose for debugging (remove in production)
+    window.__PHASER_GAME__ = game;
 
     // When WorldScene is ready, notify parent
     EventBus.once('scene-ready', () => {

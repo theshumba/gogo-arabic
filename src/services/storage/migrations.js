@@ -21,7 +21,7 @@
 
 import { createMigrate } from 'redux-persist';
 
-export const CURRENT_VERSION = 5;
+export const CURRENT_VERSION = 6;
 
 /**
  * Migration definitions
@@ -98,6 +98,19 @@ const migrations = {
       console.log('[Migration] v4 -> v5 complete');
     }
     return state;
+  },
+  // Version 6: Force-skip broken tutorial (Nuclear Fix)
+  6: (state) => {
+    console.log('[Migration] Starting v5 -> v6: Force-skip broken tutorial');
+    return {
+      ...state,
+      player: {
+        ...state.player,
+        onboardingComplete: true,
+        tutorialPhase: 'complete',
+        isFrozen: false,
+      },
+    };
   },
 };
 

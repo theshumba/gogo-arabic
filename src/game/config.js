@@ -42,10 +42,17 @@ export const gameConfig = {
     antialias: false,
     roundPixels: true,
   },
-  // Mobile optimizations
+  // Input configuration
   input: {
+    // Listen for keyboard events on window instead of canvas.
+    // This prevents movement from stopping when React overlays steal
+    // DOM focus from the Phaser canvas element.
+    keyboard: {
+      target: window,       // listen on window so React overlays can't steal focus
+    },
     touch: {
       capture: true,
     },
   },
+  disableVisibilityChange: true,  // Prevent game loop halt on tab focus loss
 };

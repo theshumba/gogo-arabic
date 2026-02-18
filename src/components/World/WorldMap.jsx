@@ -12,17 +12,39 @@ import vocabularyAll from '../../data/vocabularyAll.js';
 import styles from './WorldMap.module.css';
 
 const ZONE_POSITIONS = {
-  oasis_village:      { x: 50, y: 75 },
-  ancient_library:    { x: 50, y: 58 },
+  // Original 8 Zones
+  oasis_village: { x: 50, y: 75 },
+  ancient_library: { x: 50, y: 58 },
   desert_marketplace: { x: 72, y: 52 },
-  farmland:           { x: 72, y: 35 },
-  bedouin_camp:       { x: 88, y: 28 },
-  mountain_village:   { x: 70, y: 15 },
-  coastal_port:       { x: 45, y: 18 },
-  royal_palace:       { x: 30, y: 5 },
+  farmland: { x: 72, y: 35 },
+  bedouin_camp: { x: 88, y: 28 },
+  mountain_village: { x: 70, y: 15 },
+  coastal_port: { x: 45, y: 18 },
+  royal_palace: { x: 30, y: 5 },
+
+  // Real World Zones
+  baghdad: { x: 60, y: 45 },
+  damascus: { x: 55, y: 30 },
+  cairo: { x: 38, y: 45 },
+  timbuktu: { x: 25, y: 75 },
+  fez: { x: 15, y: 35 },
+  cordoba: { x: 10, y: 25 },
+  granada: { x: 15, y: 15 },
+  samarkand: { x: 85, y: 45 },
+
+  // Fantasy Zones
+  star_oasis: { x: 50, y: 88 },
+  sea_of_ink: { x: 5, y: 50 },
+  forest_of_tales: { x: 40, y: 30 },
+  mountain_of_words: { x: 80, y: 10 },
+  desert_of_silence: { x: 90, y: 85 },
+  merchants_island: { x: 5, y: 10 },
+  fortress_of_secrets: { x: 50, y: 5 },
+  garden_of_spirits: { x: 30, y: 85 },
 };
 
 const ZONE_CONNECTIONS = [
+  // Original Connections
   ['oasis_village', 'ancient_library'],
   ['ancient_library', 'desert_marketplace'],
   ['desert_marketplace', 'farmland'],
@@ -30,6 +52,33 @@ const ZONE_CONNECTIONS = [
   ['bedouin_camp', 'mountain_village'],
   ['mountain_village', 'coastal_port'],
   ['coastal_port', 'royal_palace'],
+
+  // New Connections - Real World
+  ['baghdad', 'desert_marketplace'],
+  ['baghdad', 'ancient_library'],
+  ['baghdad', 'damascus'],
+  ['damascus', 'royal_palace'],
+  ['cairo', 'ancient_library'],
+  ['cairo', 'royal_palace'],
+  ['timbuktu', 'oasis_village'],
+  ['fez', 'timbuktu'],
+  ['cordoba', 'fez'],
+  ['granada', 'cordoba'],
+  ['granada', 'coastal_port'],
+  ['samarkand', 'desert_marketplace'],
+  ['samarkand', 'bedouin_camp'],
+
+  // New Connections - Fantasy
+  ['star_oasis', 'oasis_village'],
+  ['sea_of_ink', 'fez'],
+  ['forest_of_tales', 'mountain_village'],
+  ['forest_of_tales', 'royal_palace'],
+  ['mountain_of_words', 'mountain_village'],
+  ['desert_of_silence', 'bedouin_camp'],
+  ['merchants_island', 'grade'], // Typo fix: presumably granada or coastal_port. Let's do coastal_port
+  ['merchants_island', 'coastal_port'],
+  ['fortress_of_secrets', 'royal_palace'],
+  ['garden_of_spirits', 'timbuktu'],
 ];
 
 const BOSS_OFFSETS = {

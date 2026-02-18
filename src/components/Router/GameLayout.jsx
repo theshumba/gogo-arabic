@@ -169,6 +169,31 @@ export default function GameLayout() {
   useKeyboardShortcuts();
   useTutorialTrigger();
 
+  // EMERGENCY RESET: Press 'R' to force unfreeze
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key.toLowerCase() === 'r' && !anyOverlayOpen && !showWardrobe) {
+        console.warn('[EMERGENCY RESET] User pressed R - forcing unfreeze!');
+        EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+        const canvas = document.querySelector('canvas');
+        if (canvas) canvas.focus();
+
+        // Also ensure physics resume
+        if (phaserRef.current && phaserRef.current.game) {
+          const scene = phaserRef.current.game.scene.getScene('WorldScene');
+          if (scene) {
+            scene.frozen = false;
+            if (scene.physics && scene.physics.world) {
+              scene.physics.world.resume();
+            }
+          }
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [anyOverlayOpen, showWardrobe, phaserRef]);
+
   // UI state selectors
   const dialogueOpen = useSelector((state) => state.ui.dialogueOpen);
   const dialogueConfig = useSelector((state) => state.ui.dialogueConfig);
@@ -188,15 +213,43 @@ export default function GameLayout() {
   // Safety net selector
   const anyOverlayOpen = useSelector(selectAnyOverlayOpen);
 
+  // Freeze player when React overlays open (recipe book, crafting, inventory)
+  // These overlays steal keyboard focus from the Phaser canvas, so movement
+  // stops even without an explicit PLAYER_FREEZE. This ensures the game state
+  // is consistent with the input state.
+  useEffect(() => {
+    if (recipeBookOpen || craftingMiniGameActive || inventoryOpen) {
+      EventBus.emit(EVENTS.PLAYER_FREEZE);
+    }
+  }, [recipeBookOpen, craftingMiniGameActive, inventoryOpen]);
+
   // Safety net: if no overlays are open, ensure player is unfrozen
+  // and refocus the Phaser canvas so keyboard input resumes.
   useEffect(() => {
     if (!anyOverlayOpen && !showWardrobe) {
       // Small delay to avoid race with overlay close animations
       const timer = setTimeout(() => {
         EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+        // Refocus the Phaser canvas so arrow keys work again
+        const canvas = document.querySelector('canvas');
+        if (canvas) canvas.focus();
       }, 100);
       return () => clearTimeout(timer);
     }
+  }, [anyOverlayOpen, showWardrobe]);
+
+  // Periodic watchdog: catch phantom freezes where PLAYER_FREEZE fires
+  // without any overlay opening (anyOverlayOpen stays false, so the above
+  // effect never re-triggers). This interval polls every 3 seconds.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!anyOverlayOpen && !showWardrobe) {
+        EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+        const canvas = document.querySelector('canvas');
+        if (canvas) canvas.focus();
+      }
+    }, 3000);
+    return () => clearInterval(interval);
   }, [anyOverlayOpen, showWardrobe]);
 
   return (

@@ -13,8 +13,18 @@ import { SceneStackManager } from '../systems/SceneStackManager.js';
 import { DialogueEngine } from '../systems/DialogueEngine.js';
 import { EquipmentManager } from '../systems/equipment/EquipmentManager.js';
 import { CompanionManager } from '../systems/companions/CompanionManager.js';
+import { store } from '../../store/store.js';
+import { selectAnyOverlayOpen } from '../../store/slices/uiSlice.js';
 import { GatheringSpotManager } from '../systems/GatheringSpotManager.js';
 import { ZONES, TILE } from '../../data/zones.js';
+import { TimeSystem } from '../systems/TimeSystem.js';
+import { WeatherSystem } from '../systems/WeatherSystem.js';
+import { DayNightCycle } from '../systems/DayNightCycle.js';
+import { WorldStateManager } from '../systems/WorldStateManager.js';
+import { PuzzleManager } from '../systems/PuzzleManager.js';
+import { getInterior } from '../../data/interiors/registry.js';
+import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 
 // ============================================================
 // WORLD SCENE
@@ -44,6 +54,9 @@ export class WorldScene extends Phaser.Scene {
     this.equipmentManager = null;
     this.companionManager = null;
     this.gatheringSpotManager = null;
+    this.timeSystem = null;
+    this.weatherSystem = null;
+    this.dayNightCycle = null;
 
     // Input
     this.interactKey = null;
@@ -60,8 +73,31 @@ export class WorldScene extends Phaser.Scene {
     this.mapLoader = new MapLoader(this);
     this.screenShake = new ScreenShake(this);
     this.particleEffects = new ParticleEffectManager(this);
+    this.timeSystem = new TimeSystem(this);
+    this.weatherSystem = new WeatherSystem(this);
+    this.dayNightCycle = new DayNightCycle(this);
+    this.worldStateManager = new WorldStateManager(this); // Init World State Manager
+    this.puzzleManager = new PuzzleManager(this);         // Init Puzzle Manager
     this.sceneStackManager = new SceneStackManager(this);
     this.dialogueEngine = new DialogueEngine(this);
+
+    // Sync Time to World State
+    const updateTimeFlags = (phase) => {
+      if (!this.worldStateManager) return;
+      this.worldStateManager.setFlag('time_phase', phase);
+      this.worldStateManager.setFlag('is_night', phase === 'night');
+    };
+
+    EventBus.on(EVENTS.TIME_PHASE_CHANGED, updateTimeFlags);
+
+    // Initial sync
+    const initialPhase = this.timeSystem.lastPhase || 'day'; // Fallback
+    updateTimeFlags(initialPhase);
+
+    // Cleanup listener on shutdown
+    this.events.once('shutdown', () => {
+      EventBus.off(EVENTS.TIME_PHASE_CHANGED, updateTimeFlags);
+    });
 
     // Companion system — must be after PlayerController is created
     this.companionManager = new CompanionManager(this);
@@ -222,12 +258,16 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   handleFreeze() {
+    console.warn('[DEBUG FREEZE] WorldScene.handleFreeze called', new Error().stack);
     this.frozen = true;
+    this._frozenSince = Date.now();
     this.playerController.freeze();
   }
 
   handleUnfreeze() {
+    console.warn('[DEBUG UNFREEZE] WorldScene.handleUnfreeze called', new Error().stack);
     this.frozen = false;
+    this._frozenSince = 0;
     this.playerController.unfreeze();
   }
 
@@ -243,6 +283,17 @@ export class WorldScene extends Phaser.Scene {
     if (this.frozen) {
       // Still update overlays so they track correctly while frozen
       if (this.domOverlay) this.domOverlay.update();
+
+      // WATCHDOG: Auto-unfreeze if stuck with no overlay for >2 seconds
+      const frozenMs = Date.now() - (this._frozenSince || Date.now());
+      if (frozenMs > 2000 && !this.zoneTransition?.transitioning) {
+        const state = store.getState();
+        const overlayOpen = selectAnyOverlayOpen(state);
+        if (!overlayOpen) {
+          console.warn('[WATCHDOG] Auto-unfreezing player after', frozenMs, 'ms with no overlay open');
+          this.handleUnfreeze();
+        }
+      }
       return;
     }
 
@@ -302,7 +353,12 @@ export class WorldScene extends Phaser.Scene {
     this.checkExitTriggers();
 
     // Update DOM overlay positions every frame
+    // Update DOM overlay positions every frame
     if (this.domOverlay) this.domOverlay.update();
+
+    // Update time system
+    if (this.timeSystem) this.timeSystem.update(time, delta);
+    if (this.weatherSystem) this.weatherSystem.update(time, delta);
   }
 
   // Check if player has walked into an exit trigger region
@@ -408,6 +464,21 @@ export class WorldScene extends Phaser.Scene {
     if (this.domOverlay) {
       this.domOverlay.destroy();
       this.domOverlay = null;
+    }
+
+    if (this.timeSystem) {
+      this.timeSystem.destroy();
+      this.timeSystem = null;
+    }
+
+    if (this.weatherSystem) {
+      this.weatherSystem.destroy();
+      this.weatherSystem = null;
+    }
+
+    if (this.dayNightCycle) {
+      this.dayNightCycle.destroy();
+      this.dayNightCycle = null;
     }
   }
 }

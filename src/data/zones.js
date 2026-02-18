@@ -1012,6 +1012,11 @@ const royal_palace = {
 // ZONE REGISTRY
 // ============================================================
 
+
+
+import { realWorldZones } from './zones/realWorldZones';
+import { fantasyZones } from './zones/fantasyZones';
+
 export const ZONES = {
   oasis_village,
   ancient_library,
@@ -1021,10 +1026,13 @@ export const ZONES = {
   mountain_village,
   coastal_port,
   royal_palace,
+  ...realWorldZones,
+  ...fantasyZones,
 };
 
 // Ordered list for world map rendering
 export const ZONE_ORDER = [
+  // Initial 8 Zones
   'oasis_village',
   'ancient_library',
   'desert_marketplace',
@@ -1033,6 +1041,24 @@ export const ZONE_ORDER = [
   'mountain_village',
   'coastal_port',
   'royal_palace',
+  // Real World Zones
+  'baghdad',
+  'cordoba',
+  'timbuktu',
+  'damascus',
+  'cairo',
+  'fez',
+  'samarkand',
+  'granada',
+  // Fantasy Zones
+  'star_oasis',
+  'mountain_of_words',
+  'sea_of_ink',
+  'forest_of_tales',
+  'desert_of_silence',
+  'merchants_island',
+  'fortress_of_secrets',
+  'garden_of_spirits',
 ];
 
 // Tile type constants for external use

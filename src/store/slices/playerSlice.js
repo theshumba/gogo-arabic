@@ -28,8 +28,8 @@ const initialState = {
   readBooks: [], // array of bookshelf IDs that have been read
   levelUpRewards: null, // Pending level-up reward to display
   streakRewardPending: null, // Pending streak reward to display
-  onboardingComplete: false, // Whether the player has completed the onboarding flow
-  tutorialPhase: 'awaiting_mentor', // 'awaiting_mentor' | 'met_mentor' | 'learned_word' | 'met_yusuf' | 'complete'
+  onboardingComplete: true, // Skip broken onboarding (Guide Amira texture missing)
+  tutorialPhase: 'complete', // Skip broken tutorial (NPC interaction fails without texture)
   mentorAvailable: true, // Guide Amira can be found for hints
   onboardingTargetNpc: null, // NPC ID to highlight during onboarding (e.g., 'guide-amira')
 };

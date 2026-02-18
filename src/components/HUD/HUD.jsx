@@ -15,7 +15,9 @@ import questsData from '../../data/quests.json';
 import AchievementPanel from '../Achievements/AchievementPanel.jsx';
 import DailyGoalsPanel from '../Goals/DailyGoalsPanel.jsx';
 import QuestTracker from './QuestTracker.jsx';
+import QuestTracker from './QuestTracker.jsx';
 import NextObjectiveIndicator from './NextObjectiveIndicator.jsx';
+import ClockHUD from './ClockHUD.jsx';
 
 function HUD({ onMenu }) {
   const dispatch = useDispatch();
@@ -188,6 +190,9 @@ function HUD({ onMenu }) {
 
         {/* Right: Buttons */}
         <div className={styles.right}>
+
+          {/* Clock HUD */}
+          <ClockHUD />
 
           {/* Alphabet/Letters button with progress badge */}
           <motion.button
