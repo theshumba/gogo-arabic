@@ -132,7 +132,7 @@ const styles = {
  * @param {boolean} props.victory - Whether player won
  * @param {Function} props.onClose - Callback when user clicks continue
  */
-export default function BattleResult({ bossId, victory, onClose }) {
+export default function BattleResult({ bossId, victory, onClose, onReview }) {
   const boss = getBossById(bossId);
   const battleHistory = useSelector((s) => s.battle.battleHistory);
 
@@ -240,13 +240,32 @@ export default function BattleResult({ bossId, victory, onClose }) {
           </div>
         )}
 
-        <motion.button
-          style={styles.continueBtn}
-          onClick={onClose}
-          {...buttonProps}
-        >
-          Continue
-        </motion.button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+          <motion.button
+            style={styles.continueBtn}
+            onClick={onClose}
+            {...buttonProps}
+          >
+            Continue
+          </motion.button>
+          {onReview && (
+            <motion.button
+              style={{
+                ...styles.continueBtn,
+                background: 'transparent',
+                border: `2px solid ${COLORS.gold}`,
+                color: COLORS.gold,
+                marginTop: 0,
+                fontSize: '11px',
+                padding: '10px 24px',
+              }}
+              onClick={onReview}
+              {...buttonProps}
+            >
+              مراجعة العربية — Review Arabic
+            </motion.button>
+          )}
+        </div>
       </motion.div>
     </motion.div>
   );

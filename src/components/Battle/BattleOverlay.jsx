@@ -5,6 +5,17 @@
  * Renders BattleMenu (action select), BattleArabicInput (word prompt),
  * ComboCounter (streak), enemy intent text, and BattleResult (victory/defeat).
  *
+ * Phase 32 additions:
+ * - StatusEffectBar (player + enemy effects)
+ * - ComboMeter (combo charge gauge)
+ * - GrammarComboInput (grammar combo multi-field input)
+ * - BattleItemMenu (battle-usable inventory items)
+ * - TargetSelector (multi-enemy target selection)
+ * - ArenaHUD (arena wave-based combat overlay)
+ * - PostBattleReview (post-battle Arabic analytics)
+ * - BossRushInterlude (story interludes between boss rush fights)
+ * - Flee challenge via BattleArabicInput in flee mode
+ *
  * Mounted inside GameLayout. Only visible when battle is active.
  */
 
@@ -18,6 +29,16 @@ import BattleArabicInput from './BattleArabicInput.jsx';
 import ComboCounter from './ComboCounter.jsx';
 import BattleResult from './BattleResult.jsx';
 
+// Phase 32 components
+import StatusEffectBar from './StatusEffectBar.jsx';
+import ComboMeter from './ComboMeter.jsx';
+import GrammarComboInput from './GrammarComboInput.jsx';
+import BattleItemMenu from './BattleItemMenu.jsx';
+import TargetSelector from './TargetSelector.jsx';
+import ArenaHUD from './ArenaHUD.jsx';
+import PostBattleReview from './PostBattleReview.jsx';
+import BossRushInterlude from './BossRushInterlude.jsx';
+
 export default function BattleOverlay() {
   const [battleActive, setBattleActive] = useState(false);
   const [phase, setPhase] = useState('idle');
@@ -28,10 +49,31 @@ export default function BattleOverlay() {
   const [companionAction, setCompanionAction] = useState(null);
   const [isCompanionTurn, setIsCompanionTurn] = useState(false);
 
+  // Phase 32 state
+  const [showGrammarCombo, setShowGrammarCombo] = useState(false);
+  const [grammarComboData, setGrammarComboData] = useState(null);
+  const [showItemMenu, setShowItemMenu] = useState(false);
+  const [showTargetSelector, setShowTargetSelector] = useState(false);
+  const [targetSelectorData, setTargetSelectorData] = useState(null);
+  const [showPostReview, setShowPostReview] = useState(false);
+  const [postReviewData, setPostReviewData] = useState(null);
+  const [showArenaHUD, setShowArenaHUD] = useState(false);
+  const [fleeChallengeData, setFleeChallengeData] = useState(null);
+
   const streak = useSelector((s) => s.battle.streak);
   const activeParty = useSelector((s) => s.companions?.activeParty);
   const allCompanions = useSelector((s) => s.companions?.companions);
   const battleState = useSelector((s) => s.battle);
+
+  // Phase 32 selectors
+  const playerEffects = useSelector((s) => s.battle.playerEffects);
+  const enemyEffects = useSelector((s) => s.battle.enemyEffects);
+  const comboMeter = useSelector((s) => s.battle.comboMeter);
+  const maxComboMeter = useSelector((s) => s.battle.maxComboMeter);
+  const grammarComboState = useSelector((s) => s.battle.grammarComboState);
+  const enemies = useSelector((s) => s.battle.enemies);
+  const arabicUsedThisBattle = useSelector((s) => s.battle.arabicUsedThisBattle);
+  const maxStreak = useSelector((s) => s.battle.maxStreak);
 
   // Freeze player when battle is active, unfreeze when component unmounts
   useEffect(() => {
@@ -50,6 +92,15 @@ export default function BattleOverlay() {
       setBattleActive(true);
       setPhase('intro');
       setBattleResult(null);
+      // Reset Phase 32 state on new battle
+      setShowGrammarCombo(false);
+      setGrammarComboData(null);
+      setShowItemMenu(false);
+      setShowTargetSelector(false);
+      setTargetSelectorData(null);
+      setShowPostReview(false);
+      setPostReviewData(null);
+      setFleeChallengeData(null);
     };
 
     const onStateChanged = ({ to, actions }) => {
@@ -62,6 +113,21 @@ export default function BattleOverlay() {
       }
       if (to !== 'ENEMY_TURN') {
         setEnemyAction(null);
+      }
+      // Phase 32: clear sub-phase overlays on state transitions
+      if (to !== 'GRAMMAR_COMBO') {
+        setShowGrammarCombo(false);
+        setGrammarComboData(null);
+      }
+      if (to !== 'ITEM_USE') {
+        setShowItemMenu(false);
+      }
+      if (to !== 'TARGET_SELECT') {
+        setShowTargetSelector(false);
+        setTargetSelectorData(null);
+      }
+      if (to !== 'FLEE_CHALLENGE') {
+        setFleeChallengeData(null);
       }
     };
 
@@ -76,6 +142,11 @@ export default function BattleOverlay() {
     const onBattleEnded = (result) => {
       setBattleResult(result);
       setPhase('result');
+      // Phase 32: prepare post-review data from battle
+      setShowGrammarCombo(false);
+      setShowItemMenu(false);
+      setShowTargetSelector(false);
+      setFleeChallengeData(null);
     };
 
     const onCompanionTurnStart = ({ companionId: _companionId }) => {
@@ -92,6 +163,43 @@ export default function BattleOverlay() {
       setCompanionAction(null);
     };
 
+    // Phase 32: Grammar combo event
+    const onGrammarCombo = (data) => {
+      setGrammarComboData(data);
+      setShowGrammarCombo(true);
+    };
+
+    // Phase 32: Flee challenge event
+    const onFleeChallenge = (data) => {
+      setFleeChallengeData(data);
+    };
+
+    // Phase 32: Target selection event
+    const onTargetSelect = (data) => {
+      setTargetSelectorData(data);
+      setShowTargetSelector(true);
+    };
+
+    // Phase 32: Item menu open event
+    const onItemMenuOpen = () => {
+      setShowItemMenu(true);
+    };
+
+    // Phase 32: Post-battle review event
+    const onPostReview = (data) => {
+      setPostReviewData(data);
+    };
+
+    // Phase 32: Arena wave start
+    const onArenaWaveStart = () => {
+      setShowArenaHUD(true);
+    };
+
+    // Phase 32: Arena complete
+    const onArenaComplete = () => {
+      // ArenaHUD handles its own result display
+    };
+
     EventBus.on(EVENTS.BATTLE_STARTED, onBattleStarted);
     EventBus.on(EVENTS.BATTLE_STATE_CHANGED, onStateChanged);
     EventBus.on(EVENTS.BATTLE_PROMPT_WORD, onPromptWord);
@@ -100,6 +208,14 @@ export default function BattleOverlay() {
     EventBus.on(EVENTS.COMPANION_BATTLE_TURN_START, onCompanionTurnStart);
     EventBus.on(EVENTS.COMPANION_BATTLE_ACTION, onCompanionAction);
     EventBus.on(EVENTS.COMPANION_BATTLE_TURN_END, onCompanionTurnEnd);
+    // Phase 32 events
+    EventBus.on(EVENTS.BATTLE_GRAMMAR_COMBO, onGrammarCombo);
+    EventBus.on(EVENTS.BATTLE_FLEE_CHALLENGE, onFleeChallenge);
+    EventBus.on(EVENTS.BATTLE_TARGET_SELECT, onTargetSelect);
+    EventBus.on(EVENTS.BATTLE_ITEM_MENU_OPEN, onItemMenuOpen);
+    EventBus.on(EVENTS.BATTLE_POST_REVIEW, onPostReview);
+    EventBus.on(EVENTS.ARENA_WAVE_START, onArenaWaveStart);
+    EventBus.on(EVENTS.ARENA_COMPLETE, onArenaComplete);
 
     return () => {
       EventBus.off(EVENTS.BATTLE_STARTED, onBattleStarted);
@@ -110,6 +226,14 @@ export default function BattleOverlay() {
       EventBus.off(EVENTS.COMPANION_BATTLE_TURN_START, onCompanionTurnStart);
       EventBus.off(EVENTS.COMPANION_BATTLE_ACTION, onCompanionAction);
       EventBus.off(EVENTS.COMPANION_BATTLE_TURN_END, onCompanionTurnEnd);
+      // Phase 32 cleanup
+      EventBus.off(EVENTS.BATTLE_GRAMMAR_COMBO, onGrammarCombo);
+      EventBus.off(EVENTS.BATTLE_FLEE_CHALLENGE, onFleeChallenge);
+      EventBus.off(EVENTS.BATTLE_TARGET_SELECT, onTargetSelect);
+      EventBus.off(EVENTS.BATTLE_ITEM_MENU_OPEN, onItemMenuOpen);
+      EventBus.off(EVENTS.BATTLE_POST_REVIEW, onPostReview);
+      EventBus.off(EVENTS.ARENA_WAVE_START, onArenaWaveStart);
+      EventBus.off(EVENTS.ARENA_COMPLETE, onArenaComplete);
     };
   }, []);
 
@@ -117,15 +241,79 @@ export default function BattleOverlay() {
     setBattleActive(false);
     setPhase('idle');
     setBattleResult(null);
+    setShowPostReview(false);
+    setPostReviewData(null);
+    setShowArenaHUD(false);
+  }, []);
+
+  // Phase 32: Handle review button from BattleResult
+  const handleReview = useCallback(() => {
+    setShowPostReview(true);
+  }, []);
+
+  // Phase 32: Handle grammar combo submission
+  const handleGrammarComboSubmit = useCallback((result) => {
+    EventBus.emit(EVENTS.BATTLE_ARABIC_INPUT, {
+      input: result.arabicInput,
+      accuracy: result.accuracy,
+      damageMultiplier: result.damageMultiplier,
+      comboType: result.comboType,
+    });
+    setShowGrammarCombo(false);
+    setGrammarComboData(null);
+  }, []);
+
+  // Phase 32: Handle grammar combo cancel
+  const handleGrammarComboCancel = useCallback(() => {
+    setShowGrammarCombo(false);
+    setGrammarComboData(null);
+  }, []);
+
+  // Phase 32: Handle item use from BattleItemMenu
+  const handleItemUse = useCallback((itemData) => {
+    EventBus.emit(EVENTS.BATTLE_ITEM_USED, itemData);
+    setShowItemMenu(false);
+  }, []);
+
+  // Phase 32: Handle target selection
+  const handleTargetSelect = useCallback((targetIndex) => {
+    EventBus.emit(EVENTS.BATTLE_TARGET_SELECT, { targetIndex });
+    setShowTargetSelector(false);
+    setTargetSelectorData(null);
   }, []);
 
   if (!battleActive) return null;
+
+  // Phase 32: Build post-review battle data from Redux state
+  const reviewBattleData = {
+    arabicUsedThisBattle: arabicUsedThisBattle || [],
+    maxStreak: maxStreak || 0,
+    timeElapsed: battleResult?.timeElapsed || 0,
+    playerEffects: playerEffects || [],
+    enemyEffects: enemyEffects || [],
+  };
 
   return (
     <div
       className="battle-overlay-container"
       style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 250 }}
     >
+      {/* Phase 32: Status effect bars */}
+      {playerEffects && playerEffects.length > 0 && (
+        <StatusEffectBar effects={playerEffects} target="player" />
+      )}
+      {enemyEffects && enemyEffects.length > 0 && (
+        <StatusEffectBar effects={enemyEffects} target="enemy" />
+      )}
+
+      {/* Phase 32: Combo meter — left side */}
+      <ComboMeter
+        comboMeter={comboMeter || 0}
+        maxComboMeter={maxComboMeter || 100}
+        grammarComboState={grammarComboState}
+        streak={streak}
+      />
+
       {/* Battle menu — visible during ACTION_SELECT */}
       <div style={{ pointerEvents: 'auto' }}>
         <BattleMenu
@@ -142,6 +330,63 @@ export default function BattleOverlay() {
           onSubmit={() => setPhase('resolving')}
         />
       </div>
+
+      {/* Phase 32: Flee challenge — BattleArabicInput in flee mode */}
+      {fleeChallengeData && (
+        <div style={{ pointerEvents: 'auto' }}>
+          <BattleArabicInput
+            mode="flee"
+            prompt={{
+              word: fleeChallengeData.word,
+              timeLimit: 10000,
+              difficulty: 'type',
+            }}
+            onSubmit={() => {
+              setFleeChallengeData(null);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Phase 32: Grammar combo input — visible during GRAMMAR_COMBO phase */}
+      {showGrammarCombo && grammarComboData && (
+        <div style={{ pointerEvents: 'auto' }}>
+          <GrammarComboInput
+            comboType={grammarComboData.comboType || grammarComboData.type}
+            template={grammarComboData.template}
+            onSubmit={handleGrammarComboSubmit}
+            onCancel={handleGrammarComboCancel}
+          />
+        </div>
+      )}
+
+      {/* Phase 32: Battle item menu — visible during ITEM_USE phase */}
+      <div style={{ pointerEvents: 'auto' }}>
+        <BattleItemMenu
+          visible={showItemMenu}
+          onUseItem={handleItemUse}
+          onCancel={() => setShowItemMenu(false)}
+        />
+      </div>
+
+      {/* Phase 32: Target selector — visible during TARGET_SELECT phase */}
+      <div style={{ pointerEvents: 'auto' }}>
+        <TargetSelector
+          visible={showTargetSelector}
+          enemies={targetSelectorData?.enemies || enemies || []}
+          onSelectTarget={handleTargetSelect}
+          onCancel={() => {
+            setShowTargetSelector(false);
+            setTargetSelectorData(null);
+          }}
+        />
+      </div>
+
+      {/* Phase 32: Arena HUD — visible during arena mode */}
+      {showArenaHUD && <ArenaHUD />}
+
+      {/* Phase 32: Boss Rush Interlude — self-managed via EventBus */}
+      <BossRushInterlude />
 
       {/* Combo counter — always visible when streak > 1 */}
       <ComboCounter streak={streak} />
@@ -251,12 +496,26 @@ export default function BattleOverlay() {
       )}
 
       {/* Battle result overlay */}
-      {phase === 'result' && battleResult && (
+      {phase === 'result' && battleResult && !showPostReview && (
         <div style={{ pointerEvents: 'auto' }}>
           <BattleResult
             victory={battleResult.victory}
             bossId={battleResult.bossId}
             onClose={handleBattleClose}
+            onReview={handleReview}
+          />
+        </div>
+      )}
+
+      {/* Phase 32: Post-battle review overlay */}
+      {showPostReview && (
+        <div style={{ pointerEvents: 'auto' }}>
+          <PostBattleReview
+            battleData={reviewBattleData}
+            onClose={() => {
+              setShowPostReview(false);
+              handleBattleClose();
+            }}
           />
         </div>
       )}

@@ -18,6 +18,7 @@ const MENU_ACTIONS = [
   { id: 'item', label: 'Item', arabic: 'أداة', key: '3' },
   { id: 'defend', label: 'Defend', arabic: 'دفاع', key: '4' },
   { id: 'flee', label: 'Flee', arabic: 'هروب', key: '5' },
+  { id: 'combo', label: 'Combo', arabic: 'تركيبة', key: '6' },
 ];
 
 const reduceMotion =

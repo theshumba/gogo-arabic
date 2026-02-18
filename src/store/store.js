@@ -20,6 +20,7 @@ import inventoryReducer from './slices/inventorySlice.js';
 import economyReducer from './slices/economySlice.js';
 import companionReducer from './slices/companionSlice.js';
 import craftingReducer from './slices/craftingSlice.js';
+import arenaReducer from './slices/arenaSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -110,7 +111,7 @@ const persistedCraftingReducer = persistReducer(craftingPersistConfig, craftingR
 const persistConfig = {
   key: 'gogo-arabic',
   storage, // localStorage
-  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative', 'economy'],
+  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative', 'economy', 'arena'],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
 
@@ -133,6 +134,7 @@ const rootReducer = combineReducers({
   economy: economyReducer,
   companions: persistedCompanionReducer, // IndexedDB (nested)
   crafting: persistedCraftingReducer, // IndexedDB (nested)
+  arena: arenaReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
