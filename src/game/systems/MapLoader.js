@@ -151,11 +151,11 @@ export class MapLoader {
     // Place world objects
     this.placeObjects(objects);
 
-    // Scatter desert decorations on empty sand tiles
-    this.scatterDecorations(zone, groundData, mapWidth, mapHeight);
+    // TODO: Fix decoration scattering (props are multi-item sheets, not 16x16 — scaling 4x breaks them)
+    // this.scatterDecorations(zone, groundData, mapWidth, mapHeight);
 
-    // Place ambient animals (camels, vultures, scarabs) in desert zones
-    this.spawnAmbientAnimals(zone, groundData, mapWidth, mapHeight);
+    // TODO: Fix ambient animals (spritesheet frame indices need verification)
+    // this.spawnAmbientAnimals(zone, groundData, mapWidth, mapHeight);
 
     // Create exit triggers (signposts at zone edges)
     this.createExitTriggers(exits, mapWidth, mapHeight);
@@ -171,11 +171,9 @@ export class MapLoader {
    * Render ground tiles — uses Kenmi desert tileset if available, flat colors as fallback
    */
   renderGroundTiles(groundData, mapW, mapH) {
-    if (this._hasKenmiTiles()) {
-      this._renderKenmiTiles(groundData, mapW, mapH);
-    } else {
-      this._renderFlatTiles(groundData, mapW, mapH);
-    }
+    // TODO: Fix Kenmi terrain rendering (wrong frame indices cause tiling artifacts)
+    // For now, always use flat tiles which are known to work
+    this._renderFlatTiles(groundData, mapW, mapH);
   }
 
   /**
@@ -622,9 +620,15 @@ export class MapLoader {
       const textureKey = kenmiKey && this.scene.textures.exists(kenmiKey) ? kenmiKey : obj.key;
       const sprite = this.scene.add.image(px, py, textureKey).setOrigin(0.5, 0.8);
 
-      // Kenmi sprites are 16x16 base, need scaling. Old sprites are already correct size.
+      // Kenmi buildings/props are already 80-144px images — do NOT scale 4x.
+      // Only scale if the texture is smaller than a game tile (< 64px wide).
       if (kenmiKey && this.scene.textures.exists(kenmiKey)) {
-        sprite.setScale(KENMI_SCALE);
+        const tex = this.scene.textures.get(kenmiKey);
+        const srcWidth = tex.source[0]?.width || 64;
+        if (srcWidth <= 32) {
+          sprite.setScale(KENMI_SCALE);
+        }
+        // Otherwise render at native size — Kenmi buildings are already proportional
       }
 
       this.objectSprites.push(sprite);
