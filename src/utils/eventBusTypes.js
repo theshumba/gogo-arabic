@@ -426,4 +426,17 @@ export const EVENTS = Object.freeze({
   ACTION_TELEPORT: 'action:zone:teleport',
   /** ActionSetExecutor → AudioManager: play a sound effect or BGM cue */
   ACTION_PLAY_SOUND: 'action:audio:play-sound',
+
+  // ────────────────────────────────────────────────
+  // SYSTEM — AutoSave, stats, sub-areas (Phase 36)
+  // ────────────────────────────────────────────────
+
+  /** System → React: autosave triggered (show brief indicator) */
+  AUTOSAVE_TRIGGERED: 'system:autosave:triggered',
+  /** Phaser → React: player entered a named sub-area within a zone */
+  SUB_AREA_ENTER: 'phaser:zone:sub-area-enter',
+  /** Phaser → React: player left a named sub-area */
+  SUB_AREA_EXIT: 'phaser:zone:sub-area-exit',
+  /** React → React: journal overlay opened */
+  JOURNAL_OPEN: 'react:ui:journal-open',
 });
