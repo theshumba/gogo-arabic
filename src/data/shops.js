@@ -115,6 +115,61 @@ export const SHOP_REPUTATION_ITEMS = {
 };
 
 /**
+ * Production chain data for zone economy simulation (Phase 35)
+ * Each shop consumes inputs and produces outputs at a given rate (units per game day)
+ */
+export const SHOP_PRODUCTION = {
+  oasis_village_shop: {
+    inputs: ['raw_cotton', 'dye'],
+    outputs: ['simple_cloth'],
+    rate: 1,  // produces 1 output per game day
+    nameArabic: 'دكان القماش',
+  },
+  desert_market_shop: {
+    inputs: ['spice_raw', 'oil'],
+    outputs: ['spice_blend', 'perfume'],
+    rate: 2,
+    nameArabic: 'سوق التوابل',
+  },
+  sacred_library_shop: {
+    inputs: ['raw_paper', 'ink'],
+    outputs: ['scroll', 'book'],
+    rate: 1,
+    nameArabic: 'مكتبة المعرفة',
+  },
+  farmland_shop: {
+    inputs: ['seed', 'water'],
+    outputs: ['wheat', 'herb'],
+    rate: 3,
+    nameArabic: 'مزرعة',
+  },
+  bedouin_camp_shop: {
+    inputs: ['wool', 'leather'],
+    outputs: ['tent_cloth', 'saddle'],
+    rate: 1,
+    nameArabic: 'خيمة البدو',
+  },
+  mountain_village_shop: {
+    inputs: ['ore', 'coal'],
+    outputs: ['iron_bar', 'steel_bar'],
+    rate: 1,
+    nameArabic: 'حداد الجبل',
+  },
+  coastal_port_shop: {
+    inputs: ['fish_raw', 'salt'],
+    outputs: ['dried_fish', 'fish_oil'],
+    rate: 2,
+    nameArabic: 'ميناء الصيادين',
+  },
+  royal_palace_shop: {
+    inputs: ['gold_dust', 'gemstone'],
+    outputs: ['jewelry', 'crown_ornament'],
+    rate: 1,
+    nameArabic: 'صائغ القصر',
+  },
+};
+
+/**
  * Items unlocked by completing specific quests
  */
 export const SHOP_QUEST_ITEMS = {

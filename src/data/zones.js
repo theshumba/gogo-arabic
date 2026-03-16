@@ -135,6 +135,9 @@ const oasis_village = {
     from_library: { x: 20, y: 3 },
   },
 
+  defaultWeather: 'clear',
+  battleBackground: 'bg-oasis',
+
   // Step triggers — invisible floor zones that fire actionSets when the player walks over them.
   // Missing = no triggers for this zone (backward compatible).
   stepTriggers: [
@@ -312,6 +315,9 @@ const ancient_library = {
 
   unlock: { quest: 'words_of_oasis' },
 
+  defaultWeather: 'mist',
+  battleBackground: 'bg-library',
+
   entries: {
     from_oasis: { x: 17, y: 27 },
     from_marketplace: { x: 33, y: 15 },
@@ -442,6 +448,9 @@ const desert_marketplace = {
 
   unlock: { quest: 'master_of_letters', minLevel: 5 },
 
+  defaultWeather: 'dust',
+  battleBackground: 'bg-desert',
+
   entries: {
     from_library: { x: 3, y: 17 },
     from_farmland: { x: 22, y: 3 },
@@ -565,6 +574,9 @@ const farmland = {
 
   unlock: { quest: 'merchant_master', minLevel: 8, minWords: 400 },
 
+  defaultWeather: 'clear',
+  battleBackground: 'bg-farmland',
+
   entries: {
     from_marketplace: { x: 22, y: 33 },
     from_bedouin: { x: 43, y: 17 },
@@ -675,6 +687,9 @@ const bedouin_camp = {
   ],
 
   unlock: { quest: 'natures_scholar', minLevel: 11, minWords: 600 },
+
+  defaultWeather: 'sandstorm',
+  battleBackground: 'bg-camp',
 
   entries: {
     from_farmland: { x: 3, y: 13 },
@@ -795,6 +810,9 @@ const mountain_village = {
   ],
 
   unlock: { quest: 'tales_of_desert', minLevel: 14, minWords: 800 },
+
+  defaultWeather: 'snow',
+  battleBackground: 'bg-mountain',
 
   entries: {
     from_bedouin: { x: 20, y: 27 },
@@ -921,6 +939,9 @@ const coastal_port = {
   ],
 
   unlock: { quest: 'mountain_wisdom', minLevel: 17, minWords: 1200 },
+
+  defaultWeather: 'rain',
+  battleBackground: 'bg-port',
 
   entries: {
     from_mountain: { x: 3, y: 17 },
@@ -1056,6 +1077,9 @@ const royal_palace = {
   ],
 
   unlock: { quest: 'port_of_knowledge', minLevel: 20, minWords: 1600 },
+
+  defaultWeather: 'clear',
+  battleBackground: 'bg-palace',
 
   entries: {
     from_port: { x: 25, y: 37 },
