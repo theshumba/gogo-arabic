@@ -161,15 +161,15 @@ export class NPCManager {
         npc.stopMovement();
 
         // ActionSet evaluation: data-driven NPC behavior (Phase 34)
-        // If NPC has actionSets for the interact trigger, evaluate and execute — skip default dialogue.
+        // Emit matched actions alongside normal dialogue. ACTION_* consumers
+        // are not wired yet, so we do NOT skip the default NPC_INTERACT.
         const fullData = NPC_DATA_MAP.get(npc.npcId);
         if (fullData?.actionSets?.interact) {
           const context = buildActionContext();
           const matched = evaluateActionSets(fullData.actionSets.interact, context);
           if (matched) {
             executeActions(matched.actions, EventBus);
-            EventBus.emit(EVENTS.PLAYER_FREEZE);
-            return; // Skip default NPC_INTERACT emit
+            // Fall through to normal NPC_INTERACT below
           }
         }
 

@@ -305,14 +305,14 @@ export class WorldScene extends Phaser.Scene {
 
   handleFreeze() {
     // Only freeze if this scene is actively running (not paused by InteriorScene)
-    if (!this.scene.isActive()) return;
+    if (!this.scene || !this.scene.isActive()) return;
     this.frozen = true;
     this.playerController.freeze();
   }
 
   handleUnfreeze() {
     // Only unfreeze if this scene is actively running
-    if (!this.scene.isActive()) return;
+    if (!this.scene || !this.scene.isActive()) return;
     this.frozen = false;
     this.playerController.unfreeze();
   }
