@@ -275,7 +275,7 @@ Plans:
 **Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 38-01-PLAN.md — Copy 10 packs to public/assets/kenmi/ + generate src/data/kenmiCatalog.js
+- [x] 38-01-PLAN.md — Copy 10 packs to public/assets/kenmi/ + generate src/data/kenmiCatalog.js
 - [ ] 38-02-PLAN.md — BootScene loader loop from KENMI_CATALOG + human-verify texture cache
 
 #### Phase 39: Terrain Rendering
@@ -424,7 +424,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 35. Economy + Home (Production Chains + Decoration) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 36. Quest Journal + Audio (Notebook + Buses) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 37. Polish + Replay (Randomizer + Settings) | v7.0 | 4/4 | Complete | 2026-03-16 |
-| 38. Asset Pipeline & BootScene | v8.0 | 0/2 | Not started | — |
+| 38. Asset Pipeline & BootScene | v8.0 | 1/2 | In progress | — |
 | 39. Terrain Rendering | v8.0 | 0/3 | Not started | — |
 | 40. Buildings & Decorations | v8.0 | 0/3 | Not started | — |
 | 41. Characters & Ambient Life | v8.0 | 0/3 | Not started | — |
@@ -435,4 +435,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-16 — v8.0 Visual Overhaul roadmap added (Phases 38-43, 50 requirements)*
+*Last updated: 2026-03-16 — 38-01 complete (969 PNGs + KENMI_CATALOG)*

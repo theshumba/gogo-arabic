@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
-status: ready_to_plan
-stopped_at: Roadmap created — Phase 38 ready to plan
-last_updated: "2026-03-16T20:30:00.000Z"
-last_activity: 2026-03-16 — v8.0 roadmap created (6 phases, 50 requirements)
+status: in_progress
+stopped_at: Phase 38 Plan 01 complete — ready for 38-02 (BootScene loader)
+last_updated: "2026-03-16T22:43:00.000Z"
+last_activity: 2026-03-16 — Completed 38-01 (asset copy + KENMI_CATALOG)
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 16
-  completed_plans: 0
+  completed_plans: 1
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 
 Milestone: v8.0 Visual Overhaul
 Phase: 38 of 43 (Asset Pipeline & BootScene)
-Plan: 0 of 2 in current phase
-Status: Ready to plan
-Last activity: 2026-03-16 — Roadmap created, Phase 38 ready to plan
+Plan: 1 of 2 in current phase (38-01 complete)
+Status: In progress
+Last activity: 2026-03-16 — Completed 38-01-PLAN.md (asset copy + KENMI_CATALOG)
 
-Progress (v8.0): [░░░░░░░░░░] 0% (0/6 phases)
+Progress (v8.0): [░░░░░░░░░░] 6% (1/16 plans)
 
 ### Shipped Milestones
 
@@ -50,7 +50,8 @@ Progress (v8.0): [░░░░░░░░░░] 0% (0/6 phases)
 
 ### Key v8.0 Context
 
-- Assets at `/tmp/kenmi/` — 13 packs, ~1,200 PNGs, 16x16 base tiles
+- Assets at `public/assets/kenmi/` — 10 packs, 969 PNGs, 16x16 base tiles (PIPE-01 complete)
+- KENMI_CATALOG at `src/data/kenmiCatalog.js` — 969 entries, 592 spritesheets, 377 images
 - TILE constant = 64, so 16x16 tiles scale 4x — no game logic changes needed
 - Current MapLoader renders flat colored squares — TilesetRenderer replaces it
 - Current UI is React DOM overlays for everything — only in-game elements move to Phaser
@@ -61,14 +62,19 @@ Progress (v8.0): [░░░░░░░░░░] 0% (0/6 phases)
 
 All v2.0-v7.0 decisions logged in PROJECT.md Key Decisions table.
 
-v8.0 decisions (none yet — first plan not started):
+v8.0 decisions:
 - Phase ordering: pipeline → terrain → buildings/deco → characters → UI/Arabic → cleanup
 - UI-07 constraint: React overlays (HUD, menu, settings, profile, wardrobe) stay as React
+- 38-01: Preserved internal subdirectory structure within each pack (not fully flattened) — keeps paths semantic
+- 38-01: Characters pack (goblins, knights, orcs, angels) entirely spritesheet — all walk-cycle animation sheets
+- 38-01: Catalog keys use shortened pack prefixes (char, shroom, military) to keep keys concise
+- 38-01: Catalog sorted alphabetically by key for deterministic output and readable diffs
+- 38-01: UI pack `ui-frames.png` is at `ui/ui/ui-frames.png` (nested Cute_Fantasy_UI/UI/ subdir)
 
 ### Blockers/Concerns
 
 - Bundle already 862KB (well over 500KB target) — Kenmi assets will increase this further; lazy loading needed
-- BootScene currently loads ALL assets upfront (77 calls) — Phase 38 should establish zone-based loading pattern
+- BootScene currently loads ALL assets upfront (77 calls) — 38-02 should establish zone-based loading pattern
 
 ### Pending Todos
 
@@ -77,5 +83,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-16
-Stopped at: v8.0 roadmap created — ready to plan Phase 38
-Resume file: None — next step is `/gsd:plan-phase 38`
+Stopped at: 38-01 complete — asset copy + KENMI_CATALOG generated
+Resume file: .planning/phases/38-asset-pipeline/38-02-PLAN.md
