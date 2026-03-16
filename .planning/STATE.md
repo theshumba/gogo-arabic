@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v7.0 World & Content (Phases 33-37)
 Phase: 35 — Economy + Home (in progress)
-Plan: 1 of ? in phase
+Plan: 3 of ? in phase
 Status: In progress
-Last activity: 2026-03-16 — Completed 35-01-PLAN.md (Economy Foundation)
+Last activity: 2026-03-16 — Completed 35-03-PLAN.md (Home Decoration System)
 
-Progress: [█░░░░░] 1 plan complete in Phase 35 — in progress
+Progress: [███░░░] 3 plans complete in Phase 35 — in progress
 
 ### Shipped Milestones
 
@@ -129,6 +129,12 @@ v7.0 Phase 35 decisions (35-02):
 - companions/giveGift (not companion/giveGift) — verified against slice name 'companions'
 - quiz/recordAnswer kept as-is — no quiz slice exists yet, forward-looking listener
 
+v7.0 Phase 35 decisions (35-03):
+- homeSlice NOT registered in store.js yet — deferred to future plan (follows EconomyFlow deferral pattern from 35-01)
+- recalcUtilitiesFromGrid scans full 8x10 grid on every place/remove — simple and O(80), no delta tracking needed
+- barrel and crate have no utilityCategory — intentionally excluded as trade goods, not decorative items
+- ownedFurniture quantity tracked in homeSlice; canPlace() verifies ownership before dispatching
+
 v7.0 Phase 34 decisions (34-03):
 - buildActionContext extracted to shared actionContext.js — both NPCManager and WorldScene share one implementation; accepts optional zoneOverride for caller-authoritative zone context
 - Step trigger state initialized inside buildZone() (not clearZone()) — zone-scoped, wiped clean on every zone load before zone.stepTriggers are read
@@ -203,9 +209,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 35 plan 01 — Economy Foundation)
-Stopped at: 35-01 complete (1/? plans in Phase 35)
-Resume file: .planning/phases/35-economy-home/35-01-SUMMARY.md
+Last session: 2026-03-16 (Phase 35 plan 03 — Home Decoration System)
+Stopped at: 35-03 complete (3/? plans in Phase 35)
+Resume file: .planning/phases/35-economy-home/35-03-SUMMARY.md
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -236,7 +242,9 @@ Resume file: .planning/phases/35-economy-home/35-01-SUMMARY.md
 
 **Phase 35 Progress: IN PROGRESS**
 - 35-01: Production Chain Data (shops + zone configs) — COMPLETE
+- 35-02: Friendship System (FriendshipManager + middleware) — COMPLETE
+- 35-03: Home Decoration System (homeSlice + HomeDecoration) — COMPLETE
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-03-16 — Phase 35 plan 01 complete (Economy Foundation)*
+*Last updated: 2026-03-16 — Phase 35 plan 03 complete (Home Decoration System)*
