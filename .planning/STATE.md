@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v7.0 World & Content (Phases 33-37)
 Phase: 35 — Economy + Home (in progress)
-Plan: 3 of ? in phase
+Plan: 4 of ? in phase
 Status: In progress
-Last activity: 2026-03-16 — Completed 35-03-PLAN.md (Home Decoration System)
+Last activity: 2026-03-16 — Completed 35-04-PLAN.md (Store Wiring — homeSlice + friendshipMiddleware + utilityBonusMiddleware)
 
-Progress: [███░░░] 3 plans complete in Phase 35 — in progress
+Progress: [████░░] 4 plans complete in Phase 35 — in progress
 
 ### Shipped Milestones
 
@@ -129,6 +129,12 @@ v7.0 Phase 35 decisions (35-02):
 - companions/giveGift (not companion/giveGift) — verified against slice name 'companions'
 - quiz/recordAnswer kept as-is — no quiz slice exists yet, forward-looking listener
 
+v7.0 Phase 35 decisions (35-04):
+- utilityBonusMiddleware infinite loop prevention via action.meta.utilityBonus flag — bonus dispatches marked to prevent re-triggering
+- Comfort and Barakah are pull-based (selectUtility) — game systems read value when needed, no push dispatch needed
+- home persisted to localStorage (not IndexedDB) — 8x10 grid is lightweight, fits comfortably in localStorage
+- Knowledge bonus: +1 XP per 10 Knowledge utility; Hospitality bonus: +1 friendship per 20 Hospitality utility
+
 v7.0 Phase 35 decisions (35-03):
 - homeSlice NOT registered in store.js yet — deferred to future plan (follows EconomyFlow deferral pattern from 35-01)
 - recalcUtilitiesFromGrid scans full 8x10 grid on every place/remove — simple and O(80), no delta tracking needed
@@ -209,9 +215,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 35 plan 03 — Home Decoration System)
-Stopped at: 35-03 complete (3/? plans in Phase 35)
-Resume file: .planning/phases/35-economy-home/35-03-SUMMARY.md
+Last session: 2026-03-16 (Phase 35 plan 04 — Store Wiring)
+Stopped at: 35-04 complete (4/? plans in Phase 35)
+Resume file: .planning/phases/35-economy-home/35-04-SUMMARY.md
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -244,7 +250,8 @@ Resume file: .planning/phases/35-economy-home/35-03-SUMMARY.md
 - 35-01: Production Chain Data (shops + zone configs) — COMPLETE
 - 35-02: Friendship System (FriendshipManager + middleware) — COMPLETE
 - 35-03: Home Decoration System (homeSlice + HomeDecoration) — COMPLETE
+- 35-04: Store Wiring (homeSlice + friendshipMiddleware + utilityBonusMiddleware registered) — COMPLETE
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-03-16 — Phase 35 plan 03 complete (Home Decoration System)*
+*Last updated: 2026-03-16 — Phase 35 plan 04 complete (Store Wiring)*
