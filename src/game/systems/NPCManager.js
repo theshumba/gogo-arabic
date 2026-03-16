@@ -22,6 +22,9 @@ export class NPCManager {
   constructor(scene) {
     this.scene = scene;
     this.npcs = [];
+
+    // Listen for time phase changes to re-evaluate NPC schedules
+    EventBus.on(EVENTS.TIME_PHASE_CHANGED, this._onPhaseChanged, this);
   }
 
   /**
@@ -182,9 +185,73 @@ export class NPCManager {
   }
 
   /**
+   * Re-evaluate all spawned NPCs' schedules when time phase changes.
+   * NPCs whose schedule no longer matches the current time are hidden.
+   * NPCs whose schedule location changed are tweened to the new position.
+   * Called by EventBus TIME_PHASE_CHANGED listener.
+   */
+  _onPhaseChanged({ phase: _phase }) {
+    // Guard: NPCs haven't been spawned yet — skip initial fire on load
+    if (!this.npcs || !this.npcs.length) return;
+
+    const { hour } = selectGameTime(store.getState());
+    const flags = store.getState().narrative?.storyFlags || {};
+    const currentZone = this.scene.currentZone || '';
+
+    this.npcs.forEach((npc) => {
+      const fullData = NPC_DATA_MAP.get(npc.npcId);
+      if (!fullData?.schedule?.length) return; // No schedule = always active, skip
+
+      const entry = evaluateSchedule(fullData, hour, currentZone, flags);
+
+      if (!entry) {
+        // NPC should not be visible in this zone at this time
+        npc.stopMovement();
+        npc.setActive(false).setVisible(false);
+        if (npc.body) npc.body.enable = false;
+      } else {
+        // NPC should be visible — show and move to schedule location
+        npc.setActive(true).setVisible(true);
+        if (npc.body) npc.body.enable = true;
+
+        // Calculate new position from schedule entry tile coords
+        const tileSize = 64;
+        const newX = entry.location.x * tileSize + tileSize / 2;
+        const newY = entry.location.y * tileSize + tileSize / 2;
+
+        // Tween to new position (smooth 2s transition, not teleport)
+        npc.stopMovement();
+        this.scene.tweens.add({
+          targets: npc,
+          x: newX,
+          y: newY,
+          duration: 2000,
+          ease: 'Linear',
+          onComplete: () => {
+            // Start new behavior from updated schedule entry
+            npc._scheduleEntry = entry;
+            if (entry.behavior === 'wander') {
+              npc._spawnX = newX;
+              npc._spawnY = newY;
+              npc.startWander(96);
+            } else if (entry.behavior === 'patrol' && entry.patrol) {
+              npc.startPatrol(entry.patrol.path, entry.patrol.durations);
+            } else {
+              // Static — restore immovable
+              npc.setImmovable(true);
+              npc.setVelocity(0, 0);
+            }
+          },
+        });
+      }
+    });
+  }
+
+  /**
    * Destroy all NPCs
    */
   destroy() {
+    EventBus.off(EVENTS.TIME_PHASE_CHANGED, this._onPhaseChanged, this);
     this.npcs.forEach((npc) => {
       npc.destroy();
     });
