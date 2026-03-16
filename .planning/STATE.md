@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
 status: in_progress
-stopped_at: Phase 38 Plan 01 complete — ready for 38-02 (BootScene loader)
-last_updated: "2026-03-16T22:43:00.000Z"
-last_activity: 2026-03-16 — Completed 38-01 (asset copy + KENMI_CATALOG)
+stopped_at: Phase 38 complete — ready for Phase 39 (terrain rendering)
+last_updated: "2026-03-16T23:00:00.000Z"
+last_activity: 2026-03-16 — Completed 38-02 (BootScene Kenmi catalog loader)
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 16
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 38 of 43 (Asset Pipeline & BootScene)
-Plan: 1 of 2 in current phase (38-01 complete)
-Status: In progress
-Last activity: 2026-03-16 — Completed 38-01-PLAN.md (asset copy + KENMI_CATALOG)
+Phase: 39 of 43 (next: terrain rendering)
+Plan: Phase 38 complete (2/2 plans done)
+Status: Phase 38 complete — ready for Phase 39
+Last activity: 2026-03-16 — Completed 38-02-PLAN.md (BootScene Kenmi catalog loader)
 
-Progress (v8.0): [░░░░░░░░░░] 6% (1/16 plans)
+Progress (v8.0): [█░░░░░░░░░] 13% (2/16 plans)
 
 ### Shipped Milestones
 
@@ -70,11 +70,13 @@ v8.0 decisions:
 - 38-01: Catalog keys use shortened pack prefixes (char, shroom, military) to keep keys concise
 - 38-01: Catalog sorted alphabetically by key for deterministic output and readable diffs
 - 38-01: UI pack `ui-frames.png` is at `ui/ui/ui-frames.png` (nested Cute_Fantasy_UI/UI/ subdir)
+- 38-02: All 969 Kenmi assets loaded upfront in BootScene — zone-based lazy loading deferred to post-v8.0
+- 38-02: loaderror handler registered once before the catalog loop (not per-entry) — Phaser fires event per file
 
 ### Blockers/Concerns
 
-- Bundle already 862KB (well over 500KB target) — Kenmi assets will increase this further; lazy loading needed
-- BootScene currently loads ALL assets upfront (77 calls) — 38-02 should establish zone-based loading pattern
+- Bundle already 862KB (well over 500KB target) — Kenmi assets increase this further; lazy loading deferred to post-v8.0 cleanup
+- BootScene now loads ALL 969 Kenmi assets upfront (in addition to legacy 77 calls) — zone-based loading is a future optimization
 
 ### Pending Todos
 
@@ -83,5 +85,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-16
-Stopped at: 38-01 complete — asset copy + KENMI_CATALOG generated
-Resume file: .planning/phases/38-asset-pipeline/38-02-PLAN.md
+Stopped at: Phase 38 complete — both plans done, all Kenmi assets loading in BootScene
+Resume file: .planning/phases/39-terrain/ (next plan to be created)
