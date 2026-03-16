@@ -37,8 +37,8 @@ export const defaultSpawnPoint = { x: 20, y: 15 };
  * Default objects for placeholder maps.
  */
 export const defaultObjects = [
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 10, y: 10, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 30, y: 10, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 10, y: 20, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 30, y: 20, collide: true, collideW: 20, collideH: 20 },
+    { key: 'ruin-pillar', x: 10, y: 10, collide: true, collideW: 20, collideH: 20 },
+    { key: 'ruin-pillar', x: 30, y: 10, collide: true, collideW: 20, collideH: 20 },
+    { key: 'ruin-pillar', x: 10, y: 20, collide: true, collideW: 20, collideH: 20 },
+    { key: 'ruin-pillar', x: 30, y: 20, collide: true, collideW: 20, collideH: 20 },
 ];
