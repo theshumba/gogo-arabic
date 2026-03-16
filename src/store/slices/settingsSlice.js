@@ -11,6 +11,12 @@ const initialState = {
   pronunciationVolume: 100,
   isMuted: false,
   textSize: 'medium', // 'small' | 'medium' | 'large'
+  difficulty: 'normal',           // 'easy' | 'normal' | 'hard'
+  vowelMarks: true,               // Show tashkeel on Arabic text
+  hintFrequency: 'normal',        // 'always' | 'normal' | 'rare' | 'never'
+  battleSpeed: 1.0,               // 0.5 | 1.0 | 1.5 | 2.0
+  vocabRandomizerSeed: null,      // Seed for VocabRandomizer (null = default)
+  showRomanization: true,         // Show romanized Arabic
 };
 
 const settingsSlice = createSlice({
@@ -56,6 +62,25 @@ const settingsSlice = createSlice({
     setTextSize(state, action) {
       state.textSize = action.payload;
     },
+
+    setDifficulty(state, action) {
+      state.difficulty = action.payload;
+    },
+    setVowelMarks(state, action) {
+      state.vowelMarks = action.payload;
+    },
+    setHintFrequency(state, action) {
+      state.hintFrequency = action.payload;
+    },
+    setBattleSpeed(state, action) {
+      state.battleSpeed = action.payload;
+    },
+    setVocabRandomizerSeed(state, action) {
+      state.vocabRandomizerSeed = action.payload;
+    },
+    setShowRomanization(state, action) {
+      state.showRomanization = action.payload;
+    },
   },
 });
 
@@ -70,6 +95,12 @@ export const {
   setPronunciationVolume,
   toggleMute,
   setTextSize,
+  setDifficulty,
+  setVowelMarks,
+  setHintFrequency,
+  setBattleSpeed,
+  setVocabRandomizerSeed,
+  setShowRomanization,
 } = settingsSlice.actions;
 
 // --- Selectors ---
@@ -84,5 +115,10 @@ export const selectPronunciationVolume = (state) => state.settings.pronunciation
 export const selectIsMuted = (state) => state.settings.isMuted;
 export const selectTextSize = (state) => state.settings.textSize;
 export const selectSettings = (state) => state.settings;
+export const selectDifficulty = (state) => state.settings.difficulty;
+export const selectVowelMarks = (state) => state.settings.vowelMarks;
+export const selectHintFrequency = (state) => state.settings.hintFrequency;
+export const selectBattleSpeed = (state) => state.settings.battleSpeed;
+export const selectVocabRandomizerSeed = (state) => state.settings.vocabRandomizerSeed;
 
 export default settingsSlice.reducer;

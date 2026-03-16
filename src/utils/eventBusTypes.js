@@ -439,4 +439,6 @@ export const EVENTS = Object.freeze({
   SUB_AREA_EXIT: 'phaser:zone:sub-area-exit',
   /** React → React: journal overlay opened */
   JOURNAL_OPEN: 'react:ui:journal-open',
+  /** System → React: calendar event is active today (Ramadan, Eid, Friday) */
+  CALENDAR_EVENT_ACTIVE: 'system:calendar:event-active',
 });
