@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v7.0 World & Content (Phases 33-37)
 Phase: 35 — Economy + Home (in progress)
-Plan: 2 of ? in phase
+Plan: 1 of ? in phase
 Status: In progress
-Last activity: 2026-03-16 — Completed 35-02-PLAN.md (Friendship System)
+Last activity: 2026-03-16 — Completed 35-01-PLAN.md (Economy Foundation)
 
-Progress: [██░░░░] 2 plans complete in Phase 35 — in progress
+Progress: [█░░░░░] 1 plan complete in Phase 35 — in progress
 
 ### Shipped Milestones
 
@@ -113,6 +113,14 @@ v7.0 Phase 34 decisions (34-01):
 - flag requirement defaults value to true when omitted — matches most common use case
 - Empty requirements array = unconditional match — enables default/fallback action set as last array entry
 
+v7.0 Phase 35 decisions (35-01):
+- SHOP_ZONE_MAP defined inside EconomyFlow (not zones.js) — bridges naming mismatch without modifying zone data
+- Initial resource seed = 10 per input per zone — provides economy flow without over-inflating
+- consumeResources checks availability before consuming — prevents negative resource pools
+- tick() returns { shortages } diagnostic array — enables future UI/quest hooks without Redux wiring
+- EconomyFlow is standalone class, not wired to Redux — store integration deferred to later plan
+- defaultWeather and battleBackground are data-only fields — no rendering logic, consumed by future phases
+
 v7.0 Phase 35 decisions (35-02):
 - Friendship neutral start is 50 (not 0) — players begin on good terms, negative actions push toward cold
 - adjustFriendship guard initializes missing npcId to 50 — no spawn-time init needed
@@ -195,9 +203,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 35 plan 02 — Friendship System)
-Stopped at: 35-02 complete (2/? plans in Phase 35)
-Resume file: .planning/phases/35-economy-home/35-02-SUMMARY.md
+Last session: 2026-03-16 (Phase 35 plan 01 — Economy Foundation)
+Stopped at: 35-01 complete (1/? plans in Phase 35)
+Resume file: .planning/phases/35-economy-home/35-01-SUMMARY.md
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -228,8 +236,7 @@ Resume file: .planning/phases/35-economy-home/35-02-SUMMARY.md
 
 **Phase 35 Progress: IN PROGRESS**
 - 35-01: Production Chain Data (shops + zone configs) — COMPLETE
-- 35-02: Friendship System (npcSlice + friendshipMiddleware) — COMPLETE
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-03-16 — Phase 35 plan 02 complete (Friendship System)*
+*Last updated: 2026-03-16 — Phase 35 plan 01 complete (Economy Foundation)*
