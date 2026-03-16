@@ -66,6 +66,12 @@ export class BootScene extends Phaser.Scene {
     this.load.image('tile-sand', '/assets/sprites/objects/sand.png');
     this.load.image('tile-grass', '/assets/sprites/objects/grass.png');
 
+    // Desert tileset spritesheet (32x32 tiles, scaled to 64x64 at render time)
+    this.load.spritesheet('desert-tiles', '/assets/sprites/desert-tileset.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+
     // =========================================================
     // PLAYER BODY SPRITESHEETS (12 outfits)
     // =========================================================
@@ -110,7 +116,7 @@ export class BootScene extends Phaser.Scene {
       'trader-hassan', 'spice-seller-layla',
       'farmer-omar', 'herbalist-maryam',
       'elder-tariq', 'storyteller-noor',
-      'guide-salim', 'weaver-zahra',
+      'guide-salim', 'guide-amira', 'weaver-zahra',
       'captain-rashid', 'fishmonger-hana',
       'vizier-abbas', 'princess-aisha', 'guard-hamza',
       'wanderer-ali', 'healer-khadija', 'imam-muhammad',
