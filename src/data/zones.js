@@ -3,11 +3,13 @@
  * Each zone provides: map builder, objects, NPCs, interactables, exits, and unlock rules.
  */
 
-const TILE = 64;
-const SAND = 0;
-const GRASS = 1;
-const WATER = 2;
-const ICE_GRASS = 3;
+export const TILE = 64;
+export const SAND = 0;
+export const GRASS = 1;
+export const WATER = 2;
+export const ICE_GRASS = 3;
+export const STONE = 4;
+export const WOOD = 5;
 
 // ============================================================
 // ZONE 1: Oasis Village (40×30)
@@ -132,6 +134,58 @@ const oasis_village = {
   entries: {
     from_library: { x: 20, y: 3 },
   },
+
+  // Step triggers — invisible floor zones that fire actionSets when the player walks over them.
+  // Missing = no triggers for this zone (backward compatible).
+  stepTriggers: [
+    {
+      id: 'oasis-welcome',
+      x: 14, y: 19,        // tile coords just north of spawn (spawnPoint is 14,20)
+      width: 2, height: 1, // 2-tile wide, 1-tile tall
+      oneShot: true,        // fires once per session (tracked via in-memory set)
+      flagOnFire: 'trigger_oasis_welcome', // flag set when this fires
+      actionSets: [
+        {
+          requirements: [{ type: 'flag', flagId: 'trigger_oasis_welcome', value: false }],
+          actions: [
+            { type: 'speech', npcId: 'narrator', dialogueKey: 'welcome-to-oasis' },
+            { type: 'setFlag', flagId: 'trigger_oasis_welcome', value: true },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'marketplace-hint',
+      x: 13, y: 8,         // tile coords near the market sign / stall area
+      width: 3, height: 1, // 3-tile wide, 1-tile tall
+      oneShot: false,
+      cooldown: 30000,      // 30 seconds between fires
+      actionSets: [
+        {
+          requirements: [],
+          actions: [
+            { type: 'playSound', soundId: 'marketplace-chatter' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'ruins-echo',
+      x: 20, y: 3,         // tile coords at the ruin-gate / ancient ruins entrance
+      width: 2, height: 1,
+      oneShot: true,
+      flagOnFire: 'trigger_ruins_echo',
+      actionSets: [
+        {
+          requirements: [{ type: 'flag', flagId: 'trigger_ruins_echo', value: false }],
+          actions: [
+            { type: 'speech', npcId: 'narrator', dialogueKey: 'ruins-whisper' },
+            { type: 'setFlag', flagId: 'trigger_ruins_echo', value: true },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 // ============================================================
@@ -1062,4 +1116,4 @@ export const ZONE_ORDER = [
 ];
 
 // Tile type constants for external use
-export { SAND, GRASS, WATER, ICE_GRASS, TILE };
+
