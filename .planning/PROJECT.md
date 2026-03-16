@@ -68,7 +68,22 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
-## Current Milestone: None — ready for v8.0
+## Current Milestone: v8.0 Visual Overhaul
+
+**Goal:** Replace all placeholder art with the Kenmi Cute Fantasy 16x16 pixel art bundle, move in-game UI from React DOM overlays into Phaser Canvas, and add Arabic BitmapFont rendering — making the game look like a polished Pokemon/Stardew Valley RPG.
+
+**Asset source:** Kenmi Art — Cute Fantasy RPG bundle (13 packs, ~1,200 PNGs, 16x16 base, commercial license)
+
+**Target features:**
+- Real desert terrain with auto-tiled transitions (sand, grass, water, cliff, road)
+- Kenmi buildings, props, and decorations replacing placeholder objects across all zones
+- Kenmi NPC/enemy/animal sprites replacing 128x128 faceless silhouettes
+- Hijab variants for female NPC characters
+- In-Phaser UI panels (NineSlice) replacing React CSS overlays for in-game elements
+- Arabic BitmapFont (Pixel AE) for all in-game text
+- Ambient animated decorations (grass sway, campfire, water foam, flies)
+- Zone-specific biome art (desert, forest, dungeon, snow, volcano, shroomlands, military camp)
+- Tiled-compatible map export structure for future collaborator handoff
 
 ### Out of Scope
 
@@ -144,4 +159,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-02-13 after v6.1 milestone start*
+*Last updated: 2026-03-16 after v8.0 milestone start*

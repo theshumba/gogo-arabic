@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v7.0
-milestone_name: World & Content
-status: completed
-stopped_at: v7.0 shipped, ready for v8.0 Visual Overhaul
-last_updated: "2026-03-16T18:08:05.377Z"
-last_activity: 2026-03-16 — v7.0 milestone completed and archived
+milestone: v8.0
+milestone_name: Visual Overhaul
+status: defining_requirements
+stopped_at: Defining v8.0 requirements
+last_updated: "2026-03-16T20:00:00.000Z"
+last_activity: 2026-03-16 — Milestone v8.0 started
 progress:
-  total_phases: 37
-  completed_phases: 37
-  total_plans: 113
-  completed_plans: 113
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -21,13 +21,15 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
 
-**Current focus:** v8.0 Visual Overhaul — tilesets, pixel UI, Arabic BitmapFont, Tiled maps, decorations
+**Current focus:** v8.0 Visual Overhaul — Kenmi 16x16 tilesets, Phaser-native UI, Arabic BitmapFont
 
 ## Current Position
 
-Milestone: v7.0 World & Content (Phases 33-37) — SHIPPED
-Phase: All 5 phases complete
-Plan: 18/18 plans executed
+Milestone: v8.0 Visual Overhaul
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-16 — Milestone v8.0 started
 Status: Milestone complete
 Last activity: 2026-03-16 — Phase 37 COMPLETE, v7.0 shipped
 
