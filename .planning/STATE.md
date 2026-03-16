@@ -6,17 +6,17 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
 
-**Current focus:** v7.0 Phase 35 — Economy + Home (Production Chains + Decoration)
+**Current focus:** v7.0 Phase 36 — Quest Journal + Audio (Bomber's Notebook + Audio Buses)
 
 ## Current Position
 
 Milestone: v7.0 World & Content (Phases 33-37)
-Phase: 35 — Economy + Home (in progress)
-Plan: 4 of ? in phase
-Status: In progress
-Last activity: 2026-03-16 — Completed 35-04-PLAN.md (Store Wiring — homeSlice + friendshipMiddleware + utilityBonusMiddleware)
+Phase: 36 — Quest Journal + Audio (next)
+Plan: —
+Status: Ready to plan
+Last activity: 2026-03-16 — Phase 35 COMPLETE (4/4 plans)
 
-Progress: [████░░] 4 plans complete in Phase 35 — in progress
+Progress: [████████████████████████████████████████████████████████████████] 4/4 Phase 35 plans — COMPLETE
 
 ### Shipped Milestones
 
@@ -215,9 +215,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 35 plan 04 — Store Wiring)
-Stopped at: 35-04 complete (4/? plans in Phase 35)
-Resume file: .planning/phases/35-economy-home/35-04-SUMMARY.md
+Last session: 2026-03-16 (Phase 35 COMPLETE)
+Stopped at: Phase 35 complete, ready for Phase 36 planning
+Resume file: .planning/ROADMAP.md — Phase 36 next
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -246,12 +246,12 @@ Resume file: .planning/phases/35-economy-home/35-04-SUMMARY.md
 - 34-02: NPC ActionSets + EventScriptRunner + NPCManager Wiring — COMPLETE
 - 34-03: Step Triggers (zone data + WorldScene detection) — COMPLETE
 
-**Phase 35 Progress: IN PROGRESS**
+**Phase 35 Progress: COMPLETE (4/4)**
 - 35-01: Production Chain Data (shops + zone configs) — COMPLETE
-- 35-02: Friendship System (FriendshipManager + middleware) — COMPLETE
+- 35-02: Friendship System (npcSlice + middleware) — COMPLETE
 - 35-03: Home Decoration System (homeSlice + HomeDecoration) — COMPLETE
-- 35-04: Store Wiring (homeSlice + friendshipMiddleware + utilityBonusMiddleware registered) — COMPLETE
+- 35-04: Store Wiring (homeSlice + friendshipMiddleware + utilityBonusMiddleware) — COMPLETE
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-03-16 — Phase 35 plan 04 complete (Store Wiring)*
+*Last updated: 2026-03-16 — Phase 35 complete (Economy + Home)*

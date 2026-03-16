@@ -211,7 +211,13 @@ Plans:
 
 **Key files**: `shops.js`, new `EconomyFlow.js`, `zones.js`, new `HomeDecoration.js`, `furniture.js`, `npcSlice.js`
 
-Plans: TBD
+**Plans**: 4 plans in 3 waves
+
+Plans:
+- [x] 35-01-PLAN.md — Production chains on shops + EconomyFlow + zone weather/battle-bg
+- [x] 35-02-PLAN.md — Friendship system in npcSlice + friendshipMiddleware
+- [x] 35-03-PLAN.md — Home decoration grid + furniture utilities + homeSlice
+- [x] 35-04-PLAN.md — Utility bonus middleware + store registration
 
 #### Phase 36: Quest Journal + Audio (Bomber's Notebook + Audio Buses)
 **Goal**: Clear quest tracking and immersive audio
@@ -274,8 +280,9 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 | 32. Status Effects & Advanced Combat | v6.1 | 11/11 | Complete | 2026-02-18 |
 | 33. Living World (NPC Schedules + Movement) | v7.0 | 3/3 | Complete | 2026-03-16 |
 | 34. Data-Driven Events (ActionSets + Event Scripts) | v7.0 | 3/3 | Complete | 2026-03-16 |
+| 35. Economy + Home (Production Chains + Decoration) | v7.0 | 4/4 | Complete | 2026-03-16 |
 
-**Cumulative:** 34 phases shipped, 101 plans complete, 7 milestones
+**Cumulative:** 35 phases shipped, 105 plans complete, 7 milestones
 
 ---
 *Roadmap created: 2026-02-08*
