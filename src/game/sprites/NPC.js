@@ -1,9 +1,16 @@
 import Phaser from 'phaser';
+import { NPC_KEY_MAP } from '../../data/spriteKeyMap.js';
 
 /**
- * NPC sprite using 128x128 frames from monster-quest character spritesheets.
- * Same layout as Player: 4 cols × 4 rows
- * NPCs use a slow idle animation cycling through the down-facing frames.
+ * NPC sprite supporting both legacy 128x128 spritesheets (4×4 grid)
+ * and Kenmi 16x16 spritesheets (12 cols × 20 rows).
+ *
+ * Kenmi layout (12 cols per row):
+ *   Row 0 (frames 0-11): Walk down
+ *   Row 1 (frames 12-23): Walk up
+ *   Row 2 (frames 24-35): Walk left
+ *   Row 3 (frames 36-47): Walk right
+ *   We use 3 frames per direction for a conservative walk cycle.
  *
  * Movement patterns (added in Phase 33):
  *   - static: default, setImmovable(true), no movement
@@ -12,8 +19,17 @@ import Phaser from 'phaser';
  */
 export class NPC extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, { id, key, name }) {
-    // Use fallback texture if the NPC sprite didn't load
-    const textureKey = scene.textures.exists(key) ? key : 'player';
+    // Check if this NPC key has a Kenmi mapping and the texture is loaded
+    const kenmiKey = NPC_KEY_MAP[key];
+    const useKenmi = kenmiKey && scene.textures.exists(kenmiKey);
+
+    // Resolve texture: prefer Kenmi → original key → fallback 'player'
+    let textureKey;
+    if (useKenmi) {
+      textureKey = kenmiKey;
+    } else {
+      textureKey = scene.textures.exists(key) ? key : 'player';
+    }
 
     super(scene, x, y, textureKey, 0);
 
@@ -21,20 +37,74 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.setImmovable(true);
-    this.setSize(40, 30);
-    this.setOffset(44, 90);
+    this._useKenmi = useKenmi;
+
+    if (useKenmi) {
+      // Kenmi sprites are 16x16 base; scale 4x to 64x64 on screen
+      this.setScale(4);
+      // Physics body: ~20x16 at scaled size (5x4 base), centered at feet
+      this.setSize(5, 4);
+      this.setOffset(5.5, 12);
+    } else {
+      // Legacy 128x128 hitbox
+      this.setSize(40, 30);
+      this.setOffset(44, 90);
+    }
 
     this.npcId = id;
     this.npcName = name;
 
-    // Only create idle animations if the texture has enough frames
-    const idleKey = `${id}-idle`;
-    const blinkKey = `${id}-blink`;
+    // Count available frames in the texture
     const texture = scene.textures.get(textureKey);
     const frameCount = texture?.getFrameNames?.()?.length || Object.keys(texture?.frames || {}).length;
-    const hasEnoughFrames = frameCount >= 3;
 
-    if (hasEnoughFrames) {
+    // Animation key names (scoped per NPC id)
+    const idleKey = `${id}-idle`;
+    const blinkKey = `${id}-blink`;
+
+    if (useKenmi) {
+      // --- Kenmi animation setup (12 cols × 20 rows) ---
+      // Walk: 3 frames per direction for conservative cycle
+      const walkDown = `${id}-walk-down`;
+      const walkUp = `${id}-walk-up`;
+      const walkLeft = `${id}-walk-left`;
+      const walkRight = `${id}-walk-right`;
+
+      if (!scene.anims.exists(walkDown)) {
+        scene.anims.create({
+          key: walkDown,
+          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [0, 1, 2] }),
+          frameRate: 8,
+          repeat: -1,
+        });
+      }
+      if (!scene.anims.exists(walkUp)) {
+        scene.anims.create({
+          key: walkUp,
+          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [12, 13, 14] }),
+          frameRate: 8,
+          repeat: -1,
+        });
+      }
+      if (!scene.anims.exists(walkLeft)) {
+        scene.anims.create({
+          key: walkLeft,
+          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [24, 25, 26] }),
+          frameRate: 8,
+          repeat: -1,
+        });
+      }
+      if (!scene.anims.exists(walkRight)) {
+        scene.anims.create({
+          key: walkRight,
+          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [36, 37, 38] }),
+          frameRate: 8,
+          repeat: -1,
+        });
+      }
+      this._hasWalkAnims = true;
+
+      // Idle: gentle 2-frame cycle from walk-down row
       if (!scene.anims.exists(idleKey)) {
         scene.anims.create({
           key: idleKey,
@@ -43,6 +113,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
           repeat: 0,
         });
       }
+      // Blink: reuse frame 0 + frame 2 for subtle variation
       if (!scene.anims.exists(blinkKey)) {
         scene.anims.create({
           key: blinkKey,
@@ -51,50 +122,72 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
           repeat: 0,
         });
       }
-    }
+    } else {
+      // --- Legacy animation setup (4×4 grid, 128x128 frames) ---
+      const hasEnoughFrames = frameCount >= 3;
 
-    // Conditionally create walk animations if the spritesheet has 16+ frames
-    // (4x4 layout: row 0=walk-down, row 1=walk-left, row 2=walk-right, row 3=walk-up)
-    this._hasWalkAnims = false;
-    if (frameCount >= 16) {
-      const walkDown = `${id}-walk-down`;
-      const walkLeft = `${id}-walk-left`;
-      const walkRight = `${id}-walk-right`;
-      const walkUp = `${id}-walk-up`;
+      if (hasEnoughFrames) {
+        if (!scene.anims.exists(idleKey)) {
+          scene.anims.create({
+            key: idleKey,
+            frames: scene.anims.generateFrameNumbers(textureKey, { frames: [0, 1] }),
+            frameRate: 4,
+            repeat: 0,
+          });
+        }
+        if (!scene.anims.exists(blinkKey)) {
+          scene.anims.create({
+            key: blinkKey,
+            frames: scene.anims.generateFrameNumbers(textureKey, { frames: [0, 2] }),
+            frameRate: 6,
+            repeat: 0,
+          });
+        }
+      }
 
-      if (!scene.anims.exists(walkDown)) {
-        scene.anims.create({
-          key: walkDown,
-          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [0, 1, 2, 3] }),
-          frameRate: 8,
-          repeat: -1,
-        });
+      // Conditionally create walk animations if the spritesheet has 16+ frames
+      // (4x4 layout: row 0=walk-down, row 1=walk-left, row 2=walk-right, row 3=walk-up)
+      this._hasWalkAnims = false;
+      if (frameCount >= 16) {
+        const walkDown = `${id}-walk-down`;
+        const walkLeft = `${id}-walk-left`;
+        const walkRight = `${id}-walk-right`;
+        const walkUp = `${id}-walk-up`;
+
+        if (!scene.anims.exists(walkDown)) {
+          scene.anims.create({
+            key: walkDown,
+            frames: scene.anims.generateFrameNumbers(textureKey, { frames: [0, 1, 2, 3] }),
+            frameRate: 8,
+            repeat: -1,
+          });
+        }
+        if (!scene.anims.exists(walkLeft)) {
+          scene.anims.create({
+            key: walkLeft,
+            frames: scene.anims.generateFrameNumbers(textureKey, { frames: [4, 5, 6, 7] }),
+            frameRate: 8,
+            repeat: -1,
+          });
+        }
+        if (!scene.anims.exists(walkRight)) {
+          scene.anims.create({
+            key: walkRight,
+            frames: scene.anims.generateFrameNumbers(textureKey, { frames: [8, 9, 10, 11] }),
+            frameRate: 8,
+            repeat: -1,
+          });
+        }
+        if (!scene.anims.exists(walkUp)) {
+          scene.anims.create({
+            key: walkUp,
+            frames: scene.anims.generateFrameNumbers(textureKey, { frames: [12, 13, 14, 15] }),
+            frameRate: 8,
+            repeat: -1,
+          });
+        }
+        this._hasWalkAnims = true;
       }
-      if (!scene.anims.exists(walkLeft)) {
-        scene.anims.create({
-          key: walkLeft,
-          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [4, 5, 6, 7] }),
-          frameRate: 8,
-          repeat: -1,
-        });
-      }
-      if (!scene.anims.exists(walkRight)) {
-        scene.anims.create({
-          key: walkRight,
-          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [8, 9, 10, 11] }),
-          frameRate: 8,
-          repeat: -1,
-        });
-      }
-      if (!scene.anims.exists(walkUp)) {
-        scene.anims.create({
-          key: walkUp,
-          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [12, 13, 14, 15] }),
-          frameRate: 8,
-          repeat: -1,
-        });
-      }
-      this._hasWalkAnims = true;
     }
 
     // Store idle key for use in _playIdleAnim
