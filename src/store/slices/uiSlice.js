@@ -16,6 +16,7 @@ const initialState = {
   notification: null, // { message, type }
   craftingRecipeId: null, // Recipe ID for crafting mini-game
   craftingProfessionId: null, // Profession ID for crafting mini-game
+  journalOpen: false,
 };
 
 const uiSlice = createSlice({
@@ -111,6 +112,14 @@ const uiSlice = createSlice({
       state.notification = null;
     },
 
+    openJournal(state) {
+      state.journalOpen = true;
+    },
+
+    closeJournal(state) {
+      state.journalOpen = false;
+    },
+
     closeAllOverlays(state) {
       state.dialogueOpen = false;
       state.quizOpen = false;
@@ -126,6 +135,7 @@ const uiSlice = createSlice({
       state.objectInspectData = null;
       state.craftingRecipeId = null;
       state.craftingProfessionId = null;
+      state.journalOpen = false;
     },
   },
 });
@@ -148,6 +158,8 @@ export const {
   endCraftingMiniGame,
   showNotification,
   clearNotification,
+  openJournal,
+  closeJournal,
   closeAllOverlays,
 } = uiSlice.actions;
 
@@ -167,6 +179,7 @@ export const selectRecipeBookOpen = (state) => state.ui.recipeBookOpen;
 export const selectCraftingMiniGameActive = (state) => state.ui.craftingMiniGameActive;
 export const selectCraftingRecipeId = (state) => state.ui.craftingRecipeId;
 export const selectCraftingProfessionId = (state) => state.ui.craftingProfessionId;
+export const selectJournalOpen = (state) => state.ui.journalOpen;
 export const selectAnyOverlayOpen = createSelector(
   [
     (state) => state.ui.dialogueOpen,
@@ -177,10 +190,11 @@ export const selectAnyOverlayOpen = createSelector(
     (state) => state.ui.inventoryOpen,
     (state) => state.ui.recipeBookOpen,
     (state) => state.ui.craftingMiniGameActive,
+    (state) => state.ui.journalOpen,
     (state) => !!state.battle?.activeBattle,
   ],
-  (dialogueOpen, quizOpen, menuOpen, signOpen, objectInspectOpen, inventoryOpen, recipeBookOpen, craftingMiniGameActive, activeBattle) =>
-    dialogueOpen || quizOpen || menuOpen || signOpen || objectInspectOpen || inventoryOpen || recipeBookOpen || craftingMiniGameActive || activeBattle
+  (dialogueOpen, quizOpen, menuOpen, signOpen, objectInspectOpen, inventoryOpen, recipeBookOpen, craftingMiniGameActive, journalOpen, activeBattle) =>
+    dialogueOpen || quizOpen || menuOpen || signOpen || objectInspectOpen || inventoryOpen || recipeBookOpen || craftingMiniGameActive || journalOpen || activeBattle
 );
 
 export default uiSlice.reducer;

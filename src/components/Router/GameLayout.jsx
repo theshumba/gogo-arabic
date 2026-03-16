@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { toggleMenu, selectAnyOverlayOpen, selectInventoryOpen, closeInventory, selectRecipeBookOpen, closeRecipeBook, selectCraftingMiniGameActive, selectCraftingRecipeId, selectCraftingProfessionId, startCraftingMiniGame, endCraftingMiniGame } from '../../store/slices/uiSlice.js';
+import { toggleMenu, selectAnyOverlayOpen, selectInventoryOpen, closeInventory, selectRecipeBookOpen, closeRecipeBook, selectCraftingMiniGameActive, selectCraftingRecipeId, selectCraftingProfessionId, startCraftingMiniGame, endCraftingMiniGame, selectJournalOpen, openJournal, closeJournal } from '../../store/slices/uiSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { audioManager } from '../../services/audio.js';
@@ -20,7 +20,7 @@ import QuizOverlay from '../Quiz/QuizOverlay.jsx';
 import QuestLog from '../Quest/QuestLog.jsx';
 import SignOverlay from '../World/SignOverlay.jsx';
 import ObjectInteractionOverlay from '../World/ObjectInteractionOverlay.jsx';
-import TutorialHints from '../Onboarding/TutorialHints.jsx';
+import TutorialHints, { WelcomeSplash } from '../Onboarding/TutorialHints.jsx';
 import { useTutorialTrigger } from '../../hooks/useTutorialTrigger.js';
 import LevelUpModal from '../UI/LevelUpModal.jsx';
 import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
@@ -34,6 +34,7 @@ import InventoryUI from '../Inventory/InventoryUI.jsx';
 import RecipeBook from '../Crafting/RecipeBook.jsx';
 import CraftingMiniGame from '../Crafting/CraftingMiniGame.jsx';
 import ShopOverlay from '../Shop/ShopOverlay.jsx';
+import QuestJournal from '../Quest/QuestJournal.jsx';
 import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate }) {
@@ -169,32 +170,7 @@ export default function GameLayout() {
   useKeyboardShortcuts();
   useTutorialTrigger();
 
-  // EMERGENCY RESET: Press 'R' to force unfreeze
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key.toLowerCase() === 'r' && !anyOverlayOpen && !showWardrobe) {
-        console.warn('[EMERGENCY RESET] User pressed R - forcing unfreeze!');
-        EventBus.emit(EVENTS.PLAYER_UNFREEZE);
-        const canvas = document.querySelector('canvas');
-        if (canvas) canvas.focus();
-
-        // Also ensure physics resume
-        if (phaserRef.current && phaserRef.current.game) {
-          const scene = phaserRef.current.game.scene.getScene('WorldScene');
-          if (scene) {
-            scene.frozen = false;
-            if (scene.physics && scene.physics.world) {
-              scene.physics.world.resume();
-            }
-          }
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [anyOverlayOpen, showWardrobe, phaserRef]);
-
-  // UI state selectors
+  // UI state selectors — declared early so the emergency reset effect below can use them
   const dialogueOpen = useSelector((state) => state.ui.dialogueOpen);
   const dialogueConfig = useSelector((state) => state.ui.dialogueConfig);
   const quizOpen = useSelector((state) => state.ui.quizOpen);
@@ -206,12 +182,31 @@ export default function GameLayout() {
   const craftingMiniGameActive = useSelector(selectCraftingMiniGameActive);
   const craftingRecipeId = useSelector(selectCraftingRecipeId);
   const craftingProfessionId = useSelector(selectCraftingProfessionId);
+  const journalOpen = useSelector(selectJournalOpen);
   const onboardingComplete = useSelector((state) => state.player.onboardingComplete ?? true);
+  const anyOverlayOpen = useSelector(selectAnyOverlayOpen);
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
 
-  // Safety net selector
-  const anyOverlayOpen = useSelector(selectAnyOverlayOpen);
+  // Welcome splash — show only when onboarding hasn't started yet
+  const tutorialPhase = useSelector((state) => state.player.tutorialPhase);
+  const [showWelcome, setShowWelcome] = React.useState(
+    !onboardingComplete && tutorialPhase === 'awaiting_mentor'
+  );
+
+  // J key toggles journal
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'j' || e.key === 'J') {
+        if (!anyOverlayOpen || journalOpen) {
+          e.preventDefault();
+          dispatch(journalOpen ? closeJournal() : openJournal());
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [anyOverlayOpen, journalOpen, dispatch]);
 
   // Freeze player when React overlays open (recipe book, crafting, inventory)
   // These overlays steal keyboard focus from the Phaser canvas, so movement
@@ -236,20 +231,6 @@ export default function GameLayout() {
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [anyOverlayOpen, showWardrobe]);
-
-  // Periodic watchdog: catch phantom freezes where PLAYER_FREEZE fires
-  // without any overlay opening (anyOverlayOpen stays false, so the above
-  // effect never re-triggers). This interval polls every 3 seconds.
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!anyOverlayOpen && !showWardrobe) {
-        EventBus.emit(EVENTS.PLAYER_UNFREEZE);
-        const canvas = document.querySelector('canvas');
-        if (canvas) canvas.focus();
-      }
-    }, 3000);
-    return () => clearInterval(interval);
   }, [anyOverlayOpen, showWardrobe]);
 
   return (
@@ -278,6 +259,9 @@ export default function GameLayout() {
       {/* Tutorial hints (non-blocking arrows/prompts) */}
       {!onboardingComplete && <TutorialHints />}
 
+      {/* Welcome splash — auto-fades after 3 seconds */}
+      {showWelcome && <WelcomeSplash onDone={() => setShowWelcome(false)} />}
+
       {/* Conditional overlays */}
       {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}
       {dialogueOpen && dialogueConfig?.type === 'shop' && <ShopOverlay />}
@@ -302,6 +286,11 @@ export default function GameLayout() {
           }}
         />
       )}
+
+      {/* Quest Journal overlay (v7.0) */}
+      <AnimatePresence>
+        {journalOpen && <QuestJournal onClose={() => dispatch(closeJournal())} />}
+      </AnimatePresence>
 
       {/* Battle overlay (v6.0 turn-based combat) */}
       <BattleOverlay />
