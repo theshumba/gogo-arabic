@@ -268,15 +268,15 @@ Plans:
 **Requirements**: PIPE-01, PIPE-02
 
 **Success Criteria** (what must be TRUE):
-  1. All 13 Kenmi packs are copied to `src/assets/kenmi/` with consistent kebab-case naming, and a catalog file documents every available spritesheet key
-  2. BootScene completes without errors and loads all Kenmi spritesheets with the correct frame width/height per asset type (16x16 tiles, 16x32 characters, variable UI frames)
-  3. Phaser texture cache contains every Kenmi key after BootScene finishes, verifiable in browser DevTools
+  1. All 10 Kenmi packs copied to `public/assets/kenmi/` with kebab-case naming and catalog file at src/data/kenmiCatalog.js
+  2. BootScene loads all KENMI_CATALOG entries without errors (correct 16x16 frame dims for spritesheets)
+  3. Phaser texture cache contains 800+ keys starting with "kenmi-" after BootScene finishes
 
-**Plans**: TBD
+**Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 38-01: Asset catalog + copy script (src/assets/kenmi/ structure, naming convention, catalog.js)
-- [ ] 38-02: BootScene Kenmi loader (all 13 packs, correct frame dimensions, load error handling)
+- [ ] 38-01-PLAN.md — Copy 10 packs to public/assets/kenmi/ + generate src/data/kenmiCatalog.js
+- [ ] 38-02-PLAN.md — BootScene loader loop from KENMI_CATALOG + human-verify texture cache
 
 #### Phase 39: Terrain Rendering
 **Goal**: Every zone renders real pixel art terrain with biome-correct tilesets, auto-tiled transitions, seeded random variants, and animated water edges instead of flat colored squares
