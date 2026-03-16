@@ -6,17 +6,17 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
 
-**Current focus:** v7.0 Phase 36 — Quest Journal + Audio (Bomber's Notebook + Audio Buses)
+**Current focus:** v7.0 Phase 37 — Polish + Replay (Randomizer + Settings + Difficulty)
 
 ## Current Position
 
 Milestone: v7.0 World & Content (Phases 33-37)
-Phase: 36 — Quest Journal + Audio (next)
+Phase: 37 — Polish + Replay (next — final phase)
 Plan: —
 Status: Ready to plan
-Last activity: 2026-03-16 — Phase 35 COMPLETE (4/4 plans)
+Last activity: 2026-03-16 — Phase 36 COMPLETE (4/4 plans)
 
-Progress: [████████████████████████████████████████████████████████████████] 4/4 Phase 35 plans — COMPLETE
+Progress: [████████████████████████████████████████████████████████████████] 4/4 Phase 36 plans — COMPLETE
 
 ### Shipped Milestones
 

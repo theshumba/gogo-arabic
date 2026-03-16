@@ -226,7 +226,13 @@ Plans:
 
 **Key files**: new `QuestJournal.jsx`, `audioConfig.js`, `audio.js`, new `GameplayStats.js`, `zones.js`
 
-Plans: TBD
+**Plans**: 4 plans in 2 waves
+
+Plans:
+- [x] 36-01-PLAN.md — QuestJournal UI (Bomber's Notebook) + NPC schedule viewer + GameLayout wiring
+- [x] 36-02-PLAN.md — Bus-based audio + ambient sound layers + continueBGM for buildings
+- [x] 36-03-PLAN.md — AutoSave system + GameplayStats tracker + statsSlice
+- [x] 36-04-PLAN.md — Sub-zone areas + WorldScene detection + store/system registration
 
 #### Phase 37: Polish + Replay (Randomizer + Settings + Difficulty)
 **Goal**: Replayability, accessibility, and professional polish
@@ -281,8 +287,9 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 | 33. Living World (NPC Schedules + Movement) | v7.0 | 3/3 | Complete | 2026-03-16 |
 | 34. Data-Driven Events (ActionSets + Event Scripts) | v7.0 | 3/3 | Complete | 2026-03-16 |
 | 35. Economy + Home (Production Chains + Decoration) | v7.0 | 4/4 | Complete | 2026-03-16 |
+| 36. Quest Journal + Audio (Notebook + Buses) | v7.0 | 4/4 | Complete | 2026-03-16 |
 
-**Cumulative:** 35 phases shipped, 105 plans complete, 7 milestones
+**Cumulative:** 36 phases shipped, 109 plans complete, 7 milestones
 
 ---
 *Roadmap created: 2026-02-08*
