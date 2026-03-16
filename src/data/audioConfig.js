@@ -16,6 +16,20 @@ export const ZONE_BGM_MAP = {
   royal_palace: 'palace',
 };
 
+// Zone name -> Night ambient BGM track mapping (crickets, wind, etc.)
+// Audio files at: /assets/audio/bgm/bgm-{trackName}.mp3
+// Files do not exist yet — audioManager.playBGM() silently skips missing files via onloaderror.
+export const ZONE_NIGHT_BGM_MAP = {
+  oasis_village: 'oasis-night',
+  ancient_library: 'library-night',
+  desert_marketplace: 'marketplace-night',
+  farmland: 'farmland-night',
+  bedouin_camp: 'bedouin-night',
+  mountain_village: 'mountain-night',
+  coastal_port: 'port-night',
+  royal_palace: 'palace-night',
+};
+
 // Special tracks (not zone-based)
 export const MENU_BGM = 'menu';
 export const QUIZ_BGM = 'quiz';

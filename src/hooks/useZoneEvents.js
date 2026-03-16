@@ -17,21 +17,23 @@ import { EVENTS } from '../utils/eventBusTypes.js';
 import { audioManager } from '../services/audio.js';
 import { store } from '../store/store.js';
 import { ZONES } from '../data/zones.js';
-import { ZONE_BGM_MAP } from '../data/audioConfig.js';
+import { ZONE_BGM_MAP, ZONE_NIGHT_BGM_MAP } from '../data/audioConfig.js';
+import { selectTimePhase } from '../store/slices/timeSlice.js';
 
 /**
  * useZoneEvents — Zone change, transition, unlock, and fast travel handlers
  */
 export function useZoneEvents(phaserRef, playSFX) {
   const dispatch = useDispatch();
-  const quests = useSelector((state) => state.quests.quests);
 
   useEffect(() => {
     const handleZoneChange = ({ zone }) => {
       dispatch(setCurrentZone(zone));
 
-      // Play zone-specific BGM
-      const bgmTrack = ZONE_BGM_MAP[zone];
+      // Play zone-specific BGM — use night ambient if currently night phase
+      const timePhase = selectTimePhase(store.getState());
+      const isNight = timePhase === 'night';
+      const bgmTrack = isNight ? ZONE_NIGHT_BGM_MAP[zone] : ZONE_BGM_MAP[zone];
       if (bgmTrack) {
         audioManager.playBGM(bgmTrack);
       }
@@ -39,15 +41,16 @@ export function useZoneEvents(phaserRef, playSFX) {
       // Track zone visit for exploration quests
       dispatch(visitZone(zone));
 
+      // Read quests from store directly (not stale closure)
+      const quests = store.getState().quests.quests;
+
       // Check zone exploration quests
       for (const qd of questsData) {
         if (qd.type === 'exploration' && qd.trackEvent === 'zones_visited' && quests[qd.id]?.status === 'active') {
-          const state = store.getState();
-          const zonesVisited = state.quests.zonesVisited || [];
+          const currentState = store.getState();
+          const zonesVisited = currentState.quests.zonesVisited || [];
           const visitedCount = zonesVisited.length;
-          if (quests[qd.id]) {
-            quests[qd.id].progress = visitedCount;
-          }
+          dispatch(updateQuestProgress({ questId: qd.id, amount: visitedCount }));
           if (visitedCount >= qd.target) {
             dispatch(completeQuest(qd.id));
             dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
@@ -63,7 +66,8 @@ export function useZoneEvents(phaserRef, playSFX) {
         EventBus.emit(EVENTS.ZONE_TRANSITION, { zoneName, entryX, entryY });
         return;
       }
-      // Check quest completion
+      // Check quest completion — read quests from store directly
+      const quests = store.getState().quests.quests;
       if (unlock.quest && quests[unlock.quest]?.status !== 'completed') {
         const qd = questsData.find((q) => q.id === unlock.quest);
         playSFX('wrong');
@@ -125,16 +129,34 @@ export function useZoneEvents(phaserRef, playSFX) {
       }
     };
 
+    const handlePhaseChanged = ({ phase }) => {
+      // Get current zone from Redux state
+      const currentZone = store.getState().player.currentZone;
+      if (!currentZone) return;
+
+      // Select appropriate BGM based on phase
+      const isNight = phase === 'night';
+      const bgmTrack = isNight
+        ? ZONE_NIGHT_BGM_MAP[currentZone]
+        : ZONE_BGM_MAP[currentZone];
+
+      if (bgmTrack) {
+        audioManager.playBGM(bgmTrack);
+      }
+    };
+
     EventBus.on(EVENTS.ZONE_CHANGE, handleZoneChange);
     EventBus.on(EVENTS.ZONE_CHECK_UNLOCK, handleCheckZoneUnlock);
     EventBus.on(EVENTS.ZONE_TRANSITION, handleZoneTransition);
     EventBus.on(EVENTS.FAST_TRAVEL, handleFastTravel);
+    EventBus.on(EVENTS.TIME_PHASE_CHANGED, handlePhaseChanged);
 
     return () => {
       EventBus.off(EVENTS.ZONE_CHANGE, handleZoneChange);
       EventBus.off(EVENTS.ZONE_CHECK_UNLOCK, handleCheckZoneUnlock);
       EventBus.off(EVENTS.ZONE_TRANSITION, handleZoneTransition);
       EventBus.off(EVENTS.FAST_TRAVEL, handleFastTravel);
+      EventBus.off(EVENTS.TIME_PHASE_CHANGED, handlePhaseChanged);
     };
-  }, [dispatch, quests, playSFX, phaserRef]);
+  }, [dispatch, playSFX, phaserRef]);
 }
