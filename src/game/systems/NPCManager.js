@@ -4,9 +4,15 @@ import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { store } from '../../store/store.js';
 import { selectNpcQuestMarkers } from '../../store/slices/questSlice.js';
+import { shouldSpawnNpc, evaluateSchedule } from './ScheduleEvaluator.js';
+import npcsEnriched from '../../data/npcsEnriched.js';
+import { selectGameTime } from '../../store/slices/timeSlice.js';
 
 // NPC proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
+
+// O(1) lookup map for full NPC data (includes schedule arrays)
+const NPC_DATA_MAP = new Map(npcsEnriched.map((n) => [n.id, n]));
 
 /**
  * NPCManager
@@ -20,19 +26,37 @@ export class NPCManager {
 
   /**
    * Spawn NPCs from zone config
+   * NPCs with a schedule are only spawned if their schedule matches the
+   * current zone and hour. NPCs without a schedule always spawn.
    */
   create(npcConfigs, playerSprite, wallGroup, domOverlay) {
     this.npcs = [];
 
+    // Read current game time and story flags for schedule evaluation
+    const { hour } = selectGameTime(store.getState());
+    const currentZone = this.scene.currentZone || '';
+    const flags = store.getState().narrative?.storyFlags || {};
+
     npcConfigs.forEach((cfg) => {
-      const npcX = cfg.x * 64;
-      const npcY = cfg.y * 64;
+      // Schedule filtering: skip NPCs whose schedule doesn't match
+      const fullNpcData = NPC_DATA_MAP.get(cfg.id);
+      if (fullNpcData && !shouldSpawnNpc(fullNpcData, hour, currentZone, flags)) {
+        return; // Not in this zone at this time — skip
+      }
+
+      const npcX = cfg.x * 64 + 32;
+      const npcY = cfg.y * 64 + 32;
 
       const npc = new NPC(this.scene, npcX, npcY, {
         id: cfg.id,
         key: cfg.key,
         name: cfg.name,
       });
+
+      // Store active schedule entry on sprite for use by movement system
+      if (fullNpcData?.schedule?.length) {
+        npc._scheduleEntry = evaluateSchedule(fullNpcData, hour, currentZone, flags);
+      }
 
       this.npcs.push(npc);
       this.scene.physics.add.collider(playerSprite, npc);
