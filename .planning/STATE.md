@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v7.0 World & Content (Phases 33-37)
 Phase: 33 — Living World (NPC Schedules + Movement)
-Plan: 2 of ? completed
+Plan: 3 of ? completed
 Status: In progress
-Last activity: 2026-03-16 — Completed 33-02-PLAN.md (NPC Movement Patterns)
+Last activity: 2026-03-16 — Completed 33-03-PLAN.md (Time Phase NPC Re-evaluation + Night BGM)
 
-Progress: [██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2/? Phase 33 plans
+Progress: [███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 3/? Phase 33 plans
 
 ### Shipped Milestones
 
@@ -99,6 +99,13 @@ v7.0 Phase 33 decisions (33-02):
 - Wander radius default 96px (1.5 tiles) — small enough to stay near spawn, visible enough to appear alive
 - setFlipX(playerSprite.x > npc.x) added before every NPC_INTERACT emit — face-player works for all NPCs
 
+v7.0 Phase 33 decisions (33-03):
+- NPCManager registers TIME_PHASE_CHANGED in constructor and deregisters in destroy() — follows DayNightCycle.js EventBus pattern
+- body.enable = false when hiding NPCs — fully disables physics for hidden NPCs, prevents invisible collision walls
+- Tween 2s Linear on phase change — smooth relocation rather than instant teleport
+- ZONE_NIGHT_BGM_MAP track names ({zone-short}-night) don't exist yet — intentional; audioManager.playBGM silently skips via onloaderror
+- handlePhaseChanged defined inside useZoneEvents useEffect — consistent with existing handler pattern in that hook
+
 v6.1 Phase 32 decisions:
 - 24 effects total (not 22) — original file had 16 effects (not 14 as plan assumed), adding 8 yields 24 (32-01)
 - Level gating tiers: 10/16/24 — tier 2 returns original 16, tier 3 includes all Phase 32 additions (32-01)
@@ -160,9 +167,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 33 plan 02 complete)
-Stopped at: 33-02 complete — NPC wander/patrol/face-player done
-Resume file: .planning/phases/33-world-zones/33-03-PLAN.md (next plan — time-phase re-evaluation)
+Last session: 2026-03-16 (Phase 33 plan 03 complete)
+Stopped at: 33-03 complete — TIME_PHASE_CHANGED NPC re-evaluation + night BGM done
+Resume file: .planning/phases/33-world-zones/ (next plan TBD — living world system complete)
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -181,9 +188,10 @@ Resume file: .planning/phases/33-world-zones/33-03-PLAN.md (next plan — time-p
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
 - Phase 32: Status Effects & Advanced Combat — COMPLETE (11/11 plans)
 
-**Phase 33 Progress: IN PROGRESS (2/?)**
+**Phase 33 Progress: IN PROGRESS (3/?)**
 - 33-01: NPC Schedule Foundation — COMPLETE
 - 33-02: NPC Movement Patterns (wander/patrol/face-player) — COMPLETE
+- 33-03: Time Phase NPC Re-evaluation + Night BGM — COMPLETE
 
 ---
 *State initialized: 2026-02-08*
