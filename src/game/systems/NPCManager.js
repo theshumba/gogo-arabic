@@ -58,6 +58,20 @@ export class NPCManager {
         npc._scheduleEntry = evaluateSchedule(fullNpcData, hour, currentZone, flags);
       }
 
+      // Initialize movement behavior from schedule entry (Phase 33)
+      if (npc._scheduleEntry) {
+        const behavior = npc._scheduleEntry.behavior;
+        if (behavior === 'wander') {
+          npc.startWander(96); // 1.5-tile radius
+        } else if (behavior === 'patrol' && npc._scheduleEntry.patrol) {
+          npc.startPatrol(
+            npc._scheduleEntry.patrol.path,
+            npc._scheduleEntry.patrol.durations
+          );
+        }
+        // 'static' = do nothing (default behavior)
+      }
+
       this.npcs.push(npc);
       this.scene.physics.add.collider(playerSprite, npc);
 
@@ -115,6 +129,9 @@ export class NPCManager {
       );
       domOverlay.updatePosition(`prompt-${npc.npcId}`, npc.x, npc.y);
 
+      // Tick NPC update (wander target arrival check)
+      npc.update();
+
       // Handle SPACE key press for interaction
       if (
         inRange &&
@@ -125,6 +142,13 @@ export class NPCManager {
         this.scene.time.delayedCall(500, () => {
           setInteractCooldown(false);
         });
+
+        // Face player: flip sprite based on relative position (Phase 33)
+        npc.setFlipX(playerSprite.x > npc.x);
+
+        // Stop movement so NPC stands still during dialogue (Phase 33)
+        npc.stopMovement();
+
         EventBus.emit(EVENTS.NPC_INTERACT, {
           npcId: npc.npcId,
           npcName: npc.npcName,
