@@ -11,12 +11,12 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Milestone: v7.0 World & Content (Phases 33-37)
-Phase: 34 — Data-Driven Events (next)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-03-16 — Phase 33 COMPLETE (3/3 plans, verified)
+Phase: 34 — Data-Driven Events (in progress)
+Plan: 1 of N in Phase 34
+Status: In progress
+Last activity: 2026-03-16 — Completed 34-01-PLAN.md (ActionSetExecutor foundation)
 
-Progress: [████████████████████████████████████████████████████████████████] 3/3 Phase 33 plans — COMPLETE
+Progress: [█░░░░░░░] 1/N Phase 34 plans — IN PROGRESS
 
 ### Shipped Milestones
 
@@ -106,6 +106,13 @@ v7.0 Phase 33 decisions (33-03):
 - ZONE_NIGHT_BGM_MAP track names ({zone-short}-night) don't exist yet — intentional; audioManager.playBGM silently skips via onloaderror
 - handlePhaseChanged defined inside useZoneEvents useEffect — consistent with existing handler pattern in that hook
 
+v7.0 Phase 34 decisions (34-01):
+- ACTION_* event names use 'action:' prefix (not 'phaser:' or 'react:') — system-internal, not crossing Phaser/React bridge yet; consumers wired in 34-02+
+- evaluateRequirement returns false for unknown requirement types — fail-safe, forward compatible
+- executeActions silently skips unknown action types — forward-compatible extension point, no crash
+- flag requirement defaults value to true when omitted — matches most common use case
+- Empty requirements array = unconditional match — enables default/fallback action set as last array entry
+
 v6.1 Phase 32 decisions:
 - 24 effects total (not 22) — original file had 16 effects (not 14 as plan assumed), adding 8 yields 24 (32-01)
 - Level gating tiers: 10/16/24 — tier 2 returns original 16, tier 3 includes all Phase 32 additions (32-01)
@@ -167,9 +174,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 33 COMPLETE — verified)
-Stopped at: Phase 33 verified, ready for Phase 34 planning
-Resume file: .planning/ROADMAP.md — Phase 34 next
+Last session: 2026-03-16 (Phase 34 Plan 01 — ActionSetExecutor complete)
+Stopped at: 34-01 complete (ActionSetExecutor foundation), ready for 34-02
+Resume file: .planning/phases/34-data-driven-events/34-02-PLAN.md
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -193,6 +200,9 @@ Resume file: .planning/ROADMAP.md — Phase 34 next
 - 33-02: NPC Movement Patterns (wander/patrol/face-player) — COMPLETE
 - 33-03: Time Phase NPC Re-evaluation + Night BGM — COMPLETE
 
+**Phase 34 Progress: IN PROGRESS (1/N)**
+- 34-01: ActionSetExecutor Foundation — COMPLETE
+
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-03-16 — Phase 33 complete and verified (Living World)*
+*Last updated: 2026-03-16 — Phase 34 Plan 01 complete (ActionSetExecutor foundation)*
