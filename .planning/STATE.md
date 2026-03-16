@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v7.0 World & Content (Phases 33-37)
 Phase: 33 — Living World (NPC Schedules + Movement)
-Plan: 1 of ? completed
+Plan: 2 of ? completed
 Status: In progress
-Last activity: 2026-03-16 — Completed 33-01-PLAN.md (NPC Schedule Foundation)
+Last activity: 2026-03-16 — Completed 33-02-PLAN.md (NPC Movement Patterns)
 
-Progress: [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 1/? Phase 33 plans
+Progress: [██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2/? Phase 33 plans
 
 ### Shipped Milestones
 
@@ -91,6 +91,14 @@ v7.0 Phase 33 decisions (33-01):
 - _scheduleEntry stored on NPC sprite at spawn for movement system to consume without re-evaluating
 - NPC_DATA_MAP at module level in NPCManager for O(1) lookup — built once on module load
 
+v7.0 Phase 33 decisions (33-02):
+- npc.update() driven by NPCManager.update() — NPC sprites not registered with Phaser scene updateList, NPCManager iterates all NPCs each frame
+- stopMovement() removes wander/patrol timers permanently on interaction — NPC stays still through dialogue; resume-after-dialogue deferred to plan 03+
+- setImmovable(false) scoped to startWander/startPatrol only — static NPCs never call these, remain blocking
+- Walk anims guard: frameCount >= 16 — NPC sprites with fewer frames fall back to setFrame(0) on arrival
+- Wander radius default 96px (1.5 tiles) — small enough to stay near spawn, visible enough to appear alive
+- setFlipX(playerSprite.x > npc.x) added before every NPC_INTERACT emit — face-player works for all NPCs
+
 v6.1 Phase 32 decisions:
 - 24 effects total (not 22) — original file had 16 effects (not 14 as plan assumed), adding 8 yields 24 (32-01)
 - Level gating tiers: 10/16/24 — tier 2 returns original 16, tier 3 includes all Phase 32 additions (32-01)
@@ -152,9 +160,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 33 plan 01 complete)
-Stopped at: 33-01 complete — NPC schedule foundation done
-Resume file: .planning/phases/33-world-zones/33-02-PLAN.md (next plan)
+Last session: 2026-03-16 (Phase 33 plan 02 complete)
+Stopped at: 33-02 complete — NPC wander/patrol/face-player done
+Resume file: .planning/phases/33-world-zones/33-03-PLAN.md (next plan — time-phase re-evaluation)
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -173,9 +181,10 @@ Resume file: .planning/phases/33-world-zones/33-02-PLAN.md (next plan)
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
 - Phase 32: Status Effects & Advanced Combat — COMPLETE (11/11 plans)
 
-**Phase 33 Progress: IN PROGRESS (1/?)**
+**Phase 33 Progress: IN PROGRESS (2/?)**
 - 33-01: NPC Schedule Foundation — COMPLETE
+- 33-02: NPC Movement Patterns (wander/patrol/face-player) — COMPLETE
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-03-16 — Phase 33 plan 01 complete (NPC schedule foundation)*
+*Last updated: 2026-03-16 — Phase 33 plan 02 complete (NPC movement patterns)*
