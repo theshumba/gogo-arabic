@@ -6,17 +6,17 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
 
-**Current focus:** v7.0 Phase 34 — Data-Driven Events (ActionSets + Event Scripts)
+**Current focus:** v7.0 Phase 35 — Economy + Home (Production Chains + Decoration)
 
 ## Current Position
 
 Milestone: v7.0 World & Content (Phases 33-37)
-Phase: 34 — Data-Driven Events (in progress)
-Plan: 3 of N in Phase 34
-Status: In progress
-Last activity: 2026-03-16 — Completed 34-03-PLAN.md (Step triggers in zone data + WorldScene detection)
+Phase: 35 — Economy + Home (next)
+Plan: —
+Status: Ready to plan
+Last activity: 2026-03-16 — Phase 34 COMPLETE (3/3 plans, verified)
 
-Progress: [███░░░░░] 3/N Phase 34 plans — IN PROGRESS
+Progress: [████████████████████████████████████████████████████████████████] 3/3 Phase 34 plans — COMPLETE
 
 ### Shipped Milestones
 
@@ -187,9 +187,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 34 Plan 03 — Step triggers in zone data + WorldScene detection)
-Stopped at: 34-03 complete (stepTriggers zone data, actionContext.js shared util, WorldScene detection), ready for 34-04
-Resume file: .planning/phases/34-data-driven-events/34-04-PLAN.md
+Last session: 2026-03-16 (Phase 34 COMPLETE — verified)
+Stopped at: Phase 34 verified, ready for Phase 35 planning
+Resume file: .planning/ROADMAP.md — Phase 35 next
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -213,11 +213,11 @@ Resume file: .planning/phases/34-data-driven-events/34-04-PLAN.md
 - 33-02: NPC Movement Patterns (wander/patrol/face-player) — COMPLETE
 - 33-03: Time Phase NPC Re-evaluation + Night BGM — COMPLETE
 
-**Phase 34 Progress: IN PROGRESS (3/N)**
+**Phase 34 Progress: COMPLETE (3/3) — VERIFIED**
 - 34-01: ActionSetExecutor Foundation — COMPLETE
 - 34-02: NPC ActionSets + EventScriptRunner + NPCManager Wiring — COMPLETE
 - 34-03: Step Triggers (zone data + WorldScene detection) — COMPLETE
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-03-16 — Phase 34 Plan 03 complete (step triggers zone data + WorldScene detection + shared actionContext utility)*
+*Last updated: 2026-03-16 — Phase 34 complete and verified (Data-Driven Events)*

@@ -197,7 +197,12 @@ Plans:
 
 **Key files**: new `ActionSetExecutor.js`, new `EventScriptRunner.js`, `npcsEnriched.js`, `zones.js`, `WorldScene.js`
 
-Plans: TBD
+**Plans**: 3 plans in 3 waves
+
+Plans:
+- [x] 34-01-PLAN.md — ActionSetExecutor + action/requirement types + event constants
+- [x] 34-02-PLAN.md — NPC actionSets data + visibilityFlag + EventScriptRunner + NPCManager wiring
+- [x] 34-03-PLAN.md — Step triggers in zone data + WorldScene detection
 
 #### Phase 35: Economy + Home (Production Chains + Decoration)
 **Goal**: Create a living economy and meaningful player housing
@@ -268,8 +273,9 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 | 31. Crafting & Professions | v6.1 | 8/8 | Complete | 2026-02-13 |
 | 32. Status Effects & Advanced Combat | v6.1 | 11/11 | Complete | 2026-02-18 |
 | 33. Living World (NPC Schedules + Movement) | v7.0 | 3/3 | Complete | 2026-03-16 |
+| 34. Data-Driven Events (ActionSets + Event Scripts) | v7.0 | 3/3 | Complete | 2026-03-16 |
 
-**Cumulative:** 33 phases shipped, 98 plans complete, 7 milestones
+**Cumulative:** 34 phases shipped, 101 plans complete, 7 milestones
 
 ---
 *Roadmap created: 2026-02-08*
