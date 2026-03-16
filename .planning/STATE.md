@@ -11,12 +11,12 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Milestone: v7.0 World & Content (Phases 33-37)
-Phase: 35 — Economy + Home (next)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-03-16 — Phase 34 COMPLETE (3/3 plans, verified)
+Phase: 35 — Economy + Home (in progress)
+Plan: 2 of ? in phase
+Status: In progress
+Last activity: 2026-03-16 — Completed 35-02-PLAN.md (Friendship System)
 
-Progress: [████████████████████████████████████████████████████████████████] 3/3 Phase 34 plans — COMPLETE
+Progress: [██░░░░] 2 plans complete in Phase 35 — in progress
 
 ### Shipped Milestones
 
@@ -113,6 +113,14 @@ v7.0 Phase 34 decisions (34-01):
 - flag requirement defaults value to true when omitted — matches most common use case
 - Empty requirements array = unconditional match — enables default/fallback action set as last array entry
 
+v7.0 Phase 35 decisions (35-02):
+- Friendship neutral start is 50 (not 0) — players begin on good terms, negative actions push toward cold
+- adjustFriendship guard initializes missing npcId to 50 — no spawn-time init needed
+- friendshipMiddleware NOT wired to store yet — registration deferred to future plan
+- quests/completeQuest (not quest/completeQuest) — verified against slice name 'quests'
+- companions/giveGift (not companion/giveGift) — verified against slice name 'companions'
+- quiz/recordAnswer kept as-is — no quiz slice exists yet, forward-looking listener
+
 v7.0 Phase 34 decisions (34-03):
 - buildActionContext extracted to shared actionContext.js — both NPCManager and WorldScene share one implementation; accepts optional zoneOverride for caller-authoritative zone context
 - Step trigger state initialized inside buildZone() (not clearZone()) — zone-scoped, wiped clean on every zone load before zone.stepTriggers are read
@@ -187,9 +195,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 34 COMPLETE — verified)
-Stopped at: Phase 34 verified, ready for Phase 35 planning
-Resume file: .planning/ROADMAP.md — Phase 35 next
+Last session: 2026-03-16 (Phase 35 plan 02 — Friendship System)
+Stopped at: 35-02 complete (2/? plans in Phase 35)
+Resume file: .planning/phases/35-economy-home/35-02-SUMMARY.md
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -218,6 +226,10 @@ Resume file: .planning/ROADMAP.md — Phase 35 next
 - 34-02: NPC ActionSets + EventScriptRunner + NPCManager Wiring — COMPLETE
 - 34-03: Step Triggers (zone data + WorldScene detection) — COMPLETE
 
+**Phase 35 Progress: IN PROGRESS**
+- 35-01: Production Chain Data (shops + zone configs) — COMPLETE
+- 35-02: Friendship System (npcSlice + friendshipMiddleware) — COMPLETE
+
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-03-16 — Phase 34 complete and verified (Data-Driven Events)*
+*Last updated: 2026-03-16 — Phase 35 plan 02 complete (Friendship System)*
