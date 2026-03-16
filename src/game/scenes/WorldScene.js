@@ -28,6 +28,7 @@ import { AutoSave } from '../systems/AutoSave.js';
 import { GameplayStats } from '../systems/GameplayStats.js';
 import { evaluateActionSets, executeActions } from '../systems/ActionSetExecutor.js';
 import { buildActionContext } from '../systems/actionContext.js';
+import { DialogueBox } from '../ui/DialogueBox.js';
 
 
 // ============================================================
@@ -61,6 +62,9 @@ export class WorldScene extends Phaser.Scene {
     this.timeSystem = null;
     this.weatherSystem = null;
     this.dayNightCycle = null;
+
+    // DialogueBox (Phaser in-canvas dialogue)
+    this.dialogueBox = null;
 
     // Input
     this.interactKey = null;
@@ -158,7 +162,23 @@ export class WorldScene extends Phaser.Scene {
       }
     });
 
+    // Phaser in-canvas DialogueBox (Phase 42 — visual overhaul)
+    this.dialogueBox = new DialogueBox(this);
+
+    // Listen for simple dialogue requests routed to the Phaser DialogueBox
+    EventBus.on('phaser:npc:simple-dialogue', this._handleSimpleDialogue, this);
+
     EventBus.emit(EVENTS.SCENE_READY, this);
+  }
+
+  /**
+   * Handle simple dialogue routed to the Phaser in-canvas DialogueBox.
+   * @param {{ npcName: string, messages: string[], onComplete?: Function }} data
+   */
+  _handleSimpleDialogue(data) {
+    if (this.dialogueBox && data.npcName && data.messages) {
+      this.dialogueBox.show(data.npcName, data.messages, data.onComplete);
+    }
   }
 
   // ============================================================
@@ -179,6 +199,12 @@ export class WorldScene extends Phaser.Scene {
 
   // Tear down current zone contents
   clearZone() {
+    // Destroy and recreate DialogueBox for the new zone
+    if (this.dialogueBox) {
+      this.dialogueBox.destroy();
+      this.dialogueBox = new DialogueBox(this);
+    }
+
     // Reset DOM overlays
     if (this.domOverlay) {
       this.domOverlay.destroy();
@@ -326,6 +352,15 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   update(time, delta) {
+    // Handle DialogueBox input even while frozen (dialogue freezes player)
+    if (this.dialogueBox && this.dialogueBox.isVisible) {
+      if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey('SPACE')) ||
+          Phaser.Input.Keyboard.JustDown(this.input.keyboard.addKey('ENTER'))) {
+        this.dialogueBox.advance();
+        return; // Don't process other input while dialogue is open
+      }
+    }
+
     if (this.frozen) {
       // Still update overlays so they track correctly while frozen
       if (this.domOverlay) this.domOverlay.update();
@@ -538,6 +573,15 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   shutdown() {
+    // Destroy Phaser DialogueBox
+    if (this.dialogueBox) {
+      this.dialogueBox.destroy();
+      this.dialogueBox = null;
+    }
+
+    // Remove simple-dialogue listener
+    EventBus.off('phaser:npc:simple-dialogue', this._handleSimpleDialogue, this);
+
     if (this.autoSave) { this.autoSave.stop(); this.autoSave = null; }
     if (this.gameplayStats) { this.gameplayStats.stop(); this.gameplayStats = null; }
 

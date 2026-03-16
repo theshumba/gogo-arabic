@@ -43,9 +43,15 @@
 
   /* Fonts */
   --font-pixel: 'Press Start 2P', cursive;
-  --font-arabic: 'Noto Kufi Arabic', sans-serif; /* Legacy - prefer specific variants below */
-  --font-arabic-display: 'Noto Kufi Arabic', sans-serif; /* For headings, labels, decorative text */
-  --font-arabic-body: 'Noto Naskh Arabic', serif; /* For body text, readability focus */
+  --font-pixel-arabic: 'PixelAE', 'Amiri', 'Noto Naskh Arabic', serif;
+  --font-ui: 'Noto Kufi Arabic', sans-serif;
+  /* NEW: Primary UI font */
+  --font-arabic: 'Noto Kufi Arabic', sans-serif;
+  /* Legacy */
+  --font-arabic-display: 'Noto Kufi Arabic', sans-serif;
+  /* For headings, labels, decorative text */
+  --font-arabic-body: 'Noto Naskh Arabic', serif;
+  /* For body text, readability focus */
   --font-pixeloid: 'PixeloidSans', sans-serif;
 
   /* Responsive Breakpoints */

@@ -221,14 +221,13 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       },
     });
 
-    // Interaction hint text with pixel font
-    this.hintText = scene.add.text(x, y - 70, 'SPACE', {
-      fontFamily: "'Press Start 2P'",
-      fontSize: '8px',
-      color: '#f4fefa',
-      backgroundColor: '#2b292c',
-      padding: { x: 6, y: 4 },
-    }).setOrigin(0.5).setVisible(false).setDepth(9999);
+    // Interaction prompt — bouncing gold arrow (Phase 42 visual overhaul)
+    this.hintText = scene.add.text(x, y - 40, '\u25BC', {
+      fontFamily: "'Press Start 2P', monospace",
+      fontSize: '12px',
+      color: '#d4a843',
+    }).setOrigin(0.5).setVisible(false).setDepth(10001);
+    this._hintTween = null;
 
     // Add name label above NPC
     this.nameLabel = scene.add.text(x, y - 56, name, {
@@ -265,12 +264,35 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
   }
 
   setInteractionHint(visible) {
-    this.hintText.setVisible(visible);
-    this.hintText.setPosition(this.x, this.y - 70);
+    // Update positions to track NPC movement
+    this.hintText.setPosition(this.x, this.y - 40);
     this.nameLabel.setPosition(this.x, this.y - 56);
     this.questMarker.setPosition(this.x, this.y - 85);
     this.onboardingArrow.setPosition(this.x, this.y - 100);
     this.onboardingGlow.setPosition(this.x, this.y + 10);
+
+    const wasVisible = this.hintText.visible;
+    this.hintText.setVisible(visible);
+
+    // Start bounce tween when prompt appears, stop when it hides
+    if (visible && !wasVisible && this.scene) {
+      if (this._hintTween) {
+        this._hintTween.remove();
+      }
+      this._hintTween = this.scene.tweens.add({
+        targets: this.hintText,
+        y: this.y - 48,
+        duration: 600,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
+    } else if (!visible && wasVisible) {
+      if (this._hintTween) {
+        this._hintTween.remove();
+        this._hintTween = null;
+      }
+    }
   }
 
   setQuestMarker(type) {
@@ -492,6 +514,9 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     // Stop movement timers (Phase 33)
     if (this._wanderTimer) this._wanderTimer.remove();
     if (this._patrolTimer) this._patrolTimer.remove(false);
+
+    // Stop hint bounce tween (Phase 42)
+    if (this._hintTween) this._hintTween.remove();
 
     // Stop onboarding tweens
     if (this._arrowTween) this._arrowTween.remove();

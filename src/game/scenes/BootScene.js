@@ -9,6 +9,25 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
+    // --- Preload PixelAE Arabic font for Phaser Canvas text ---
+    const pixelAERegular = new FontFace(
+      'PixelAE',
+      "url('/assets/fonts/PixelAE-Regular.ttf')"
+    );
+    const pixelAEBold = new FontFace(
+      'PixelAE',
+      "url('/assets/fonts/PixelAE-Bold.ttf')",
+      { weight: 'bold' }
+    );
+    Promise.all([pixelAERegular.load(), pixelAEBold.load()])
+      .then((fonts) => {
+        fonts.forEach((f) => document.fonts.add(f));
+        console.log('[BootScene] PixelAE fonts loaded');
+      })
+      .catch((err) => {
+        console.warn('[BootScene] PixelAE font failed to load:', err);
+      });
+
     const { width, height } = this.cameras.main;
 
     // --- Loading bar background ---

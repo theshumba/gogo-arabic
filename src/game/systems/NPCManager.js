@@ -95,8 +95,7 @@ export class NPCManager {
         cfg.name
       );
 
-      // Create interaction prompt (starts hidden)
-      domOverlay.createInteractionPrompt(cfg.id, npcX, npcY);
+      // DOM interaction prompt removed — now handled by Phaser NPC sprite (Phase 42)
     });
   }
 
@@ -129,16 +128,13 @@ export class NPCManager {
       // Update onboarding highlight
       npc.setOnboardingHighlight(!!onboardingTargetNpc && npc.npcId === onboardingTargetNpc);
 
-      // Show/hide the DOM overlay SPACE prompt
-      domOverlay.setVisible(`prompt-${npc.npcId}`, inRange);
-
-      // Update DOM overlay positions to track NPC world position
+      // Update DOM overlay label position to track NPC world position
+      // (DOM interaction prompt removed in Phase 42 — handled by Phaser NPC sprite)
       domOverlay.updatePosition(
         `npc-label-${npc.npcId}`,
         npc.x,
         npc.y
       );
-      domOverlay.updatePosition(`prompt-${npc.npcId}`, npc.x, npc.y);
 
       // Tick NPC update (wander target arrival check)
       npc.update();
