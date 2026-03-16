@@ -5,6 +5,7 @@ import { EVENTS } from '../../utils/eventBusTypes.js';
 import { store } from '../../store/store.js';
 import { selectNpcQuestMarkers } from '../../store/slices/questSlice.js';
 import { shouldSpawnNpc, evaluateSchedule } from './ScheduleEvaluator.js';
+import { selectGameTime } from '../../store/slices/timeSlice.js';
 import npcsEnriched from '../../data/npcsEnriched.js';
 import { evaluateActionSets, executeActions } from './ActionSetExecutor.js';
 import { buildActionContext } from './actionContext.js';
