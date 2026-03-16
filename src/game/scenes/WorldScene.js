@@ -14,7 +14,6 @@ import { DialogueEngine } from '../systems/DialogueEngine.js';
 import { EquipmentManager } from '../systems/equipment/EquipmentManager.js';
 import { CompanionManager } from '../systems/companions/CompanionManager.js';
 import { store } from '../../store/store.js';
-import { selectAnyOverlayOpen } from '../../store/slices/uiSlice.js';
 import { GatheringSpotManager } from '../systems/GatheringSpotManager.js';
 import { ZONES, TILE } from '../../data/zones.js';
 import { TimeSystem } from '../systems/TimeSystem.js';
@@ -22,9 +21,12 @@ import { WeatherSystem } from '../systems/WeatherSystem.js';
 import { DayNightCycle } from '../systems/DayNightCycle.js';
 import { WorldStateManager } from '../systems/WorldStateManager.js';
 import { PuzzleManager } from '../systems/PuzzleManager.js';
+import { FastTravelManager } from '../systems/FastTravelManager.js';
+import { MountSystem } from '../systems/MountSystem.js';
 import { getInterior } from '../../data/interiors/registry.js';
-import { EventBus } from '../../utils/eventBus.js';
-import { EVENTS } from '../../utils/eventBusTypes.js';
+import { evaluateActionSets, executeActions } from '../systems/ActionSetExecutor.js';
+import { buildActionContext } from '../systems/actionContext.js';
+
 
 // ============================================================
 // WORLD SCENE
@@ -63,6 +65,10 @@ export class WorldScene extends Phaser.Scene {
   }
 
   create() {
+    // Reset state flags (Phaser reuses scene instances, constructor only runs once)
+    this.frozen = false;
+    this.interactCooldown = false;
+
     // Initialize subsystems
     this.domOverlay = new DOMOverlayManager(this);
     this.domOverlay.init();
@@ -78,6 +84,8 @@ export class WorldScene extends Phaser.Scene {
     this.dayNightCycle = new DayNightCycle(this);
     this.worldStateManager = new WorldStateManager(this); // Init World State Manager
     this.puzzleManager = new PuzzleManager(this);         // Init Puzzle Manager
+    this.fastTravelManager = new FastTravelManager(this); // Init Fast Travel Manager
+    this.mountSystem = new MountSystem(this);             // Init Mount System
     this.sceneStackManager = new SceneStackManager(this);
     this.dialogueEngine = new DialogueEngine(this);
 
@@ -122,7 +130,16 @@ export class WorldScene extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
 
+    // Input: M for Mount (Temp binding)
+    this.input.keyboard.on('keydown-M', () => {
+      if (this.mountSystem && !this.frozen) {
+        this.mountSystem.mount('camel');
+      }
+    });
+
     // Restore player position when resuming from InteriorScene
+    // Use off first to prevent listener accumulation across scene restarts
+    this.events.off('resume');
     this.events.on('resume', () => {
       if (this.pendingSpawnPosition) {
         const player = this.playerController.getPlayer();
@@ -184,6 +201,11 @@ export class WorldScene extends Phaser.Scene {
   buildZone(zoneName, spawnX, spawnY) {
     this.currentZone = zoneName;
 
+    // Step trigger state — reset for every zone load
+    this._stepTriggers = [];
+    this._stepTriggerCooldowns = {}; // triggerId → lastFireTime (ms)
+    this._stepTriggersFired = new Set(); // triggerId → true for oneShot tracking
+
     const zone = ZONES[zoneName];
     if (!zone) {
       console.error(`Unknown zone: ${zoneName}`);
@@ -192,6 +214,9 @@ export class WorldScene extends Phaser.Scene {
 
     this.currentMapW = zone.mapWidth;
     this.currentMapH = zone.mapHeight;
+
+    // Load step triggers from zone data (Phase 34-03)
+    this._stepTriggers = zone.stepTriggers || [];
 
     // Build map (ground, objects, collision, exits)
     const wallGroup = this.mapLoader.create(zone, zone.mapWidth, zone.mapHeight);
@@ -253,21 +278,30 @@ export class WorldScene extends Phaser.Scene {
     EventBus.emit(EVENTS.BUILDING_ENTERED, { interiorId });
   }
 
+  handleFastTravel({ zoneName }) {
+    if (this.fastTravelManager) {
+      this.fastTravelManager.travelToZone(zoneName);
+    } else {
+      // Fallback if manager fails
+      this.loadZone(zoneName);
+    }
+  }
+
   // ============================================================
   // HELPERS
   // ============================================================
 
   handleFreeze() {
-    console.warn('[DEBUG FREEZE] WorldScene.handleFreeze called', new Error().stack);
+    // Only freeze if this scene is actively running (not paused by InteriorScene)
+    if (!this.scene.isActive()) return;
     this.frozen = true;
-    this._frozenSince = Date.now();
     this.playerController.freeze();
   }
 
   handleUnfreeze() {
-    console.warn('[DEBUG UNFREEZE] WorldScene.handleUnfreeze called', new Error().stack);
+    // Only unfreeze if this scene is actively running
+    if (!this.scene.isActive()) return;
     this.frozen = false;
-    this._frozenSince = 0;
     this.playerController.unfreeze();
   }
 
@@ -279,21 +313,10 @@ export class WorldScene extends Phaser.Scene {
   // FRAME UPDATE
   // ============================================================
 
-  update() {
+  update(time, delta) {
     if (this.frozen) {
       // Still update overlays so they track correctly while frozen
       if (this.domOverlay) this.domOverlay.update();
-
-      // WATCHDOG: Auto-unfreeze if stuck with no overlay for >2 seconds
-      const frozenMs = Date.now() - (this._frozenSince || Date.now());
-      if (frozenMs > 2000 && !this.zoneTransition?.transitioning) {
-        const state = store.getState();
-        const overlayOpen = selectAnyOverlayOpen(state);
-        if (!overlayOpen) {
-          console.warn('[WATCHDOG] Auto-unfreezing player after', frozenMs, 'ms with no overlay open');
-          this.handleUnfreeze();
-        }
-      }
       return;
     }
 
@@ -349,16 +372,70 @@ export class WorldScene extends Phaser.Scene {
       );
     }
 
+    // Check step trigger zones (Phase 34-03)
+    if (this._stepTriggers && this._stepTriggers.length && player) {
+      this._checkStepTriggers(player);
+    }
+
     // Check exit trigger zones
     this.checkExitTriggers();
 
-    // Update DOM overlay positions every frame
     // Update DOM overlay positions every frame
     if (this.domOverlay) this.domOverlay.update();
 
     // Update time system
     if (this.timeSystem) this.timeSystem.update(time, delta);
     if (this.weatherSystem) this.weatherSystem.update(time, delta);
+
+    // Check fast travel unlocks
+    if (this.fastTravelManager && this.playerController) {
+      const p = this.playerController.getPlayer();
+      if (p) {
+        this.fastTravelManager.checkCurrentLocation(p.x, p.y, this.currentZone);
+      }
+    }
+  }
+
+  // ============================================================
+  // STEP TRIGGERS (Phase 34-03)
+  // ============================================================
+
+  /**
+   * Check if the player is standing inside any step trigger zone.
+   * Fires the first matched actionSet for each triggered zone,
+   * respecting cooldown and oneShot constraints.
+   *
+   * @param {Phaser.GameObjects.Sprite} player - Player sprite with x/y world coords
+   */
+  _checkStepTriggers(player) {
+    const px = Math.floor(player.x / TILE);
+    const py = Math.floor(player.y / TILE);
+    const now = this.time.now;
+
+    for (const trigger of this._stepTriggers) {
+      // Check if player tile position is within trigger bounds
+      if (px < trigger.x || px >= trigger.x + (trigger.width || 1)) continue;
+      if (py < trigger.y || py >= trigger.y + (trigger.height || 1)) continue;
+
+      // Check oneShot: skip if already fired this session
+      if (trigger.oneShot && this._stepTriggersFired.has(trigger.id)) continue;
+
+      // Check cooldown: skip if fired too recently
+      const lastFire = this._stepTriggerCooldowns[trigger.id] || 0;
+      if (trigger.cooldown && now - lastFire < trigger.cooldown) continue;
+
+      // Evaluate actionSets using the shared context builder
+      const context = buildActionContext(this.currentZone);
+      const matched = evaluateActionSets(trigger.actionSets, context);
+      if (!matched) continue;
+
+      // Fire: execute actions, record timing, track oneShot
+      executeActions(matched.actions, EventBus);
+      this._stepTriggerCooldowns[trigger.id] = now;
+      if (trigger.oneShot || trigger.flagOnFire) {
+        this._stepTriggersFired.add(trigger.id);
+      }
+    }
   }
 
   // Check if player has walked into an exit trigger region
@@ -444,10 +521,30 @@ export class WorldScene extends Phaser.Scene {
       this.sceneStackManager = null;
     }
 
+    // Destroy WorldStateManager (has Redux subscription that leaks if not cleaned up)
+    if (this.worldStateManager) {
+      this.worldStateManager.destroy();
+      this.worldStateManager = null;
+    }
+
+    // Destroy PuzzleManager
+    if (this.puzzleManager) {
+      if (this.puzzleManager.destroy) this.puzzleManager.destroy();
+      this.puzzleManager = null;
+    }
+
+    // Destroy FastTravelManager
+    if (this.fastTravelManager) {
+      this.fastTravelManager = null;
+    }
+
     // Reset zone transition to prevent stuck state on scene restart
     if (this.zoneTransition) {
       this.zoneTransition.transitioning = false;
     }
+
+    // Clean up resume listener
+    this.events.off('resume');
 
     EventBus.off(EVENTS.PLAYER_FREEZE, this.handleFreeze, this);
     EventBus.off(EVENTS.PLAYER_UNFREEZE, this.handleUnfreeze, this);
@@ -479,6 +576,11 @@ export class WorldScene extends Phaser.Scene {
     if (this.dayNightCycle) {
       this.dayNightCycle.destroy();
       this.dayNightCycle = null;
+    }
+
+    if (this.mountSystem) {
+      this.mountSystem.destroy();
+      this.mountSystem = null;
     }
   }
 }

@@ -6,33 +6,14 @@ import { store } from '../../store/store.js';
 import { selectNpcQuestMarkers } from '../../store/slices/questSlice.js';
 import { shouldSpawnNpc, evaluateSchedule } from './ScheduleEvaluator.js';
 import npcsEnriched from '../../data/npcsEnriched.js';
-import { selectGameTime } from '../../store/slices/timeSlice.js';
 import { evaluateActionSets, executeActions } from './ActionSetExecutor.js';
+import { buildActionContext } from './actionContext.js';
 
 // NPC proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
 
 // O(1) lookup map for full NPC data (includes schedule arrays)
 const NPC_DATA_MAP = new Map(npcsEnriched.map((n) => [n.id, n]));
-
-/**
- * Build the action context snapshot from Redux state.
- * Used by evaluateActionSets to check quest statuses, flags, player stats, etc.
- *
- * @returns {Object} Context object for ActionSetExecutor requirement evaluation
- */
-function buildActionContext() {
-  const state = store.getState();
-  return {
-    questStatuses: state.quest?.statuses || {},
-    storyFlags: state.narrative?.storyFlags || {},
-    vocabMastery: {}, // TODO: wire to FSRS mastery in future phase
-    playerLevel: state.player?.level || 1,
-    inventory: state.inventory?.items?.map((i) => i.id) || [],
-    currentHour: selectGameTime(state).hour,
-    currentZone: state.player?.currentZone || 'oasis_village',
-  };
-}
 
 /**
  * NPCManager
