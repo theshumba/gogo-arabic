@@ -109,13 +109,64 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| *(populated during roadmap creation)* | | |
+| PIPE-01 | Phase 38 | Pending |
+| PIPE-02 | Phase 38 | Pending |
+| TILE-01 | Phase 39 | Pending |
+| TILE-02 | Phase 39 | Pending |
+| TILE-03 | Phase 39 | Pending |
+| TILE-04 | Phase 39 | Pending |
+| TILE-05 | Phase 39 | Pending |
+| TILE-06 | Phase 39 | Pending |
+| TILE-07 | Phase 39 | Pending |
+| TILE-08 | Phase 39 | Pending |
+| TILE-09 | Phase 39 | Pending |
+| TILE-10 | Phase 39 | Pending |
+| BLDG-01 | Phase 40 | Pending |
+| BLDG-02 | Phase 40 | Pending |
+| BLDG-03 | Phase 40 | Pending |
+| BLDG-04 | Phase 40 | Pending |
+| BLDG-05 | Phase 40 | Pending |
+| BLDG-06 | Phase 40 | Pending |
+| BLDG-07 | Phase 40 | Pending |
+| DECO-01 | Phase 40 | Pending |
+| DECO-02 | Phase 40 | Pending |
+| DECO-03 | Phase 40 | Pending |
+| DECO-04 | Phase 40 | Pending |
+| DECO-05 | Phase 40 | Pending |
+| DECO-06 | Phase 40 | Pending |
+| DECO-07 | Phase 40 | Pending |
+| CHAR-01 | Phase 41 | Pending |
+| CHAR-02 | Phase 41 | Pending |
+| CHAR-03 | Phase 41 | Pending |
+| CHAR-04 | Phase 41 | Pending |
+| CHAR-05 | Phase 41 | Pending |
+| CHAR-06 | Phase 41 | Pending |
+| ANIM-01 | Phase 41 | Pending |
+| ANIM-02 | Phase 41 | Pending |
+| ANIM-03 | Phase 41 | Pending |
+| ANIM-04 | Phase 41 | Pending |
+| UI-01 | Phase 42 | Pending |
+| UI-02 | Phase 42 | Pending |
+| UI-03 | Phase 42 | Pending |
+| UI-04 | Phase 42 | Pending |
+| UI-05 | Phase 42 | Pending |
+| UI-06 | Phase 42 | Pending |
+| UI-07 | Phase 42 | Pending |
+| ARAB-01 | Phase 42 | Pending |
+| ARAB-02 | Phase 42 | Pending |
+| ARAB-03 | Phase 42 | Pending |
+| ARAB-04 | Phase 42 | Pending |
+| PIPE-03 | Phase 43 | Pending |
+| PIPE-04 | Phase 43 | Pending |
+| PIPE-05 | Phase 43 | Pending |
 
 **Coverage:**
-- v8.0 requirements: 39 total
-- Mapped to phases: 0
-- Unmapped: 39
+- v8.0 requirements: 50 total (10 TILE + 7 BLDG + 7 DECO + 6 CHAR + 4 ANIM + 7 UI + 4 ARAB + 5 PIPE)
+- Mapped to phases: 50
+- Unmapped: 0
+
+*Note: Initial requirements file listed 39 total — the correct count from enumerated IDs is 50.*
 
 ---
 *Requirements defined: 2026-03-16*
-*Last updated: 2026-03-16 after initial definition*
+*Last updated: 2026-03-16 — Traceability populated after roadmap creation (Phases 38-43)*

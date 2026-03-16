@@ -9,6 +9,7 @@
 - ✅ **v6.0 Combat & RPG** — Phases 27.1, 28-30 (shipped 2026-02-13) → [archive](milestones/v6.0-ROADMAP.md)
 - ✅ **v6.1 Crafting & Advanced Combat** — Phases 31-32 (shipped 2026-02-18) → [archive](milestones/v6.1-ROADMAP.md)
 - ✅ **v7.0 World & Content** — Phases 33-37 (shipped 2026-03-16) → [archive](milestones/v7.0-ROADMAP.md)
+- 🚧 **v8.0 Visual Overhaul** — Phases 38-43 (in progress)
 
 ## Phases
 
@@ -251,10 +252,138 @@ Plans:
 
 </details>
 
+### 🚧 v8.0 Visual Overhaul (Phases 38-43) — In Progress
+
+**Milestone Goal:** Replace all placeholder art with the Kenmi Cute Fantasy 16x16 pixel art bundle, move in-game UI from React DOM overlays into Phaser Canvas, and add Arabic BitmapFont rendering — making the game look like a polished Pokemon/Stardew Valley RPG.
+
+**Asset source:** Kenmi Art — Cute Fantasy RPG bundle (13 packs, ~1,200 PNGs, 16x16 base, commercial license). Assets downloaded to `/tmp/kenmi/`.
+
+**Scope constraint:** Visual-only overhaul. No gameplay logic changes, no new zones, no new NPCs.
+
+#### Phase 38: Asset Pipeline & BootScene
+**Goal**: All Kenmi assets are cataloged, organized in the project, and BootScene loads them correctly so every subsequent phase can reference them
+
+**Depends on**: Phase 37 (v7.0 stable baseline)
+
+**Requirements**: PIPE-01, PIPE-02
+
+**Success Criteria** (what must be TRUE):
+  1. All 13 Kenmi packs are copied to `src/assets/kenmi/` with consistent kebab-case naming, and a catalog file documents every available spritesheet key
+  2. BootScene completes without errors and loads all Kenmi spritesheets with the correct frame width/height per asset type (16x16 tiles, 16x32 characters, variable UI frames)
+  3. Phaser texture cache contains every Kenmi key after BootScene finishes, verifiable in browser DevTools
+
+**Plans**: TBD
+
+Plans:
+- [ ] 38-01: Asset catalog + copy script (src/assets/kenmi/ structure, naming convention, catalog.js)
+- [ ] 38-02: BootScene Kenmi loader (all 13 packs, correct frame dimensions, load error handling)
+
+#### Phase 39: Terrain Rendering
+**Goal**: Every zone renders real pixel art terrain with biome-correct tilesets, auto-tiled transitions, seeded random variants, and animated water edges instead of flat colored squares
+
+**Depends on**: Phase 38 (Kenmi spritesheets loaded in BootScene)
+
+**Requirements**: TILE-01, TILE-02, TILE-03, TILE-04, TILE-05, TILE-06, TILE-07, TILE-08, TILE-09, TILE-10
+
+**Success Criteria** (what must be TRUE):
+  1. All zones render 16x16 Kenmi tiles scaled 4x (64px grid) — no flat colored squares remain anywhere in any zone
+  2. Terrain edges auto-tile correctly: sand-to-grass, sand-to-water, and sand-to-cliff transitions show proper transition tiles using 4-neighbor edge detection
+  3. Sand terrain displays at least 3 visually distinct tile variants distributed using seeded randomness, so no large area looks uniform
+  4. Water shorelines display animated foam tiles from the Kenmi animated water set
+  5. Each biome zone uses its correct tileset: desert pack for desert zones, base RPG grass/path for forest/farmland, Christmas snow pack for mountain/snow zones, Dungeon pack for fortress interiors, Volcano pack for lava/rock zones, ShroomLands pack for mushroom zones
+
+**Plans**: TBD
+
+Plans:
+- [ ] 39-01: TilesetRenderer system (MapLoader replacement, 4-neighbor auto-tiling, seeded variants)
+- [ ] 39-02: Desert tileset integration (TILE-01, TILE-02, TILE-03, TILE-05)
+- [ ] 39-03: Animated water foam (TILE-04) + remaining biome tilesets (TILE-06, TILE-07, TILE-08, TILE-09, TILE-10)
+
+#### Phase 40: Buildings & Decorations
+**Goal**: Every zone's buildings are replaced with zone-appropriate Kenmi structures and filled with clustered decorative props that create visual density and world identity
+
+**Depends on**: Phase 39 (terrain rendered — buildings and props are placed on top of terrain layer)
+
+**Requirements**: BLDG-01, BLDG-02, BLDG-03, BLDG-04, BLDG-05, BLDG-06, BLDG-07, DECO-01, DECO-02, DECO-03, DECO-04, DECO-05, DECO-06, DECO-07
+
+**Success Criteria** (what must be TRUE):
+  1. Oasis Village displays Kenmi desert houses (4 designs × 4 color variants), desert temple structures appear in library/palace zones, and zone-specific building sets (dungeon arches, military tents, mushroom houses) are used in their correct zones — no placeholder rectangle buildings remain
+  2. Desert zones contain Kenmi props (cacti, rocks, bones, pots, sacks, rugs, campfires, palm trees, acacia trees) with a minimum of 20 decoration objects per zone
+  3. Decoration placement uses clustering: props appear in groups of 2-4 near buildings and along paths rather than uniformly scattered across the map
+  4. Animated decorations (grass sway, campfire flicker, water foam, flies) play in-game at the correct locations
+  5. Landmark locations (temple entrances, quest sites) have obelisks or golden pots as visual anchors, NPC spawn points have sleeping mats or water sacks nearby, and barren/edge areas of desert zones use dead trees and dead bushes
+
+**Plans**: TBD
+
+Plans:
+- [ ] 40-01: Building sprite replacement (BLDG-01 through BLDG-07, zone data updates)
+- [ ] 40-02: Decoration placement system (clustering algorithm, DECO-01, DECO-02, DECO-06, DECO-07)
+- [ ] 40-03: Animated decorations + landmark/NPC-adjacent props (DECO-03, DECO-04, DECO-05)
+
+#### Phase 41: Characters & Ambient Life
+**Goal**: The player and all NPCs, enemies, and ambient animals are replaced with Kenmi pixel art sprites with proper 4-direction walk and idle animations
+
+**Depends on**: Phase 40 (world visuals stable — character sprites are the final layer of world population)
+
+**Requirements**: CHAR-01, CHAR-02, CHAR-03, CHAR-04, CHAR-05, CHAR-06, ANIM-01, ANIM-02, ANIM-03, ANIM-04
+
+**Success Criteria** (what must be TRUE):
+  1. The player character uses a Kenmi 16x16 sprite with smooth 4-direction walk animations (no faceless silhouette)
+  2. Desert NPCs use Kenmi Desert_Person sprites (4 standard variants, Pharaoh, and 3 Trader variants); non-desert NPCs use base RPG pack premade characters (Chef, Farmer, Fisherman, etc.)
+  3. Female NPC sprites have hijab head covering variants — pixel-modified from base sprites — on all female characters across all zones
+  4. Enemy encounter sprites use Kenmi Desert Warriors (2 weapon types × 2 variants) and Mummy; all NPC sprites have idle and walk animations loaded from spritesheets
+  5. Desert zones contain camels (3 variants), vultures (4 variants), and scarabs (4 color variants) as ambient non-interactive sprites with idle/walk animations that add world life without blocking gameplay
+
+**Plans**: TBD
+
+Plans:
+- [ ] 41-01: Player sprite replacement (CHAR-01, 4-direction walk anims from Kenmi spritesheet)
+- [ ] 41-02: NPC sprite replacement (CHAR-02, CHAR-03, CHAR-05, CHAR-06 — Desert_Person + hijab variants + RPG pack NPCs)
+- [ ] 41-03: Enemy sprites + ambient animals (CHAR-04, ANIM-01, ANIM-02, ANIM-03, ANIM-04)
+
+#### Phase 42: Phaser UI & Arabic BitmapFont
+**Goal**: In-game UI elements render natively inside Phaser Canvas using Kenmi UI panels and Pixel AE Arabic BitmapFont — dialogue boxes, interaction prompts, and zone labels no longer use React DOM overlays
+
+**Depends on**: Phase 41 (all world art in place — UI is the final visual layer rendered on top)
+
+**Requirements**: UI-01, UI-02, UI-03, UI-04, UI-05, UI-06, UI-07, ARAB-01, ARAB-02, ARAB-03, ARAB-04
+
+**Success Criteria** (what must be TRUE):
+  1. The in-game dialogue box renders inside Phaser Canvas as a NineSlice panel with Kenmi UI frame art, typewriter text effect, and a blinking cursor — the React DOM dialogue overlay is no longer used for in-game conversations
+  2. NPC interaction prompts ("Press E") render as Phaser sprites with Kenmi icon art, positioned above NPC sprites in world space — not as DOM overlay elements
+  3. Kenmi UI pack frames, bars, and icons are used for in-game health/XP/stamina displays and inventory/quest/map buttons
+  4. Arabic text inside Phaser (zone names, NPC labels, sign text) renders correctly using Pixel AE BitmapFont with proper letter joining (js-arabic-reshaper) and right-to-left direction
+  5. React overlays (HUD bar, main menu, settings, profile, wardrobe) remain as React components — only in-game elements have moved to Phaser Canvas
+
+**Plans**: TBD
+
+Plans:
+- [ ] 42-01: Phaser NineSlice dialogue panel (UI-01, UI-03) + Kenmi pixel font for English text (UI-06)
+- [ ] 42-02: NPC interaction prompts as Phaser sprites (UI-02) + Kenmi bars/icons (UI-04, UI-05, UI-07)
+- [ ] 42-03: Arabic BitmapFont integration (ARAB-01, ARAB-02, ARAB-03, ARAB-04)
+
+#### Phase 43: Zone References & Cleanup
+**Goal**: Zone data files reference Kenmi sprite keys throughout, a Tiled-compatible export structure exists for future collaborators, and all placeholder sprites are removed from the project
+
+**Depends on**: Phase 42 (full visual overhaul complete — cleanup and handoff structure as final step)
+
+**Requirements**: PIPE-03, PIPE-04, PIPE-05
+
+**Success Criteria** (what must be TRUE):
+  1. All zone data files (zones.js, building definitions, NPC spawn data) reference Kenmi sprite keys exclusively — no placeholder keys (tile-sand, tile-grass, placeholder-house, etc.) remain in any data file
+  2. A Tiled-compatible JSON map export structure exists at `src/assets/maps/` that documents zone layout, NPC spawn points, interactables, and exits in a format a collaborator could open in Tiled Map Editor
+  3. All old placeholder sprite assets are removed from `src/assets/` and no console errors about missing textures appear during any zone load
+
+**Plans**: TBD
+
+Plans:
+- [ ] 43-01: Zone data file updates (PIPE-03 — all zone/building/NPC keys updated to Kenmi keys)
+- [ ] 43-02: Tiled export structure + placeholder sprite removal (PIPE-04, PIPE-05)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
+Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 → 33 → ... → 43
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -295,9 +424,15 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 | 35. Economy + Home (Production Chains + Decoration) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 36. Quest Journal + Audio (Notebook + Buses) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 37. Polish + Replay (Randomizer + Settings) | v7.0 | 4/4 | Complete | 2026-03-16 |
+| 38. Asset Pipeline & BootScene | v8.0 | 0/2 | Not started | — |
+| 39. Terrain Rendering | v8.0 | 0/3 | Not started | — |
+| 40. Buildings & Decorations | v8.0 | 0/3 | Not started | — |
+| 41. Characters & Ambient Life | v8.0 | 0/3 | Not started | — |
+| 42. Phaser UI & Arabic BitmapFont | v8.0 | 0/3 | Not started | — |
+| 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
 
 **Cumulative:** 37 phases shipped, 113 plans complete, 8 milestones
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-02-18 — v6.1 Crafting & Advanced Combat shipped (Phases 31-32, 19 plans)*
+*Last updated: 2026-03-16 — v8.0 Visual Overhaul roadmap added (Phases 38-43, 50 requirements)*
