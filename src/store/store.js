@@ -21,10 +21,10 @@ import economyReducer from './slices/economySlice.js';
 import companionReducer from './slices/companionSlice.js';
 import craftingReducer from './slices/craftingSlice.js';
 import arenaReducer from './slices/arenaSlice.js';
-import arenaReducer from './slices/arenaSlice.js';
 import timeReducer from './slices/timeSlice.js';
 import weatherReducer from './slices/weatherSlice.js';
 import worldStateReducer from './slices/worldStateSlice.js';
+import homeReducer from './slices/homeSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -32,6 +32,8 @@ import { rootFsrsSyncMiddleware } from './middleware/rootFsrsSyncMiddleware.js';
 import { battleRewardsMiddleware } from './middleware/battleRewardsMiddleware.js';
 import { craftingVocabMiddleware } from './middleware/craftingVocabMiddleware.js';
 import { statusEffectVocabMiddleware } from './middleware/statusEffectVocabMiddleware.js';
+import { friendshipMiddleware } from './slices/friendshipMiddleware.js';
+import { utilityBonusMiddleware } from './slices/utilityBonusMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -115,7 +117,7 @@ const persistedCraftingReducer = persistReducer(craftingPersistConfig, craftingR
 const persistConfig = {
   key: 'gogo-arabic',
   storage, // localStorage
-  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative', 'economy', 'arena', 'time', 'weather', 'worldState'],
+  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative', 'economy', 'arena', 'time', 'weather', 'worldState', 'home'],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
 
@@ -141,6 +143,8 @@ const rootReducer = combineReducers({
   arena: arenaReducer,
   time: timeReducer,
   weather: weatherReducer,
+  worldState: worldStateReducer,
+  home: homeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -153,7 +157,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware),
 });
 
 export const persistor = persistStore(store);
