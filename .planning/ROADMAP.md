@@ -8,7 +8,7 @@
 - ✅ **v5.0 The Real Game** — Phases 19-26 (shipped 2026-02-11) → [archive](milestones/v5.0-ROADMAP.md)
 - ✅ **v6.0 Combat & RPG** — Phases 27.1, 28-30 (shipped 2026-02-13) → [archive](milestones/v6.0-ROADMAP.md)
 - ✅ **v6.1 Crafting & Advanced Combat** — Phases 31-32 (shipped 2026-02-18) → [archive](milestones/v6.1-ROADMAP.md)
-- 📋 **v7.0 World & Content** — Phases 33-38 (planned)
+- 📋 **v7.0 World & Content** — Phases 33-37 (planned)
 
 ## Phases
 
@@ -157,6 +157,74 @@ Plans:
 - [x] 32-09-PLAN.md — PostBattleReview + ArenaLeaderboard
 - [x] 32-10-PLAN.md — BattleStateMachine FSM integration + arabicUsedThisBattle capture
 - [x] 32-11-PLAN.md — BattleOverlay UI wiring + BattleMenu/BattleResult + arenaSlice store registration
+
+</details>
+
+<details>
+<summary>📋 v7.0 World & Content (Phases 33-37) — PLANNED</summary>
+
+**Milestone Goal:** Transform Gogo Arabic from a functional prototype into a polished, Pokemon/Zelda-quality RPG. NPCs move and follow schedules, events are data-driven, economy feels alive, quests are clearly tracked, and the game is replayable.
+
+**Source:** Research from 9 open-source game repos (see memory: gogo-arabic-game-patterns.md).
+
+#### Phase 33: Living World (NPC Schedules + Movement)
+**Goal**: Make the world feel alive — NPCs move, wander, and follow schedules
+
+**Depends on**: Phase 32 (v6.1 complete — stable NPC/world systems)
+
+**Success Criteria** (what must be TRUE):
+  1. NPCs have schedule data (time ranges + zone + location + behavior)
+  2. ScheduleEvaluator evaluates NPC schedule based on time, zone, and story flags
+  3. NPCManager filters spawns by schedule (only spawn NPCs scheduled for current zone/time)
+  4. NPCs exhibit movement patterns: wander, patrol, scripted paths
+  5. NPCs face player on interact (flip sprite based on relative position)
+  6. TimeSystem triggers schedule re-evaluation on time phase change
+  7. Night BGM switches on day/night transition per zone
+
+**Key files**: `npcsEnriched.js`, `NPCManager.js`, `NPC.js`, `TimeSystem.js`, `audioConfig.js`
+
+**Plans**: 3 plans in 3 waves
+
+Plans:
+- [ ] 33-01-PLAN.md — Schedule data + ScheduleEvaluator + NPCManager spawn filter
+- [ ] 33-02-PLAN.md — NPC movement patterns (wander/patrol) + face player on interact
+- [ ] 33-03-PLAN.md — TimeSystem schedule re-evaluation + night ambient BGM switching
+
+#### Phase 34: Data-Driven Events (ActionSets + Event Scripts)
+**Goal**: Replace hardcoded NPC logic with pure-data behavior definitions
+
+**Depends on**: Phase 33 (schedule system provides time-aware NPC context)
+
+**Key files**: new `ActionSetExecutor.js`, new `EventScriptRunner.js`, `npcsEnriched.js`, `zones.js`, `WorldScene.js`
+
+Plans: TBD
+
+#### Phase 35: Economy + Home (Production Chains + Decoration)
+**Goal**: Create a living economy and meaningful player housing
+
+**Depends on**: Phase 34 (events can trigger economic actions, NPC businesses use action sets)
+
+**Key files**: `shops.js`, new `EconomyFlow.js`, `zones.js`, new `HomeDecoration.js`, `furniture.js`, `npcSlice.js`
+
+Plans: TBD
+
+#### Phase 36: Quest Journal + Audio (Bomber's Notebook + Audio Buses)
+**Goal**: Clear quest tracking and immersive audio
+
+**Depends on**: Phase 35 (economy/home provide trackable content for journal)
+
+**Key files**: new `QuestJournal.jsx`, `audioConfig.js`, `audio.js`, new `GameplayStats.js`, `zones.js`
+
+Plans: TBD
+
+#### Phase 37: Polish + Replay (Randomizer + Settings + Difficulty)
+**Goal**: Replayability, accessibility, and professional polish
+
+**Depends on**: Phase 36 (journal/stats provide data for difficulty tuning)
+
+**Key files**: new `VocabRandomizer.js`, `settingsSlice.js`, `migrations.js`, new `CalendarEvents.js`, new `ActorRegistry.js`
+
+Plans: TBD
 
 </details>
 
