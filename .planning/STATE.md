@@ -12,11 +12,11 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v7.0 World & Content (Phases 33-37)
 Phase: 34 — Data-Driven Events (in progress)
-Plan: 2 of N in Phase 34
+Plan: 3 of N in Phase 34
 Status: In progress
-Last activity: 2026-03-16 — Completed 34-02-PLAN.md (NPC actionSets + EventScriptRunner + NPCManager wiring)
+Last activity: 2026-03-16 — Completed 34-03-PLAN.md (Step triggers in zone data + WorldScene detection)
 
-Progress: [██░░░░░░] 2/N Phase 34 plans — IN PROGRESS
+Progress: [███░░░░░] 3/N Phase 34 plans — IN PROGRESS
 
 ### Shipped Milestones
 
@@ -113,6 +113,12 @@ v7.0 Phase 34 decisions (34-01):
 - flag requirement defaults value to true when omitted — matches most common use case
 - Empty requirements array = unconditional match — enables default/fallback action set as last array entry
 
+v7.0 Phase 34 decisions (34-03):
+- buildActionContext extracted to shared actionContext.js — both NPCManager and WorldScene share one implementation; accepts optional zoneOverride for caller-authoritative zone context
+- Step trigger state initialized inside buildZone() (not clearZone()) — zone-scoped, wiped clean on every zone load before zone.stepTriggers are read
+- oneShot and flagOnFire both add to _stepTriggersFired in-memory Set — both prevent repeat fires within a session (flag fires once, Set silences trigger for session)
+- 3 PoC triggers on oasis_village only — pattern established, other zones deferred
+
 v7.0 Phase 34 decisions (34-02):
 - actionSets added to 4 PoC NPCs only — pattern established, remaining 42+ NPCs deferred to later plan
 - Fallback preserved: NPCs without actionSets or no matched set still emit classic NPC_INTERACT — backward compatible with existing DialogueEngine
@@ -181,9 +187,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16 (Phase 34 Plan 02 — NPC actionSets + EventScriptRunner complete)
-Stopped at: 34-02 complete (NPC actionSets, EventScriptRunner, NPCManager wiring), ready for 34-03
-Resume file: .planning/phases/34-data-driven-events/34-03-PLAN.md
+Last session: 2026-03-16 (Phase 34 Plan 03 — Step triggers in zone data + WorldScene detection)
+Stopped at: 34-03 complete (stepTriggers zone data, actionContext.js shared util, WorldScene detection), ready for 34-04
+Resume file: .planning/phases/34-data-driven-events/34-04-PLAN.md
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -207,10 +213,11 @@ Resume file: .planning/phases/34-data-driven-events/34-03-PLAN.md
 - 33-02: NPC Movement Patterns (wander/patrol/face-player) — COMPLETE
 - 33-03: Time Phase NPC Re-evaluation + Night BGM — COMPLETE
 
-**Phase 34 Progress: IN PROGRESS (2/N)**
+**Phase 34 Progress: IN PROGRESS (3/N)**
 - 34-01: ActionSetExecutor Foundation — COMPLETE
 - 34-02: NPC ActionSets + EventScriptRunner + NPCManager Wiring — COMPLETE
+- 34-03: Step Triggers (zone data + WorldScene detection) — COMPLETE
 
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-03-16 — Phase 34 Plan 02 complete (NPC actionSets + EventScriptRunner + NPCManager wiring)*
+*Last updated: 2026-03-16 — Phase 34 Plan 03 complete (step triggers zone data + WorldScene detection + shared actionContext utility)*
