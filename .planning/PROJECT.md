@@ -60,18 +60,15 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - Companion following (lazy pathfinding) + contextual Arabic comments + teaching specializations — v6.0
 - battleRewardsMiddleware wiring XP/gold/items from battles to progression — v6.0
 
+- NPC schedules + wander/patrol movement + night ambient BGM + schedule re-evaluation on time change — v7.0
+- ActionSetExecutor (9 actions, 7 requirements) + EventScriptRunner + step triggers + visibilityFlag — v7.0
+- EconomyFlow production chains + friendship system (0-100, 4 tiers) + home decoration (8x10 grid, 4 utilities) — v7.0
+- QuestJournal (3 tabs) + ambient sound layers + building muffle + AutoSave (3min) + GameplayStats + sub-zones — v7.0
+- VocabRandomizer + difficulty settings + CalendarEvents + TownKnowledge + BattleActionQueue + tiered currency (fils/dirham/dinar) + ActorRegistry — v7.0
+
 ### Active
 
-## Current Milestone: v6.1 Crafting & Advanced Combat
-
-**Goal:** Add crafting professions with Arabic recipes and advanced combat mechanics including status effects, grammar-based combos, and arena challenges.
-
-**Target features:**
-- 6 crafting professions (calligraphy, cooking, alchemy, smithing, weaving, herbalism) with Arabic recipe names and vocabulary integration
-- Status effects system tied to Arabic vocabulary mastery
-- Grammar pattern combat combos (sentence structures = attack chains)
-- Wave-based arena challenges with progressive difficulty
-- Crafting-combat integration (crafted items enhance combat abilities)
+## Current Milestone: None — ready for v8.0
 
 ### Out of Scope
 

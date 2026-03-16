@@ -8,7 +8,7 @@
 - ✅ **v5.0 The Real Game** — Phases 19-26 (shipped 2026-02-11) → [archive](milestones/v5.0-ROADMAP.md)
 - ✅ **v6.0 Combat & RPG** — Phases 27.1, 28-30 (shipped 2026-02-13) → [archive](milestones/v6.0-ROADMAP.md)
 - ✅ **v6.1 Crafting & Advanced Combat** — Phases 31-32 (shipped 2026-02-18) → [archive](milestones/v6.1-ROADMAP.md)
-- ✅ **v7.0 World & Content** — Phases 33-37 (shipped 2026-03-16)
+- ✅ **v7.0 World & Content** — Phases 33-37 (shipped 2026-03-16) → [archive](milestones/v7.0-ROADMAP.md)
 
 ## Phases
 
@@ -161,7 +161,7 @@ Plans:
 </details>
 
 <details>
-<summary>📋 v7.0 World & Content (Phases 33-37) — PLANNED</summary>
+<summary>✅ v7.0 World & Content (Phases 33-37) — SHIPPED 2026-03-16</summary>
 
 **Milestone Goal:** Transform Gogo Arabic from a functional prototype into a polished, Pokemon/Zelda-quality RPG. NPCs move and follow schedules, events are data-driven, economy feels alive, quests are clearly tracked, and the game is replayable.
 
