@@ -429,7 +429,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 40. Buildings & Decorations | v8.0 | Complete    | 2026-03-16 | — |
 | 41. Characters & Ambient Life | v8.0 | Complete    | 2026-03-16 | — |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | Complete    | 2026-03-16 | — |
-| 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
+| 43. Zone References & Cleanup | v8.0 | Complete    | 2026-03-16 | — |
 
 **Cumulative:** 37 phases shipped, 113 plans complete, 8 milestones
 
