@@ -424,7 +424,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 35. Economy + Home (Production Chains + Decoration) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 36. Quest Journal + Audio (Notebook + Buses) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 37. Polish + Replay (Randomizer + Settings) | v7.0 | 4/4 | Complete | 2026-03-16 |
-| 38. Asset Pipeline & BootScene | v8.0 | 1/2 | In progress | — |
+| 38. Asset Pipeline & BootScene | v8.0 | Complete    | 2026-03-16 | — |
 | 39. Terrain Rendering | v8.0 | 0/3 | Not started | — |
 | 40. Buildings & Decorations | v8.0 | 0/3 | Not started | — |
 | 41. Characters & Ambient Life | v8.0 | 0/3 | Not started | — |
