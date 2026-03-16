@@ -7,12 +7,32 @@ import { selectNpcQuestMarkers } from '../../store/slices/questSlice.js';
 import { shouldSpawnNpc, evaluateSchedule } from './ScheduleEvaluator.js';
 import npcsEnriched from '../../data/npcsEnriched.js';
 import { selectGameTime } from '../../store/slices/timeSlice.js';
+import { evaluateActionSets, executeActions } from './ActionSetExecutor.js';
 
 // NPC proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
 
 // O(1) lookup map for full NPC data (includes schedule arrays)
 const NPC_DATA_MAP = new Map(npcsEnriched.map((n) => [n.id, n]));
+
+/**
+ * Build the action context snapshot from Redux state.
+ * Used by evaluateActionSets to check quest statuses, flags, player stats, etc.
+ *
+ * @returns {Object} Context object for ActionSetExecutor requirement evaluation
+ */
+function buildActionContext() {
+  const state = store.getState();
+  return {
+    questStatuses: state.quest?.statuses || {},
+    storyFlags: state.narrative?.storyFlags || {},
+    vocabMastery: {}, // TODO: wire to FSRS mastery in future phase
+    playerLevel: state.player?.level || 1,
+    inventory: state.inventory?.items?.map((i) => i.id) || [],
+    currentHour: selectGameTime(state).hour,
+    currentZone: state.player?.currentZone || 'oasis_village',
+  };
+}
 
 /**
  * NPCManager
@@ -45,6 +65,12 @@ export class NPCManager {
       const fullNpcData = NPC_DATA_MAP.get(cfg.id);
       if (fullNpcData && !shouldSpawnNpc(fullNpcData, hour, currentZone, flags)) {
         return; // Not in this zone at this time — skip
+      }
+
+      // Visibility flag filtering: skip story-gated NPCs whose flag doesn't match (Phase 34)
+      if (fullNpcData?.visibilityFlag) {
+        const flagValue = !!flags[fullNpcData.visibilityFlag];
+        if (flagValue !== fullNpcData.showWhenTrue) return; // Story gate not yet passed — skip
       }
 
       const npcX = cfg.x * 64 + 32;
@@ -152,6 +178,20 @@ export class NPCManager {
         // Stop movement so NPC stands still during dialogue (Phase 33)
         npc.stopMovement();
 
+        // ActionSet evaluation: data-driven NPC behavior (Phase 34)
+        // If NPC has actionSets for the interact trigger, evaluate and execute — skip default dialogue.
+        const fullData = NPC_DATA_MAP.get(npc.npcId);
+        if (fullData?.actionSets?.interact) {
+          const context = buildActionContext();
+          const matched = evaluateActionSets(fullData.actionSets.interact, context);
+          if (matched) {
+            executeActions(matched.actions, EventBus);
+            EventBus.emit(EVENTS.PLAYER_FREEZE);
+            return; // Skip default NPC_INTERACT emit
+          }
+        }
+
+        // Fallback: no actionSets or no matched set — emit classic NPC_INTERACT
         EventBus.emit(EVENTS.NPC_INTERACT, {
           npcId: npc.npcId,
           npcName: npc.npcName,
