@@ -186,9 +186,9 @@ Plans:
 **Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 33-01-PLAN.md — Schedule data + ScheduleEvaluator + NPCManager spawn filter
-- [ ] 33-02-PLAN.md — NPC movement patterns (wander/patrol) + face player on interact
-- [ ] 33-03-PLAN.md — TimeSystem schedule re-evaluation + night ambient BGM switching
+- [x] 33-01-PLAN.md — Schedule data + ScheduleEvaluator + NPCManager spawn filter
+- [x] 33-02-PLAN.md — NPC movement patterns (wander/patrol) + face player on interact
+- [x] 33-03-PLAN.md — TimeSystem schedule re-evaluation + night ambient BGM switching
 
 #### Phase 34: Data-Driven Events (ActionSets + Event Scripts)
 **Goal**: Replace hardcoded NPC logic with pure-data behavior definitions
@@ -267,8 +267,9 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 | 30. Companion System | v6.0 | 5/5 | Complete | 2026-02-13 |
 | 31. Crafting & Professions | v6.1 | 8/8 | Complete | 2026-02-13 |
 | 32. Status Effects & Advanced Combat | v6.1 | 11/11 | Complete | 2026-02-18 |
+| 33. Living World (NPC Schedules + Movement) | v7.0 | 3/3 | Complete | 2026-03-16 |
 
-**Cumulative:** 32 phases shipped, 95 plans complete, 7 milestones
+**Cumulative:** 33 phases shipped, 98 plans complete, 7 milestones
 
 ---
 *Roadmap created: 2026-02-08*
