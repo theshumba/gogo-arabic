@@ -24,6 +24,8 @@ import { PuzzleManager } from '../systems/PuzzleManager.js';
 import { FastTravelManager } from '../systems/FastTravelManager.js';
 import { MountSystem } from '../systems/MountSystem.js';
 import { getInterior } from '../../data/interiors/registry.js';
+import { AutoSave } from '../systems/AutoSave.js';
+import { GameplayStats } from '../systems/GameplayStats.js';
 import { evaluateActionSets, executeActions } from '../systems/ActionSetExecutor.js';
 import { buildActionContext } from '../systems/actionContext.js';
 
@@ -113,6 +115,12 @@ export class WorldScene extends Phaser.Scene {
     // Load the default zone
     const zone = ZONES.oasis_village;
     this.buildZone('oasis_village', zone.spawnPoint.x * TILE, zone.spawnPoint.y * TILE);
+
+    // AutoSave + GameplayStats (Phase 36)
+    this.autoSave = new AutoSave();
+    this.autoSave.start();
+    this.gameplayStats = new GameplayStats();
+    this.gameplayStats.start();
 
     // Camera setup (delegated to PlayerController for encapsulation)
     this.playerController.setupCamera(this.currentMapW * TILE, this.currentMapH * TILE);
@@ -217,6 +225,10 @@ export class WorldScene extends Phaser.Scene {
 
     // Load step triggers from zone data (Phase 34-03)
     this._stepTriggers = zone.stepTriggers || [];
+
+    // Sub-area state (Phase 36)
+    this._subAreas = zone.subAreas || [];
+    this._currentSubArea = null;
 
     // Build map (ground, objects, collision, exits)
     const wallGroup = this.mapLoader.create(zone, zone.mapWidth, zone.mapHeight);
@@ -377,6 +389,11 @@ export class WorldScene extends Phaser.Scene {
       this._checkStepTriggers(player);
     }
 
+    // Check sub-area boundaries (Phase 36)
+    if (this._subAreas && this._subAreas.length && player) {
+      this._checkSubArea(player);
+    }
+
     // Check exit trigger zones
     this.checkExitTriggers();
 
@@ -438,6 +455,31 @@ export class WorldScene extends Phaser.Scene {
     }
   }
 
+  // ============================================================
+  // SUB-AREA DETECTION (Phase 36)
+  // ============================================================
+
+  _checkSubArea(player) {
+    const px = Math.floor(player.x / TILE);
+    const py = Math.floor(player.y / TILE);
+
+    let currentArea = null;
+    for (const area of this._subAreas) {
+      if (px >= area.x && px < area.x + (area.width || 1) &&
+          py >= area.y && py < area.y + (area.height || 1)) {
+        currentArea = area;
+        break;
+      }
+    }
+
+    const prevArea = this._currentSubArea;
+    if (currentArea?.id !== prevArea?.id) {
+      if (prevArea) EventBus.emit(EVENTS.SUB_AREA_EXIT, { area: prevArea });
+      if (currentArea) EventBus.emit(EVENTS.SUB_AREA_ENTER, { area: currentArea });
+      this._currentSubArea = currentArea;
+    }
+  }
+
   // Check if player has walked into an exit trigger region
   checkExitTriggers() {
     const player = this.playerController.getPlayer();
@@ -496,6 +538,9 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   shutdown() {
+    if (this.autoSave) { this.autoSave.stop(); this.autoSave = null; }
+    if (this.gameplayStats) { this.gameplayStats.stop(); this.gameplayStats = null; }
+
     if (this.companionManager) {
       this.companionManager.destroy();
       this.companionManager = null;

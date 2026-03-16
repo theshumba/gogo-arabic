@@ -189,6 +189,13 @@ const oasis_village = {
       ],
     },
   ],
+
+  subAreas: [
+    { id: 'market-square', name: 'Market Square', nameArabic: 'ساحة السوق', x: 12, y: 6, width: 6, height: 4 },
+    { id: 'oasis-shore', name: 'Oasis Shore', nameArabic: 'شاطئ الواحة', x: 18, y: 12, width: 5, height: 4 },
+    { id: 'residential', name: 'Residential Quarter', nameArabic: 'الحي السكني', x: 6, y: 18, width: 8, height: 6 },
+    { id: 'ruins', name: 'Ancient Ruins', nameArabic: 'الأطلال القديمة', x: 18, y: 2, width: 6, height: 5 },
+  ],
 };
 
 // ============================================================
