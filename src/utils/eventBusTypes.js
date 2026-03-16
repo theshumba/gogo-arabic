@@ -160,6 +160,20 @@ export const EVENTS = Object.freeze({
   NARRATIVE_RELATIONSHIP_CHANGED: 'react:narrative:relationship-changed',
 
   // ────────────────────────────────────────────────
+  // TIME — Day/night cycle and time system
+  // ────────────────────────────────────────────────
+  /** Phaser → Phaser: time phase changed (dawn/day/dusk/night) */
+  TIME_PHASE_CHANGED: 'phaser:time:phase-changed',
+  /** Phaser → Phaser: time tick (periodic updates) */
+  TIME_TICK: 'phaser:time:tick',
+
+  // ────────────────────────────────────────────────
+  // NOTIFICATIONS — UI notification events
+  // ────────────────────────────────────────────────
+  /** Phaser → React: show a notification toast */
+  SHOW_NOTIFICATION: 'react:ui:show-notification',
+
+  // ────────────────────────────────────────────────
   // SCENE — Phaser scene lifecycle
   // ────────────────────────────────────────────────
   /** Phaser → React: BootScene/WorldScene finished initializing */
@@ -389,4 +403,27 @@ export const EVENTS = Object.freeze({
   PUZZLE_ANSWER_RESULT: 'phaser:puzzle:answer-result',
   /** Phaser → React: puzzle battle completed (victory or defeat) */
   PUZZLE_COMPLETE: 'phaser:puzzle:complete',
+
+  // ────────────────────────────────────────────────
+  // ACTION SET — Data-driven NPC action execution (Phase 34)
+  // ────────────────────────────────────────────────
+
+  /** ActionSetExecutor → DialogueEngine: play NPC speech line by key */
+  ACTION_SPEECH: 'action:npc:speech',
+  /** ActionSetExecutor → questSlice: start a quest by id */
+  ACTION_START_QUEST: 'action:quest:start',
+  /** ActionSetExecutor → questSlice: complete a quest by id */
+  ACTION_COMPLETE_QUEST: 'action:quest:complete',
+  /** ActionSetExecutor → inventorySlice: give item(s) to player */
+  ACTION_GIVE_ITEM: 'action:inventory:give-item',
+  /** ActionSetExecutor → vocabularySlice: teach a new vocabulary word */
+  ACTION_TEACH_WORD: 'action:vocab:teach-word',
+  /** ActionSetExecutor → narrativeSlice: set a story flag value */
+  ACTION_SET_FLAG: 'action:narrative:set-flag',
+  /** ActionSetExecutor → BattleScene: initiate a battle encounter */
+  ACTION_BATTLE: 'action:battle:start',
+  /** ActionSetExecutor → ZoneTransition: teleport player to zone/coords */
+  ACTION_TELEPORT: 'action:zone:teleport',
+  /** ActionSetExecutor → AudioManager: play a sound effect or BGM cue */
+  ACTION_PLAY_SOUND: 'action:audio:play-sound',
 });
