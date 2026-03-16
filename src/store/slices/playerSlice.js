@@ -12,6 +12,7 @@ const initialState = {
   xp: 0,
   xpToNextLevel: 100,
   dirhams: 0,
+  currency: { fils: 0, dirhams: 0, dinars: 0 },
   wordsLearned: 0,
   streak: 0,
   lastPlayedDate: null,
@@ -28,8 +29,8 @@ const initialState = {
   readBooks: [], // array of bookshelf IDs that have been read
   levelUpRewards: null, // Pending level-up reward to display
   streakRewardPending: null, // Pending streak reward to display
-  onboardingComplete: true, // Skip broken onboarding (Guide Amira texture missing)
-  tutorialPhase: 'complete', // Skip broken tutorial (NPC interaction fails without texture)
+  onboardingComplete: false, // New players start the tutorial
+  tutorialPhase: 'awaiting_mentor', // New players start at awaiting_mentor phase
   mentorAvailable: true, // Guide Amira can be found for hints
   onboardingTargetNpc: null, // NPC ID to highlight during onboarding (e.g., 'guide-amira')
 };
@@ -99,6 +100,38 @@ const playerSlice = createSlice({
 
     spendDirhams(state, action) {
       state.dirhams = Math.max(0, state.dirhams - action.payload);
+    },
+
+    addCurrency(state, action) {
+      const { fils = 0, dirhams = 0, dinars = 0 } = action.payload;
+      if (!state.currency) state.currency = { fils: 0, dirhams: 0, dinars: 0 };
+      state.currency.fils += fils;
+      state.currency.dirhams += dirhams;
+      state.currency.dinars += dinars;
+      // Auto-convert: 100 fils → 1 dirham
+      if (state.currency.fils >= 100) {
+        const convert = Math.floor(state.currency.fils / 100);
+        state.currency.dirhams += convert;
+        state.currency.fils %= 100;
+      }
+      // Auto-convert: 100 dirhams → 1 dinar
+      if (state.currency.dirhams >= 100) {
+        const convert = Math.floor(state.currency.dirhams / 100);
+        state.currency.dinars += convert;
+        state.currency.dirhams %= 100;
+      }
+    },
+
+    spendCurrency(state, action) {
+      const totalFils = action.payload.totalFils || 0;
+      if (!state.currency) return;
+      let pool = state.currency.dinars * 10000 + state.currency.dirhams * 100 + state.currency.fils;
+      if (pool < totalFils) return;
+      pool -= totalFils;
+      state.currency.dinars = Math.floor(pool / 10000);
+      pool %= 10000;
+      state.currency.dirhams = Math.floor(pool / 100);
+      state.currency.fils = pool % 100;
     },
 
     incrementWordsLearned(state) {
@@ -262,6 +295,8 @@ export const {
   addXP,
   addDirhams,
   spendDirhams,
+  addCurrency,
+  spendCurrency,
   incrementWordsLearned,
   updateStreak,
   setCurrentZone,
@@ -350,5 +385,11 @@ export const selectOnboardingState = createSelector(
     mentorAvailable: player.mentorAvailable,
   })
 );
+
+export const selectCurrency = (state) => state.player?.currency || { fils: 0, dirhams: 0, dinars: 0 };
+export const selectTotalFils = (state) => {
+  const c = state.player?.currency || { fils: 0, dirhams: 0, dinars: 0 };
+  return c.dinars * 10000 + c.dirhams * 100 + c.fils;
+};
 
 export default playerSlice.reducer;

@@ -21,7 +21,7 @@
 
 import { createMigrate } from 'redux-persist';
 
-export const CURRENT_VERSION = 6;
+export const CURRENT_VERSION = 7;
 
 /**
  * Migration definitions
@@ -99,18 +99,83 @@ const migrations = {
     }
     return state;
   },
-  // Version 6: Force-skip broken tutorial (Nuclear Fix)
+  // Version 6: Force-skip broken tutorial (root persist only)
   6: (state) => {
-    console.log('[Migration] Starting v5 -> v6: Force-skip broken tutorial');
+    // Only apply to root persist config (has player key)
+    if (!state || !state.player) return state;
     return {
       ...state,
       player: {
         ...state.player,
         onboardingComplete: true,
         tutorialPhase: 'complete',
-        isFrozen: false,
       },
     };
+  },
+
+  // Version 7: v7.0 World & Content — new slices and fields
+  7: (state) => {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] Starting v6 -> v7: v7.0 World & Content slices');
+    }
+
+    // Initialize home slice if missing
+    if (state && !state.home) {
+      state.home = {
+        placementGrid: Array(8).fill(null).map(() => Array(10).fill(null)),
+        ownedFurniture: [],
+        utilities: { Comfort: 0, Knowledge: 0, Hospitality: 0, Barakah: 0 },
+      };
+    }
+
+    // Initialize stats slice if missing
+    if (state && !state.stats) {
+      state.stats = {
+        wordsLearnedToday: 0,
+        wordsLearnedAllTime: 0,
+        totalAccuracy: { correct: 0, total: 0 },
+        zoneTime: {},
+        battlesWon: 0,
+        battlesLost: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        sessionsPlayed: 0,
+        totalPlayTime: 0,
+        lastSessionDate: null,
+        dailyStats: [],
+      };
+    }
+
+    // Initialize friendship in npc slice if missing
+    if (state?.npc && !state.npc.friendship) {
+      state.npc.friendship = {};
+    }
+
+    // Initialize new settings fields
+    if (state?.settings) {
+      if (state.settings.difficulty === undefined) state.settings.difficulty = 'normal';
+      if (state.settings.vowelMarks === undefined) state.settings.vowelMarks = true;
+      if (state.settings.hintFrequency === undefined) state.settings.hintFrequency = 'normal';
+      if (state.settings.battleSpeed === undefined) state.settings.battleSpeed = 1.0;
+      if (state.settings.vocabRandomizerSeed === undefined) state.settings.vocabRandomizerSeed = null;
+      if (state.settings.showRomanization === undefined) state.settings.showRomanization = true;
+    }
+
+    // Initialize tiered currency in player slice
+    if (state?.player && !state.player.currency) {
+      state.player.currency = {
+        fils: 0,
+        dirhams: state.player.dirhams || 0,
+        dinars: 0,
+      };
+    }
+
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] v6 -> v7 complete');
+    }
+    return state;
   },
 };
 
