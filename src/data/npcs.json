@@ -496,7 +496,61 @@
         },
         "behavior": "wander"
       }
-    ]
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [
+            {
+              "type": "quest",
+              "questId": "learn-greetings",
+              "status": "complete"
+            }
+          ],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "scholar-yusuf",
+              "dialogueKey": "advanced-lesson"
+            },
+            {
+              "type": "teachWord",
+              "wordId": "kitab"
+            }
+          ]
+        },
+        {
+          "requirements": [
+            {
+              "type": "flag",
+              "flagId": "met_mentor"
+            }
+          ],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "scholar-yusuf",
+              "dialogueKey": "welcome-student"
+            },
+            {
+              "type": "setFlag",
+              "flagId": "met_scholar",
+              "value": true
+            }
+          ]
+        },
+        {
+          "requirements": [],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "scholar-yusuf",
+              "dialogueKey": "default"
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": "merchant-fatima",
@@ -896,7 +950,60 @@
         },
         "behavior": "static"
       }
-    ]
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [
+            {
+              "type": "item",
+              "itemId": "rare_spice"
+            }
+          ],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "merchant-fatima",
+              "dialogueKey": "special-trade"
+            },
+            {
+              "type": "giveItem",
+              "itemId": "gold_dinar",
+              "quantity": 5
+            }
+          ]
+        },
+        {
+          "requirements": [
+            {
+              "type": "level",
+              "min": 3
+            }
+          ],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "merchant-fatima",
+              "dialogueKey": "experienced-trader"
+            },
+            {
+              "type": "teachWord",
+              "wordId": "tujjar"
+            }
+          ]
+        },
+        {
+          "requirements": [],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "merchant-fatima",
+              "dialogueKey": "default"
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": "student-khalid",
@@ -1166,7 +1273,41 @@
         },
         "behavior": "wander"
       }
-    ]
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [
+            {
+              "type": "quest",
+              "questId": "help-khalid-study",
+              "status": "active"
+            }
+          ],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "student-khalid",
+              "dialogueKey": "study-session"
+            },
+            {
+              "type": "teachWord",
+              "wordId": "qiraa"
+            }
+          ]
+        },
+        {
+          "requirements": [],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "student-khalid",
+              "dialogueKey": "default"
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": "librarian-ibrahim",
@@ -11056,7 +11197,40 @@
         },
         "behavior": "static"
       }
-    ]
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [
+            {
+              "type": "flag",
+              "flagId": "met_scholar"
+            }
+          ],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "guide-amira",
+              "dialogueKey": "scholar-intro-done"
+            },
+            {
+              "type": "startQuest",
+              "questId": "learn-greetings"
+            }
+          ]
+        },
+        {
+          "requirements": [],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "guide-amira",
+              "dialogueKey": "default"
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     "id": "scholar-yusuf-interior",
@@ -12356,5 +12530,152 @@
         ]
       }
     ]
+  },
+  {
+    "id": "mysterious-traveler",
+    "name": "Mysterious Traveler",
+    "nameArabic": "المُسافِر الغامِض",
+    "portrait": "portrait-npc-default",
+    "role": "A traveler who only appears after you have met the scholar",
+    "visibilityFlag": "met_scholar",
+    "showWhenTrue": true,
+    "personality": {
+      "tone": "mysterious",
+      "mood": "enigmatic"
+    },
+    "zone": "oasis_village",
+    "greeting": {
+      "arabic": "أَهلاً يا طالِب العِلم... سَمِعتُ أَنَّكَ تَلتَقي بِيوسُف",
+      "english": "Hello, seeker of knowledge... I heard you met Yusuf.",
+      "transliteration": "ahlan ya taalib al-ilm... sami'tu annaka talqa bi-yuusuf"
+    },
+    "vocabWords": [
+      "safar",
+      "ghareeb"
+    ],
+    "dialogueTrees": [
+      {
+        "id": "intro",
+        "trigger": "first_meeting",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الرِّحلَة إلى المَعرِفَة تَبدَأ بِخُطوَة واحِدَة",
+            "english": "The journey to knowledge begins with a single step.",
+            "transliteration": "ar-rihla ilal-ma'rifa tabda' bi-khutwa waahida"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [
+            {
+              "type": "quest",
+              "questId": "learn-greetings",
+              "status": "complete"
+            }
+          ],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "mysterious-traveler",
+              "dialogueKey": "quest-complete"
+            },
+            {
+              "type": "teachWord",
+              "wordId": "safar"
+            },
+            {
+              "type": "setFlag",
+              "flagId": "met_traveler",
+              "value": true
+            }
+          ]
+        },
+        {
+          "requirements": [],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "mysterious-traveler",
+              "dialogueKey": "default"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "night-guard",
+    "name": "Night Guard",
+    "nameArabic": "حارِس اللَّيل",
+    "portrait": "portrait-npc-default",
+    "role": "A guard who only patrols after dark",
+    "visibilityFlag": "unlocked_night_district",
+    "showWhenTrue": true,
+    "personality": {
+      "tone": "stern",
+      "mood": "vigilant"
+    },
+    "zone": "oasis_village",
+    "greeting": {
+      "arabic": "قِف! مَن أَنتَ في هذا الوَقت المُتَأَخِّر؟",
+      "english": "Halt! Who goes there at this late hour?",
+      "transliteration": "qif! man anta fii haadhaa al-waqt al-muta'akhkhir?"
+    },
+    "vocabWords": [
+      "hiraasa",
+      "layl"
+    ],
+    "dialogueTrees": [
+      {
+        "id": "default",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "المَنطِقَة آمِنَة. تَوَقَّف عِندَ الحَدّ",
+            "english": "The area is secure. Stay within the boundary.",
+            "transliteration": "al-mantiqa aamina. tawwaqaf inda al-hadd"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [
+            {
+              "type": "time",
+              "startHour": 20,
+              "endHour": 6
+            }
+          ],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "night-guard",
+              "dialogueKey": "on-duty"
+            },
+            {
+              "type": "teachWord",
+              "wordId": "layl"
+            }
+          ]
+        },
+        {
+          "requirements": [],
+          "actions": [
+            {
+              "type": "speech",
+              "npcId": "night-guard",
+              "dialogueKey": "default"
+            }
+          ]
+        }
+      ]
+    }
   }
 ]
