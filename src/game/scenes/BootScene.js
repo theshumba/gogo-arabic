@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
+import { KENMI_CATALOG } from '../../data/kenmiCatalog.js';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -58,6 +59,11 @@ export class BootScene extends Phaser.Scene {
     this.load.spritesheet('world-tileset', '/assets/tilesets/world.png', {
       frameWidth: 64,
       frameHeight: 64,
+    });
+
+    this.load.spritesheet('desert-tiles', '/assets/tilesets/desert-32x32/Desert Tileset 32x32/DESERT TILESET 32x32.png', {
+      frameWidth: 32,
+      frameHeight: 32,
     });
 
     // =========================================================
@@ -178,10 +184,133 @@ export class BootScene extends Phaser.Scene {
 
     // Audio is handled entirely by Howler.js (AudioManager singleton).
     // No Phaser audio loading needed.
+
+    // =========================================================
+    // BDRAGON PANEL ASSETS (for future spritesheet extraction)
+    // =========================================================
+    this.load.image('bdragon-border-1', '/assets/ui/bdragon-panels/Border All 1.png');
+    this.load.image('bdragon-border-2', '/assets/ui/bdragon-panels/Border All 2.png');
+    this.load.image('bdragon-border-3', '/assets/ui/bdragon-panels/Border All 3.png');
+    this.load.image('bdragon-border-4', '/assets/ui/bdragon-panels/Border All 4.png');
+    this.load.image('bdragon-deco-1', '/assets/ui/bdragon-panels/Deco All 1.png');
+    this.load.image('bdragon-deco-2', '/assets/ui/bdragon-panels/Deco All 2.png');
+
+    // =========================================================
+    // RPG UI KIT — Main tile sheet for NineSlice panels
+    // =========================================================
+    this.load.image('rpg-ui-tiles', '/assets/ui/rpg-ui-kit/PNG/Main_tiles.png');
+    this.load.image('rpg-ui-buttons', '/assets/ui/rpg-ui-kit/PNG/Buttons.png');
+    this.load.image('rpg-ui-icons', '/assets/ui/rpg-ui-kit/PNG/Icons.png');
+
+    // =========================================================
+    // KENMI CUTE FANTASY ASSETS — loaded from catalog
+    // =========================================================
+    // Register error handler once (fires per failed asset)
+    this.load.on('loaderror', (file) => {
+      console.warn(`[BootScene] Failed to load asset: ${file.key} @ ${file.url}`);
+    });
+
+    for (const entry of KENMI_CATALOG) {
+      if (entry.type === 'spritesheet') {
+        this.load.spritesheet(entry.key, entry.path, {
+          frameWidth: entry.frameWidth,
+          frameHeight: entry.frameHeight,
+        });
+      } else {
+        this.load.image(entry.key, entry.path);
+      }
+    }
   }
 
   create() {
+    // Generate pixel art panel textures for NineSlice use
+    this._generatePanelTextures();
+
     this.scene.start('WorldScene');
     EventBus.emit(EVENTS.SCENE_READY);
+  }
+
+  // ===========================================================
+  // Panel texture generation
+  // ===========================================================
+
+  /**
+   * Generate small pixel art panel textures at runtime using Phaser Graphics.
+   * These are used as NineSlice sources — corners stay fixed, edges/center stretch.
+   */
+  _generatePanelTextures() {
+    // Dark panel with gold border (dialogues, menus)
+    this._makePanel('panel-dark', 48, 48, {
+      bg: 0x1a1a2e, bgAlpha: 0.95,
+      border: 0xd4a843, borderWidth: 3, cornerSize: 6,
+    });
+
+    // Parchment panel (inventory, quest journal)
+    this._makePanel('panel-parchment', 48, 48, {
+      bg: 0x3d2b1f, bgAlpha: 0.95,
+      border: 0x8b6914, borderWidth: 3, cornerSize: 6,
+    });
+
+    // Red accent panel (battle, warnings)
+    this._makePanel('panel-red', 48, 48, {
+      bg: 0x2e1a1a, bgAlpha: 0.95,
+      border: 0xe63946, borderWidth: 3, cornerSize: 6,
+    });
+
+    // Tooltip (small, muted)
+    this._makePanel('panel-tooltip', 32, 32, {
+      bg: 0x2a2a3e, bgAlpha: 0.92,
+      border: 0x666680, borderWidth: 2, cornerSize: 4,
+    });
+  }
+
+  /**
+   * Draw a single pixel art panel texture and register it in Phaser's texture manager.
+   *
+   * Layout for a 48x48 source with borderWidth=3, cornerSize=6:
+   *   - Outer border stroke (3px wide)
+   *   - Brighter corner accents at each corner (6px along each edge)
+   *   - Solid fill interior
+   *
+   * @param {string} key  - Texture key to register.
+   * @param {number} w    - Source texture width.
+   * @param {number} h    - Source texture height.
+   * @param {object} opts - Drawing options.
+   */
+  _makePanel(key, w, h, opts) {
+    const g = this.make.graphics({ x: 0, y: 0, add: false });
+    const bw = opts.borderWidth;
+    const halfBw = Math.floor(bw / 2);
+
+    // Background fill (inset by border width)
+    g.fillStyle(opts.bg, opts.bgAlpha ?? 1);
+    g.fillRect(bw, bw, w - bw * 2, h - bw * 2);
+
+    // Border stroke
+    g.lineStyle(bw, opts.border, 1);
+    g.strokeRect(halfBw, halfBw, w - bw, h - bw);
+
+    // Corner accents — small bright marks at each corner for pixel art style
+    const cs = opts.cornerSize;
+    g.fillStyle(opts.border, 1);
+
+    // Top-left corner
+    g.fillRect(0, 0, cs, bw);
+    g.fillRect(0, 0, bw, cs);
+
+    // Top-right corner
+    g.fillRect(w - cs, 0, cs, bw);
+    g.fillRect(w - bw, 0, bw, cs);
+
+    // Bottom-left corner
+    g.fillRect(0, h - bw, cs, bw);
+    g.fillRect(0, h - cs, bw, cs);
+
+    // Bottom-right corner
+    g.fillRect(w - cs, h - bw, cs, bw);
+    g.fillRect(w - bw, h - cs, bw, cs);
+
+    g.generateTexture(key, w, h);
+    g.destroy();
   }
 }
