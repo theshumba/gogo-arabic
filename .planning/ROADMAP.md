@@ -425,9 +425,9 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 36. Quest Journal + Audio (Notebook + Buses) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 37. Polish + Replay (Randomizer + Settings) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 38. Asset Pipeline & BootScene | v8.0 | Complete    | 2026-03-16 | — |
-| 39. Terrain Rendering | v8.0 | 0/3 | Not started | — |
-| 40. Buildings & Decorations | v8.0 | 0/3 | Not started | — |
-| 41. Characters & Ambient Life | v8.0 | 0/3 | Not started | — |
+| 39. Terrain Rendering | v8.0 | Complete    | 2026-03-16 | — |
+| 40. Buildings & Decorations | v8.0 | Complete    | 2026-03-16 | — |
+| 41. Characters & Ambient Life | v8.0 | Complete    | 2026-03-16 | — |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 0/3 | Not started | — |
 | 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
 
