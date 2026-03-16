@@ -6,17 +6,17 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
 
-**Current focus:** v7.0 Planning — World & Content
+**Current focus:** v7.0 Phase 33 — Living World (NPC Schedules + Movement)
 
 ## Current Position
 
-Milestone: v7.0 World & Content (planning)
-Phase: Next up — Phase 33 (24 Zones)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-02-18 — Completed 32-11 (Phase 32 UI wiring + arenaSlice), shipped v6.1
+Milestone: v7.0 World & Content (Phases 33-37)
+Phase: 33 — Living World (NPC Schedules + Movement)
+Plan: 1 of ? completed
+Status: In progress
+Last activity: 2026-03-16 — Completed 33-01-PLAN.md (NPC Schedule Foundation)
 
-Progress: [████████████████████████████████████████████████████████████████] 11/11 Phase 32 plans — v6.1 SHIPPED
+Progress: [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 1/? Phase 33 plans
 
 ### Shipped Milestones
 
@@ -83,6 +83,14 @@ v6.1 Phase 31 decisions:
 - NPC profession teaching via data merge (not npcs.json modification) — composable, preserves existing data (31-08)
 - Minimal companion crafting dialogue (10 lines) — pattern established, remaining 50 lines deferred (31-08)
 
+v7.0 Phase 33 decisions (33-01):
+- 4 proof-of-concept NPCs receive schedules (guide-amira, scholar-yusuf, merchant-fatima, student-khalid) — pattern established for all 42+ NPCs
+- NPCs without schedule array always spawn unconditionally (backward compatible; no schedule = always spawn)
+- scholar-yusuf and student-khalid have no night entry — "going indoors" modelled as absence of matching schedule entry
+- Schedule filtering at spawn time; runtime re-evaluation on phase change deferred to plan 02+
+- _scheduleEntry stored on NPC sprite at spawn for movement system to consume without re-evaluating
+- NPC_DATA_MAP at module level in NPCManager for O(1) lookup — built once on module load
+
 v6.1 Phase 32 decisions:
 - 24 effects total (not 22) — original file had 16 effects (not 14 as plan assumed), adding 8 yields 24 (32-01)
 - Level gating tiers: 10/16/24 — tier 2 returns original 16, tier 3 includes all Phase 32 additions (32-01)
@@ -144,9 +152,9 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-18 (Phase 32 completion, v6.1 shipped)
-Stopped at: v6.1 archived, ready to start v7.0 planning
-Resume file: .planning/MASTER-PLAN.md + .planning/research/EXPANSION-WORLD-CONTENT.md
+Last session: 2026-03-16 (Phase 33 plan 01 complete)
+Stopped at: 33-01 complete — NPC schedule foundation done
+Resume file: .planning/phases/33-world-zones/33-02-PLAN.md (next plan)
 
 **Phase 32 Progress: COMPLETE (11/11)**
 - 32-01: Status Effects Foundation — COMPLETE
@@ -165,6 +173,9 @@ Resume file: .planning/MASTER-PLAN.md + .planning/research/EXPANSION-WORLD-CONTE
 - Phase 31: Crafting & Professions — COMPLETE (8/8 plans)
 - Phase 32: Status Effects & Advanced Combat — COMPLETE (11/11 plans)
 
+**Phase 33 Progress: IN PROGRESS (1/?)**
+- 33-01: NPC Schedule Foundation — COMPLETE
+
 ---
 *State initialized: 2026-02-08*
-*Last updated: 2026-02-18 — v6.1 Crafting & Advanced Combat shipped*
+*Last updated: 2026-03-16 — Phase 33 plan 01 complete (NPC schedule foundation)*
