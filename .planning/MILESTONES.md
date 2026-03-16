@@ -1,5 +1,28 @@
 # Project Milestones: GoGo Arabic
 
+## v7.0 World & Content (Shipped: 2026-03-16)
+
+**Delivered:** Transformed the RPG world into a living, breathing environment. NPCs follow schedules and move with personality, events are fully data-driven via ActionSets, economy has production chains and home decoration, quests are tracked in a Bomber's Notebook-style journal, and the game is replayable with randomizers and difficulty settings.
+
+**Phases completed:** 33-37 (18 plans total)
+
+**Key accomplishments:**
+- Built NPC schedule system with wander/patrol movement patterns and time-phase re-evaluation
+- Created data-driven event system (ActionSetExecutor + EventScriptRunner + step triggers)
+- Added production chain economy (EconomyFlow), friendship system, and home decoration with utility bonuses
+- Built Bomber's Notebook quest journal with NPC schedule viewer and bus-based ambient audio
+- Implemented AutoSave, GameplayStats tracker, sub-zone areas, and vocabulary randomizer
+- Added CalendarEvents, Town Knowledge Rating, tiered currency (fils/dirham/dinar), and BattleActionQueue
+- Created unified ActorRegistry and v7.0 save migrations for backward compatibility
+
+**Stats:**
+- 5 phases, 18 plans
+- Shipped 2026-03-16
+
+**What's next:** v8.0 — Visual Overhaul (pixel art tilesets, Phaser-native UI, Arabic BitmapFont, Tiled maps, decorations)
+
+---
+
 ## v6.1 Crafting & Advanced Combat (Shipped: 2026-02-18)
 
 **Delivered:** Complete crafting system with 6 Arabic-named professions, 100 recipes, 6 mini-games, and vocabulary-gated ingredients. Advanced combat with 24 Arabic status effects, grammar combo attacks (noun+adjective, verb chains, full sentences), multi-target battles, wave-based arena, boss rush mode, puzzle battles, and post-battle Arabic vocabulary review.

@@ -1,12 +1,27 @@
+---
+gsd_state_version: 1.0
+milestone: v7.0
+milestone_name: World & Content
+status: completed
+stopped_at: v7.0 shipped, ready for v8.0 Visual Overhaul
+last_updated: "2026-03-16T18:08:05.377Z"
+last_activity: 2026-03-16 — v7.0 milestone completed and archived
+progress:
+  total_phases: 37
+  completed_phases: 37
+  total_plans: 113
+  completed_plans: 113
+---
+
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-13)
+See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
 
-**Current focus:** v7.0 COMPLETE — Ready for `/gsd:complete-milestone`
+**Current focus:** v8.0 Visual Overhaul — tilesets, pixel UI, Arabic BitmapFont, Tiled maps, decorations
 
 ## Current Position
 
