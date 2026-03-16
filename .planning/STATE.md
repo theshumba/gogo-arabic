@@ -6,17 +6,17 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
 
-**Current focus:** v7.0 Phase 37 — Polish + Replay (Randomizer + Settings + Difficulty)
+**Current focus:** v7.0 COMPLETE — Ready for `/gsd:complete-milestone`
 
 ## Current Position
 
-Milestone: v7.0 World & Content (Phases 33-37)
-Phase: 37 — Polish + Replay (next — final phase)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-03-16 — Phase 36 COMPLETE (4/4 plans)
+Milestone: v7.0 World & Content (Phases 33-37) — SHIPPED
+Phase: All 5 phases complete
+Plan: 18/18 plans executed
+Status: Milestone complete
+Last activity: 2026-03-16 — Phase 37 COMPLETE, v7.0 shipped
 
-Progress: [████████████████████████████████████████████████████████████████] 4/4 Phase 36 plans — COMPLETE
+Progress: [████████████████████████████████████████████████████████████████] 5/5 phases — v7.0 COMPLETE
 
 ### Shipped Milestones
 

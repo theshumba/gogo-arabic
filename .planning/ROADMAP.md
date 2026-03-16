@@ -8,7 +8,7 @@
 - ✅ **v5.0 The Real Game** — Phases 19-26 (shipped 2026-02-11) → [archive](milestones/v5.0-ROADMAP.md)
 - ✅ **v6.0 Combat & RPG** — Phases 27.1, 28-30 (shipped 2026-02-13) → [archive](milestones/v6.0-ROADMAP.md)
 - ✅ **v6.1 Crafting & Advanced Combat** — Phases 31-32 (shipped 2026-02-18) → [archive](milestones/v6.1-ROADMAP.md)
-- 📋 **v7.0 World & Content** — Phases 33-37 (planned)
+- ✅ **v7.0 World & Content** — Phases 33-37 (shipped 2026-03-16)
 
 ## Phases
 
@@ -241,7 +241,13 @@ Plans:
 
 **Key files**: new `VocabRandomizer.js`, `settingsSlice.js`, `migrations.js`, new `CalendarEvents.js`, new `ActorRegistry.js`
 
-Plans: TBD
+**Plans**: 4 plans in 2 waves
+
+Plans:
+- [x] 37-01-PLAN.md — VocabRandomizer + difficulty settings in settingsSlice
+- [x] 37-02-PLAN.md — CalendarEvents + Town Knowledge Rating
+- [x] 37-03-PLAN.md — BattleActionQueue + tiered currency (fils/dirham/dinar)
+- [x] 37-04-PLAN.md — Unified ActorRegistry + v7.0 save migrations
 
 </details>
 
@@ -288,8 +294,9 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32
 | 34. Data-Driven Events (ActionSets + Event Scripts) | v7.0 | 3/3 | Complete | 2026-03-16 |
 | 35. Economy + Home (Production Chains + Decoration) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 36. Quest Journal + Audio (Notebook + Buses) | v7.0 | 4/4 | Complete | 2026-03-16 |
+| 37. Polish + Replay (Randomizer + Settings) | v7.0 | 4/4 | Complete | 2026-03-16 |
 
-**Cumulative:** 36 phases shipped, 109 plans complete, 7 milestones
+**Cumulative:** 37 phases shipped, 113 plans complete, 8 milestones
 
 ---
 *Roadmap created: 2026-02-08*
