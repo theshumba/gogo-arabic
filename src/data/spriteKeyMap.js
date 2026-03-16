@@ -1,7 +1,10 @@
 /**
- * Maps old placeholder sprite keys to Kenmi asset keys.
- * Used by MapLoader.placeObjects() to render Kenmi art with existing zone data.
- * Keys not in this map render using their original key (backward compatible).
+ * LEGACY FALLBACK — Maps old placeholder sprite keys to Kenmi asset keys.
+ *
+ * As of v8.0 Phase 43, zone data files (zones.js, mapPlaceholder.js) reference
+ * Kenmi keys directly. This map is kept for backward compatibility with any
+ * interior definitions or third-party code that may still reference old keys.
+ * It can be removed once all consumers are verified to use Kenmi keys directly.
  */
 export const SPRITE_KEY_MAP = {
   'palm': 'kenmi-desert-props-palm-tree-1',
