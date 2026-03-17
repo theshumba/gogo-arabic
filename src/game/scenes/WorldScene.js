@@ -7,6 +7,7 @@ import { PlayerController } from '../systems/PlayerController.js';
 import { NPCManager } from '../systems/NPCManager.js';
 import { InteractableManager } from '../systems/InteractableManager.js';
 import { MapLoader } from '../systems/MapLoader.js';
+import { TiledMapLoader } from '../systems/TiledMapLoader.js';
 import ScreenShake from '../systems/ScreenShake.js';
 import ParticleEffectManager from '../systems/ParticleEffectManager.js';
 import { SceneStackManager } from '../systems/SceneStackManager.js';
@@ -52,6 +53,8 @@ export class WorldScene extends Phaser.Scene {
     this.npcManager = null;
     this.interactableManager = null;
     this.mapLoader = null;
+    this.tiledMapLoader = null;
+    this.usingTiledMap = false; // true when current zone uses a Tiled map
     this.screenShake = null;
     this.particleEffects = null;
     this.sceneStackManager = null;
@@ -83,6 +86,7 @@ export class WorldScene extends Phaser.Scene {
     this.npcManager = new NPCManager(this);
     this.interactableManager = new InteractableManager(this);
     this.mapLoader = new MapLoader(this);
+    this.tiledMapLoader = new TiledMapLoader(this);
     this.screenShake = new ScreenShake(this);
     this.particleEffects = new ParticleEffectManager(this);
     this.timeSystem = new TimeSystem(this);
@@ -225,7 +229,12 @@ export class WorldScene extends Phaser.Scene {
     }
 
     // Destroy subsystems
-    this.mapLoader.destroy();
+    if (this.usingTiledMap) {
+      this.tiledMapLoader.destroy();
+    } else {
+      this.mapLoader.destroy();
+    }
+    this.usingTiledMap = false;
     this.npcManager.destroy();
     this.interactableManager.destroy();
     this.playerController.destroy();
@@ -256,8 +265,34 @@ export class WorldScene extends Phaser.Scene {
     this._subAreas = zone.subAreas || [];
     this._currentSubArea = null;
 
-    // Build map (ground, objects, collision, exits)
-    const wallGroup = this.mapLoader.create(zone, zone.mapWidth, zone.mapHeight);
+    // Build map — prefer Tiled JSON if available, fall back to code-generated
+    let wallGroup;
+    let objectSprites = [];
+
+    if (this.tiledMapLoader.hasMap(zoneName)) {
+      // ---- Tiled map path ----
+      this.usingTiledMap = true;
+      const mapKey = this.tiledMapLoader.zoneIdToMapKey(zoneName);
+      const result = this.tiledMapLoader.load(mapKey);
+
+      this.currentTiledMap = result.map;
+      this.currentTiledLayers = result.layers;
+      this.currentTiledExitTriggers = result.exitTriggers;
+
+      wallGroup = result.wallGroup;
+
+      // Override map dimensions from Tiled data (scaled to game grid)
+      const worldSize = this.tiledMapLoader.getWorldSize();
+      this.currentMapW = worldSize.width / TILE;
+      this.currentMapH = worldSize.height / TILE;
+
+      console.log(`[WorldScene] Loaded Tiled map "${mapKey}" (${this.currentMapW}x${this.currentMapH})`);
+    } else {
+      // ---- Code-generated map path (existing behavior) ----
+      this.usingTiledMap = false;
+      wallGroup = this.mapLoader.create(zone, zone.mapWidth, zone.mapHeight);
+      objectSprites = this.mapLoader.getObjectSprites();
+    }
 
     // Spawn player
     const player = this.playerController.create(spawnX, spawnY, wallGroup);
@@ -269,7 +304,7 @@ export class WorldScene extends Phaser.Scene {
     this.npcManager.create(zone.npcs, player, wallGroup, this.domOverlay);
 
     // Spawn interactables
-    this.interactableManager.create(zone.interactables, this.mapLoader.getObjectSprites());
+    this.interactableManager.create(zone.interactables, objectSprites);
 
     // Initialize gathering spots if zone supports crafting
     if (zone.gatheringSpots) {
@@ -525,7 +560,9 @@ export class WorldScene extends Phaser.Scene {
     const tileX = Math.floor(px / TILE);
     const tileY = Math.floor(py / TILE);
 
-    const exitTriggers = this.mapLoader.getExitTriggers();
+    const exitTriggers = this.usingTiledMap
+      ? (this.currentTiledExitTriggers || [])
+      : this.mapLoader.getExitTriggers();
 
     for (const exit of exitTriggers) {
       const [start, end] = exit.tileRange;

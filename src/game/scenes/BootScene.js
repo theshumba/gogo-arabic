@@ -228,6 +228,24 @@ export class BootScene extends Phaser.Scene {
     this.load.image('rpg-ui-icons', '/assets/ui/rpg-ui-kit/PNG/Icons.png');
 
     // =========================================================
+    // TILED MAP JSON FILES
+    // =========================================================
+    // Add Tiled JSON maps here as zones are built in Tiled Map Editor.
+    // Convention: key = "map-{zone-id-with-hyphens}", path = "/assets/maps/{zone}.json"
+    // Example: this.load.tilemapTiledJSON('map-oasis-village', '/assets/maps/oasis-village.json');
+    this.load.tilemapTiledJSON('map-test-map', '/assets/maps/test-map.json');
+
+    // Tileset images for Tiled maps — the key must match the tileset name in the Tiled JSON.
+    // For now, register short aliases for the Kenmi tilesets that Tiled maps reference.
+    this.load.image('desert-beach-tiles-1', '/assets/kenmi/desert/tiles/desert-beach-tiles-1.png');
+    this.load.image('desert-beach-tiles-2', '/assets/kenmi/desert/tiles/desert-beach-tiles-2.png');
+    this.load.image('desert-beach-tiles-3', '/assets/kenmi/desert/tiles/desert-beach-tiles-3.png');
+    this.load.image('desert-grass', '/assets/kenmi/desert/tiles/desert-grass.png');
+    this.load.image('desert-water-tiles-1', '/assets/kenmi/desert/tiles/desert-water-tiles-1.png');
+    this.load.image('desert-water-tiles-2', '/assets/kenmi/desert/tiles/desert-water-tiles-2.png');
+    this.load.image('desert-water-tiles-3', '/assets/kenmi/desert/tiles/desert-water-tiles-3.png');
+
+    // =========================================================
     // KENMI CUTE FANTASY ASSETS — loaded from catalog
     // =========================================================
     // Register error handler once (fires per failed asset)
