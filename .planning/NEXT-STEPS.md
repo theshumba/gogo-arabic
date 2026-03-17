@@ -210,14 +210,21 @@
 ---
 
 ## TIER 7: Infrastructure (from Master Plan v10.0)
-*Scale the foundation for 800K LOC.*
+*Scale the foundation for 800K LOC. New tools from docx research integrated.*
 
 - [ ] Backend v2: API, MongoDB 15+ collections, Redis, CDN
+- [ ] AceBase integration: realtime live object sync (installed) replacing manual CRUD for save states
 - [ ] State management overhaul: 25+ Redux slices, normalization
-- [ ] Performance: code splitting, Web Workers, streaming, bundle < 500KB
-- [ ] Testing: expand to 2,000+ tests, Playwright E2E
+- [ ] Performance: code splitting, Web Workers, streaming, bundle < 500KB, Phaser custom-build to strip unused modules
+- [ ] Testing: expand to 2,000+ tests, Playwright E2E, Visual Regression Tracker for pixel art
 - [ ] Content pipeline: vocabulary, dialogue, quest authoring tools
 - [ ] Save system: 3 slots, cloud sync, compression, migration
+- [ ] Migrate dialogue system to inkjs (installed) — ink scripting for branching narrative instead of hardcoded JSON
+- [ ] Integrate CAMeL Arabic Frequency Lists (17.3B token corpus) for vocabulary ordering
+- [ ] Integrate Arabic CEFR Classified List (8,834 lemmas mapped A1-C2) for level gating
+- [ ] Replace js-arabic-reshaper with mapbox-gl-rtl-text (ICU-based, production-proven) for Arabic rendering
+- [ ] Tiled MCP server (cloned at .mcp/tiled-mcp-server) for AI-assisted map creation
+- [ ] economia-style agent-based market simulation for dynamic NPC pricing
 
 ---
 
@@ -233,23 +240,44 @@
 
 ---
 
+## Installed Packages (Ready to Use)
+
+| Package | Purpose | Status |
+|---------|---------|--------|
+| phaser3-rex-plugins | RTL text, UI sizers, dialogue, inventory, pathfinding | Installed |
+| phaser-animated-tiles | Tiled map tile animations | Installed |
+| inkjs | Ink narrative scripting (80 Days, Heaven's Vault) | Installed |
+| acebase | Realtime NoSQL with live object sync | Installed |
+| js-arabic-reshaper | Arabic letter joining (to be replaced by mapbox-gl-rtl-text later) | Installed |
+| tiled-mcp-server | AI-assisted Tiled map creation | Cloned at .mcp/ |
+
 ## Order of Operations
 
 ```
 NOW        → Tier 1A (you design Oasis Village in Tiled)
-           → Tier 2A (source ambient audio in parallel)
-NEXT       → Tier 1B + 1C (I strip UI + rebuild sprites while you design)
+           → Tier 1B + 1C (I strip in-game UI + rebuild with Kenmi while you design)
+PARALLEL   → Tier 2A (source ambient audio)
 THEN       → Tier 3 (onboarding — needs the good-looking zone first)
-           → Tier 4A (NPC dialogue rewrite — needs working zone)
+           → Tier 4A (NPC dialogue rewrite with cultural depth)
 ONGOING    → Tier 1D (you design more zones over time)
-           → Tier 4B + 4C (content expansion)
-AFTER      → Tier 5 (learning systems built on content)
-           → Tier 6 (narrative on top of systems)
-LATER      → Tier 7 (infrastructure when codebase demands it)
-LAST       → Tier 8 (polish after everything works)
+           → Tier 4B + 4C (quest storylines + vocabulary expansion to 5,000 words)
+AFTER      → Tier 5 (learning systems: skill trees, grammar, quizzes, achievements)
+           → Tier 6 (narrative: divergent experience engine, factions, 8-act story)
+LATER      → Tier 7 (infrastructure: inkjs migration, AceBase sync, CAMeL frequency lists, Tiled MCP)
+LAST       → Tier 8 (AAA polish: game feel, accessibility, endgame)
 ```
+
+## After /clear, Say This:
+
+> "Continue with the NEXT-STEPS.md to-do list. Read `.planning/NEXT-STEPS.md` for the combined master plan. I'm working on Tiled maps — you work on Tier 1B (strip in-game UI and rebuild with Kenmi pixel art panels)."
+
+Or if you want me to work on something specific:
+
+> "Continue with NEXT-STEPS.md. Work on Tier [X] — [specific task]."
 
 ---
 
-*This replaces the original MASTER-PLAN.md phase numbering for post-v8.0 work.*
-*The original master plan research docs (.planning/research/EXPANSION-*.md) remain valid references.*
+*Combined master to-do list — replaces original MASTER-PLAN.md phase numbering for post-v8.0 work.*
+*Original master plan research docs (.planning/research/EXPANSION-*.md) remain valid references.*
+*All resources saved in memory: gogo-arabic-plugins-resources.md + gogo-arabic-docx-resources.md*
+*Last updated: 2026-03-17*
