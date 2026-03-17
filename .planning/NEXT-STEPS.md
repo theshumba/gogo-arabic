@@ -93,11 +93,23 @@
 - [ ] Guide Amira appears, speaks ONE line, gives first quest
 - [ ] No menus, no settings, no explanation — pure discovery
 
-### 3B. First Quest Flow
+### 3B. Learning Path Choice (During Onboarding)
+- [ ] After first word learned, Guide Amira asks: "What draws you to Arabic?"
+- [ ] Player picks one of three FOCUS PATHS (affects word order, NPC emphasis, quest priority):
+  - **Path of the Scholar** (القارئ) — Reading focus: Quranic vocabulary, classical texts, literary Arabic, calligraphy. Prioritizes reading comprehension, root analysis, formal register. Scholar Yusuf becomes primary mentor.
+  - **Path of the Traveler** (المسافر) — Conversational focus: greetings, directions, food, shopping, daily life. Prioritizes speaking phrases, practical vocab, social situations. Guide Amira becomes primary mentor.
+  - **Path of the Historian** (المؤرخ) — Cultural focus: historical terms, place names, scientific Arabic, trade vocabulary. Prioritizes world exploration, cultural notes, faction knowledge. Elder Tariq becomes primary mentor.
+- [ ] ALL paths teach the same Fusha (MSA) — no dialects. The difference is WHICH words come first and WHICH NPCs/quests are highlighted
+- [ ] Path choice affects: vocabulary ordering, NPC relationship bonuses, quest recommendations, achievement categories, skill tree emphasis
+- [ ] Player can switch paths later (but loses priority bonuses)
+- [ ] This creates replayability — "I did Scholar path, now I want Traveler" = different experience
+
+### 3C. First Quest Flow
 - [ ] "Learn 3 Arabic words from objects in the village" — words float above pots, signs, buildings
 - [ ] Each word teaches with visual + Arabic + transliteration + audio
 - [ ] After 3 words: reward (gold coins, achievement toast, "You know 3 Arabic words!")
-- [ ] Guide Amira: "Visit Scholar Yusuf to learn about letters" — quest marker appears
+- [ ] Guide Amira asks the Path choice question (3B above)
+- [ ] Based on path: different first real quest and mentor NPC
 - [ ] Player has learned the core loop in under 2 minutes without a single tutorial popup
 
 ---
@@ -105,14 +117,23 @@
 ## TIER 4: Content Depth (Do After Tiers 1-3 Are Solid)
 *The game has systems. Now fill them with substance.*
 
-### 4A. NPC Dialogue & Cultural Content
+### 4A. NPC Dialogue & Cultural Content (Researched from real history)
 - [ ] Rewrite all 23 NPC dialogue trees with personality, cultural depth, humor
-- [ ] Each NPC teaches something unique about Arabic culture/history
-- [ ] Merchant Fatima: haggling stories from Silk Road
-- [ ] Scholar Yusuf: Arabic calligraphy traditions, poetry quotes
-- [ ] Guide Amira: journey of a student learning Arabic, personal growth
+- [ ] Each NPC teaches something unique about Arabic culture/history, sourced from real historical records:
+  - **Merchant Fatima**: Silk Road trade routes, how Arabic numerals spread to Europe, the word "algorithm" coming from Al-Khwarizmi's name, spice trade vocabulary
+  - **Scholar Yusuf**: Arabic calligraphy traditions (6 canonical scripts), poetry of Al-Mutanabbi, the concept of ijazah (scholarly license), Bayt al-Hikma translations
+  - **Guide Amira**: Journey of learning Arabic as a non-native, the difference between Fusha and dialects, how Arabic spread across 22 countries, modern Arabic media
+  - **Librarian Ibrahim**: 400,000 books in Cordoba's library, paper-making from China via Samarkand, the translation movement, Arabic contributions to optics (Ibn al-Haytham)
+  - **Farmer Omar**: Arabic agricultural revolution (irrigation, crop rotation), words English borrowed from Arabic (cotton, sugar, orange, lemon, algebra, zero)
+  - **Blacksmith Daud**: Damascus steel secrets, Arabic metallurgy terms, geometric patterns in Islamic art (mathematical basis)
+  - **Imam Muhammad**: Arabic as language of the Quran, how tajweed (pronunciation rules) preserved the language, the concept of fasaha (eloquence)
+  - **Healer Khadija**: Ibn Sina's Canon of Medicine, Arabic medical vocabulary still used today, the hospital (bimaristan) as Arabic invention
+  - **Captain Rashid**: Arabic navigation terms (admiral = amir al-bahr), the astrolabe, monsoon trade routes
+  - **Princess Aisha**: Women scholars in Islamic history (Fatima al-Fihri founded world's first university), female poets, Scheherazade
+  - **Poet Rumi**: Arabic poetry forms (qasida, ghazal), the power of the Arabic root system for wordplay, calligraphy as meditation
 - [ ] Add 500+ new dialogue lines across all NPCs
-- [ ] Add cultural notes that appear when vocabulary is learned ("Did you know...")
+- [ ] Add cultural notes that appear when vocabulary is learned ("Did you know the word 'check' in chess comes from Arabic شاه (shah)?")
+- [ ] Cultural notes sourced from: Islamic Golden Age history, Cambridge History of Arabic Literature, 1001 Inventions project
 
 ### 4B. Quest Storylines
 - [ ] Flesh out the main story: time-traveling scholar, manuscript pages
@@ -161,8 +182,23 @@
 ---
 
 ## TIER 6: Narrative & Social Systems (from Master Plan v9.0)
-*The story that pulls players forward.*
+*The story that pulls players forward. Every player's journey is different.*
 
+### 6A. Divergent Experience Engine
+- [ ] Player choices create REAL consequences — not just dialogue flavor
+- [ ] Faction alignment (Scholars/Merchants/Artisans/Travelers/Guardians/Artists) gates content:
+  - Scholars: unlock library archives, formal Arabic, calligraphy quests, academic NPCs
+  - Merchants: unlock trade routes, negotiation Arabic, caravan travel, market quests
+  - Artisans: unlock crafting masters, technical Arabic, workshop interiors, creation quests
+  - Travelers: unlock hidden zones, geographic Arabic, mount system, exploration quests
+  - Guardians: unlock fortress areas, military Arabic, combat training, protection quests
+  - Artists: unlock poetry circles, literary Arabic, music halls (ambient), performance quests
+- [ ] NPC relationships shape what Arabic you learn — befriend a chef, learn food words; befriend a sailor, learn navigation words
+- [ ] World state variables (500+) remembered: helped rebuild library? New books + NPCs appear. Ignored the merchant's request? She sells to someone else, prices change
+- [ ] Daily/weekly rotating events: market festival, scholarly debate, caravan arrival, storm, eclipse — each with unique vocabulary and quests
+- [ ] Vocabulary-as-character-build: the Arabic words you know unlock abilities, dialogue options, and areas. Two players with 500 words but different words have completely different game experiences
+
+### 6B. Main Storyline
 - [ ] 8-act main storyline with manuscript page collection
 - [ ] 250+ quests (main, zone, companion, faction, daily, discovery)
 - [ ] 350+ NPCs with personality, schedules, memory, gossip
