@@ -156,3 +156,27 @@ export const NPC_KEY_MAP = {
   'npc-guide-salim': 'kenmi-desert-npc-desert-person-1',
   'npc-guide-amira': 'kenmi-desert-npc-traders-desert-trader-2',
 };
+
+/**
+ * Set of NPC sprite keys belonging to female characters.
+ * Used by NPC.js to apply hijab head covering overlay.
+ * Female NPCs identified from character names and roles in npcs.json.
+ */
+export const FEMALE_NPC_IDS = new Set([
+  'npc-merchant-fatima',      // Fatima
+  'npc-scribe-amina',         // Amina
+  'npc-spice-seller-layla',   // Layla
+  'npc-herbalist-maryam',     // Maryam
+  'npc-storyteller-noor',     // Noor
+  'npc-weaver-zahra',         // Zahra
+  'npc-healer-khadija',       // Khadija
+  'npc-princess-aisha',       // Aisha
+  'npc-fishmonger-hana',      // Hana
+  'npc-guide-amira',          // Amira
+]);
+
+/**
+ * Hijab tint color — a warm off-white that blends with Kenmi desert palette.
+ * Applied as multiply tint to the hijab overlay rectangle.
+ */
+export const NPC_HIJAB_TINT = 0xF5E6D3;
