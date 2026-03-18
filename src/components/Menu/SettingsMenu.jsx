@@ -9,6 +9,7 @@ import {
   toggleDiacritics,
   setKeyboardMode,
 } from '../../store/slices/settingsSlice.js';
+import AccessibilityPanel from '../Settings/AccessibilityPanel.jsx';
 import styles from './SettingsMenu.module.css';
 
 export default function SettingsMenu({ onBack }) {
@@ -112,6 +113,12 @@ export default function SettingsMenu({ onBack }) {
               {settings.keyboardMode === 'onscreen' ? 'On-Screen' : 'Physical'}
             </button>
           </div>
+        </div>
+
+        {/* Accessibility Section */}
+        <div className={styles.settingsSection}>
+          <div className={styles.sectionHeading}>Accessibility</div>
+          <AccessibilityPanel />
         </div>
 
         <button className={styles.backBtn} onClick={onBack}>Back to Menu</button>

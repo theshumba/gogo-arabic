@@ -147,6 +147,18 @@ function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe }) {
         <button onClick={() => { audioManager.playSFX('click'); onOpenWardrobe(); }} className={styles.pauseMenuBtnActivities}>
           Wardrobe
         </button>
+        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/skill-tree'); }} className={styles.pauseMenuBtnActivities}>
+          Skill Trees
+        </button>
+        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/codex'); }} className={styles.pauseMenuBtnActivities}>
+          Codex
+        </button>
+        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/save-load'); }} className={styles.pauseMenuBtnActivities}>
+          Save / Load
+        </button>
+        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/completion'); }} className={styles.pauseMenuBtnActivities}>
+          Completion
+        </button>
         <button onClick={() => { audioManager.playSFX('click'); onMainMenu(); }} className={styles.pauseMenuBtnMenu}>
           Main Menu
         </button>

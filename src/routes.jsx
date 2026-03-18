@@ -35,6 +35,12 @@ const WordSearch = lazy(() => import('./components/MiniGames/WordSearch.jsx'));
 const ReadingExercise = lazy(() => import('./components/Reading/ReadingExercise.jsx'));
 const RootExplorer = lazy(() => import('./components/Roots/RootExplorer.jsx'));
 
+// Disconnected systems — now wired in
+const SkillTreeMenu = lazy(() => import('./components/Skills/SkillTreeMenu.jsx'));
+const SaveLoadMenu  = lazy(() => import('./components/SaveLoad/SaveLoadMenu.jsx'));
+const CompletionTracker = lazy(() => import('./components/Endgame/CompletionTracker.jsx'));
+const CodexMenu     = lazy(() => import('./components/Menu/CodexMenu.jsx'));
+
 function DashboardRoute() {
   return (
     <PageTransition>
@@ -293,6 +299,58 @@ function RootExplorerRoute() {
   );
 }
 
+function SkillTreeRoute() {
+  const { goBack } = useGameNavigation();
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <SkillTreeMenu onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
+function SaveLoadRoute() {
+  const { goBack } = useGameNavigation();
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <SaveLoadMenu onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
+function CompletionTrackerRoute() {
+  const { goBack } = useGameNavigation();
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <CompletionTracker onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
+function CodexRoute() {
+  const { goBack } = useGameNavigation();
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <CodexMenu onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
 /**
  * Route configuration using React Router v6
  * Code splitting applied to all routes except MainMenu
@@ -381,6 +439,26 @@ export const router = createBrowserRouter([
   {
     path: '/roots',
     element: <RootExplorerRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/skill-tree',
+    element: <SkillTreeRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/save-load',
+    element: <SaveLoadRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/completion',
+    element: <CompletionTrackerRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/codex',
+    element: <CodexRoute />,
     errorElement: <RouteErrorBoundary />,
   },
   {
