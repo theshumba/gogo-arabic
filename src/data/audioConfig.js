@@ -39,6 +39,13 @@ export const INTERIOR_BGM = {
   default: 'interior',
 };
 
+// Zone ambient layers (wind, birds, water — layered on top of BGM)
+// Files at: /assets/audio/ambient/{layer}.mp3  (not yet created)
+export const ZONE_AMBIENT_LAYERS = {};
+
+// Interior ambient sounds
+export const INTERIOR_AMBIENT = {};
+
 // All BGM tracks for preloading reference
 export const ALL_BGM_TRACKS = [
   ...Object.values(ZONE_BGM_MAP),

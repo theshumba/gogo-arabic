@@ -3,13 +3,14 @@ import { useSelector } from 'react-redux';
 import { selectFormattedTime, selectTimePhase, TIME_PHASES } from '../../store/slices/timeSlice';
 import styles from './ClockHUD.module.css';
 
+// Simple pixel-art-friendly text icons (avoids react-icons dependency)
 const PhaseIcons = {
-    [TIME_PHASES.DAWN]: '🌅',
-    [TIME_PHASES.MORNING]: '☀️',
-    [TIME_PHASES.NOON]: '☀️',
-    [TIME_PHASES.AFTERNOON]: '🌤️',
-    [TIME_PHASES.SUNSET]: '🌇',
-    [TIME_PHASES.NIGHT]: '🌙',
+    [TIME_PHASES.DAWN]: '\u2600\uFE0E',     // sun symbol (text)
+    [TIME_PHASES.MORNING]: '\u2600\uFE0E',
+    [TIME_PHASES.NOON]: '\u2600\uFE0E',
+    [TIME_PHASES.AFTERNOON]: '\u2600\uFE0E',
+    [TIME_PHASES.SUNSET]: '\u263D',           // first quarter moon
+    [TIME_PHASES.NIGHT]: '\u263D',
 };
 
 const PhaseLabels = {

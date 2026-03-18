@@ -23,6 +23,33 @@ import styles from './TutorialHints.module.css';
  *
  * Also shows a persistent controls reminder for the first 60 seconds.
  */
+/**
+ * WelcomeSplash — brief overlay shown once on first game load.
+ * Fades out when the player clicks/taps or presses any key.
+ */
+export function WelcomeSplash({ onDone }) {
+  useEffect(() => {
+    const dismiss = () => onDone?.();
+    window.addEventListener('keydown', dismiss, { once: true });
+    window.addEventListener('pointerdown', dismiss, { once: true });
+    // Auto-dismiss after 4 seconds
+    const timer = setTimeout(dismiss, 4000);
+    return () => {
+      window.removeEventListener('keydown', dismiss);
+      window.removeEventListener('pointerdown', dismiss);
+      clearTimeout(timer);
+    };
+  }, [onDone]);
+
+  return (
+    <div className={styles.container} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className={styles.prompt} style={{ position: 'static', pointerEvents: 'auto', cursor: 'pointer' }}>
+        Welcome to GoGo Arabic! Click or press any key to begin.
+      </div>
+    </div>
+  );
+}
+
 export default function TutorialHints() {
   const dispatch = useDispatch();
   const tutorialPhase = useSelector((s) => s.player.tutorialPhase);
