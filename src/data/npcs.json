@@ -434,6 +434,44 @@
             ]
           }
         ]
+      },
+      {
+        "id": "cultural_calligraphy",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "في الخَطِّ العَرَبيِّ سِتَّةُ أُصولٍ كَبيرَة",
+            "english": "In Arabic calligraphy there are six great canonical scripts",
+            "transliteration": "fil-khatt al-arabi sittat usul kabira"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "النَّسخ وَالثُّلُث وَالرِّقعَة وَالدِّيواني وَالفارِسي وَالكوفي",
+            "english": "Naskh, Thuluth, Ruq'ah, Diwani, Farsi, and Kufi",
+            "transliteration": "an-naskh wath-thuluth war-ruq'a wad-diwani wal-farisi wal-kufi"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "ابنُ مُقلَة في القَرنِ العاشِر وَضَعَ قَواعِدَ النِّسَب",
+            "english": "Ibn Muqla in the 10th century established the proportional rules",
+            "transliteration": "ibn muqla fil-qarn al-'ashir wada'a qawa'id an-nisab",
+            "culturalNote": "Ibn Muqla (886-940 CE) created the proportional system that standardized Arabic calligraphy. Each letter is measured in dots relative to the alif."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كُلُّ حَرفٍ يُقاسُ بِنِقاطٍ نِسبَةً إلى الأَلِف",
+            "english": "Every letter is measured in dots relative to the alif",
+            "transliteration": "kullu harf yuqas bi-niqat nisbatan ila al-alif"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الشِّعرُ عِندَ المُتَنَبّي بَلَغَ ذُروَتَهُ — 'أَنا الَّذي نَظَرَ الأَعمى إلى أَدَبي'",
+            "english": "Poetry reached its peak with Al-Mutanabbi — 'I am he whose literature the blind can see'",
+            "transliteration": "ash-shi'r 'inda al-mutanabbi balagha dhurwatahu",
+            "culturalNote": "Al-Mutanabbi (915-965 CE) is considered the greatest Arabic poet. His name means 'the one who claimed to be a prophet' — a childhood nickname that stuck."
+          }
+        ]
       }
     ],
     "personality": {
@@ -893,6 +931,38 @@
                 "next": "hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "cultural_silk_road",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هَل تَعلَم أَنَّ طَريقَ الحَريرِ كانَ يَمُرُّ مِن هُنا؟",
+            "english": "Did you know the Silk Road passed through here?",
+            "transliteration": "hal ta'lam anna tariq al-harir kana yamurru min huna?"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "التُّجّارُ العَرَبُ نَقَلوا الأَرقامَ إلى أوروبا",
+            "english": "Arab traders carried numerals to Europe",
+            "transliteration": "at-tujjaar al-arab naqalu al-arqaam ila urubba"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كَلِمَةُ 'خَوارِزمي' أَصبَحَت 'algorithm' بالإنجليزيَّة",
+            "english": "The word 'Khwarizmi' became 'algorithm' in English",
+            "transliteration": "kalimat 'khwarizmi' asbahat 'algorithm' bil-injiliziyya",
+            "culturalNote": "Al-Khwarizmi (780-850 CE) wrote the foundational text on algebra. His name, Latinized as 'Algoritmi', gave us the word 'algorithm'."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَةُ 'تَعريفَة' أَعطَت الإنجليزيَّة 'tariff'",
+            "english": "And 'ta'rifa' gave English the word 'tariff'",
+            "transliteration": "wa kalimat 'ta'rifa' a'tat al-injiliziyya 'tariff'",
+            "culturalNote": "Many English trade words come from Arabic: tariff (ta'rifa), magazine (makhazin), cotton (qutn), sugar (sukkar)."
           }
         ]
       }
@@ -1655,6 +1725,39 @@
                 "next": "hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "cultural_libraries",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مَكتَبَةُ قُرطُبَة كانَت تَحوي أَربَعمِئَةِ أَلفِ كِتاب",
+            "english": "The library of Cordoba held 400,000 books",
+            "transliteration": "maktabat qurtuba kanat tahwi arba'mi'at alf kitab",
+            "culturalNote": "In the 10th century, Cordoba's library was the largest in Europe. By comparison, the largest monastery library in Christian Europe held about 400 books."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "صِناعَةُ الوَرَقِ جاءَت مِن الصّينِ عَبرَ سَمَرقَند",
+            "english": "Papermaking came from China through Samarkand",
+            "transliteration": "sina'at al-waraq ja'at min as-sin 'abra samarqand",
+            "culturalNote": "After the Battle of Talas (751 CE), Arab forces captured Chinese papermakers. Within decades, paper mills spread across the Islamic world, enabling the translation movement."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "بَيتُ الحِكمَةِ في بَغداد تَرجَمَ كُنوزَ اليونان",
+            "english": "The House of Wisdom in Baghdad translated Greek treasures",
+            "transliteration": "bayt al-hikma fi baghdad tarjama kunuz al-yunan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "ابنُ الهَيثَم أَسَّسَ عِلمَ البَصَريّات — كِتابُ المَناظِر",
+            "english": "Ibn al-Haytham founded optics — the Book of Optics",
+            "transliteration": "ibn al-haytham assasa 'ilm al-basariyyat — kitab al-manazir",
+            "culturalNote": "Ibn al-Haytham (965-1040 CE) disproved the Greek theory that eyes emit light. His 'Kitab al-Manazir' influenced Roger Bacon and Kepler."
           }
         ]
       }
@@ -3409,6 +3512,38 @@
                 "next": "hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "cultural_agriculture",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "العَرَبُ أَحدَثوا ثَورَةً زِراعيَّة — الرَّي وَتَناوُبُ المَحاصيل",
+            "english": "Arabs created an agricultural revolution — irrigation and crop rotation",
+            "transliteration": "al-arab ahdathu thawra zira'iyya — ar-ray wa tanawub al-mahasil"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كَلِمَةُ 'قُطن' أَعطَت 'cotton' وَ'سُكَّر' أَعطَت 'sugar'",
+            "english": "'Qutn' gave 'cotton' and 'sukkar' gave 'sugar'",
+            "transliteration": "kalimat 'qutn' a'tat 'cotton' wa 'sukkar' a'tat 'sugar'",
+            "culturalNote": "English borrowed extensively from Arabic through trade: cotton (qutn), sugar (sukkar), orange (naranj), lemon (laymun), lime (lima), artichoke (al-kharshuf)."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَ'نارَنج' أَعطَت 'orange' وَ'لَيمون' أَعطَت 'lemon'",
+            "english": "And 'naranj' gave 'orange' and 'laymun' gave 'lemon'",
+            "transliteration": "wa 'naranj' a'tat 'orange' wa 'laymun' a'tat 'lemon'"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "حَتّى كَلِمَةُ 'الجَبر' أَصبَحَت 'algebra' وَ'صِفر' أَصبَحَت 'zero'",
+            "english": "Even 'al-jabr' became 'algebra' and 'sifr' became 'zero'",
+            "transliteration": "hatta kalimat 'al-jabr' asbahat 'algebra' wa 'sifr' asbahat 'zero'",
+            "culturalNote": "The concept of zero (sifr) was transmitted to Europe through Arabic mathematicians. The word 'cipher' also comes from sifr."
           }
         ]
       }
@@ -6197,6 +6332,32 @@
             ]
           }
         ]
+      },
+      {
+        "id": "cultural_medicine",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "ابنُ سينا كَتَبَ القانونَ في الطِّبّ — أَعظَمُ كِتابٍ طِبّي",
+            "english": "Ibn Sina wrote the Canon of Medicine — the greatest medical text",
+            "transliteration": "ibn sina kataba al-qanun fit-tibb — a'zam kitab tibbi",
+            "culturalNote": "Ibn Sina's (Avicenna, 980-1037 CE) Canon of Medicine was used as a textbook in European universities until the 17th century — over 600 years."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "البيمارِستان — المُستَشفى — اختِراعٌ عَرَبي",
+            "english": "The bimaristan — the hospital — is an Arab invention",
+            "transliteration": "al-bimaristan — al-mustashfa — ikhtira' arabi",
+            "culturalNote": "The first hospitals (bimaristans) were established in Baghdad in the 9th century. They were free, treated all patients regardless of religion, and had separate wards for different conditions."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الرّازي فَرَّقَ بَينَ الحَصبَة وَالجُدَري أَوَّلَ مَرَّة",
+            "english": "Al-Razi distinguished between measles and smallpox for the first time",
+            "transliteration": "ar-razi farraqa bayna al-hasba wal-judari awwal marra"
+          }
+        ]
       }
     ],
     "personality": {
@@ -6669,6 +6830,32 @@
                 "action": "return_to_hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "cultural_navigation",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "كَلِمَةُ 'أَميرال' جاءَت مِن 'أَمير البَحر'",
+            "english": "The word 'admiral' came from 'amir al-bahr'",
+            "transliteration": "kalimat 'admiral' ja'at min 'amir al-bahr'",
+            "culturalNote": "Admiral comes from Arabic 'amir al-bahr' (أمير البحر), meaning 'commander of the sea'. Other nautical terms from Arabic include monsoon (mawsim) and cable (habl)."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "المَلّاحونَ العَرَبُ اختَرَعوا الإسطُرلاب البَحري",
+            "english": "Arab sailors invented the maritime astrolabe",
+            "transliteration": "al-mallahun al-arab ikhtara'u al-isturlab al-bahri"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "ابنُ ماجِد — أُسطورَةُ المُحيطِ الهِندي",
+            "english": "Ibn Majid — legend of the Indian Ocean",
+            "transliteration": "ibn majid — usturat al-muhit al-hindi",
+            "culturalNote": "Ahmad ibn Majid (1421-1500 CE) wrote over 40 works on navigation. He is said to have guided Vasco da Gama's fleet from East Africa to India in 1498."
           }
         ]
       }
@@ -7480,6 +7667,32 @@
                 "action": "return_to_hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "cultural_metallurgy",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الفولاذُ الدِّمَشقي كانَ أَقوى مَعدِنٍ في العالَم",
+            "english": "Damascus steel was the strongest metal in the world",
+            "transliteration": "al-fulath ad-dimashqi kan aqwa ma'din fil-'alam",
+            "culturalNote": "Damascus steel swords were famous for their distinctive wavy pattern (damask). The technique was lost around 1750 CE and has never been fully replicated."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الأَنماطُ الهَندَسيَّة في الفَنِّ الإسلامي تَعتَمِدُ على الرِّياضيّات",
+            "english": "Geometric patterns in Islamic art are based on mathematics",
+            "transliteration": "al-anmat al-handasiyya fil-fann al-islami ta'tamid 'ala ar-riyadiyyat"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كُلُّ نَمَطٍ يَبدَأُ مِن دائِرَة — الكَمالُ الإلهي",
+            "english": "Every pattern begins from a circle — divine perfection",
+            "transliteration": "kullu namat yabda' min da'ira — al-kamal al-ilahi",
+            "culturalNote": "Islamic geometric art avoids depicting living beings. Instead, artists used pure geometry and mathematical ratios, creating infinitely repeating patterns that suggest the infinite nature of God."
           }
         ]
       }
@@ -8381,6 +8594,32 @@
             ]
           }
         ]
+      },
+      {
+        "id": "cultural_women_scholars",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "فاطِمَةُ الفِهريَّة أَسَّسَت أَقدَمَ جامِعَةٍ في العالَم",
+            "english": "Fatima al-Fihri founded the oldest university in the world",
+            "transliteration": "fatima al-fihriyya assasat aqdam jami'a fil-'alam",
+            "culturalNote": "Fatima al-Fihri founded the University of al-Qarawiyyin in Fez, Morocco in 859 CE. UNESCO and Guinness World Records recognize it as the oldest continuously operating educational institution."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الشّاعِراتُ العَرَبيّاتُ كَتَبنَ شِعراً يَفوقُ كَثيراً مِنَ الرِّجال",
+            "english": "Arab women poets wrote verse surpassing many men",
+            "transliteration": "ash-sha'irat al-arabiyyat katabna shi'ran yafuqu kathiran min ar-rijal"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَشَهرَزاد — أَقوى شَخصيَّةٍ أَدَبيَّة: أَنقَذَت حَياتَها بالقِصَص",
+            "english": "And Scheherazade — the most powerful literary character: she saved her life through stories",
+            "transliteration": "wa shahrazad — aqwa shakhsiyya adabiyya: anqadhat hayataha bil-qisas",
+            "culturalNote": "In One Thousand and One Nights, Scheherazade tells stories for 1,001 nights to delay her execution. She represents the power of narrative — stories as survival."
+          }
+        ]
       }
     ],
     "personality": {
@@ -8811,6 +9050,31 @@
                 "action": "return_to_hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "cultural_poetry",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "القَصيدَةُ العَرَبيَّة لَها قَوافٍ مُعَقَّدَة — البَحرُ الطَّويل، الكامِل، الوافِر",
+            "english": "Arabic poetry has complex meters — Tawil, Kamil, Wafir",
+            "transliteration": "al-qasida al-arabiyya laha qawafi mu'aqqada — al-bahr at-tawil, al-kamil, al-wafir"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "نِظامُ الجُذورِ الثُّلاثيَّة يَجعَلُ التَّلاعُبَ بالأَلفاظِ فَنّاً",
+            "english": "The trilateral root system makes wordplay an art form",
+            "transliteration": "nizam al-judhur ath-thulathiyya yaj'al at-tala'ub bil-alfaz fannan",
+            "culturalNote": "Arabic's root system means a skilled poet can play with dozens of words sharing the same three-letter root, creating layers of meaning impossible in other languages."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الخَطُّ العَرَبي نَفسُهُ شِعر — كُلُّ حَرفٍ رَقصَة",
+            "english": "Arabic calligraphy itself is poetry — every letter a dance",
+            "transliteration": "al-khatt al-arabi nafsuhu shi'r — kullu harf raqsa"
           }
         ]
       }
@@ -9247,6 +9511,32 @@
                 "action": "return_to_hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "cultural_language",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "التَّجويدُ حَفِظَ النُّطقَ العَرَبيَّ لِأَكثَرَ مِن أَلفِ عام",
+            "english": "Tajweed preserved Arabic pronunciation for over a thousand years",
+            "transliteration": "at-tajwid hafiza an-nutq al-arabi li-akthar min alf 'am",
+            "culturalNote": "Tajweed (تجويد) is the science of Quranic recitation. Its rules standardized Arabic pronunciation so precisely that Classical Arabic sounds almost identical today to how it sounded in the 7th century."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مَفهومُ الفَصاحَة — البَلاغَةُ هِيَ أَعلى فُنونِ اللُّغَة",
+            "english": "The concept of fasaha — eloquence is the highest art of language",
+            "transliteration": "mafhum al-fasaha — al-balagha hiya a'la funun al-lugha"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العَرَبيَّةُ لُغَةُ الضّاد — الحَرفُ الَّذي لا يوجَدُ في أَيِّ لُغَةٍ أُخرى",
+            "english": "Arabic is the language of Daad — a letter found in no other language",
+            "transliteration": "al-arabiyya lughat ad-daad — al-harf alladhi la yujad fi ayy lugha ukhra",
+            "culturalNote": "Arabic is called 'lughat ad-Daad' (language of the Daad) because the letter ض is unique to Arabic — no other language has this exact sound."
           }
         ]
       }
@@ -11172,6 +11462,31 @@
             "arabic": "واصِل هَكَذا — الطَّريقُ طَويلٌ وَلَكِنَّكَ قادِر",
             "english": "Keep it up — the path is long but you are capable.",
             "transliteration": "waasil haakadha — at-tariiqu tawiilun wa laakinnaka qaadir"
+          }
+        ]
+      },
+      {
+        "id": "cultural_arabic_spread",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "العَرَبيَّةُ يَتَحَدَّثُها أَكثَرُ مِن ٤٠٠ مِليون شَخص",
+            "english": "Arabic is spoken by over 400 million people",
+            "transliteration": "al-arabiyya yatahadathuha akthar min 400 milyun shakhs"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الفُصحى تَجمَعُ ٢٢ دَولَة — مِن المَغرِب إلى العِراق",
+            "english": "Fusha unites 22 countries — from Morocco to Iraq",
+            "transliteration": "al-fusha tajma' 22 dawla — min al-maghrib ila al-'iraq"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كُلُّ بَلَدٍ لَهُ لَهجَة لكِنَّ الفُصحى هِيَ اللُّغَةُ المُشتَرَكَة",
+            "english": "Each country has a dialect but Fusha is the shared language",
+            "transliteration": "kullu balad lahu lahja lakinna al-fusha hiya al-lugha al-mushtaraka",
+            "culturalNote": "Modern Standard Arabic (Fusha) is understood across all Arabic-speaking countries. It's the language of news, literature, and formal speech — the common thread connecting 400+ million people."
           }
         ]
       }
