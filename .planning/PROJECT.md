@@ -68,22 +68,21 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
-## Current Milestone: v8.0 Visual Overhaul
+## Current Milestone: v9.0 Content Depth
 
-**Goal:** Replace all placeholder art with the Kenmi Cute Fantasy 16x16 pixel art bundle, move in-game UI from React DOM overlays into Phaser Canvas, and add Arabic BitmapFont rendering — making the game look like a polished Pokemon/Stardew Valley RPG.
-
-**Asset source:** Kenmi Art — Cute Fantasy RPG bundle (13 packs, ~1,200 PNGs, 16x16 base, commercial license)
+**Goal:** Fill the game with substance — rich NPC dialogue with real Islamic Golden Age history, a fleshed-out quest storyline spanning all zones, and vocabulary expansion from 1,220 to 5,000+ words with CEFR tagging and root family groupings.
 
 **Target features:**
-- Real desert terrain with auto-tiled transitions (sand, grass, water, cliff, road)
-- Kenmi buildings, props, and decorations replacing placeholder objects across all zones
-- Kenmi NPC/enemy/animal sprites replacing 128x128 faceless silhouettes
-- Hijab variants for female NPC characters
-- In-Phaser UI panels (NineSlice) replacing React CSS overlays for in-game elements
-- Arabic BitmapFont (Pixel AE) for all in-game text
-- Ambient animated decorations (grass sway, campfire, water foam, flies)
-- Zone-specific biome art (desert, forest, dungeon, snow, volcano, shroomlands, military camp)
-- Tiled-compatible map export structure for future collaborator handoff
+- 500+ new NPC dialogue lines with researched cultural/historical content across 23 NPCs
+- 8-act main storyline with manuscript page collection spanning all zones
+- Zone-specific side quests tied to Arabic learning and narrative
+- Vocabulary expansion from 1,220 to 5,000+ words with frequency-based ordering
+- CEFR-tagged vocabulary: A1 (500), A2 (1,000), B1 (2,000), B2 (1,500)
+- Root family groupings (ك-ت-ب → كتاب، كاتب، مكتوب، مكتبة)
+- Semantic clusters (food, family, travel, nature, body, etc.)
+- Cultural notes on vocabulary showing Arabic loanwords in English and historical context
+
+**Previous milestone:** v8.0 Visual Overhaul (shipped 2026-03-18) — Kenmi pixel art across all zones, Phaser-native UI, Arabic BitmapFont
 
 ### Out of Scope
 

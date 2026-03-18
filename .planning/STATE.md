@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v8.0
-milestone_name: Visual Overhaul
-status: completed
-stopped_at: Phase 43 Plan 02 complete
-last_updated: "2026-03-18T02:44:38.943Z"
-last_activity: "2026-03-18 — 43-02: Old sprite loads removed, InteractableManager migrated, zone-export.json created (PIPE-04, PIPE-05)"
+milestone: v9.0
+milestone_name: Content Depth
+status: not_started
+stopped_at: Defining requirements
+last_updated: "2026-03-18T04:00:00.000Z"
+last_activity: "2026-03-18 — Milestone v9.0 started (Content Depth)"
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 15
-  completed_plans: 16
+  total_phases: 3
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -20,14 +20,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 43 (zone cleanup) in progress (43-01 and 43-02 complete)
+**Current focus:** v9.0 Content Depth — NPC dialogue, quest storylines, vocabulary expansion
 
 ## Current Position
 
-Milestone: v8.0 Visual Overhaul
-Phase: 43 of 43 (zone-cleanup) — IN PROGRESS (2/3 plans done)
-Plan: 43-02 complete — 43-03 next
-Status: 43-02 done — BootScene cleaned, Kenmi keys in InteractableManager, Tiled JSON export created
+Milestone: v9.0 Content Depth
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-18 — Milestone v9.0 started
 Last activity: 2026-03-18 — 43-02: Old sprite loads removed, InteractableManager migrated, zone-export.json created (PIPE-04, PIPE-05)
 
 Progress (v8.0): [████████████] ~98% (17 plans done, 43-03 remains)
