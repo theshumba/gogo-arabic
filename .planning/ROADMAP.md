@@ -429,8 +429,8 @@ Plans:
 
 Plans:
 - [x] 45-01-PLAN.md — 8-act main storyline quests + act dialogue arcs in npcStoryArcs.js (QUEST-01)
-- [ ] 45-02-PLAN.md — 16 zone side quests + 12 companion personal quests + npcs.json dialogue (QUEST-02, QUEST-03)
-- [ ] 45-03-PLAN.md — Hidden inscription interactables + learningPath condition engine + per-path dialogue branches (QUEST-04, QUEST-05)
+- [x] 45-02-PLAN.md — 16 zone side quests + 12 companion personal quests + npcs.json dialogue (QUEST-02, QUEST-03)
+- [x] 45-03-PLAN.md — Hidden inscription interactables + learningPath condition engine + per-path dialogue branches (QUEST-04, QUEST-05)
 
 #### Phase 46: Vocabulary Expansion
 **Goal**: The FSRS vocabulary system contains 5,000+ words organized so players always encounter the most useful Arabic first, with every word contextualized by CEFR level, root family, and semantic category
@@ -502,7 +502,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 43. Zone References & Cleanup | v8.0 | 2/2 | Complete | 2026-03-18 |
 | 44. NPC Dialogue Expansion | v9.0 | Complete    | 2026-03-18 | 2026-03-18 |
-| 45. Quest Storylines | v9.0 | 0/TBD | Not started | — |
+| 45. Quest Storylines | v9.0 | Complete    | 2026-03-18 | — |
 | 46. Vocabulary Expansion | v9.0 | 0/TBD | Not started | — |
 
 **Cumulative:** 44 phases shipped (Phase 44 complete), 130 plans complete, 8 milestones shipped
