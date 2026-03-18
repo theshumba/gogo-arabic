@@ -427,7 +427,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 38. Asset Pipeline & BootScene | v8.0 | 2/2 | Complete | 2026-03-16 |
 | 39. Terrain Rendering | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 40. Buildings & Decorations | v8.0 | 3/3 | Complete | 2026-03-18 |
-| 41. Characters & Ambient Life | v8.0 | 3/3 | Complete | 2026-03-18 |
+| 41. Characters & Ambient Life | v8.0 | Complete    | 2026-03-18 | 2026-03-18 |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 0/3 | Not started | — |
 | 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
 
