@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
-status: in_progress
-stopped_at: Phase 43 Plan 02 complete — Phase 43 in progress (2/3 plans done)
-last_updated: "2026-03-18T10:00:00.000Z"
-last_activity: "2026-03-18 — 43-02: BootScene cleaned, InteractableManager Kenmi keys, Tiled export created (PIPE-04, PIPE-05)"
+status: completed
+stopped_at: Phase 43 Plan 02 complete
+last_updated: "2026-03-18T02:44:38.943Z"
+last_activity: "2026-03-18 — 43-02: Old sprite loads removed, InteractableManager migrated, zone-export.json created (PIPE-04, PIPE-05)"
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 15
-  completed_plans: 17
+  completed_plans: 16
 ---
 
 # Project State
