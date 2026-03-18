@@ -7,6 +7,7 @@ import { buildPlaceholderMap, defaultSpawnPoint, defaultObjects } from './mapPla
 export const realWorldZones = {
     baghdad: {
         id: 'baghdad',
+        tilesetTheme: 'desert',
         name: 'Baghdad (House of Wisdom)',
         arabicName: 'بغداد',
         era: 'Abbasid Caliphate (~800 CE)',
@@ -25,6 +26,7 @@ export const realWorldZones = {
     },
     cordoba: {
         id: 'cordoba',
+        tilesetTheme: 'desert',
         name: 'Cordoba (Al-Andalus)',
         arabicName: 'قرطبة',
         era: 'Umayyad Caliphate of Cordoba (~950 CE)',
@@ -43,6 +45,7 @@ export const realWorldZones = {
     },
     timbuktu: {
         id: 'timbuktu',
+        tilesetTheme: 'desert',
         name: 'Timbuktu',
         arabicName: 'تمبكتو',
         era: 'Songhai Empire (~1500 CE)',
@@ -61,6 +64,7 @@ export const realWorldZones = {
     },
     damascus: {
         id: 'damascus',
+        tilesetTheme: 'desert',
         name: 'Damascus',
         arabicName: 'دمشق',
         era: 'Umayyad Caliphate (~700 CE)',
@@ -79,6 +83,7 @@ export const realWorldZones = {
     },
     cairo: {
         id: 'cairo',
+        tilesetTheme: 'desert',
         name: 'Cairo',
         arabicName: 'القاهرة',
         era: 'Fatimid Caliphate (~1000 CE)',
@@ -97,6 +102,7 @@ export const realWorldZones = {
     },
     fez: {
         id: 'fez',
+        tilesetTheme: 'desert',
         name: 'Fez',
         arabicName: 'فاس',
         era: 'Marinid Sultanate (~1300 CE)',
@@ -115,6 +121,7 @@ export const realWorldZones = {
     },
     samarkand: {
         id: 'samarkand',
+        tilesetTheme: 'desert',
         name: 'Samarkand',
         arabicName: 'سمرقند',
         era: 'Timurid Empire (~1400 CE)',
@@ -133,6 +140,7 @@ export const realWorldZones = {
     },
     granada: {
         id: 'granada',
+        tilesetTheme: 'desert',
         name: 'Granada',
         arabicName: 'غرناطة',
         era: 'Nasrid Kingdom (~1350 CE)',

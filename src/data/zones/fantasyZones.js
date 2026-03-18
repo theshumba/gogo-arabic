@@ -7,6 +7,7 @@ import { buildPlaceholderMap, defaultSpawnPoint, defaultObjects } from './mapPla
 export const fantasyZones = {
     star_oasis: {
         id: 'star_oasis',
+        tilesetTheme: 'desert',
         name: 'Star Oasis',
         arabicName: 'واحة النجوم',
         theme: 'Navigation, Astronomy, Night',
@@ -24,6 +25,7 @@ export const fantasyZones = {
     },
     mountain_of_words: {
         id: 'mountain_of_words',
+        tilesetTheme: 'snow',
         name: 'Mountain of Words',
         arabicName: 'جبل الكلمات',
         theme: 'Roots, Morphology, Climbing',
@@ -41,6 +43,7 @@ export const fantasyZones = {
     },
     sea_of_ink: {
         id: 'sea_of_ink',
+        tilesetTheme: 'grass',
         name: 'Sea of Ink',
         arabicName: 'بحر الحبر',
         theme: 'Calligraphy, Writing',
@@ -58,6 +61,7 @@ export const fantasyZones = {
     },
     forest_of_tales: {
         id: 'forest_of_tales',
+        tilesetTheme: 'mushroom',
         name: 'Forest of Tales',
         arabicName: 'غابة الحكايات',
         theme: 'Storytelling, 1001 Nights',
@@ -75,6 +79,7 @@ export const fantasyZones = {
     },
     desert_of_silence: {
         id: 'desert_of_silence',
+        tilesetTheme: 'volcano',
         name: 'Desert of Silence',
         arabicName: 'صحراء الصمت',
         theme: 'Listening, Comprehension',
@@ -92,6 +97,7 @@ export const fantasyZones = {
     },
     merchants_island: {
         id: 'merchants_island',
+        tilesetTheme: 'grass',
         name: 'Merchants\' Island',
         arabicName: 'جزيرة التجار',
         theme: 'Trade, Economics, Negotiation',
@@ -109,6 +115,7 @@ export const fantasyZones = {
     },
     fortress_of_secrets: {
         id: 'fortress_of_secrets',
+        tilesetTheme: 'dungeon',
         name: 'Fortress of Secrets',
         arabicName: 'قلعة الأسرار',
         theme: 'Puzzles, Logic, Riddles',
@@ -126,6 +133,7 @@ export const fantasyZones = {
     },
     garden_of_spirits: {
         id: 'garden_of_spirits',
+        tilesetTheme: 'grass',
         name: 'Garden of Spirits',
         arabicName: 'حديقة الأرواح',
         theme: 'Nature, Seasons, Growth',
