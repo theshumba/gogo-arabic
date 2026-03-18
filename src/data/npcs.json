@@ -1613,6 +1613,13 @@
           },
           {
             "speaker": "npc",
+            "arabic": "العَرَبِيَّةُ سَهلَةٌ إذا لم تَخَفْ مِنَ الغَلَط. سَهل — هَذِهِ كَلِمَةٌ مُهِمَّة!",
+            "english": "Arabic is easy if you don't fear mistakes. Easy — that is an important word!",
+            "transliteration": "al-arabiyya sahla idha lam takhaf min al-ghalat. sahl — hadhihi kalimah muhimma!",
+            "teachWord": "easy_1"
+          },
+          {
+            "speaker": "npc",
             "arabic": "هَل تَعرِفُ 'صَحيح'؟ تَعني correct. 'غَلَط' تَعني wrong. تَعَلَّمهُما!",
             "english": "Do you know 'sahiih'? It means correct. 'Ghalat' means wrong. Learn both!",
             "transliteration": "hal ta'rifu 'sahiih'? ta'nii correct. 'ghalat' ta'nii wrong. ta'allamahumaa!",
@@ -3546,6 +3553,126 @@
             ]
           }
         ]
+      },
+      {
+        "id": "teach_caravanserai",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "تَفَضَّل يا أَخي! صَفْقَة مُمتازَة! اليَوم سَأُريكَ أَسرارَ التِّجارَة عَبرَ الصَّحراء",
+            "english": "Come in my friend! Excellent deal! Today I will show you the secrets of desert trade.",
+            "transliteration": "tafaddal ya akhii! safqa mumtaaza! al-yawm sa-uriika asraar at-tijaara abr as-sahraa'"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "القَافِلَة — مَجموعَةُ التُّجَّار تَسيرُ مَعاً. الأَمانُ في الجَماعَة!",
+            "english": "The caravan — a group of traders traveling together. Safety in numbers!",
+            "transliteration": "al-qaafila — majmuu'at at-tujjaar tasiiru ma'an. al-amaan fil-jamaa'a!",
+            "teachWord": "merchant_w44"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الخانُ — فُندُقُ التّاجِر في الصَّحراء. بَعدَ أُسبوعِ سَفَر تَجِدُهُ كَالجَنَّة!",
+            "english": "The khan — the trader's hotel in the desert. After a week of travel you find it like paradise!",
+            "transliteration": "al-khaan — funduq at-taajir fis-sahraa'. ba'da usbu' safar tajidahu kal-janna!",
+            "culturalNote": "Caravanserais (khan/funduq) were rest stops built every 25-30 km along trade routes — roughly one day's caravan travel. They provided free accommodation, water, and fodder. The largest could house 300 merchants."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَةُ 'check' في المَصارِف — مِن العَرَبِيَّة 'صَكّ' — وَثيقَةُ الدَّفع",
+            "english": "And the word 'check' in banking — from Arabic 'sakk' — a payment document.",
+            "transliteration": "wa kalimat 'check' fil-masaarif — min al-arabiyya 'sakk' — wathiiqat ad-daf'",
+            "culturalNote": "The word 'check' (bank check) comes from Arabic 'sakk' — a written payment order. Arab merchants invented the sakk system to avoid carrying gold across dangerous trade routes. This was the world's first banking instrument."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَ'risk' مِن 'رِزق' — الرِّزقُ هُوَ ما قَسَمَهُ اللَّهُ مِنَ الخَيرات",
+            "english": "And 'risk' from 'rizq' — rizq is what God has apportioned of good things.",
+            "transliteration": "wa 'risk' min 'rizq' — ar-rizq huwa maa qasamahu allaah min al-khayrat",
+            "culturalNote": "The English word 'risk' may derive from Arabic 'rizq' (livelihood, fortune) through Italian 'risco'. Arab traders used the concept of divine provision alongside calculated risk-taking."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "قِصَص أُخرى مِن السَّفَر!",
+                "english": "More travel stories!",
+                "next": "hassan_travel_stories"
+              },
+              {
+                "arabic": "صَفْقَة مُمتازَة — شُكراً!",
+                "english": "Excellent deal — thank you!",
+                "next": "hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hassan_travel_stories",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "صَفْقَة مُمتازَة! ثَلاثون عاماً في التِّجارَة — سافَرتُ مِنَ الأَندَلُس إلى الصّين",
+            "english": "Excellent deal! Thirty years in trade — I traveled from Andalusia to China.",
+            "transliteration": "safqa mumtaaza! thalaathuun aaman fit-tijaara — saafartu min al-andalus ilaa as-siin"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "في الأَندَلُس — اِسبانيا الإِسلامِيَّة — رَأَيتُ أَجمَلَ بُيوتٍ في العالَم",
+            "english": "In Andalusia — Islamic Spain — I saw the most beautiful houses in the world.",
+            "transliteration": "fil-andalus — isbaaniyaa al-islamiyya — ra'aytu ajmal buyuut fil-'aalam"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَفي الصّين — ما شاء اللَّه — المَدائِنُ كَالجِبال! وَالبُوصَلَةُ العَجيبَة التي تُشيرُ دائِماً للشَّمال",
+            "english": "And in China — mashallah — cities like mountains! And the amazing compass that always points north!",
+            "transliteration": "wa fis-siin — maa shaa'allaah — al-madaa'in kal-jibaal! wal-buusala al-ajiiba allati tushiiru daa'iman lish-shamaal"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "التُّجارُ العَرَبُ أَخَذوا البُوصَلَةَ مِن الصّين وَنَشَروها في العالَم — صَفْقَة مُمتازَة للبَشَرِيَّة!",
+            "english": "Arab traders took the compass from China and spread it to the world — an excellent deal for humanity!",
+            "transliteration": "at-tujjaar al-arab akhadhu al-buusala min as-siin wa nasharu-ha fil-'aalam — safqa mumtaaza lil-bashariyya!"
+          },
+          {
+            "action": "quiz",
+            "words": ["sell_w35", "buy_w34", "merchant_w44", "customer_w45"],
+            "quizType": "random"
+          }
+        ]
+      },
+      {
+        "id": "hassan_guild_system",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "صَفْقَة مُمتازَة! اليَوم أُريدُ أَن أُخبِرَكَ عَن نِقابَةِ التُّجَّار",
+            "english": "Excellent deal! Today I want to tell you about the merchants' guild.",
+            "transliteration": "safqa mumtaaza! al-yawm uriidu an ukhbiraka an niqaabat at-tujjaar"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "نِقابَةُ التُّجَّار — تَنظيمٌ يَحمي التّاجِرَ مِنَ الغِشِّ وَيَضمَنُ جَودَةَ البَضائِع",
+            "english": "The merchants' guild — an organization protecting traders from fraud and guaranteeing goods quality.",
+            "transliteration": "niqaabat at-tujjaar — tandhiim yahmii at-taajir min al-ghish wa yadmanu jawdat al-badaa'i'",
+            "culturalNote": "Islamic trade guilds (asnaf) developed in the 9th century, centuries before European guilds. They had standardized weights, quality controls, and dispute resolution. The hisba (market inspector) enforced fair trading."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "المُحتَسِبُ — مُفَتِّشُ السُّوق — يَمشي كُلَّ يَوم وَيَتَحَقَّقُ مِن المَوازين",
+            "english": "The muhtasib — the market inspector — walks every day and checks the scales.",
+            "transliteration": "al-muhtasib — mufaatish as-suuq — yamshi kull yawm wa yatahaqqa min al-mawaaziin"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "التّاجِرُ الصّادِقُ يَنجَحُ دائِماً — البَرَكَةُ في الصِّدق! صَفْقَة مُمتازَة يا أَخي!",
+            "english": "The honest trader always succeeds — blessing is in honesty! Excellent deal my friend!",
+            "transliteration": "at-taajir as-saadiq yanjahu daa'iman — al-baraka fis-sidq! safqa mumtaaza ya akhii!"
+          }
+        ]
       }
     ],
     "personality": {
@@ -3893,6 +4020,126 @@
                 "next": "hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "hamza_military_vocab",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "قِف! أَنتَ عُدتَ. جَيِّد. الجُندِيُّ الجَيِّدُ يَعودُ دائِماً",
+            "english": "Halt! You returned. Good. A good soldier always returns.",
+            "transliteration": "qif! anta udta. jayyid. al-jundiyyu al-jayyid ya'uudu daa'iman"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أُعَلِّمُك كَلِمات المُحارِب. السَّيف — أَهَمُّ سِلاح",
+            "english": "I'll teach you warrior words. The sword — the most important weapon.",
+            "transliteration": "u'allimuk kalimaat al-muharib. as-sayf — ahamm silaah",
+            "teachWord": "strong_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "القَوس وَالسَّهم — لِلمَسافَة البَعيدَة. الصَّبر — لِلمَسافَة الأَبعَد",
+            "english": "Bow and arrow — for long distance. Patience — for the longest distance.",
+            "transliteration": "al-qaws was-sahm — lil-masaafa al-ba'iida. as-sabr — lil-masaafa al-ab'ad"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "'admiral' — كَلِمَة إنجليزيَّة مِن 'أَميرُ البَحر'. العَرَبُ كانوا أَسيادَ البَحر",
+            "english": "'Admiral' — an English word from 'amir al-bahr'. Arabs were masters of the sea.",
+            "transliteration": "'admiral' — kalima injiliziyya min 'amir al-bahr'. al-arab kaanu asiyaad al-bahr",
+            "culturalNote": "The word 'admiral' comes from Arabic 'amir al-bahr' (commander of the sea). Arab naval power reached its peak under the Fatimid and later the Ottoman Empire. The Mediterranean was an Arab sea for centuries."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "صَلاحُ الدِّين الأَيُّوبي — مِن أَعظَم القادَة. تَعَلَّمَ مِنَ الأَعداءِ وَانتَصَرَ",
+            "english": "Saladin — one of the greatest commanders. He learned from enemies and prevailed.",
+            "transliteration": "salaah ad-diin al-ayyuubii — min a'dham al-qaada. ta'allama min al-a'daa' wa intasar",
+            "culturalNote": "Saladin (Salah ad-Din, 1137-1193 CE) recaptured Jerusalem in 1187. He was renowned for his chivalry — he allowed Christian civilians to leave safely. Even his enemies, like Richard I, respected him."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلِّمْني أَرقاماً أَكبَر",
+                "english": "Teach me bigger numbers",
+                "next": "teach_numbers_2"
+              },
+              {
+                "arabic": "كَيفَ حالُ عائِلَتِك؟",
+                "english": "How is your family?",
+                "next": "hamza_family"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hamza_family",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "عائِلَتي... أَنا أَعملُ بَعيداً. لَكِنَّهُم في قَلبي دائِماً",
+            "english": "My family... I work far away. But they are always in my heart.",
+            "transliteration": "aa'ilatii... ana a'mal ba'iidan. laakinnnahum fii qalbii daa'iman"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "ابني... هُوَ في الثّامِنَة مِن عُمرِهِ. يُريدُ أَن يَكونَ حارِساً مِثلي",
+            "english": "My son... he is eight years old. He wants to be a guard like me.",
+            "transliteration": "ibnii... huwa fith-thaaminati min umurihi. yuriidu an yakuuna haarisan mithlii"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قُلتُ لَهُ: أَوَّلاً تَعَلَّم! ثُمَّ اخدُم. الجُنديُّ الجاهِلُ خَطَر",
+            "english": "I told him: first learn! Then serve. An ignorant soldier is a danger.",
+            "transliteration": "qultu lahu: awwalan ta'allam! thumma ukhdum. al-jundiyyu al-jaahil khatar"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَذا لِماذا أُعَلِّمُك الأَعداد — حَتّى لا تُخطِئَ في الحِساب يَوماً",
+            "english": "This is why I teach you numbers — so you don't make arithmetic errors someday.",
+            "transliteration": "haadhaa limaadha u'allimuk al-a'daad — hattaa laa tukhti' fil-hisaab yawman",
+            "teachWord": "num_15"
+          },
+          {
+            "action": "quiz",
+            "words": ["num_11", "num_12", "num_13", "num_14", "num_15"],
+            "quizType": "en-to-ar"
+          }
+        ]
+      },
+      {
+        "id": "hamza_fortress_gate",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "قِف! لَيسَ كُلُّ مَن يَأتي إلى البَوَّابَة صَديقاً",
+            "english": "Halt! Not everyone who comes to the gate is a friend.",
+            "transliteration": "qif! laysa kullu man ya'tii ilaa al-bawaaba sadiiqan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الحِصنُ — المَكانُ المَحمِيُّ. كَالقَلعَة لَكِن أَصغَر",
+            "english": "The fortress — a protected place. Like a castle but smaller.",
+            "transliteration": "al-hisn — al-makaan al-mahmiyyu. kal-qal'a laakin asghar",
+            "culturalNote": "Muslim military architecture reached its peak under Saladin. The Citadel of Cairo (built 1183 CE) used the same engineering principles as Crusader castles — in fact, Crusaders may have copied Muslim fortress designs."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الجُندِيُّ الجَيِّدُ لا يَحتاجُ سُيوفاً كَثيرَة — يَحتاجُ عَقلاً واحِداً صافِياً",
+            "english": "A good soldier doesn't need many swords — he needs one clear mind.",
+            "transliteration": "al-jundiyyu al-jayyid laa yahtaaju suyuufan kathiira — yahtaaju aqlan waahidan saafiyyan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قِف! ذاكَ يَكفي لِليَوم. عُدْ غَداً",
+            "english": "Halt! That's enough for today. Return tomorrow.",
+            "transliteration": "qif! dhaaka yakfii lil-yawm. ud ghadan"
           }
         ]
       }
@@ -4269,6 +4516,144 @@
             "english": "Even 'al-jabr' became 'algebra' and 'sifr' became 'zero'",
             "transliteration": "hatta kalimat 'al-jabr' asbahat 'algebra' wa 'sifr' asbahat 'zero'",
             "culturalNote": "The concept of zero (sifr) was transmitted to Europe through Arabic mathematicians. The word 'cipher' also comes from sifr."
+          }
+        ]
+      },
+      {
+        "id": "teach_qanat",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً وَسَهلاً! الحَمدُ لِلَّهِ على الحَصاد. تَعالَ أُريكَ شَيئاً عَجيباً",
+            "english": "Welcome! Praise God for the harvest. Come let me show you something amazing.",
+            "transliteration": "ahlan wa sahlan! al-hamdu lillaah ala al-hasaad. ta'aala uriika shay'an ajiiban"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "القَناةُ — قَناةٌ مائِيَّةٌ تَحتَ الأَرض. أَجدادُنا بَنَوها منذُ آلاف السِّنين",
+            "english": "The qanat — an underground water channel. Our ancestors built them thousands of years ago.",
+            "transliteration": "al-qanaat — qanaat maa'iyya taht al-ard. ajdaaduna banawha mundhu aalaf as-siniin",
+            "culturalNote": "Qanats are ancient underground water channels that bring groundwater from aquifers to the surface by gravity. They were invented in Persia and spread across the Islamic world. Some are still functional after 3,000 years."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الماءُ يَسيرُ تَحتَ الأَرض مِيلاتٍ بِقوَّةِ الجاذِبِيَّة. لا مَضَخَّات! لا كَهرُباء!",
+            "english": "Water travels underground for miles by gravity. No pumps! No electricity!",
+            "transliteration": "al-maa' yasiiru taht al-ard miilaat bi-quwwat al-jaadhibiyya. laa madhakhkhaat! laa kahrubaa'!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الحَمدُ لِلَّه! هَذِهِ الواحَة تَعيشُ بِقَناةٍ بَناها جَدّي قَبلَ مِئَتَي سَنَة",
+            "english": "Praise God! This oasis lives by a qanat my grandfather built two hundred years ago.",
+            "transliteration": "al-hamdu lillaah! haadhihi al-waaha ta'iishu bi-qanaat banaahaa jaddii qabl mi'atay sana",
+            "teachWord": "water_w13"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "هَذا مَذهول! أُريدُ أَن أُتعَلَّم",
+                "english": "This is amazing! I want to learn",
+                "next": "teach_farming_vocab"
+              },
+              {
+                "arabic": "حَياة المُزارِع صَعبَة؟",
+                "english": "Is a farmer's life hard?",
+                "next": "omar_farmers_life"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "teach_farming_vocab",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً وَسَهلاً! الحَمدُ لِلَّه! سَأُعَلِّمُكَ كَلِمات الأَرض",
+            "english": "Welcome! Praise God! I'll teach you the words of the earth.",
+            "transliteration": "ahlan wa sahlan! al-hamdu lillaah! sa-u'allimuka kalimaat al-ard"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَرض — هِيَ أُمُّ كُلِّ شَيء. مِنها نَأكُل وَإِلَيها نَعود",
+            "english": "Land — it is the mother of everything. From it we eat and to it we return.",
+            "transliteration": "ard — hiya ummu kull shay'. minhaa na'kul wa ilayhaa na'uud",
+            "teachWord": "desert_w18"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "زَرعَ — فِعلٌ مُقَدَّس. كُلُّ زَرعَةٍ صَدَقَة. هَكَذا قالَ النَّبيُّ عَلَيهِ السَّلام",
+            "english": "Planting — a sacred act. Every planted thing is charity. So the Prophet, peace be upon him, said.",
+            "transliteration": "zara'a — fi'lun muqaddas. kullu zar'atin sadaqa. haakadha qaala an-nabiyyu alayhis-salaam"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَالنَّخلَةُ — مَلِكَةُ الأَشجار في الصَّحراء. تُعطينا تَمراً وَظِلاً وَخَشَباً",
+            "english": "And the palm tree — queen of trees in the desert. It gives us dates, shade, and wood.",
+            "transliteration": "wan-nakhlatu — maliikat al-ashjaar fis-sahraa'. tu'tiinaa tamran wa dhillan wa khashaban",
+            "teachWord": "palm_tree_w20"
+          },
+          {
+            "action": "quiz",
+            "words": ["sun_w14", "rain_w25", "tree_w27", "palm_tree_w20"],
+            "quizType": "ar-to-en"
+          }
+        ]
+      },
+      {
+        "id": "omar_farmers_life",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "صَعبَة؟ الحَمدُ لِلَّه — كُلُّ حَياةٍ فيها صُعوبات. لَكِنَّ المُزارِعَ يَرى الثَّمَر",
+            "english": "Hard? Praise God — every life has difficulties. But the farmer sees the fruit.",
+            "transliteration": "sa'ba? al-hamdu lillaah — kullu hayaatin fiihaa su'uubaat. laakin al-muzaari' yaraa ath-thamar"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "تَزرَعُ اليَوم وَتَأكُلُ بَعدَ أَشهُر. الصَّبرُ هُوَ أَهَمُّ ما يَتَعَلَّمُهُ المُزارِع",
+            "english": "You plant today and eat after months. Patience is the most important thing a farmer learns.",
+            "transliteration": "tazra'u al-yawm wa ta'kulu ba'da ashhur. as-sabr huwa ahamm maa yata'allamuhu al-muzaari'",
+            "teachWord": "long_tall_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الحَمدُ لِلَّه على كُلِّ حَال — في الجَفاف وَفي المَطَر. هَذا ما عَلَّمَني أَبي",
+            "english": "Praise God in every situation — in drought and in rain. This is what my father taught me.",
+            "transliteration": "al-hamdu lillaah ala kull haal — fil-jafaaf wa fil-matar. haadhaa maa allamanii abii"
+          }
+        ]
+      },
+      {
+        "id": "omar_andalus_agriculture",
+        "trigger": "relationship_level_3",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً! الحَمدُ لِلَّه! هَل تَعلَمُ عَن الثَّورَة الزِّراعيَّة في الأَندَلُس؟",
+            "english": "Welcome! Praise God! Do you know about the agricultural revolution in Andalusia?",
+            "transliteration": "ahlan! al-hamdu lillaah! hal ta'lamu an ath-thawra az-ziraa'iyya fil-andalus?"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العَرَبُ أَدخَلوا إلى أُوروبَّا: البُرتُقال وَالقُطن وَالقَصَب وَالأَرُزَّ",
+            "english": "Arabs introduced to Europe: orange, cotton, sugarcane, and rice.",
+            "transliteration": "al-arab adkhalu ila urubba: al-burtuqaal wal-qutn wal-qasab wal-aruzz",
+            "culturalNote": "The Arab Agricultural Revolution (700-1100 CE) transformed Spain and Sicily. Arabs introduced irrigation, new crops, and crop rotation. Over 10,000 Arabic words entered Spanish, mostly through agriculture and science."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَنَشَروا نِظامَ السَّقي بِالرَّوافِع وَالسَّواقي — الأَرضُ الجافَّة صارَت خَضراء",
+            "english": "And they spread irrigation systems with water wheels and channels — dry land turned green.",
+            "transliteration": "wa nasharu nidhaam as-saqii bir-rawaafia was-sawaaqii — al-ard al-jaaffa saarat khadhraa'"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الحَمدُ لِلَّه! المُزارِعُ يَزرَعُ وَالأَرضُ تُعطي — هَذِهِ بَرَكَةُ العَمَل",
+            "english": "Praise God! The farmer plants and the earth gives — this is the blessing of work.",
+            "transliteration": "al-hamdu lillaah! al-muzaari' yazra'u wal-ard tu'tii — haadhihi barakat al-'amal"
           }
         ]
       }
@@ -4649,6 +5034,152 @@
                 "next": "hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "teach_ibn_sina",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "اِجْلِسْ، يا صَديقي. أُحَدِّثُكَ اليَومَ عَنِ الشَّيْخِ الرَّئيسِ ابنِ سينا.",
+            "english": "Sit, my friend. Today I will tell you about the Master Sheikh, Ibn Sina.",
+            "transliteration": "Ijlis, ya sadiiqi. Uhaddithuka al-yawma 'ani sh-shaykhi ar-ra'iis Ibn Siina."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كانَ ابنُ سينا طَبيبًا وَفَيلَسوفًا عاشَ في القَرنِ العاشِرِ الميلادي.",
+            "english": "Ibn Sina was a physician and philosopher who lived in the 10th century CE.",
+            "transliteration": "Kaana Ibn Siina tabiibanwa failasoofan 'aasha fil-qarni al-'aashiri al-miilaadiyi.",
+            "culturalNote": "Ibn Sina (Avicenna, 980-1037 CE) wrote the Canon of Medicine (al-Qanun fi al-Tibb), a medical encyclopedia that remained the primary medical textbook in European universities until the 17th century."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كِتابُهُ القانونُ في الطِّبِّ كانَ يُدَرَّسُ في جامِعاتِ أُوروبَّا لِسِتِّمائَةِ سَنَةٍ!",
+            "english": "His book, the Canon of Medicine, was taught in European universities for six hundred years!",
+            "transliteration": "Kitaabuhu al-Qaanun fi at-Tibb kaana yudarrasu fi jaami'aat Uroobba li-sittimi'ati sanah!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَةُ 'إكسير' في الإنجليزيَّةِ جاءَت مِنَ العَرَبيَّةِ: الإكسير.",
+            "english": "And the word 'elixir' in English came from Arabic: al-iksir.",
+            "transliteration": "Wa kalimat 'elixir' fil-injiliiziyyati jaa'at min al-'arabiyyah: al-iksir.",
+            "teachWord": "clean_1",
+            "culturalNote": "The English word 'elixir' comes from Arabic 'al-iksir', itself from Greek 'xerion' (powder for wounds). Arab alchemists used it to describe miraculous healing substances, and the concept entered European medicine through Arabic translations."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "تَعَلَّمْنا 'نَظيف'. الجِسْمُ النَّظيفُ أَوَّلُ خُطْوَةٍ في الطِّبِّ.",
+            "english": "We learned 'clean'. A clean body is the first step in medicine.",
+            "transliteration": "Ta'allamnaa 'nadhiif'. Al-jismu an-nadhiifu awwalu khutwa fin-tibb."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أَخبِرْني عَنِ المُستَشفَياتِ القَديمَة",
+                "english": "Tell me about the ancient hospitals",
+                "next": "teach_bimaristan"
+              },
+              {
+                "arabic": "عَلِّمْني كَلِماتٍ طِبِّيَّة",
+                "english": "Teach me medical words",
+                "next": "teach_health_vocab"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "teach_bimaristan",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَوَّلُ مُستَشفًى حَقيقيٍّ في العالَمِ كانَ في بَغداد سَنَةَ ثَمانِمائَةٍ وَعِشرينَ مِيلادِيَّة.",
+            "english": "The first real hospital in the world was in Baghdad in 820 CE.",
+            "transliteration": "Awwalu mustashfan haqiiqiyyin fil-'aalami kaana fi Baghdaad sanata thamaanmi'atin wa 'ishriina miilaadiiyyah.",
+            "culturalNote": "The Bimaristan (from Persian: 'place of the sick') was the Islamic world's hospital system. The Baghdad Bimaristan (820 CE) treated all patients free of charge, regardless of religion, race, or wealth — a revolutionary concept in medieval medicine."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كانَ البيمارِستانُ يُعالِجُ الجَميعَ مَجَّانًا: المُسلِمَ وَالمَسيحيَّ وَاليَهوديَّ وَالفَقيرَ.",
+            "english": "The bimaristan treated everyone for free: Muslim, Christian, Jew, and the poor.",
+            "transliteration": "Kaana al-biimaaristaanu yu'aaliju al-jamii'a majjaanan: al-muslima wal-masiihiyya wal-yahuudiyya wal-faqiir."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كانَ فيهِ أَطِبَّاءُ مُتَخَصِّصونَ: لِلعيونِ، وَلِلعَقلِ، وَلِلجِراحَة.",
+            "english": "It had specialized doctors: for eyes, for the mind, and for surgery.",
+            "transliteration": "Kaana fiihi atibbaa'u mutakhassisoon: lil-'uyooni, walil-'aqli, walil-jiraahah."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَذا هو القَلبُ النَّابِضُ لِلحَضارَةِ الإسلامِيَّة — العِنايَةُ بِكُلِّ إنسان.",
+            "english": "This is the beating heart of Islamic civilization — caring for every person.",
+            "transliteration": "Haadha huwa al-qalbu an-naabidu lil-hadaarati al-islaamiyyah — al-'inaayatu bikulli insaan.",
+            "teachWord": "heart_1"
+          }
+        ]
+      },
+      {
+        "id": "teach_health_vocab",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "طَيِّب، هَيَّا نَتَعَلَّمُ كَلِماتٍ لِلصِّحَّةِ وَالجِسم.",
+            "english": "Good, let us learn words for health and the body.",
+            "transliteration": "Tayyib, hayya nata'allamu kalimaat lis-sihha wal-jism."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "اليَدُ — بِها نَجمَعُ الأَعشابَ وَنَشفي المَرضى.",
+            "english": "The hand — with it we gather herbs and heal the sick.",
+            "transliteration": "Al-yadu — biha najma'u al-a'shaaba wa nashfi al-mardaa.",
+            "teachWord": "hand_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العَيْنُ — بِها نَتَعَرَّفُ عَلى نَباتاتِ الشِّفاء.",
+            "english": "The eye — with it we recognize healing plants.",
+            "transliteration": "Al-'aynu — biha nata'arrafu 'ala nabaataat ash-shifaa'.",
+            "teachWord": "eye_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الرَّأسُ — إذا آلَمَ الرَّأسُ، جَرِّبْ زَيتَ الزَّيتون.",
+            "english": "The head — if the head aches, try olive oil.",
+            "transliteration": "Ar-ra'su — idhaa aalama ar-ra'su, jarrib zayta az-zaytoon.",
+            "teachWord": "head_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "عَظيم! لِنَختَبِرْ ما تَعَلَّمتَه.",
+            "english": "Excellent! Let us test what you have learned.",
+            "transliteration": "Addhiim! Li-nakhtabir maa ta'allamtah."
+          },
+          {
+            "action": "quiz",
+            "words": ["head_1", "hand_1", "eye_1", "heart_1", "stomach_1"],
+            "quizType": "ar-to-en"
+          }
+        ]
+      },
+      {
+        "id": "maryam_daily",
+        "trigger": "daily",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مَرحَبًا يا عَزيزي. كَيفَ صِحَّتُك اليَوم؟",
+            "english": "Welcome, dear one. How is your health today?",
+            "transliteration": "Marhaban ya 'aziizi. Kayfa sihhhatuka al-yawm?"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الصِّحَّةُ تاج عَلى رُؤوسِ الأَصِحَّاء. لا تَعرِفُ قيمَتَها إلا إذا مَرِضت.",
+            "english": "Health is a crown on the heads of the healthy. You only know its value when you fall ill.",
+            "transliteration": "As-sihha taaj 'ala ru'oosi al-asihha'. La ta'rifu qiimatahailla idhaa maridta."
           }
         ]
       }
@@ -5037,6 +5568,128 @@
                 "next": "hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "teach_star_navigation",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "اِجلِس يا صَديقي. أَنظُر إلى السَّماء — كُلُّ نَجمٍ لَهُ اسمٌ عَربيٌّ قَديم.",
+            "english": "Sit, my friend. Look at the sky — every star has an ancient Arabic name.",
+            "transliteration": "Ijlis ya sadiiqi. Undhur ila as-samaa' — kullu najmin lahu ismun 'arabiyyun qadiim."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "النَّجمُ الأَحمَرُ الكَبيرُ؟ اسمُهُ الدَّبَران — مَعناهُ 'التَّابِع'.",
+            "english": "That large red star? Its name is al-Dabaran — it means 'the follower'.",
+            "transliteration": "An-najmu al-ahmaru al-kabiiru? Ismuhu ad-Dabaraan — ma'naahu 'at-taabi'u'.",
+            "culturalNote": "The star Aldebaran (alpha Tauri) gets its name from Arabic 'al-Dabaran' meaning 'the follower', because it appears to follow the Pleiades across the sky. Roughly two-thirds of all named stars have Arabic names, a legacy of Islamic Golden Age astronomy."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَذاكَ النَّجمُ العَملاق؟ يَدُ الجَوزاء. بِالإنجليزيَّةِ يُسَمُّونَهُ 'بيتِلجوز'.",
+            "english": "And that giant star? Yad al-Jawza'. In English they call it 'Betelgeuse'.",
+            "transliteration": "Wa dhaakin-najmu al-'amlaaqu? Yadu al-Jawzaa'. Bil-injiliiziyyati yusammuunahu 'Betelgeuse'.",
+            "culturalNote": "Betelgeuse comes from Arabic 'yad al-jawza'' meaning 'the hand of Orion' (al-Jawza' was the Arabic name for the Orion constellation). The name was corrupted through medieval Latin transliteration from 'Ibṭ al-Jauzā'' (armpit of Orion)."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "النُّجومُ هِيَ خَريطَتُنا في الصَّحراء. الشَّمالُ دائِمًا عِندَ نَجمِ القُطب.",
+            "english": "The stars are our map in the desert. North is always at the Pole Star.",
+            "transliteration": "An-nujoomu hiya khariitatuna fis-sahraa'. Ash-shamalu daa'iman 'inda najm al-qutb.",
+            "teachWord": "north_1"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلِّمْني الجِهات",
+                "english": "Teach me the directions",
+                "next": "teach_directions"
+              },
+              {
+                "arabic": "أَخبِرْني عَن نُجومٍ أُخرى",
+                "english": "Tell me about other stars",
+                "next": "tariq_bedouin_proverbs"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "teach_directions",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "في الصَّحراءِ بِلا خَريطَةٍ، الجِهاتُ حَياتُكَ أو مَوتُكَ.",
+            "english": "In the desert without a map, the directions are your life or your death.",
+            "transliteration": "Fis-sahraa'i bilaa khariitatin, al-jihaatu hayatuka aw mawtuka."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الشَّمالُ — نَجمُ القُطب يُرشِدُك. الجَنوبُ — ظِلُّكَ في الظُّهرِ يُشيرُ إليه.",
+            "english": "North — the Pole Star guides you. South — your shadow at noon points to it.",
+            "transliteration": "Ash-shamalu — najm al-qutbi yurshiduka. Al-janoob — dhilluka fidh-dhuhri yushiiru ilayhi.",
+            "teachWord": "south_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الشَّرقُ — مِن هُناكَ تَشرُقُ الشَّمسُ كُلَّ صَباح.",
+            "english": "East — from there the sun rises every morning.",
+            "transliteration": "Ash-sharqu — min hunaaka tashruku ash-shamsu kulla sabaah.",
+            "teachWord": "east_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الغَربُ — إلى هُناكَ تَغرُبُ الشَّمسُ. الغُروبُ أَجمَلُ لَحظاتِ الصَّحراء.",
+            "english": "West — there the sun sets. Sunset is the most beautiful moment in the desert.",
+            "transliteration": "Al-gharbu — ila hunaaka taghrubu ash-shamsu. Al-ghuroob ajmalu lahdhaat as-sahraa'.",
+            "teachWord": "west_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مُمتاز! هَيَّا نَختَبِرُ هَذِهِ الجِهات.",
+            "english": "Excellent! Let us now test these directions.",
+            "transliteration": "Mumtaaz! Hayya nakhtabiru hadhihi al-jihaat."
+          },
+          {
+            "action": "quiz",
+            "words": ["north_1", "south_1", "east_1", "west_1"],
+            "quizType": "ar-to-en"
+          }
+        ]
+      },
+      {
+        "id": "tariq_bedouin_proverbs",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "يا صَديقي، أَشارِكُكَ حِكمَةَ أَجدادي — اِسمَع بِقَلبِكَ لا بِأُذُنَيكَ.",
+            "english": "My friend, I share with you the wisdom of my ancestors — listen with your heart, not your ears.",
+            "transliteration": "Ya sadiiqi, usharikuka hikmat ajdaadii — isma' biqalbika laa bi-udhunayik."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مَثَلٌ بَدَوِيٌّ: 'اِسأَلْ عَن الرَّفيقِ قَبلَ السَّفَر، وَعَنِ الجارِ قَبلَ الدَّار'.",
+            "english": "A Bedouin proverb: 'Ask about the companion before the journey, and about the neighbor before the house'.",
+            "transliteration": "Mathalun badawiyyun: 'Is'al 'an ar-rafiiqi qabla as-safar, wa 'an al-jaari qabla ad-daar'."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَمَثَلٌ آخَرُ: 'الصَّحراءُ لا تَرحَمُ الجاهِلَ، وَلا تَنسى الحَكيمَ'.",
+            "english": "And another proverb: 'The desert has no mercy on the ignorant, and does not forget the wise'.",
+            "transliteration": "Wa mathalun aakhar: 'As-sahraa'u la tarham al-jaahil, wa la tansa al-hakiim'."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قَديمًا، كانَ البَدَوِيُّ يَحفَظُ الألفَ نَجم. اليَومَ، احفَظ أَربَعَةَ كَلِمات.",
+            "english": "Long ago, a Bedouin memorized a thousand stars. Today, memorize four words.",
+            "transliteration": "Qadiiman, kaana al-badawiyyu yahfadhu al-alfa najm. Al-yawm, ihfadh arba'ata kalimaat.",
+            "teachWord": "star_w16"
           }
         ]
       }
@@ -5443,6 +6096,137 @@
                 "next": "hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "teach_scheherazade",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "اِسمَعْ! اِسمَعْ! سَأَحكي لَكَ عَن أَعظَمِ راوِيَةٍ في التَّاريخ — شَهرَزاد!",
+            "english": "Listen! Listen! I will tell you about the greatest storyteller in history — Scheherazade!",
+            "transliteration": "Isma'! Isma'! Sa-ahki laka 'an a'dhami raawiiyatin fit-taariikh — Shahrazaad!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كانَت شَهرَزادُ تَحكي قِصَّةً كُلَّ لَيلَةٍ لِتُنقِذَ حَياتَها. أَلفُ لَيلَةٍ وَلَيلَة!",
+            "english": "Scheherazade told a story every night to save her life. One Thousand and One Nights!",
+            "transliteration": "Kaanat Shahrazaadu tahki qissatan kulla laylatin li-tunqidha hayaatahaa. Alfu laylatin wa laylah!",
+            "culturalNote": "One Thousand and One Nights (Alf Layla wa Layla) is a collection of Middle Eastern folk tales compiled during the Islamic Golden Age. Stories like Sinbad the Sailor, Aladdin, and Ali Baba reflect real 9th-century trade routes across the Indian Ocean and Silk Road."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَقِصَّةُ السِّندِباد؟ السِّندِبادُ مُسافِرٌ شُجاعٌ — يَعني شُجاع، جَريء!",
+            "english": "And the story of Sinbad? Sinbad is a brave traveler — meaning brave, courageous!",
+            "transliteration": "Wa qissatu as-Sindibaad? As-Sindibaadu musaafirun shujaa' — ya'ni shujaa', jarii'!",
+            "teachWord": "strong_1",
+            "culturalNote": "The name 'Sinbad' may derive from 'Sind-bad' meaning 'river of the Indus' in Persian/Sanskrit, reflecting the real Indian Ocean trade routes Arab merchants sailed. The Sinbad tales preserve genuine geographical knowledge of 9th-century maritime trade."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "القِصَصُ لَيسَت مُجَرَّدَ تَسليَة — هِيَ تاريخٌ وَجُغرافيا وَحِكمَة!",
+            "english": "Stories are not mere entertainment — they are history and geography and wisdom!",
+            "transliteration": "Al-qisasu laysat mujarrada tasliya — hiya taarikhun wa jughraafiya wa hikmah!"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلِّمْني كَلِماتٍ وَصْفِيَّةٍ مِنَ القِصَص",
+                "english": "Teach me descriptive words from the stories",
+                "next": "teach_story_adjectives"
+              },
+              {
+                "arabic": "أَخبِرْني المَزيدَ عَنِ الأَلف لَيلَة",
+                "english": "Tell me more about One Thousand and One Nights",
+                "next": "noor_colors_story"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "teach_story_adjectives",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "في كُلِّ قِصَّةٍ جَيِّدَةٍ، هُناكَ وَصفٌ رائِعٌ. دَعني أُعَلِّمَكَ!",
+            "english": "In every good story, there is wonderful description. Let me teach you!",
+            "transliteration": "Fi kulli qissatin jayyidatin, hunaaka wasfun raa'i'. Da'ni u'allimaka!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "جَديد — كَأَنَّ الصَّباحَ الجَديد يَفتَحُ بابًا جَديدًا لِكُلِّ مُسافِر.",
+            "english": "New — as if the new morning opens a new door for every traveler.",
+            "transliteration": "Jadiid — ka-anna as-sabaaha al-jadiida yaftahu baaban jadiidan li-kulli musaafir.",
+            "teachWord": "new_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قَديم — القِصَصُ القَديمَةُ هِيَ الأَجمَل. مِثلُ الخَمرِ، تَزدادُ جَمالًا مَعَ الزَّمَن!",
+            "english": "Old — the old stories are the most beautiful. Like wine, they grow more beautiful with time!",
+            "transliteration": "Qadiim — al-qisasu al-qadiimatu hiya al-ajmal. Mithlu al-khamri, tazdaadu jamaalan ma'a az-zaman!",
+            "teachWord": "old_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "طَويل — القِصَّةُ الطَّويلَةُ تَملَأُ اللَّيلَ بِأَكمَلِه!",
+            "english": "Long — a long story fills the entire night!",
+            "transliteration": "Tawiil — al-qissatu at-tawiilatu tamla'u al-layla bi-akmalihi!",
+            "teachWord": "long_tall_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قَصير — وَالقِصَّةُ القَصيرَةُ تَترُكُ شَوقًا لِلمَزيد!",
+            "english": "Short — and the short story leaves you longing for more!",
+            "transliteration": "Qasiir — wal-qissatu al-qasiiratu tatruqu shawqan lil-maziid!",
+            "teachWord": "short_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الآنَ لِنَختَبِرُ الأَلوانَ وَالأَوصافَ التي تَعَلَّمتَها!",
+            "english": "Now let us test the colors and descriptions you have learned!",
+            "transliteration": "Al-aana li-nakhtabiru al-alwaan wal-awsaaf allati ta'allamtaha!"
+          },
+          {
+            "action": "quiz",
+            "words": ["new_1", "old_1", "long_tall_1", "short_1", "big_1", "small_1"],
+            "quizType": "ar-to-en"
+          }
+        ]
+      },
+      {
+        "id": "noor_colors_story",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "يُحكى أَنَّ السِّندِبادَ رَأى بَحرًا أَزرَقَ كالسَّماء يَلتَقي بِأَرضٍ خَضراءَ كَالزُّمُرُّد.",
+            "english": "It is said that Sinbad saw a sea blue as the sky meeting land green as emerald.",
+            "transliteration": "Yuhkaa anna as-Sindibaada ra'aa bahran azraqa kas-samaa' yaltaqi bi-ardin khadhraa'a kaz-zumuruud.",
+            "teachWord": "color_blue"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَرَأى صَحراءَ حَمراءَ تَحتَ شَمسٍ ذَهَبِيَّة — الأَلوانُ هِيَ لُغَةُ الجَمال!",
+            "english": "And he saw a red desert under a golden sun — colors are the language of beauty!",
+            "transliteration": "Wa ra'aa sahraa'a hamraa'a tahta shamsin dhahabiyyah — al-alwaanu hiya lughatu al-jamaal!",
+            "teachWord": "color_golden"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "فِي القِصَصِ العَظيمَة، كُلُّ لَونٍ لَهُ مَعنى. الأَحمَرُ لِلخَطَر، الأَزرَقُ لِلأَمَل.",
+            "english": "In great stories, every color has meaning. Red for danger, blue for hope.",
+            "transliteration": "Fil-qisasi al-'azhiimah, kullu lawning lahu ma'na. Al-ahmar lil-khatar, al-azraq lil-amal.",
+            "teachWord": "color_red"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الآنَ أَنتَ تَعرِفُ سِرَّ الرَّاوي: اِستَخدِم الأَلوانَ وَالأَوصافَ لِتُحيِيَ القِصَّة!",
+            "english": "Now you know the storyteller's secret: use colors and descriptions to bring the story to life!",
+            "transliteration": "Al-aana anta ta'rifu sirra ar-raawi: istakhdim al-alwaana wal-awsaaf li-tuhyiya al-qissah!"
           }
         ]
       }
