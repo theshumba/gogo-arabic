@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
 status: in_progress
-stopped_at: Phase 40 Plan 01 complete — zone buildings upgraded to Kenmi
-last_updated: "2026-03-18T01:03:08Z"
-last_activity: 2026-03-18 — Completed 40-01 (BIOME_BUILDING_SETS + all 24 zones Kenmi buildings)
+stopped_at: Phase 40 Plan 03 checkpoint — awaiting human visual verification
+last_updated: "2026-03-18T01:45:00Z"
+last_activity: 2026-03-18 — Completed 40-03 tasks (animated campfire/flies + landmark obelisks/golden pots + NPC props)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 4
-  completed_plans: 10
+  completed_plans: 12
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 40: Buildings & Decorations (plan 01 complete)
+**Current focus:** v8.0 Visual Overhaul — Phase 40: Buildings & Decorations (all 3 plans coded, checkpoint pending)
 
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 40 of 43 (buildings-decorations) — IN PROGRESS
-Plan: 40-01 complete (1/3 plans in phase 40 done)
-Status: Plan 40-01 complete — Kenmi buildings in all 24 zones. Continue with 40-02.
-Last activity: 2026-03-18 — Completed 40-01 (BIOME_BUILDING_SETS + zone building sprites)
+Phase: 40 of 43 (buildings-decorations) — CHECKPOINT
+Plan: 40-03 tasks complete (3/3 plans in phase 40 coded)
+Status: All Phase 40 code done — awaiting human visual verification via dev server before phase closes
+Last activity: 2026-03-18 — Completed 40-03 (animated campfire/flies + landmark obelisks/golden pots + NPC props)
 
-Progress (v8.0): [████░░░░░░] 43% (7/16 plans)
+Progress (v8.0): [█████░░░░░] 56% (9/16 plans)
 
 ### Shipped Milestones
 
@@ -88,6 +88,14 @@ v8.0 decisions:
 - 40-01: getDefaultObjects(tilesetTheme) in mapPlaceholder.js replaces old 4-identical-ruin-pillar defaultObjects
 - 40-01: gate-pillar key (royal_palace) replaced with kenmi-desert-temple-desert-obelisk-small-1 (no dedicated gate-pillar in Kenmi)
 - 40-01: mapPlaceholder references BIOME_BUILDING_SETS via import, not inline strings — acceptance criteria grep was design-based not literal
+- 40-02: PROP_CROP_REGIONS maps texture key to array of {x,y,w,h} regions for multi-item prop sheets
+- 40-02: _createDecoSprite() uses setCrop() for multi-item sheets, native size for large single-object images
+- 40-02: scatterDecorations() skips dungeon/volcano/mushroom/snow biomes — only desert and grass get prop scattering
+- 40-02: Near-object chance increased to 0.25, near-water to 0.18, near-edge to 0.15 for density
+- 40-03: Campfire animation uses kenmi-military-campfire-pot-anim (spritesheet) not kenmi-desert-props-desert-campfire (static image)
+- 40-03: Flies placed at shore-adjacent WATER tiles with 15% sparse probability — avoids overwhelming water edges
+- 40-03: NPC positions verified from actual zone data — plan's listed positions adjusted to match real coords
+- 40-03: Guard Hamza prop placed in desert_marketplace (actual zone) not royal_palace (plan listed wrong zone)
 
 ### Blockers/Concerns
 
@@ -96,10 +104,10 @@ v8.0 decisions:
 
 ### Pending Todos
 
-None.
+- Visual verification: `npm run dev` → load Oasis Village, Ancient Library, Desert Marketplace, Bedouin Camp, Farmland, Mountain Village, Coastal Port, Royal Palace — check animated decorations, landmark obelisks, NPC-adjacent props, no console errors
 
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 40 Plan 01 complete — all 24 zones have Kenmi building sprites
-Resume file: .planning/phases/40-buildings-decorations/40-02-PLAN.md
+Stopped at: Phase 40 Plan 03 checkpoint — visual verification of all 8 zones
+Resume file: .planning/phases/40-buildings-decorations/40-03-PLAN.md (type "approved" to complete)
