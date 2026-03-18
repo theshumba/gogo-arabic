@@ -441,6 +441,22 @@ export class MapLoader {
   }
 
   /**
+   * Safe frame getter — clamps frame index to valid range for a texture.
+   * Returns frame 0 if the requested frame doesn't exist (prevents black squares).
+   */
+  _safeFrame(textureKey, frame) {
+    if (frame == null || frame < 0) return 0;
+    const tex = this.scene.textures.get(textureKey);
+    if (!tex || !tex.frames) return 0;
+    // Phaser spritesheet frames are named by index: '0', '1', '2', etc.
+    // Check if this frame index exists
+    if (tex.frames[String(frame)]) return frame;
+    // Fallback: find max valid frame
+    const maxFrame = Object.keys(tex.frames).filter(k => k !== '__BASE').length - 1;
+    return Math.min(frame, Math.max(0, maxFrame));
+  }
+
+  /**
    * Fallback: original flat-color tile rendering
    */
   _renderFlatTiles(groundData, mapW, mapH) {
@@ -547,7 +563,7 @@ export class MapLoader {
         frame = solidVariants[Math.floor(varHash * solidVariants.length)];
       }
 
-      const sprite = this.scene.add.image(px, py, key, frame);
+      const sprite = this.scene.add.image(px, py, key, this._safeFrame(key, frame));
       sprite.setScale(KENMI_SCALE);
       if (this._currentBiome === 'snow' && cfg.sandTint) {
         sprite.setTint(cfg.sandTint);
@@ -571,7 +587,7 @@ export class MapLoader {
       frame = this._pickEdgeFrame(nWater, sWater, wWater, eWater, TL, T, TR, L, B, R, solidCenter, BL, BR);
     }
 
-    const sprite = this.scene.add.image(px, py, key, frame);
+    const sprite = this.scene.add.image(px, py, key, this._safeFrame(key, frame));
     sprite.setScale(KENMI_SCALE);
     if (this._currentBiome === 'snow' && cfg.sandTint) {
       sprite.setTint(cfg.sandTint);
@@ -657,7 +673,7 @@ export class MapLoader {
     }
 
     const grassKey = cfg.grassKey;
-    const sprite = this.scene.add.image(px, py, grassKey, frame);
+    const sprite = this.scene.add.image(px, py, grassKey, this._safeFrame(grassKey, frame));
     sprite.setScale(KENMI_SCALE);
 
     // Ice-grass tint: use biome-aware tint if available, fall back to default
@@ -711,7 +727,7 @@ export class MapLoader {
     }
 
     const waterKey = cfg.waterKey;
-    const sprite = this.scene.add.image(px, py, waterKey, frame);
+    const sprite = this.scene.add.image(px, py, waterKey, this._safeFrame(waterKey, frame));
     sprite.setScale(KENMI_SCALE);
 
     // Add foam animation overlay on water tiles that border land
