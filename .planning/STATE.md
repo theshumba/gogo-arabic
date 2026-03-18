@@ -114,5 +114,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Quick task 260318-tot complete — all disconnected systems wired into live game
+Stopped at: 37-01 and 37-02 SUMMARY files created (retroactive documentation of already-shipped Phase 37 work)
 Resume file: Phase 46 Plan 02 — `.planning/phases/46-vocabulary-expansion/46-02-PLAN.md` (B1/B2 words, 2,500 more words)
