@@ -472,6 +472,152 @@
             "culturalNote": "Al-Mutanabbi (915-965 CE) is considered the greatest Arabic poet. His name means 'the one who claimed to be a prophet' — a childhood nickname that stuck."
           }
         ]
+      },
+      {
+        "id": "teach_grammar_1",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "بِسمِ اللَّه! اليَومَ سَنَتَعَلَّمُ قاعِدَةً عَظيمَة في العَرَبِيَّة",
+            "english": "In God's name! Today we will learn a great rule in Arabic.",
+            "transliteration": "bismillaah! al-yawma sanata'allamu qaa'idatan aziima fil-arabiyya"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لَيسَ في العَرَبِيَّةِ فِعلٌ لِـ'كانَ' في المُضارِع — أَنا طالِبٌ، لَيسَ 'أَنا أَكونُ طالِباً'",
+            "english": "Arabic has no verb 'to be' in the present tense — 'ana taalib' means 'I am a student', not 'I am being a student'.",
+            "transliteration": "laysa fil-arabiyya fi'lun li-kaana fil-mudaari' — ana taalib, laysa 'ana akuunu taaliban'",
+            "culturalNote": "Arabic omits the copula (verb 'to be') in present tense nominal sentences. This is called a 'jumlah ismiyya' — a noun sentence. English learners often struggle with this elegant simplicity."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قُل مَعي: أَنا طالِبٌ — هَذِهِ جُملَةٌ اسمِيَّة",
+            "english": "Say with me: Ana taalib — this is a nominal sentence.",
+            "transliteration": "qul ma'ii: ana taalib — haadhihi jumlatun ismiyya",
+            "teachWord": "my_name_is_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الآن أَنتَ: مَن أَنتَ؟ قُل اسمَك بِالعَرَبِيَّة",
+            "english": "Now you: who are you? Say your name in Arabic.",
+            "transliteration": "al-aan anta: man anta? qul ismaka bil-arabiyya"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "فَهِمتُ — عَلِّمْني أَكثَر",
+                "english": "I understand — teach me more",
+                "next": "teach_grammar_2"
+              },
+              {
+                "arabic": "هَذا صَعبٌ بَعض الشَّيء",
+                "english": "This is a bit difficult",
+                "next": "grammar_encouragement"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "teach_grammar_2",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَحسَنت! في العَرَبِيَّةِ الكَلِماتُ لَها مُذَكَّر وَمُؤَنَّث",
+            "english": "Well done! In Arabic, words have masculine and feminine forms.",
+            "transliteration": "ahsant! fil-arabiyya al-kalimaat lahaa mudhakkar wa mu'annath"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كِتابٌ — مُذَكَّر. مَكتَبَةٌ — مُؤَنَّث. تَلاحَظُ حَرفَ التّاء في النِّهايَة؟",
+            "english": "Kitab — masculine. Maktaba — feminine. Notice the 'ta' letter at the end?",
+            "transliteration": "kitaabun — mudhakkar. maktabatun — mu'annath. talaahazu harf at-taa' fin-nihaaya?",
+            "culturalNote": "The taa marbuuta (ة) marks feminine nouns in Arabic. It was invented by early Arab grammarians to standardize gender marking, making Arabic one of the most systematic languages for gender in grammar."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كِتاب — كِتابان — كُتُب. هَذا الجَمع! الجَمعُ التَّكسيريّ",
+            "english": "Kitab — two books — books. This is the plural! The broken plural.",
+            "transliteration": "kitaab — kitaabayn — kutub. haadhaa al-jam'! al-jam' at-taksiiriyy",
+            "teachWord": "what_is_this_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الجَمعُ التَّكسيريُّ يُغَيِّرُ شَكلَ الكَلِمَة مِن الداخِل — هَذا فَريدٌ في العَرَبِيَّة",
+            "english": "The broken plural changes the shape of the word from within — this is unique to Arabic.",
+            "transliteration": "al-jam' at-taksiiriyyu yughayyiru shakl al-kalima min ad-daakhil — haadhaa fariidun fil-arabiyya"
+          },
+          {
+            "action": "quiz",
+            "words": ["what_is_this_1", "my_name_is_1", "how_are_you_1"],
+            "quizType": "ar-to-en"
+          }
+        ]
+      },
+      {
+        "id": "grammar_encouragement",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "لا تَقلَق! حَتّى العُلَماءُ الكِبارُ بَدَأوا مِن الصِّفر",
+            "english": "Do not worry! Even the great scholars started from zero.",
+            "transliteration": "laa taqlaq! hatta al-ulama al-kibaar bada'uu min as-sifr"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الإمامُ سيبَوَيه كانَ فارِسِيَّ الأَصل وَأَصبَحَ أَعظَمَ نَحويٍّ عَرَبيّ",
+            "english": "Imam Sibawayhi was of Persian origin and became the greatest Arab grammarian.",
+            "transliteration": "al-imaam sibawayhi kaana farisiyya al-asl wa asbaha a'dhama nahwiyyin arabii",
+            "culturalNote": "Sibawayhi (c.760-796 CE) wrote 'Al-Kitab' — the foundational work of Arabic grammar. He was Persian, proving that mastery of Arabic belongs to all who pursue it."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العِلمُ يَحتاجُ صَبراً. بِسمِ اللَّه، لِنُكمِل",
+            "english": "Knowledge requires patience. In God's name, let us continue.",
+            "transliteration": "al-ilm yahtaaju sabran. bismillaah, linukmil"
+          }
+        ]
+      },
+      {
+        "id": "teach_al_khwarizmi",
+        "trigger": "relationship_level_3",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "بِسمِ اللَّه! هَل تَعلَمُ مِن أَينَ جاءَت كَلِمَةُ 'algorithm'؟",
+            "english": "In God's name! Do you know where the word 'algorithm' came from?",
+            "transliteration": "bismillaah! hal ta'lamu min ayna jaa'at kalimat 'algorithm'?"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مِن اسمِ العالِمِ مُحَمَّد بنِ موسى الخَوارِزميّ",
+            "english": "From the name of the scholar Muhammad ibn Musa al-Khwarizmi.",
+            "transliteration": "min ism al-aalim muhammad ibn muusa al-khwaarizmi",
+            "culturalNote": "Al-Khwarizmi (780-850 CE) was the father of algebra. His book 'Al-Kitab al-Mukhtasar fi Hisab al-Jabr' gave us the word 'algebra' (al-jabr). His name, Latinized as 'Algoritmi', became 'algorithm'."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَةُ 'algebra' مِن 'الجَبر' — عُنوانُ كِتابِهِ العَظيم",
+            "english": "And 'algebra' from 'al-jabr' — the title of his great book.",
+            "transliteration": "wa kalimat 'algebra' min 'al-jabr' — unwaanu kitaabihi al-aziim",
+            "culturalNote": "The word 'algebra' comes from 'al-jabr wa al-muqabala' (reunion of broken parts and balancing). Al-Khwarizmi also introduced the Indian zero concept to the Islamic world."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العُلَماءُ العَرَبُ نَقَلوا العِلمَ وَأَضافوا إِلَيه. هَذا شَرَفُنا",
+            "english": "Arab scholars transmitted knowledge and added to it. This is our honor.",
+            "transliteration": "al-ulama al-arab naqalu al-ilm wa adaafuu ilayh. haadhaa sharafunaa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "تَعَلَّم العَرَبِيَّة وَسَتَفتَحُ لَكَ أَبوابَ الحِكمَة القَديمَة",
+            "english": "Learn Arabic and it will open for you the doors of ancient wisdom.",
+            "transliteration": "ta'allam al-arabiyya wa sataftahu laka abwaab al-hikma al-qadiima"
+          }
+        ]
       }
     ],
     "personality": {
@@ -965,6 +1111,120 @@
             "culturalNote": "Many English trade words come from Arabic: tariff (ta'rifa), magazine (makhazin), cotton (qutn), sugar (sukkar)."
           }
         ]
+      },
+      {
+        "id": "teach_bargaining_1",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "يَلّا يا زَبون! أُعَلِّمُكَ فَنَّ المُساوَمَة. هَذا أَهَمُّ شَيء في السُّوق!",
+            "english": "Come on, customer! I'll teach you the art of bargaining. This is the most important thing in the market!",
+            "transliteration": "yalla ya zabuun! u'allimuka fann al-musaawama. haadhaa ahammu shay' fis-suuq!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَوَّلاً: لا تُظهِر اهتِمامَك. قُل: 'غالي' — هَذه أَداةٌ ذَهَبِيَّة",
+            "english": "First: don't show your interest. Say: 'ghaali' (expensive) — this is a golden tool.",
+            "transliteration": "awwalan: laa tudhir ihtimaamak. qul: 'ghaali' — haadhihi adaatun dhahabiyya",
+            "teachWord": "expensive_w33"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "ثُمَّ: 'هَذا رَخيص في السُّوق الآخَر!' — المُقارَنَة سِلاحٌ قَوِيّ",
+            "english": "Then: 'this is cheap at the other market!' — comparison is a powerful weapon.",
+            "transliteration": "thumma: 'haadhaa rakhiis fis-suuq al-aakhar!' — al-muqaarana silaahun qawii",
+            "teachWord": "cheap_w32"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَأَخيراً: اِمشِ! المَشيُ يَجعَلُ التّاجِرَ يُخَفِّضُ السِّعر — جَرِّب!",
+            "english": "And finally: walk away! Walking makes the trader lower the price — try it!",
+            "transliteration": "wa akhiiran: imshi! al-mashi yaj'al at-taajir yukhaffffid as-si'r — jarrib!"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "كَيفَ أَقول 'خَفِّض السِّعر'؟",
+                "english": "How do I say 'lower the price'?",
+                "next": "teach_bargaining_2"
+              },
+              {
+                "arabic": "ماذا تَعني 'مَخازِن'؟",
+                "english": "What does 'makhazin' mean?",
+                "next": "cultural_loanwords"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "teach_bargaining_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "قُل: 'خَفِّض قَليلاً مِن فَضلَك!' — ثُمَّ اِبتَسِم",
+            "english": "Say: 'lower a little please!' — then smile.",
+            "transliteration": "qul: 'khaffid qaliilan min fadlak!' — thumma ibtasim"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "البَيعُ وَالشِّراءُ لُغَةٌ. التّاجِرُ الجَيِّدُ يُسمِع الآخَرين ما يُريدون أَن يَسمَعوه",
+            "english": "Buying and selling is a language. The good trader makes others hear what they want to hear.",
+            "transliteration": "al-bay' wash-shiraa' lugha. at-taajir al-jayyid yusmi' al-aakhariina maa yuriiduuna an yasma'uuh"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَذِهِ حِكمَةُ سَبعِينَ سَنَة مِن التِّجارَة. يَلّا نَختَبِر!",
+            "english": "This is the wisdom of seventy years of trade. Come on, let's test!",
+            "transliteration": "haadhihi hikmat sab'iin sana min at-tijaara. yalla nakhtabir!"
+          },
+          {
+            "action": "quiz",
+            "words": ["price_w31", "cheap_w32", "expensive_w33", "buy_w34"],
+            "quizType": "random"
+          }
+        ]
+      },
+      {
+        "id": "cultural_loanwords",
+        "trigger": "relationship_level_3",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "يَلّا يا زَبون! هَل تَعلَمُ كَم كَلِمَة أَنجليزيَّة جاءَت مِن لُغَتِنا؟",
+            "english": "Come on, customer! Do you know how many English words came from our language?",
+            "transliteration": "yalla ya zabuun! hal ta'lamu kam kalima injiliziyya jaa'at min lughatinaa?"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "'magazine' — مِن 'مَخازِن' يَعني مَكانُ التَّخزين. أَنا عَرِفتُ هَذا!",
+            "english": "'Magazine' — from 'makhazin' meaning storehouse. I knew this one!",
+            "transliteration": "'magazine' — min 'makhazin' ya'nii makaan at-takhziiin. ana arift haadhaa!",
+            "culturalNote": "The word 'magazine' comes from Arabic 'makhazin' (plural of makhzan — storehouse). Arab merchants stored goods in makhazin across the Silk Road trade routes."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "'tariff' مِن 'تَعريفَة' — قائِمَةُ الأَسعار في السُّوق القَديم",
+            "english": "'Tariff' from 'ta'rifa' — the price list in the old market.",
+            "transliteration": "'tariff' min 'ta'rifa' — qaa'imat al-as'aar fis-suuq al-qadiim",
+            "culturalNote": "The word 'tariff' entered English through Spanish 'tarifa' from Arabic 'ta'rifa' (notification, schedule of prices). Arab merchants used ta'rifa notices posted at ports."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كَذَلِكَ 'mattress' مِن 'مَطرَح' وَ'sofa' مِن 'صُفَّة'!",
+            "english": "Also 'mattress' from 'matrah' and 'sofa' from 'suffa'!",
+            "transliteration": "kadhaalika 'mattress' min 'matrah' wa 'sofa' min 'suffa'!",
+            "culturalNote": "Many English household words are Arabic in origin: mattress (matrah — a place to throw), sofa (suffa — bench), jar (jarra), alcohol (al-kuhl), syrup (sharab)."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لُغَتُنا مَلِيئَةٌ بِالثَّروات — كَسُوقِنا! يَلّا!",
+            "english": "Our language is full of riches — like our market! Come on!",
+            "transliteration": "lughatunaa malii'atun bith-thawraat — kasuuqinaa! yalla!"
+          }
+        ]
       }
     ],
     "personality": {
@@ -1286,6 +1546,132 @@
                 "next": "hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "khalid_mistakes_1",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "يا هَلا! أَنا غَلِطتُ اليَوم في الدَّرس — قُلتُ 'أَنا هُوَ ذاهِب' بَدَلاً مِن 'أَنا ذاهِب'!",
+            "english": "Hey there! I made a mistake in class today — I said 'I am he going' instead of 'I am going'!",
+            "transliteration": "ya halaa! ana ghalitt al-yawm fid-dars — qultu 'ana huwa dhaahib' badalan min 'ana dhaahib'!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الشَّيخُ يوسُف قالَ: لَيسَ في العَرَبِيَّةِ ضَميرٌ مُنفَصِلٌ مَعَ الفِعل في العادَة",
+            "english": "Sheikh Yusuf said: in Arabic, a separate pronoun doesn't usually go with the verb.",
+            "transliteration": "ash-shaykh yuusuf qaala: laysa fil-arabiyya damiir munfasil ma'a al-fi'l fil-'aada",
+            "culturalNote": "In Arabic, the subject pronoun is often embedded within the verb conjugation. 'Dhahaba' already means 'he went' — adding 'huwa' separately is redundant (though used for emphasis)."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَذا صَعبٌ! أَنتَ بَالتَّأكيد تَغلَطُ أَيضاً أَحياناً، صَحّ؟",
+            "english": "This is hard! You definitely make mistakes sometimes too, right?",
+            "transliteration": "haadhaa sa'b! anta bittakiid taghlat aydan ahyaanan, sahh?",
+            "teachWord": "difficult_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "المُهِمُّ أَنَّنا نُكمِل وَلا نَستَسلِم — هَذا ما يَقولُهُ الشَّيخ",
+            "english": "What matters is that we continue and don't give up — that's what the Sheikh says.",
+            "transliteration": "al-muhimm annana nukmil wa laa nastaslim — haadhaa maa yaquuluhu ash-shaykh"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أَنا أَيضاً أَغلَطُ كَثيراً!",
+                "english": "I make lots of mistakes too!",
+                "next": "khalid_solidarity"
+              },
+              {
+                "arabic": "تَدَرَّب مَعي!",
+                "english": "Practice with me!",
+                "next": "practice_quiz"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "khalid_solidarity",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "يا هَلا! إِذاً نَحنُ سَواء! هَيّا نَغلَط مَعاً ونَتَعَلَّم مَعاً!",
+            "english": "Hey there! So we're the same! Let's make mistakes together and learn together!",
+            "transliteration": "ya halaa! idhan nahnu sawaa'! hayya naghlat ma'an wa nata'allam ma'an!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الشَّيخُ يوسُف يَقولُ: الغَلَطُ في التَّعَلُّم كَالسَّقطَةِ في المَشي — ضَرورِيَّة!",
+            "english": "Sheikh Yusuf says: mistakes in learning are like stumbling in walking — necessary!",
+            "transliteration": "ash-shaykh yuusuf yaquul: al-ghalat fit-ta'allum kas-saqta fil-mashi — daruurriyya!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَل تَعرِفُ 'صَحيح'؟ تَعني correct. 'غَلَط' تَعني wrong. تَعَلَّمهُما!",
+            "english": "Do you know 'sahiih'? It means correct. 'Ghalat' means wrong. Learn both!",
+            "transliteration": "hal ta'rifu 'sahiih'? ta'nii correct. 'ghalat' ta'nii wrong. ta'allamahumaa!",
+            "teachWord": "i_understand_1"
+          },
+          {
+            "action": "quiz",
+            "words": ["i_understand_1", "i_dont_understand_1", "easy_1", "difficult_1"],
+            "quizType": "random"
+          }
+        ]
+      },
+      {
+        "id": "khalid_no_verb_to_be",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "يا هَلا! تَعَلَّمتُ شَيئاً مُذهِلاً اليَوم — لَيسَ في العَرَبِيَّةِ 'is' و 'am' و 'are'!",
+            "english": "Hey there! I learned something amazing today — Arabic has no 'is', 'am', or 'are'!",
+            "transliteration": "ya halaa! ta'allamtu shay'an mudhilan al-yawm — laysa fil-arabiyya 'is' wa 'am' wa 'are'!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "بَدَلاً مِن 'I am a student' نَقول فَقَط 'أَنا طالِب'",
+            "english": "Instead of 'I am a student' we just say 'ana taalib'.",
+            "transliteration": "badalan min 'I am a student' naquul faqat 'ana taalib'",
+            "culturalNote": "Classical Arabic has no present-tense copula. The sentence 'al-bayt kabiir' (the house is big) has no verb — the meaning is carried purely by the juxtaposition. This is called a nominal sentence (jumla ismiyya)."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كَأَنَّكَ تَقول 'I, student.' بِدونِ فِعل! مُمتاز وَمُبَسَّط!",
+            "english": "It's as if you say 'I, student.' without a verb! Excellent and simplified!",
+            "transliteration": "ka'annaka taquul 'I, student.' bidooni fi'l! mumtaaz wa mubassit!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قُل مَعي: 'أَنا طالِب!' ثُمَّ 'الكِتابُ كَبير!'",
+            "english": "Say with me: 'Ana taalib!' Then 'al-kitaab kabiir!'",
+            "transliteration": "qul ma'ii: 'ana taalib!' thumma 'al-kitaab kabiir!'",
+            "teachWord": "big_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "جَيِّد! كَبير — big! صَغير — small! هَذِهِ أَسهَلُ كَلِماتٍ في العَرَبِيَّة لأَنَّهُ لا يُوجَدُ فِعلٌ!",
+            "english": "Good! Kabiir — big! Saghiir — small! These are the easiest words in Arabic because there's no verb!",
+            "transliteration": "jayyid! kabiir — big! saghiir — small! haadhihi ashal kalimaat fil-arabiyya li'annahu laa yuujad fi'l!",
+            "teachWord": "small_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "يا هَلا! عِندي مُسابَقَة — هَيّا نَختَبِر!",
+            "english": "Hey there! I have a quiz — let's test it!",
+            "transliteration": "ya halaa! indii musaabaqaa — hayya nakhtabir!"
+          },
+          {
+            "action": "quiz",
+            "words": ["big_1", "small_1", "new_1", "old_1"],
+            "quizType": "ar-to-en"
           }
         ]
       }
@@ -1760,6 +2146,114 @@
             "culturalNote": "Ibn al-Haytham (965-1040 CE) disproved the Greek theory that eyes emit light. His 'Kitab al-Manazir' influenced Roger Bacon and Kepler."
           }
         ]
+      },
+      {
+        "id": "teach_reading_words",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً بِكَ يا طالِبَ المَعرِفَة. العِلمُ نور! اليَومَ سَنَتَعَلَّمُ كَلِماتِ القِراءَة",
+            "english": "Welcome, seeker of knowledge. Knowledge is light! Today we will learn reading words.",
+            "transliteration": "ahlan bika ya taalib al-ma'rifa. al-ilmu nuur! al-yawma sanata'allamu kalimaat al-qiraa'a"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كِتاب — هُوَ أَهَمُّ ما صَنَعَهُ الإِنسان. كَلِمَةُ 'كِتاب' مِن جَذرِ ك-ت-ب",
+            "english": "Kitab — it is the most important thing humanity made. The word 'kitab' from the root k-t-b.",
+            "transliteration": "kitaab — huwa ahamm maa sana'ahu al-insaan. kalimat 'kitaab' min jadr k-t-b",
+            "teachWord": "what_is_this_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مِن نَفسِ الجَذر: كَتَبَ (كَتَبَ)، كاتِب (writer)، مَكتوب (written)، مَكتَبَة (library)",
+            "english": "From the same root: kataba (wrote), kaatib (writer), maktuub (written), maktaba (library).",
+            "transliteration": "min nafs al-jadr: kataba, kaatib, maktuub, maktaba",
+            "culturalNote": "Arabic root system (trilateral roots) means related concepts share the same three core letters. K-T-B produces: kitaab (book), kaatib (writer), maktaba (library), maktub (letter/written), muktatib (student of writing)."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَذا النِّظامُ العَبقَريُّ يَجعَلُ تَعَلُّمَ العَرَبِيَّةِ مَبنِيًّا على أُسُس",
+            "english": "This genius system makes learning Arabic built on foundations.",
+            "transliteration": "haadhaa an-nidhaam al-abqariyyu yaj'al ta'allum al-arabiyya mabniyyan ala usus"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلِّمْني جَذراً آخَر",
+                "english": "Teach me another root",
+                "next": "teach_roots"
+              },
+              {
+                "arabic": "بَيتُ الحِكمَة",
+                "english": "Tell me about the House of Wisdom",
+                "next": "house_of_wisdom"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "teach_roots",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "ممتاز! الجَذرُ ع-ل-م: عِلم (knowledge)، عالِم (scholar)، مُعَلِّم (teacher)، تَعَلَّمَ (learned)",
+            "english": "Excellent! The root '-l-m: ilm (knowledge), aalim (scholar), mu'allim (teacher), ta'allama (learned).",
+            "transliteration": "mumtaaz! al-jadr '-l-m: ilm, aalim, mu'allim, ta'allama",
+            "culturalNote": "The root '-L-M appears in over 200 Arabic words. 'Alam' (world/universe), 'ilm' (knowledge), 'ta'lim' (education), 'ulama' (scholars) — all from three letters that suggest apprehension of reality."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَجَذرُ ق-ر-أ: قَرَأَ (read)، قِراءَة (reading)، قُرآن (Quran — that which is recited)",
+            "english": "And root q-r-': qara'a (read), qiraa'a (reading), Quran (that which is recited).",
+            "transliteration": "wa jadr q-r-': qara'a, qiraa'a, qur'aan"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العِلمُ نور! كُلُّ جَذرٍ كَبَيتٍ مَليءٍ بِالأَثاث — تَعَلَّم البَيتَ تَعرِف الأَثاث",
+            "english": "Knowledge is light! Each root is like a house full of furniture — learn the house, know the furniture.",
+            "transliteration": "al-ilmu nuur! kullu jadr kabayt mali' bil-athath — ta'allam al-bayt ta'rif al-athath"
+          },
+          {
+            "action": "quiz",
+            "words": ["num_1", "num_2", "num_3", "num_4", "num_5"],
+            "quizType": "en-to-ar"
+          }
+        ]
+      },
+      {
+        "id": "house_of_wisdom",
+        "trigger": "relationship_level_3",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "بَيتُ الحِكمَة — أَعظَمُ مُؤَسَّسَةٍ عِلمِيَّة في تاريخِ الإِسلام",
+            "english": "The House of Wisdom — the greatest scientific institution in Islamic history.",
+            "transliteration": "bayt al-hikma — a'dhamu mu'assasa ilmiyya fii taariikh al-islaam",
+            "culturalNote": "Bayt al-Hikma (founded c.830 CE in Baghdad) was the first research institution in history. Scholars from across the world — Muslim, Christian, Jewish, Zoroastrian — translated and created knowledge under one roof."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الخَليفَةُ المَأمونُ جَمَعَ فيها عُلَماءَ مِن كُلِّ الأَديانِ وَالأُمَم",
+            "english": "Caliph al-Ma'mun gathered scholars of all religions and nations within it.",
+            "transliteration": "al-khalifa al-ma'muun jama'a fiihaa ulamaa' min kull al-adyaan wal-umam"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "تَرجَمَ الحُنَينُ بنُ إِسحاق أَكثَرَ مِن مِئَةِ كِتابٍ يونانيٍّ",
+            "english": "Hunayn ibn Ishaq translated over 100 Greek books.",
+            "transliteration": "tarjama al-hunayn ibn ishaaq akthar min mi'at kitaabin yunaaniyy",
+            "culturalNote": "Hunayn ibn Ishaq (809-873 CE) was a Nestorian Christian who became the chief translator at Bayt al-Hikma. He translated Hippocrates, Galen, and Aristotle. The Abbasid caliphs paid translators by the weight of the books in gold."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العِلمُ نور! وَكانَ بَغدادُ مَنارَةً تَشعُّ بِنورِ المَعرِفَة",
+            "english": "Knowledge is light! And Baghdad was a lighthouse shining with the light of knowledge.",
+            "transliteration": "al-ilmu nuur! wa kaana baghdaad manaara tasha'u bi-nuur al-ma'rifa"
+          }
+        ]
       }
     ],
     "personality": {
@@ -2128,6 +2622,120 @@
             ]
           }
         ]
+      },
+      {
+        "id": "teach_six_scripts",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الخَطُّ الجَميلُ فَنّ! اليَوم سَأُريكَ أَنواعَ الخُطوطِ السِّتَّة الأَصيلَة",
+            "english": "Beautiful writing is art! Today I will show you the six authentic calligraphy scripts.",
+            "transliteration": "al-khat al-jamiil fann! al-yawm sa-uriika anwaa' al-khutut as-sitta al-asiila"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "النَّسخُ — الخَطُّ الذي تَقرَأُهُ في القُرآن. واضِحٌ وَمُستَديم",
+            "english": "Naskh — the script you read in the Quran. Clear and enduring.",
+            "transliteration": "an-naskhu — al-khat alladhii taqra'uhu fil-qur'aan. waadihun wa mustadiim",
+            "culturalNote": "Naskh script was standardized in the 10th century and became the basis for modern Arabic printing. Its rounded, connected letters made it ideal for Quran manuscripts."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الثُّلُثُ — الخَطُّ المَلَكيُّ. يُزَيَّنُ بِهِ القِباب وَالمَساجِد",
+            "english": "Thuluth — the royal script. It decorates domes and mosques.",
+            "transliteration": "ath-thuluthu — al-khat al-malakiyyu. yuzayyan bihi al-qibab wal-masaajid",
+            "culturalNote": "Thuluth ('one third') script got its name because one third of each letter slopes. It is the most prestigious script for architectural and ceremonial use, seen on mosques from Istanbul to Cairo."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "ابنُ مُقلَة — رَحِمَهُ اللَّه — وَضَعَ قانونَ الحَرفِ المُتَناسِب. مَجدٌ أَبَديّ",
+            "english": "Ibn Muqla — may God have mercy on him — established the law of the proportionate letter. Eternal glory.",
+            "transliteration": "ibn muqla — rahimahu allaah — wada'a qaanoon al-harf al-mutanaasib. majd abadii"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "مُدهِش! أَخبِرني عَن الكوفي",
+                "english": "Amazing! Tell me about Kufic",
+                "next": "teach_kufic"
+              },
+              {
+                "arabic": "عَلِّمْني كَلِماتِ الكِتابَة",
+                "english": "Teach me writing words",
+                "next": "teach_writing_1"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "teach_kufic",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الكوفيُّ! الخَطُّ الأَقدَم — مِن مَدينَةِ الكوفَة في العِراق",
+            "english": "Kufic! The oldest script — from the city of Kufa in Iraq.",
+            "transliteration": "al-kuufiyyu! al-khat al-aqdam — min madinat al-kuufa fil-iraaq"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الخُطوطُ الكوفِيَّةُ كالرِّياضِيّات — زَوايا حادَّة وَخُطوطٌ مُستَقيمَة",
+            "english": "Kufic scripts are like mathematics — sharp angles and straight lines.",
+            "transliteration": "al-khutut al-kuufiyya kar-riyaadiyyaat — zawaaya haadda wa khutut mustaqiima",
+            "culturalNote": "Kufic script (7th-11th century CE) is the oldest Arabic calligraphy style. The angular geometric designs were perfect for carving into stone and stamping coins. Early Quran manuscripts used Kufic."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الأَنماطُ الهَندَسِيَّةُ الإِسلامِيَّةُ تَتَجَنَّبُ تَصويرَ الكائِناتِ الحَيَّة",
+            "english": "Islamic geometric patterns avoid depicting living beings.",
+            "transliteration": "al-anmaat al-handasiyya al-islamiyya tatajannab tasweer al-kaa'inaat al-hayya",
+            "culturalNote": "Islamic art uses geometric patterns, arabesque, and calligraphy instead of figurative art. This led to extraordinary mathematical sophistication — Islamic geometers discovered quasi-crystalline patterns 500 years before Western mathematics."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الخَطُّ الجَميلُ فَنّ! تَعَلَّم اللَّونَ وَالخَطَّ مَعاً",
+            "english": "Beautiful writing is art! Learn color and script together.",
+            "transliteration": "al-khat al-jamiil fann! ta'allam al-lawn wal-khat ma'an"
+          },
+          {
+            "action": "quiz",
+            "words": ["color_red", "color_blue", "color_green", "color_black", "color_golden"],
+            "quizType": "en-to-ar"
+          }
+        ]
+      },
+      {
+        "id": "amina_ibn_muqla",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الخَطُّ الجَميلُ فَنّ! أُريدُ أَن تَعرِفَ ابنَ مُقلَة",
+            "english": "Beautiful writing is art! I want you to know Ibn Muqla.",
+            "transliteration": "al-khat al-jamiil fann! uriidu an ta'rifa ibn muqla"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "ابنُ مُقلَة (٨٨٦-٩٤٠م) كانَ وَزيرَ الخَليفَة — وَأَعظَمَ خَطّاطٍ في التّاريخ",
+            "english": "Ibn Muqla (886-940 CE) was the Caliph's vizier — and the greatest calligrapher in history.",
+            "transliteration": "ibn muqla (886-940m) kaana waziir al-khaliifa — wa a'dhama khattaat fis-taariikh",
+            "culturalNote": "Ibn Muqla served as vizier three times under different Abbasid caliphs. He invented the system of proportional measurement for Arabic letters — using the rhombic dot as the basic unit. Every letter is measured by dots relative to the alif height."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "طَوَّرَ نِظامَ النِّقطَة المُعَيَّنَة — وَحَدَّدَ نِسَبَ كُلِّ حَرفٍ بِدِقَّة",
+            "english": "He developed the rhombic dot system — precisely defining the proportions of each letter.",
+            "transliteration": "tawwara nidhaam an-niqta al-mu'ayyina — wa haddada nisab kull harf bi-diqqa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قَطَعوا يَدَهُ بِسَبَبِ المَؤامَرات — فَكَتَبَ بِيَدِهِ الأُخرى! هَذا هُوَ الفَنّ",
+            "english": "They cut off his hand due to politics — so he wrote with his other hand! This is art.",
+            "transliteration": "qata'uu yadahu bisabab al-mu'aamaraat — fa kataba bi-yadihi al-ukhraa! haadhaa huwa al-fann"
+          }
+        ]
       }
     ],
     "personality": {
@@ -2472,6 +3080,123 @@
                 "next": "hub"
               }
             ]
+          }
+        ]
+      },
+      {
+        "id": "teach_spice_names",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً يا حَبيبي! تَعالَ شُمَّ البَهارات — الأَنفُ يَتَعَلَّم قَبلَ اللِّسان!",
+            "english": "Hello dear! Come smell the spices — the nose learns before the tongue!",
+            "transliteration": "ahlan ya habiibii! ta'aala shumma al-bahaaraat — al-anf yata'allam qabl al-lisaan!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَذا الزَّعفَران — أَغلى بَهارٍ في العالَم. رائِحَتُهُ كَالذَّهَب",
+            "english": "This is saffron — the most expensive spice in the world. Its smell is like gold.",
+            "transliteration": "haadhaa az-za'faraan — aghlaa bahaar fil-'aalam. raa'ihatuhu kadh-dhahab",
+            "culturalNote": "The word 'saffron' comes directly from Arabic 'za'faran'. Saffron requires 75,000 flowers to make one pound of spice. Arab traders controlled the saffron trade for centuries.",
+            "teachWord": "spice_w39"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَهَذا الزَّنجَبيل — يُدَفِّئُ الجِسمَ كَالشَّمسِ مِن الداخِل",
+            "english": "And this is ginger — it warms the body like the sun from within.",
+            "transliteration": "wa haadhaa az-zanjabeel — yudaffi'u al-jism kash-shams mid ad-daakhil",
+            "teachWord": "water_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَالقَهوَة — كَلِمَةٌ عَرَبِيَّةٌ أَصيلَة. 'قَهوَة' أَصبَحَت 'coffee' في كُلِّ العالَم!",
+            "english": "And coffee — a genuine Arabic word. 'Qahwa' became 'coffee' in the entire world!",
+            "transliteration": "wal-qahwa — kalimatun arabiyya asiila. 'qahwa' asbahat 'coffee' fii kull al-'aalam!",
+            "culturalNote": "The word 'coffee' comes from Arabic 'qahwa' via Turkish 'kahve'. Yemen was the first country to cultivate coffee commercially. The first coffeehouses (qahwakhana) opened in Mecca and Cairo in the 15th century.",
+            "teachWord": "coffee_1"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "وَالسُّكَّر؟",
+                "english": "And sugar?",
+                "next": "teach_sugar_candy"
+              },
+              {
+                "arabic": "عَلِّمْني المَزيدَ مِن البَهارات",
+                "english": "Teach me more spices",
+                "next": "teach_food_3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "teach_sugar_candy",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "آهٍ! السُّكَّر! تَعالَ تَعالَ — شُمَّ هَذا!",
+            "english": "Ah! Sugar! Come come — smell this!",
+            "transliteration": "aahin! as-sukkar! ta'aala ta'aala — shumma haadhaa!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "'sugar' مِن العَرَبِيَّة 'سُكَّر' — وَ'candy' مِن 'قَند' — سُكَّرُ القَصَب",
+            "english": "'Sugar' from Arabic 'sukkar' — and 'candy' from 'qand' — sugarcane.",
+            "transliteration": "'sugar' min al-arabiyya 'sukkar' — wa 'candy' min 'qand' — sukkar al-qasab",
+            "culturalNote": "Both 'sugar' and 'candy' are Arabic loanwords in English. Sugar (sukkar) was first refined by Persian and Arab chemists. 'Candy' comes from 'qand' (crystallized sugar). The first sugar refineries were built in the Islamic world."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَ'sherbet' مِن 'شَرْبَة' — وَ'syrup' مِن 'شَراب'! لُغَتُنا مَليئَة بِالحَلاوَة!",
+            "english": "And 'sherbet' from 'sharba' — and 'syrup' from 'sharab'! Our language is full of sweetness!",
+            "transliteration": "wa 'sherbet' min 'sharba' — wa 'syrup' min 'sharaab'! lughatunaa malii'a bil-halaawa!",
+            "culturalNote": "Arabic sharab (drink) gave English sherbet, sorbet, and syrup. Arab pharmacists were the first to create medicinal syrups. The Arabic suffix -at in 'sharba' became the English '-et' in sherbet."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "تَعالَ شُمَّ البَهارات وَتَعَلَّم — مَعاً هُما أَلَذُّ!",
+            "english": "Come smell the spices and learn — together they are sweeter!",
+            "transliteration": "ta'aala shumma al-bahaaraat wa ta'allam — ma'an humaa aladhdh!"
+          },
+          {
+            "action": "quiz",
+            "words": ["coffee_1", "sugar_1", "honey_1", "dates_1"],
+            "quizType": "ar-to-en"
+          }
+        ]
+      },
+      {
+        "id": "layla_east_africa",
+        "trigger": "relationship_level_2",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً يا حَبيبي! هَذِهِ البَهاراتُ جاءَت مِن أَفريقيا الشَّرقِيَّة — زَنجِبار!",
+            "english": "Hello dear! These spices came from East Africa — Zanzibar!",
+            "transliteration": "ahlan ya habiibii! haadhihi al-bahaaraatu jaa'at min afrikiyaa ash-sharqiyya — zanjibaar!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "التُّجّارُ العَرَبُ وَصَلوا إلى أَفريقيا قَبلَ الأُوروبِيِّينَ بِقُرونٍ",
+            "english": "Arab traders reached Africa centuries before Europeans.",
+            "transliteration": "at-tujjaar al-arab wasalu ila afrikiyaa qabl al-urubiyyin bi-quruun",
+            "culturalNote": "Arab traders established trade networks from East Africa (Swahili coast) to Southeast Asia from the 8th century CE. Zanzibar and Mombasa were Arab-Swahili trading cities. Many Swahili words are Arabic in origin."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "القِرفَة مِن سَريلانكا! والفُلفُل مِن الهِند! والزَّعفَران مِن إيران!",
+            "english": "Cinnamon from Sri Lanka! Pepper from India! Saffron from Iran!",
+            "transliteration": "al-qirfa min sriilaankaa! wal-fulful min al-hind! waz-za'faraan min iiraan!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كُلُّها تَمُرُّ عَبرَ هَذا السُّوق — رائِحَةُ كُلِّ العالَم في مَكانٍ واحِد!",
+            "english": "All of it passes through this market — the smell of the whole world in one place!",
+            "transliteration": "kulluhaa tamurru abr as-suuq — raa'ihat kull al-'aalam fii makaan waahid!"
           }
         ]
       }
