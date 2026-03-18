@@ -215,10 +215,10 @@ All 16 use `buildPlaceholderMap()` which returns a simple 40×30 all-SAND grid. 
 | `mountain_of_words` | `'snow'` | Mountain setting |
 | `sea_of_ink` | `'grass'` | Ink ocean, base water |
 | `forest_of_tales` | `'mushroom'` | ShroomLands (TILE-10) |
-| `city_of_mirrors` | `'desert'` | Desert city |
-| `garden_of_roots` | `'grass'` | Garden setting |
-| `fortress_of_silence` | `'dungeon'` | Dungeon pack (TILE-08) |
-| `volcano_of_creation` | `'volcano'` | Volcano pack (TILE-09) |
+| `desert_of_silence` | `'volcano'` | Volcanic wasteland (TILE-09) — was incorrectly listed as city_of_mirrors |
+| `merchants_island` | `'grass'` | Island/port setting — was incorrectly listed as garden_of_roots |
+| `fortress_of_secrets` | `'dungeon'` | Dungeon pack (TILE-08) — was incorrectly listed as fortress_of_silence |
+| `garden_of_spirits` | `'grass'` | Garden setting — was incorrectly listed as volcano_of_creation |
 | All 8 real-world zones | `'desert'` | All Sahara/Middle East settings |
 
 ---
