@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
-status: completed
-stopped_at: 44-03 complete — Phase 44 complete, all DIAL requirements met
-last_updated: "2026-03-18T12:46:55.160Z"
-last_activity: 2026-03-18 — Completed 44-03 (culturalNote UI + teachWord verification + 1544 lines)
+status: in_progress
+stopped_at: 45-01 complete — Phase 45 plan 1 done, QUEST-01 narrative spine established
+last_updated: "2026-03-18T13:09:21Z"
+last_activity: 2026-03-18 — Completed 45-01 (8-act main storyline + 16 arc dialogue trees)
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 9
+  completed_plans: 4
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Milestone: v9.0 Content Depth
-Phase: 44 — NPC Dialogue Expansion (COMPLETE)
-Plan: 03 of 3 complete — Phase 44 complete
-Status: Phase complete — ready for Phase 45 (Quest Storylines)
-Last activity: 2026-03-18 — Completed 44-03 (culturalNote UI + teachWord verification + 1544 lines)
+Phase: 45 — Quest Storylines (IN PROGRESS)
+Plan: 01 of N complete — 8-act main story spine done
+Status: In progress — Phase 45 plan 1 complete; ready for plan 2 (quest branching by learningPath)
+Last activity: 2026-03-18 — Completed 45-01 (8-act main storyline + 16 arc dialogue trees)
 
-Progress (v9.0): [███░░░░░░░░░] 33% (3/9 plans)
+Progress (v9.0): [████░░░░░░░░] 44% (4/9 plans)
 
 ### Shipped Milestones
 
@@ -58,7 +58,7 @@ Progress (v9.0): [███░░░░░░░░░] 33% (3/9 plans)
 - DIAL-04 COMPLETE: culturalNote fields render in DialogueBox UI with red accent (#E63946) styling
 - DIAL-05 COMPLETE: teachWord-to-FSRS pipeline verified (454 teachWord fields, 0 invalid refs)
 - 111 total culturalNote fields across all NPCs
-- 8-act main storyline uses time-traveling scholar collecting manuscript pages across all 8 zones (QUEST-01)
+- QUEST-01 COMPLETE: 8-act main storyline (time-traveling scholar + manuscript pages) in quests.json + 16 STORY_ACT_ARCS in npcStoryArcs.js
 - Quest branching by learningPath (Scholar/Traveler/Historian) already exists in narrativeSlice (QUEST-05)
 - vocabularyAll.js currently has 1,220 words — expand to 5,000+ (VOCAB-01)
 - CEFR targets: A1 (500), A2 (1,000), B1 (2,000), B2 (1,500) = 5,000 total (VOCAB-02)
@@ -76,6 +76,8 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 | player-choice branches use next pointers to named trees | 44-02 | Cleaner than inline choices; lets engine's handleChoice() navigate between trees |
 | culturalNote added to DialogueBox.jsx not DialogueOverlay.jsx | 44-03 | DialogueBox is where line content renders; DialogueOverlay only orchestrates phases/choices |
 | Cultural note shown only when allComplete | 44-03 | Matches teachWordCard timing — prevents note appearing during typewriter animation |
+| act_8 NPC is vizier-abbas, not scholar-yusuf | 45-01 | scholar-yusuf is in oasis_village; vizier-abbas is first NPC in royal_palace zone and most narratively fitting |
+| STORY_ACT_ARCS is a new top-level export | 45-01 | Act arcs are standalone condition-based objects, separate from NPC_EXTRA_DIALOGUE_TREES appended trees |
 
 ### Blockers/Concerns
 
@@ -92,5 +94,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: 44-03 complete — Phase 44 complete, all DIAL requirements met
-Resume file: `.planning/phases/45-quest-storylines/` (Phase 45 not yet planned — run `/gsd:plan-phase 45`)
+Stopped at: 45-01 complete — QUEST-01 main story spine done (8 acts + 16 arc dialogues)
+Resume file: `.planning/phases/45-quest-storylines/` (Phase 45 plan 02 next — quest branching by learningPath)

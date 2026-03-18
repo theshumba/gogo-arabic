@@ -428,7 +428,7 @@ Plans:
 **Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 45-01-PLAN.md — 8-act main storyline quests + act dialogue arcs in npcStoryArcs.js (QUEST-01)
+- [x] 45-01-PLAN.md — 8-act main storyline quests + act dialogue arcs in npcStoryArcs.js (QUEST-01)
 - [ ] 45-02-PLAN.md — 16 zone side quests + 12 companion personal quests + npcs.json dialogue (QUEST-02, QUEST-03)
 - [ ] 45-03-PLAN.md — Hidden inscription interactables + learningPath condition engine + per-path dialogue branches (QUEST-04, QUEST-05)
 
