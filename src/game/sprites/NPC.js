@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { NPC_KEY_MAP } from '../../data/spriteKeyMap.js';
+import { NPC_KEY_MAP, FEMALE_NPC_IDS, NPC_HIJAB_TINT } from '../../data/spriteKeyMap.js';
 
 /**
  * NPC sprite supporting both legacy 128x128 spritesheets (4×4 grid)
@@ -122,6 +122,34 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
           repeat: 0,
         });
       }
+
+      // --- Hijab overlay for female NPCs (CHAR-03) ---
+      this._hijabSprite = null;
+      if (FEMALE_NPC_IDS.has(key)) {
+        // Create a small rectangle overlay positioned over the head area of the sprite.
+        // Kenmi 16x16 sprites at 4x scale = 64x64. Head occupies roughly top 5px (20px scaled).
+        // We use a tinted Graphics-based sprite to simulate hijab covering.
+        const gfx = scene.make.graphics({ x: 0, y: 0, add: false });
+
+        // Draw a hijab shape: a rounded top + drape on the sides
+        // At 16x16 base: head is roughly x:4-12, y:0-5
+        gfx.fillStyle(0xFFFFFF, 1);
+        // Head covering: semicircle on top + drape sides
+        gfx.fillRoundedRect(3, 0, 10, 6, 2);  // top of head
+        gfx.fillRect(2, 3, 3, 5);              // left drape
+        gfx.fillRect(11, 3, 3, 5);             // right drape
+
+        // Generate a unique texture key for this NPC's hijab
+        const hijabTexKey = `hijab-overlay-${id}`;
+        gfx.generateTexture(hijabTexKey, 16, 16);
+        gfx.destroy();
+
+        this._hijabSprite = scene.add.sprite(x, y, hijabTexKey);
+        this._hijabSprite.setScale(4);  // Match NPC scale
+        this._hijabSprite.setTint(NPC_HIJAB_TINT);
+        this._hijabSprite.setDepth(this.depth + 1);
+        this._hijabSprite.setOrigin(0.5, 0.5);
+      }
     } else {
       // --- Legacy animation setup (4×4 grid, 128x128 frames) ---
       const hasEnoughFrames = frameCount >= 3;
@@ -189,6 +217,9 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
         this._hasWalkAnims = true;
       }
     }
+
+    // Ensure _hijabSprite is always defined (set in Kenmi block only; null for legacy NPCs)
+    if (this._hijabSprite === undefined) this._hijabSprite = null;
 
     // Store idle key for use in _playIdleAnim
     this._idleKey = idleKey;
@@ -263,6 +294,17 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     this._glowTween = null;
   }
 
+  /**
+   * Override setFlipX to keep hijab overlay in sync (Phase 41, CHAR-03).
+   */
+  setFlipX(value) {
+    super.setFlipX(value);
+    if (this._hijabSprite) {
+      this._hijabSprite.setFlipX(value);
+    }
+    return this;
+  }
+
   setInteractionHint(visible) {
     // Update positions to track NPC movement
     this.hintText.setPosition(this.x, this.y - 40);
@@ -270,6 +312,10 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     this.questMarker.setPosition(this.x, this.y - 85);
     this.onboardingArrow.setPosition(this.x, this.y - 100);
     this.onboardingGlow.setPosition(this.x, this.y + 10);
+    if (this._hijabSprite) {
+      this._hijabSprite.setPosition(this.x, this.y);
+      this._hijabSprite.setDepth(this.depth + 1);
+    }
 
     const wasVisible = this.hintText.visible;
     this.hintText.setVisible(visible);
@@ -488,6 +534,11 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
    * Checks if NPC reached its wander target; stops velocity if so.
    */
   update() {
+    // Sync hijab overlay position (Phase 41)
+    if (this._hijabSprite) {
+      this._hijabSprite.setPosition(this.x, this.y);
+    }
+
     if (!this._wanderTarget) return;
     const dist = Phaser.Math.Distance.Between(
       this.x,
@@ -530,6 +581,12 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     if (this.hintText) this.hintText.destroy();
     if (this.nameLabel) this.nameLabel.destroy();
     if (this.questMarker) this.questMarker.destroy();
+
+    // Destroy hijab overlay (Phase 41, CHAR-03)
+    if (this._hijabSprite) {
+      this._hijabSprite.destroy();
+      this._hijabSprite = null;
+    }
 
     super.destroy(fromScene);
   }
