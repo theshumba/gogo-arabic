@@ -84,6 +84,14 @@ const oasis_village = {
     { key: 'kenmi-desert-props-desert-rocks', x: 38, y: 27, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-houses-desert-house-4.2', x: 34, y: 10, collide: true, collideW: 240, collideH: 100 },
     { key: 'kenmi-desert-houses-desert-house-2.3', x: 2, y: 3, collide: true, collideW: 180, collideH: 80 },
+    // DECO-04: Golden pots near ruins gate entrance (landmark)
+    { key: 'kenmi-desert-props-golden-pots', x: 21, y: 3, collide: false },
+    { key: 'kenmi-desert-props-golden-pots', x: 19, y: 3, collide: false },
+    // DECO-05: NPC-adjacent props
+    { key: 'kenmi-desert-props-water-sack-on-stick', x: 13, y: 19, collide: false },
+    { key: 'kenmi-desert-props-sleeping-mat', x: 10, y: 7, collide: false },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 11, y: 19, collide: false },
+    { key: 'kenmi-desert-props-sleeping-mat', x: 34, y: 26, collide: false },
   ],
 
   npcs: [
@@ -270,6 +278,13 @@ const ancient_library = {
     { key: 'kenmi-desert-props-desert-rocks', x: 29, y: 27, collide: true, collideW: 30, collideH: 20 },
     // Gate entrance
     { key: 'kenmi-desert-temple-desert-obelisk-1', x: 17, y: 22, collide: true, collideW: 120, collideH: 40 },
+    // DECO-04: Obelisks flanking the library gate + golden pot in reading garden
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 12, y: 22, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 22, y: 22, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-props-golden-pots', x: 17, y: 14, collide: false },
+    // DECO-05: NPC-adjacent props
+    { key: 'kenmi-desert-props-sleeping-mat', x: 18, y: 12, collide: false },
+    { key: 'kenmi-desert-props-water-sack-on-stick', x: 11, y: 17, collide: false },
   ],
 
   npcs: [
@@ -404,6 +419,13 @@ const desert_marketplace = {
     { key: 'kenmi-desert-props-desert-fencewall', x: 14, y: 15, collide: true, collideW: 40, collideH: 10 },
     { key: 'kenmi-desert-props-desert-fencewall', x: 28, y: 15, collide: true, collideW: 40, collideH: 10 },
     { key: 'kenmi-desert-props-desert-fencewall', x: 34, y: 15, collide: true, collideW: 40, collideH: 10 },
+    // DECO-04: Golden pot at market fountain / small obelisk at market entrance
+    { key: 'kenmi-desert-props-golden-pots', x: 22, y: 17, collide: false },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 20, y: 2, collide: true, collideW: 20, collideH: 20 },
+    // DECO-05: NPC-adjacent props (Layla 15,17; Hassan 29,17; Guard Hamza 22,8)
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 14, y: 18, collide: false },
+    { key: 'kenmi-desert-props-desert-rugs', x: 29, y: 18, collide: false },
+    { key: 'kenmi-desert-props-water-sack-on-stick', x: 23, y: 9, collide: false },
   ],
 
   npcs: [
@@ -536,6 +558,9 @@ const farmland = {
     { key: 'kenmi-desert-props-palm-tree-1', x: 40, y: 22, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-palm-tree-1', x: 3, y: 18, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-palm-tree-2', x: 42, y: 18, collide: true, collideW: 20, collideH: 16 },
+    // DECO-05: NPC-adjacent props (Omar 12,10 and Maryam 33,25)
+    { key: 'kenmi-base-outdoor-decoration-hay-bales', x: 11, y: 11, collide: false },
+    { key: 'kenmi-base-outdoor-decoration-barrels', x: 34, y: 26, collide: false },
   ],
 
   npcs: [
@@ -659,6 +684,11 @@ const bedouin_camp = {
     { key: 'kenmi-desert-props-desert-rocks', x: 12, y: 22, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-desert-rocks', x: 25, y: 22, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-desert-rocks', x: 30, y: 15, collide: true, collideW: 30, collideH: 20 },
+    // DECO-05: NPC-adjacent props (Tariq 17,13; Noor 8,8; Ali 27,8)
+    { key: 'kenmi-desert-props-sleeping-mat', x: 16, y: 14, collide: false },
+    { key: 'kenmi-desert-props-water-sack-on-stick', x: 18, y: 14, collide: false },
+    { key: 'kenmi-desert-props-desert-rugs', x: 9, y: 9, collide: false },
+    { key: 'kenmi-desert-props-sleeping-mat', x: 28, y: 9, collide: false },
   ],
 
   npcs: [
@@ -780,6 +810,10 @@ const mountain_village = {
     { key: 'kenmi-desert-props-desert-rocks', x: 33, y: 26, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 18, y: 8, collide: true, collideW: 20, collideH: 20 },
     { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 22, y: 8, collide: true, collideW: 20, collideH: 20 },
+    // DECO-05: NPC-adjacent props (Salim 20,13; Zahra 15,20; Khadija 27,20)
+    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 19, y: 14, collide: false },
+    { key: 'kenmi-base-outdoor-decoration-barrels', x: 16, y: 21, collide: false },
+    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 28, y: 21, collide: false },
   ],
 
   npcs: [
@@ -907,6 +941,10 @@ const coastal_port = {
     // Trees in town
     { key: 'kenmi-desert-props-acacia-tree', x: 10, y: 14, collide: true, collideW: 40, collideH: 20 },
     { key: 'kenmi-desert-props-halfdead-tree', x: 25, y: 14, collide: true, collideW: 30, collideH: 20 },
+    // DECO-05: NPC-adjacent props (Rashid 33,17; Hana 18,17; Daud 12,24)
+    { key: 'kenmi-base-outdoor-decoration-barrels', x: 34, y: 18, collide: false },
+    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 17, y: 18, collide: false },
+    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 11, y: 25, collide: false },
   ],
 
   npcs: [
@@ -1053,6 +1091,15 @@ const royal_palace = {
     { key: 'kenmi-desert-props-desert-rocks', x: 44, y: 5, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-desert-rocks', x: 5, y: 35, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-desert-rocks', x: 44, y: 35, collide: true, collideW: 30, collideH: 20 },
+    // DECO-04: Large obelisks at grand gate + golden pots at central fountain
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 20, y: 30, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 30, y: 30, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-props-golden-pots', x: 23, y: 20, collide: false },
+    { key: 'kenmi-desert-props-golden-pots', x: 27, y: 20, collide: false },
+    // DECO-05: NPC-adjacent props (Vizier Abbas 25,13; Princess Aisha 20,20; Poet Rumi 30,20)
+    { key: 'kenmi-desert-props-desert-rugs', x: 26, y: 14, collide: false },
+    { key: 'kenmi-desert-props-sleeping-mat', x: 19, y: 21, collide: false },
+    { key: 'kenmi-desert-props-golden-pots', x: 31, y: 21, collide: false },
   ],
 
   npcs: [
