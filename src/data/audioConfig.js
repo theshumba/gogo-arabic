@@ -39,6 +39,26 @@ export const INTERIOR_BGM = {
   default: 'interior',
 };
 
+// Zone ambient sound layers (layered on top of BGM)
+// Each zone can have multiple ambient tracks mixed at different volumes.
+export const ZONE_AMBIENT_LAYERS = {
+  oasis_village: [{ track: 'water-flowing', volume: 0.3 }, { track: 'birds', volume: 0.2 }],
+  ancient_library: [{ track: 'pages-rustling', volume: 0.15 }],
+  desert_marketplace: [{ track: 'crowd-chatter', volume: 0.25 }, { track: 'wind-light', volume: 0.1 }],
+  farmland: [{ track: 'birds', volume: 0.3 }, { track: 'wind-light', volume: 0.15 }],
+  bedouin_camp: [{ track: 'fire-crackle', volume: 0.3 }, { track: 'wind-desert', volume: 0.2 }],
+  mountain_village: [{ track: 'wind-mountain', volume: 0.25 }],
+  coastal_port: [{ track: 'waves', volume: 0.3 }, { track: 'seagulls', volume: 0.15 }],
+  royal_palace: [{ track: 'fountain', volume: 0.2 }],
+};
+
+// Interior ambient sound mapping
+export const INTERIOR_AMBIENT = {
+  default: [{ track: 'room-tone', volume: 0.1 }],
+  library: [{ track: 'pages-rustling', volume: 0.15 }],
+  shop: [{ track: 'crowd-chatter', volume: 0.1 }],
+};
+
 // All BGM tracks for preloading reference
 export const ALL_BGM_TRACKS = [
   ...Object.values(ZONE_BGM_MAP),

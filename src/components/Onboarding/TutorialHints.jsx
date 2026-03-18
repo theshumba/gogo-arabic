@@ -166,3 +166,62 @@ export default function TutorialHints() {
 
   return null;
 }
+
+/**
+ * WelcomeSplash — Brief welcome overlay shown on first load.
+ * Shows game title and a "Begin" button, then fades out.
+ */
+export function WelcomeSplash({ onDone }) {
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%)',
+        color: '#f5f0e1',
+        fontFamily: 'var(--font-pixel, monospace)',
+      }}
+    >
+      <h1
+        style={{
+          fontSize: '2.5rem',
+          marginBottom: '0.5rem',
+          letterSpacing: '0.1em',
+          color: '#E63946',
+        }}
+      >
+        Gogo Arabic
+      </h1>
+      <p
+        style={{
+          fontSize: '1rem',
+          marginBottom: '2rem',
+          opacity: 0.7,
+        }}
+      >
+        Your Arabic learning adventure begins
+      </p>
+      <button
+        onClick={onDone}
+        style={{
+          padding: '0.75rem 2.5rem',
+          fontSize: '1.1rem',
+          fontFamily: 'inherit',
+          background: '#E63946',
+          color: '#f5f0e1',
+          border: 'none',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          letterSpacing: '0.05em',
+        }}
+      >
+        Begin
+      </button>
+    </div>
+  );
+}
