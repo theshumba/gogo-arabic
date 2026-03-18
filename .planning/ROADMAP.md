@@ -339,7 +339,7 @@ Plans:
 Plans:
 - [x] 41-01-PLAN.md — Player sprite replacement with Kenmi knight character (CHAR-01)
 - [x] 41-02-PLAN.md — NPC sprite verification + hijab overlay for female NPCs (CHAR-02, CHAR-03, CHAR-05, CHAR-06)
-- [ ] 41-03-PLAN.md — Enemy Kenmi battle sprites + enable ambient desert animals (CHAR-04, ANIM-01, ANIM-02, ANIM-03, ANIM-04)
+- [x] 41-03-PLAN.md — Enemy Kenmi battle sprites + enable ambient desert animals (CHAR-04, ANIM-01, ANIM-02, ANIM-03, ANIM-04) — COMPLETE 2026-03-18
 
 #### Phase 42: Phaser UI & Arabic BitmapFont
 **Goal**: In-game UI elements render natively inside Phaser Canvas using Kenmi UI panels and Pixel AE Arabic BitmapFont — dialogue boxes, interaction prompts, and zone labels no longer use React DOM overlays
