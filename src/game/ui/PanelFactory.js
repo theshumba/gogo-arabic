@@ -138,4 +138,54 @@ export class PanelFactory {
       ...extraOpts,
     });
   }
+
+  /**
+   * Kenmi sign panel — warm orange Kenmi UI frame art.
+   * Used for sign popups, simple in-game text displays.
+   *
+   * @param {Phaser.Scene} scene
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @param {object} [extraOpts]
+   * @returns {UIPanel}
+   */
+  static createKenmiPanel(scene, x, y, width, height, extraOpts = {}) {
+    return new UIPanel(scene, x, y, width, height, {
+      preset: 'kenmi',
+      depth: 10000,
+      scrollFactor: 0,
+      ...extraOpts,
+    });
+  }
+
+  /**
+   * Kenmi tooltip panel — smaller Kenmi UI frame for hover info.
+   *
+   * @param {Phaser.Scene} scene
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @param {object} [extraOpts]
+   * @returns {UIPanel}
+   */
+  static createKenmiTooltipPanel(scene, x, y, width, height, extraOpts = {}) {
+    return new UIPanel(scene, x, y, width, height, {
+      preset: 'kenmi',
+      padding: 8,
+      depth: 10100,
+      scrollFactor: 0,
+      ...extraOpts,
+    });
+  }
 }
+
+// ==========================================================================
+// UI-07 COMPLIANCE NOTE (Phase 42):
+// React overlays (HUD bar, main menu, settings, profile, wardrobe, quest log,
+// shop, complex NPC dialogue with choices/portraits) remain as React components.
+// Only in-game elements (signs, basic objects, NPC labels) have moved to Phaser.
+// See: src/components/Router/GameLayout.jsx for the React overlay render tree.
+// ==========================================================================

@@ -87,8 +87,9 @@ export function createNineSlice(scene, opts = {}) {
  * texture keys and their source corner sizes. Used by UIPanel and PanelFactory.
  */
 export const PANEL_PRESETS = Object.freeze({
-  dark:      { texture: 'panel-dark',      cornerSize: 6 },
-  parchment: { texture: 'panel-parchment', cornerSize: 6 },
-  red:       { texture: 'panel-red',       cornerSize: 6 },
-  tooltip:   { texture: 'panel-tooltip',   cornerSize: 4 },
+  dark:      { texture: 'panel-dark',            cornerSize: 6 },
+  parchment: { texture: 'panel-parchment',       cornerSize: 6 },
+  red:       { texture: 'panel-red',             cornerSize: 6 },
+  tooltip:   { texture: 'panel-tooltip',         cornerSize: 4 },
+  kenmi:     { texture: 'kenmi-ui-frames-sheet', cornerSize: 6 },
 });
