@@ -20,6 +20,7 @@ const SettingsMenu = lazy(() => import('./components/Menu/SettingsMenu.jsx'));
 const WorldMap = lazy(() => import('./components/World/WorldMap.jsx'));
 const WordDuel = lazy(() => import('./components/Battle/WordDuel.jsx'));
 const GrammarModule = lazy(() => import('./components/Grammar/GrammarModule.jsx'));
+const GrammarLesson = lazy(() => import('./components/Grammar/GrammarLesson.jsx'));
 
 // Phase 5-7-9 lazy imports
 const DailyDashboard = lazy(() => import('./components/Dashboard/DailyDashboard.jsx'));
@@ -169,6 +170,46 @@ function GrammarRoute() {
   );
 }
 
+function GrammarLessonRoute() {
+  const { goBack } = useGameNavigation();
+
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <GrammarLesson onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
+function DailyRoute() {
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <DailyDashboard />
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
+function WordSearchDirectRoute() {
+  const { goBack } = useGameNavigation();
+
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <WordSearch onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
 function BattleRoute() {
   const { goBack } = useGameNavigation();
   const [searchParams] = useSearchParams();
@@ -295,6 +336,21 @@ export const router = createBrowserRouter([
   {
     path: '/grammar',
     element: <GrammarRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/grammar/:lessonId',
+    element: <GrammarLessonRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/daily',
+    element: <DailyRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/word-search',
+    element: <WordSearchDirectRoute />,
     errorElement: <RouteErrorBoundary />,
   },
   {

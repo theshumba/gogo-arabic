@@ -12,6 +12,7 @@ import { useSessionTracking } from '../../hooks/useSessionTracking.js';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts.js';
 
 import { PhaserGame } from '../../game/PhaserGame.jsx';
+import { loadExpandedVocabulary } from '../../data/vocabularyAll.js';
 import HUD from '../HUD/HUD.jsx';
 import MiniMap from '../HUD/MiniMap.jsx';
 import NotificationToast from '../HUD/NotificationToast.jsx';
@@ -202,6 +203,15 @@ export default function GameLayout() {
     }
     prevPhaseRef.current = tutorialPhase;
   }, [tutorialPhase, onboardingComplete]);
+
+  // Lazy-load the 5,000-word expanded vocabulary after the game boots.
+  // This defers the large vocabularyExpanded.js chunk until after the
+  // initial render, keeping the first-load bundle small.
+  useEffect(() => {
+    loadExpandedVocabulary().catch((err) => {
+      console.warn('[GameLayout] Failed to load expanded vocabulary:', err);
+    });
+  }, []);
 
   // J key toggles journal
   useEffect(() => {

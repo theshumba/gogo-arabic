@@ -14,11 +14,13 @@
  *
  * Every exported entry is guaranteed to have at minimum:
  *   id, arabic, english, category, difficulty
+ *
+ * The 5,000-word vocabularyExpanded.js dataset is NOT imported eagerly.
+ * Call loadExpandedVocabulary() after the game boots to merge it in.
  */
 
 import curatedWords from './vocabulary.json';
 import finalWords from './vocabulary-final.json';
-import expandedWords from './vocabularyExpanded.js';
 
 // Build a Set of IDs already present in the curated dataset
 const curatedIds = new Set(curatedWords.map((w) => w.id));
@@ -48,25 +50,48 @@ const additionalWords = finalWords
     frequency: w.frequency ?? null,
   }));
 
-// Collect all existing IDs to deduplicate expanded words
-const existingIds = new Set([...curatedWords.map((w) => w.id), ...additionalWords.map((w) => w.id)]);
-
-// Add expanded vocabulary (5,000 CEFR-tagged words) — deduplicate by ID
-const expandedDeduped = expandedWords
-  .filter((w) => !existingIds.has(w.id))
-  .map((w) => ({
-    id: w.id,
-    arabic: w.arabic,
-    english: w.english,
-    transliteration: w.transliteration || null,
-    category: w.category || 'general',
-    difficulty: w.difficulty || 1,
-    root: w.root || null,
-    cefrLevel: w.cefrLevel || null,
-    frequency: w.frequency ?? null,
-  }));
-
-// Curated first, then vocabulary-final, then expanded CEFR words
-const vocabulary = [...curatedWords, ...additionalWords, ...expandedDeduped];
+// Curated first, then vocabulary-final (~1,220 words total at boot)
+const vocabulary = [...curatedWords, ...additionalWords];
 
 export default vocabulary;
+
+/**
+ * Lazily loads the 5,000-word CEFR-tagged expanded vocabulary and merges it
+ * into the live vocabulary array. Safe to call multiple times — subsequent
+ * calls are no-ops once the chunk has been loaded.
+ *
+ * Call this in GameLayout's useEffect after Phaser boots so the expanded
+ * words don't block the initial page load.
+ *
+ * @returns {Promise<Array>} The full merged vocabulary array
+ */
+let expandedLoaded = false;
+
+export async function loadExpandedVocabulary() {
+  if (expandedLoaded) return vocabulary;
+
+  const { default: expandedWords } = await import('./vocabularyExpanded.js');
+
+  // Build a Set of IDs already in the base vocabulary to deduplicate
+  const existingIds = new Set(vocabulary.map((w) => w.id));
+
+  const expandedDeduped = expandedWords
+    .filter((w) => !existingIds.has(w.id))
+    .map((w) => ({
+      id: w.id,
+      arabic: w.arabic,
+      english: w.english,
+      transliteration: w.transliteration || null,
+      category: w.category || 'general',
+      difficulty: w.difficulty || 1,
+      root: w.root || null,
+      cefrLevel: w.cefrLevel || null,
+      frequency: w.frequency ?? null,
+    }));
+
+  // Mutate the exported array in-place so all existing references see the update
+  vocabulary.push(...expandedDeduped);
+  expandedLoaded = true;
+
+  return vocabulary;
+}

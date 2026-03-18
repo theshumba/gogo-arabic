@@ -44,12 +44,33 @@ export default defineConfig({
         manualChunks(id) {
           // Large vocabulary data file (~932KB JSON)
           if (id.includes('src/data/vocabulary-final.json') ||
-            id.includes('src/data/vocabularyAll.js')) {
+            id.includes('src/data/vocabularyAll.js') ||
+            id.includes('src/data/vocabularyExpanded.js')) {
             return 'vocabulary-data';
           }
           // Large NPC data file (~220KB JSON)
           if (id.includes('src/data/npcs.json')) {
             return 'npc-data';
+          }
+          // Quest data
+          if (id.includes('src/data/quests.json')) {
+            return 'quest-data';
+          }
+          // Grammar data
+          if (id.includes('src/data/grammar.js') ||
+            id.includes('src/data/grammarCombos.js')) {
+            return 'grammar-data';
+          }
+          // Lore data
+          if (id.includes('src/data/loreCodex.js')) {
+            return 'lore-data';
+          }
+          // Skill/achievement/faction data
+          if (id.includes('src/data/skillTrees.js') ||
+            id.includes('src/data/achievements.js') ||
+            id.includes('src/data/factions.js') ||
+            id.includes('src/data/factionEvents.js')) {
+            return 'skill-data';
           }
 
           if (id.includes('node_modules')) {
