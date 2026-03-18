@@ -1,24 +1,51 @@
 /**
- * MountSystem — stub
- *
- * Placeholder for the mount/ride system. Currently a no-op
- * to unblock the build. Full implementation will be added
- * when the mount feature is developed.
+ * MountSystem — Handles mount (camel) riding for faster overworld travel.
+ * Mounts increase player movement speed and change sprite animation.
  */
+
 export class MountSystem {
   constructor(scene) {
     this.scene = scene;
+    this.currentMount = null;
+    this.speedMultiplier = 1.0;
   }
 
-  mount(/* type */) {
-    // No-op — mount system not yet implemented
+  /**
+   * Mount a rideable creature.
+   * @param {string} mountType - Mount type (e.g. 'camel', 'horse')
+   */
+  mount(mountType) {
+    if (this.currentMount) return; // Already mounted
+    this.currentMount = mountType;
+    this.speedMultiplier = mountType === 'camel' ? 1.8 : 1.5;
   }
 
-  unmount() {
-    // No-op
+  /**
+   * Dismount current mount.
+   */
+  dismount() {
+    this.currentMount = null;
+    this.speedMultiplier = 1.0;
+  }
+
+  /**
+   * Check if player is currently mounted.
+   * @returns {boolean}
+   */
+  isMounted() {
+    return this.currentMount !== null;
+  }
+
+  /**
+   * Get current speed multiplier.
+   * @returns {number}
+   */
+  getSpeedMultiplier() {
+    return this.speedMultiplier;
   }
 
   destroy() {
+    this.currentMount = null;
     this.scene = null;
   }
 }
