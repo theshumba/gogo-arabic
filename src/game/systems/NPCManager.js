@@ -62,6 +62,7 @@ export class NPCManager {
         id: cfg.id,
         key: cfg.key,
         name: cfg.name,
+        nameArabic: cfg.nameArabic,
       });
 
       // Store active schedule entry on sprite for use by movement system
@@ -86,15 +87,8 @@ export class NPCManager {
       this.npcs.push(npc);
       this.scene.physics.add.collider(playerSprite, npc);
 
-      // Create DOM overlay labels for this NPC
-      domOverlay.createNpcLabel(
-        cfg.id,
-        npcX,
-        npcY,
-        cfg.nameArabic,
-        cfg.name
-      );
-
+      // DOM NPC label removed — Arabic + English name labels now rendered as Phaser text sprites on NPC (Phase 42)
+      // domOverlay.createNpcLabel() call removed — NPC.arabicNameLabel via createArabicText() replaces it
       // DOM interaction prompt removed — now handled by Phaser NPC sprite (Phase 42)
     });
   }

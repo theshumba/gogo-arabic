@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { NPC_KEY_MAP, FEMALE_NPC_IDS, NPC_HIJAB_TINT } from '../../data/spriteKeyMap.js';
+import { createArabicText } from '../ui/ArabicText.js';
 
 /**
  * NPC sprite supporting both legacy 128x128 spritesheets (4×4 grid)
@@ -18,7 +19,7 @@ import { NPC_KEY_MAP, FEMALE_NPC_IDS, NPC_HIJAB_TINT } from '../../data/spriteKe
  *   - patrol: directional step-based movement loop, setImmovable(false)
  */
 export class NPC extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, { id, key, name }) {
+  constructor(scene, x, y, { id, key, name, nameArabic }) {
     // Check if this NPC key has a Kenmi mapping and the texture is loaded
     const kenmiKey = NPC_KEY_MAP[key];
     const useKenmi = kenmiKey && scene.textures.exists(kenmiKey);
@@ -53,6 +54,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
 
     this.npcId = id;
     this.npcName = name;
+    this.npcNameArabic = nameArabic || '';
 
     // Count available frames in the texture
     const texture = scene.textures.get(textureKey);
@@ -267,6 +269,17 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       color: '#e2b659',
     }).setOrigin(0.5).setVisible(true).setDepth(9999);
 
+    // Arabic name label above English label (Phase 42 — replaces DOM overlay)
+    if (nameArabic) {
+      this.arabicNameLabel = createArabicText(
+        scene, x, y - 70, nameArabic,
+        { fontSize: '12px', color: '#d4a843' }
+      );
+      this.arabicNameLabel.setDepth(9999);
+    } else {
+      this.arabicNameLabel = null;
+    }
+
     // Quest marker (! or ?) above NPC head
     this.questMarker = scene.add.text(x, y - 85, '', {
       fontFamily: "'Press Start 2P'",
@@ -309,6 +322,9 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     // Update positions to track NPC movement
     this.hintText.setPosition(this.x, this.y - 40);
     this.nameLabel.setPosition(this.x, this.y - 56);
+    if (this.arabicNameLabel) {
+      this.arabicNameLabel.setPosition(this.x, this.y - 70);
+    }
     this.questMarker.setPosition(this.x, this.y - 85);
     this.onboardingArrow.setPosition(this.x, this.y - 100);
     this.onboardingGlow.setPosition(this.x, this.y + 10);
@@ -580,6 +596,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     // Destroy other NPC elements
     if (this.hintText) this.hintText.destroy();
     if (this.nameLabel) this.nameLabel.destroy();
+    if (this.arabicNameLabel) this.arabicNameLabel.destroy();
     if (this.questMarker) this.questMarker.destroy();
 
     // Destroy hijab overlay (Phase 41, CHAR-03)
