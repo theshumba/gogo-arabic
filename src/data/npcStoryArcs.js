@@ -881,6 +881,525 @@ const NPC_EXTRA_DIALOGUE_TREES = {
   ],
 };
 
+// ── 8-Act Main Storyline Arc Dialogue Objects (QUEST-01) ──
+// Each act has a start arc and a completion arc = 16 total objects.
+// These are standalone data objects consumed by DialogueEngine when
+// evaluating NPC arcs — they are NOT appended to NPC_EXTRA_DIALOGUE_TREES.
+const STORY_ACT_ARCS = [
+
+  // ────────────────────────────────────────────────────────────
+  // ACT 1 — Guide Amira — Oasis Village
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'arc_act_1',
+    npcId: 'guide-amira',
+    condition: { quest: { id: 'words_of_oasis', status: 'completed' } },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'أَيُّها الرَّحّالَة، لَقَد عَرَفتُ أَنَّكَ قادِرٌ عَلى فَهمِ ما سَأَقولُه',
+        english: 'Traveler, I knew you were capable of understanding what I am about to say.',
+        transliteration: "ayyuhaa ar-rahhaal, laqad 'araftu annaka qaadiran 'alaa fahm maa sa-aquuluh",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'عاصِفَةٌ كَونيَّةٌ بَعثَرَت ثَمانيَ صَفَحات مِن مَخطوطَة قَديمَة عَبرَ البِلاد',
+        english: 'A cosmic sandstorm scattered eight pages of an ancient manuscript across the land.',
+        transliteration: 'aasifattun kawwaniyatun ba\'tharat thamaani safahaat min makhtuuta qadiima abra al-bilaad',
+      },
+      {
+        speaker: 'npc',
+        arabic: 'هَذِهِ المَخطوطَة تَحمِلُ سِرَّ اللُّغَة العَرَبيَّة الكَونيَّة — لا يَستَطيعُ جَمعَها إلّا رَحّالَةٌ عَبرَ الزَّمَن',
+        english: 'This manuscript holds the secret of the cosmic Arabic language — only a time-traveler can reassemble it.',
+        transliteration: "haadhihi al-makhtuuta tahmilu sirr al-lugha al-arabiyya al-kawwaniyya — laa yastatii'u jam'ahaa illaa rahhaalun 'abra az-zaman",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'اِبدَأ في الأَطلال هُنا — الصَّفحَة الأُولى مَدفونَةٌ تَحتَ حَجَرِ المَعرِفَة. مَخطوطَة — كَلِمَة تَعني كِتاباً مَكتوباً بِاليَد',
+        english: 'Begin in the ruins here — the first page is buried beneath the Stone of Knowledge. Makhtoota — a word meaning a handwritten book.',
+        transliteration: "ibda' fii al-atlaal hunaa — as-safha al-uulaa madfiinatan tahta hajar al-ma'rifa. makhtuuta — kalima ta'nii kitaaban maktuuban bil-yad",
+        teachWord: 'makhtuuta',
+        effects: [
+          { type: 'quest_start', questId: 'act_1_manuscript_call' },
+          { type: 'story_flag', flag: 'arc_act_1_started', value: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'arc_act_1_complete',
+    npcId: 'guide-amira',
+    condition: {
+      quest: { id: 'act_1_manuscript_call', status: 'active' },
+      storyFlag: { key: 'act_1_milestone_reached', value: true },
+    },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'وَجَدتَ الصَّفحَة الأُولى! الواحَة دائِماً تَحفَظُ أَسرارَها لِمَن يَستَحِقّ',
+        english: 'You found the first page! The oasis always preserves its secrets for those who deserve them.',
+        transliteration: "wajadta as-safha al-uulaa! al-waaha daa'iman tahfazu asraarahaa liman yastahiqq",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'بَيتُ الحِكمَة في بَغداد كانَ مِثلَ هَذِهِ الواحَة — مَكانٌ تَتَجَمَّعُ فيهِ المَعرِفَة مِن كُلِّ الأُمَم. رِحلَتُكَ أَمامَك الآن',
+        english: 'The House of Wisdom in Baghdad was like this oasis — a place where knowledge gathered from all nations. Your journey lies ahead now.',
+        transliteration: "bayt al-hikma fii baghdaad kaana mithl haadhihi al-waaha — makaanun tatajamma'u fiihi al-ma'rifa min kull al-umam. rihllatuk amamak al-aan",
+        effects: [
+          { type: 'quest_complete', questId: 'act_1_manuscript_call' },
+          { type: 'story_flag', flag: 'act_1_complete', value: true },
+          { type: 'relationship_change', amount: 1 },
+        ],
+      },
+    ],
+  },
+
+  // ────────────────────────────────────────────────────────────
+  // ACT 2 — Librarian Ibrahim — Ancient Library
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'arc_act_2',
+    npcId: 'librarian-ibrahim',
+    condition: { storyFlag: { key: 'act_1_complete', value: true } },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'آهٍ، أَنتَ الرَّحّالَة الذي أَرسَلَتهُ أَميرَة! كُنتُ أَنتَظِرُ هَذا اليَوم',
+        english: 'Ah, you are the traveler Amira sent! I have been waiting for this day.',
+        transliteration: "aah, anta ar-rahhaal alladhii arsalat-hu amiira! kuntu antaziru haadha al-yawm",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'هَذِهِ المَكتَبَة بُنيَت عَلى نَمَطِ بَيتِ الحِكمَة — كُلُّ كِتابٍ لَه رَمزٌ بِالحُروف الأَبجَدِيَّة',
+        english: 'This library was built on the model of the House of Wisdom — every book has a symbol in abjad numerals.',
+        transliteration: "haadhihi al-maktaba buniiyat 'alaa namat bayt al-hikma — kullu kitaabin lahu ramzun bil-huruuf al-abjadiyya",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'الصَّفحَة الثّانيَة مَحبوسَةٌ في غُرفَةِ التَّشفير. فَكُّ شِفرَتِها يَستَلزِمُ مَعرِفَة ثَلاثَة جُذور عَرَبيَّة',
+        english: 'The second page is locked in the cipher room. Breaking its code requires knowledge of three Arabic roots.',
+        transliteration: "as-safha ath-thaaniya mahbuusatan fii ghurfat at-tashfiir. fakku shifratihaa yastazmiu ma'rifat thalaathat juzuur arabiyya",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'أَبجَد — كَلِمَة تَعني أَوَّل الحُروف، وَهِيَ أَصلُ كُلِّ تَشفير',
+        english: "Abjad — a word meaning the first letters, and the root of all cipher.",
+        transliteration: "abjad — kalima ta'nii awwal al-huruuf, wa hiya asl kullu tashfiir",
+        teachWord: 'abjad',
+        effects: [
+          { type: 'quest_start', questId: 'act_2_library_cipher' },
+          { type: 'story_flag', flag: 'arc_act_2_started', value: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'arc_act_2_complete',
+    npcId: 'librarian-ibrahim',
+    condition: {
+      quest: { id: 'act_2_library_cipher', status: 'active' },
+      storyFlag: { key: 'act_2_milestone_reached', value: true },
+    },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'أَحسَنتَ! فَكَكتَ الشِّفرَة! حَتّى أَنا لَم أَستَطِع ذَلِك وَحدي',
+        english: 'Well done! You broke the cipher! Even I could not do that alone.',
+        transliteration: "ahsanta! fakakta ash-shifra! hatta ana lam astati' dhaalik wahdii",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'المَعرِفَة العَرَبيَّة القَديمَة لا تَموت — تَنتَظِرُ مَن يُحسِنُ قِراءَتَها. وَاصِل رِحلَتَك',
+        english: 'Ancient Arabic knowledge does not die — it waits for those who can read it. Continue your journey.',
+        transliteration: "al-ma'rifa al-arabiyya al-qadiima laa tamuut — tantaziru man yuhsinu qiraa'atahaa. waasil rihllatak",
+        effects: [
+          { type: 'quest_complete', questId: 'act_2_library_cipher' },
+          { type: 'story_flag', flag: 'act_2_complete', value: true },
+          { type: 'relationship_change', amount: 1 },
+        ],
+      },
+    ],
+  },
+
+  // ────────────────────────────────────────────────────────────
+  // ACT 3 — Merchant Fatima — Desert Marketplace
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'arc_act_3',
+    npcId: 'merchant-fatima',
+    condition: { storyFlag: { key: 'act_2_complete', value: true } },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'تَبحَثُ عَن وَرَقَة قَديمَة؟ عِندي ورَقَة لَفَّيتُ بِها تَوابِل اليَوم — لا أَعرِفُ مَا فيها',
+        english: 'Looking for an old page? I have a paper I wrapped today\'s spices in — I do not know what is written on it.',
+        transliteration: "tabhathu 'an waraqatan qadiima? 'indii waraqa laffahtu bihaa tawabilal-yawm — laa a'rifu maa fiihaa",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'السُّوقُ الإسلامي كانَ مَكانَ تَبادُل المَعرِفَة أَيضاً — مَعَ كُلِّ صَفقَة تِجاريَّة كانَت هُناكَ صَفقَةٌ مِن الحِكمَة',
+        english: 'The Islamic market was also a place of knowledge exchange — with every trade deal there was also a deal in wisdom.',
+        transliteration: "as-suuq al-islamii kaana makaan tabaadull al-ma'rifa aydan — ma'a kulli safqa tijaariyya kaanant hunaaka safqatun min al-hikma",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'سَأُعطيكَها إذا تَكَلَّمتَ مَعي بِعَرَبيَّة السُّوق. هَل تَعرِفُ كَيفَ تَتَفاوَض؟ تِجارَة — كَلِمَة تَعني التَّبادُل',
+        english: "I will give it to you if you speak market Arabic with me. Do you know how to negotiate? Tij\u0101ra — a word meaning exchange.",
+        transliteration: "sa-u'tiika iyaahaa idhaa takallamt ma'ii bi-arabiyyat as-suuq. hal ta'rifu kayfa tatafaawadd? tijaara — kalima ta'nii at-tabaadull",
+        teachWord: 'tijaara',
+        effects: [
+          { type: 'quest_start', questId: 'act_3_market_bargain_scroll' },
+          { type: 'story_flag', flag: 'arc_act_3_started', value: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'arc_act_3_complete',
+    npcId: 'merchant-fatima',
+    condition: {
+      quest: { id: 'act_3_market_bargain_scroll', status: 'active' },
+      storyFlag: { key: 'act_3_milestone_reached', value: true },
+    },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'ماشاء الله! أَنتَ تُجيدُ لُغَة السُّوق كَأَنَّكَ وُلِدتَ فيه. خُذ الصَّفحَة',
+        english: 'Wonderful! You speak market language as if you were born in it. Take the page.',
+        transliteration: "maa shaa' allaah! anta tujiidu lughat as-suuq ka-annaka ulidat fiih. khudh as-safha",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'طَريقُ التُّجّار كانَ طَريقَ الكَلِمات أَيضاً — كُلُّ رِحلَة تِجاريَّة حَمَلَت لُغَةً جَديدَة مَعَها. يَلّا، وَاصِل',
+        english: 'The trade route was also the route of words — every trade journey carried a new language with it. Go, continue.',
+        transliteration: "tariiq at-tujjaar kaana tariiq al-kalimaat aydan — kullu rihlla tijaariyya hamalat lughatan jadiida ma'ahaa. yallaa, waasil",
+        effects: [
+          { type: 'quest_complete', questId: 'act_3_market_bargain_scroll' },
+          { type: 'story_flag', flag: 'act_3_complete', value: true },
+          { type: 'relationship_change', amount: 1 },
+        ],
+      },
+    ],
+  },
+
+  // ────────────────────────────────────────────────────────────
+  // ACT 4 — Farmer Omar — Farmland
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'arc_act_4',
+    npcId: 'farmer-omar',
+    condition: { storyFlag: { key: 'act_3_complete', value: true } },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'يا سَلام، زَيّاَرة في وَقتِ الحَصاد! هَل جِئتَ لِتُساعِدَني؟',
+        english: 'Welcome, a visit at harvest time! Did you come to help me?',
+        transliteration: "yaa salaam, ziyyaara fii waqt al-hasaad! hal ji'ta li-tusaa'idnii?",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'وَجَدتُ وَرَقَةً غَريبَةً في الأَرض أَثناءَ الحَرث — مَكتوبٌ فيها كَلام لا أَفهَمُه',
+        english: 'I found a strange paper in the soil while plowing — it has writing on it I cannot understand.',
+        transliteration: "wajadtu waraqatan ghariibatan fil-ard athnaa al-harth — maktuubun fiihaa kalaam laa afhamuh",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'الأَرضُ الزِّراعيَّة عِندَنا كانَت تُروى بِنِظامِ قَنَوات الفَلَج — مِن أَعظَمِ اِختِراعات العالَم الإسلامي',
+        english: 'Our farmland was irrigated by the falaj canal system — one of the greatest inventions of the Islamic world.',
+        transliteration: "al-ard az-ziraa'iyya 'indanaa kaanat tuuraa bi-nidaam qanawaat al-falaj — min a'zam ikhtiiraa'aat al-'aalam al-islaamii",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'ساعِدني في الحَصاد وَسَأُعطيكَ الوَرَقَة. حَصاد — تَعني جَمعُ ثِمار العَمَل',
+        english: "Help me with the harvest and I will give you the paper. Hassaad — means gathering the fruits of labor.",
+        transliteration: "saa'idnii fil-hasaad wa-sa-u'tiika al-waraqa. hasaad — ta'nii jam'u thamaar al-'amal",
+        teachWord: 'hasaad',
+        effects: [
+          { type: 'quest_start', questId: 'act_4_farmland_harvest_clue' },
+          { type: 'story_flag', flag: 'arc_act_4_started', value: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'arc_act_4_complete',
+    npcId: 'farmer-omar',
+    condition: {
+      quest: { id: 'act_4_farmland_harvest_clue', status: 'active' },
+      storyFlag: { key: 'act_4_milestone_reached', value: true },
+    },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'شُكراً لَكَ! الحَصاد اِنتَهى وَأَنا لَن أَنسى مُساعَدَتَك',
+        english: 'Thank you! The harvest is done and I will never forget your help.',
+        transliteration: "shukran lak! al-hasaad intahaa wa anaa lan ansaa musaa'adatak",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'العِلمُ الزِّراعيُّ الإسلامي أَطعَمَ العالَم لِقُرون — كَما تُطعِمُنا هَذِهِ الصَّفَحات بِالمَعرِفَة الآن. بارَكَ اللَّه فيك',
+        english: 'Islamic agricultural science fed the world for centuries — just as these pages feed us with knowledge now. God bless you.',
+        transliteration: "al-'ilm az-ziraa'ii al-islaamii at'ama al-'aalim li-quruun — kamaa nut'amunaa haadhihi as-safahaat bil-ma'rifa al-aan. baaraka allaah fiik",
+        effects: [
+          { type: 'quest_complete', questId: 'act_4_farmland_harvest_clue' },
+          { type: 'story_flag', flag: 'act_4_complete', value: true },
+          { type: 'relationship_change', amount: 1 },
+        ],
+      },
+    ],
+  },
+
+  // ────────────────────────────────────────────────────────────
+  // ACT 5 — Wanderer Ali — Bedouin Camp
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'arc_act_5',
+    npcId: 'wanderer-ali',
+    condition: { storyFlag: { key: 'act_4_complete', value: true } },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'رَأَيتُها! في لَيلَةِ القَمَر الكامِل — وَرَقَة تَتَساقَطُ مِن السَّماء كَنَجمَة ساقِطَة',
+        english: 'I saw it! On the night of the full moon — a page falling from the sky like a shooting star.',
+        transliteration: "ra'aytuha! fii laylat al-qamar al-kaamil — waraqa tatasaaqatu min as-samaa' ka-najma saaqita",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'البَدو نَحنُ نَقرَأُ السَّماء كَما تَقرَأُ أَنتَ الكِتاب — كُلُّ نَجمَةٍ لَها اِسمٌ عَرَبيٌّ وَحِكايَة',
+        english: 'We Bedouins read the sky as you read a book — every star has an Arabic name and a story.',
+        transliteration: "al-badw nahnu naqra'u as-samaa' kamaa taqra'u anta al-kitaab — kullu najmatin lahaa ismun arabiyyun wa hikaaya",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'أَخفَيتُ الصَّفحَة في أُغنيَة مَلّاحَة — لا أُعطيها لِمَن لا يَعرِفُ النُّجوم. نَجم — كَلِمَة تَعني نُقطَة ضَوء في السَّماء',
+        english: "I hid the page in a navigation song — I won't give it to one who does not know the stars. Najm — a word meaning a point of light in the sky.",
+        transliteration: "akhfaytu as-safha fii ughniyyat mallaaha — laa u'tiihaa liman laa ya'rif an-nujuum. najm — kalima ta'nii nuqtat daw' fis-samaa'",
+        teachWord: 'najm',
+        effects: [
+          { type: 'quest_start', questId: 'act_5_bedouin_night_vision' },
+          { type: 'story_flag', flag: 'arc_act_5_started', value: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'arc_act_5_complete',
+    npcId: 'wanderer-ali',
+    condition: {
+      quest: { id: 'act_5_bedouin_night_vision', status: 'active' },
+      storyFlag: { key: 'act_5_milestone_reached', value: true },
+    },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'أَحسَنتَ! قَرَأتَ أُغنيَة المَلّاحَة كَمَلّاحٍ حَقيقي! خُذ الصَّفحَة',
+        english: 'Well done! You read the navigation song like a true navigator! Take the page.',
+        transliteration: "ahsanta! qara'ta ughniyyat al-mallaaha ka-mallahin haqiiqii! khudh as-safha",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'الطَّريق إلى الجَبَل مَفتوح. النُّجوم ستَدُلُّكَ — إنَّها لُغَةُ المُسافِرينَ مُنذُ الأَزَل',
+        english: 'The road to the mountain is open. The stars will guide you — they are the language of travelers since time immemorial.',
+        transliteration: "at-tariiq ilaa al-jabal maftuuh. an-nujuum sa-tadulluka — innahaa lughat al-musaaafiriin mundhuu al-azal",
+        effects: [
+          { type: 'quest_complete', questId: 'act_5_bedouin_night_vision' },
+          { type: 'story_flag', flag: 'act_5_complete', value: true },
+          { type: 'relationship_change', amount: 1 },
+        ],
+      },
+    ],
+  },
+
+  // ────────────────────────────────────────────────────────────
+  // ACT 6 — Healer Khadija — Mountain Village
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'arc_act_6',
+    npcId: 'healer-khadija',
+    condition: { storyFlag: { key: 'act_5_complete', value: true } },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'أَحمَلُ هَذِهِ الوَرَقَةَ مُنذُ عَشرِ سَنَوات. كُنتُ أَظُنُّها وَصفَة طِبيَّة لِشِفاءِ المَرَضِ الغامِض',
+        english: 'I have carried this page for ten years. I thought it was a medical recipe to cure the mysterious illness.',
+        transliteration: "ahmilu haadhihi al-waraqata mundhu 'ashr sanawaat. kuntu azunnu-haa wasfa tibbiyya li-shifaa' al-marad al-ghaamid",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'ابنُ سينا كَتَبَ القانون في الطِّبِّ بِالعَرَبيَّة — كِتابٌ ظَلَّ مَرجِعاً طِبيَّاً لِسِتَّةِ قُرون',
+        english: 'Ibn Sina wrote the Canon of Medicine in Arabic — a book that remained a medical reference for six centuries.',
+        transliteration: "ibn siinaa kataba al-qanuun fit-tibb bil-arabiyya — kitaabun zalla marji'an tibbiyan li-sittat quruun",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'أُعطيكَ إيَّاها إن ثَبَتَّ لي أَنَّكَ تَعرِفُ لُغَةَ الشِّفاء. شِفاء — كَلِمَة تَعني العَودَة إلى الصِّحَّة',
+        english: "I will give it to you if you prove you know the language of healing. Shifaa' — a word meaning the return to health.",
+        transliteration: "u'tiika iyyaahaa in thabatta lii annaka ta'rifu lughat ash-shifaa'. shifaa' — kalima ta'nii al-'awda ilaa as-sihha",
+        teachWord: 'shifaa_a',
+        effects: [
+          { type: 'quest_start', questId: 'act_6_mountain_healer_secret' },
+          { type: 'story_flag', flag: 'arc_act_6_started', value: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'arc_act_6_complete',
+    npcId: 'healer-khadija',
+    condition: {
+      quest: { id: 'act_6_mountain_healer_secret', status: 'active' },
+      storyFlag: { key: 'act_6_milestone_reached', value: true },
+    },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'قَرَأتَ الأَبيات كَمُعالِجٍ حَقيقي. خُذ الصَّفحَة وَكُن بِخَير في رِحلَتِك',
+        english: 'You read the verses like a true healer. Take the page and be well on your journey.',
+        transliteration: "qara'ta al-abyaat ka-mu'aalijin haqiiqii. khudh as-safha wa kun bi-khayr fii rihlllatik",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'الطِّبُّ العَرَبيُّ كانَ طِبَّ الرُّوح والجِسم مَعاً — كَما هَذِهِ الرِّحلَة تُشفي جُهلَكَ وَتَملَأُ قَلبَكَ بِالمَعرِفَة',
+        english: 'Arab medicine healed both the soul and the body — just as this journey cures your ignorance and fills your heart with knowledge.',
+        transliteration: "at-tibb al-arabii kaana tibb ar-ruuh wal-jism ma'an — kamaa haadhihi ar-rihlla tushfii jahlak wa tamla' qalbak bil-ma'rifa",
+        effects: [
+          { type: 'quest_complete', questId: 'act_6_mountain_healer_secret' },
+          { type: 'story_flag', flag: 'act_6_complete', value: true },
+          { type: 'relationship_change', amount: 1 },
+        ],
+      },
+    ],
+  },
+
+  // ────────────────────────────────────────────────────────────
+  // ACT 7 — Captain Rashid — Coastal Port
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'arc_act_7',
+    npcId: 'captain-rashid',
+    condition: { storyFlag: { key: 'act_6_complete', value: true } },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'أَنا أَنتَظِرُكَ! سَمِعتُ أَنَّكَ تَبحَثُ عَن صَفَحات مَخطوطَة — أَنقَذتُ واحِدَةً مِن البَحر أَمسِ',
+        english: 'I have been waiting for you! I heard you are searching for manuscript pages — I rescued one from the sea yesterday.',
+        transliteration: "ana antaziruka! sami'tu annaka tabhathu 'an safahaat makhtuuta — anqadhtu waahidatan min al-bahr ams",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'ابنُ ماجِد الملقَّب بِأَسَدِ البَحر كَتَبَ أَكثَرَ مِن أَربَعينَ كِتاباً في المَلاحَة — كُلُّها بِالعَرَبيَّة',
+        english: "Ibn Majid, called the Lion of the Sea, wrote over forty books on navigation — all in Arabic.",
+        transliteration: "ibn maajid al-mulaqqa bi-asad al-bahr kataba akthar min arba'iin kitaaban fil-malaaha — kulluhaa bil-arabiyya",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'الصَّفحَة مَبلولَة — الكِتابَة عَرَبيَّة بَحريَّة لا أَعرِفُها. تَرجِمها لي وَهِيَ لَكَ. مَلاحَة — كَلِمَة تَعني فَنَّ قِيادَة السُّفُن',
+        english: "The page is wet — the writing is nautical Arabic I do not know. Translate it for me and it is yours. Mallaaha — a word meaning the art of navigating ships.",
+        transliteration: "as-safha mabluula — al-kataaba arabiyya bahriyya laa a'rifuhaa. tarjimhaa lii wa hiya lak. mallaaha — kalima ta'nii fann qiyyaadat as-sufun",
+        teachWord: 'mallaaha',
+        effects: [
+          { type: 'quest_start', questId: 'act_7_port_navigator_compass' },
+          { type: 'story_flag', flag: 'arc_act_7_started', value: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'arc_act_7_complete',
+    npcId: 'captain-rashid',
+    condition: {
+      quest: { id: 'act_7_port_navigator_compass', status: 'active' },
+      storyFlag: { key: 'act_7_milestone_reached', value: true },
+    },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'يا سَلام! تَرجَمتَها! إذَن القَصر المَلَكي هُوَ المَحَطَّة الأَخيرَة',
+        english: 'Wonderful! You translated it! So the Royal Palace is the final destination.',
+        transliteration: "yaa salaam! tarjamtahaa! idhan al-qasr al-malakii huwa al-mahatta al-akhiira",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'البَحرُ العَرَبيُّ وَصَلَ الحَضارات — كَما هَذِهِ المَخطوطَة تَجمَعُ عُلومَ الأَرض كُلِّها. الرِّياحُ مَعَكَ يا صَديقي',
+        english: 'The Arabian Sea connected civilizations — just as this manuscript gathers the knowledge of all the earth. The winds are with you, my friend.',
+        transliteration: "al-bahr al-arabii wasala al-hadaaraat — kamaa haadhihi al-makhtuuta tajma'u 'uluum al-ard kullihaa. ar-riyaahu ma'aka yaa sadiiqii",
+        effects: [
+          { type: 'quest_complete', questId: 'act_7_port_navigator_compass' },
+          { type: 'story_flag', flag: 'act_7_complete', value: true },
+          { type: 'relationship_change', amount: 1 },
+        ],
+      },
+    ],
+  },
+
+  // ────────────────────────────────────────────────────────────
+  // ACT 8 — Vizier Abbas — Royal Palace
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'arc_act_8',
+    npcId: 'vizier-abbas',
+    condition: { storyFlag: { key: 'act_7_complete', value: true } },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'أَخيراً! الرَّحّالَةُ عَبرَ الزَّمَن وَصَلَ إلى القَصر. لَقَد كُنّا نَنتَظِرُكَ',
+        english: 'At last! The time-traveling scholar has reached the palace. We have been waiting for you.',
+        transliteration: "akhiiran! ar-rahhaalatu 'abra az-zaman wasala ilaa al-qasr. laqad kunnaa nantaziruk",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'الشَّيخُ يوسُف في الواحَة أَرسَلَ إلَيَّ رِسالَةً — قالَ إنَّكَ تَحمِلُ سَبعَ صَفَحات وَلَكَ الثّامِنَة هُنا',
+        english: 'Scholar Yusuf in the oasis sent me a message — he said you carry seven pages and the eighth one is here for you.',
+        transliteration: "ash-shaykh yuusuf fil-waaha arsala ilayya risaalatan — qaala annaka tahmilu sab'a safahaat wa laka ath-thaaminata hunaa",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'قَصيدَة — كَلِمَة تَعني كَلاماً مَوزوناً مِن القَلب. هَذِهِ الصَّفحَة تَكمِلُ القَصيدَة الكَونيَّة',
+        english: "Qasiida — a word meaning measured speech from the heart. This page completes the cosmic poem.",
+        transliteration: "qasiida — kalima ta'nii kalaaman mawzuunan min al-qalb. haadhihi as-safha tukmilu al-qasiida al-kawwaniyya",
+        teachWord: 'qasiida',
+        effects: [
+          { type: 'quest_start', questId: 'act_8_palace_final_assembly' },
+          { type: 'story_flag', flag: 'arc_act_8_started', value: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'arc_act_8_complete',
+    npcId: 'vizier-abbas',
+    condition: {
+      quest: { id: 'act_8_palace_final_assembly', status: 'active' },
+      storyFlag: { key: 'act_8_milestone_reached', value: true },
+    },
+    lines: [
+      {
+        speaker: 'npc',
+        arabic: 'أَنشَدتَ القَصيدَة! السَّماء تَسمَعُكَ يا رَحّالَة الزَّمَن',
+        english: 'You recited the poem! The heavens hear you, time-traveler.',
+        transliteration: "anshadta al-qasiida! as-samaa' tasma'uka yaa rahhaalaz-zaman",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'المَخطوطَة اِكتَمَلَت. سِرُّها هُوَ هَذا: اللُّغَةُ العَرَبيَّة لَيسَت كَلِمات — إنَّها طَريقٌ إلى فَهمِ الكَون',
+        english: 'The manuscript is complete. Its secret is this: Arabic is not words — it is a path to understanding the universe.',
+        transliteration: "al-makhtuuta iktamalat. sirruhaa huwa haadha: al-lugha al-arabiyya laysat kalimaat — innahaa tariiqun ilaa fahm al-kawn",
+      },
+      {
+        speaker: 'npc',
+        arabic: 'بَيتُ الحِكمَة لَم يَحتَرِق — إنَّهُ يَعيشُ فيكَ الآن. كُلُّ كَلِمَة تَعَلَّمتَها هِيَ صَفحَة مِن المَخطوطَة الكَبيرَة',
+        english: 'The House of Wisdom did not burn — it lives in you now. Every word you learned is a page of the great manuscript.',
+        transliteration: "bayt al-hikma lam yahtariq — innahu ya'iiish fiika al-aan. kullu kalima ta'allamtahaa hiya safha min al-makhtuuta al-kabiira",
+        effects: [
+          { type: 'quest_complete', questId: 'act_8_palace_final_assembly' },
+          { type: 'story_flag', flag: 'act_8_complete', value: true },
+          { type: 'relationship_change', amount: 1 },
+        ],
+      },
+    ],
+  },
+];
+
 /**
  * Merges story arc metadata and extra dialogue trees into NPC data.
  * Returns a new array — does NOT mutate the input.
@@ -909,4 +1428,4 @@ export function mergeNpcStoryArcs(baseNpcs) {
   });
 }
 
-export { NPC_STORY_ARC_META, NPC_EXTRA_DIALOGUE_TREES };
+export { NPC_STORY_ARC_META, NPC_EXTRA_DIALOGUE_TREES, STORY_ACT_ARCS };
