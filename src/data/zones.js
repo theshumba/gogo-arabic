@@ -38,6 +38,7 @@ function buildOasisMap() {
 
 const oasis_village = {
   id: 'oasis_village',
+  tilesetTheme: 'desert',
   name: 'Oasis Village',
   nameArabic: 'واحَة الحُروف',
   mapWidth: 40,
@@ -228,6 +229,7 @@ function buildLibraryMap() {
 
 const ancient_library = {
   id: 'ancient_library',
+  tilesetTheme: 'desert',
   name: 'Ancient Library',
   nameArabic: 'المَكتَبَة القَديمَة',
   mapWidth: 35,
@@ -359,6 +361,7 @@ function buildMarketplaceMap() {
 
 const desert_marketplace = {
   id: 'desert_marketplace',
+  tilesetTheme: 'desert',
   name: 'Desert Marketplace',
   nameArabic: 'سوق الصَّحراء',
   mapWidth: 45,
@@ -494,6 +497,7 @@ function buildFarmlandMap() {
 
 const farmland = {
   id: 'farmland',
+  tilesetTheme: 'grass',
   name: 'Farmland',
   nameArabic: 'الأَرض الزِّراعِيَّة',
   mapWidth: 45,
@@ -616,6 +620,7 @@ function buildBedouinMap() {
 
 const bedouin_camp = {
   id: 'bedouin_camp',
+  tilesetTheme: 'desert',
   name: 'Bedouin Camp',
   nameArabic: 'مُخَيَّم البَدو',
   mapWidth: 35,
@@ -732,6 +737,7 @@ function buildMountainMap() {
 
 const mountain_village = {
   id: 'mountain_village',
+  tilesetTheme: 'snow',
   name: 'Mountain Village',
   nameArabic: 'قَرية الجَبَل',
   mapWidth: 40,
@@ -855,6 +861,7 @@ function buildPortMap() {
 
 const coastal_port = {
   id: 'coastal_port',
+  tilesetTheme: 'grass',
   name: 'Coastal Port',
   nameArabic: 'المِيناء',
   mapWidth: 45,
@@ -989,6 +996,7 @@ function buildPalaceMap() {
 
 const royal_palace = {
   id: 'royal_palace',
+  tilesetTheme: 'desert',
   name: 'Royal Palace',
   nameArabic: 'القَصر المَلَكي',
   mapWidth: 50,
