@@ -449,7 +449,7 @@ Plans:
 **Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 46-01-PLAN.md — Write A1 (500 words) + A2 (1,000 words) into vocabularyExpanded.js with VOCAB-06 schema
+- [x] 46-01-PLAN.md — Write A1 (500 words) + A2 (1,000 words) into vocabularyExpanded.js with VOCAB-06 schema
 - [ ] 46-02-PLAN.md — Append B1 (2,000 words) + B2 (1,500 words) to vocabularyExpanded.js
 - [ ] 46-03-PLAN.md — Merge into vocabularyAll.js + CEFR badge in TeacherWordCard + Root Explorer cluster browsing + frequency-ordered FSRS selector
 
@@ -505,10 +505,10 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 43. Zone References & Cleanup | v8.0 | 2/2 | Complete | 2026-03-18 |
 | 44. NPC Dialogue Expansion | v9.0 | Complete | 2026-03-18 | 2026-03-18 |
 | 45. Quest Storylines | v9.0 | Complete | 2026-03-18 | 2026-03-18 |
-| 46. Vocabulary Expansion | v9.0 | 0/3 | Not started | — |
+| 46. Vocabulary Expansion | v9.0 | 1/3 | In progress | — |
 
 **Cumulative:** 45 phases shipped (Phase 45 complete), 133 plans complete, 8 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 46 planned: 3 plans in 3 waves, VOCAB-01 through VOCAB-06*
+*Last updated: 2026-03-18 — 46-01 complete: vocabularyExpanded.js with 1,500 words (500 A1 + 1,000 A2)*

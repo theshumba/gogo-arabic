@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
-status: completed
-stopped_at: 45-03 complete — Phase 45 DONE (QUEST-01 through QUEST-05 all satisfied)
-last_updated: "2026-03-18T13:36:25.142Z"
-last_activity: 2026-03-18 — Completed 45-03 (8 inscription interactables + learningPath dialogue branches)
+status: in_progress
+stopped_at: 46-01 complete — vocabularyExpanded.js created (500 A1 + 1,000 A2 words)
+last_updated: "2026-03-18T15:00:00Z"
+last_activity: 2026-03-18 — Completed 46-01 (vocabularyExpanded.js — 1,500 Arabic words, VOCAB-06 schema)
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 9
+  completed_plans: 7
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Milestone: v9.0 Content Depth
-Phase: 45 — Quest Storylines (COMPLETE)
-Plan: 03 of 03 complete — Phase 45 fully done
-Status: Phase 45 COMPLETE — all 5 QUEST requirements (QUEST-01 through QUEST-05) satisfied
-Last activity: 2026-03-18 — Completed 45-03 (8 inscription interactables + learningPath dialogue branches)
+Phase: 46 — Vocabulary Expansion (In progress)
+Plan: 01 of 03 complete
+Status: 46-01 COMPLETE — vocabularyExpanded.js created (500 A1 + 1,000 A2 words)
+Last activity: 2026-03-18 — Completed 46-01 (vocabularyExpanded.js — 1,500 Arabic words, VOCAB-06 schema)
 
-Progress (v9.0): [██████░░░░░░] 67% (6/9 plans)
+Progress (v9.0): [███████░░░░░] 78% (7/9 plans)
 
 ### Shipped Milestones
 
@@ -70,6 +70,8 @@ Progress (v9.0): [██████░░░░░░] 67% (6/9 plans)
 - vocabularyAll.js currently has 1,220 words — expand to 5,000+ (VOCAB-01)
 - CEFR targets: A1 (500), A2 (1,000), B1 (2,000), B2 (1,500) = 5,000 total (VOCAB-02)
 - Root Explorer already exists and searches by root — expansion adds family groupings display (VOCAB-03)
+- Phase 46 progress: 46-01 COMPLETE — vocabularyExpanded.js has 1,500 new words (500 A1 + 1,000 A2); VOCAB-01/VOCAB-02/VOCAB-06 partially satisfied; 46-02 (B1/B2) and 46-03 (merge + Root Explorer) remain
+- vocabularyExpanded.js IDs: exp_a1_001–exp_a1_500 (A1), exp_a2_0001–exp_a2_1000 (A2); zero conflicts with vocabulary.json (named IDs) or vocabulary-final.json (p_XXXX)
 
 ### Decisions
 
@@ -91,6 +93,8 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 | rootWords use real verified vocabulary IDs | 45-03 | All rootWords arrays use IDs confirmed in vocabulary.json before writing (write_1, sea_w23, etc.) |
 | filterLines helper added to DialogueEngine | 45-03 | Mirrors getFilteredChoices pattern; enables line-level learningPath filtering without breaking existing flow |
 | learningPath lines appended at end of lines array | 45-03 | null-path players see lines 0-2 (unchanged); path players also see their matching variant line |
+| ID prefix exp_a1_ / exp_a2_ for vocabularyExpanded.js | 46-01 | Guarantees zero collision with vocabulary.json named IDs and vocabulary-final.json p_XXXX IDs |
+| A1 frequency 4000–9999, A2 frequency 2000–3999 | 46-01 | Matches vocabulary-final.json conventions for frequency field semantics |
 
 ### Blockers/Concerns
 
@@ -107,5 +111,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: 45-03 complete — Phase 45 DONE (QUEST-01 through QUEST-05 all satisfied)
-Resume file: Phase 46 (Vocabulary Expansion) — `/gsd:plan-phase 46` to plan vocabulary expansion to 5,000+ words
+Stopped at: 46-01 complete — vocabularyExpanded.js created (500 A1 + 1,000 A2 words)
+Resume file: Phase 46 Plan 02 — `.planning/phases/46-vocabulary-expansion/46-02-PLAN.md` (B1/B2 words, 2,500 more words)
