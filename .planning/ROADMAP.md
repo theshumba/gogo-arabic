@@ -317,8 +317,8 @@ Plans:
 
 Plans:
 - [x] 40-01-PLAN.md — BIOME_BUILDING_SETS + Kenmi building keys in all 24 zone objects arrays (BLDG-01 through BLDG-07) — COMPLETE 2026-03-18
-- [ ] 40-02-PLAN.md — Fix + enable scatterDecorations with multi-item crop, clustering near buildings (DECO-01, DECO-02, DECO-06, DECO-07)
-- [ ] 40-03-PLAN.md — Animated campfire/flies decorations + landmark obelisks/golden pots + NPC-adjacent props (DECO-03, DECO-04, DECO-05)
+- [x] 40-02-PLAN.md — Fix + enable scatterDecorations with multi-item crop, clustering near buildings (DECO-01, DECO-02, DECO-06, DECO-07) — COMPLETE 2026-03-18
+- [~] 40-03-PLAN.md — Animated campfire/flies decorations + landmark obelisks/golden pots + NPC-adjacent props (DECO-03, DECO-04, DECO-05) — CHECKPOINT: awaiting visual verify
 
 #### Phase 41: Characters & Ambient Life
 **Goal**: The player and all NPCs, enemies, and ambient animals are replaced with Kenmi pixel art sprites with proper 4-direction walk and idle animations
@@ -435,4 +435,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 40 Plan 01 complete (BIOME_BUILDING_SETS + Kenmi buildings in all 24 zones)*
+*Last updated: 2026-03-18 — Phase 40 Plans 01-02 complete + Plan 03 at checkpoint (animated decorations + landmark props + NPC-adjacent props coded)*
