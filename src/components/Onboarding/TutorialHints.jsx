@@ -10,6 +10,47 @@ import { EVENTS } from '../../utils/eventBusTypes.js';
 import styles from './TutorialHints.module.css';
 
 /**
+ * WelcomeSplash — Brief "Welcome back" overlay that auto-fades.
+ */
+export function WelcomeSplash({ onDone }) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (onDone) onDone();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [onDone]);
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        pointerEvents: 'none',
+        animation: 'fadeOut 1s ease-in 2s forwards',
+      }}
+    >
+      <div
+        style={{
+          background: 'rgba(0,0,0,0.7)',
+          color: '#fff',
+          padding: '24px 48px',
+          borderRadius: '12px',
+          fontFamily: 'var(--font-primary, sans-serif)',
+          fontSize: '1.5rem',
+          textAlign: 'center',
+        }}
+      >
+        Welcome to Gogo Arabic
+      </div>
+    </div>
+  );
+}
+
+/**
  * TutorialHints
  *
  * Minimal in-world hint system replacing ContextualOnboarding.

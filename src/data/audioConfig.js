@@ -39,6 +39,25 @@ export const INTERIOR_BGM = {
   default: 'interior',
 };
 
+// Zone ambient layers — layered environmental sounds per zone
+// Audio files at: /assets/audio/ambient/ambient-{layerName}.mp3
+// Files do not exist yet — audioManager silently skips missing files.
+export const ZONE_AMBIENT_LAYERS = {
+  oasis_village: ['birds', 'water'],
+  ancient_library: ['wind-light', 'page-rustle'],
+  desert_marketplace: ['crowd', 'wind-sand'],
+  farmland: ['birds', 'wind-light'],
+  bedouin_camp: ['fire-crackle', 'wind-sand'],
+  mountain_village: ['wind-strong', 'birds'],
+  coastal_port: ['waves', 'seagulls'],
+  royal_palace: ['fountain', 'wind-light'],
+};
+
+// Interior ambient settings
+export const INTERIOR_AMBIENT = {
+  default: { muffle: 0.3 },
+};
+
 // All BGM tracks for preloading reference
 export const ALL_BGM_TRACKS = [
   ...Object.values(ZONE_BGM_MAP),
