@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
 status: in_progress
-stopped_at: Phase 42 Plan 02 complete — ready for 42-03 (BootScene spritesheet registration + SignPanel + ObjectPanel)
-last_updated: "2026-03-18T00:12:00Z"
-last_activity: "2026-03-18 — 42-02 complete: NPC Arabic labels migrated to Phaser, Kenmi PanelFactory methods added"
+stopped_at: Phase 42 Plan 03 complete — Phase 42 done, ready for Phase 43 (zone cleanup)
+last_updated: "2026-03-18T02:40:00Z"
+last_activity: "2026-03-18 — 42-03 complete: Arabic-aware DialogueBox + zone name toast, ARAB-01 through ARAB-04 satisfied"
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 10
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 42 in progress (42-01 + 42-02 complete, 42-03 next)
+**Current focus:** v8.0 Visual Overhaul — Phase 42 COMPLETE, Phase 43 (zone cleanup) next
 
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 42 of 43 (phaser-ui-arabic) — IN PROGRESS (2/3 plans done)
-Plan: 2/3 complete — 42-03 next (BootScene kenmi-ui-frames-sheet spritesheet + SignPanel + ObjectPanel)
-Status: 42-02 done — ready for 42-03
-Last activity: 2026-03-18 — 42-02: NPC Arabic name labels migrated to Phaser, Kenmi PanelFactory methods added
+Phase: 42 of 43 (phaser-ui-arabic) — COMPLETE (3/3 plans done)
+Plan: 3/3 complete — Phase 43 next (zone cleanup — remove DOM overlay infrastructure)
+Status: 42-03 done — Phase 42 complete
+Last activity: 2026-03-18 — 42-03: Arabic-aware DialogueBox + zone name toast, ARAB-01–04 satisfied
 
-Progress (v8.0): [███████████░] 90% (18/20 plans total — 42-01 + 42-02 done, 42-03 + Phase 43 remain)
+Progress (v8.0): [███████████░] 95% (19/20 plans total — Phase 42 done, Phase 43 remains)
 
 ### Shipped Milestones
 
@@ -109,6 +109,10 @@ v8.0 decisions:
 - 42-02: arabicNameLabel positioned at y-70 (above English nameLabel at y-56) — stacks cleanly, null when nameArabic is falsy
 - 42-02: NineSlice.js kenmi preset uses texture 'kenmi-ui-frames-sheet' at cornerSize 6 — requires BootScene spritesheet registration (Plan 42-03)
 - 42-02: UI-07 boundary documented as code comment in PanelFactory.js — clear React/Phaser ownership for future maintainers
+- 42-03: _hasArabic() inline in DialogueBox (not imported from ArabicText) — keeps detection self-contained
+- 42-03: Arabic typewriter speed 20ms vs English 30ms — Arabic strings shorter after reshaping, faster timer needed
+- 42-03: Zone toast depth 9500 (below DialogueBox at 10000) — toast never obscures active dialogue
+- 42-03: _suppressZoneToast cleared in buildZone() not create() — handles Phaser scene reuse correctly (constructor runs once)
 
 ### Blockers/Concerns
 
@@ -117,12 +121,12 @@ v8.0 decisions:
 
 ### Pending Todos
 
-- Plan 42-03: Register kenmi-ui-frames-sheet as Phaser spritesheet in BootScene (required by kenmi PANEL_PRESET)
-- Plan 42-03: Build SignPanel + ObjectPanel as Phaser NineSlice panels replacing React overlays
-- Plan 43: Zone cleanup — remove DOM overlay infrastructure after Phase 42 replacements confirmed
+- Phase 43: Zone cleanup — remove DOM overlay infrastructure after Phase 42 replacements confirmed
+- Post-v8.0: SignPanel + ObjectPanel (React → Phaser NineSlice migration) deferred — Phase 42 Arabic requirements met without them
+- Post-v8.0: kenmi-ui-frames-sheet spritesheet registration in BootScene (PanelFactory kenmi preset wiring)
 
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 42 Plan 02 complete
-Resume file: .planning/phases/42-phaser-ui-arabic/42-03-PLAN.md
+Stopped at: Phase 42 Plan 03 complete — Phase 42 fully done
+Resume file: .planning/phases/43-zone-cleanup/ (Phase 43 plans to be created)
