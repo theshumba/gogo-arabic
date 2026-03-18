@@ -44,6 +44,9 @@ export class InteriorScene extends Phaser.Scene {
     this.interiorId = data.interiorId;
     this.entryPosition = data.entryPosition;
     this._exiting = false;
+    // Reset state flags (Phaser reuses scene instances)
+    this.frozen = false;
+    this.interactCooldown = false;
   }
 
   create() {
@@ -183,7 +186,9 @@ export class InteriorScene extends Phaser.Scene {
     const worldScene = this.scene.get(this.returnSceneKey);
     if (worldScene) {
       worldScene.pendingSpawnPosition = this.entryPosition;
-      worldScene.sceneStackManager.popScene();
+      if (worldScene.sceneStackManager) {
+        worldScene.sceneStackManager.popScene();
+      }
     }
 
     EventBus.emit(EVENTS.BUILDING_EXITED);
@@ -206,6 +211,11 @@ export class InteriorScene extends Phaser.Scene {
   shutdown() {
     EventBus.off(EVENTS.PLAYER_FREEZE, this.handleFreeze, this);
     EventBus.off(EVENTS.PLAYER_UNFREEZE, this.handleUnfreeze, this);
+
+    if (this.interactKey) {
+      this.input.keyboard.removeKey(this.interactKey);
+      this.interactKey = null;
+    }
 
     if (this.playerController) { this.playerController.destroy(); this.playerController = null; }
     if (this.interactableManager) { this.interactableManager.destroy(); this.interactableManager = null; }

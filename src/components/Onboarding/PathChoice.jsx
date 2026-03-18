@@ -28,6 +28,14 @@ const PATHS = [
     desc: 'Cultural focus — historical terms, scientific Arabic, trade vocabulary. Prioritizes world exploration and cultural knowledge.',
     mentor: 'Elder Tariq',
   },
+  {
+    id: 'polymath',
+    nameAr: 'المتعلم',
+    nameEn: 'Path of the Polymath',
+    icon: '🌟',
+    desc: 'All-rounder — reading, conversation, and culture combined. No priority bias — learn everything equally. The hardest but most rewarding path.',
+    mentor: 'All Mentors',
+  },
 ];
 
 export default function PathChoice() {

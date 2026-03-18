@@ -55,6 +55,10 @@ class LRUCache {
  * Five independent volume channels: master, ambient, bgm, sfx, pronunciation
  * Master volume scales all other channels.
  * Effective volume = channelVolume * masterVolume
+ *
+ * Bus-based architecture:
+ *   busVolumes tracks per-bus volume multipliers (bgm, sfx, ambient, voice).
+ *   setBusVolume() adjusts bus multiplier and updates active sounds on that bus.
  */
 class AudioManager {
   constructor() {
@@ -90,6 +94,34 @@ class AudioManager {
 
     /** @type {LRUCache} LRU cache for letter pronunciations */
     this.letterCache = new LRUCache(28);
+
+    // -------------------------------------------------------------------------
+    // Bus-based audio architecture
+    // -------------------------------------------------------------------------
+
+    /**
+     * Per-bus volume multipliers (independent of channel volumes above).
+     * busVolumes act as a secondary multiplier: effectiveVol = channelVol * busVol * masterVol
+     */
+    this.busVolumes = {
+      bgm: 0.5,
+      sfx: 1.0,
+      ambient: 0.5,
+      voice: 1.0,
+    };
+
+    /**
+     * Active ambient layer Howl instances (from playAmbient(layers)).
+     * Stored alongside their base layer volume for muffling calculations.
+     * @type {Array<{ howl: Howl, baseVolume: number }>}
+     */
+    this.ambientSounds = [];
+
+    /**
+     * Current muffle factor for ambient bus (0-1). 1.0 = full volume, 0.3 = 30% (inside building).
+     * @type {number}
+     */
+    this.ambientMuffle = 1.0;
   }
 
   // ---------------------------------------------------------------------------
@@ -135,6 +167,35 @@ class AudioManager {
       this.unmute();
     } else {
       this.mute();
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Bus Volume Control
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Set the volume for a named audio bus.
+   * Updates all active sounds on that bus immediately.
+   * @param {'bgm'|'sfx'|'ambient'|'voice'} bus - Bus name
+   * @param {number} volume - Volume from 0 to 1
+   */
+  setBusVolume(bus, volume) {
+    if (!(bus in this.busVolumes)) return;
+    this.busVolumes[bus] = Math.max(0, Math.min(1, volume));
+
+    // Immediately apply new bus volume to active sounds on that bus
+    if (bus === 'bgm' && this.bgm) {
+      this.bgm.volume(this.bgmVolume * this.busVolumes.bgm * this.masterVolume);
+    }
+    if (bus === 'ambient') {
+      this.ambientSounds.forEach(({ howl, baseVolume }) => {
+        howl.volume(baseVolume * this.busVolumes.ambient * this.ambientMuffle * this.masterVolume);
+      });
+      // Also update legacy single-ambient if playing
+      if (this.ambient) {
+        this.ambient.volume(this.ambientVolume * this.busVolumes.ambient * this.masterVolume);
+      }
     }
   }
 
@@ -279,63 +340,62 @@ class AudioManager {
   }
 
   // ---------------------------------------------------------------------------
-  // Ambient
+  // Ambient — Layered ambient sound system
   // ---------------------------------------------------------------------------
 
   /**
-   * Play ambient loop for a zone with crossfade.
-   * Current ambient fades out over 500ms, new one fades in over 500ms.
-   * Maps zone name to: /assets/audio/ambient/ambient-{zoneName}.mp3
-   * If already playing the same zone, does nothing.
-   * @param {string} zoneName - e.g. "oasis", "market", "desert"
+   * Play ambient sound layers for a zone.
+   * Accepts an array of layer objects: [{ track: string, volume: number }, ...]
+   * Each layer creates a separate looping Howl for independent volume control.
+   * Stops any currently playing ambient layers before starting new ones.
+   * Files at: /assets/audio/ambient/ambient-{track}.mp3
+   * Missing files are silently skipped via onloaderror.
+   * @param {Array<{ track: string, volume: number }>} layers - Zone ambient layers
    */
-  playAmbient(zoneName) {
-    if (!zoneName) return;
-
-    // Already playing this zone -- skip
-    if (this.ambientZone === zoneName && this.ambient && this.ambient.playing()) {
+  playAmbient(layers) {
+    if (!layers || layers.length === 0) {
+      this.stopAmbient();
       return;
     }
 
-    const src = `/assets/audio/ambient/ambient-${zoneName}.mp3`;
+    // Stop current ambient layers before starting new ones
+    this._stopAmbientSounds();
 
-    // Fade out current ambient if one is playing
-    if (this.ambient) {
-      const old = this.ambient;
-      old.fade(old.volume(), 0, 500);
-      old.once('fade', () => {
-        old.stop();
-        old.unload();
+    // Reset muffle factor for new zone
+    this.ambientMuffle = 1.0;
+
+    layers.forEach((layer) => {
+      const src = `/assets/audio/ambient/${layer.track}.mp3`;
+      const targetVolume = layer.volume * this.busVolumes.ambient * this.ambientMuffle * this.masterVolume;
+
+      const howl = new Howl({
+        src: [src],
+        loop: true,
+        volume: 0,
+        onloaderror: () => {
+          // File doesn't exist for this layer -- silently skip
+          this.ambientSounds = this.ambientSounds.filter(entry => entry.howl !== howl);
+        },
       });
-    }
 
-    const targetVolume = this.ambientVolume * this.masterVolume;
+      this.ambientSounds.push({ howl, baseVolume: layer.volume });
 
-    // Create and fade in new ambient
-    const newAmbient = new Howl({
-      src: [src],
-      loop: true,
-      volume: 0,
-      onloaderror: () => {
-        // File doesn't exist for this zone -- silently skip
-        this.ambient = null;
-        this.ambientZone = null;
-      },
-    });
-
-    this.ambient = newAmbient;
-    this.ambientZone = zoneName;
-
-    newAmbient.once('load', () => {
-      newAmbient.play();
-      newAmbient.fade(0, targetVolume, 500);
+      howl.once('load', () => {
+        // Only play if still in our active list (wasn't skipped by error)
+        if (this.ambientSounds.some(entry => entry.howl === howl)) {
+          howl.play();
+          howl.fade(0, targetVolume, 500);
+        }
+      });
     });
   }
 
   /**
-   * Stop the currently playing ambient sound.
+   * Stop all currently playing ambient sounds with a fade-out.
    */
   stopAmbient() {
+    this._stopAmbientSounds();
+    // Also stop legacy single ambient if playing
     if (this.ambient) {
       const old = this.ambient;
       old.fade(old.volume(), 0, 500);
@@ -346,6 +406,47 @@ class AudioManager {
       this.ambient = null;
       this.ambientZone = null;
     }
+  }
+
+  /**
+   * Reduce ambient layer volumes by a muffle factor.
+   * Used when entering building interiors to simulate muffled outdoor sounds.
+   * @param {number} factor - Target volume fraction (e.g. 0.3 = 30% of normal volume)
+   */
+  muffleAmbient(factor) {
+    this.ambientMuffle = Math.max(0, Math.min(1, factor));
+    this.ambientSounds.forEach(({ howl, baseVolume }) => {
+      const targetVol = baseVolume * this.busVolumes.ambient * this.ambientMuffle * this.masterVolume;
+      howl.fade(howl.volume(), targetVol, 400);
+    });
+  }
+
+  /**
+   * Restore ambient layer volumes to their normal (un-muffled) levels.
+   * Used when exiting building interiors.
+   */
+  unmuffleAmbient() {
+    this.ambientMuffle = 1.0;
+    this.ambientSounds.forEach(({ howl, baseVolume }) => {
+      const targetVol = baseVolume * this.busVolumes.ambient * this.masterVolume;
+      howl.fade(howl.volume(), targetVol, 400);
+    });
+  }
+
+  /**
+   * Internal helper: fade out and unload all active ambient layer Howls.
+   * @private
+   */
+  _stopAmbientSounds() {
+    const toStop = [...this.ambientSounds];
+    this.ambientSounds = [];
+    toStop.forEach(({ howl }) => {
+      howl.fade(howl.volume(), 0, 500);
+      howl.once('fade', () => {
+        howl.stop();
+        howl.unload();
+      });
+    });
   }
 
   // ---------------------------------------------------------------------------

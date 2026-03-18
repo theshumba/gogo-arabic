@@ -89,16 +89,16 @@ describe('NPCManager', () => {
       expect(npcManager.npcs[0].npcId).toBe('npc1');
       expect(npcManager.npcs[1].npcId).toBe('npc2');
 
-      // Verify NPC positions (converted from tile coords to pixels)
-      expect(npcManager.npcs[0].x).toBe(320); // 5 * 64
-      expect(npcManager.npcs[0].y).toBe(320); // 5 * 64
+      // Verify NPC positions (converted from tile coords to pixels, centered in tile)
+      expect(npcManager.npcs[0].x).toBe(352); // 5 * 64 + 32
+      expect(npcManager.npcs[0].y).toBe(352); // 5 * 64 + 32
 
       // Verify colliders created
       expect(scene.physics.add.collider).toHaveBeenCalledTimes(2);
 
       // Verify DOM labels created
-      expect(mockDomOverlay.createNpcLabel).toHaveBeenCalledWith('npc1', 320, 320, 'الشيخ', 'Elder');
-      expect(mockDomOverlay.createNpcLabel).toHaveBeenCalledWith('npc2', 640, 640, 'التاجر', 'Merchant');
+      expect(mockDomOverlay.createNpcLabel).toHaveBeenCalledWith('npc1', 352, 352, 'الشيخ', 'Elder');
+      expect(mockDomOverlay.createNpcLabel).toHaveBeenCalledWith('npc2', 672, 672, 'التاجر', 'Merchant');
 
       // Verify interaction prompts created
       expect(mockDomOverlay.createInteractionPrompt).toHaveBeenCalledTimes(2);
@@ -152,8 +152,8 @@ describe('NPCManager', () => {
 
       npcManager.update(mockPlayerSprite, mockDomOverlay, interactKey, false, setInteractCooldown);
 
-      expect(mockDomOverlay.updatePosition).toHaveBeenCalledWith('npc-label-npc1', 320, 320);
-      expect(mockDomOverlay.updatePosition).toHaveBeenCalledWith('prompt-npc1', 320, 320);
+      expect(mockDomOverlay.updatePosition).toHaveBeenCalledWith('npc-label-npc1', 352, 352);
+      expect(mockDomOverlay.updatePosition).toHaveBeenCalledWith('prompt-npc1', 352, 352);
     });
 
     it('should emit npc-interact event when player presses SPACE in range', async () => {

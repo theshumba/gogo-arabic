@@ -46,6 +46,12 @@ const getDB = () => {
 
     request.onsuccess = () => {
       dbInstance = request.result;
+      // Invalidate cache if connection is closed by browser (tab sleep, background eviction)
+      dbInstance.onclose = () => { dbInstance = null; };
+      dbInstance.onversionchange = () => {
+        dbInstance.close();
+        dbInstance = null;
+      };
       resolve(dbInstance);
     };
 

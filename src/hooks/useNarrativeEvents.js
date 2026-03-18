@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   setStoryFlag,
   setNpcRelationship,
@@ -7,6 +7,7 @@ import {
 } from '../store/slices/narrativeSlice.js';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
+import { store } from '../store/store.js';
 
 /**
  * useNarrativeEvents — Narrative flag and relationship event handlers
@@ -20,7 +21,6 @@ import { EVENTS } from '../utils/eventBusTypes.js';
  */
 export function useNarrativeEvents() {
   const dispatch = useDispatch();
-  const storyFlags = useSelector((state) => state.narrative.storyFlags);
 
   useEffect(() => {
     const handleFlagSet = ({ flag, value }) => {
@@ -42,8 +42,11 @@ export function useNarrativeEvents() {
       // Track unique topic visits using composite progress flags
       const flagKey = 'topic_visited_' + topicId;
 
+      // Read storyFlags from store directly (not stale closure)
+      const currentFlags = store.getState().narrative?.storyFlags || {};
+
       // Only set flag if not already set (avoid redundant dispatches)
-      if (!storyFlags[flagKey]) {
+      if (!currentFlags[flagKey]) {
         dispatch(setStoryFlag({ flag: flagKey, value: true }));
       }
 
@@ -61,5 +64,5 @@ export function useNarrativeEvents() {
       EventBus.off(EVENTS.NARRATIVE_RELATIONSHIP_CHANGED, handleRelationshipChanged);
       EventBus.off(EVENTS.DIALOGUE_TOPIC_SELECTED, handleTopicSelected);
     };
-  }, [dispatch, storyFlags]);
+  }, [dispatch]);
 }

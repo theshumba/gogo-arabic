@@ -14,6 +14,7 @@ export class SecretWall extends DynamicObject {
 
     updateState() {
         super.updateState();
+        if (!this.worldStateManager) return;
 
         if (this.config.triggerCondition) {
             const conditionMet = this.worldStateManager.checkCondition(this.config.triggerCondition);

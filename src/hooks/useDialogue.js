@@ -79,7 +79,7 @@ function resolveVocabWord(wordId) {
 export function useDialogue(npc) {
   const dispatch = useDispatch();
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
-  const dialogueState = useSelector((s) => s.npc.dialogueState);
+  const dialogueState = useSelector((s) => s.npc?.dialogueState || {});
   const quests = useSelector((s) => s.quests.quests);
   const playerLevel = useSelector((s) => s.player.level);
   const wordsLearned = useSelector((s) => s.player.wordsLearned);

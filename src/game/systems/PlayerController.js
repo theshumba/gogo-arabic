@@ -70,6 +70,12 @@ export class PlayerController {
     return this.player;
   }
 
+  setSpeedMultiplier(multiplier) {
+    if (this.player) {
+      this.player.setSpeedMultiplier(multiplier);
+    }
+  }
+
   /**
    * Destroy player sprite
    */

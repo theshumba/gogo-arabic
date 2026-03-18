@@ -18,6 +18,8 @@ class DOMOverlayManager {
     this.lastCameraScrollY = 0;
     this.lastScaleX = 1;
     this.lastScaleY = 1;
+    // Dirty flag: set to true when any overlay position changes (independent of camera)
+    this._overlayMoved = false;
   }
 
   // Call once when scene starts - creates the overlay container div
@@ -113,8 +115,11 @@ class DOMOverlayManager {
   updatePosition(id, worldX, worldY) {
     const overlay = this.overlays.get(id);
     if (overlay) {
-      overlay.worldX = worldX;
-      overlay.worldY = worldY;
+      if (overlay.worldX !== worldX || overlay.worldY !== worldY) {
+        overlay.worldX = worldX;
+        overlay.worldY = worldY;
+        this._overlayMoved = true; // mark dirty so update() recomputes even with static camera
+      }
     }
   }
 
@@ -129,20 +134,21 @@ class DOMOverlayManager {
 
   // Called every frame from scene.update() to sync overlay screen positions
   // with their world coordinates, accounting for camera scroll and canvas scaling.
-  // Optimized to only update DOM when camera actually moves or scale changes.
+  // Optimized to only update DOM when camera actually moves, scale changes,
+  // or an overlay's world position changed.
   update() {
     const camera = this.scene.cameras.main;
     const scaleX = this.scene.game.canvas.width / camera.width;
     const scaleY = this.scene.game.canvas.height / camera.height;
 
-    // Only update if camera position or scale changed (dirty flag pattern)
+    // Only update if camera position, scale, or any overlay position changed
     const cameraChanged =
       camera.scrollX !== this.lastCameraScrollX ||
       camera.scrollY !== this.lastCameraScrollY ||
       scaleX !== this.lastScaleX ||
       scaleY !== this.lastScaleY;
 
-    if (!cameraChanged) {
+    if (!cameraChanged && !this._overlayMoved) {
       return;
     }
 
@@ -151,6 +157,7 @@ class DOMOverlayManager {
     this.lastCameraScrollY = camera.scrollY;
     this.lastScaleX = scaleX;
     this.lastScaleY = scaleY;
+    this._overlayMoved = false;
 
     // Update all overlay positions
     for (const [, overlay] of this.overlays) {

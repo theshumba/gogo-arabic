@@ -201,7 +201,9 @@ export class BattleEffectManager {
     this.scene.tweens.timeScale = 0;
     this.scene.anims.globalTimeScale = 0;
 
-    setTimeout(() => {
+    if (this._hitStopTimeout) clearTimeout(this._hitStopTimeout);
+    this._hitStopTimeout = setTimeout(() => {
+      this._hitStopTimeout = null;
       if (this.scene?.sys?.isActive()) {
         this.scene.time.timeScale = 1;
         this.scene.tweens.timeScale = 1;
@@ -368,6 +370,20 @@ export class BattleEffectManager {
   }
 
   destroy() {
+    // Restore global time scale immediately (hitStop sets game-global scales to 0)
+    if (this.scene?.anims) {
+      this.scene.anims.globalTimeScale = 1;
+    }
+    if (this.scene?.time) {
+      this.scene.time.timeScale = 1;
+    }
+    if (this.scene?.tweens) {
+      this.scene.tweens.timeScale = 1;
+    }
+    if (this._hitStopTimeout) {
+      clearTimeout(this._hitStopTimeout);
+      this._hitStopTimeout = null;
+    }
     for (const timer of this.pendingTimers) {
       if (timer?.remove) timer.remove(false);
     }

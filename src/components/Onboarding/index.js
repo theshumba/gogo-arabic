@@ -1,1 +1,1 @@
-export { default as TutorialHints } from './TutorialHints.jsx';
+export { default as TutorialHints, WelcomeSplash } from './TutorialHints.jsx';

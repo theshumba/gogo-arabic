@@ -4,20 +4,16 @@ import { selectCurrentWeather, WEATHER_TYPES } from '../../store/slices/weatherS
 /**
  * WeatherSystem
  * Handles visual weather effects (particles, tints) in the Phaser scene.
+ * Uses Phaser 3.60+ particle API (ParticleEmitterManager was removed in 3.60).
  */
 export class WeatherSystem {
     constructor(scene) {
         this.scene = scene;
         this.currentWeather = WEATHER_TYPES.CLEAR;
-        this.particleManager = null;
-        this.emitters = {};
-        this.unsubscribe = null;
+        this.emitters = []; // array of ParticleEmitter objects
 
-        // Create a particle manager for weather
-        // We use a texture key 'weather-particles' which we'll generate
+        // Create the shared particle texture
         this.createTextures();
-        this.particleManager = this.scene.add.particles('weather-particle');
-        this.particleManager.setDepth(9999); // Above everything
 
         // Subscribe to store updates
         this.unsubscribe = store.subscribe(() => {
@@ -56,28 +52,28 @@ export class WeatherSystem {
             case WEATHER_TYPES.SANDSTORM:
                 this.startSandstorm();
                 break;
-            // Add other types as needed
+            // CLEAR and others: no particles
         }
     }
 
     stopAllEffects() {
-        Object.values(this.emitters).forEach(emitter => {
-            emitter.stop();
-            // Give time for particles to disappear before destroying? 
-            // For now just stop emitting.
-            // emitter.killAll(); // If supported
+        // Destroy all active emitters (Phaser 3.60+ API)
+        this.emitters.forEach(emitter => {
+            if (emitter && emitter.destroy) {
+                emitter.destroy();
+            }
         });
-        // Clear emitters list if we want to recreate them
-        this.emitters = {};
-        // Actually better to destroy old emitters to clean up
-        this.particleManager.emitters.getAll().forEach(e => e.remove());
+        this.emitters = [];
+
+        // Reset camera background
+        this.scene.cameras.main.setBackgroundColor(0x1A1A2E);
     }
 
     startRain() {
         const { width, height } = this.scene.scale;
-        const emitter = this.particleManager.createEmitter({
-            x: { min: -100, max: width + 100 },
-            y: -50,
+        // Phaser 3.60+ API: scene.add.particles(x, y, texture, config) returns a ParticleEmitter
+        const emitter = this.scene.add.particles(0, -50, 'weather-particle', {
+            x: { min: 0, max: width },
             lifespan: 1000,
             speedY: { min: 400, max: 600 },
             speedX: { min: -20, max: 20 },
@@ -88,17 +84,17 @@ export class WeatherSystem {
             alpha: 0.6,
             blendMode: 'ADD',
         });
-        this.emitters.rain = emitter;
+        emitter.setDepth(9999);
+        emitter.setScrollFactor(0);
+        this.emitters.push(emitter);
 
-        // Camera tint/overlay could be handled here too
-        this.scene.cameras.main.setBackgroundColor(0x555555); // Darker sky
+        this.scene.cameras.main.setBackgroundColor(0x555555);
     }
 
     startSnow() {
         const { width, height } = this.scene.scale;
-        const emitter = this.particleManager.createEmitter({
-            x: { min: -100, max: width + 100 },
-            y: -50,
+        const emitter = this.scene.add.particles(0, -50, 'weather-particle', {
+            x: { min: 0, max: width },
             lifespan: 3000,
             speedY: { min: 50, max: 100 },
             speedX: { min: -20, max: 20 },
@@ -108,13 +104,14 @@ export class WeatherSystem {
             tint: 0xffffff,
             alpha: 0.8,
         });
-        this.emitters.snow = emitter;
+        emitter.setDepth(9999);
+        emitter.setScrollFactor(0);
+        this.emitters.push(emitter);
     }
 
     startSandstorm() {
         const { width, height } = this.scene.scale;
-        const emitter = this.particleManager.createEmitter({
-            x: width + 50,
+        const emitter = this.scene.add.particles(width + 50, 0, 'weather-particle', {
             y: { min: 0, max: height },
             lifespan: 2000,
             speedX: { min: -600, max: -400 },
@@ -122,22 +119,20 @@ export class WeatherSystem {
             scale: { start: 1, end: 0.5 },
             quantity: 5,
             frequency: 20,
-            tint: 0xd2b48c, // Tan color
+            tint: 0xd2b48c,
             alpha: 0.6,
         });
-        this.emitters.sandstorm = emitter;
+        emitter.setDepth(9999);
+        emitter.setScrollFactor(0);
+        this.emitters.push(emitter);
     }
 
     update() {
-        // If we need to scroll particles with camera, usually emitters handle it if setScrollFactor(0) 
-        // But since they are mostly screen-space effects, we might want them fixed to camera?
-        // In Phaser 3, setting scroll factor on manager affects all.
-        // Let's assume weather is global/screen-space.
-        this.particleManager.setScrollFactor(0);
+        // Emitters are set to setScrollFactor(0) at creation so they stay screen-space.
     }
 
     destroy() {
         if (this.unsubscribe) this.unsubscribe();
-        if (this.particleManager) this.particleManager.destroy();
+        this.stopAllEffects();
     }
 }

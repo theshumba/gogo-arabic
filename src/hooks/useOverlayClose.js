@@ -4,7 +4,12 @@ import { EVENTS } from '../utils/eventBusTypes.js';
 
 /**
  * useOverlayClose -- centralized overlay dismissal
- * Handles: ESC key, guaranteed unfreeze-player on close and unmount
+ * Handles: ESC key, guaranteed unfreeze-player on close.
+ *
+ * IMPORTANT: We do NOT emit PLAYER_UNFREEZE on unmount, because many components
+ * using this hook are mounted at startup (before any freeze occurs), and an
+ * unconditional unfreeze-on-unmount would create mismatched freeze/unfreeze pairs
+ * that permanently freeze the player after the first interaction closes.
  *
  * @param {function} onClose - The close handler (dispatch closeX action, etc.)
  * @param {object} options
@@ -34,13 +39,6 @@ export function useOverlayClose(onClose, options = {}) {
     window.addEventListener('keydown', handleKeyDown, true); // capture phase
     return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [escEnabled, handleClose]);
-
-  // Unmount safety net -- if overlay is removed without explicit close, still unfreeze
-  useEffect(() => {
-    return () => {
-      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
-    };
-  }, []);
 
   return handleClose;
 }

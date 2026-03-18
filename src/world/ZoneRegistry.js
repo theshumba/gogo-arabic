@@ -36,7 +36,7 @@ class ZoneRegistry {
     getUnlockedZones(playerLevel) {
         return this.zoneIds
             .map(id => this.zones[id])
-            .filter(zone => zone.unlockRequirements.level <= playerLevel);
+            .filter(zone => (zone.unlockRequirements?.level ?? 0) <= playerLevel);
     }
 
     /**

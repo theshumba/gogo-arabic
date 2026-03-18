@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 export class DynamicObject extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture, config = {}) {
         super(scene, x, y, texture);
@@ -49,7 +51,9 @@ export class DynamicObject extends Phaser.GameObjects.Sprite {
     }
 
     destroy() {
-        this.scene.events.off('world-state-changed', this.handleStateChange, this);
+        if (this.scene) {
+            this.scene.events.off('world-state-changed', this.handleStateChange, this);
+        }
         super.destroy();
     }
 }

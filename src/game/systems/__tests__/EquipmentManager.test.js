@@ -46,6 +46,7 @@ describe('EquipmentManager', () => {
       scaleX: 1,
       scaleY: 1,
       flipX: false,
+      active: true,
       frame: { name: 'idle_0' },
     };
 

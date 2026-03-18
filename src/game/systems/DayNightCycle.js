@@ -104,7 +104,9 @@ export class DayNightCycle {
     destroy() {
         EventBus.off(EVENTS.TIME_PHASE_CHANGED, this.handlePhaseChange, this);
         if (this.overlay) {
+            this.scene.tweens.killTweensOf(this.overlay);
             this.overlay.destroy();
+            this.overlay = null;
         }
     }
 }

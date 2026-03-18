@@ -66,7 +66,7 @@ const ZONE_STORY_FLAGS = {
  */
 export function isWorldObjectInState(objectId, expectedState, state) {
   const s = state || store.getState();
-  const currentState = s.narrative.worldObjectStates[objectId] ?? null;
+  const currentState = s.narrative?.worldObjectStates?.[objectId] ?? null;
   return currentState === expectedState;
 }
 
@@ -81,7 +81,7 @@ export function isWorldObjectInState(objectId, expectedState, state) {
 export function getZoneCompletionFlags(zoneId, state) {
   const s = state || store.getState();
   const flags = ZONE_STORY_FLAGS[zoneId] || [];
-  const storyFlags = s.narrative.storyFlags;
+  const storyFlags = s.narrative?.storyFlags || {};
 
   return flags.map((flag) => ({
     flag,

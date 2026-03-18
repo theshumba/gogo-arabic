@@ -22,51 +22,62 @@ const ACTION_TO_GOAL_MAPPING = {
   // Quiz completion will be tracked manually via a custom action
 };
 
+// Re-entrancy guard: prevents infinite cascade when addXP from goal completion
+// re-enters this middleware
+let _isProcessingGoals = false;
+
 export const dailyGoalsMiddleware = (store) => (next) => (action) => {
   // Pass the action through first
   const result = next(action);
 
-  // Check for date reset on any action
-  if (action.type.startsWith('player/') || action.type.startsWith('vocabulary/')) {
-    store.dispatch(checkDailyReset());
-  }
+  // Prevent re-entrant dispatch cascade
+  if (_isProcessingGoals) return result;
 
-  // Track mapped actions
+  // Only check for date reset on goal-tracking actions (not every player/ or vocabulary/ action)
   const goalMapping = ACTION_TO_GOAL_MAPPING[action.type];
+
   if (goalMapping) {
-    const state = store.getState();
-    const goalsBefore = state.dailyGoals.goals;
-    const wasCompleted = areAllGoalsCompleted(goalsBefore);
+    _isProcessingGoals = true;
+    try {
+      // Check for date reset before tracking
+      store.dispatch(checkDailyReset());
 
-    // Update the goal
-    store.dispatch(updateDailyGoal({
-      goalType: goalMapping.goalType,
-      amount: goalMapping.amount,
-    }));
+      const state = store.getState();
+      const goalsBefore = state.dailyGoals.goals;
+      const wasCompleted = areAllGoalsCompleted(goalsBefore);
 
-    // Check if all goals are now completed (and weren't before)
-    const stateAfter = store.getState();
-    const goalsAfter = stateAfter.dailyGoals.goals;
-    const isNowCompleted = areAllGoalsCompleted(goalsAfter);
+      // Update the goal
+      store.dispatch(updateDailyGoal({
+        goalType: goalMapping.goalType,
+        amount: goalMapping.amount,
+      }));
 
-    if (!wasCompleted && isNowCompleted) {
-      // Award bonus XP for completing all goals
-      store.dispatch(addXP(ALL_GOALS_BONUS_XP));
+      // Check if all goals are now completed (and weren't before)
+      const stateAfter = store.getState();
+      const goalsAfter = stateAfter.dailyGoals.goals;
+      const isNowCompleted = areAllGoalsCompleted(goalsAfter);
+
+      // Collect XP rewards to batch
+      let totalXp = 0;
+
+      if (!wasCompleted && isNowCompleted) {
+        totalXp += ALL_GOALS_BONUS_XP;
+      }
+
+      // Award XP for completing individual goals
+      const goalAfter = goalsAfter[goalMapping.goalType];
+      const goalBefore = goalsBefore[goalMapping.goalType];
+      if (goalAfter.current >= goalAfter.target && goalBefore.current < goalBefore.target) {
+        totalXp += goalAfter.xpReward;
+      }
+
+      // Dispatch batched XP once
+      if (totalXp > 0) {
+        store.dispatch(addXP(totalXp));
+      }
+    } finally {
+      _isProcessingGoals = false;
     }
-
-    // Award XP for completing individual goals
-    const goalAfter = goalsAfter[goalMapping.goalType];
-    const goalBefore = goalsBefore[goalMapping.goalType];
-    if (goalAfter.current >= goalAfter.target && goalBefore.current < goalBefore.target) {
-      // Goal just completed
-      store.dispatch(addXP(goalAfter.xpReward));
-    }
-  }
-
-  // Handle quiz completion (custom tracking)
-  if (action.type === 'ui/closeQuiz') {
-    // Check if quiz was passed (this would need to be in the action payload)
-    // For now, we'll track this separately via a helper function
   }
 
   return result;

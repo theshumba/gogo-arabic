@@ -47,6 +47,52 @@ export const ALL_BGM_TRACKS = [
   'interior',
 ];
 
+// Zone ambient sound layer configs — multiple environmental sounds per zone
+// Each layer: { track: string, volume: number (0-1) }
+// Files at: /assets/audio/ambient/ambient-{track}.mp3
+// Files do not exist yet — playAmbient silently skips missing files via onloaderror.
+export const ZONE_AMBIENT_LAYERS = {
+  oasis_village: [
+    { track: 'ambient-fountain', volume: 0.4 },
+    { track: 'ambient-birds', volume: 0.3 },
+  ],
+  desert_marketplace: [
+    { track: 'ambient-crowd', volume: 0.5 },
+    { track: 'ambient-wind', volume: 0.2 },
+    { track: 'ambient-bells', volume: 0.15 },
+  ],
+  ancient_library: [
+    { track: 'ambient-pages', volume: 0.3 },
+    { track: 'ambient-echo', volume: 0.2 },
+  ],
+  farmland: [
+    { track: 'ambient-wind', volume: 0.4 },
+    { track: 'ambient-insects', volume: 0.3 },
+  ],
+  bedouin_camp: [
+    { track: 'ambient-fire', volume: 0.4 },
+    { track: 'ambient-wind', volume: 0.3 },
+  ],
+  mountain_village: [
+    { track: 'ambient-wind', volume: 0.5 },
+    { track: 'ambient-stream', volume: 0.3 },
+  ],
+  coastal_port: [
+    { track: 'ambient-waves', volume: 0.5 },
+    { track: 'ambient-gulls', volume: 0.2 },
+    { track: 'ambient-ropes', volume: 0.15 },
+  ],
+  royal_palace: [
+    { track: 'ambient-fountain', volume: 0.3 },
+    { track: 'ambient-chimes', volume: 0.2 },
+  ],
+};
+
+// Interior ambient config — muffled versions
+export const INTERIOR_AMBIENT = {
+  default: { muffle: 0.3 },  // Reduce ambient volume to 30% inside buildings
+};
+
 // SFX categories for consistent naming
 export const SFX_NAMES = {
   // UI

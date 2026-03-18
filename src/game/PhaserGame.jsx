@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
 import Phaser from 'phaser';
 import { gameConfig } from './config.js';
 import { EventBus } from '../utils/eventBus.js';
+import { EVENTS } from '../utils/eventBusTypes.js';
 
 export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) {
   const gameRef = useRef(null);
@@ -26,7 +27,7 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) 
     window.__PHASER_GAME__ = game;
 
     // When WorldScene is ready, notify parent
-    EventBus.once('scene-ready', () => {
+    EventBus.once(EVENTS.SCENE_READY, () => {
       if (onSceneReady) onSceneReady(game.scene.getScene('WorldScene'));
     });
 

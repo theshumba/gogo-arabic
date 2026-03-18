@@ -109,6 +109,10 @@ const ACTION_TO_ACHIEVEMENT_TYPES = {
   'player/addDirhams': ['dirhams_held'],
 };
 
+// Re-entrancy guard: prevents infinite dispatch cascade when addXP triggers
+// achievement checks which dispatch more addXP
+let _isProcessingAchievements = false;
+
 export const achievementMiddleware = (store) => (next) => (action) => {
   // Pass the action through first
   const result = next(action);
@@ -117,41 +121,57 @@ export const achievementMiddleware = (store) => (next) => (action) => {
   const typesToCheck = ACTION_TO_ACHIEVEMENT_TYPES[action.type];
   if (!typesToCheck) return result;
 
-  // Get the updated state only for relevant actions
-  const state = store.getState();
-  const unlockedAchievements = state.achievements?.unlockedAchievements || {};
+  // Prevent re-entrant dispatch cascade
+  if (_isProcessingAchievements) return result;
+  _isProcessingAchievements = true;
 
-  // Find achievements that match the types to check
-  const relevantAchievements = ACHIEVEMENTS.filter((achievement) =>
-    typesToCheck.includes(achievement.requirement.type)
-  );
+  try {
+    // Get the updated state only for relevant actions
+    const state = store.getState();
+    const unlockedAchievements = state.achievements?.unlockedAchievements || {};
 
-  // Check each relevant achievement
-  relevantAchievements.forEach((achievement) => {
-    // Skip if already unlocked
-    if (unlockedAchievements[achievement.id]) return;
+    // Find achievements that match the types to check
+    const relevantAchievements = ACHIEVEMENTS.filter((achievement) =>
+      typesToCheck.includes(achievement.requirement.type)
+    );
 
-    // Check if the achievement is now met
-    if (isAchievementMet(achievement, state)) {
-      // Unlock the achievement
-      store.dispatch(unlockAchievement(achievement.id));
+    // Collect all XP rewards to batch into a single dispatch
+    let totalXpReward = 0;
 
-      // Award XP
-      store.dispatch(addXP(achievement.xpReward));
+    // Check each relevant achievement
+    relevantAchievements.forEach((achievement) => {
+      // Skip if already unlocked
+      if (unlockedAchievements[achievement.id]) return;
 
-      // Check for completionist achievement after dispatches settle
-      queueMicrotask(() => {
-        const newState = store.getState();
-        const completionist = ACHIEVEMENTS.find((a) => a.requirement.type === 'all_achievements');
-        if (completionist && !newState.achievements.unlockedAchievements[completionist.id]) {
-          if (isAchievementMet(completionist, newState)) {
-            store.dispatch(unlockAchievement(completionist.id));
-            store.dispatch(addXP(completionist.xpReward));
-          }
-        }
-      });
+      // Check if the achievement is now met
+      if (isAchievementMet(achievement, state)) {
+        // Unlock the achievement
+        store.dispatch(unlockAchievement(achievement.id));
+
+        // Accumulate XP reward instead of dispatching immediately
+        totalXpReward += achievement.xpReward;
+      }
+    });
+
+    // Dispatch batched XP reward once (avoids re-entrant addXP cascade)
+    if (totalXpReward > 0) {
+      store.dispatch(addXP(totalXpReward));
     }
-  });
+
+    // Check for completionist achievement after dispatches settle
+    queueMicrotask(() => {
+      const newState = store.getState();
+      const completionist = ACHIEVEMENTS.find((a) => a.requirement.type === 'all_achievements');
+      if (completionist && !newState.achievements.unlockedAchievements[completionist.id]) {
+        if (isAchievementMet(completionist, newState)) {
+          store.dispatch(unlockAchievement(completionist.id));
+          store.dispatch(addXP(completionist.xpReward));
+        }
+      }
+    });
+  } finally {
+    _isProcessingAchievements = false;
+  }
 
   return result;
 };

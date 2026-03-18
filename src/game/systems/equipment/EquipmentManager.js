@@ -120,6 +120,8 @@ export class EquipmentManager {
    * Called every frame from scene update()
    */
   update() {
+    if (!this.playerSprite || !this.playerSprite.active) return;
+
     // Optimization: only update if player has moved or frame changed
     const playerMoved =
       this.playerSprite.x !== this.lastPlayerX ||

@@ -33,7 +33,7 @@ const initialState = {
   tutorialPhase: 'cinematic_intro', // New players see cinematic first, then awaiting_mentor
   mentorAvailable: true, // Guide Amira can be found for hints
   onboardingTargetNpc: null, // NPC ID to highlight during onboarding (e.g., 'guide-amira')
-  learningPath: null, // null | 'scholar' | 'traveler' | 'historian'
+  learningPath: null, // null | 'scholar' | 'traveler' | 'historian' | 'polymath'
 };
 
 const playerSlice = createSlice({
@@ -287,7 +287,7 @@ const playerSlice = createSlice({
     },
 
     setLearningPath(state, action) {
-      const validPaths = ['scholar', 'traveler', 'historian'];
+      const validPaths = ['scholar', 'traveler', 'historian', 'polymath'];
       if (validPaths.includes(action.payload)) {
         state.learningPath = action.payload;
       }

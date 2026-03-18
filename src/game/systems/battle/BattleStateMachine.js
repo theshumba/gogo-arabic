@@ -1198,7 +1198,8 @@ export class BattleStateMachine {
 
     // Check if player turn just ended and we have companion
     if (this.isPlayerTurn && this.companionBattleAI) {
-      // Player turn done, companion turn next
+      // Player turn done, companion turn next — toggle BEFORE branching
+      this.isPlayerTurn = false;
       this._transition(STATES.COMPANION_TURN);
       return;
     }
