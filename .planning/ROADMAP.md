@@ -9,7 +9,8 @@
 - ✅ **v6.0 Combat & RPG** — Phases 27.1, 28-30 (shipped 2026-02-13) → [archive](milestones/v6.0-ROADMAP.md)
 - ✅ **v6.1 Crafting & Advanced Combat** — Phases 31-32 (shipped 2026-02-18) → [archive](milestones/v6.1-ROADMAP.md)
 - ✅ **v7.0 World & Content** — Phases 33-37 (shipped 2026-03-16) → [archive](milestones/v7.0-ROADMAP.md)
-- 🚧 **v8.0 Visual Overhaul** — Phases 38-43 (in progress)
+- ✅ **v8.0 Visual Overhaul** — Phases 38-43 (shipped 2026-03-18)
+- 🚧 **v9.0 Content Depth** — Phases 44-46 (in progress)
 
 ## Phases
 
@@ -252,7 +253,8 @@ Plans:
 
 </details>
 
-### v8.0 Visual Overhaul (Phases 38-43) — In Progress
+<details>
+<summary>✅ v8.0 Visual Overhaul (Phases 38-43) — SHIPPED 2026-03-18</summary>
 
 **Milestone Goal:** Replace all placeholder art with the Kenmi Cute Fantasy 16x16 pixel art bundle, move in-game UI from React DOM overlays into Phaser Canvas, and add Arabic BitmapFont rendering — making the game look like a polished Pokemon/Stardew Valley RPG.
 
@@ -380,10 +382,75 @@ Plans:
 - [x] 43-01-PLAN.md — Replace old placeholder keys in gathering spots, interior zones, InteriorGenerator, InteractableManager (PIPE-03)
 - [x] 43-02-PLAN.md — Remove old sprite loads from BootScene + Tiled JSON export + test updates (PIPE-04, PIPE-05)
 
+</details>
+
+### v9.0 Content Depth (Phases 44-46) — In Progress
+
+**Milestone Goal:** Fill the game with substance — rich NPC dialogue grounded in real Islamic Golden Age history, a fleshed-out quest storyline spanning all zones, and vocabulary expansion from 1,220 to 5,000+ words with CEFR tagging, root family groupings, and semantic clusters.
+
+**Coverage:** 16 requirements across 3 phases (DIAL-01 to DIAL-05, QUEST-01 to QUEST-05, VOCAB-01 to VOCAB-06)
+
+#### Phase 44: NPC Dialogue Expansion
+**Goal**: Players encounter NPCs with rich, distinct personalities and historically grounded Arabic and Islamic cultural content that makes every conversation feel educational and alive
+
+**Depends on**: Phase 43 (v8.0 visual overhaul complete — NPC sprites and dialogue UI finalized)
+
+**Requirements**: DIAL-01, DIAL-02, DIAL-03, DIAL-04, DIAL-05
+
+**Success Criteria** (what must be TRUE):
+  1. All 23 main NPCs have a clearly distinct voice — talking to any two NPCs feels different in tone, humor, and cultural knowledge (no two NPCs share the same personality template)
+  2. At least 8 NPCs reference specific verifiable historical facts from the Islamic Golden Age, Silk Road, or House of Wisdom when conversed with
+  3. The game contains 1,543+ total dialogue lines (500+ new lines added to the ~1,043 existing baseline)
+  4. When a player learns a new vocabulary word through NPC dialogue, a cultural note surfaces showing either its Arabic loanword survival in English or its historical context of use
+  5. Words taught by NPCs via teachWord fields are added to the player's FSRS review queue and appear in the next scheduled review session
+
+**Plans**: TBD
+
+Plans:
+- [ ] 44-01-PLAN.md — TBD
+
+#### Phase 45: Quest Storylines
+**Goal**: Players have a compelling narrative arc to pursue — an 8-act main storyline plus per-zone side content that makes every Arabic learning moment feel purposeful and story-motivated
+
+**Depends on**: Phase 44 (NPC dialogue expanded — quest dialogues build on the same NPC personalities and cultural grounding)
+
+**Requirements**: QUEST-01, QUEST-02, QUEST-03, QUEST-04, QUEST-05
+
+**Success Criteria** (what must be TRUE):
+  1. Player can follow an 8-act main storyline as a time-traveling scholar collecting manuscript pages, with each act unlocking in a different zone and advancing through a readable story
+  2. Every zone has at least 2 side quests where Arabic learning is woven into the narrative action — not presented as a bare vocabulary task
+  3. Each companion NPC has a personal quest available that, on completion, raises their relationship score and adds a batch of zone-specific vocabulary to the player's FSRS queue
+  4. Players can discover hidden Arabic inscriptions placed in the world that, when found, teach a root family grouping and add associated words to review
+  5. Quest dialogue branches differently based on the player's chosen learning path (Scholar/Traveler/Historian), so the same quest feels contextually appropriate for each path
+
+**Plans**: TBD
+
+Plans:
+- [ ] 45-01-PLAN.md — TBD
+
+#### Phase 46: Vocabulary Expansion
+**Goal**: The FSRS vocabulary system contains 5,000+ words organized so players always encounter the most useful Arabic first, with every word contextualized by CEFR level, root family, and semantic category
+
+**Depends on**: Phase 45 (quest storylines define which vocabulary clusters matter most per zone — vocabulary expansion fills those clusters)
+
+**Requirements**: VOCAB-01, VOCAB-02, VOCAB-03, VOCAB-04, VOCAB-05, VOCAB-06
+
+**Success Criteria** (what must be TRUE):
+  1. vocabularyAll.js contains 5,000+ words (expanded from 1,220 baseline), with no duplicate entries
+  2. Every word in the vocabulary review UI displays its CEFR level tag (A1, A2, B1, or B2) alongside the Arabic and English
+  3. Root Explorer shows complete root family groupings — searching a trilateral root like ك-ت-ب surfaces all derived forms (كتاب، كاتب، مكتوب، مكتبة) together in one view
+  4. Words are browseable by semantic cluster (food, family, travel, nature, body, colors, numbers, etc.) in the vocabulary interface, so a player can study a topic end-to-end
+  5. Within each CEFR level, high-frequency words appear before rare ones in new FSRS card generation — a player who just started A2 encounters common words first
+
+**Plans**: TBD
+
+Plans:
+- [ ] 46-01-PLAN.md — TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 → 33 → ... → 43
+Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 → 33 → ... → 46
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -427,12 +494,15 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 38. Asset Pipeline & BootScene | v8.0 | 2/2 | Complete | 2026-03-16 |
 | 39. Terrain Rendering | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 40. Buildings & Decorations | v8.0 | 3/3 | Complete | 2026-03-18 |
-| 41. Characters & Ambient Life | v8.0 | Complete    | 2026-03-18 | 2026-03-18 |
-| 42. Phaser UI & Arabic BitmapFont | v8.0 | Complete    | 2026-03-18 | 2026-03-18 |
-| 43. Zone References & Cleanup | v8.0 | Complete    | 2026-03-18 | — |
+| 41. Characters & Ambient Life | v8.0 | 3/3 | Complete | 2026-03-18 |
+| 42. Phaser UI & Arabic BitmapFont | v8.0 | 3/3 | Complete | 2026-03-18 |
+| 43. Zone References & Cleanup | v8.0 | 2/2 | Complete | 2026-03-18 |
+| 44. NPC Dialogue Expansion | v9.0 | 0/TBD | Not started | — |
+| 45. Quest Storylines | v9.0 | 0/TBD | Not started | — |
+| 46. Vocabulary Expansion | v9.0 | 0/TBD | Not started | — |
 
-**Cumulative:** 41 phases shipped (38-42 complete in v8.0), 127 plans complete (43-01 and 43-02 done), 7 milestones shipped (v8.0 in progress — 43-03 remaining)
+**Cumulative:** 43 phases shipped (v8.0 complete), 127+ plans complete, 8 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — 43-02 COMPLETE — BootScene cleaned (PIPE-05), Tiled zone-export.json created (PIPE-04), InteractableManager Kenmi keys*
+*Last updated: 2026-03-18 — v9.0 roadmap added (Phases 44-46, 16 requirements mapped)*
