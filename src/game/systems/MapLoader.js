@@ -1072,10 +1072,85 @@ export class MapLoader {
         this.decoSprites.push(sprite);
       }
     }
+
+    const biome = zone.tilesetTheme || 'desert';
+
+    // --- Animated campfires: 1-2 per desert zone near center (DECO-03) ---
+    if (biome === 'desert' && this.scene.anims.exists('deco-campfire')) {
+      const campfireCount = 1 + Math.floor(tileHash(3, 3, DECO_SEED + 300) * 2);
+      for (let i = 0; i < campfireCount; i++) {
+        const cx = Math.floor(mapW / 2) + Math.floor((tileHash(i, 5, DECO_SEED + 301) - 0.5) * 10);
+        const cy = Math.floor(mapH / 2) + Math.floor((tileHash(5, i, DECO_SEED + 302) - 0.5) * 8);
+        if (cx < 1 || cx >= mapW - 1 || cy < 1 || cy >= mapH - 1) continue;
+        if (occupiedTiles.has(`${cx},${cy}`)) continue;
+        if (groundData[cy][cx] === WATER) continue;
+
+        const px = cx * TILE + TILE / 2;
+        const py = cy * TILE + TILE / 2;
+        const campfire = this.scene.add.sprite(px, py, 'kenmi-military-campfire-pot-anim', 0);
+        campfire.setScale(KENMI_SCALE);
+        campfire.setDepth(py);
+        campfire.play('deco-campfire');
+        this.decoSprites.push(campfire);
+        occupiedTiles.add(`${cx},${cy}`);
+      }
+    }
+
+    // --- Animated flies: 2-3 near water/shorelines in desert zones (DECO-03) ---
+    if (biome === 'desert' && this.scene.anims.exists('deco-flies')) {
+      const fliesCount = 2 + Math.floor(tileHash(7, 7, DECO_SEED + 400) * 2);
+      let fliesPlaced = 0;
+      for (let y = 0; y < mapH && fliesPlaced < fliesCount; y++) {
+        for (let x = 0; x < mapW && fliesPlaced < fliesCount; x++) {
+          if (groundData[y][x] !== WATER) continue;
+          // Only place on shore-adjacent water tiles
+          const hasShore = (x > 0 && groundData[y][x - 1] !== WATER) ||
+                           (x < mapW - 1 && groundData[y][x + 1] !== WATER) ||
+                           (y > 0 && groundData[y - 1][x] !== WATER) ||
+                           (y < mapH - 1 && groundData[y + 1][x] !== WATER);
+          if (!hasShore) continue;
+
+          const fHash = tileHash(x, y, DECO_SEED + 401);
+          if (fHash > 0.15) continue; // sparse — only ~15% of shore tiles
+
+          const px = x * TILE + TILE / 2;
+          const py = y * TILE + TILE / 2 - 16; // slightly above water surface
+          const flies = this.scene.add.sprite(px, py, 'kenmi-desert-props-flies-anim', 0);
+          flies.setScale(KENMI_SCALE);
+          flies.setDepth(py + 1000); // above water layer
+          flies.setAlpha(0.7);
+          flies.play('deco-flies');
+          this.decoSprites.push(flies);
+          fliesPlaced++;
+        }
+      }
+    }
+
+    // --- Military banners/flags for bedouin camp ---
+    if (zone.id === 'bedouin_camp') {
+      const bannerPositions = [
+        { x: 7, y: 4 },
+        { x: 27, y: 4 },
+      ];
+      for (let i = 0; i < bannerPositions.length; i++) {
+        const bp = bannerPositions[i];
+        if (bp.x < 0 || bp.x >= mapW || bp.y < 0 || bp.y >= mapH) continue;
+        const animKey = i === 0 ? 'deco-banner' : 'deco-flag';
+        const texKey = i === 0 ? 'kenmi-military-banners-anim' : 'kenmi-military-flags-anim';
+        if (!this.scene.anims.exists(animKey)) continue;
+        const px = bp.x * TILE + TILE / 2;
+        const py = bp.y * TILE + TILE / 2;
+        const banner = this.scene.add.sprite(px, py, texKey, 0);
+        banner.setScale(KENMI_SCALE);
+        banner.setDepth(py);
+        banner.play(animKey);
+        this.decoSprites.push(banner);
+      }
+    }
   }
 
   /**
-   * Create animated grass decoration animations (run once)
+   * Create animated grass, campfire, and flies decoration animations (run once)
    */
   _createDecoGrassAnimations() {
     // Pre-create all 3 grass animation configs
@@ -1086,6 +1161,65 @@ export class MapLoader {
     ];
     for (const { key, anim } of grassSheets) {
       this._ensureDecoGrassAnim(key, anim);
+    }
+
+    // Campfire animation (DECO-03)
+    const campfireKey = 'kenmi-military-campfire-pot-anim';
+    if (this.scene.textures.exists(campfireKey) && !this.scene.anims.exists('deco-campfire')) {
+      const tex = this.scene.textures.get(campfireKey);
+      const frameCount = tex.frameTotal - 1;
+      if (frameCount > 0) {
+        this.scene.anims.create({
+          key: 'deco-campfire',
+          frames: this.scene.anims.generateFrameNumbers(campfireKey, { start: 0, end: frameCount - 1 }),
+          frameRate: 6,
+          repeat: -1,
+        });
+      }
+    }
+
+    // Flies animation (DECO-03)
+    const fliesKey = 'kenmi-desert-props-flies-anim';
+    if (this.scene.textures.exists(fliesKey) && !this.scene.anims.exists('deco-flies')) {
+      const tex = this.scene.textures.get(fliesKey);
+      const frameCount = tex.frameTotal - 1;
+      if (frameCount > 0) {
+        this.scene.anims.create({
+          key: 'deco-flies',
+          frames: this.scene.anims.generateFrameNumbers(fliesKey, { start: 0, end: frameCount - 1 }),
+          frameRate: 8,
+          repeat: -1,
+        });
+      }
+    }
+
+    // Military banner and flag animations for bedouin camp
+    const bannerKey = 'kenmi-military-banners-anim';
+    if (this.scene.textures.exists(bannerKey) && !this.scene.anims.exists('deco-banner')) {
+      const tex = this.scene.textures.get(bannerKey);
+      const frameCount = tex.frameTotal - 1;
+      if (frameCount > 0) {
+        this.scene.anims.create({
+          key: 'deco-banner',
+          frames: this.scene.anims.generateFrameNumbers(bannerKey, { start: 0, end: frameCount - 1 }),
+          frameRate: 5,
+          repeat: -1,
+        });
+      }
+    }
+
+    const flagKey = 'kenmi-military-flags-anim';
+    if (this.scene.textures.exists(flagKey) && !this.scene.anims.exists('deco-flag')) {
+      const tex = this.scene.textures.get(flagKey);
+      const frameCount = tex.frameTotal - 1;
+      if (frameCount > 0) {
+        this.scene.anims.create({
+          key: 'deco-flag',
+          frames: this.scene.anims.generateFrameNumbers(flagKey, { start: 0, end: frameCount - 1 }),
+          frameRate: 5,
+          repeat: -1,
+        });
+      }
     }
   }
 
