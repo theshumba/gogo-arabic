@@ -7,16 +7,16 @@ import { stripDiacritics } from '../../utils/arabicUtils.js';
 // Interactable proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
 
-// Sprite key mapping for the 8 new interactive object types
+// Sprite key mapping for the 8 new interactive object types — Kenmi keys
 const WORLD_OBJECT_SPRITES = {
-  fountain: 'rock2',
-  statue: 'ruin-pillar',
-  painting: 'gate-pillar',
-  lantern: 'rock1',
-  stall: 'house-small',
-  barrel: 'rock1',
-  crate: 'rock2',
-  pot: 'rock1',
+  fountain: 'kenmi-desert-props-golden-pots',
+  statue: 'kenmi-desert-temple-desert-obelisk-small-1',
+  painting: 'kenmi-desert-temple-desert-obelisk-small-2',
+  lantern: 'kenmi-desert-props-desert-rocks',
+  stall: 'kenmi-desert-houses-pergola',
+  barrel: 'kenmi-desert-props-desert-rocks',
+  crate: 'kenmi-desert-props-golden-pots',
+  pot: 'kenmi-desert-props-golden-pots',
 };
 
 // Set of all new world object types (behavior composition, not class-per-type)
@@ -49,12 +49,12 @@ export class InteractableManager {
       const px = cfg.x * 64 + 32;
       const py = cfg.y * 64 + 32;
 
-      // Choose sprite based on type
+      // Choose sprite based on type — Kenmi keys
       let spriteKey;
-      if (cfg.type === 'sign') spriteKey = 'gate-pillar';
-      else if (cfg.type === 'bookshelf') spriteKey = 'ruin-pillar';
-      else if (cfg.type === 'chest') spriteKey = 'rock1';
-      else if (cfg.type === 'door') spriteKey = 'house-small';
+      if (cfg.type === 'sign') spriteKey = 'kenmi-desert-temple-desert-obelisk-small-2';
+      else if (cfg.type === 'bookshelf') spriteKey = 'kenmi-desert-temple-desert-obelisk-small-1';
+      else if (cfg.type === 'chest') spriteKey = 'kenmi-desert-props-desert-rocks';
+      else if (cfg.type === 'door') spriteKey = 'kenmi-desert-houses-desert-house-1.1';
       else if (WORLD_OBJECT_TYPES.has(cfg.type)) spriteKey = WORLD_OBJECT_SPRITES[cfg.type];
 
       const sprite = this.scene.add.image(px, py, spriteKey).setOrigin(0.5, 0.8);

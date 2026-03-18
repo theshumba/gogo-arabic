@@ -82,25 +82,9 @@ export class BootScene extends Phaser.Scene {
     this.load.image('tile-grass', '/assets/sprites/objects/grass.png');
     this.load.image('grass-ice', '/assets/sprites/objects/grass_ice.png');
 
-    // =========================================================
-    // LEGACY OBJECT SPRITES (fallback for any missing Kenmi textures)
-    // =========================================================
-    this.load.image('palm', '/assets/sprites/objects/palm.png');
-    this.load.image('palm-small', '/assets/sprites/objects/palm_small.png');
-    this.load.image('palm-alt', '/assets/sprites/objects/palm_alt.png');
-    this.load.image('house-small', '/assets/sprites/objects/house_small.png');
-    this.load.image('house-small-alt', '/assets/sprites/objects/house_small_alt.png');
-    this.load.image('house-large', '/assets/sprites/objects/house_large.png');
-    this.load.image('house-large-alt', '/assets/sprites/objects/house_large_alt.png');
-    this.load.image('rock1', '/assets/sprites/objects/sandrock1.png');
-    this.load.image('rock2', '/assets/sprites/objects/sandrock2.png');
-    this.load.image('ruin-pillar', '/assets/sprites/objects/ruin_pillar.png');
-    this.load.image('ruin-pillar-broke', '/assets/sprites/objects/ruin_pillar_broke.png');
-    this.load.image('ruin-gate', '/assets/sprites/objects/ruin_gate.png');
-    this.load.image('green-tree', '/assets/sprites/objects/green_tree.png');
-    this.load.image('green-tree-small', '/assets/sprites/objects/green_tree_small.png');
-    this.load.image('green-tree-bushy', '/assets/sprites/objects/green_tree_bushy.png');
-    this.load.image('ice-tree', '/assets/sprites/objects/ice_tree.png');
+    // Old placeholder object sprites (palm, house-*, rock*, ruin-*, green-tree*, ice-tree)
+    // have been fully replaced by Kenmi keys in zone data and InteractableManager.
+    // These load calls are no longer needed — assets stay on disk but are not loaded.
 
     this.load.spritesheet('world-tileset', '/assets/tilesets/world.png', {
       frameWidth: 64,

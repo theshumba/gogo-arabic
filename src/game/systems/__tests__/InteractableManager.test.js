@@ -81,10 +81,10 @@ describe('InteractableManager', () => {
 
       interactableManager.create(configs, objectSprites);
 
-      // Verify sprites created with correct keys
-      expect(scene.add.image).toHaveBeenCalledWith(352, 352, 'gate-pillar');
-      expect(scene.add.image).toHaveBeenCalledWith(480, 480, 'ruin-pillar');
-      expect(scene.add.image).toHaveBeenCalledWith(672, 672, 'rock1');
+      // Verify sprites created with correct keys (Kenmi)
+      expect(scene.add.image).toHaveBeenCalledWith(352, 352, 'kenmi-desert-temple-desert-obelisk-small-2');
+      expect(scene.add.image).toHaveBeenCalledWith(480, 480, 'kenmi-desert-temple-desert-obelisk-small-1');
+      expect(scene.add.image).toHaveBeenCalledWith(672, 672, 'kenmi-desert-props-desert-rocks');
     });
 
     it('should tint already-opened chests from Redux state', async () => {
