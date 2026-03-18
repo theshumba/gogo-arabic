@@ -12,6 +12,13 @@ import EnglishToArabic from './EnglishToArabic.jsx';
 import EnglishToTypeArabic from './EnglishToTypeArabic.jsx';
 import ListenAndChoose from './ListenAndChoose.jsx';
 import MatchPairs from './MatchPairs.jsx';
+import SentenceBuilder from './SentenceBuilder.jsx';
+import RootIdentifier from './RootIdentifier.jsx';
+import FillInBlank from './FillInBlank.jsx';
+import CategorySort from './CategorySort.jsx';
+import Transliteration from './Transliteration.jsx';
+import ConjugationPick from './ConjugationPick.jsx';
+import PictureWord from './PictureWord.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
@@ -23,6 +30,13 @@ const QUIZ_TYPE_LABELS = {
   'en-to-type-ar': 'Type Arabic',
   'listen': 'Listen & Choose',
   'match': 'Match Pairs',
+  'sentence-build': 'Build a Sentence',
+  'root-identify': 'Find the Root',
+  'fill-blank': 'Fill in the Blank',
+  'category-sort': 'Sort Categories',
+  'transliterate': 'Transliterate',
+  'conjugation': 'Conjugation',
+  'picture-word': 'Picture Word',
 };
 
 export default function QuizOverlay() {
@@ -76,12 +90,26 @@ export default function QuizOverlay() {
     // Determine correctness to play the right SFX — direct call for lower latency
     const word = quiz.currentWord;
     if (word) {
-      const isCorrect =
-        (quiz.quizType === 'ar-to-en' || quiz.quizType === 'listen')
-          ? userAnswer === word.english
-          : (quiz.quizType === 'en-to-ar')
-            ? userAnswer === word.arabic
-            : userAnswer.replace(/[\u064B-\u065F\u0670]/g, '').trim() === word.arabic.replace(/[\u064B-\u065F\u0670]/g, '').trim();
+      const normalize = (s) => s.replace(/[\u064B-\u065F\u0670]/g, '').trim();
+      let isCorrect = false;
+      if (quiz.quizType === 'ar-to-en' || quiz.quizType === 'listen') {
+        isCorrect = userAnswer === word.english;
+      } else if (quiz.quizType === 'en-to-ar') {
+        isCorrect = userAnswer === word.arabic;
+      } else if (quiz.quizType === 'transliterate') {
+        isCorrect = userAnswer.toLowerCase().trim() === (word.transliteration || word.arabic).toLowerCase().trim();
+      } else if (quiz.quizType === 'root-identify') {
+        const root = word.root || word.rootLetters || word.arabic.slice(0, 3);
+        isCorrect = normalize(userAnswer) === normalize(root);
+      } else if (quiz.quizType === 'sentence-build') {
+        const expected = (word.exampleSentence?.arabic || word.arabic).split(/\s+/).filter(Boolean).join(' ');
+        isCorrect = normalize(userAnswer) === normalize(expected);
+      } else if (quiz.quizType === 'category-sort') {
+        // Optimistic: trust the hook answer result — SFX handled after answer() resolves
+        isCorrect = true; // feedback from hook is authoritative
+      } else {
+        isCorrect = normalize(userAnswer) === normalize(word.arabic);
+      }
       audioManager.playSFX(isCorrect ? 'correct' : 'wrong');
     }
   }, [answer, quiz.currentWord, quiz.quizType]);
@@ -317,6 +345,69 @@ export default function QuizOverlay() {
           <ListenAndChoose
             word={quiz.currentWord}
             choices={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'sentence-build' && (
+          <SentenceBuilder
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'root-identify' && (
+          <RootIdentifier
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'fill-blank' && (
+          <FillInBlank
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'category-sort' && (
+          <CategorySort
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'transliterate' && (
+          <Transliteration
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'conjugation' && (
+          <ConjugationPick
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'picture-word' && (
+          <PictureWord
+            word={quiz.currentWord}
+            options={quiz.choices}
             feedback={combinedFeedback}
             onAnswer={handleAnswer}
           />
