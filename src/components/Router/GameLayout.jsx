@@ -21,6 +21,8 @@ import QuestLog from '../Quest/QuestLog.jsx';
 import SignOverlay from '../World/SignOverlay.jsx';
 import ObjectInteractionOverlay from '../World/ObjectInteractionOverlay.jsx';
 import TutorialHints, { WelcomeSplash } from '../Onboarding/TutorialHints.jsx';
+import CinematicIntro from '../Onboarding/CinematicIntro.jsx';
+import PathChoice from '../Onboarding/PathChoice.jsx';
 import { useTutorialTrigger } from '../../hooks/useTutorialTrigger.js';
 import LevelUpModal from '../UI/LevelUpModal.jsx';
 import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
@@ -188,11 +190,18 @@ export default function GameLayout() {
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
 
-  // Welcome splash — show only when onboarding hasn't started yet
+  // Welcome splash — show when arriving at awaiting_mentor (after cinematic + path choice)
   const tutorialPhase = useSelector((state) => state.player.tutorialPhase);
-  const [showWelcome, setShowWelcome] = React.useState(
-    !onboardingComplete && tutorialPhase === 'awaiting_mentor'
-  );
+  const prevPhaseRef = useRef(tutorialPhase);
+  const [showWelcome, setShowWelcome] = React.useState(false);
+
+  // Trigger welcome splash when transitioning into awaiting_mentor
+  useEffect(() => {
+    if (prevPhaseRef.current !== 'awaiting_mentor' && tutorialPhase === 'awaiting_mentor' && !onboardingComplete) {
+      setShowWelcome(true);
+    }
+    prevPhaseRef.current = tutorialPhase;
+  }, [tutorialPhase, onboardingComplete]);
 
   // J key toggles journal
   useEffect(() => {
@@ -256,8 +265,14 @@ export default function GameLayout() {
       {/* Level up modal */}
       <LevelUpModal />
 
+      {/* Cinematic intro — black screen text crawl for brand new players */}
+      {tutorialPhase === 'cinematic_intro' && <CinematicIntro />}
+
+      {/* Learning path choice — Scholar/Traveler/Historian */}
+      {tutorialPhase === 'path_choice' && <PathChoice />}
+
       {/* Tutorial hints (non-blocking arrows/prompts) */}
-      {!onboardingComplete && <TutorialHints />}
+      {!onboardingComplete && tutorialPhase !== 'cinematic_intro' && tutorialPhase !== 'path_choice' && <TutorialHints />}
 
       {/* Welcome splash — auto-fades after 3 seconds */}
       {showWelcome && <WelcomeSplash onDone={() => setShowWelcome(false)} />}

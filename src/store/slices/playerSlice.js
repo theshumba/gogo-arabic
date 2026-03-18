@@ -30,9 +30,10 @@ const initialState = {
   levelUpRewards: null, // Pending level-up reward to display
   streakRewardPending: null, // Pending streak reward to display
   onboardingComplete: false, // New players start the tutorial
-  tutorialPhase: 'awaiting_mentor', // New players start at awaiting_mentor phase
+  tutorialPhase: 'cinematic_intro', // New players see cinematic first, then awaiting_mentor
   mentorAvailable: true, // Guide Amira can be found for hints
   onboardingTargetNpc: null, // NPC ID to highlight during onboarding (e.g., 'guide-amira')
+  learningPath: null, // null | 'scholar' | 'traveler' | 'historian'
 };
 
 const playerSlice = createSlice({
@@ -272,12 +273,23 @@ const playerSlice = createSlice({
     },
 
     setTutorialPhase(state, action) {
-      const validPhases = ['awaiting_mentor', 'met_mentor', 'learned_word', 'met_yusuf', 'complete'];
+      const validPhases = [
+        'cinematic_intro', 'path_choice', 'awaiting_mentor',
+        'met_mentor', 'learned_word', 'first_words_quest',
+        'met_yusuf', 'complete',
+      ];
       if (validPhases.includes(action.payload)) {
         state.tutorialPhase = action.payload;
         if (action.payload === 'complete') {
           state.onboardingComplete = true;
         }
+      }
+    },
+
+    setLearningPath(state, action) {
+      const validPaths = ['scholar', 'traveler', 'historian'];
+      if (validPaths.includes(action.payload)) {
+        state.learningPath = action.payload;
       }
     },
 
@@ -314,6 +326,7 @@ export const {
   addTitle,
   completeOnboarding,
   setTutorialPhase,
+  setLearningPath,
   setOnboardingTargetNpc,
 } = playerSlice.actions;
 

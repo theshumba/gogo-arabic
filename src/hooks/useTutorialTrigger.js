@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   setTutorialPhase,
@@ -10,26 +10,91 @@ import { EVENTS } from '../utils/eventBusTypes.js';
 
 const MENTOR_NPC_ID = 'guide-amira';
 const SCHOLAR_NPC_ID = 'scholar-yusuf';
-// Proximity threshold: 2 tiles = 128px
-const PROXIMITY_THRESHOLD = 128;
-// Mentor position in world pixels (tile 14, 18 * 64)
-const MENTOR_X = 14 * 64;
-const MENTOR_Y = 18 * 64;
 
 /**
  * useTutorialTrigger
  *
- * Listens for player proximity to Guide Amira and drives the tutorial flow.
- * - 'awaiting_mentor': Shows arrow to Amira, auto-opens dialogue on proximity
- * - 'met_mentor': Waiting for word learn (tracked via DIALOGUE_ENDED)
+ * Drives the full onboarding flow:
+ *
+ * Tutorial phases:
+ * - 'cinematic_intro': Black screen text crawl (CinematicIntro component)
+ * - 'path_choice': Scholar/Traveler/Historian selection (PathChoice component)
+ * - 'awaiting_mentor': Auto-intro fires, freezes player, opens Guide Amira dialogue
+ * - 'met_mentor': Waiting for word learn
  * - 'learned_word': Shows arrow to Scholar Yusuf
+ * - 'first_words_quest': Player exploring, learning words from objects
  * - 'met_yusuf': Tutorial complete
  * - 'complete': Onboarding done
  */
 export function useTutorialTrigger() {
-  // NUCLEAR FIX: Disable tutorial trigger entirely to prevent walking freeze.
-  // The proximity check near Guide Amira was causing valid freezes that couldn't
-  // be cleared because the NPC texture was missing (breaking the dialogue).
-  // By returning early, we guarantee this code path never executes.
-  return { tutorialPhase: 'complete', onboardingComplete: true };
+  const dispatch = useDispatch();
+  const tutorialPhase = useSelector((s) => s.player.tutorialPhase);
+  const onboardingComplete = useSelector((s) => s.player.onboardingComplete);
+  const autoIntroFired = useRef(false);
+
+  // --- Auto-intro when cinematic + path choice are done ---
+  useEffect(() => {
+    if (tutorialPhase !== 'awaiting_mentor') return;
+    if (autoIntroFired.current) return;
+    autoIntroFired.current = true;
+
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+    dispatch(setOnboardingTargetNpc(MENTOR_NPC_ID));
+
+    const timer = setTimeout(() => {
+      EventBus.emit(EVENTS.NPC_INTERACT, {
+        npcId: MENTOR_NPC_ID,
+        npcName: 'Guide Amira',
+        autoTriggered: true,
+      });
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [tutorialPhase, dispatch]);
+
+  // --- Track dialogue end to advance tutorial phases ---
+  useEffect(() => {
+    if (onboardingComplete) return;
+
+    const handleDialogueEnded = ({ npcId }) => {
+      if (tutorialPhase === 'awaiting_mentor' && npcId === MENTOR_NPC_ID) {
+        dispatch(setTutorialPhase('met_mentor'));
+        dispatch(setOnboardingTargetNpc(null));
+      } else if (tutorialPhase === 'learned_word' && npcId === SCHOLAR_NPC_ID) {
+        dispatch(setTutorialPhase('met_yusuf'));
+        dispatch(setOnboardingTargetNpc(null));
+        dispatch(setTutorialPhase('complete'));
+        dispatch(completeOnboarding());
+      }
+    };
+
+    EventBus.on(EVENTS.DIALOGUE_ENDED, handleDialogueEnded);
+    return () => EventBus.off(EVENTS.DIALOGUE_ENDED, handleDialogueEnded);
+  }, [tutorialPhase, onboardingComplete, dispatch]);
+
+  // --- Track word learned to advance from met_mentor to learned_word ---
+  useEffect(() => {
+    if (tutorialPhase !== 'met_mentor') return;
+
+    const handleWordLearned = () => {
+      dispatch(setTutorialPhase('learned_word'));
+      dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+    };
+
+    EventBus.on(EVENTS.SFX_WORDLEARNED, handleWordLearned);
+    return () => EventBus.off(EVENTS.SFX_WORDLEARNED, handleWordLearned);
+  }, [tutorialPhase, dispatch]);
+
+  // --- Set onboarding target NPC based on current phase ---
+  useEffect(() => {
+    if (onboardingComplete) return;
+
+    if (tutorialPhase === 'awaiting_mentor') {
+      dispatch(setOnboardingTargetNpc(MENTOR_NPC_ID));
+    } else if (tutorialPhase === 'learned_word') {
+      dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+    }
+  }, [tutorialPhase, onboardingComplete, dispatch]);
+
+  return { tutorialPhase, onboardingComplete };
 }
