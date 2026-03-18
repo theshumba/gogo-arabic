@@ -1700,6 +1700,41 @@
             "quizType": "ar-to-en"
           }
         ]
+      },
+      {
+        "id": "khalid_review",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَنا تَعَلَّمتُ دَرساً جَديداً اليَوم! تَعال نَتَذاكَر",
+            "english": "I learned a new lesson today! Come, let's review together.",
+            "transliteration": "ana ta'allamtu darsan jadiidan al-yawm! ta'aal natadhaakar"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أُستاذ يوسُف قال: المُراجَعَة أُمّ العِلم — ما رَأيُك؟",
+            "english": "Teacher Yusuf said: 'Review is the mother of knowledge' — what do you think?",
+            "transliteration": "ustaadh yuusuf qaal: al-muraaja'a umm al-'ilm — maa ra'yuk?",
+            "teachWord": "write_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَنا كَثيراً ما أَنسى — لَكِن التَّكرار يُساعِد كَثيراً",
+            "english": "I often forget — but repetition helps a great deal.",
+            "transliteration": "ana kathiiran maa ansaa — laakin at-tikraar yusaa'id kathiiran"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "لِنَتَذاكَر سَوِيَّاً!",
+                "english": "Let's review together!",
+                "next": null
+              }
+            ]
+          }
+        ]
       }
     ],
     "personality": {
@@ -2547,7 +2582,7 @@
             "arabic": "الكِتابَةُ تَحْتاجُ صَبْراً وَدِقَّة",
             "english": "Writing requires patience and precision.",
             "transliteration": "al-kitaaba tahtaaju sabran wa diqqah",
-            "teachWord": "patience"
+            "teachWord": "beautiful_1"
           },
           {
             "speaker": "npc",
@@ -3029,14 +3064,14 @@
             "arabic": "البَهاراتُ مُهِمَّة جِدّاً لِلطَّعام",
             "english": "Spices are very important for food.",
             "transliteration": "al-bahaaraatu muhimma jiddan lit-ta'aam",
-            "teachWord": "food"
+            "teachWord": "bread_1"
           },
           {
             "speaker": "npc",
             "arabic": "عِنْدي فُلْفُل، كُرْكُم، زَنْجَبيل",
             "english": "I have pepper, turmeric, ginger.",
             "transliteration": "indii fulful, kurkum, zanjabeel",
-            "teachWord": "spices"
+            "teachWord": "spice_w39"
           },
           {
             "speaker": "player",
@@ -3495,7 +3530,7 @@
             "arabic": "صَفْقَة — يَعني اتِّفاق لِلبَيْع",
             "english": "Safqa — means a deal for selling.",
             "transliteration": "safqa — ya'nii ittifaaq lil-bay'",
-            "teachWord": "deal"
+            "teachWord": "p_0680"
           },
           {
             "speaker": "player",
@@ -3967,7 +4002,7 @@
             "arabic": "أَنا أَحْمي الواحَة",
             "english": "I protect the oasis.",
             "transliteration": "ana ahmii al-waaha",
-            "teachWord": "protect"
+            "teachWord": "p_0407"
           },
           {
             "speaker": "npc",
@@ -4187,6 +4222,42 @@
             "arabic": "قِف! ذاكَ يَكفي لِليَوم. عُدْ غَداً",
             "english": "Halt! That's enough for today. Return tomorrow.",
             "transliteration": "qif! dhaaka yakfii lil-yawm. ud ghadan"
+          }
+        ]
+      },
+      {
+        "id": "hamza_city_walls",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "المَدينَة مَحمِيَّة بِالأَسوار. تَعال أُريكَ",
+            "english": "The city is protected by walls. Come, let me show you.",
+            "transliteration": "al-madiina mahmiyya bil-aswaar. ta'aal uriika"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "سور — الحائِط حَول المَدينَة. مِنهُ مَدينَة الصِّلاة السُّور في القُرآن",
+            "english": "Suur — the wall around a city. Also the name for Quran chapters (Sura).",
+            "transliteration": "suur — al-haa'it hawla al-madiina. minhu madiina",
+            "teachWord": "p_0407",
+            "culturalNote": "The Arabic word \"sura\" (سورة), a Quran chapter, shares its root with \"suur\" (سور, wall). A sura is a section that stands complete on its own — like a walled enclosure that contains and protects what is within it."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَلف حارِس حَرَسوا بَغداد في ذُروَتِها — أَعظَم مَدينَة في العالَم",
+            "english": "A thousand guards protected Baghdad at its peak — the greatest city in the world.",
+            "transliteration": "alf haaris harasuu baghdaad fii dhurwatihaa — a'zam madiina fil-'aalam"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "حِماية المَدينَة مُهِمَّة! شُكراً حَمزَة",
+                "english": "Protecting the city is important! Thank you, Hamza.",
+                "next": null
+              }
+            ]
           }
         ]
       }
@@ -4442,14 +4513,14 @@
             "arabic": "الطَّبيعَةُ جَميلَة. دَعْني أُعَلِّمُك",
             "english": "Nature is beautiful. Let me teach you.",
             "transliteration": "at-tabii'a jamiila. da'nii u'allimuk",
-            "teachWord": "nature"
+            "teachWord": "p_0492"
           },
           {
             "speaker": "npc",
             "arabic": "شَجَرَة — يَعني tree",
             "english": "Shajara — means tree.",
             "transliteration": "shajara — ya'nii tree",
-            "teachWord": "tree"
+            "teachWord": "tree_w27"
           },
           {
             "speaker": "player",
@@ -4975,7 +5046,7 @@
             "arabic": "رَأْس — هَذا head",
             "english": "Ra's — this is the head.",
             "transliteration": "ra's — haadhaa head",
-            "teachWord": "head",
+            "teachWord": "head_1",
             "inlineVocab": [
               {
                 "wordId": "head",
@@ -4988,7 +5059,7 @@
             "arabic": "يَد — هَذِهِ hand",
             "english": "Yad — this is the hand.",
             "transliteration": "yad — haadhihi hand",
-            "teachWord": "hand",
+            "teachWord": "hand_1",
             "inlineVocab": [
               {
                 "wordId": "hand",
@@ -5615,7 +5686,7 @@
             "arabic": "مَثَل: العِلْمُ نور",
             "english": "Proverb: Knowledge is light.",
             "transliteration": "mathal: al-ilmu nuur",
-            "teachWord": "knowledge"
+            "teachWord": "write_1"
           },
           {
             "speaker": "player",
@@ -6113,7 +6184,7 @@
             "arabic": "كَبير — big، صَغير — small",
             "english": "Kabiir — big, saghiir — small.",
             "transliteration": "kabiir — big, saghiir — small",
-            "teachWord": "big"
+            "teachWord": "big_1"
           },
           {
             "speaker": "player",
@@ -6515,6 +6586,19 @@
             "arabic": "يا أَهْلاً! الرِّحْلَةُ مُغامَرَة دائِماً",
             "english": "Hey there! The journey is always an adventure.",
             "transliteration": "ya ahlan! ar-rihla mughaamara daa'iman"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الرِّحلَة لا تَنتَهي — كُلَّما سافَرتَ وَجَدتَ أَسرار جَديدَة",
+            "english": "The journey never ends — the more you travel, the more secrets you find.",
+            "transliteration": "ar-rihla laa tantahii — kullama saafarta wajadta asraar jadiida"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "تَذَكَّر: \"السَّفَر يُوسِّع العَقل\" — وَاللُّغَة تُوسِّعُهُ أَكثَر",
+            "english": "Remember: \"Travel broadens the mind\" — and language broadens it more.",
+            "transliteration": "tadhakkar: 'as-safar yuwassi' al-'aql' — wal-lugha tuwassi'uh akthar",
+            "teachWord": "moon_w15"
           },
           {
             "speaker": "player",
@@ -7151,14 +7235,14 @@
             "arabic": "يَمين — right، يَسار — left",
             "english": "Yamiin — right, yasaar — left.",
             "transliteration": "yamiin — right, yasaar — left",
-            "teachWord": "right"
+            "teachWord": "right_1"
           },
           {
             "speaker": "npc",
             "arabic": "أَمام — front، خَلْف — behind",
             "english": "Amaam — front, khalf — behind.",
             "transliteration": "amaam — front, khalf — behind",
-            "teachWord": "front"
+            "teachWord": "p_0746"
           },
           {
             "speaker": "player",
@@ -7719,7 +7803,7 @@
             "arabic": "ثَوْب — dress، قَميص — shirt",
             "english": "Thawb — dress, qamiis — shirt.",
             "transliteration": "thawb — dress, qamiis — shirt",
-            "teachWord": "dress",
+            "teachWord": "dress_w4",
             "inlineVocab": [
               {
                 "wordId": "dress",
@@ -9185,6 +9269,41 @@
             "teachWord": "star_w16"
           }
         ]
+      },
+      {
+        "id": "rashid_sea_proverbs",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "البَحر يُعَلِّم الصَّبر — لا يَمكُنُك إِجبارُ الرِّيح",
+            "english": "The sea teaches patience — you cannot force the wind.",
+            "transliteration": "al-bahr yu'allim as-sabr — laa yumkinuk ijbaar ar-riih"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مَثَل: \"سافِر تَجِد خَلَفاً عَمَّن تُفارِق\" — السَّفَر يُعَوِّض",
+            "english": "Proverb: \"Travel and you will find a substitute for those you leave\" — travel compensates.",
+            "transliteration": "mathal: 'saafir tajid khalafan 'amman tufaariq' — as-safar yu'awwid",
+            "teachWord": "moon_w15"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَ\"دَلتا\" النِّيل جاءَت مِن الحَرف اليوناني \"دِلتا\" — لَكِن العَرَب طَوَّروا الجُغرافِيا",
+            "english": "The Nile delta got its name from the Greek letter \"delta\" — but Arabs developed geography.",
+            "transliteration": "wa \"delta\" an-niil jaa'at min al-harf al-yunaani \"delta\""
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "شُكراً يا رَبّان!",
+                "english": "Thank you, captain!",
+                "next": null
+              }
+            ]
+          }
+        ]
       }
     ],
     "personality": {
@@ -9491,7 +9610,7 @@
             "arabic": "سَمَك — هَذا ما أَبيع",
             "english": "Fish — this is what I sell.",
             "transliteration": "samak — haadha maa abii'",
-            "teachWord": "fish_1",
+            "teachWord": "fish_food_1",
             "inlineVocab": [
               {
                 "wordId": "fish_1",
@@ -10961,6 +11080,41 @@
             "teachWord": "sleep_1"
           }
         ]
+      },
+      {
+        "id": "abbas_justice",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "العَدلُ أَساسُ المُلك — هَذا مَبدَأ الحُكم",
+            "english": "Justice is the foundation of rule — this is the principle of governance.",
+            "transliteration": "al-'adl asaas al-mulk — haadha mabda' al-hukm"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قاضٍ — القاضي يَحكُم بِالعَدل. وَكَلِمَة \"cadi\" الإنجليزِيَّة مِنها",
+            "english": "Qaadi — the judge rules with justice. The English \"cadi\" comes from this word.",
+            "transliteration": "qaadin — al-qaadi yahkum bil-'adl",
+            "teachWord": "right_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "في بَغداد العَبّاسِيَّة كانَ القُضاة مُستَقِلِّين — نِظام قانوني عَادِل",
+            "english": "In Abbasid Baghdad, judges were independent — a fair legal system.",
+            "transliteration": "fii baghdaad al-'abbaasiyya kaana al-qudaat mustaqilliin"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "العَدل قَبلَ كُلّ شَيء! شُكراً وَزير",
+                "english": "Justice above all! Thank you, vizier.",
+                "next": null
+              }
+            ]
+          }
+        ]
       }
     ],
     "personality": {
@@ -11588,6 +11742,36 @@
             "teachWord": "new_1"
           }
         ]
+      },
+      {
+        "id": "aisha_women_scholars",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هَل تَعرِف أَنَّ النِّساء العَرَبِيّات كُنَّ عالِمات كَبيرات؟",
+            "english": "Did you know that Arab women were great scholars?",
+            "transliteration": "hal ta'rif anna an-nisaa' al-arabiyyaat kunna 'aalimaat kabiraat?"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "خَيزُران — أُمّ هارون الرَّشيد — كانَت مِن أَقوَى النِّساء في التّاريخ",
+            "english": "Khayzuran — mother of Harun al-Rashid — was one of the most powerful women in history.",
+            "transliteration": "khayzuraan — umm haaroon ar-rashiid — kaanat min aqwaa an-nisaa' fit-taariikh",
+            "teachWord": "family_mother",
+            "culturalNote": "Khayzuran (d. 789 CE), mother of Harun al-Rashid, wielded enormous political power in the Abbasid caliphate. Lubna of Cordoba (d. 984) ran the royal library of 400,000 volumes. Fatima al-Fihri (d. 880) founded al-Qarawiyyin — the world's oldest continuously operating university."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "النِّساء العالِمات! مُلهِم. شُكراً",
+                "english": "Women scholars! Inspiring. Thank you.",
+                "next": null
+              }
+            ]
+          }
+        ]
       }
     ],
     "personality": {
@@ -12171,6 +12355,42 @@
             "english": "Learn: difficult — because poetry is difficult but its reward is the greatest reward!",
             "transliteration": "Ta'allam: sa'b — li-anna ash-shi'r sa'bun wa laakin jaa'izatuhu a'zam jaa'iza!",
             "teachWord": "difficult_1"
+          }
+        ]
+      },
+      {
+        "id": "rumi_loanwords_poetry",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "عُدتَ! الشِّعرُ يَنتَظِرُك. لِنَتَكَلَّم عَن الأَلفاظ",
+            "english": "You're back! Poetry awaits you. Let's talk about words.",
+            "transliteration": "'udta! ash-shi'r yantaziruk. linatakallamm 'an al-alfaaz"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "\"risk\" الإنجليزِيَّة جاءَت مِن العَرَبِيَّة \"رِزق\" — الرَّزق الَّذي يُقَسِّمُه الله",
+            "english": "The English \"risk\" came from Arabic \"rizq\" — the provision God distributes.",
+            "transliteration": "\"risk\" al-injliiziyya jaa'at min al-arabiyya \"rizq\"",
+            "teachWord": "beautiful_1",
+            "culturalNote": "The English word \"risk\" traces to Arabic rizq (رِزق), meaning livelihood or God's provision. Arab traders in the medieval Mediterranean used it for the chance of maritime loss — European merchants adopted the term along with the trade practices."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَ\"check\" في البَنك جاءَت مِن \"صَكّ\" العَرَبِيَّة — وَثيقَة مالِيَّة",
+            "english": "And bank \"check\" came from Arabic \"sakk\" — a financial document.",
+            "transliteration": "wa \"check\" fil-bank jaa'at min \"sakk\" al-arabiyya — wathiiqa maaliyya"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الكَلِمات تُسافِر مِثلَنا! شُكراً",
+                "english": "Words travel like us! Thank you.",
+                "next": null
+              }
+            ]
           }
         ]
       }
@@ -12792,6 +13012,35 @@
             "teachWord": "tomorrow_1"
           }
         ]
+      },
+      {
+        "id": "imam_arabic_unique",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "العَرَبِيَّة لُغَة الضَّاد — حَرف الضَّاد فَريد في العَرَبِيَّة وَحدَها",
+            "english": "Arabic is the language of the Daad — the Daad letter is unique to Arabic alone.",
+            "transliteration": "al-arabiyya lughat ad-daad — harf ad-daad fariid fil-arabiyya wahdaha"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لا تَوجَد في أَيّ لُغَة أُخرى — هَذا يَجعَل العَرَبِيَّة فَريدَة",
+            "english": "It exists in no other language — this makes Arabic unique.",
+            "transliteration": "laa tujad fii ayy lugha ukhraa — haadha yaj'al al-arabiyya fariida",
+            "teachWord": "salaam"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "لُغَة الضَّاد! فَخور بِتَعَلُّمِها",
+                "english": "Language of the Daad! Proud to learn it.",
+                "next": null
+              }
+            ]
+          }
+        ]
       }
     ],
     "personality": {
@@ -13051,6 +13300,142 @@
             ]
           }
         ]
+      },
+      {
+        "id": "topic_return_sweets",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مَرحَباً ثانِيَة! اليَوم نَتَعَلَّم الحَلَويّات",
+            "english": "Welcome back! Today we learn sweets.",
+            "transliteration": "marhaban thaaniya! al-yawm nata'allam al-halawiyyaat"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "سُكَّر — وَكَلِمَة \"sugar\" الإنجليزِيَّة جاءَت مِن \"sukkar\" العَرَبِيَّة",
+            "english": "Sukkar — sugar. The English word \"sugar\" came from Arabic \"sukkar\".",
+            "transliteration": "sukkar — wa kalima \"sugar\" al-injliiziyya jaa'at min \"sukkar\" al-arabiyya",
+            "teachWord": "bread_1",
+            "culturalNote": "\"Sugar\" traces through Arabic sukkar (سُكَّر) from Sanskrit sharkara. Arab merchants introduced sugar refining to Europe in the medieval period. The word \"candy\" also comes from Arabic qand (قَنْد, crystallized sugar)."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "حَلوى — كُلّ شَيء حُلو! مِن \"حَلال\" وَ\"حَلاوَة\"",
+            "english": "Halwa — sweets! Related to halaal and halaawa (sweetness).",
+            "transliteration": "halwaa — kull shay' hulw! min \"halaal\" wa \"halaawa\""
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "اللَّسان يُريد حَلوى الآن! شُكراً",
+                "english": "My tongue wants sweets now! Thank you.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_cooking2",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً مَرَّة ثانِيَة! الفُرن ساخِن وَعِندي دَرس جَديد",
+            "english": "Welcome again! The oven is hot and I have a new lesson.",
+            "transliteration": "ahlan marra thaaniya! al-furn saakhin wa 'indii dars jadiid"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قَهوَة — المَشروب المُقَدَّس في العالَم العَرَبي",
+            "english": "Qahwa — coffee, the sacred drink in the Arab world.",
+            "transliteration": "qahwa — al-mashrob al-muqaddas fil-'aalam al-'arabii",
+            "teachWord": "tea_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"coffee\" الإنجليزِيَّة جاءَت مِن \"قَهوَة\" العَرَبِيَّة",
+            "english": "The English word \"coffee\" came from Arabic \"qahwa\".",
+            "transliteration": "wa kalima \"coffee\" al-injliiziyya jaa'at min \"qahwa\" al-arabiyya",
+            "culturalNote": "\"Coffee\" derives from Arabic qahwa (قَهوَة). Coffee originated in Ethiopia but Arab merchants popularized it worldwide from 15th century Yemen. The first coffeehouses (qahwakhaana) opened in Mecca around 1450 CE, creating the world's first \"café culture\"."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الآن أُريدُ قَهوَة! شُكراً ياسمين",
+                "english": "Now I want coffee! Thank you, Yasmin.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_traditions",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هَل تَعرِف \"رَمَضان\"؟ شَهر الصِّيام وَالعَطاء",
+            "english": "Do you know \"Ramadan\"? The month of fasting and giving.",
+            "transliteration": "hal ta'rif \"ramadaan\"? shahr as-siyaam wal-'ataa'"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "فِي رَمَضان نَأكُل \"سُحور\" قَبلَ الفَجر وَ\"إِفطار\" عِندَ الغُروب",
+            "english": "In Ramadan we eat \"suhoor\" before dawn and \"iftar\" at sunset.",
+            "transliteration": "fii ramadaan na'kul \"suhoor\" qabl al-fajr wa \"iftaar\" 'inda al-ghuroob",
+            "teachWord": "day_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"مُهمَّش\" تَعني الحَرَكات فَوق الحُروف — مِنها جاءَت harakat",
+            "english": "Vowel marks in Arabic are called harakat — \"movements\" over letters.",
+            "transliteration": "harakat al-huroof — harakaat — \"movements\" fawq al-huroof"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "رَمَضان مُبارَك! شُكراً ياسمين",
+                "english": "Ramadan Mubarak! Thank you, Yasmin.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_bread_culture",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الخُبز في العَرَبِيَّة — \"عَيْش\" في مِصر — أَي \"حَياة\"",
+            "english": "Bread in Egypt is called \"aysh\" — meaning \"life\".",
+            "transliteration": "al-khubz fil-arabiyya — \"'aysh\" fii misr — ay \"hayaat\""
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَفي الخَليج \"خُبز\" — نَفس الجَذر لِلعَيش وَالحَياة",
+            "english": "And in the Gulf \"khubz\" — the same root as 'aysh meaning life.",
+            "transliteration": "wa fil-khalij \"khubz\" — nafs al-jadhr lil-'aysh wal-hayaat",
+            "teachWord": "bread_1"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الخُبز حَياة! شُكراً ياسمين",
+                "english": "Bread is life! Thank you, Yasmin.",
+                "next": null
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -13301,6 +13686,137 @@
             ]
           }
         ]
+      },
+      {
+        "id": "topic_return_star_names",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "عُدتَ! هُنا أَسماء النُّجوم العَرَبِيَّة",
+            "english": "You're back! Here are Arabic star names.",
+            "transliteration": "'udta! hunaa asmaa' an-nujoom al-arabiyya"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الدَّبَران — النَّجم البُرتُقالي في الثَّور. بِالإنجليزِيَّة \"Aldebaran\"",
+            "english": "Al-Dabaraan — the orange star in Taurus. In English: \"Aldebaran\".",
+            "transliteration": "ad-dabaraan — an-najm al-burtuqaalii fit-thawr. bil-injliiziyya \"Aldebaran\"",
+            "teachWord": "star_w16",
+            "culturalNote": "Over 200 star names in modern astronomy come from Arabic: Aldebaran (الدَّبَران), Betelgeuse (يَد الجَوزاء), Rigel (رِجْل الجَبّار), Deneb (ذَنَب), Altair (الطّائِر). Arab astronomers mapped and named the sky from the 8th century onward."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَ\"Betelgeuse\" جاءَت مِن \"يَد الجَوزاء\" — يَد الجَبّار",
+            "english": "And \"Betelgeuse\" came from \"yad al-jawzaa'\" — the giant's hand.",
+            "transliteration": "wa \"Betelgeuse\" jaa'at min \"yad al-jawzaa'\" — yad al-jabbaar"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "النُّجوم تَتَكَلَّم عَرَبي! شُكراً زَين",
+                "english": "The stars speak Arabic! Thank you, Zain.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_math",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "عُدتَ يا طالِب! النُّجوم تَنتَظِر دَراسَتَنا",
+            "english": "You returned, student! The stars await our study.",
+            "transliteration": "'udta yaa taalib! an-nujoom tantazir diraasatanaa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "جَبر — اِبتَكَرَه الخَوارِزمي في بَغداد سَنَة ٨٣٠ مِيلادِيَّة",
+            "english": "Jabr — algebra, invented by al-Khwarizmi in Baghdad in 830 CE.",
+            "transliteration": "jabr — ibtakarahu al-khawaarizmi fii baghdaad sana 830 miilaadiyya",
+            "teachWord": "num_2",
+            "culturalNote": "Al-Khwarizmi's book \"Al-Kitab al-Mukhtasar fi Hisab al-Jabr wal-Muqabala\" (830 CE) gave us both \"algebra\" (from al-jabr) and the word \"algorithm\" (from his Latinized name Algoritmi). His work formed the basis of all modern mathematics."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"algorithm\" جاءَت مِن اِسمِه — الخَوارِزمي يُلفَظ بِاللّاتينِيَّة \"Algoritmi\"",
+            "english": "\"Algorithm\" came from his name — al-Khwarizmi was pronounced \"Algoritmi\" in Latin.",
+            "transliteration": "wa kalima \"algorithm\" jaa'at min ismihi — al-khawaarizmi yulafaz bil-laatiiniyya \"Algoritmi\""
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الجَبر وَالخَوارِزمِيَّات! شُكراً زَين",
+                "english": "Algebra and algorithms! Thank you, Zain.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_navigation",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الإِسطِرلاب — أَداة المُنَجِّمين العَرَب لِقياس النُّجوم",
+            "english": "Al-Istirllab — the astrolabe, the Arab astronomers' tool for measuring stars.",
+            "transliteration": "al-istirllab — adaatu al-munajjimiin al-arab liqiyaas an-nujoom",
+            "teachWord": "star_w16",
+            "culturalNote": "The astrolabe (الإِسطِرلاب, from Greek) was perfected by Arab astronomers. By the 9th century, Muslim scholars had built astrolabes with 1,000+ star positions. It solved problems of time, prayer direction (qibla), and navigation — a pocket-sized computer of the medieval world."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "بِالإِسطِرلاب يُمكِنُك مَعرِفَة وَقت الصَّلاة أَينَما كُنتَ في العالَم",
+            "english": "With the astrolabe you can know prayer time wherever you are in the world.",
+            "transliteration": "bil-istirllab yumkinuka ma'rifat waqt as-salaa aynamaa kunta fil-'aalam"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عِلم وَدين في آنٍ مَعاً! شُكراً زَين",
+                "english": "Science and faith together! Thank you, Zain.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_time",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "وَقت — هَذِهِ الكَلِمَة مُهِمَّة لِلفَلَكي",
+            "english": "Waqt — time. This word is essential for the astronomer.",
+            "transliteration": "waqt — haadhihi al-kalima muhimma lil-falakii",
+            "teachWord": "day_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العَرَب قَسَّموا اللَّيل إلى سَاعات وَالسّاعَة إلى دَقائِق — قَبلَ أَوروبّا بِقُرون",
+            "english": "Arabs divided the night into hours and the hour into minutes — centuries before Europe.",
+            "transliteration": "al-arab qassamuu al-layl ilaa saa'aat was-saa'a ilaa daqaa'iq — qabl urubbaa bi-quroon"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الوَقت عِلم! شُكراً زَين",
+                "english": "Time is a science! Thank you, Zain.",
+                "next": null
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -13516,6 +14032,143 @@
                 "arabic": "عَوْدَة",
                 "english": "Return",
                 "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_colors2",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مَرحَباً! لِنَتَعَلَّم أَلواناً أَكثَر مِن السَّجّادات",
+            "english": "Welcome! Let's learn more colors from the carpets.",
+            "transliteration": "marhaban! linata'allam alwaanan akthar min as-sajjaadaat"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَحمَر — لَونُ الدَّم وَالرُّمّان وَالشَّجاعَة",
+            "english": "Ahmar — red, the color of blood, pomegranate, and courage.",
+            "transliteration": "ahmar — lawnul-dam war-rummaan wash-shajaa'a",
+            "teachWord": "beautiful_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَزرَق — لَونُ السَّماء وَالبَحر. وَ\"أُزَيرِق\" اِسم لِلأَزرَق الفاتِح",
+            "english": "Azraq — blue, the color of sky and sea.",
+            "transliteration": "azraq — lawnus-samaa' wal-bahr."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَخضَر — لَونُ الجَنَّة في الإِسلام وَالنَّباتات",
+            "english": "Akhdar — green, the color of paradise in Islam and plants.",
+            "transliteration": "akhdar — lawnal-janna fil-islam wan-nabaataat",
+            "culturalNote": "Green (أَخضَر, akhdar) holds special significance in Islam — it is the color associated with paradise (al-janna). The Prophet's banner was green, and many mosque domes are painted green."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أَلوان جَميلَة! شُكراً",
+                "english": "Beautiful colors! Thank you.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_trade2",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً وَسَهلاً مَرَّة ثانِيَة! اليَوم نَتَعَلَّم التِّجارَة",
+            "english": "Welcome back! Today we learn trade vocabulary.",
+            "transliteration": "ahlan wa sahlan marra thaaniya! al-yawm nata'allam at-tijaara"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "سِعر — كَم سِعره؟ هَذا السُّؤال في كُلّ سوق",
+            "english": "Si'r — price. How much is it? This question is in every market.",
+            "transliteration": "si'r — kam si'ruh? haadha as-su'aal fii kull suuq",
+            "teachWord": "p_0680"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"tariff\" الإنجليزِيَّة جاءَت مِن العَرَبِيَّة \"تَعريفَة\" — رُسوم التِّجارَة",
+            "english": "The English word \"tariff\" came from Arabic \"ta'rifa\" — trade fees.",
+            "transliteration": "wa kalima \"tariff\" al-injliiziyya jaa'at min al-arabiyya \"ta'rifa\"",
+            "culturalNote": "\"Tariff\" traces to Arabic ta'rifa (تَعرِفَة, price list/notification). Arab merchants in the medieval Mediterranean standardized many trade practices that European merchants then adopted — including the use of written contracts (sakk, which became \"cheque/check\")."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "عَلَّمتَني الكَثير! شُكراً جَمال",
+                "english": "You taught me much! Thank you, Jamal.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_weaving",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "نَسيج — فِعل النَّسج. وَمِنهُ جاءَت \"magazine\" بِالإنجليزِيَّة؟",
+            "english": "Nasij — the act of weaving. And from this came \"magazine\" in English?",
+            "transliteration": "nasiij — fi'l an-nasj."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "لا! \"magazine\" جاءَت مِن العَرَبِيَّة \"مَخزَن\" — مَكان لِتَخزين الأَشياء",
+            "english": "No! \"Magazine\" came from Arabic \"makhzan\" — a storage place.",
+            "transliteration": "laa! \"magazine\" jaa'at min al-arabiyya \"makhzan\" — makaan litakhziil al-ashyaa'",
+            "teachWord": "cloth_w42",
+            "culturalNote": "\"Magazine\" derives from Arabic makhzan (مَخزَن, warehouse/storage), via Italian magazzino. The same root gives us \"Maghreb\" (al-Maghrib, the west) and the French word \"magasin\" (store). The publishing use — \"magazine\" as a repository of articles — preserves the storage metaphor."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "المَخزَن أَصبَحَ مَجَلَّة! شُكراً جَمال",
+                "english": "The warehouse became a magazine! Thank you, Jamal.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_geometry",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "كُلّ سَجّادَة هِيَ رِياضِيّات! مَثَّلَث، مُرَبَّع، دائِرَة",
+            "english": "Every carpet is mathematics! Triangle, square, circle.",
+            "transliteration": "kull sajjaada hiya riyaadiyyaat! muthalath, murabba', daa'ira"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "\"algebra\" و\"algorithm\" مِن العَرَبِيَّة — العَرَب أَعطَونا الرِّياضِيّات الحَديثَة",
+            "english": "\"Algebra\" and \"algorithm\" come from Arabic — Arabs gave us modern mathematics.",
+            "transliteration": "\"algebra\" wa \"algorithm\" min al-arabiyya — al-arab a'atawna ar-riyaadiyyaat al-hadiitha",
+            "teachWord": "num_1"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "السَّجّاد وَالرِّياضِيّات! شُكراً",
+                "english": "Carpets and math! Thank you.",
+                "next": null
               }
             ]
           }
@@ -13746,6 +14399,137 @@
             ]
           }
         ]
+      },
+      {
+        "id": "topic_return_sea_vocab",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "عُدتَ! هُنا دَرس جَديد عَن البَحر",
+            "english": "You're back! Here's a new lesson about the sea.",
+            "transliteration": "'udta! hunaa dars jadiid 'an al-bahr"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "بَحْر — هُوَ المَعنى الأَصلي لِكَلِمَة \"الجَوف\"",
+            "english": "Bahr — the sea. The word also gives us \"bahrain\" (two seas).",
+            "transliteration": "bahr — huwa al-ma'naa al-aslii. \"al-bahrayn\" ta'nii al-bahrayn",
+            "teachWord": "water_w13",
+            "culturalNote": "\"Bahrain\" (البَحرَيْن) literally means \"two seas\" in Arabic — referring to the freshwater springs that well up through the Gulf's saltwater floor. Arab merchants knew this geography precisely for navigation."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"admiral\" الإنجليزِيَّة جاءَت مِن \"أَمير البَحر\"",
+            "english": "And the English word \"admiral\" came from Arabic \"amir al-bahr\" (prince of the sea).",
+            "transliteration": "wa kalima \"admiral\" al-injliiziyya jaa'at min \"amiir al-bahr\""
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "مُذهِل! شُكراً نادِيَة",
+                "english": "Astonishing! Thank you Nadia.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_numbers_port",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مَرحَباً مَرَّة ثانِيَة! مِيناؤنا مَشغول اليَوم",
+            "english": "Welcome again! Our port is busy today.",
+            "transliteration": "marhaban marra thaaniya! miinaau'naa mashghool al-yawm"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "عَشَرَة سُفُن في المِيناء — عَشَرَة هُوَ رَقم مُهِمّ في التِّجارَة",
+            "english": "Ten ships in the port — ten is an important number in trade.",
+            "transliteration": "'ashara sufun fil-miinaaa' — 'ashara huwa raqm muhimm fit-tijaara",
+            "teachWord": "num_3"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الأَرقامُ العَرَبِيَّة التي تَستَخدِمُها أَوروبّا جاءَت مِن العَرَب",
+            "english": "The Arabic numerals Europe uses came from the Arabs.",
+            "transliteration": "al-arqaamu al-arabiyya allati tastakhdimuha urubbaa jaa'at min al-arab",
+            "culturalNote": "Arabic numerals (١٢٣...) were adopted by Europe in the 10th-12th centuries through Arab scholars in Andalusia, particularly Al-Khwarizmi's \"On Hindu-Arabic Numerals.\" Before this, Europe used Roman numerals (I, V, X...) — nearly impossible for complex calculation."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الأَرقامُ العَرَبِيَّة! شُكراً نادِيَة",
+                "english": "Arabic numerals! Thank you, Nadia.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_ships",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "سَفينَة — أَجمَل كَلِمَة في المِيناء. كَم سَفينَة تَرى؟",
+            "english": "Safiina — the most beautiful word in the port. How many ships do you see?",
+            "transliteration": "safiina — ajmal kalima fil-miinaaa. kam safiina taraa?",
+            "teachWord": "water_w13"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "المَركَب العَرَبي \"الدّاو\" أَبحَرَ مِن أَفريقيا إلى الصّين وَعادَ — ١٠٠٠ سَنَة قَبلَ كولومبوس",
+            "english": "The Arab \"dhow\" ship sailed from Africa to China and back — 1,000 years before Columbus.",
+            "transliteration": "al-markab al-arabii \"ad-daaw\" abhara min afriqia ilaa as-siin wa 'aada",
+            "culturalNote": "The Arab dhow (داو) was the dominant vessel of the Indian Ocean trade network from the 8th-19th centuries. Arab navigator Ahmad ibn Majid (15th c.) wrote 40+ navigation treatises — and guided Vasco da Gama to India in 1498."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "العَرَب بَحّارَة عُظَماء! شُكراً",
+                "english": "Arabs were great sailors! Thank you.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_greetings_port",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "آخِر دَرس! كَيف تُحَيِّي البَحّارَة؟",
+            "english": "Final lesson! How do you greet sailors?",
+            "transliteration": "aakhir dars! kayf tuhayiii al-bahhaarah?"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "مَرحَباً — أَصلُها \"رَحب\" أَي سَعَة وَفُسحَة — أَهلاً بِك",
+            "english": "Marhaban — from rahb, meaning wide space — you are welcome here.",
+            "transliteration": "marhaban — asluha \"rahb\" ay sa'a wa fusha — ahlan bik",
+            "teachWord": "salaam"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "مَرحَباً يا نادِيَة!",
+                "english": "Marhaban, Nadia!",
+                "next": null
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -13896,7 +14680,7 @@
             "arabic": "شَجَرَة — الصَّبر كَالشَّجَرَة، يَنمو بِبُطء",
             "english": "Tree — patience is like a tree, it grows slowly.",
             "transliteration": "shajara — as-sabr kash-shajara, yanmuu bibu't'",
-            "teachWord": "tree_w18"
+            "teachWord": "tree_w27"
           },
           {
             "speaker": "player",
@@ -13993,6 +14777,143 @@
                 "arabic": "أَنا مُستَعِدّ",
                 "english": "I am ready",
                 "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_wisdom",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "عُدتَ. الجَبَلُ لا يَنسى مَن طَلَبَ الحِكمَة",
+            "english": "You returned. The mountain never forgets those who sought wisdom.",
+            "transliteration": "'udta. al-jabal laa yansaa man talaba al-hikma"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "صَبر — الصَّبرُ مِفتاحُ الفَرَج. كَلِمَة عَظيمَة",
+            "english": "Sabr — patience is the key to relief. A great word.",
+            "transliteration": "sabr — as-sabru miftaahu al-faraj. kalima 'aziima",
+            "teachWord": "write_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَقَولُ المَثَل: \"الصَّبرُ مِفتاحُ الفَرَج\" — بِالعَرَبِيَّة يُصبِح شِعراً",
+            "english": "And the proverb: \"Patience is the key to relief\" — in Arabic it becomes poetry.",
+            "transliteration": "wa qawlu al-mathal: \"as-sabru miftaahu al-faraj\" — bil-arabiyya yusbih shi'ran",
+            "culturalNote": "Arabic proverbs (أَمثال, amthaal) are a cornerstone of classical learning. The proverb \"الصَّبرُ مِفتاحُ الفَرَج\" (patience is the key to relief) appears in Imam al-Ghazali's 12th-century Ihya Ulum al-Din."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الحِكمَة مَوجودَة هُنا. شُكراً إِدريس",
+                "english": "Wisdom lives here. Thank you, Idris.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_philosophy",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الجَبَل يَرحَّب بِك مَرَّة أُخرى. لِنَتَأَمَّل",
+            "english": "The mountain welcomes you again. Let us reflect.",
+            "transliteration": "al-jabal yurahahib bik marra ukhraa. linata'ammal"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "حِكمَة — وَكَلِمَة \"حَكيم\" تَعني الحَكيم أَو الطَّبيب في العَرَبِيَّة القَديمَة",
+            "english": "Hikma — wisdom. And \"hakim\" means wise man or physician in classical Arabic.",
+            "transliteration": "hikma — wa kalima \"hakiim\" ta'nii al-hakiim aw at-tabiib fil-arabiyya al-qadiima",
+            "teachWord": "beautiful_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "ابن سينا لَقَّبوه \"الشَّيخ الرَّئيس\" — رَئيس الحُكَماء",
+            "english": "Ibn Sina was titled \"al-Shaykh al-Ra'is\" — Chief of the Wise.",
+            "transliteration": "ibn siinaa laqqabuuh \"ash-shaykh ar-ra'iis\" — ra'iis al-hukamaa'"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَ\"elixir\" الإنجليزِيَّة جاءَت مِن الكيمياء العَرَبِيَّة \"الإِكسير\"",
+            "english": "And English \"elixir\" came from Arabic alchemy: \"al-iksir\".",
+            "transliteration": "wa \"elixir\" al-injliiziyya jaa'at min al-kiimyaa' al-arabiyya \"al-iksir\"",
+            "culturalNote": "\"Elixir\" derives from Arabic al-iksir (الإِكسير), itself from Greek xerion. Arab alchemists like Jabir ibn Hayyan (8th c.) developed systematic chemistry — the word \"alchemy\" itself comes from Arabic al-kimiya (الكيمياء), from Coptic kemi (black earth/Egypt)."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "العِلمُ العَرَبي في كُلّ مَكان! شُكراً إِدريس",
+                "english": "Arabic science is everywhere! Thank you, Idris.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_writing",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الكِتابَة العَرَبِيَّة تَسير مِن اليَمين إلى اليَسار — كَالشَّمس تَغرُب",
+            "english": "Arabic writing goes from right to left — like the sun setting.",
+            "transliteration": "al-kitaaba al-arabiyya tasiir min al-yamiin ilaa al-yasaar — kashams taghrub",
+            "teachWord": "write_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "جَذر \"ك-ت-ب\": كَتَبَ — يَكتُب — كِتاب — كاتِب — مَكتَبَة — مَكتَب",
+            "english": "Root K-T-B: kataba (he wrote) — yaktub (he writes) — kitaab (book) — kaatib (writer) — maktaba (library) — maktab (office).",
+            "transliteration": "jadhr k-t-b: kataba — yaktub — kitaab — kaatib — maktaba — maktab",
+            "culturalNote": "The Arabic trilateral root K-T-B (ك-ت-ب) demonstrates the system's power: from three letters, the language generates dozens of related words. Learning one root unlocks a whole vocabulary family — this is why Arabic learners say \"once you see the roots, the language opens up.\""
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الجُذور تَفتَح العالَم! شُكراً إِدريس",
+                "english": "Roots open the world! Thank you, Idris.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_meditation",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "اِجلِس. خُذ نَفَساً. \"تَفَكَّر\" — العَقل يَحتاج الهُدوء",
+            "english": "Sit. Take a breath. \"Tafakkar\" — the mind needs quiet.",
+            "transliteration": "ijlis. khudh nafasan. \"tafakkar\" — al-'aql yahtaaj al-huduu'"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "كَلِمَة \"تَفَكَّر\" تَعني التَّأَمُّل العَميق — فِكر عَميق",
+            "english": "\"Tafakkar\" means deep reflection — profound thought.",
+            "transliteration": "kalima \"tafakkar\" ta'nii at-ta'ammul al-'amiiq — fikr 'amiiq",
+            "teachWord": "write_1"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "سَأَتَفَكَّر. شُكراً",
+                "english": "I will reflect. Thank you.",
+                "next": null
               }
             ]
           }
@@ -14230,6 +15151,143 @@
             ]
           }
         ]
+      },
+      {
+        "id": "topic_return_travel_vocab",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مَرحَباً! الخُيول تَفرَح بِرُجوعِك",
+            "english": "Welcome! The horses are happy at your return.",
+            "transliteration": "marhaban! al-khuyuul tafrahu bi-rujooo'ik"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قافِلَة — مَجموعَة مِن الجِمال وَالتُّجّار",
+            "english": "Qaafila — a caravan, a group of camels and traders.",
+            "transliteration": "qaafila — majmoo'a min al-jimaal wat-tujjaar",
+            "teachWord": "night_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"caravan\" الإنجليزِيَّة جاءَت مِن الفارِسِيَّة عَن طَريق العَرَبِيَّة: \"قَرواَن\"",
+            "english": "\"Caravan\" in English came through Arabic from Persian: \"qirwaan\".",
+            "transliteration": "\"caravan\" al-injliiziyya jaa'at min al-faarisiyya 'an tariiq al-arabiyya"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "طَريق الحَرير كانَ أَطوَل طَريق تِجاري في التّاريخ — مِن الصّين إلى الأَندَلُس",
+            "english": "The Silk Road was the longest trade route in history — from China to Andalusia.",
+            "transliteration": "tariiq al-hariir kaana atwal tariiq tijaarii fit-taariikh — min as-siin ilaa al-andalus",
+            "culturalNote": "The Silk Road (طَريق الحَرير) connected China to Andalusia. Arab merchants were its backbone from the 8th-13th centuries, carrying silk, spices, paper, and knowledge — along with Arabic vocabulary that remains in dozens of languages today."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أُريدُ السَّفَر يَوماً! شُكراً يارا",
+                "english": "I want to travel someday! Thank you, Yara.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_animals2",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مَرحَباً مَرَّة ثانِيَة! الإِسطَبل مَكان يُعَلِّم",
+            "english": "Welcome again! The stable is a place that teaches.",
+            "transliteration": "marhaban marra thaaniya! al-istab al-makaan yu'allim"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الحِصان العَرَبي الأَصيل — أَسرَع خَيل في العالَم القَديم",
+            "english": "The Arabian thoroughbred — the fastest horse in the ancient world.",
+            "transliteration": "al-hisaan al-arabii al-asiil — asra' khayl fil-'aalam al-qadiim",
+            "teachWord": "night_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "اللُّغَة العَرَبِيَّة عِندَها مِئَة اِسم لِلحِصان وَخَمسِمِئَة لِلأَسَد",
+            "english": "Arabic has one hundred names for the horse and five hundred for the lion.",
+            "transliteration": "al-lugha al-arabiyya 'indahaa mi'a ism lil-hisaan wa khamsumi'a lil-asad",
+            "culturalNote": "Classical Arabic's richness of vocabulary is legendary: reportedly 1,000+ words for camel and its states, 500+ for lion, 200+ for snake. This reflects the Bedouin oral tradition of precision in describing the natural world upon which survival depended."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "اللُّغَة العَرَبِيَّة غَنِيَّة جِدَّاً! شُكراً يارا",
+                "english": "Arabic is so rich! Thank you, Yara.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_desert",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الجَمَل — سَفينَة الصَّحراء — يُخزِّن الدَّهن في سَنامِه لَيسَ الماء",
+            "english": "The camel — ship of the desert — stores fat in its hump, not water.",
+            "transliteration": "al-jamal — safinat as-sahraa' — yukhazzin ad-dahn fii sanamih laysa al-maa'",
+            "teachWord": "day_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العَرَب سَمَّوا الجَمَل \"سَفينَة الصَّحراء\" — وَهُوَ وَسيلَة نَقلِهِم لِأَلفَي سَنَة",
+            "english": "Arabs called the camel \"ship of the desert\" — their transport for two thousand years.",
+            "transliteration": "al-arab sammaaw al-jamal \"safinat as-sahraa'\" — wa huwa wasiilat naqlihim li-alfay sana",
+            "culturalNote": "The camel's domestication around 3000 BCE transformed the Arabian peninsula. Classical Arabic has reportedly over 1,000 words related to camels and their states — reflecting the animal's centrality to Bedouin survival."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الجَمَل مُعجِزَة! شُكراً يارا",
+                "english": "The camel is a miracle! Thank you, Yara.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_geography",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "\"الجَزيرَة العَرَبِيَّة\" تَعني: الجَزيرَة — الأَرض المُحاطَة بِالماء",
+            "english": "\"Al-Jazira al-Arabiyya\" means: jazira — land surrounded by water (peninsula).",
+            "transliteration": "\"al-jazira al-arabiyya\" ta'nii: al-jaziira — al-ard al-muhaata bil-maa'"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "\"الجَزيرَة\" أَيضاً اِسم قَناة الأَخبار — مَعناها \"الجَزيرَة\"",
+            "english": "\"Al-Jazeera\" is also the news channel name — it means \"The Island/Peninsula\".",
+            "transliteration": "\"al-jazeera\" aydan ism qanaat al-akhbaar — ma'naaha \"al-jaziira\"",
+            "teachWord": "water_w13"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الجَزيرَة! فَهِمتُ. شُكراً يارا",
+                "english": "Al-Jazeera! I understand now. Thank you, Yara.",
+                "next": null
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -14445,6 +15503,144 @@
                 "arabic": "عَوْدَة",
                 "english": "Return",
                 "action": "return_to_hub"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_plants",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً! لِنَتَعَلَّم أَسماء النَّباتات اليَوم",
+            "english": "Welcome! Let's learn plant names today.",
+            "transliteration": "ahlan! linata'allam asmaa' an-nabaataat al-yawm"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَرد — الزَّهرَة الأَجمَل. وَكَلِمَة \"ward\" الإنجليزِيَّة جاءَت مِنها",
+            "english": "Ward — rose, the most beautiful flower.",
+            "transliteration": "ward — az-zahra al-ajmal.",
+            "teachWord": "tree_w27"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "نَخيل — شَجَرَة التَّمر. غِذاء الصَّحراء مُنذُ آلاف السِّنين",
+            "english": "Nakheeel — the date palm. Desert food for thousands of years.",
+            "transliteration": "nakhiil — shajarat at-tamr. ghidha' as-sahraa' mundhu alaaf as-siniin",
+            "teachWord": "sun_w14",
+            "culturalNote": "The date palm (نَخيل) was so essential to desert life that classical Arabic has over 360 words for different types of dates and stages of palm development. It provided food, timber, fiber, and shade."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الطَّبيعَة جَميلَة! شُكراً لَيلى",
+                "english": "Nature is beautiful! Thank you Leila.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_seasons",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "عُدتَ يا صَديقي! الفُصول تَتَغَيَّر وَالحَديقَة تَتَجَدَّد",
+            "english": "You returned, my friend! The seasons change and the garden renews.",
+            "transliteration": "'udta yaa sadiiqii! al-fusool tataghayar wal-hadiqa tatajaddad"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "رَبيع — فَصلُ الأَزهار وَالأَمَل",
+            "english": "Rabia — spring, the season of flowers and hope.",
+            "transliteration": "rabiia — faslu al-azhaar wal-amal",
+            "teachWord": "day_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "صَيف — الحَرارَة وَالعَمَل. شِتاء — المَطَر وَالرّاحَة",
+            "english": "Sayf — summer, heat and work. Shitaa' — winter, rain and rest.",
+            "transliteration": "sayf — al-haraara wal-'amal. shitaa' — al-matar war-raaha"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"monsoon\" الإنجليزِيَّة جاءَت مِن العَرَبِيَّة \"مَوسِم\" — المَوسِم",
+            "english": "The English word \"monsoon\" came from Arabic \"mawsim\" — the season.",
+            "transliteration": "wa kalima \"monsoon\" al-injliiziyya jaa'at min al-arabiyya \"mawsim\"",
+            "culturalNote": "\"Monsoon\" derives from Arabic mawsim (مَوسِم, season). Arab sailors in the Indian Ocean used the seasonal monsoon winds to navigate between Arabia, India, and East Africa — mastering these patterns by the 8th century CE."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الفُصول كَالحَياة. شُكراً لَيلى",
+                "english": "The seasons are like life. Thank you, Leila.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_water",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الماء حَياة! \"ماء\" — أَقصَر الكَلِمات وَأَهَمُّها",
+            "english": "Water is life! \"Maa'\" — the shortest word and the most important.",
+            "transliteration": "al-maa' hayaat! \"maa'\" — aqsar al-kalimaat wa ahammuha",
+            "teachWord": "water_w13"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قَناة — العَرَب بَنوا قَنوات الري في الأَندَلُس — لا تَزال تَعمَل",
+            "english": "Qanaat — the Arabs built irrigation canals in Andalusia — still working.",
+            "transliteration": "qanaah — al-arab banaw qanawaat ar-ray fii al-andalus — laa tazaal ta'mal",
+            "culturalNote": "The Arab Agricultural Revolution (8th-13th c.) transformed Spain: the Arabs introduced sophisticated irrigation systems (qanat, نهر), new crops (citrus, cotton, rice, sugarcane), and agricultural manuals. Andalusian gardens like the Generalife in Granada preserve this legacy."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الماء يَجمَع البَشَر! شُكراً لَيلى",
+                "english": "Water connects humanity! Thank you, Leila.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "topic_return_knowledge",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الحَديقَة تُعَلِّمُك الصَّبر — النَّباتات لا تَستَعجِل",
+            "english": "The garden teaches patience — plants do not hurry.",
+            "transliteration": "al-hadiqa tu'allimuk as-sabr — an-nabaataat laa tasta'jil"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قُل: \"الطَّبيعَة جَميلَة\" — أَربَع كَلِمات تَعلَّمتَها اليَوم",
+            "english": "Say: \"Nature is beautiful\" — four words you learned today.",
+            "transliteration": "qul: \"at-tabi'a jamiila\" — arba' kalimaat ta'allamtaha al-yawm",
+            "teachWord": "sun_w14"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "الطَّبيعَة جَميلَة! شُكراً لَيلى",
+                "english": "Nature is beautiful! Thank you, Leila.",
+                "next": null
               }
             ]
           }
@@ -15049,14 +16245,14 @@
             "arabic": "أَوَّلاً: تَشَرَّفنا — عِندَ المُقابَلَة الأولى",
             "english": "First: tasharrafnaa — when meeting for the first time.",
             "transliteration": "awwalan: tasharrafnaa — inda al-muqaabala al-uulaa",
-            "teachWord": "tasharrafnaa"
+            "teachWord": "salaam"
           },
           {
             "speaker": "npc",
             "arabic": "ثانِياً: حَيّاكَ الله — تَحِيَّة كَريمَة",
             "english": "Second: hayyaaka allaah — a noble greeting.",
             "transliteration": "thaaniyan: hayyaaka allaah — tahiyyatun kariima",
-            "teachWord": "hayyaaka_allaah"
+            "teachWord": "salaam"
           },
           {
             "speaker": "npc",
@@ -15159,28 +16355,28 @@
             "arabic": "أُمّ — هَذِهِ أَغلى كَلِمَة",
             "english": "Umm — this is the most precious word (mother).",
             "transliteration": "umm — haadhihi aghlaa kalima",
-            "teachWord": "umm"
+            "teachWord": "family_mother"
           },
           {
             "speaker": "npc",
             "arabic": "أَب — الرَّجُل الكَبير في البَيت",
             "english": "Ab — the elder man of the house (father).",
             "transliteration": "ab — ar-rajul al-kabiir fil-bayt",
-            "teachWord": "ab"
+            "teachWord": "family_father"
           },
           {
             "speaker": "npc",
             "arabic": "أَخ — مِثل صَديق لَكِن مِنَ الدَّم",
             "english": "Akh — like a friend but from blood (brother).",
             "transliteration": "akh — mithl sadiiq laakin mina ad-dam",
-            "teachWord": "akh"
+            "teachWord": "family_brother"
           },
           {
             "speaker": "npc",
             "arabic": "أُخت — البِنت مِن نَفس العائِلَة",
             "english": "Ukht — the girl from the same family (sister).",
             "transliteration": "ukht — al-bint min nafs al-'aa'ila",
-            "teachWord": "ukht"
+            "teachWord": "family_sister"
           }
         ]
       }
@@ -15286,21 +16482,21 @@
             "arabic": "واحِد — الرَّقم الأَوَّل",
             "english": "Waahid — the first number (one).",
             "transliteration": "waahid — ar-raqam al-awwal",
-            "teachWord": "waahid"
+            "teachWord": "num_1"
           },
           {
             "speaker": "npc",
             "arabic": "اِثنان — بَعدَ الواحِد",
             "english": "Ithnaan — after one (two).",
             "transliteration": "ithnaan — ba'da al-waahid",
-            "teachWord": "ithnaan"
+            "teachWord": "num_2"
           },
           {
             "speaker": "npc",
             "arabic": "ثَلاثَة — رَقمٌ مُبارَك",
             "english": "Thalaatha — a blessed number (three).",
             "transliteration": "thalaatha — raqmun mubaarak",
-            "teachWord": "thalaatha"
+            "teachWord": "num_3"
           }
         ]
       }
@@ -15406,21 +16602,21 @@
             "arabic": "فُلفُل — يُعطي الطَّعام حَرارَة",
             "english": "Fulful — it gives food heat (pepper).",
             "transliteration": "fulful — yu'tii at-ta'aam haraara",
-            "teachWord": "fulful"
+            "teachWord": "spice_w39"
           },
           {
             "speaker": "npc",
             "arabic": "زَعفَران — أَغلى بُهار في العالَم",
             "english": "Za'faraan — the most expensive spice in the world (saffron).",
             "transliteration": "za'faraan — aghlaa buhaar fil-'aalam",
-            "teachWord": "zafaraan"
+            "teachWord": "spice_w39"
           },
           {
             "speaker": "npc",
             "arabic": "خُبز — نَأكُلُهُ كُلَّ يَوم",
             "english": "Khubz — we eat it every day (bread).",
             "transliteration": "khubz — na'kuluhu kulla yawm",
-            "teachWord": "khubz"
+            "teachWord": "bread_1"
           }
         ]
       }
@@ -15523,21 +16719,21 @@
             "arabic": "ثَوب — المَلبَس التَّقليدي",
             "english": "Thawb — the traditional garment.",
             "transliteration": "thawb — al-malbas at-taqleedii",
-            "teachWord": "thawb"
+            "teachWord": "cloth_w42"
           },
           {
             "speaker": "npc",
             "arabic": "عَباءَة — رِداء طَويل وَفَضفاض",
             "english": "Abaaya — a long, loose cloak.",
             "transliteration": "abaaya — ridaa' tawiil wa fadfaad",
-            "teachWord": "abaaya"
+            "teachWord": "cloth_w42"
           },
           {
             "speaker": "npc",
             "arabic": "حِذاء — ما نَلبَسُهُ في الأَرجُل",
             "english": "Hidhaa — what we wear on our feet (shoes).",
             "transliteration": "hidhaa' — maa nalbasuhu fil-arjul",
-            "teachWord": "hidhaa"
+            "teachWord": "dress_w4"
           }
         ]
       }
@@ -15643,21 +16839,21 @@
             "arabic": "شَجَرَة — هِيَ أُمّ الظِّل",
             "english": "Shajara — she is the mother of shade (tree).",
             "transliteration": "shajara — hiya umm az-zill",
-            "teachWord": "shajara"
+            "teachWord": "tree_w27"
           },
           {
             "speaker": "npc",
             "arabic": "ماء — الحَياة نَفسُها",
             "english": "Maa' — life itself (water).",
             "transliteration": "maa' — al-hayaat nafsuhaa",
-            "teachWord": "maa"
+            "teachWord": "water_w13"
           },
           {
             "speaker": "npc",
             "arabic": "شَمس — تُنيرُ كُلَّ شَيء",
             "english": "Shams — it lights everything (sun).",
             "transliteration": "shams — tuniiru kulla shay'",
-            "teachWord": "shams"
+            "teachWord": "sun_w14"
           }
         ]
       }
@@ -15758,21 +16954,21 @@
             "arabic": "صَباح — أَوَّل الضَّوء",
             "english": "Sabaah — the first light (morning).",
             "transliteration": "sabaah — awwal ad-daw'",
-            "teachWord": "sabaah"
+            "teachWord": "day_1"
           },
           {
             "speaker": "npc",
             "arabic": "لَيل — عِندَما تَظهَر النُّجوم",
             "english": "Layl — when the stars appear (night).",
             "transliteration": "layl — indamaa tazhar an-nujuum",
-            "teachWord": "layl"
+            "teachWord": "night_1"
           },
           {
             "speaker": "npc",
             "arabic": "يَوم — مِنَ الشُّروق إلى الغُروب",
             "english": "Yawm — from sunrise to sunset (day).",
             "transliteration": "yawm — mina ash-shuruuq ilaa al-ghuruub",
-            "teachWord": "yawm"
+            "teachWord": "day_1"
           }
         ]
       }
@@ -15878,21 +17074,21 @@
             "arabic": "كَبير — مِثل الجَبَل",
             "english": "Kabiir — like the mountain (big).",
             "transliteration": "kabiir — mithl al-jabal",
-            "teachWord": "kabiir"
+            "teachWord": "big_1"
           },
           {
             "speaker": "npc",
             "arabic": "صَغير — مِثل الحَصى",
             "english": "Saghiir — like the pebbles (small).",
             "transliteration": "saghiir — mithl al-hasaa",
-            "teachWord": "saghiir"
+            "teachWord": "small_1"
           },
           {
             "speaker": "npc",
             "arabic": "جَميل — مِثل هَذا المَنظَر",
             "english": "Jamiil — like this view (beautiful).",
             "transliteration": "jamiil — mithl haadha al-manzar",
-            "teachWord": "jamiil"
+            "teachWord": "beautiful_1"
           }
         ]
       }
@@ -15997,21 +17193,21 @@
             "arabic": "بِسمِ الله — نَقولُها قَبلَ كُلّ شَيء",
             "english": "Bismillaah — we say it before everything (in God's name).",
             "transliteration": "bismillaah — naquuluhaa qabla kulli shay'",
-            "teachWord": "bismillaah"
+            "teachWord": "bismillah"
           },
           {
             "speaker": "npc",
             "arabic": "الحَمْدُ لِلَّه — شُكر لِلَّه عَلى نِعَمِه",
             "english": "Al-hamdu lillaah — thanks to God for His blessings.",
             "transliteration": "al-hamdu lillaah — shukr lillaah alaa ni'amihi",
-            "teachWord": "alhamdulillaah"
+            "teachWord": "alhamdulillah"
           },
           {
             "speaker": "npc",
             "arabic": "إِن شاءَ الله — عِندَما نَتَحَدَّث عَنِ المُستَقبَل",
             "english": "In shaa' allaah — when we speak about the future (God willing).",
             "transliteration": "in shaa' allaah — indamaa natahaddath anil-mustaqbal",
-            "teachWord": "inshaallaah"
+            "teachWord": "inshallah"
           }
         ]
       }
@@ -16116,21 +17312,21 @@
             "arabic": "سَمَك — مِنَ البَحر مُباشَرَة",
             "english": "Samak — straight from the sea (fish).",
             "transliteration": "samak — mina al-bahr mubaashara",
-            "teachWord": "samak"
+            "teachWord": "fish_food_1"
           },
           {
             "speaker": "npc",
             "arabic": "أَرُزّ — أَساس كُلّ وَجبَة",
             "english": "Aruzz — the base of every meal (rice).",
             "transliteration": "aruzz — asaas kulli wajba",
-            "teachWord": "aruzz"
+            "teachWord": "rice_1"
           },
           {
             "speaker": "npc",
             "arabic": "شاي — نَشرَبُهُ بَعدَ الأَكل",
             "english": "Shaay — we drink it after eating (tea).",
             "transliteration": "shaay — nashrabuhu ba'da al-akl",
-            "teachWord": "shaay"
+            "teachWord": "tea_1"
           }
         ]
       }
@@ -16235,21 +17431,21 @@
             "arabic": "حَضرَة — لَقَب اِحتِرام لِلمَلِك",
             "english": "Hadra — a title of respect for the king (Your Majesty).",
             "transliteration": "hadra — laqab ihtiraam lil-malik",
-            "teachWord": "hadra"
+            "teachWord": "p_0133"
           },
           {
             "speaker": "npc",
             "arabic": "أَمَرَ — فِعل المَلِك: أَمَرَ وَأَطَعنا",
             "english": "Amara — the king's verb: he commanded and we obeyed.",
             "transliteration": "amara — fi'l al-malik: amara wa ata'naa",
-            "teachWord": "amara"
+            "teachWord": "p_0407"
           },
           {
             "speaker": "npc",
             "arabic": "عَدل — أَهَمّ صِفَة لِلحاكِم",
             "english": "Adl — the most important quality for a ruler (justice).",
             "transliteration": "'adl — ahamm sifa lil-haakim",
-            "teachWord": "adl"
+            "teachWord": "right_1"
           }
         ]
       }
@@ -16284,9 +17480,121 @@
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "الرِّحلَة إلى المَعرِفَة تَبدَأ بِخُطوَة واحِدَة",
-            "english": "The journey to knowledge begins with a single step.",
-            "transliteration": "ar-rihla ilal-ma'rifa tabda' bi-khutwa waahida"
+            "arabic": "الرِّحلَة إلى المَعرِفَة تَبدَأ بِخُطوَة",
+            "english": "The journey to knowledge begins with a step.",
+            "transliteration": "ar-rihla ilaa al-ma'rifa tabda' bi-khutwa"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَنا مُسافِر. رَأَيتُ بِلاداً كَثيرَة وَتَعَلَّمتُ لُغاتٍ كَثيرَة",
+            "english": "I am a traveler. I have seen many lands and learned many languages.",
+            "transliteration": "ana musaafir. ra'aytu bilaadan kathiira wa ta'allamtu lughaat kathiira"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "العَرَبِيَّة — لُغَة الشِّعر وَالحِكمَة وَالعِلم",
+            "english": "Arabic — the language of poetry, wisdom, and science.",
+            "transliteration": "al-arabiyya — lughat ash-shi'r wal-hikma wal-'ilm"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أَخبِرني عَن رِحلاتِك",
+                "english": "Tell me about your travels",
+                "next": "traveler_stories"
+              },
+              {
+                "arabic": "عَلِّمني كَلِمَة",
+                "english": "Teach me a word",
+                "next": "traveler_teaches"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "traveler_stories",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "رَحَلتُ مِن الأَندَلُس إلى بَغداد — شَهرَيْن عَلى الجَمَل",
+            "english": "I traveled from Andalusia to Baghdad — two months on camel.",
+            "transliteration": "rahaltu min al-andalus ilaa baghdaad — shahrayn 'alaa al-jamal",
+            "culturalNote": "The medieval Islamic world was connected by vast trade and pilgrimage routes. Traveling from Cordoba in Andalusia (Spain) to Baghdad took months by camel caravan."
+          },
+          {
+            "speaker": "npc",
+            "arabic": "في كُلّ مَدينَة تَعَلَّمتُ كَلِمات جَديدَة — التُّجّار يَتَحَدَّثون العَرَبِيَّة في كُلّ مَكان",
+            "english": "In every city I learned new words — traders speak Arabic everywhere.",
+            "transliteration": "fii kull madiina ta'allamtu kalimaat jadiida — at-tujjaar yatahadathoon al-arabiyya fii kull makaan"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "مَدهِش! شُكراً",
+                "english": "Amazing! Thank you.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "traveler_teaches",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "سَفَر — هَذِهِ كَلِمَة مُهِمَّة لِلمُسافِر",
+            "english": "Safar — this is an important word for a traveler.",
+            "transliteration": "safar — haadhihi kalima muhimma lil-musaafir",
+            "teachWord": "moon_w15"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"safari\" الإنجليزِيَّة جاءَت مِن العَرَبِيَّة — سَفَري",
+            "english": "And the English word \"safari\" came from Arabic — safarii (my journey).",
+            "transliteration": "wa kalima \"safari\" al-injliiziyya jaa'at min al-arabiyya — safarii",
+            "culturalNote": "\"Safari\" comes from Arabic safar (سَفَر, journey). Arab merchants and explorers established the trade routes across East Africa that later European explorers would follow."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "رائِع! شُكراً يا مُسافِر",
+                "english": "Wonderful! Thank you, traveler.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "default",
+        "trigger": "default",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "كُلّ يَوم جَديد فُرصَة لِلتَّعَلُّم",
+            "english": "Every new day is an opportunity to learn.",
+            "transliteration": "kull yawm jadiid fursa lit-ta'allum"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "أَخبِرني أَكثَر",
+                "english": "Tell me more",
+                "next": "traveler_stories"
+              },
+              {
+                "arabic": "إلى اللِّقاء",
+                "english": "Goodbye",
+                "next": null
+              }
+            ]
           }
         ]
       }
@@ -16360,9 +17668,93 @@
         "lines": [
           {
             "speaker": "npc",
-            "arabic": "المَنطِقَة آمِنَة. تَوَقَّف عِندَ الحَدّ",
-            "english": "The area is secure. Stay within the boundary.",
-            "transliteration": "al-mantiqa aamina. tawwaqaf inda al-hadd"
+            "arabic": "المَنطِقَة آمِنَة. تَوَقَّف عِندَ الحاجَة",
+            "english": "The area is safe. Stop if you need anything.",
+            "transliteration": "al-mantiqа aamina. tawqqaf 'inda al-haaja"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَنا الحارِس اللَّيلي. أَحمي المَدينَة مِن الغُروب إلى الفَجر",
+            "english": "I am the night guard. I protect the city from sunset to dawn.",
+            "transliteration": "ana al-haaris al-laylii. ahmi al-madiina min al-ghuroob ilaa al-fajr"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "هَل تَعلَم شَيئاً عَن هَذِهِ المَدينَة؟",
+                "english": "Do you know something about this city?",
+                "next": "guard_lore"
+              },
+              {
+                "arabic": "كَيفَ تَقول \"أَمان\" بِالعَرَبِيَّة؟",
+                "english": "How do you say \"safety\" in Arabic?",
+                "next": "guard_teaches"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "guard_lore",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "هَذِهِ المَدينَة قَديمَة جِدَّاً. بُنِيَت قَبلَ مِئَة وَخَمسين سَنَة",
+            "english": "This city is very old. It was built 150 years ago.",
+            "transliteration": "haadhihi al-madiina qadiima jiddan. buniyat qabla mi'a wa khamsiin sana"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الحُراسُ الأَوائِل كانوا يَحفَظون القُرآن — كانَت تِلاوَتُهُم تُبعِد الشَّرّ",
+            "english": "The first guards memorized the Quran — their recitation was said to ward off evil.",
+            "transliteration": "al-hurrasu al-awaa'il kaanuu yahfazoon al-qur'an — kaanat tilaawatuhum tub'id ash-sharr"
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "شُكراً يا حارِس",
+                "english": "Thank you, guard.",
+                "next": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "guard_teaches",
+        "trigger": "return_visit",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَمَان — هَذِهِ الكَلِمَة الجَميلَة",
+            "english": "Amaan — this beautiful word.",
+            "transliteration": "amaan — haadhihi al-kalima al-jamiila",
+            "teachWord": "right_1"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "وَكَلِمَة \"آمِن\" تَعني safe — نَفس الجَذر: أ-م-ن",
+            "english": "And \"aamin\" means safe — same root: A-M-N.",
+            "transliteration": "wa kalima \"aamin\" ta'nii safe — nafs al-jadhr: a-m-n"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "الجَذر العَرَبي يُعطيك عَشَرات الكَلِمات مِن ثَلاثَة حُروف",
+            "english": "The Arabic root gives you dozens of words from three letters.",
+            "transliteration": "al-jadhr al-arabii yu'tiika 'asharaat al-kalimaat min thalaatha huroof",
+            "culturalNote": "The Arabic root system (trilateral roots) is one of the most systematic in the world. The root A-M-N (أ-م-ن) generates: amaan (safety), aamin (safe), mu'min (believer), iimaan (faith), amiin (trustworthy)."
+          },
+          {
+            "speaker": "player",
+            "choices": [
+              {
+                "arabic": "فَهِمتُ! شُكراً",
+                "english": "I understand! Thank you.",
+                "next": null
+              }
+            ]
           }
         ]
       }
