@@ -132,6 +132,36 @@ const BIOME_TILESETS = {
     iceGrassTint: 0xaaddff,
     sandTint: 0xddeeff,
   },
+  dungeon: {
+    sandKeys: ['kenmi-base-tiles-cave-cave-floor-1'],
+    sandCols: 3,  // cave-floor-1.png = 48x80px = 3 cols x 5 rows
+    grassKey: 'kenmi-base-tiles-cave-cave-floor-2',
+    grassCols: 3, // cave-floor-2.png = 48x80px = 3 cols x 5 rows
+    waterKey: 'kenmi-base-tiles-cave-cave-water',
+    waterCols: 7, // cave-water.png = 112x80px = 7 cols x 5 rows
+    foamKey: 'kenmi-base-tiles-cave-cave-water-animation',
+    foamCols: 56, // cave-water-animation.png = 896x80px = 56 cols x 5 rows
+  },
+  volcano: {
+    sandKeys: ['kenmi-volcano-tiles-volcano-tiles'],
+    sandCols: 29, // volcano-tiles.png = 464x144px = 29 cols x 9 rows
+    grassKey: 'kenmi-volcano-tiles-volcano-tiles',
+    grassCols: 29,
+    waterKey: 'kenmi-volcano-tiles-volcano-tiles',
+    waterCols: 29,
+    foamKey: 'kenmi-volcano-tiles-volcano-lava-buble',
+    foamCols: 11, // volcano-lava-buble.png = 176x16px = 11 cols x 1 row
+  },
+  mushroom: {
+    sandKeys: ['kenmi-shroom-tiles-shroomlands-grass-green-tiles'],
+    sandCols: 11, // shroomlands-grass-green-tiles.png = 176x192px = 11 cols x 12 rows
+    grassKey: 'kenmi-shroom-tiles-shroomlands-grass-green-tiles',
+    grassCols: 11,
+    waterKey: 'kenmi-base-tiles-water-water-tile-1',
+    waterCols: 3,
+    foamKey: 'kenmi-base-tiles-water-water-foam-animation',
+    foamCols: 20,
+  },
 };
 
 /**
@@ -589,27 +619,38 @@ export class MapLoader {
 
     const foamCols = cfg.foamCols;
 
-    // Row 0: top/horizontal foam
+    // Get actual frame count to avoid creating animations for nonexistent rows
+    const foamTexture = this.scene.textures.get(foamKey);
+    const totalFrames = foamTexture.frameTotal - 1; // subtract __BASE frame
+    const foamRows = Math.floor(totalFrames / foamCols) || 1;
+
+    // Row 0 always exists
     this.scene.anims.create({
       key: topKey,
-      frames: this.scene.anims.generateFrameNumbers(foamKey, { start: 0, end: foamCols - 1 }),
+      frames: this.scene.anims.generateFrameNumbers(foamKey, { start: 0, end: Math.min(foamCols - 1, totalFrames - 1) }),
       frameRate: 6,
       repeat: -1,
     });
-    // Row 1: left/vertical foam
-    this.scene.anims.create({
-      key: leftKey,
-      frames: this.scene.anims.generateFrameNumbers(foamKey, { start: foamCols, end: foamCols * 2 - 1 }),
-      frameRate: 6,
-      repeat: -1,
-    });
-    // Row 2: bottom/other direction foam
-    this.scene.anims.create({
-      key: bottomKey,
-      frames: this.scene.anims.generateFrameNumbers(foamKey, { start: foamCols * 2, end: foamCols * 3 - 1 }),
-      frameRate: 6,
-      repeat: -1,
-    });
+
+    if (foamRows >= 2) {
+      // Row 1: left/vertical foam
+      this.scene.anims.create({
+        key: leftKey,
+        frames: this.scene.anims.generateFrameNumbers(foamKey, { start: foamCols, end: Math.min(foamCols * 2 - 1, totalFrames - 1) }),
+        frameRate: 6,
+        repeat: -1,
+      });
+    }
+
+    if (foamRows >= 3) {
+      // Row 2: bottom/other direction foam
+      this.scene.anims.create({
+        key: bottomKey,
+        frames: this.scene.anims.generateFrameNumbers(foamKey, { start: foamCols * 2, end: Math.min(foamCols * 3 - 1, totalFrames - 1) }),
+        frameRate: 6,
+        repeat: -1,
+      });
+    }
 
     // Store current foam anim keys for _addFoamOverlay
     this._foamAnimKeys = { top: topKey, left: leftKey, bottom: bottomKey };
