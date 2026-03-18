@@ -147,6 +147,13 @@ export default function DialogueBox({ npc, line, onAdvance, portrait, teachWordC
             {translitTypewriter.displayText}
           </div>
         )}
+        {/* Cultural note - only show when all text is revealed */}
+        {allComplete && line.culturalNote && (
+          <div className={styles.culturalNote}>
+            <div className={styles.culturalNoteLabel}>Cultural Note</div>
+            <div className={styles.culturalNoteText}>{line.culturalNote}</div>
+          </div>
+        )}
         {/* Teach word card - only show when all text is revealed */}
         {allComplete && teachWordCard}
       </div>

@@ -149,6 +149,31 @@
   max-width: 100%;
 }
 
+/* Cultural note */
+.culturalNote {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(230, 57, 70, 0.08);
+  border-left: 3px solid #E63946;
+  border-radius: 4px;
+}
+
+.culturalNoteLabel {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #E63946;
+  margin-bottom: 4px;
+  font-family: var(--font-pixel);
+}
+
+.culturalNoteText {
+  font-size: 0.85rem;
+  color: #ccc;
+  line-height: 1.4;
+  font-family: var(--font-pixel);
+}
+
 /* Teach word badge and card */
 .teachContainer {
   margin-top: 10px;
