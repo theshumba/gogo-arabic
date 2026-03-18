@@ -62,7 +62,7 @@ export class DialogueEngine {
 
     // Check story flag condition
     if (condition.storyFlag) {
-      const flagValue = state.narrative.storyFlags[condition.storyFlag.key];
+      const flagValue = state.narrative?.storyFlags?.[condition.storyFlag.key];
       if (flagValue !== condition.storyFlag.value) return false;
     }
 
@@ -79,11 +79,17 @@ export class DialogueEngine {
 
     // Check vocabulary condition
     if (condition.vocabulary) {
-      const card = state.vocabulary.fsrsCards[condition.vocabulary.wordId];
+      const card = state.vocabulary?.fsrsCards?.[condition.vocabulary.wordId];
       const hasLearned = !!card; // Truthy if word exists in FSRS cards
       if (!hasLearned) return false;
       // If mastered flag is set, could add additional mastery check here
       // For now, just check existence
+    }
+
+    // Check learningPath condition
+    if (condition.learningPath) {
+      const learningPath = state.player?.learningPath;
+      if (learningPath !== condition.learningPath) return false;
     }
 
     // Check NOT condition (recursive negation)
@@ -104,7 +110,7 @@ export class DialogueEngine {
     this.currentNpcId = npc.id;
 
     // Filter dialogue trees that have a topic field (hub-and-spoke)
-    const topicTrees = npc.dialogueTrees.filter(tree => tree.topic);
+    const topicTrees = (npc.dialogueTrees || []).filter(tree => tree.topic);
 
     // Filter by condition and prepare topic metadata
     const availableTopics = topicTrees
@@ -129,6 +135,18 @@ export class DialogueEngine {
     if (!choices) return [];
 
     return choices.filter(choice => this.evaluateCondition(choice.condition));
+  }
+
+  /**
+   * Filter dialogue lines based on their conditions (e.g. learningPath branching).
+   * Lines without a condition are always included.
+   * @param {Array} lines - Array of dialogue line objects
+   * @returns {Array} Filtered lines that pass condition check
+   */
+  filterLines(lines) {
+    if (!lines) return [];
+
+    return lines.filter(line => this.evaluateCondition(line.condition));
   }
 
   /**

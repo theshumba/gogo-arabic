@@ -18,6 +18,9 @@ const conditionSchema = z.object({
     wordId: z.string(),
     mastered: z.boolean().optional(),
   }).optional(),
+  // learningPath condition — show line/choice only for a specific learning path
+  // Valid values: 'scholar' | 'traveler' | 'historian'
+  learningPath: z.enum(['scholar', 'traveler', 'historian']).optional(),
   not: z.lazy(() => conditionSchema).optional(),
 }).passthrough();
 

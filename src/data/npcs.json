@@ -17832,6 +17832,24 @@
             "arabic": "هَل تَقبَلُ أَن تُساعِدَني في إِتمام سِجِلِّي التّاريخي؟",
             "english": "Will you accept to help me complete my historical chronicle?",
             "transliteration": "hal taqbalu an tusa'idani fi itmam sijilli at-tariikhi?"
+          },
+          {
+            "arabic": "سِجِلّي يَعتَمِدُ عَلى تَحليلِ النُّصوص — كُلُّ جُملَة تَحتاجُ قارِئاً يَفهَمُ النَّحو",
+            "english": "My chronicle relies on textual analysis — every sentence needs a reader who understands grammar.",
+            "transliteration": "sijilli ya'tamid 'ala tahlil an-nusuus — kullu jumla tahtaaj qaari'an yafham an-nahw",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "سِجِلّي يَتَتَبَّعُ رِحَل العُلَماء — كُلُّ مَكانٍ مَشَوا فيهِ تَرَكَ أَثَراً في اللُّغَة",
+            "english": "My chronicle traces scholars' journeys — every place they walked left a mark on language.",
+            "transliteration": "sijilli yatatabba' rihal al-'ulamaa' — kullu makaanin mashaw fiihi taraka atharan fil-lugha",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "سِجِلّي يَحفَظُ التّاريخَ اللُّغَوي — كُلُّ حَقبَة أَضافَت إلى العَرَبيَّة كَلِمات جَديدَة",
+            "english": "My chronicle preserves linguistic history — every era added new words to Arabic.",
+            "transliteration": "sijilli yahfaz at-taariikh al-lughawi — kullu haqba adaafat ilaa al-arabiyya kalimaat jadiida",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -17898,6 +17916,24 @@
             "arabic": "هَل تُساعِدُني في تَسجيل كَلِمات الطَّريق؟",
             "english": "Will you help me record the route vocabulary?",
             "transliteration": "hal tusa'iduni fi tasjil kalimaat at-tariq?"
+          },
+          {
+            "arabic": "الأَطلَسُ يَحتاجُ تَصنيفاً دَقيقاً — الجُذور أَوَّلاً، ثُمَّ المُشتَقّات، ثُمَّ الاستِخدام",
+            "english": "The atlas needs precise classification — roots first, then derivatives, then usage.",
+            "transliteration": "al-atlas yahtaaj tasniifan daqiiqan — al-judhuur awwalan, thumma al-mushtaqqaat, thumma al-istikhdaam",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "كُلُّ طَريقٍ لَه لُغَتُه — الأَطلَسُ سَيُريكَ أَينَ يَلتَقي المُسافِرون بِالكَلِمات",
+            "english": "Every route has its language — the atlas will show you where travelers meet words.",
+            "transliteration": "kullu tariiqin lahu lughatu — al-atlas sa-yuriika ayna yaltaqii al-musaafiriin bil-kalimaat",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "الكَلِمات تَنتَقِلُ مَعَ التُّجّار وَالجُيوش — الأَطلَسُ سَيَكشِفُ كَيفَ اِنتَشَرَت العَرَبيَّة عَبرَ التّاريخ",
+            "english": "Words travel with merchants and armies — the atlas will reveal how Arabic spread through history.",
+            "transliteration": "al-kalimaat tantaqil ma'a at-tujjaar wal-juyuush — al-atlas sa-yakshif kayfa intasharat al-arabiyya 'abra at-taariikh",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -17964,6 +18000,24 @@
             "arabic": "هَل تُريدُ أَن تَنظِمَ مَعي بَيتاً يَتَفَتَّحُ بِالنُّطق الصَّحيح؟",
             "english": "Would you like to compose with me a verse that blooms with correct pronunciation?",
             "transliteration": "hal turiidu an tanzim ma'i baytan yatafatahu bin-nutq as-sahiih?"
+          },
+          {
+            "arabic": "النُّطقُ الصَّحيح يَكشِفُ المَعنى الخَفيَّ — العالِمُ يَسمَعُ فَرقاً بَينَ ضاد وَظاء",
+            "english": "Correct pronunciation reveals hidden meaning — the scholar hears the difference between Daad and Dhaa.",
+            "transliteration": "an-nutq as-sahiih yakshif al-ma'na al-khafiyy — al-'aalim yasma' farqan bayna dhaad wa dhaa",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "في كُلِّ مِيناء لَهجَةٌ مُختَلِفَة — الشِّعرُ يُعَلِّمُكَ كَيفَ تُكَلِّمُ كُلَّ النّاس",
+            "english": "Every port has a different dialect — poetry teaches you how to speak to all people.",
+            "transliteration": "fii kulli miinaa' lahja mukhtalifa — ash-shi'r yu'allimuka kayfa tukallim kull an-naas",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "الشِّعرُ العَرَبيُّ حَفِظَ اللُّغَة خِلالَ قُرونِ التَّحَوُّلات — كُلُّ بَيتٍ نافِذَةٌ إلى الماضي",
+            "english": "Arabic poetry preserved the language through centuries of change — every verse is a window to the past.",
+            "transliteration": "ash-shi'r al-arabiyy hafiz al-lugha khilaal quruun at-tahawwulaat — kullu bayt naafidha ilaa al-maadi",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -18030,6 +18084,24 @@
             "arabic": "هَل تُساعِدُني في اِسترِداد كَلِمات دَفتَري؟",
             "english": "Will you help me recover the words from my ledger?",
             "transliteration": "hal tusa'iduni fi istirdaad kalimaat daftari?"
+          },
+          {
+            "arabic": "الدَّفتَرُ يَستَخدِمُ مُصطَلَحاتٍ تِجارِيَّةً دَقيقَة — فَقَط عالِمٌ بِالعَرَبيَّة يَفهَمُها",
+            "english": "The ledger uses precise trade terminology — only a scholar of Arabic can understand it.",
+            "transliteration": "ad-daftar yastakhdam mustalahaatan tijaariyya daqiiqa — faqat 'aalim bil-arabiyya yafhamuhaa",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "الدَّفتَرُ ضائِعٌ في طَريقِ السُّوق — مَن يَعرِفُ طُرُقَ التُّجّار سَيَجِدُه",
+            "english": "The ledger is lost on the market route — one who knows the traders' paths will find it.",
+            "transliteration": "ad-daftar dhaa'i' fi tariiq as-suuq — man ya'rif turuq at-tujjaar sa-yajiduhu",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "هَذا الدَّفتَرُ كُتِبَ عَلى طَريقَة تُجّار الحَرير — مَن يَعرِفُ التّاريخَ التِّجاري سَيَفهَمُ لُغَتَه",
+            "english": "This ledger was written in the style of Silk Road merchants — one who knows trade history will understand its language.",
+            "transliteration": "haadhaa ad-daftar kutib 'ala tariiqa tujjaar al-hariir — man ya'rif at-taariikh at-tijaariyy sa-yafham lughataه",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -18096,6 +18168,24 @@
             "arabic": "أَحتاجُ إلى عالِمٍ واحِدٍ لِلتَّحَقُّق مِن عَمَلي. هَل أَنتَ ذَلِكَ العالِم؟",
             "english": "I need one scholar to verify my work. Are you that scholar?",
             "transliteration": "ahtaaju ila 'aalim waahid lit-tahaqquq min 'amali. hal anta dhaalika al-'aalim?"
+          },
+          {
+            "arabic": "النَّحوُ لَيسَ قُيوداً — هُوَ مَنطِقُ اللُّغَة الَّذي يَجعَلُ كُلَّ جُملَةٍ قَصيدَة",
+            "english": "Grammar is not chains — it is the logic of language that makes every sentence a poem.",
+            "transliteration": "an-nahw laysa quyuudan — huwa mantiq al-lugha alladhi yaj'al kull jumla qasiida",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "اللَّيلُ وَقتُ التَّفكير — المُسافِرُ يَتَعَلَّمُ اللُّغَة حينَ يَسكُنُ المَكان لَيلاً",
+            "english": "Night is the time for reflection — the traveler learns language when they rest in a place at night.",
+            "transliteration": "al-layl waqt at-tafkiir — al-musaafir yata'allam al-lugha hiina yaskun al-makaan laylan",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "المَخطوطاتُ كُتِبَت لَيلاً في أَغلَبِ الأَحيان — النُّسّاخُ عَمِلوا عَلى ضَوءِ الشَّمعَةِ لِيَحفَظوا المَعرِفَة لِلأَجيال",
+            "english": "Most manuscripts were written at night — scribes worked by candlelight to preserve knowledge for generations.",
+            "transliteration": "al-makhtuutaat kutibbat laylan fii aghalab al-ahyaan — an-nussaakh 'amiluu 'ala daw' ash-sham'a li-yahfazuu al-ma'rifa lil-ajyaal",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -18162,6 +18252,24 @@
             "arabic": "هَل تَستَطيعُ حِفظَهُ وَتِلاوَتَهُ وَفقَ تَقليد الهِضاب؟",
             "english": "Can you memorise it and recite it according to the highland tradition?",
             "transliteration": "hal tastati'u hifzahu wa tilaawatahu wafq taqliid al-hidaab?"
+          },
+          {
+            "arabic": "المِيثاقُ مَكتوبٌ بِالعَرَبِيَّة الفُصحى القَديمَة — يَحتاجُ عالِماً يَفهَمُ تَصريفَ الأَفعال",
+            "english": "The code is written in ancient Classical Arabic — it needs a scholar who understands verb conjugation.",
+            "transliteration": "al-miithaaq maktuum bil-arabiyya al-fushaa al-qadiima — yahtaaj 'aaliman yafham tasriif al-af'aal",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "المِيثاقُ يُصاحِبُ المُحارِبَ في كُلِّ رِحلَة — المُسافِرُ الشُّجاعُ يَحفَظُهُ عَن ظَهرِ قَلب",
+            "english": "The code accompanies the warrior on every journey — the brave traveler memorises it by heart.",
+            "transliteration": "al-miithaaq yusaahib al-muharib fii kulli rihlla — al-musaafir ash-shujaa' yahfazuhu 'an zhahr qalb",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "المِيثاقُ أَقدَمُ مِنَ الإسلام — جُذورُهُ في قَوانينِ القَبائِل العَرَبيَّة قَبلَ الكِتابَة",
+            "english": "The code is older than Islam — its roots lie in Arab tribal laws from before writing existed.",
+            "transliteration": "al-miithaaq aqdamu min al-islaam — judhuuruhu fii qawaniin al-qabaa'il al-arabiyya qabl al-kitaaba",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -18228,6 +18336,24 @@
             "arabic": "هَل تَقرَأُ النُّقوشَ مَعي حَتَّى نُؤَرِّخَها؟",
             "english": "Will you read the inscriptions with me so we can archive them?",
             "transliteration": "hal taqra' an-nuquush ma'ii hatta nu'arrikha?"
+          },
+          {
+            "arabic": "النُّقوشُ بِالعَرَبيَّة المُبكِّرَة — تَحليلُها يَكشِفُ كَيفَ تَطَوَّرَت الكِتابَة مِن الرَّسمِ إلى الحُرف",
+            "english": "The inscriptions are in early Arabic — analysing them reveals how writing evolved from images to letters.",
+            "transliteration": "an-nuquush bil-arabiyya al-mubakkira — tahliluhaa yakshif kayfa tatawwarat al-kitaaba min ar-rasm ilaa al-harf",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "النُّقوشُ وَجَدتُها في طُرُق القَوافِل — كُلُّ نَقشٍ عَلامَةٌ تَرَكَها مُسافِرٌ لِمَن بَعدَه",
+            "english": "I found the inscriptions on caravan routes — every inscription is a sign left by a traveler for those who follow.",
+            "transliteration": "an-nuquush wajadtuhaa fii turuq al-qawaafil — kullu naqshin 'alaama tarakahaa musaafir liman ba'dahu",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "هَذِهِ النُّقوشُ تَعودُ إلى ما قَبلَ الإسلام — إنَّها تَرابُطُ الحَضارات العَرَبيَّة عَبرَ الأَجيال",
+            "english": "These inscriptions date to pre-Islamic times — they are the continuity of Arab civilisations across the ages.",
+            "transliteration": "haadhihi an-nuquush ta'uud ilaa maa qabl al-islaam — innahaa taraabutu al-hadaaraat al-arabiyya 'abra al-ajyaal",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -18294,6 +18420,24 @@
             "arabic": "هَل تَتَعَلَّمُ الدُّعاءَ مَعي وَتَتلوهُ بِصِحَّة؟",
             "english": "Will you learn the prayer with me and recite it correctly?",
             "transliteration": "hal tata'allamu ad-du'aa' ma'ii wa tatluuhu bissiha?"
+          },
+          {
+            "arabic": "الدُّعاءُ الطِّبيُّ يَستَلزِمُ تَحليلَ كُلِّ لَفظَة — كَلِمَة شِفاء لَيسَت مُرادِفَةً لِكَلِمَة صِحَّة",
+            "english": "The healing prayer requires analysing every word — shifa (cure) is not synonymous with sihha (health).",
+            "transliteration": "ad-du'aa' at-tibbiyy yastalzimu tahlil kulli lafza — kalima shifaa' laysat muraadifan li-kalima sihha",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "الشِّفاءُ في كُلِّ أَرض — المُسافِرُ يَتَعَلَّمُ الدُّعاء لِيَحمِيَ نَفسَه في أَيِّ طَريق",
+            "english": "Healing exists in every land — the traveler learns the prayer to protect themselves on any road.",
+            "transliteration": "ash-shifaa' fii kulli ard — al-musaafir yata'allamu ad-du'aa' li-yahmiya nafsahu fii ayy tariiq",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "الطِّبُّ العَرَبيُّ كانَ طِبَّ الجِسمِ وَالرُّوح — الدُّعاءُ كانَ جُزءاً مِن وِصفَةِ كُلِّ طَبيب",
+            "english": "Arab medicine healed both body and soul — the prayer was part of every physician's prescription.",
+            "transliteration": "at-tibb al-arabiyy kaana tibb al-jism war-ruuh — ad-du'aa' kaana juz'an min wasfa kulli tabiib",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -18360,6 +18504,24 @@
             "arabic": "هَل تُتقِنُ البِنيَةَ وَتُثبِتُ جَدارَتَكَ أَمامي؟",
             "english": "Will you master the structure and prove your worth before me?",
             "transliteration": "hal tutqin al-binyata wa tuthbit jadaraataka amamii?"
+          },
+          {
+            "arabic": "النَّحوُ القِتاليُّ مَبنيٌّ عَلى قَواعِدَ صارِمَة — العالِمُ يَستَخدِمُ الأَوزانَ الصَّرفيَّةَ كَسُيوف",
+            "english": "Battle grammar is built on strict rules — the scholar wields morphological patterns like swords.",
+            "transliteration": "an-nahw al-qitaaliyy mabniyy 'ala qawaa'id saarimа — al-'aalim yastakhdam al-awzaan as-sarfiyya ka-suyuuf",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "المُسافِرُ الشُّجاعُ لا يَتَرَدَّد — البِنيَةُ تَحمي لِسانَكَ في كُلِّ بَلَد",
+            "english": "The brave traveler does not hesitate — structure protects your tongue in every land.",
+            "transliteration": "al-musaafir ash-shujaa' laa yataraddad — al-binyatu tahmi lisaanik fii kulli balad",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "العَرَبُ الفُرسانُ كانوا شُعَراء أَيضاً — السَّيفُ وَالبَيانُ وَجهانِ لِقُوَّةٍ واحِدَة",
+            "english": "Arab knights were also poets — the sword and eloquence are two faces of one power.",
+            "transliteration": "al-'arab al-fursaan kaanuu shu'araa' aydan — as-sayf wal-bayaan wajhaan li-quwwa waahida",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -18426,6 +18588,24 @@
             "arabic": "هَل تَجرُؤُ عَلى تَحَدِّيَ النُّطقي؟",
             "english": "Do you dare to face my pronunciation challenge?",
             "transliteration": "hal tajra'u 'ala tahaddiyi an-nutqii?"
+          },
+          {
+            "arabic": "النُّطقُ السَّريعُ لا يَعني النُّطقَ الأَدقَّ — العالِمُ يُوازِنُ بَينَ السُّرعَةِ وَالضَّبط",
+            "english": "Fast pronunciation does not mean more precise pronunciation — the scholar balances speed with accuracy.",
+            "transliteration": "an-nutq as-sarii' laa ya'nii an-nutq al-adaqq — al-'aalim yuwaazin bayna as-sur'a wad-dabt",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "في كُلِّ مَدينَة لَهجَةٌ مُختَلِفَة — المُسافِرُ يَتَكَيَّفُ مَعَ إيقاعِ كُلِّ مَكان",
+            "english": "Every city has a different dialect — the traveler adapts to the rhythm of every place.",
+            "transliteration": "fii kulli madiina lahja mukhtalifa — al-musaafir yatakayaf ma'a iiqa' kulli makaan",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "أَسواقُ بَغداد وَالقاهِرَة وَالأَندَلُس كُلٌّ لَها إيقاعُها — التّاريخُ يُسمَعُ في سُرعَةِ الكَلام",
+            "english": "The markets of Baghdad, Cairo, and Andalusia each had their own rhythm — history is heard in the speed of speech.",
+            "transliteration": "aswaaq baghdaad wal-qaahira wal-andalus kullun lahaa iiqa'uhaa — at-taariikh yusma' fii sur'at al-kalaam",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -18492,6 +18672,24 @@
             "arabic": "هَل تُساعِدُني في تَعليم أَسماء الأَعشاب لِلجيل القادِم؟",
             "english": "Will you help me teach the herb names to the next generation?",
             "transliteration": "hal tusa'iduni fi ta'liim asmaa' al-a'shaab lil-jiil al-qaadim?"
+          },
+          {
+            "arabic": "التَّصنيفُ العِلمي لِلأَعشاب كَتَبَهُ العُلَماءُ العَرَب — كُلُّ اِسمٍ يَحمِلُ خُصائِصَ النَّبات",
+            "english": "The scientific classification of herbs was written by Arab scholars — every name carries the plant's properties.",
+            "transliteration": "at-tasniif al-'ilmiyy lil-a'shaab katabahu al-'ulamaa' al-'arab — kullu ism yahmil khasaa'is an-nabaat",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "الأَعشابُ الطِّبيَّة تَنمو في كُلِّ جَبَل — المُسافِرُ يَتَعَلَّمُ أَسماءَها لِيَنجوَ في البَريَّة",
+            "english": "Medicinal herbs grow on every mountain — the traveler learns their names to survive in the wilderness.",
+            "transliteration": "al-a'shaab at-tibbiyya tanmu fii kulli jabal — al-musaafir yata'allam asmaa'ahaa li-yanjuwa fil-barriyya",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "الطِّبُّ النَّباتيُّ الإسلامي وَثَّقَ أَلفَ نَباتٍ قَبلَ عُلَماء أُوروبّا — هَذِهِ الأَسماءُ هِيَ التُّراث",
+            "english": "Islamic botanical medicine documented a thousand plants before European scholars — these names are the heritage.",
+            "transliteration": "at-tibb an-nabaatiyy al-islaamiyy waththaqa alf nabaat qabl 'ulamaa' uurubbaa — haadhihi al-asmaa' hiya at-turaath",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
@@ -18558,6 +18756,24 @@
             "arabic": "هَل تُساعِدُني في فَكِّ رُموزِ النُّقوش وَتَسجيلِها قَبلَ فَوات الأَوان؟",
             "english": "Will you help me decode and record the inscriptions before it's too late?",
             "transliteration": "hal tusa'iduni fi fakk rumuuz an-nuquush wa tasjiiluha qabl fawaat al-awan?"
+          },
+          {
+            "arabic": "فَكُّ الرُّموز عِلمٌ دَقيق — العالِمُ يَربِطُ كُلَّ رَمزٍ بِجَذرِهِ اللُّغَوي",
+            "english": "Decoding symbols is a precise science — the scholar links every symbol to its linguistic root.",
+            "transliteration": "fakk ar-rumuuz 'ilmun daqiiq — al-'aalim yarbit kull ramzin bi-jadhrihi al-lughawiyy",
+            "condition": { "learningPath": "scholar" }
+          },
+          {
+            "arabic": "النُّقوشُ مَنتَشِرَةٌ عَلى طُرُق القَوافِل — المُسافِرُ يَتَعَلَّمُ مِنها الاتِّجاهات وَالتّاريخ مَعاً",
+            "english": "Inscriptions are scattered along caravan routes — the traveler learns both directions and history from them.",
+            "transliteration": "an-nuquush muntashira 'ala turuq al-qawaafil — al-musaafir yata'allam minhaa al-ittijaahaat wat-taariikh ma'an",
+            "condition": { "learningPath": "traveler" }
+          },
+          {
+            "arabic": "النُّقوشُ شُهودٌ صامِتَة عَلى الحَضارات — كُلُّ حَرفٍ هُوَ بَقيَّةٌ مِن عالَمٍ بَنى وَاندَثَر",
+            "english": "Inscriptions are silent witnesses of civilisations — every letter is a remnant of a world that built and then faded.",
+            "transliteration": "an-nuquush shuhuudun saamita 'ala al-hadaaraat — kullu harfin huwa baqiyya min 'aalam banaa wantathara",
+            "condition": { "learningPath": "historian" }
           }
         ],
         "effects": [
