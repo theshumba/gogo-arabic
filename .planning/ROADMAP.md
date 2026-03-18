@@ -499,7 +499,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 41. Characters & Ambient Life | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 43. Zone References & Cleanup | v8.0 | 2/2 | Complete | 2026-03-18 |
-| 44. NPC Dialogue Expansion | v9.0 | 3/3 | Complete | 2026-03-18 |
+| 44. NPC Dialogue Expansion | v9.0 | Complete    | 2026-03-18 | 2026-03-18 |
 | 45. Quest Storylines | v9.0 | 0/TBD | Not started | — |
 | 46. Vocabulary Expansion | v9.0 | 0/TBD | Not started | — |
 
