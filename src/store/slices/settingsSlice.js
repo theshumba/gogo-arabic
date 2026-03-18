@@ -17,6 +17,12 @@ const initialState = {
   battleSpeed: 1.0,               // 0.5 | 1.0 | 1.5 | 2.0
   vocabRandomizerSeed: null,      // Seed for VocabRandomizer (null = default)
   showRomanization: true,         // Show romanized Arabic
+  // Accessibility
+  colorBlindMode: 'none',         // 'none' | 'protanopia' | 'deuteranopia' | 'tritanopia'
+  fontScale: 1.0,                 // 0.8 – 1.5 in 0.1 increments
+  reducedMotion: false,           // Suppress animations
+  highContrast: false,            // Boost contrast for all UI elements
+  screenReaderMode: false,        // Extra ARIA labels + live announcements
 };
 
 const settingsSlice = createSlice({
@@ -81,6 +87,24 @@ const settingsSlice = createSlice({
     setShowRomanization(state, action) {
       state.showRomanization = action.payload;
     },
+    // Accessibility reducers
+    setColorBlindMode(state, action) {
+      const valid = ['none', 'protanopia', 'deuteranopia', 'tritanopia'];
+      if (valid.includes(action.payload)) state.colorBlindMode = action.payload;
+    },
+    setFontScale(state, action) {
+      const clamped = Math.round(Math.min(1.5, Math.max(0.8, action.payload)) * 10) / 10;
+      state.fontScale = clamped;
+    },
+    setReducedMotion(state, action) {
+      state.reducedMotion = Boolean(action.payload);
+    },
+    setHighContrast(state, action) {
+      state.highContrast = Boolean(action.payload);
+    },
+    setScreenReaderMode(state, action) {
+      state.screenReaderMode = Boolean(action.payload);
+    },
   },
 });
 
@@ -101,6 +125,11 @@ export const {
   setBattleSpeed,
   setVocabRandomizerSeed,
   setShowRomanization,
+  setColorBlindMode,
+  setFontScale,
+  setReducedMotion,
+  setHighContrast,
+  setScreenReaderMode,
 } = settingsSlice.actions;
 
 // --- Selectors ---
@@ -120,5 +149,11 @@ export const selectVowelMarks = (state) => state.settings.vowelMarks;
 export const selectHintFrequency = (state) => state.settings.hintFrequency;
 export const selectBattleSpeed = (state) => state.settings.battleSpeed;
 export const selectVocabRandomizerSeed = (state) => state.settings.vocabRandomizerSeed;
+// Accessibility selectors
+export const selectColorBlindMode = (state) => state.settings.colorBlindMode;
+export const selectFontScale = (state) => state.settings.fontScale;
+export const selectReducedMotion = (state) => state.settings.reducedMotion;
+export const selectHighContrast = (state) => state.settings.highContrast;
+export const selectScreenReaderMode = (state) => state.settings.screenReaderMode;
 
 export default settingsSlice.reducer;
