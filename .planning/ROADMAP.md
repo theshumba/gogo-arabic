@@ -297,7 +297,7 @@ Plans:
 Plans:
 - [x] 39-01-PLAN.md — Kenmi terrain rendering code (auto-tiling, frame maps, foam) — written but disabled
 - [x] 39-02-PLAN.md — Enable Kenmi rendering + BIOME_TILESETS config + tilesetTheme on 8 main zones (TILE-01 thru TILE-07)
-- [ ] 39-03-PLAN.md — Dungeon/volcano/mushroom biome configs + tilesetTheme on 16 placeholder zones + human verify (TILE-08, TILE-09, TILE-10)
+- [x] 39-03-PLAN.md — Dungeon/volcano/mushroom biome configs + tilesetTheme on 16 placeholder zones + human verify (TILE-08, TILE-09, TILE-10)
 
 #### Phase 40: Buildings & Decorations
 **Goal**: Every zone's buildings are replaced with zone-appropriate Kenmi structures and filled with clustered decorative props that create visual density and world identity
