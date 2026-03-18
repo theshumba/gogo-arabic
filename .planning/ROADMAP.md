@@ -374,11 +374,11 @@ Plans:
   2. A Tiled-compatible JSON map export structure exists at `src/assets/maps/` that documents zone layout, NPC spawn points, interactables, and exits in a format a collaborator could open in Tiled Map Editor
   3. All old placeholder sprite assets are removed from `src/assets/` and no console errors about missing textures appear during any zone load
 
-**Plans**: TBD
+**Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 43-01: Zone data file updates (PIPE-03 — all zone/building/NPC keys updated to Kenmi keys)
-- [ ] 43-02: Tiled export structure + placeholder sprite removal (PIPE-04, PIPE-05)
+- [ ] 43-01-PLAN.md — Replace old placeholder keys in gathering spots, interior zones, InteriorGenerator, InteractableManager (PIPE-03)
+- [ ] 43-02-PLAN.md — Remove old sprite loads from BootScene + Tiled JSON export + test updates (PIPE-04, PIPE-05)
 
 ## Progress
 
