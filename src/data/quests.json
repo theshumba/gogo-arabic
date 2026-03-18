@@ -1845,5 +1845,585 @@
       }
     ],
     "lore": "The Bayt al-Hikma in Baghdad housed over 400,000 manuscripts before the Mongol invasion of 1258 CE — many texts survived only because scholars memorised and transcribed them by heart."
+  },
+
+  {
+    "id": "sq_oasis_water_blessing",
+    "title": "The Water Blessing",
+    "titleArabic": "بَرَكَة الماء",
+    "description": "Scholar Yusuf asks you to bless the village fountain by reciting three water-related Arabic words aloud while touching it.",
+    "descriptionArabic": "يَطلُبُ مِنكَ الشَّيخ يوسُف أَن تُبارِكَ نافورَة القَرية بِتِلاوَة ثَلاث كَلِمات عَرَبِيَّة تَتَعَلَّقُ بِالماء",
+    "zone": "oasis_village",
+    "type": "side_quest",
+    "target": 3,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["words_of_oasis"],
+    "npcGiver": "scholar-yusuf",
+    "reward": {
+      "xp": 100,
+      "dirhams": 40
+    },
+    "teachWords": ["water_w13", "rain_w14", "river_w15"],
+    "objectives": [
+      {
+        "id": "talk_to_yusuf",
+        "description": "Speak with Scholar Yusuf about the blessing ritual",
+        "descriptionArabic": "تَكَلَّم مَع الشَّيخ يوسُف عَن طَقس البَرَكَة"
+      },
+      {
+        "id": "interact_fountain",
+        "description": "Touch the village fountain and begin the recitation",
+        "descriptionArabic": "اِلمَس نافورَة القَرية وَابدَأ التِّلاوَة"
+      },
+      {
+        "id": "recite_3_words",
+        "description": "Recite the three water words: maa (water), matar (rain), nahr (river)",
+        "descriptionArabic": "تُلِ الكَلِمات الثَّلاث: ماء، مَطَر، نَهْر"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_oasis_lost_scroll",
+    "title": "Khalid's Lost Scroll",
+    "titleArabic": "مخطوطة خالد المفقودة",
+    "description": "Student Khalid dropped a precious scroll near the ancient ruins. Read the Arabic inscription on the ruins chest to find it.",
+    "descriptionArabic": "أَسقَطَ الطّالِب خالِد مَخطوطَةً قَيِّمَةً قُربَ الأَطلال القَديمَة. اِقرَأ النَّقشَ العَرَبيَّ عَلى صُندوق الأَطلال لِتَجِدَها",
+    "zone": "oasis_village",
+    "type": "side_quest",
+    "target": 1,
+    "trackEvent": "chest_opened",
+    "autoStart": false,
+    "prerequisites": ["words_of_oasis"],
+    "npcGiver": "student-khalid",
+    "reward": {
+      "xp": 80,
+      "dirhams": 30
+    },
+    "objectives": [
+      {
+        "id": "talk_to_khalid",
+        "description": "Talk to Student Khalid about his lost scroll",
+        "descriptionArabic": "تَكَلَّم مَع الطّالِب خالِد عَن مَخطوطَتِه المَفقودَة"
+      },
+      {
+        "id": "open_ruins_chest",
+        "description": "Find and open the ruins chest — read the Arabic inscription to unlock it",
+        "descriptionArabic": "اِبحَث عَن صُندوق الأَطلال وَافتَحهُ — اِقرَأ النَّقشَ العَرَبيَّ لِفَتحِه"
+      },
+      {
+        "id": "return_scroll",
+        "description": "Return the scroll to Khalid",
+        "descriptionArabic": "أَعِد المَخطوطَة إلى خالِد"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_library_ink_supply",
+    "title": "The Scribe's Ink",
+    "titleArabic": "حِبر الكاتِبَة",
+    "description": "Scribe Amina needs to label her ink jars with the correct Arabic colour words. Read the colour bookshelf to learn them.",
+    "descriptionArabic": "تَحتاجُ الكاتِبَة أَمينَة إلى تَسمِيَة أَوعِيَة الحِبر بِكَلِمات الأَلوان العَرَبِيَّة الصَّحيحَة. اِقرَأ الرَّفَّ لِتَتَعَلَّمَها",
+    "zone": "ancient_library",
+    "type": "side_quest",
+    "target": 1,
+    "trackEvent": "bookshelf_read",
+    "autoStart": false,
+    "prerequisites": ["master_of_letters"],
+    "npcGiver": "scribe-amina",
+    "reward": {
+      "xp": 110,
+      "dirhams": 45
+    },
+    "teachWords": ["color_blue", "color_black", "color_gold"],
+    "objectives": [
+      {
+        "id": "talk_to_amina",
+        "description": "Speak with Scribe Amina about her ink labelling problem",
+        "descriptionArabic": "تَكَلَّم مَع الكاتِبَة أَمينَة عَن مُشكِلَة تَسمِيَة الحِبر"
+      },
+      {
+        "id": "read_color_bookshelf",
+        "description": "Study the colour bookshelf and memorise the three ink colour words",
+        "descriptionArabic": "اِدرُس رَفَّ الأَلوان وَاحفَظ كَلِمات أَلوان الحِبر الثَّلاثَة"
+      },
+      {
+        "id": "report_back",
+        "description": "Return to Amina and recite the colour words to label the jars",
+        "descriptionArabic": "عُد إلى أَمينَة وَتُلِ كَلِمات الأَلوان لِوَضع عَلامات عَلى الأَوعِيَة"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_library_midnight_number",
+    "title": "The Midnight Calculation",
+    "titleArabic": "حِساب مُنتَصَف اللَّيل",
+    "description": "Librarian Ibrahim needs you to count the manuscripts catalogued — learn the Arabic numbers 1-10 from the numbers bookshelf.",
+    "descriptionArabic": "يَحتاجُ أَمين المَكتَبَة إبراهيم مِنكَ عَدَّ المَخطوطات المُفهرَسَة — تَعَلَّم الأَرقام العَرَبِيَّة ١-١٠",
+    "zone": "ancient_library",
+    "type": "side_quest",
+    "target": 1,
+    "trackEvent": "bookshelf_read",
+    "autoStart": false,
+    "prerequisites": ["master_of_letters"],
+    "npcGiver": "librarian-ibrahim",
+    "reward": {
+      "xp": 120,
+      "dirhams": 50
+    },
+    "objectives": [
+      {
+        "id": "talk_to_ibrahim",
+        "description": "Ask Librarian Ibrahim about the manuscript count",
+        "descriptionArabic": "اِسأَل أَمين المَكتَبَة إبراهيم عَن عَدَد المَخطوطات"
+      },
+      {
+        "id": "read_numbers_bookshelf",
+        "description": "Study the numbers bookshelf to learn Arabic numerals 1 through 10",
+        "descriptionArabic": "اِدرُس رَفَّ الأَرقام لِتَتَعَلَّمَ الأَرقام العَرَبِيَّة ١ إلى ١٠"
+      },
+      {
+        "id": "recite_count",
+        "description": "Recite the total count to Ibrahim using Arabic numbers",
+        "descriptionArabic": "تُلِ الحَصيلَة لِإبراهيم بِاستِخدام الأَرقام العَرَبِيَّة"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_market_spice_names",
+    "title": "The Spice Names",
+    "titleArabic": "أَسماء البَهارات",
+    "description": "A foreign merchant cannot read the spice labels. Learn three Arabic food words and translate the signs to help him.",
+    "descriptionArabic": "تاجِرٌ أَجنَبِيٌّ لا يَستَطيعُ قِراءَة لافِتات البَهارات. تَعَلَّم ثَلاث كَلِمات طَعام عَرَبِيَّة وَتَرجِم اللافِتات لِمُساعَدَتِه",
+    "zone": "desert_marketplace",
+    "type": "side_quest",
+    "target": 3,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["merchant_master"],
+    "npcGiver": "spice-seller-layla",
+    "reward": {
+      "xp": 100,
+      "dirhams": 60
+    },
+    "objectives": [
+      {
+        "id": "talk_to_merchant",
+        "description": "Speak with Spice Seller Layla about the foreign merchant's dilemma",
+        "descriptionArabic": "تَكَلَّم مَع بائِعَة التَّوابِل لَيلى عَن مُعضِلَة التّاجِر الأَجنَبي"
+      },
+      {
+        "id": "learn_3_spice_words",
+        "description": "Learn three spice and food words from the spice shop bookshelf",
+        "descriptionArabic": "تَعَلَّم ثَلاث كَلِمات تَوابِل وَطَعام مِن رَفِّ دُكّان البَهارات"
+      },
+      {
+        "id": "translate_signs",
+        "description": "Translate the three spice labels for the foreign merchant",
+        "descriptionArabic": "تَرجِم اللافِتات الثَّلاثَة لِلتّاجِر الأَجنَبي"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_market_fair_price",
+    "title": "A Fair Price",
+    "titleArabic": "سِعر عادِل",
+    "description": "A traveller was overcharged. Use marketplace direction and price vocabulary to file a formal complaint with the guild.",
+    "descriptionArabic": "سُرِقَ مِن مُسافِرٍ بِدَفعِه أَكثَرَ مِن اللّازِم. اِستَخدِم مُفرَدات الاِتِّجاهات وَالأَسعار لِتَقديم شَكوى رَسمِيَّة لِلنِّقابَة",
+    "zone": "desert_marketplace",
+    "type": "side_quest",
+    "target": 1,
+    "trackEvent": "dialogue_completed",
+    "autoStart": false,
+    "prerequisites": ["merchant_master"],
+    "npcGiver": "trader-hassan",
+    "reward": {
+      "xp": 90,
+      "dirhams": 55
+    },
+    "objectives": [
+      {
+        "id": "talk_to_traveller",
+        "description": "Hear the traveller's story from Trader Hassan",
+        "descriptionArabic": "اِستَمِع لِقِصَّة المُسافِر مِن التّاجِر حَسَّان"
+      },
+      {
+        "id": "find_price_words",
+        "description": "Learn the direction and price words needed for the formal complaint",
+        "descriptionArabic": "تَعَلَّم كَلِمات الاِتِّجاهات وَالأَسعار اللّازِمَة لِلشَّكوى الرَّسمِيَّة"
+      },
+      {
+        "id": "confront_guard",
+        "description": "Present the formal complaint to Guard Hamza using the learned vocabulary",
+        "descriptionArabic": "قَدِّم الشَّكوى الرَّسمِيَّة لِلحارِس حَمزَة بِاستِخدام المُفرَدات المُتَعَلَّمَة"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_farm_harvest_song",
+    "title": "The Harvest Song",
+    "titleArabic": "أُغنِيَة الحَصاد",
+    "description": "The farmers traditionally sing a three-word harvest chant. Learn the Arabic nature and plant words that form the ancient song.",
+    "descriptionArabic": "يَتَغَنَّى الفَلّاحونَ تَقليدِيّاً بِتَرتيلَة حَصادٍ مِن ثَلاث كَلِمات. تَعَلَّم كَلِمات الطَّبيعَة وَالنَّباتات العَرَبِيَّة التي تُشَكِّلُ الأُغنِيَة القَديمَة",
+    "zone": "farmland",
+    "type": "side_quest",
+    "target": 3,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["natures_scholar"],
+    "npcGiver": "farmer-omar",
+    "reward": {
+      "xp": 105,
+      "dirhams": 40
+    },
+    "objectives": [
+      {
+        "id": "talk_to_farmer",
+        "description": "Talk to Farmer Omar about the traditional harvest chant",
+        "descriptionArabic": "تَكَلَّم مَع المُزارِع عُمَر عَن تَرتيلَة الحَصاد التَّقليدِيَّة"
+      },
+      {
+        "id": "learn_harvest_words",
+        "description": "Learn the three nature words that form the harvest chant",
+        "descriptionArabic": "تَعَلَّم الكَلِمات الثَّلاث الطَّبيعِيَّة التي تُشَكِّلُ تَرتيلَة الحَصاد"
+      },
+      {
+        "id": "sing_chant",
+        "description": "Recite the three-word harvest chant alongside the farmers",
+        "descriptionArabic": "تُلِ تَرتيلَة الحَصاد مِن ثَلاث كَلِمات بِجانِب الفَلّاحين"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_farm_animal_care",
+    "title": "Caring for the Flock",
+    "titleArabic": "رِعايَة القَطيع",
+    "description": "A sick animal needs naming correctly in Arabic so the healer can prepare the right remedy.",
+    "descriptionArabic": "حَيَوانٌ مَريضٌ يَحتاجُ إلى تَسمِيَتِه بِالعَرَبِيَّة الصَّحيحَة حَتَّى يَتَمَكَّنَ المُعالِجُ مِن تَحضير الدَّواء المُناسِب",
+    "zone": "farmland",
+    "type": "side_quest",
+    "target": 1,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["natures_scholar"],
+    "npcGiver": "herbalist-maryam",
+    "reward": {
+      "xp": 95,
+      "dirhams": 35
+    },
+    "objectives": [
+      {
+        "id": "talk_to_keeper",
+        "description": "Talk to Herbalist Maryam about the sick animal",
+        "descriptionArabic": "تَكَلَّم مَع العَشّابَة مَريَم عَن الحَيَوان المَريض"
+      },
+      {
+        "id": "identify_animal_word",
+        "description": "Identify the animal's Arabic name from the animals bookshelf",
+        "descriptionArabic": "حَدِّد اِسمَ الحَيَوان بِالعَرَبِيَّة مِن رَفِّ الحَيَوانات"
+      },
+      {
+        "id": "fetch_healer",
+        "description": "Tell Herbalist Maryam the correct Arabic name so she can prepare the remedy",
+        "descriptionArabic": "أَخبِر العَشّابَة مَريَم بِالاِسم العَرَبيِّ الصَّحيح لِتَتَمَكَّنَ مِن تَحضير الدَّواء"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_bedouin_star_tale",
+    "title": "A Star Has a Name",
+    "titleArabic": "لِلنَّجم اسم",
+    "description": "Wanderer Ali recounts that stars were named by Arab astronomers. Learn two sky words and complete a star-naming ritual at the campfire.",
+    "descriptionArabic": "يَروي الرَّحّالَة عَلي أَنَّ العُلَماء العَرَب سَمَّوا النُّجوم. تَعَلَّم كَلِمَتَي السَّماء وَأَكمِل طَقسَ تَسمِيَة النُّجوم عِندَ نار المُخَيَّم",
+    "zone": "bedouin_camp",
+    "type": "side_quest",
+    "target": 2,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["tales_of_desert"],
+    "npcGiver": "wanderer-ali",
+    "reward": {
+      "xp": 115,
+      "dirhams": 45
+    },
+    "teachWords": ["star_w21", "sky_w18"],
+    "objectives": [
+      {
+        "id": "talk_to_wanderer",
+        "description": "Listen to Wanderer Ali's tale of the star-naming astronomers",
+        "descriptionArabic": "اِستَمِع لِقِصَّة الرَّحّالَة عَلي عَن فَلَكِيِّي تَسمِيَة النُّجوم"
+      },
+      {
+        "id": "learn_star_words",
+        "description": "Learn the two sky words: najm (star) and sama (sky)",
+        "descriptionArabic": "تَعَلَّم كَلِمَتَي السَّماء: نَجم وَسَماء"
+      },
+      {
+        "id": "light_campfire",
+        "description": "Complete the star-naming ritual by reciting both words at the campfire",
+        "descriptionArabic": "أَكمِل طَقسَ تَسمِيَة النُّجوم بِتِلاوَة الكَلِمَتَين عِندَ نار المُخَيَّم"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_bedouin_guest_rite",
+    "title": "The Guest's Greeting",
+    "titleArabic": "تَحِيَّة الضَّيف",
+    "description": "A proper desert greeting ceremony requires four phrases in sequence. Learn and deliver them to be accepted as an honoured guest.",
+    "descriptionArabic": "يَتَطَلَّبُ طَقسُ التَّرحيب الصَّحراوي الصَّحيح أَربَعَ عِبارات بِالتَّسَلسُل. تَعَلَّمها وَقَدِّمها لِتُقبَلَ ضَيفاً مُكَرَّماً",
+    "zone": "bedouin_camp",
+    "type": "side_quest",
+    "target": 1,
+    "trackEvent": "dialogue_completed",
+    "autoStart": false,
+    "prerequisites": ["tales_of_desert"],
+    "npcGiver": "elder-tariq",
+    "reward": {
+      "xp": 110,
+      "dirhams": 50
+    },
+    "objectives": [
+      {
+        "id": "talk_to_elder",
+        "description": "Ask Elder Tariq to teach you the guest greeting ceremony",
+        "descriptionArabic": "اِطلُب مِن الشَّيخ طارِق أَن يُعَلِّمَكَ طَقسَ تَحِيَّة الضَّيف"
+      },
+      {
+        "id": "learn_greetings",
+        "description": "Learn the four greeting phrases from the elder",
+        "descriptionArabic": "تَعَلَّم العِبارات الأَربَعَة لِلتَّرحيب مِن الشَّيخ"
+      },
+      {
+        "id": "perform_greeting",
+        "description": "Perform the full greeting ceremony in sequence to be welcomed as a guest",
+        "descriptionArabic": "أَدِّ طَقسَ التَّرحيب الكامِل بِالتَّسَلسُل لِتُرَحَّبَ بِكَ ضَيفاً"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_mountain_herb_names",
+    "title": "The Healer's Herbs",
+    "titleArabic": "أَعشاب المُعالِج",
+    "description": "Healer Khadija needs Arabic herb names to label her medicine jars accurately. Learn three plant words from the bookshelf.",
+    "descriptionArabic": "تَحتاجُ المُعالِجَة خَديجَة إلى أَسماء الأَعشاب بِالعَرَبِيَّة لِتَسمِيَة أَوعِيَة دَوائِها بِدِقَّة. تَعَلَّم ثَلاث كَلِمات نَباتات",
+    "zone": "mountain_village",
+    "type": "side_quest",
+    "target": 3,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["mountain_wisdom"],
+    "npcGiver": "healer-khadija",
+    "reward": {
+      "xp": 120,
+      "dirhams": 55
+    },
+    "objectives": [
+      {
+        "id": "talk_to_healer",
+        "description": "Talk to Healer Khadija about her need to label the medicine jars",
+        "descriptionArabic": "تَكَلَّم مَع المُعالِجَة خَديجَة عَن حاجَتِها لِتَسمِيَة أَوعِيَة الدَّواء"
+      },
+      {
+        "id": "learn_herb_words",
+        "description": "Study three plant and nature words from the animals bookshelf",
+        "descriptionArabic": "اِدرُس ثَلاث كَلِمات نَباتات وَطَبيعَة مِن رَفِّ الكُتُب"
+      },
+      {
+        "id": "label_jars",
+        "description": "Recite the herb names to Khadija so she can label the jars correctly",
+        "descriptionArabic": "تُلِ أَسماء الأَعشاب لِخَديجَة حَتَّى تَتَمَكَّنَ مِن تَسمِيَة الأَوعِيَة بِصِحَّة"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_mountain_path_markers",
+    "title": "Marking the Path",
+    "titleArabic": "تَعلِيم الطَّريق",
+    "description": "The mountain path sign has worn off. Learn three Arabic direction words and help re-label the sign correctly.",
+    "descriptionArabic": "اِندَثَرَت لافِتَة مَسار الجَبَل. تَعَلَّم ثَلاث كَلِمات اِتِّجاهات عَرَبِيَّة وَساعِد في إعادَة تَسمِيَة اللافِتَة بِصِحَّة",
+    "zone": "mountain_village",
+    "type": "side_quest",
+    "target": 3,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["mountain_wisdom"],
+    "npcGiver": "guide-salim",
+    "reward": {
+      "xp": 105,
+      "dirhams": 45
+    },
+    "objectives": [
+      {
+        "id": "talk_to_guide",
+        "description": "Talk to Guide Salim about the faded path marker sign",
+        "descriptionArabic": "تَكَلَّم مَع الدَّليل سَليم عَن لافِتَة المَسار المُندَثِرَة"
+      },
+      {
+        "id": "learn_directions",
+        "description": "Learn three direction words from the adjectives bookshelf",
+        "descriptionArabic": "تَعَلَّم ثَلاث كَلِمات اِتِّجاهات مِن رَفِّ الكُتُب"
+      },
+      {
+        "id": "relabel_sign",
+        "description": "Recite the direction words to Guide Salim to re-label the path sign",
+        "descriptionArabic": "تُلِ كَلِمات الاِتِّجاهات لِلدَّليل سَليم لِإعادَة تَسمِيَة لافِتَة المَسار"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_port_trade_manifest",
+    "title": "The Trade Manifest",
+    "titleArabic": "بَيان التِّجارَة",
+    "description": "The port manifest is written in Arabic. Learn three trade and number words to decode it and authorise the shipment.",
+    "descriptionArabic": "بَيانُ المِيناء مَكتوبٌ بِالعَرَبِيَّة. تَعَلَّم ثَلاث كَلِمات تِجارَة وَأَرقام لِفَكِّ شِفرَتِه وَتَصريح الشَّحنَة",
+    "zone": "coastal_port",
+    "type": "side_quest",
+    "target": 3,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["port_of_knowledge"],
+    "npcGiver": "captain-rashid",
+    "reward": {
+      "xp": 130,
+      "dirhams": 65
+    },
+    "objectives": [
+      {
+        "id": "talk_to_navigator",
+        "description": "Talk to Captain Rashid about the unreadable trade manifest",
+        "descriptionArabic": "تَكَلَّم مَع القُبطان رَشيد عَن بَيان التِّجارَة غَير المَقروء"
+      },
+      {
+        "id": "decode_manifest_words",
+        "description": "Study the trade bookshelf and learn the three key words on the manifest",
+        "descriptionArabic": "اِدرُس رَفَّ التِّجارَة وَتَعَلَّم الكَلِمات الثَّلاث الرَّئيسِيَّة في البَيان"
+      },
+      {
+        "id": "stamp_approval",
+        "description": "Recite the decoded trade words to Captain Rashid and stamp the manifest",
+        "descriptionArabic": "تُلِ كَلِمات التِّجارَة المُفَكَّكَة لِلقُبطان رَشيد وَاختِم البَيان"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_port_fishermans_blessing",
+    "title": "The Fisherman's Blessing",
+    "titleArabic": "بَرَكَة الصَّيّاد",
+    "description": "Before setting sail, fishermen recite a traditional blessing using two sea and travel Arabic words.",
+    "descriptionArabic": "قَبلَ الإِبحار يَتلو الصَّيّادونَ بَرَكَةً تَقليدِيَّةً تَستَخدِمُ كَلِمَتَي البَحر وَالسَّفَر بِالعَرَبِيَّة",
+    "zone": "coastal_port",
+    "type": "side_quest",
+    "target": 2,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["port_of_knowledge"],
+    "npcGiver": "fishmonger-hana",
+    "reward": {
+      "xp": 115,
+      "dirhams": 50
+    },
+    "teachWords": ["water_1", "fish_1"],
+    "objectives": [
+      {
+        "id": "talk_to_fisherman",
+        "description": "Talk to Fishmonger Hana about the traditional fisherman's blessing",
+        "descriptionArabic": "تَكَلَّم مَع بائِعَة السَّمَك هَناء عَن بَرَكَة الصَّيّاد التَّقليدِيَّة"
+      },
+      {
+        "id": "learn_sea_words",
+        "description": "Learn the two sea and travel words from the port food bookshelf",
+        "descriptionArabic": "تَعَلَّم كَلِمَتَي البَحر وَالسَّفَر مِن رَفِّ طَعام المِيناء"
+      },
+      {
+        "id": "recite_blessing",
+        "description": "Recite the fisherman's blessing alongside Hana before the boats depart",
+        "descriptionArabic": "تُلِ بَرَكَة الصَّيّاد بِجانِب هَناء قَبلَ مُغادَرَة القَوارِب"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_palace_calligraphy_test",
+    "title": "The Calligrapher's Test",
+    "titleArabic": "اختِبار الخَطّاط",
+    "description": "The royal calligrapher tests aspirants by asking them to identify three words from a magnificent calligraphy panel.",
+    "descriptionArabic": "يَختَبِرُ الخَطّاطُ المَلَكي المُتَطَلِّعين بِطَلَبِ تَحديد ثَلاث كَلِمات مِن لَوحَة خَطٍّ رائِعَة",
+    "zone": "royal_palace",
+    "type": "side_quest",
+    "target": 3,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["master_of_arabic"],
+    "npcGiver": "vizier-abbas",
+    "reward": {
+      "xp": 150,
+      "dirhams": 80
+    },
+    "objectives": [
+      {
+        "id": "talk_to_calligrapher",
+        "description": "Approach Vizier Abbas and ask to take the royal calligraphy test",
+        "descriptionArabic": "اِقتَرِب مِن الوَزير عَبّاس وَاطلُب خَوضَ اِختِبار الخَطِّ المَلَكي"
+      },
+      {
+        "id": "identify_calligraphy_words",
+        "description": "Study the palace calligraphy bookshelf to identify the three words on the panel",
+        "descriptionArabic": "اِدرُس رَفَّ خَطِّ القَصر لِتَحديد الكَلِمات الثَّلاث عَلى اللَّوحَة"
+      },
+      {
+        "id": "pass_test",
+        "description": "Recite the three calligraphy words correctly to pass the royal test",
+        "descriptionArabic": "تُلِ الكَلِمات الثَّلاثَة بِصِحَّة لِاجتِياز الاِختِبار المَلَكي"
+      }
+    ]
+  },
+
+  {
+    "id": "sq_palace_royal_poet",
+    "title": "The Royal Poem",
+    "titleArabic": "القَصيدَة المَلَكِيَّة",
+    "description": "The court poet needs you to recall three poetic and faith vocabulary words to complete a royal ode.",
+    "descriptionArabic": "يَحتاجُ شاعِرُ البَلاط مِنكَ تَذَكُّرَ ثَلاث كَلِمات شِعرِيَّة وَإيمانِيَّة لِإِكمال قَصيدَةٍ مَلَكِيَّة",
+    "zone": "royal_palace",
+    "type": "side_quest",
+    "target": 3,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": ["master_of_arabic"],
+    "npcGiver": "poet-rumi",
+    "reward": {
+      "xp": 145,
+      "dirhams": 75
+    },
+    "objectives": [
+      {
+        "id": "talk_to_poet",
+        "description": "Speak with Poet Rumi about the unfinished royal ode",
+        "descriptionArabic": "تَكَلَّم مَع الشّاعِر الرّومي عَن القَصيدَة المَلَكِيَّة غَير المُكتَمَلَة"
+      },
+      {
+        "id": "recall_poetry_words",
+        "description": "Study the palace phrases bookshelf to recall the three poetic words",
+        "descriptionArabic": "اِدرُس رَفَّ عِبارات القَصر لِتَستَحضِرَ الكَلِمات الثَّلاث الشِّعرِيَّة"
+      },
+      {
+        "id": "recite_ode",
+        "description": "Recite the three words to Poet Rumi to complete the royal ode",
+        "descriptionArabic": "تُلِ الكَلِمات الثَّلاث لِلشّاعِر الرّومي لِإِكمال القَصيدَة المَلَكِيَّة"
+      }
+    ]
   }
 ]
