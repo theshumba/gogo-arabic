@@ -25,6 +25,11 @@ export default function TeacherWordCard({ wordId }) {
         <div className={styles.wordCardArabic}>{formatArabic(word.arabic)}</div>
         <div className={styles.wordCardEnglish}>{word.english}</div>
         <div className={styles.wordCardTranslit}>{word.transliteration}</div>
+        {word.cefrLevel && (
+          <div className={styles.cefrBadge} data-level={word.cefrLevel}>
+            {word.cefrLevel}
+          </div>
+        )}
       </div>
     </div>
   );
