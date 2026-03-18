@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: in_progress
-stopped_at: Phase 44 Plan 02 complete — all 24 NPCs expanded with Islamic Golden Age dialogue
-last_updated: "2026-03-18T12:00:00.000Z"
-last_activity: "2026-03-18 — 44-02 complete: 647 lines, 209 teachWords, 36 culturalNotes across 12 more NPCs"
+stopped_at: Phase 44 Plan 03 complete — all 5 DIAL requirements satisfied, phase 44 complete
+last_updated: "2026-03-18T12:35:00.000Z"
+last_activity: "2026-03-18 — 44-03 complete: culturalNote UI wired, 49 invalid teachWord refs fixed, 1544 total lines verified"
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 9
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Milestone: v9.0 Content Depth
-Phase: 44 — NPC Dialogue Expansion (in progress)
-Plan: 02 of 3 complete
-Status: In progress
-Last activity: 2026-03-18 — Completed 44-02 (NPCs 13-24 + guide-amira dialogue expansion)
+Phase: 44 — NPC Dialogue Expansion (COMPLETE)
+Plan: 03 of 3 complete — Phase 44 complete
+Status: Phase complete — ready for Phase 45 (Quest Storylines)
+Last activity: 2026-03-18 — Completed 44-03 (culturalNote UI + teachWord verification + 1544 lines)
 
-Progress (v9.0): [██░░░░░░░░░░] 22% (2/9 plans)
+Progress (v9.0): [███░░░░░░░░░] 33% (3/9 plans)
 
 ### Shipped Milestones
 
@@ -51,11 +51,13 @@ Progress (v9.0): [██░░░░░░░░░░] 22% (2/9 plans)
 
 ### Key v9.0 Context
 
-- Starting dialogue count: ~1,043 lines — 1,188 new lines added (Plans 01+02) — DIAL-03 COMPLETE
+- Phase 44 COMPLETE: all 5 DIAL requirements satisfied
+- Total dialogue lines: 1,544 (target: 1,543+) — DIAL-03 COMPLETE
 - DIAL-01 COMPLETE: all 23 main NPCs + guide-amira rewritten with distinct Islamic Golden Age personalities
-- DIAL-02 COMPLETE: 12+ NPCs reference specific verifiable Islamic Golden Age historical facts
-- DIAL-05 COMPLETE: teachWord FSRS integration across all NPCs (366 total teachWord fields)
-- teachWord field integration requires wiring to existing FSRS fsrsSlice (DIAL-05) — DONE
+- DIAL-02 COMPLETE: 17 NPCs reference specific verifiable Islamic Golden Age historical facts (target: 8+)
+- DIAL-04 COMPLETE: culturalNote fields render in DialogueBox UI with red accent (#E63946) styling
+- DIAL-05 COMPLETE: teachWord-to-FSRS pipeline verified (454 teachWord fields, 0 invalid refs)
+- 111 total culturalNote fields across all NPCs
 - 8-act main storyline uses time-traveling scholar collecting manuscript pages across all 8 zones (QUEST-01)
 - Quest branching by learningPath (Scholar/Traveler/Historian) already exists in narrativeSlice (QUEST-05)
 - vocabularyAll.js currently has 1,220 words — expand to 5,000+ (VOCAB-01)
@@ -72,6 +74,8 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 | teachWord IDs use vocabulary.json format | 44-01 | IDs like `big_1`, `head_1`, `water_w13` — verified against vocabulary.json before use |
 | guide-amira gets return_visit trees with NPC routing | 44-02 | Amira now actively routes players to content NPCs; amira_npc_hints is a choice-branch after progress_check |
 | player-choice branches use next pointers to named trees | 44-02 | Cleaner than inline choices; lets engine's handleChoice() navigate between trees |
+| culturalNote added to DialogueBox.jsx not DialogueOverlay.jsx | 44-03 | DialogueBox is where line content renders; DialogueOverlay only orchestrates phases/choices |
+| Cultural note shown only when allComplete | 44-03 | Matches teachWordCard timing — prevents note appearing during typewriter animation |
 
 ### Blockers/Concerns
 
@@ -88,5 +92,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: 44-02 complete — all 24 NPCs (including guide-amira) dialogue expanded
-Resume file: `.planning/phases/44-npc-dialogue-expansion/44-03-PLAN.md`
+Stopped at: 44-03 complete — Phase 44 complete, all DIAL requirements met
+Resume file: `.planning/phases/45-quest-storylines/` (Phase 45 not yet planned — run `/gsd:plan-phase 45`)

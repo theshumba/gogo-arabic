@@ -407,9 +407,9 @@ Plans:
 **Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 44-01-PLAN.md — Rewrite dialogue for NPCs 1-12 (scholar-yusuf through storyteller-noor) with personality, cultural depth, teachWord, culturalNote
-- [ ] 44-02-PLAN.md — Rewrite dialogue for NPCs 13-24 (wanderer-ali through guide-amira) with personality, cultural depth, teachWord, culturalNote
-- [ ] 44-03-PLAN.md — Wire culturalNote display in DialogueOverlay + teachWord/FSRS verification + final line count
+- [x] 44-01-PLAN.md — Rewrite dialogue for NPCs 1-12 (scholar-yusuf through storyteller-noor) with personality, cultural depth, teachWord, culturalNote
+- [x] 44-02-PLAN.md — Rewrite dialogue for NPCs 13-24 (wanderer-ali through guide-amira) with personality, cultural depth, teachWord, culturalNote
+- [x] 44-03-PLAN.md — Wire culturalNote display in DialogueOverlay + teachWord/FSRS verification + final line count
 
 #### Phase 45: Quest Storylines
 **Goal**: Players have a compelling narrative arc to pursue — an 8-act main storyline plus per-zone side content that makes every Arabic learning moment feel purposeful and story-motivated
@@ -499,12 +499,12 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 41. Characters & Ambient Life | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 43. Zone References & Cleanup | v8.0 | 2/2 | Complete | 2026-03-18 |
-| 44. NPC Dialogue Expansion | v9.0 | 0/3 | Not started | — |
+| 44. NPC Dialogue Expansion | v9.0 | 3/3 | Complete | 2026-03-18 |
 | 45. Quest Storylines | v9.0 | 0/TBD | Not started | — |
 | 46. Vocabulary Expansion | v9.0 | 0/TBD | Not started | — |
 
-**Cumulative:** 43 phases shipped (v8.0 complete), 127+ plans complete, 8 milestones shipped
+**Cumulative:** 44 phases shipped (Phase 44 complete), 130 plans complete, 8 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 44 planned (3 plans in 2 waves)*
+*Last updated: 2026-03-18 — Phase 44 complete: all 5 DIAL requirements met, 1544 dialogue lines, culturalNote UI wired*
