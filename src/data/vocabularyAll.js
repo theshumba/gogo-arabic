@@ -18,6 +18,7 @@
 
 import curatedWords from './vocabulary.json';
 import finalWords from './vocabulary-final.json';
+import expandedWords from './vocabularyExpanded.js';
 
 // Build a Set of IDs already present in the curated dataset
 const curatedIds = new Set(curatedWords.map((w) => w.id));
@@ -47,7 +48,25 @@ const additionalWords = finalWords
     frequency: w.frequency ?? null,
   }));
 
-// Curated words first (preserving original order), then additional words
-const vocabulary = [...curatedWords, ...additionalWords];
+// Collect all existing IDs to deduplicate expanded words
+const existingIds = new Set([...curatedWords.map((w) => w.id), ...additionalWords.map((w) => w.id)]);
+
+// Add expanded vocabulary (5,000 CEFR-tagged words) — deduplicate by ID
+const expandedDeduped = expandedWords
+  .filter((w) => !existingIds.has(w.id))
+  .map((w) => ({
+    id: w.id,
+    arabic: w.arabic,
+    english: w.english,
+    transliteration: w.transliteration || null,
+    category: w.category || 'general',
+    difficulty: w.difficulty || 1,
+    root: w.root || null,
+    cefrLevel: w.cefrLevel || null,
+    frequency: w.frequency ?? null,
+  }));
+
+// Curated first, then vocabulary-final, then expanded CEFR words
+const vocabulary = [...curatedWords, ...additionalWords, ...expandedDeduped];
 
 export default vocabulary;
