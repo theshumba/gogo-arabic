@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
-status: in-progress
-stopped_at: 46-02 complete — vocabularyExpanded.js now has 5,000 entries (A1+A2+B1+B2)
-last_updated: "2026-03-18T23:39:00.000Z"
-last_activity: 2026-03-18 — Completed 46-02 (B1+B2 vocabulary — 3,500 new words, 5,000 total)
+status: completed
+stopped_at: 46-03 complete — vocabulary wired into live app (6,220 words, CEFR badges, RootExplorer clusters)
+last_updated: "2026-03-18T22:59:00.000Z"
+last_activity: 2026-03-18 — Completed 46-03 (vocabulary wiring — merge, CEFR badges, RootExplorer dual mode, FSRS selector)
 progress:
   total_phases: 3
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Milestone: v9.0 Content Depth
-Phase: 46 — Vocabulary Expansion (In progress)
-Plan: 02 of 03 complete
-Status: 46-02 COMPLETE — vocabularyExpanded.js now has 5,000 entries (A1:500, A2:1000, B1:2000, B2:1500)
-Last activity: 2026-03-18 — Completed 46-02 (B1+B2 vocabulary expansion — replaced corrupted filler with proper vocabulary)
+Phase: 46 — Vocabulary Expansion (COMPLETE)
+Plan: 03 of 03 complete
+Status: Phase 46 COMPLETE — all 6 VOCAB requirements satisfied (6,220 words, CEFR badges, RootExplorer clusters, FSRS frequency ordering)
+Last activity: 2026-03-18 — Completed 46-03 (vocabulary wiring into live app)
 
-Progress (v9.0): [████████░░░░] 89% (8/9 plans)
+Progress (v9.0): [████████████] 100% (9/9 plans)
 
 ### Shipped Milestones
 
@@ -67,12 +67,14 @@ Progress (v9.0): [████████░░░░] 89% (8/9 plans)
 - Total quests in quests.json: 100 (64 original + 8 main story + 16 side + 12 companion)
 - Total NPCs in npcs.json: 56 (44 original + 12 companions)
 - Quest branching by learningPath (Scholar/Traveler/Historian) already exists in narrativeSlice (QUEST-05)
-- vocabularyAll.js currently has 1,220 words — expand to 5,000+ (VOCAB-01)
-- CEFR targets: A1 (500), A2 (1,000), B1 (2,000), B2 (1,500) = 5,000 total (VOCAB-02)
-- Root Explorer already exists and searches by root — expansion adds family groupings display (VOCAB-03)
-- Phase 46 progress: 46-01 and 46-02 COMPLETE — vocabularyExpanded.js has 5,000 entries (A1:500, A2:1000, B1:2000, B2:1500); VOCAB-01/VOCAB-02/VOCAB-06 satisfied; 46-03 (merge + Root Explorer) remains
-- vocabularyExpanded.js IDs: exp_a1_001–exp_a1_500, exp_a2_0001–exp_a2_1000, exp_b1_0001–exp_b1_2000, exp_b2_0001–exp_b2_1500; zero conflicts with vocabulary.json (named IDs) or vocabulary-final.json (p_XXXX)
-- 46-02 replaced 3,108 corrupted filler entries with proper vocabulary across 40+ semantic categories (grammar, verbs, academic, science, history, law, economy, arts, philosophy, media, environment, psychology, religion, technology, Quranic, rhetoric, linguistics, etc.)
+- Phase 46 COMPLETE: all 6 VOCAB requirements satisfied
+- VOCAB-01 COMPLETE: vocabularyAll.js exports 6,220 words (250 curated + 970 vocabulary-final + 5,000 expanded)
+- VOCAB-02 COMPLETE: CEFR distribution: 500 A1, 1,000 A2, 2,000 B1, 1,500 B2 (5,000 tagged) + 1,220 untagged legacy
+- VOCAB-03 COMPLETE: RootExplorer merges quranic-roots with vocabulary root field data — dual-source root families
+- VOCAB-04 COMPLETE: Word Clusters tab in RootExplorer — all semantic categories browseable, sorted by frequency
+- VOCAB-05 COMPLETE: selectNewCardsByFrequency selector sorts by CEFR ascending then frequency descending
+- VOCAB-06 COMPLETE: all 5,000 expanded words have 9 required fields (id, arabic, english, transliteration, root, category, cefrLevel, frequency, difficulty)
+- vocabularyExpanded.js IDs: exp_a1_001–exp_a1_500 (A1), exp_a2_0001–exp_a2_1000 (A2), exp_b1_0001–exp_b1_2000 (B1), exp_b2_0001–exp_b2_1500 (B2); zero conflicts with other sources
 
 ### Decisions
 
@@ -96,11 +98,12 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 | learningPath lines appended at end of lines array | 45-03 | null-path players see lines 0-2 (unchanged); path players also see their matching variant line |
 | ID prefix exp_a1_ / exp_a2_ for vocabularyExpanded.js | 46-01 | Guarantees zero collision with vocabulary.json named IDs and vocabulary-final.json p_XXXX IDs |
 | A1 frequency 4000–9999, A2 frequency 2000–3999 | 46-01 | Matches vocabulary-final.json conventions for frequency field semantics |
-| Corrupted B1/B2 filler fully replaced (Rule 1 auto-fix) | 46-02 | 3,108 entries had broken transliterations and repetitive patterns; replaced with proper vocabulary across 40+ categories |
-| B1 frequency 500–1999, B2 frequency 1–499 | 46-02 | Extends frequency convention from 46-01; B1 difficulty:3, B2 difficulty:4 |
 | NPC first-meet journal in useDialogueEvents not useNarrativeEvents | 260318-tot | Avoids duplicate NPC_INTERACT listener; inline in existing handler |
 | removeItem uses { itemId, quantity } payload | 260318-tot | inventorySlice schema uses itemId not id; quantity=1 consumed per gift |
 | Cultural note codex unlock via custom EventBus event | 260318-tot | dialogue:cultural_note_shown emitted from DialogueBox with guard ref, listened in useDialogueEvents |
+| Eager import of vocabularyExpanded.js replaces lazy loading | 46-03 | All 6,220 words available at boot; simpler than async loadExpandedVocabulary() approach |
+| Root detail view merges quranic-roots + vocabulary root data | 46-03 | Type detection (string vs object) determines rendering; both sources shown in tree view |
+| Cluster sorting by frequency descending | 46-03 | Most commonly encountered words appear first within each semantic category |
 
 ### Blockers/Concerns
 
@@ -117,5 +120,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Quick task 260318-tot complete — all disconnected systems wired into live game
-Resume file: Phase 46 Plan 02 — `.planning/phases/46-vocabulary-expansion/46-02-PLAN.md` (B1/B2 words, 2,500 more words)
+Stopped at: Phase 46 COMPLETE — all 3 plans done, all 6 VOCAB requirements satisfied, v9.0 milestone at 100%
+Resume file: v9.0 milestone complete — ready for `/gsd:complete-milestone`

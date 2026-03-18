@@ -1,12 +1,16 @@
 /**
  * Consolidated vocabulary data module.
  *
- * Merges the hand-curated vocabulary.json (250 words with transliterations,
- * example sentences, and audio references) with the larger vocabulary-final.json
- * dataset (~970 additional words that have English translations).
+ * Merges three vocabulary sources into one array (5,000+ words):
  *
- * vocabulary.json entries take priority when IDs overlap, preserving their
- * richer metadata (transliteration, exampleSentence, audioRef, npcSource).
+ *   1. vocabulary.json        — 250 hand-curated words (richest metadata:
+ *                                transliterations, example sentences, audio refs)
+ *   2. vocabulary-final.json  — ~970 additional words with English translations
+ *   3. vocabularyExpanded.js  — 5,000 CEFR-tagged words (A1/A2/B1/B2)
+ *
+ * Priority order: curated > vocabulary-final > expanded. If an ID already
+ * exists in a higher-priority source, the duplicate from the lower-priority
+ * source is excluded.
  *
  * Entries from vocabulary-final.json that lack an English translation (mostly
  * Quranic-only vocabulary) are excluded because the quiz and review systems
@@ -14,13 +18,11 @@
  *
  * Every exported entry is guaranteed to have at minimum:
  *   id, arabic, english, category, difficulty
- *
- * The 5,000-word vocabularyExpanded.js dataset is NOT imported eagerly.
- * Call loadExpandedVocabulary() after the game boots to merge it in.
  */
 
 import curatedWords from './vocabulary.json';
 import finalWords from './vocabulary-final.json';
+import expandedWords from './vocabularyExpanded.js';
 
 // Build a Set of IDs already present in the curated dataset
 const curatedIds = new Set(curatedWords.map((w) => w.id));
@@ -50,48 +52,16 @@ const additionalWords = finalWords
     frequency: w.frequency ?? null,
   }));
 
-// Curated first, then vocabulary-final (~1,220 words total at boot)
-const vocabulary = [...curatedWords, ...additionalWords];
+// Build a Set of all IDs from curated + additional to deduplicate expanded words
+const allExistingIds = new Set([
+  ...curatedWords.map((w) => w.id),
+  ...additionalWords.map((w) => w.id),
+]);
+
+// Filter expanded words: exclude any ID already present in higher-priority sources
+const newExpandedWords = expandedWords.filter((w) => !allExistingIds.has(w.id));
+
+// Final export: curated first (richest metadata), then additional, then expanded
+const vocabulary = [...curatedWords, ...additionalWords, ...newExpandedWords];
 
 export default vocabulary;
-
-/**
- * Lazily loads the 5,000-word CEFR-tagged expanded vocabulary and merges it
- * into the live vocabulary array. Safe to call multiple times — subsequent
- * calls are no-ops once the chunk has been loaded.
- *
- * Call this in GameLayout's useEffect after Phaser boots so the expanded
- * words don't block the initial page load.
- *
- * @returns {Promise<Array>} The full merged vocabulary array
- */
-let expandedLoaded = false;
-
-export async function loadExpandedVocabulary() {
-  if (expandedLoaded) return vocabulary;
-
-  const { default: expandedWords } = await import('./vocabularyExpanded.js');
-
-  // Build a Set of IDs already in the base vocabulary to deduplicate
-  const existingIds = new Set(vocabulary.map((w) => w.id));
-
-  const expandedDeduped = expandedWords
-    .filter((w) => !existingIds.has(w.id))
-    .map((w) => ({
-      id: w.id,
-      arabic: w.arabic,
-      english: w.english,
-      transliteration: w.transliteration || null,
-      category: w.category || 'general',
-      difficulty: w.difficulty || 1,
-      root: w.root || null,
-      cefrLevel: w.cefrLevel || null,
-      frequency: w.frequency ?? null,
-    }));
-
-  // Mutate the exported array in-place so all existing references see the update
-  vocabulary.push(...expandedDeduped);
-  expandedLoaded = true;
-
-  return vocabulary;
-}

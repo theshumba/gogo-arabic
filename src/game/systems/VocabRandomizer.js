@@ -54,7 +54,7 @@ export class VocabRandomizer {
     for (const catName of catNames) {
       const words = categories[catName];
       // A1/beginner categories always go to first zone (starter zone)
-      const isBeginnerCat = words.length > 0 && words.every(w => w.cefr === 'A1');
+      const isBeginnerCat = words.length > 0 && words.every(w => (w.cefr === 'A1' || w.cefrLevel === 'A1'));
       const targetZone = isBeginnerCat ? zoneList[0] : zoneList[zoneIdx % zoneList.length];
       zoneAssignments[targetZone].push(...words);
       if (!isBeginnerCat) zoneIdx++;
