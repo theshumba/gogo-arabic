@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { closeDialogue } from '../../store/slices/uiSlice.js';
+import { closeDialogue, showNotification } from '../../store/slices/uiSlice.js';
 import { selectNpcRelationship } from '../../store/slices/narrativeSlice.js';
+import { giveNpcGift } from '../../store/slices/npcSlice.js';
+import { selectInventoryItems, removeItem } from '../../store/slices/inventorySlice.js';
+import { GIFTS, GIFTS_BY_ID } from '../../data/gifts.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { useDialogue } from '../../hooks/useDialogue.js';
@@ -39,6 +42,18 @@ const moodToEmoji = (mood) => {
 };
 
 /**
+ * Compute relationship delta for a given gift and NPC.
+ * Falls back to 5 (normal) for unregistered items.
+ */
+function getGiftDelta(gift, npcId) {
+  if (!gift) return 5;
+  if ((gift.npcPreferences?.loved || []).includes(npcId)) return gift.relationshipGain.loved;
+  if ((gift.npcPreferences?.liked || []).includes(npcId)) return gift.relationshipGain.liked;
+  if ((gift.npcPreferences?.disliked || []).includes(npcId)) return gift.relationshipGain.disliked;
+  return gift.relationshipGain?.normal ?? 5;
+}
+
+/**
  * DialogueOverlay
  * Main container for NPC dialogue — orchestrates portrait, dialogue box, choices,
  * topic selection, relationship indicator, and word cards.
@@ -64,6 +79,32 @@ export default function DialogueOverlay() {
   const focusTrapRef = useFocusTrap(true, null);
 
   const [showHistory, setShowHistory] = useState(false);
+  const [showGiftPanel, setShowGiftPanel] = useState(false);
+
+  // Inventory items for gift panel
+  const inventoryItems = useSelector(selectInventoryItems);
+
+  // Gift categories tracked in gifts.js
+  const GIFT_CATEGORIES = ['food', 'crafts', 'books', 'clothing', 'tools', 'luxury', 'cultural'];
+
+  // Items in inventory that are registered gifts or match gift categories
+  const giftableItems = inventoryItems.filter(
+    (item) => GIFTS_BY_ID[item.itemId] || GIFT_CATEGORIES.includes(item.category)
+  );
+
+  const handleGiveGift = (inventoryItem) => {
+    const gift = GIFTS_BY_ID[inventoryItem.itemId];
+    const delta = getGiftDelta(gift, npcId);
+    dispatch(giveNpcGift({ npcId, giftId: inventoryItem.itemId, relationshipDelta: delta }));
+    dispatch(removeItem({ itemId: inventoryItem.itemId, quantity: 1 }));
+    const reactionLabel =
+      delta >= 20 ? 'loves it!' : delta >= 10 ? 'really likes it!' : delta < 0 ? 'dislikes it.' : 'appreciates it.';
+    dispatch(showNotification({
+      message: `${npc?.name || npcId} ${reactionLabel} (+${delta} friendship)`,
+      type: 'info',
+    }));
+    setShowGiftPanel(false);
+  };
 
   // Centralized overlay close with ESC key and unmount safety net
   useOverlayClose(close);
@@ -369,6 +410,91 @@ export default function DialogueOverlay() {
           isHubAndSpoke={isHubAndSpoke}
           relationshipLevel={relationshipLevel}
         />
+
+        {/* Gift button — always available during dialogue */}
+        {!showGiftPanel && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '4px 8px' }}>
+            <button
+              onClick={(e) => { e.stopPropagation(); setShowGiftPanel(true); }}
+              style={{
+                background: 'transparent',
+                border: '1px solid #D4A843',
+                color: '#D4A843',
+                borderRadius: 4,
+                padding: '4px 12px',
+                fontSize: 12,
+                cursor: 'pointer',
+              }}
+              aria-label="Give a gift to this NPC"
+            >
+              Gift
+            </button>
+          </div>
+        )}
+
+        {/* Gift panel */}
+        {showGiftPanel && (
+          <div
+            style={{
+              background: '#1a1a2e',
+              border: '1px solid #D4A843',
+              borderRadius: 8,
+              padding: 12,
+              margin: '4px 0',
+              maxHeight: 200,
+              overflowY: 'auto',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ color: '#D4A843', fontWeight: 'bold', marginBottom: 8, fontSize: 14 }}>
+              Choose a Gift
+            </div>
+            {giftableItems.length === 0 && (
+              <div style={{ color: '#888', fontSize: 12 }}>No giftable items in your inventory.</div>
+            )}
+            {giftableItems.map((item) => {
+              const gift = GIFTS_BY_ID[item.itemId];
+              return (
+                <button
+                  key={item.itemId}
+                  onClick={(e) => { e.stopPropagation(); handleGiveGift(item); }}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    textAlign: 'left',
+                    background: 'transparent',
+                    border: '1px solid #333',
+                    borderRadius: 4,
+                    color: '#fff',
+                    padding: '6px 8px',
+                    marginBottom: 4,
+                    cursor: 'pointer',
+                    fontSize: 13,
+                  }}
+                >
+                  {gift?.name || item.name || item.itemId}
+                  {gift?.nameArabic && (
+                    <span style={{ color: '#888', marginLeft: 8, fontSize: 11 }}>{gift.nameArabic}</span>
+                  )}
+                  <span style={{ color: '#555', marginLeft: 8, fontSize: 11 }}>x{item.quantity}</span>
+                </button>
+              );
+            })}
+            <button
+              onClick={(e) => { e.stopPropagation(); setShowGiftPanel(false); }}
+              style={{
+                color: '#888',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                marginTop: 4,
+                fontSize: 12,
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        )}
       </motion.div>
     </div>
   );
