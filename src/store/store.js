@@ -28,6 +28,7 @@ import homeReducer from './slices/homeSlice.js';
 import statsReducer from './slices/statsSlice.js';
 import skillTreeReducer from './slices/skillTreeSlice.js';
 import factionReducer from './slices/factionSlice.js';
+import journalReducer from './slices/journalSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -120,7 +121,7 @@ const persistedCraftingReducer = persistReducer(craftingPersistConfig, craftingR
 const persistConfig = {
   key: 'gogo-arabic',
   storage, // localStorage
-  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative', 'economy', 'arena', 'time', 'weather', 'worldState', 'home', 'stats', 'skillTree', 'faction'],
+  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative', 'economy', 'arena', 'time', 'weather', 'worldState', 'home', 'stats', 'skillTree', 'faction', 'journal'],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
 
@@ -151,6 +152,7 @@ const rootReducer = combineReducers({
   stats: statsReducer,
   skillTree: skillTreeReducer,
   faction: factionReducer,
+  journal: journalReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -3,6 +3,7 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 const initialState = {
   dialogueState: {}, // { [npcId]: { lastLine: 0, wordsTaught: [] } }
   friendship: {},    // { [npcId]: number (0-100) }
+  giftsGiven: {},    // { [npcId]: [giftId, ...] } — all gifts ever given to each NPC
 };
 
 const npcSlice = createSlice({
@@ -49,6 +50,29 @@ const npcSlice = createSlice({
       const { npcId, value } = action.payload;
       state.friendship[npcId] = Math.max(0, Math.min(100, value));
     },
+
+    giveNpcGift(state, action) {
+      // payload: { npcId, giftId, relationshipDelta }
+      // Adjusts NPC friendship by relationshipDelta and logs the gift in giftsGiven.
+      const { npcId, giftId, relationshipDelta } = action.payload;
+
+      // Ensure friendship entry exists (default 50 = neutral)
+      if (state.friendship[npcId] === undefined) {
+        state.friendship[npcId] = 50;
+      }
+
+      // Clamp friendship between 0 and 100
+      state.friendship[npcId] = Math.max(
+        0,
+        Math.min(100, state.friendship[npcId] + (relationshipDelta ?? 0))
+      );
+
+      // Log the gift
+      if (!state.giftsGiven[npcId]) {
+        state.giftsGiven[npcId] = [];
+      }
+      state.giftsGiven[npcId].push(giftId);
+    },
   },
 });
 
@@ -58,6 +82,7 @@ export const {
   resetNpcDialogue,
   adjustFriendship,
   setFriendship,
+  giveNpcGift,
 } = npcSlice.actions;
 
 // --- Selectors ---
@@ -77,5 +102,13 @@ export const selectFriendshipTier = (npcId) => (state) => {
   return 'cold';                     // Minimal interaction
 };
 export const selectAllFriendships = (state) => state.npc?.friendship || {};
+
+// Gift selectors
+export const selectGiftsGiven       = (state)      => state.npc?.giftsGiven || {};
+export const selectGiftsGivenToNpc  = (npcId) => (state) => state.npc?.giftsGiven?.[npcId] || [];
+export const selectTotalGiftsGiven  = createSelector(
+  [(state) => state.npc?.giftsGiven || {}],
+  (giftsGiven) => Object.values(giftsGiven).reduce((sum, arr) => sum + arr.length, 0)
+);
 
 export default npcSlice.reducer;
