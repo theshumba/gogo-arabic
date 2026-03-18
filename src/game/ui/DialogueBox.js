@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
+import { prepareArabicText } from './ArabicText.js';
 
 /**
  * DialogueBox — In-canvas NPC dialogue display.
@@ -202,26 +203,56 @@ export class DialogueBox {
   // Internal helpers
   // ──────────────────────────────────────────────
 
+  /** Check if text contains Arabic Unicode characters */
+  _hasArabic(text) {
+    return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(text);
+  }
+
   /** Start typewriter for the message at currentIndex */
   _showCurrentMessage() {
     const msg = this.messages[this.currentIndex];
+    const isArabic = this._hasArabic(msg);
+
+    // Switch font style based on content language
+    if (isArabic) {
+      this.bodyText.setStyle({
+        fontFamily: "'PixelAE', 'Amiri', 'Noto Naskh Arabic', serif",
+        fontSize: '14px',
+        color: '#f4fefa',
+        wordWrap: { width: this._boxW - 32 },
+        lineSpacing: 6,
+        align: 'right',
+      });
+    } else {
+      this.bodyText.setStyle({
+        fontFamily: "'Press Start 2P', monospace",
+        fontSize: '10px',
+        color: '#f4fefa',
+        wordWrap: { width: this._boxW - 32 },
+        lineSpacing: 6,
+      });
+    }
+
     this.bodyText.setText('');
     this.cursor.setVisible(false);
     this.isTyping = true;
 
+    // Prepare the display text (reshape + reverse Arabic, or use as-is for English)
+    const displayMsg = isArabic ? prepareArabicText(msg) : msg;
+
     let charIndex = 0;
-    const speed = 30; // ms per character
+    const speed = isArabic ? 20 : 30; // Arabic flows faster (fewer "visual" chars due to reshaping)
 
     this._clearTimers();
 
     this.typeTimer = this.scene.time.addEvent({
       delay: speed,
-      repeat: msg.length - 1,
+      repeat: displayMsg.length - 1,
       callback: () => {
         charIndex++;
-        this.bodyText.setText(msg.substring(0, charIndex));
+        this.bodyText.setText(displayMsg.substring(0, charIndex));
 
-        if (charIndex >= msg.length) {
+        if (charIndex >= displayMsg.length) {
           this.isTyping = false;
           this._showCursor();
         }
@@ -235,7 +266,9 @@ export class DialogueBox {
       this.typeTimer.remove();
       this.typeTimer = null;
     }
-    this.bodyText.setText(this.messages[this.currentIndex]);
+    const msg = this.messages[this.currentIndex];
+    const displayMsg = this._hasArabic(msg) ? prepareArabicText(msg) : msg;
+    this.bodyText.setText(displayMsg);
     this.isTyping = false;
     this._showCursor();
   }

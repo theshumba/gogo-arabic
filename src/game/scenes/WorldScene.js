@@ -30,6 +30,7 @@ import { GameplayStats } from '../systems/GameplayStats.js';
 import { evaluateActionSets, executeActions } from '../systems/ActionSetExecutor.js';
 import { buildActionContext } from '../systems/actionContext.js';
 import { DialogueBox } from '../ui/DialogueBox.js';
+import { createArabicText } from '../ui/ArabicText.js';
 
 
 // ============================================================
@@ -68,6 +69,9 @@ export class WorldScene extends Phaser.Scene {
 
     // DialogueBox (Phaser in-canvas dialogue)
     this.dialogueBox = null;
+
+    // Suppress zone name toast on first load (game start)
+    this._suppressZoneToast = true;
 
     // Input
     this.interactKey = null;
@@ -183,6 +187,57 @@ export class WorldScene extends Phaser.Scene {
     if (this.dialogueBox && data.npcName && data.messages) {
       this.dialogueBox.show(data.npcName, data.messages, data.onComplete);
     }
+  }
+
+  /**
+   * Show a brief zone name toast (Arabic + English) at top of screen on zone entry.
+   * Fades in, holds 2 seconds, fades out. Fixed to camera.
+   *
+   * @param {string} zoneName - Zone ID (e.g. 'oasis_village')
+   * @param {object} zoneData - Zone definition object from zones.js
+   */
+  _showZoneNameToast(zoneName, zoneData) {
+    if (!zoneData) return;
+
+    const cam = this.cameras.main;
+    const centerX = cam.width / 2;
+
+    // English zone name (display name from zone data or formatted zone ID)
+    const englishName = zoneData.name || zoneName.replace(/_/g, ' ');
+    const englishLabel = this.add.text(centerX, 60, englishName.toUpperCase(), {
+      fontFamily: "'Press Start 2P', monospace",
+      fontSize: '12px',
+      color: '#f4fefa',
+      stroke: '#000000',
+      strokeThickness: 3,
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(9500).setAlpha(0);
+
+    // Arabic zone name (if available)
+    let arabicLabel = null;
+    if (zoneData.nameArabic) {
+      arabicLabel = createArabicText(this, centerX, 38, zoneData.nameArabic, {
+        fontSize: '16px',
+        color: '#d4a843',
+      });
+      arabicLabel.setScrollFactor(0).setDepth(9500).setAlpha(0);
+    }
+
+    // Fade in, hold, fade out
+    const targets = [englishLabel];
+    if (arabicLabel) targets.push(arabicLabel);
+
+    this.tweens.add({
+      targets,
+      alpha: 1,
+      duration: 400,
+      ease: 'Power2',
+      hold: 2000,
+      yoyo: true,
+      onComplete: () => {
+        englishLabel.destroy();
+        if (arabicLabel) arabicLabel.destroy();
+      },
+    });
   }
 
   // ============================================================
@@ -311,6 +366,13 @@ export class WorldScene extends Phaser.Scene {
       this.gatheringSpotManager = new GatheringSpotManager(this);
       this.gatheringSpotManager.create(zoneName);
     }
+
+    // Show zone name toast on zone entry (Phase 42 — ARAB-04)
+    // Suppressed on first load (game start); shown on subsequent zone transitions
+    if (!this._suppressZoneToast) {
+      this._showZoneNameToast(zoneName, zone);
+    }
+    this._suppressZoneToast = false;
   }
 
   // ============================================================
