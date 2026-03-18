@@ -4,8 +4,8 @@ milestone: v9.0
 milestone_name: Content Depth
 status: completed
 stopped_at: 46-01 complete — vocabularyExpanded.js created (500 A1 + 1,000 A2 words)
-last_updated: "2026-03-18T17:30:00.000Z"
-last_activity: 2026-03-18 — Completed quick task 260318-tot (wire disconnected systems: menu routes, gameplay dispatchers, gift UI)
+last_updated: "2026-03-18T22:55:00.000Z"
+last_activity: 2026-03-18 — Created 37-03 and 37-04 SUMMARY files + fixed 6 build blockers
 progress:
   total_phases: 3
   completed_phases: 2
@@ -98,6 +98,10 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 | NPC first-meet journal in useDialogueEvents not useNarrativeEvents | 260318-tot | Avoids duplicate NPC_INTERACT listener; inline in existing handler |
 | removeItem uses { itemId, quantity } payload | 260318-tot | inventorySlice schema uses itemId not id; quantity=1 consumed per gift |
 | Cultural note codex unlock via custom EventBus event | 260318-tot | dialogue:cultural_note_shown emitted from DialogueBox with guard ref, listened in useDialogueEvents |
+| BattleActionQueue is infrastructure only | 37-03 | Wiring to BattleStateMachine deferred to future combat phase |
+| Currency exchange rates 100:1 | 37-03 | Cultural authenticity: 100 fils = 1 dirham, 100 dirhams = 1 dinar |
+| ActorRegistry is foundation layer | 37-04 | Existing NPCManager/CompanionManager etc. continue working unchanged |
+| Singleton actorRegistry matches audioManager pattern | 37-04 | Module-level instance for global Phaser scene access |
 
 ### Blockers/Concerns
 
@@ -114,5 +118,6 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: 37-01 and 37-02 SUMMARY files created (retroactive documentation of already-shipped Phase 37 work)
+Stopped at: 37-03/37-04 SUMMARY files created + 6 build blockers fixed
 Resume file: Phase 46 Plan 02 — `.planning/phases/46-vocabulary-expansion/46-02-PLAN.md` (B1/B2 words, 2,500 more words)
+Note: v7.0 Phase 37 plans 03/04 retroactively documented — artifacts existed since commit 23d462c
