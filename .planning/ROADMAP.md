@@ -505,7 +505,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 43. Zone References & Cleanup | v8.0 | 2/2 | Complete | 2026-03-18 |
 | 44. NPC Dialogue Expansion | v9.0 | Complete | 2026-03-18 | 2026-03-18 |
 | 45. Quest Storylines | v9.0 | Complete | 2026-03-18 | 2026-03-18 |
-| 46. Vocabulary Expansion | v9.0 | 1/3 | In progress | — |
+| 46. Vocabulary Expansion | v9.0 | Complete    | 2026-03-18 | — |
 
 **Cumulative:** 45 phases shipped (Phase 45 complete), 133 plans complete, 8 milestones shipped
 
