@@ -1,4 +1,95 @@
 /**
+ * BIOME_BUILDING_SETS — Maps each tilesetTheme to its Kenmi building key arrays.
+ * Consumed by mapPlaceholder.js and zone data files to select biome-appropriate buildings.
+ */
+export const BIOME_BUILDING_SETS = {
+  desert: {
+    small: [
+      'kenmi-desert-houses-desert-house-1.1',
+      'kenmi-desert-houses-desert-house-1.2',
+      'kenmi-desert-houses-desert-house-1.3',
+      'kenmi-desert-houses-desert-house-1.4',
+      'kenmi-desert-houses-desert-house-2.1',
+      'kenmi-desert-houses-desert-house-2.2',
+      'kenmi-desert-houses-desert-house-2.3',
+      'kenmi-desert-houses-desert-house-2.4',
+    ],
+    large: [
+      'kenmi-desert-houses-desert-house-3.1',
+      'kenmi-desert-houses-desert-house-3.2',
+      'kenmi-desert-houses-desert-house-3.3',
+      'kenmi-desert-houses-desert-house-3.4',
+      'kenmi-desert-houses-desert-house-4.1',
+      'kenmi-desert-houses-desert-house-4.2',
+      'kenmi-desert-houses-desert-house-4.3',
+      'kenmi-desert-houses-desert-house-4.4',
+    ],
+    temple: 'kenmi-desert-temple-desert-temple',
+    pergola: 'kenmi-desert-houses-pergola',
+    fence: 'kenmi-desert-props-desert-fencewall',
+    obelisk: 'kenmi-desert-temple-desert-obelisk-1',
+    obeliskSmall: 'kenmi-desert-temple-desert-obelisk-small-1',
+  },
+  grass: {
+    small: [
+      'kenmi-base-buildings-buildings-houses-wood-house-1-wood-base-blue',
+      'kenmi-base-buildings-buildings-houses-wood-house-2-wood-base-blue',
+      'kenmi-base-buildings-buildings-houses-wood-house-3-wood-base-red',
+      'kenmi-base-buildings-buildings-houses-wood-house-4-wood-green-blue',
+      'kenmi-base-buildings-buildings-houses-wood-house-5-wood-base-black',
+    ],
+    large: [
+      'kenmi-base-buildings-buildings-houses-stone-house-1-stone-base-blue',
+      'kenmi-base-buildings-buildings-houses-stone-house-2-stone-base-blue',
+      'kenmi-base-buildings-buildings-houses-stone-house-3-stone-green-blue',
+      'kenmi-base-buildings-buildings-unique-buildings-inn-inn-blue',
+      'kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-blue',
+    ],
+    barn: 'kenmi-base-buildings-buildings-unique-buildings-barn-barn-base-blue',
+    stall: 'kenmi-base-buildings-buildings-unique-buildings-stalls-market-stalls',
+  },
+  snow: {
+    small: [
+      'kenmi-base-buildings-buildings-houses-stone-house-1-stone-base-black',
+      'kenmi-base-buildings-buildings-houses-stone-house-2-stone-base-black',
+      'kenmi-base-buildings-buildings-houses-limestone-house-1-limestone-base-black',
+      'kenmi-base-buildings-buildings-houses-limestone-house-2-limestone-base-black',
+    ],
+    large: [
+      'kenmi-base-buildings-buildings-houses-limestone-house-3-limestone-base-black',
+      'kenmi-base-buildings-buildings-houses-limestone-house-4-limestone-base-black',
+      'kenmi-base-buildings-buildings-houses-limestone-house-5-limestone-base-black',
+      'kenmi-base-buildings-buildings-unique-buildings-inn-inn-black',
+    ],
+  },
+  military: {
+    tent: 'kenmi-military-military-tents',
+    lookout: 'kenmi-military-lookout-towers',
+    palisade: 'kenmi-military-palisade',
+  },
+  dungeon: {
+    arch: 'kenmi-dungeons-dungeon-1-dungeon-1-arch',
+    archOpen: 'kenmi-dungeons-dungeon-1-dungeon-1-arch-open',
+    pillars: 'kenmi-dungeons-dungeon-1-dungeon-1-pillars',
+    gate: 'kenmi-dungeons-dungeon-1-dungeon-1-gate-closed',
+    stairs: 'kenmi-dungeons-dungeon-1-dungeon-1-stairs',
+  },
+  mushroom: {
+    small: [
+      'kenmi-shroom-houses-shroomlinng-house-1',
+      'kenmi-shroom-houses-shroomlinng-house-2',
+    ],
+    large: [
+      'kenmi-shroom-houses-shroomlinng-house-3',
+      'kenmi-shroom-houses-shroomlinng-house-3.5',
+    ],
+  },
+  volcano: {
+    tower: 'kenmi-volcano-buildings-volcano-tower',
+  },
+};
+
+/**
  * LEGACY FALLBACK — Maps old placeholder sprite keys to Kenmi asset keys.
  *
  * As of v8.0 Phase 43, zone data files (zones.js, mapPlaceholder.js) reference
