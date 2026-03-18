@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
 status: in_progress
-stopped_at: Phase 41 Plan 02 complete — FEMALE_NPC_IDS + hijab overlay shipped
-last_updated: "2026-03-18T01:39:21Z"
-last_activity: 2026-03-18 — Phase 41 Plan 02 complete (41-02 hijab overlay)
+stopped_at: Phase 41 Plan 03 complete (auto tasks) — awaiting checkpoint:human-verify
+last_updated: "2026-03-18T01:46:40Z"
+last_activity: 2026-03-18 — Phase 41 Plan 03 complete (ENEMY_KENMI_MAP + ambient animals enabled)
 progress:
   total_phases: 6
   completed_phases: 3
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 41 of 43 (characters-ambient-life) — IN PROGRESS
-Plan: 2/3 plans in phase 41 complete
-Status: Plans 41-01 and 41-02 shipped — NPC sprites + hijab overlay done
-Last activity: 2026-03-18 — Phase 41 Plan 02 complete (FEMALE_NPC_IDS + hijab overlay)
+Phase: 41 of 43 (characters-ambient-life) — IN PROGRESS (awaiting checkpoint)
+Plan: 3/3 plans in phase 41 complete (pending human-verify checkpoint)
+Status: All 3 plans shipped — awaiting visual verification before phase close
+Last activity: 2026-03-18 — Phase 41 Plan 03 complete (ENEMY_KENMI_MAP + ambient animals enabled)
 
-Progress (v8.0): [████████░░] 75% (12/16 plans)
+Progress (v8.0): [█████████░] 81% (13/16 plans)
 
 ### Shipped Milestones
 
@@ -101,6 +101,11 @@ v8.0 decisions:
 - 41-02: Hijab texture per-NPC with `hijab-overlay-{id}` key — avoids collision when two females share base sprite
 - 41-02: _hijabSprite initialized null via post-constructor guard for legacy/non-female NPCs
 - 41-02: Additive overlay pattern — hijab is a separate scene.add.sprite(), position synced in update() and setInteractionHint()
+- 41-03: ENEMY_KENMI_MAP uses actual enemy IDs from enemies.js — plan had 18 wrong IDs; corrected to all 19 real enemy IDs
+- 41-03: Kenmi battle fallback check: useKenmi = kenmiKey exists + Kenmi texture loaded + 256x256 NOT loaded — Kenmi is fallback only
+- 41-03: Kenmi battle sprites at 6x scale (16px * 6 = 96px) for battle scene visibility
+- 41-03: safeFrames() in _createAnimalAnimations uses Object.keys(tex.frames).length - 1 (subtracts Phaser __BASE pseudo-frame)
+- 41-03: Desert-zone guard uses zone.tilesetTheme || 'desert' matching existing biome dispatch pattern
 
 ### Blockers/Concerns
 
@@ -114,5 +119,5 @@ v8.0 decisions:
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 41 Plan 02 complete — 2/3 plans in Phase 41 done
-Resume file: .planning/phases/41-characters-ambient-life/41-03-PLAN.md (or run /gsd:plan-phase 41 for next plan)
+Stopped at: Phase 41 Plan 03 — awaiting checkpoint:human-verify (all 3 plans complete, pending visual sign-off)
+Resume file: .planning/phases/41-characters-ambient-life/41-03-PLAN.md (checkpoint:human-verify task — resume after user approves)
