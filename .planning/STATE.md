@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
 status: in_progress
-stopped_at: Phase 40 Plan 03 checkpoint — awaiting human visual verification
-last_updated: "2026-03-18T01:45:00Z"
-last_activity: 2026-03-18 — Completed 40-03 tasks (animated campfire/flies + landmark obelisks/golden pots + NPC props)
+stopped_at: Phase 41 Plan 01 — ready to start (Phase 40 complete)
+last_updated: "2026-03-18T02:00:00Z"
+last_activity: 2026-03-18 — Completed Phase 40 (40-03 checkpoint approved — all 3 plans done)
 progress:
   total_phases: 6
   completed_phases: 2
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 40: Buildings & Decorations (all 3 plans coded, checkpoint pending)
+**Current focus:** v8.0 Visual Overhaul — Phase 41: Characters & Ambient Life (Phase 40 complete, next up)
 
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 40 of 43 (buildings-decorations) — CHECKPOINT
-Plan: 40-03 tasks complete (3/3 plans in phase 40 coded)
-Status: All Phase 40 code done — awaiting human visual verification via dev server before phase closes
-Last activity: 2026-03-18 — Completed 40-03 (animated campfire/flies + landmark obelisks/golden pots + NPC props)
+Phase: 41 of 43 (characters-ambient-life) — READY TO START
+Plan: 0/3 plans in phase 41
+Status: Phase 40 complete — all 3 plans verified and shipped
+Last activity: 2026-03-18 — Phase 40 complete (40-03 checkpoint approved)
 
-Progress (v8.0): [█████░░░░░] 56% (9/16 plans)
+Progress (v8.0): [██████░░░░] 62% (10/16 plans)
 
 ### Shipped Milestones
 
@@ -104,10 +104,10 @@ v8.0 decisions:
 
 ### Pending Todos
 
-- Visual verification: `npm run dev` → load Oasis Village, Ancient Library, Desert Marketplace, Bedouin Camp, Farmland, Mountain Village, Coastal Port, Royal Palace — check animated decorations, landmark obelisks, NPC-adjacent props, no console errors
+- Visual verification complete (user-approved via checkpoint) — animated decorations, landmark obelisks, NPC-adjacent props all confirmed across 8 zones
 
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 40 Plan 03 checkpoint — visual verification of all 8 zones
-Resume file: .planning/phases/40-buildings-decorations/40-03-PLAN.md (type "approved" to complete)
+Stopped at: Phase 40 complete — ready for Phase 41 Characters & Ambient Life
+Resume file: .planning/phases/41-characters-ambient-life/ (run /gsd:plan-phase 41 to begin)

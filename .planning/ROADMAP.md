@@ -318,7 +318,7 @@ Plans:
 Plans:
 - [x] 40-01-PLAN.md — BIOME_BUILDING_SETS + Kenmi building keys in all 24 zone objects arrays (BLDG-01 through BLDG-07) — COMPLETE 2026-03-18
 - [x] 40-02-PLAN.md — Fix + enable scatterDecorations with multi-item crop, clustering near buildings (DECO-01, DECO-02, DECO-06, DECO-07) — COMPLETE 2026-03-18
-- [~] 40-03-PLAN.md — Animated campfire/flies decorations + landmark obelisks/golden pots + NPC-adjacent props (DECO-03, DECO-04, DECO-05) — CHECKPOINT: awaiting visual verify
+- [x] 40-03-PLAN.md — Animated campfire/flies decorations + landmark obelisks/golden pots + NPC-adjacent props (DECO-03, DECO-04, DECO-05) — COMPLETE 2026-03-18
 
 #### Phase 41: Characters & Ambient Life
 **Goal**: The player and all NPCs, enemies, and ambient animals are replaced with Kenmi pixel art sprites with proper 4-direction walk and idle animations
@@ -426,13 +426,13 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 37. Polish + Replay (Randomizer + Settings) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 38. Asset Pipeline & BootScene | v8.0 | 2/2 | Complete | 2026-03-16 |
 | 39. Terrain Rendering | v8.0 | 3/3 | Complete | 2026-03-18 |
-| 40. Buildings & Decorations | v8.0 | 0/3 | Planned | — |
+| 40. Buildings & Decorations | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 41. Characters & Ambient Life | v8.0 | 0/3 | Not started | — |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 0/3 | Not started | — |
 | 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
 
-**Cumulative:** 39 phases shipped (38-39 complete in v8.0), 116 plans complete, 7 milestones shipped (v8.0 in progress)
+**Cumulative:** 40 phases shipped (38-40 complete in v8.0), 119 plans complete, 7 milestones shipped (v8.0 in progress)
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 40 Plans 01-02 complete + Plan 03 at checkpoint (animated decorations + landmark props + NPC-adjacent props coded)*
+*Last updated: 2026-03-18 — Phase 40 complete (all 3 plans) — animated decorations, landmark obelisks, NPC-adjacent props verified*
