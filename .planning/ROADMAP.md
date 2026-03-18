@@ -446,10 +446,12 @@ Plans:
   4. Words are browseable by semantic cluster (food, family, travel, nature, body, colors, numbers, etc.) in the vocabulary interface, so a player can study a topic end-to-end
   5. Within each CEFR level, high-frequency words appear before rare ones in new FSRS card generation — a player who just started A2 encounters common words first
 
-**Plans**: TBD
+**Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 46-01-PLAN.md — TBD
+- [ ] 46-01-PLAN.md — Write A1 (500 words) + A2 (1,000 words) into vocabularyExpanded.js with VOCAB-06 schema
+- [ ] 46-02-PLAN.md — Append B1 (2,000 words) + B2 (1,500 words) to vocabularyExpanded.js
+- [ ] 46-03-PLAN.md — Merge into vocabularyAll.js + CEFR badge in TeacherWordCard + Root Explorer cluster browsing + frequency-ordered FSRS selector
 
 ## Progress
 
@@ -501,12 +503,12 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 41. Characters & Ambient Life | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 43. Zone References & Cleanup | v8.0 | 2/2 | Complete | 2026-03-18 |
-| 44. NPC Dialogue Expansion | v9.0 | Complete    | 2026-03-18 | 2026-03-18 |
-| 45. Quest Storylines | v9.0 | Complete    | 2026-03-18 | — |
-| 46. Vocabulary Expansion | v9.0 | 0/TBD | Not started | — |
+| 44. NPC Dialogue Expansion | v9.0 | Complete | 2026-03-18 | 2026-03-18 |
+| 45. Quest Storylines | v9.0 | Complete | 2026-03-18 | 2026-03-18 |
+| 46. Vocabulary Expansion | v9.0 | 0/3 | Not started | — |
 
-**Cumulative:** 44 phases shipped (Phase 44 complete), 130 plans complete, 8 milestones shipped
+**Cumulative:** 45 phases shipped (Phase 45 complete), 133 plans complete, 8 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 44 complete: all 5 DIAL requirements met, 1544 dialogue lines, culturalNote UI wired*
+*Last updated: 2026-03-18 — Phase 46 planned: 3 plans in 3 waves, VOCAB-01 through VOCAB-06*
