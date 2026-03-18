@@ -410,8 +410,7 @@ export class MapLoader {
 
     this.scatterDecorations(zone, groundData, mapWidth, mapHeight);
 
-    // TODO: Fix ambient animals (spritesheet frame indices need verification)
-    // this.spawnAmbientAnimals(zone, groundData, mapWidth, mapHeight);
+    this.spawnAmbientAnimals(zone, groundData, mapWidth, mapHeight);
 
     // Create exit triggers (signposts at zone edges)
     this.createExitTriggers(exits, mapWidth, mapHeight);
@@ -1568,6 +1567,10 @@ export class MapLoader {
     // Only spawn if Kenmi animal textures are loaded
     if (!this.scene.textures.exists('kenmi-desert-animals-camel-camel-1')) return;
 
+    // Only spawn desert animals in desert-themed zones
+    const tilesetTheme = zone.tilesetTheme || 'desert';
+    if (tilesetTheme !== 'desert') return;
+
     // Create animal animations if they don't already exist
     this._createAnimalAnimations();
 
@@ -1794,6 +1797,18 @@ export class MapLoader {
   _createAnimalAnimations() {
     const scene = this.scene;
 
+    // Helper: safely generate frame indices within the spritesheet's actual frame count.
+    // Prevents animation errors if a sprite has fewer frames than expected.
+    const safeFrames = (texture, maxFrames) => {
+      const tex = scene.textures.get(texture);
+      // Object.keys includes '__BASE' so subtract 1 for actual frame count
+      const total = tex ? Math.max(0, Object.keys(tex.frames).length - 1) : 0;
+      const count = Math.min(maxFrames, total);
+      const frames = [];
+      for (let i = 0; i < count; i++) frames.push(i);
+      return frames;
+    };
+
     // Camel idle animations (3 variants)
     const camelVariants = [
       { texture: 'kenmi-desert-animals-camel-camel-1', anim: 'camel-idle-1' },
@@ -1802,9 +1817,11 @@ export class MapLoader {
     ];
     for (const { texture, anim } of camelVariants) {
       if (!scene.anims.exists(anim) && scene.textures.exists(texture)) {
+        const frames = safeFrames(texture, 4);
+        if (frames.length === 0) continue;
         scene.anims.create({
           key: anim,
-          frames: scene.anims.generateFrameNumbers(texture, { frames: [0, 1, 2, 3] }),
+          frames: scene.anims.generateFrameNumbers(texture, { frames }),
           frameRate: 4,
           repeat: -1,
         });
@@ -1820,9 +1837,11 @@ export class MapLoader {
     ];
     for (const { texture, anim } of vultureVariants) {
       if (!scene.anims.exists(anim) && scene.textures.exists(texture)) {
+        const frames = safeFrames(texture, 6);
+        if (frames.length === 0) continue;
         scene.anims.create({
           key: anim,
-          frames: scene.anims.generateFrameNumbers(texture, { frames: [0, 1, 2, 3, 4, 5] }),
+          frames: scene.anims.generateFrameNumbers(texture, { frames }),
           frameRate: 6,
           repeat: -1,
         });
@@ -1838,9 +1857,11 @@ export class MapLoader {
     ];
     for (const { texture, anim } of scarabVariants) {
       if (!scene.anims.exists(anim) && scene.textures.exists(texture)) {
+        const frames = safeFrames(texture, 4);
+        if (frames.length === 0) continue;
         scene.anims.create({
           key: anim,
-          frames: scene.anims.generateFrameNumbers(texture, { frames: [0, 1, 2, 3] }),
+          frames: scene.anims.generateFrameNumbers(texture, { frames }),
           frameRate: 4,
           repeat: -1,
         });
