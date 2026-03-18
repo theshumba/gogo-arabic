@@ -11,6 +11,11 @@ import {
   visitZone,
 } from '../store/slices/questSlice.js';
 import { showNotification } from '../store/slices/uiSlice.js';
+import { adjustAlignment } from '../store/slices/factionSlice.js';
+import { addJournalEntry, JOURNAL_CATEGORIES } from '../store/slices/journalSlice.js';
+import { setWeeklyChallenge } from '../store/slices/endgameSlice.js';
+import { FACTIONS } from '../data/factions.js';
+import { WEEKLY_CHALLENGES } from '../data/weeklyRotation.js';
 import questsData from '../data/quests.json';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
@@ -19,6 +24,11 @@ import { store } from '../store/store.js';
 import { ZONES } from '../data/zones.js';
 import { ZONE_BGM_MAP, ZONE_NIGHT_BGM_MAP, ZONE_AMBIENT_LAYERS, INTERIOR_AMBIENT } from '../data/audioConfig.js';
 import { selectTimePhase } from '../store/slices/timeSlice.js';
+
+// Reverse map: npcId → factionId (built once at module load)
+const NPC_FACTION_MAP = Object.fromEntries(
+  FACTIONS.flatMap((f) => f.npcMembers.map((npcId) => [npcId, f.id]))
+);
 
 /**
  * useZoneEvents — Zone change, transition, unlock, and fast travel handlers
@@ -48,6 +58,17 @@ export function useZoneEvents(phaserRef, playSFX) {
       // Restore full ambient volume (in case we were inside a building)
       audioManager.unmuffleAmbient();
 
+      // Journal: first zone visit (check BEFORE visitZone so the zone is not yet in the list)
+      const zonesVisitedBefore = store.getState().quests.zonesVisited || [];
+      if (!zonesVisitedBefore.includes(zone)) {
+        const zoneLabel = zone.replace(/_/g, ' ');
+        dispatch(addJournalEntry({
+          text: `You entered ${zoneLabel} for the first time.`,
+          textArabic: '',
+          category: JOURNAL_CATEGORIES.TRAVEL,
+        }));
+      }
+
       // Track zone visit for exploration quests
       dispatch(visitZone(zone));
 
@@ -65,6 +86,19 @@ export function useZoneEvents(phaserRef, playSFX) {
             dispatch(completeQuest(qd.id));
             dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
             dispatch(checkPrerequisites(questsData));
+            // Journal: quest completed
+            dispatch(addJournalEntry({
+              text: `Quest completed: "${qd.title}"`,
+              textArabic: qd.titleArabic || '',
+              category: JOURNAL_CATEGORIES.QUEST,
+            }));
+            // Faction: adjust alignment for quest giver's faction
+            if (qd.npcGiver) {
+              const factionId = NPC_FACTION_MAP[qd.npcGiver];
+              if (factionId) {
+                dispatch(adjustAlignment({ factionId, amount: 10 }));
+              }
+            }
           }
         }
       }
@@ -184,4 +218,17 @@ export function useZoneEvents(phaserRef, playSFX) {
       audioManager.stopAmbient();
     };
   }, [dispatch, playSFX, phaserRef]);
+
+  // Load the weekly challenge on mount — runs once when GameLayout mounts
+  useEffect(() => {
+    const existing = store.getState().endgame?.weeklyChallenge;
+    const now = new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const weekNum = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+    const clampedWeek = Math.max(1, Math.min(52, weekNum));
+    const challenge = WEEKLY_CHALLENGES.find((c) => c.week === clampedWeek) || WEEKLY_CHALLENGES[0];
+    if (!existing || existing.id !== challenge.id) {
+      dispatch(setWeeklyChallenge(challenge));
+    }
+  }, [dispatch]);
 }

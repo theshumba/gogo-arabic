@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { openDialogue, showNotification } from '../store/slices/uiSlice.js';
 import {
   updateQuestProgress,
@@ -7,6 +7,8 @@ import {
   checkPrerequisites,
   visitNpc,
 } from '../store/slices/questSlice.js';
+import { unlockEntry } from '../store/slices/codexSlice.js';
+import { addJournalEntry, JOURNAL_CATEGORIES } from '../store/slices/journalSlice.js';
 import questsData from '../data/quests.json';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
@@ -23,15 +25,27 @@ import { store } from '../store/store.js';
  */
 export function useDialogueEvents(playSFX) {
   const dispatch = useDispatch();
-  const quests = useSelector((state) => state.quests.quests);
 
   useEffect(() => {
     const handleNpcInteract = ({ npcId, npcName }) => {
       playSFX('click');
       dispatch(openDialogue({ npcId, npcName }));
 
+      // Journal: first-ever NPC meeting (check BEFORE visitNpc so the npcId is not yet in the list)
+      const npcsVisitedBefore = store.getState().quests.npcsVisited || [];
+      if (!npcsVisitedBefore.includes(npcId)) {
+        dispatch(addJournalEntry({
+          text: `You met ${npcName || npcId.replace(/_/g, ' ')} for the first time.`,
+          textArabic: '',
+          category: JOURNAL_CATEGORIES.SOCIAL,
+        }));
+      }
+
       // Track NPC visit for exploration quests
       dispatch(visitNpc(npcId));
+
+      // Read quests from store directly (not from stale closure)
+      const quests = store.getState().quests.quests;
 
       // Check exploration quests
       for (const qd of questsData) {
@@ -44,10 +58,7 @@ export function useDialogueEvents(playSFX) {
             // Specific NPCs required
             const requiredNpcs = qd.requirements.npcsVisited;
             const visitedCount = requiredNpcs.filter(npc => npcsVisited.includes(npc)).length;
-            dispatch(updateQuestProgress({ questId: qd.id, amount: 0 })); // Update progress display
-            if (quests[qd.id]) {
-              quests[qd.id].progress = visitedCount;
-            }
+            dispatch(updateQuestProgress({ questId: qd.id, amount: visitedCount }));
             if (visitedCount >= qd.target) {
               dispatch(completeQuest(qd.id));
               dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
@@ -58,8 +69,8 @@ export function useDialogueEvents(playSFX) {
             const currentZone = state.player.currentZone;
             if (currentZone === qd.requirements.zone) {
               dispatch(updateQuestProgress({ questId: qd.id, amount: 1 }));
-              const current = (quests[qd.id]?.progress || 0) + 1;
-              if (current >= qd.target) {
+              const currentProgress = quests[qd.id]?.progress || 0;
+              if (currentProgress + 1 >= qd.target) {
                 dispatch(completeQuest(qd.id));
                 dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
                 dispatch(checkPrerequisites(questsData));
@@ -126,11 +137,18 @@ export function useDialogueEvents(playSFX) {
       }
     };
 
+    // Cultural note shown → unlock a codex entry
+    const handleCulturalNoteShown = ({ npcId, lineKey }) => {
+      const entryId = `cultural_${npcId || 'npc'}_${lineKey.replace(/\s/g, '_')}`;
+      dispatch(unlockEntry(entryId));
+    };
+
     // Register event listeners
     EventBus.on(EVENTS.NPC_INTERACT, handleNpcInteract);
     EventBus.on(EVENTS.DIALOGUE_EFFECT_EXECUTED, handleEffectExecuted);
     EventBus.on(EVENTS.DIALOGUE_RELATIONSHIP_CHANGED, handleRelationshipChanged);
     EventBus.on(EVENTS.DIALOGUE_ENDED, handleDialogueEnded);
+    EventBus.on('dialogue:cultural_note_shown', handleCulturalNoteShown);
 
     return () => {
       // Cleanup: unregister all listeners
@@ -138,6 +156,7 @@ export function useDialogueEvents(playSFX) {
       EventBus.off(EVENTS.DIALOGUE_EFFECT_EXECUTED, handleEffectExecuted);
       EventBus.off(EVENTS.DIALOGUE_RELATIONSHIP_CHANGED, handleRelationshipChanged);
       EventBus.off(EVENTS.DIALOGUE_ENDED, handleDialogueEnded);
+      EventBus.off('dialogue:cultural_note_shown', handleCulturalNoteShown);
     };
-  }, [dispatch, quests, playSFX]);
+  }, [dispatch, playSFX]);
 }

@@ -1,8 +1,10 @@
 import { useSelector } from 'react-redux';
+import { useEffect, useRef } from 'react';
 import { useTypewriter } from '../../hooks/useTypewriter.js';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import VocabularyHighlight from './VocabularyHighlight.jsx';
 import RelationshipIndicator from './RelationshipIndicator.jsx';
+import { EventBus } from '../../utils/eventBus.js';
 import styles from './DialogueOverlay.module.css';
 
 const moodToEmoji = (mood) => {
@@ -76,6 +78,24 @@ export default function DialogueBox({ npc, line, onAdvance, portrait, teachWordC
     arabicTypewriter.isComplete &&
     (!line.english || englishTypewriter.isComplete) &&
     (!line.transliteration || !settings?.showTransliteration || translitTypewriter.isComplete);
+
+  // Guard ref to ensure we emit cultural note event only once per line reveal
+  const culturalNoteEmittedRef = useRef(false);
+
+  useEffect(() => {
+    // Reset guard when line changes
+    culturalNoteEmittedRef.current = false;
+  }, [line]);
+
+  useEffect(() => {
+    if (allComplete && line?.culturalNote && !culturalNoteEmittedRef.current) {
+      culturalNoteEmittedRef.current = true;
+      EventBus.emit('dialogue:cultural_note_shown', {
+        npcId: npc?.id || 'unknown',
+        lineKey: line.culturalNote.slice(0, 30).replace(/\s+/g, '_'),
+      });
+    }
+  }, [allComplete, line, npc]);
 
   // Handle advance - first skip typing, then advance to next line
   const handleAdvance = () => {
