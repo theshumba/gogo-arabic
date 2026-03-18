@@ -119,4 +119,30 @@ export const selectVocabMasteryByZone = createSelector(
   }
 );
 
+/**
+ * Select vocabulary words not yet in FSRS, sorted by CEFR level then frequency descending.
+ * Used for new card introduction: players always encounter high-frequency words first.
+ *
+ * @param {Object} state - Redux state
+ * @param {Array} allWords - Full vocabulary array (from vocabularyAll.js)
+ * @param {number} limit - Max cards to return (default 20)
+ */
+export const selectNewCardsByFrequency = createSelector(
+  [selectFsrsCards, (_state, allWords) => allWords, (_state, _words, limit) => limit ?? 20],
+  (cards, allWords, limit) => {
+    const CEFR_ORDER = { A1: 1, A2: 2, B1: 3, B2: 4 };
+    const unseenWords = allWords.filter((w) => !cards[w.id]);
+    return unseenWords
+      .sort((a, b) => {
+        // Primary: CEFR level ascending (A1 before A2 before B1 before B2)
+        const cefrA = CEFR_ORDER[a.cefrLevel] ?? 5;
+        const cefrB = CEFR_ORDER[b.cefrLevel] ?? 5;
+        if (cefrA !== cefrB) return cefrA - cefrB;
+        // Secondary: frequency descending within same CEFR level (higher freq = show first)
+        return (b.frequency ?? 0) - (a.frequency ?? 0);
+      })
+      .slice(0, limit);
+  }
+);
+
 export default vocabularySlice.reducer;
