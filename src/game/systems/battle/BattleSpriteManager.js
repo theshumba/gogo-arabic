@@ -13,6 +13,7 @@
  */
 
 import { store } from '../../../store/store.js';
+import { ENEMY_KENMI_MAP } from '../../../data/spriteKeyMap.js';
 
 export class BattleSpriteManager {
   constructor(scene) {
@@ -43,21 +44,39 @@ export class BattleSpriteManager {
     const { width, height } = this.scene.cameras.main;
 
     enemyParty.forEach((enemyId, index) => {
-      const key = `battle-enemy-${enemyId}`;
+      const battleKey = `battle-enemy-${enemyId}`;
+      const kenmiKey = ENEMY_KENMI_MAP[enemyId];
+      // Use Kenmi sprite when: a Kenmi mapping exists, the Kenmi texture is loaded,
+      // and the 256x256 battle sprite is NOT already loaded (kenmi is the fallback).
+      const useKenmi = !!(kenmiKey && this.scene.textures.exists(kenmiKey) && !this.scene.textures.exists(battleKey));
+
+      const textureKey = useKenmi ? kenmiKey : battleKey;
 
       // Enemies on left side, staggered vertically for multi-enemy
       const xPos = width * 0.25;
       const yPos = height * 0.45 + index * 80;
 
-      const sprite = this.scene.add.sprite(xPos, yPos, key, 0);
-      sprite.setScale(2);
+      const sprite = this.scene.add.sprite(xPos, yPos, textureKey, 0);
+
+      if (useKenmi) {
+        sprite.setScale(6); // 16px * 6 = 96px — visible at battle scale
+      } else {
+        sprite.setScale(2); // Original 256x256 * 2
+      }
+
       sprite.setFlipX(true); // Face right toward player
       sprite.setDepth(10);
 
-      this._createBattleAnims(key, `enemy-${index}`);
-      sprite.play(`enemy-${index}-idle`);
+      const animPrefix = `enemy-${index}`;
 
-      this.enemySprites.push({ sprite, enemyId, animPrefix: `enemy-${index}` });
+      if (useKenmi) {
+        this._createKenmiBattleAnims(textureKey, animPrefix);
+      } else {
+        this._createBattleAnims(textureKey, animPrefix);
+      }
+
+      sprite.play(`${animPrefix}-idle`);
+      this.enemySprites.push({ sprite, enemyId, animPrefix, useKenmi });
     });
   }
 
@@ -141,6 +160,90 @@ export class BattleSpriteManager {
     }
   }
 
+  /**
+   * Create battle animations for Kenmi 16x16 spritesheets (12 cols x 20 rows).
+   * Walk-cycle rows: down=0, left=1, right=2, up=3 (each row = 12 frames)
+   *   Row 0 frames 0-11  = walk-down
+   *   Row 1 frames 12-23 = walk-left
+   *   Row 2 frames 24-35 = walk-right (used for attack lunge)
+   *   Row 3 frames 36-47 = walk-up   (used for cast gesture)
+   */
+  _createKenmiBattleAnims(textureKey, prefix) {
+    const anims = this.scene.anims;
+
+    if (!this.scene.textures.exists(textureKey)) return;
+
+    // Idle: walk-down frames 0-2, looping (gentle sway)
+    if (!anims.exists(`${prefix}-idle`)) {
+      anims.create({
+        key: `${prefix}-idle`,
+        frames: anims.generateFrameNumbers(textureKey, { frames: [0, 1, 2] }),
+        frameRate: 4,
+        repeat: -1,
+      });
+    }
+
+    // Attack: walk-right frames 24-26, play once (lunge forward)
+    if (!anims.exists(`${prefix}-attack`)) {
+      anims.create({
+        key: `${prefix}-attack`,
+        frames: anims.generateFrameNumbers(textureKey, { frames: [24, 25, 26] }),
+        frameRate: 12,
+        repeat: 0,
+      });
+    }
+
+    // Hurt: quick flash between frames 0 and 2
+    if (!anims.exists(`${prefix}-hurt`)) {
+      anims.create({
+        key: `${prefix}-hurt`,
+        frames: anims.generateFrameNumbers(textureKey, { frames: [0, 2] }),
+        frameRate: 10,
+        repeat: 0,
+      });
+    }
+
+    // Defend: hold frame 12 (walk-left first frame — brace stance)
+    if (!anims.exists(`${prefix}-defend`)) {
+      anims.create({
+        key: `${prefix}-defend`,
+        frames: [{ key: textureKey, frame: 12 }],
+        frameRate: 1,
+        repeat: 0,
+      });
+    }
+
+    // Cast: walk-up frames 36-38 (arms raised gesture)
+    if (!anims.exists(`${prefix}-cast`)) {
+      anims.create({
+        key: `${prefix}-cast`,
+        frames: anims.generateFrameNumbers(textureKey, { frames: [36, 37, 38] }),
+        frameRate: 10,
+        repeat: 0,
+      });
+    }
+
+    // Victory: reuse idle walk-down loop
+    if (!anims.exists(`${prefix}-victory`)) {
+      anims.create({
+        key: `${prefix}-victory`,
+        frames: anims.generateFrameNumbers(textureKey, { frames: [0, 1, 2] }),
+        frameRate: 4,
+        repeat: -1,
+      });
+    }
+
+    // Defeat: freeze on frame 0
+    if (!anims.exists(`${prefix}-defeat`)) {
+      anims.create({
+        key: `${prefix}-defeat`,
+        frames: [{ key: textureKey, frame: 0 }],
+        frameRate: 1,
+        repeat: 0,
+      });
+    }
+  }
+
   // --- Animation triggers called by BattleStateMachine ---
 
   playPlayerAttack(onComplete) {
@@ -207,7 +310,7 @@ export class BattleSpriteManager {
   // --- Helpers ---
 
   _playAndReturn(sprite, animKey, idleKey, onComplete) {
-    if (!sprite?.anims?.exists(animKey)) {
+    if (!sprite || !this.scene.anims.exists(animKey)) {
       // Fallback: skip animation if it doesn't exist (no sprite loaded)
       onComplete?.();
       return;

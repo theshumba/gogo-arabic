@@ -180,3 +180,47 @@ export const FEMALE_NPC_IDS = new Set([
  * Applied as multiply tint to the hijab overlay rectangle.
  */
 export const NPC_HIJAB_TINT = 0xF5E6D3;
+
+/**
+ * Maps enemy IDs from enemies.js to Kenmi overworld sprite keys.
+ * Used by BattleSpriteManager as fallback when 256x256 battle sprites are unavailable.
+ * Desert Warriors: 2 weapon types (atgier, bow) x 2 color variants = 4 warriors
+ * Mummy: 1 variant (desert/enemies/mummy.png)
+ *
+ * Enemies not in this map will attempt to load battle-enemy-{id} (256x256) as before.
+ * Kenmi keys rotate through 5 textures to provide visual variety.
+ */
+export const ENEMY_KENMI_MAP = {
+  // Oasis Village enemies
+  'sand-scarab':    'kenmi-desert-enemies-desert-warrior-atgier-1',
+  'dust-sprite':    'kenmi-desert-enemies-desert-warrior-bow-1',
+  'oasis-guardian': 'kenmi-desert-enemies-mummy',
+
+  // Ancient Library enemies
+  'ink-wraith':      'kenmi-desert-enemies-desert-warrior-bow-2',
+  'scroll-golem':    'kenmi-desert-enemies-desert-warrior-atgier-2',
+  'keeper-of-words': 'kenmi-desert-enemies-mummy',
+
+  // Desert Marketplace enemies
+  'sand-djinn':       'kenmi-desert-enemies-desert-warrior-atgier-1',
+  'mirage-thief':     'kenmi-desert-enemies-desert-warrior-bow-1',
+  'merchant-prince':  'kenmi-desert-enemies-desert-warrior-atgier-2',
+
+  // Coastal Port enemies
+  'sea-serpent':  'kenmi-desert-enemies-desert-warrior-bow-2',
+  'storm-caller': 'kenmi-desert-enemies-desert-warrior-atgier-1',
+  'tide-lord':    'kenmi-desert-enemies-mummy',
+
+  // Royal Palace enemies
+  'palace-sentinel': 'kenmi-desert-enemies-desert-warrior-atgier-2',
+  'shadow-vizier':   'kenmi-desert-enemies-mummy',
+
+  // Garden District enemies
+  'thorn-vine':     'kenmi-desert-enemies-desert-warrior-bow-1',
+  'blossom-spirit': 'kenmi-desert-enemies-desert-warrior-bow-2',
+
+  // Mountain Pass enemies
+  'rock-elemental':  'kenmi-desert-enemies-desert-warrior-atgier-2',
+  'wind-hawk':       'kenmi-desert-enemies-desert-warrior-bow-1',
+  'mountain-elder':  'kenmi-desert-enemies-mummy',
+};

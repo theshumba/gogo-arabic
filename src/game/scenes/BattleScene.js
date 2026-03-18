@@ -13,6 +13,7 @@ import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { store } from '../../store/store.js';
+import { ENEMY_KENMI_MAP } from '../../data/spriteKeyMap.js';
 import { BattleStateMachine } from '../systems/battle/BattleStateMachine.js';
 import { BattleArena } from '../systems/battle/BattleArena.js';
 import { BattleSpriteManager } from '../systems/battle/BattleSpriteManager.js';
@@ -50,7 +51,11 @@ export class BattleScene extends Phaser.Scene {
     const { enemyParty = [] } = this.battleConfig;
 
     // Load enemy battle sprites (if available)
+    // Skip loading 256x256 battle sprite when a Kenmi fallback texture is already loaded.
     enemyParty.forEach((enemyId) => {
+      const kenmiKey = ENEMY_KENMI_MAP[enemyId];
+      if (kenmiKey && this.textures.exists(kenmiKey)) return;
+
       const key = `battle-enemy-${enemyId}`;
       if (!this.textures.exists(key)) {
         // Only attempt load if the asset exists — graceful fallback if not
