@@ -427,12 +427,12 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 38. Asset Pipeline & BootScene | v8.0 | 2/2 | Complete | 2026-03-16 |
 | 39. Terrain Rendering | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 40. Buildings & Decorations | v8.0 | 3/3 | Complete | 2026-03-18 |
-| 41. Characters & Ambient Life | v8.0 | 0/3 | Not started | — |
+| 41. Characters & Ambient Life | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 0/3 | Not started | — |
 | 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
 
-**Cumulative:** 40 phases shipped (38-40 complete in v8.0), 119 plans complete, 7 milestones shipped (v8.0 in progress)
+**Cumulative:** 41 phases shipped (38-41 complete in v8.0), 122 plans complete, 7 milestones shipped (v8.0 in progress)
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 41 planned (3 plans in 2 waves) — player sprite, NPC hijab, enemy sprites, ambient animals*
+*Last updated: 2026-03-18 — Phase 41 complete (3/3 plans) — Kenmi player, NPC sprites, hijab overlay, enemy battle sprites, ambient desert animals*

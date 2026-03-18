@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
 status: in_progress
-stopped_at: Phase 41 Plan 03 complete (auto tasks) — awaiting checkpoint:human-verify
-last_updated: "2026-03-18T01:46:40Z"
-last_activity: 2026-03-18 — Phase 41 Plan 03 complete (ENEMY_KENMI_MAP + ambient animals enabled)
+stopped_at: Phase 41 complete (all 3 plans) — checkpoint approved, ready for Phase 42
+last_updated: "2026-03-18T02:00:00Z"
+last_activity: 2026-03-18 — Phase 41 fully complete + visual verification approved (checkpoint:human-verify passed)
 progress:
   total_phases: 6
   completed_phases: 3
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 41: Characters & Ambient Life (Plans 41-01 and 41-02 complete)
+**Current focus:** v8.0 Visual Overhaul — Phase 41 complete, ready for Phase 42: Phaser UI & Arabic BitmapFont
 
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 41 of 43 (characters-ambient-life) — IN PROGRESS (awaiting checkpoint)
-Plan: 3/3 plans in phase 41 complete (pending human-verify checkpoint)
-Status: All 3 plans shipped — awaiting visual verification before phase close
-Last activity: 2026-03-18 — Phase 41 Plan 03 complete (ENEMY_KENMI_MAP + ambient animals enabled)
+Phase: 41 of 43 (characters-ambient-life) — COMPLETE
+Plan: 3/3 plans complete — visual verification approved
+Status: Phase 41 done — next is Phase 42 (Phaser UI & Arabic BitmapFont)
+Last activity: 2026-03-18 — Phase 41 all 3 plans complete + checkpoint:human-verify approved
 
-Progress (v8.0): [█████████░] 81% (13/16 plans)
+Progress (v8.0): [██████████░] 87% (16/19 plans total — 41-01 + 41-02 + 41-03 now done, 42 and 43 remain)
 
 ### Shipped Milestones
 
@@ -114,10 +114,10 @@ v8.0 decisions:
 
 ### Pending Todos
 
-- Visual verification complete (user-approved via checkpoint) — animated decorations, landmark obelisks, NPC-adjacent props all confirmed across 8 zones
+None — Phase 41 complete and verified.
 
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 41 Plan 03 — awaiting checkpoint:human-verify (all 3 plans complete, pending visual sign-off)
-Resume file: .planning/phases/41-characters-ambient-life/41-03-PLAN.md (checkpoint:human-verify task — resume after user approves)
+Stopped at: Phase 41 complete — Phase 42 (Phaser UI & Arabic BitmapFont) is next
+Resume file: .planning/ROADMAP.md (Phase 42 plan list — 42-01 through 42-03)
