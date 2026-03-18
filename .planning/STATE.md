@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
-status: completed
-stopped_at: Phase 42 Plan 03 complete — Phase 42 fully done
-last_updated: "2026-03-18T02:30:04.421Z"
-last_activity: "2026-03-18 — 42-03: Arabic-aware DialogueBox + zone name toast, ARAB-01–04 satisfied"
+status: in_progress
+stopped_at: Phase 43 Plan 02 complete — Phase 43 in progress (2/3 plans done)
+last_updated: "2026-03-18T10:00:00.000Z"
+last_activity: "2026-03-18 — 43-02: BootScene cleaned, InteractableManager Kenmi keys, Tiled export created (PIPE-04, PIPE-05)"
 progress:
   total_phases: 6
   completed_phases: 5
-  total_plans: 13
-  completed_plans: 15
+  total_plans: 15
+  completed_plans: 17
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 42 COMPLETE, Phase 43 (zone cleanup) next
+**Current focus:** v8.0 Visual Overhaul — Phase 43 (zone cleanup) in progress (43-01 and 43-02 complete)
 
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 42 of 43 (phaser-ui-arabic) — COMPLETE (3/3 plans done)
-Plan: 3/3 complete — Phase 43 next (zone cleanup — remove DOM overlay infrastructure)
-Status: 42-03 done — Phase 42 complete
-Last activity: 2026-03-18 — 42-03: Arabic-aware DialogueBox + zone name toast, ARAB-01–04 satisfied
+Phase: 43 of 43 (zone-cleanup) — IN PROGRESS (2/3 plans done)
+Plan: 43-02 complete — 43-03 next
+Status: 43-02 done — BootScene cleaned, Kenmi keys in InteractableManager, Tiled JSON export created
+Last activity: 2026-03-18 — 43-02: Old sprite loads removed, InteractableManager migrated, zone-export.json created (PIPE-04, PIPE-05)
 
-Progress (v8.0): [███████████░] 95% (19/20 plans total — Phase 42 done, Phase 43 remains)
+Progress (v8.0): [████████████] ~98% (17 plans done, 43-03 remains)
 
 ### Shipped Milestones
 
@@ -113,6 +113,8 @@ v8.0 decisions:
 - 42-03: Arabic typewriter speed 20ms vs English 30ms — Arabic strings shorter after reshaping, faster timer needed
 - 42-03: Zone toast depth 9500 (below DialogueBox at 10000) — toast never obscures active dialogue
 - 42-03: _suppressZoneToast cleared in buildZone() not create() — handles Phaser scene reuse correctly (constructor runs once)
+- 43-02: InteractableManager type->sprite dispatch updated alongside test updates — plan only specified test changes but InteractableManager itself still had old keys (rock1, ruin-pillar, gate-pillar, house-small)
+- 43-02: zone-export.json is a static reference file at src/assets/maps/ — NOT imported at runtime, NOT in Vite bundle
 
 ### Blockers/Concerns
 
@@ -121,12 +123,13 @@ v8.0 decisions:
 
 ### Pending Todos
 
-- Phase 43: Zone cleanup — remove DOM overlay infrastructure after Phase 42 replacements confirmed
+- Phase 43 Plan 03: Final zone cleanup — remove DOM overlay infrastructure (last plan of v8.0)
 - Post-v8.0: SignPanel + ObjectPanel (React → Phaser NineSlice migration) deferred — Phase 42 Arabic requirements met without them
 - Post-v8.0: kenmi-ui-frames-sheet spritesheet registration in BootScene (PanelFactory kenmi preset wiring)
+- Post-v8.0: Delete inert old placeholder .png files in public/assets/sprites/objects/ (palm.png, palm_small.png, etc.)
 
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 42 Plan 03 complete — Phase 42 fully done
-Resume file: .planning/phases/43-zone-cleanup/ (Phase 43 plans to be created)
+Stopped at: Phase 43 Plan 02 complete
+Resume file: .planning/phases/43-zone-cleanup/43-03-PLAN.md

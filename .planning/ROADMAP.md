@@ -377,8 +377,8 @@ Plans:
 **Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 43-01-PLAN.md — Replace old placeholder keys in gathering spots, interior zones, InteriorGenerator, InteractableManager (PIPE-03)
-- [ ] 43-02-PLAN.md — Remove old sprite loads from BootScene + Tiled JSON export + test updates (PIPE-04, PIPE-05)
+- [x] 43-01-PLAN.md — Replace old placeholder keys in gathering spots, interior zones, InteriorGenerator, InteractableManager (PIPE-03)
+- [x] 43-02-PLAN.md — Remove old sprite loads from BootScene + Tiled JSON export + test updates (PIPE-04, PIPE-05)
 
 ## Progress
 
@@ -429,10 +429,10 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 40. Buildings & Decorations | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 41. Characters & Ambient Life | v8.0 | Complete    | 2026-03-18 | 2026-03-18 |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | Complete    | 2026-03-18 | 2026-03-18 |
-| 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
+| 43. Zone References & Cleanup | v8.0 | 2/2 | In progress (43-03 pending) | — |
 
-**Cumulative:** 41 phases shipped (38-42 complete in v8.0), 125 plans complete (Phase 42 all 3 done), 7 milestones shipped (v8.0 in progress)
+**Cumulative:** 41 phases shipped (38-42 complete in v8.0), 127 plans complete (43-01 and 43-02 done), 7 milestones shipped (v8.0 in progress — 43-03 remaining)
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 42 COMPLETE — Arabic-aware DialogueBox, zone name toast, ARAB-01–04 satisfied, NPC labels all Phaser*
+*Last updated: 2026-03-18 — 43-02 COMPLETE — BootScene cleaned (PIPE-05), Tiled zone-export.json created (PIPE-04), InteractableManager Kenmi keys*
