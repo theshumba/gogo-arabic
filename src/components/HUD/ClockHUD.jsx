@@ -1,16 +1,16 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectFormattedTime, selectTimePhase, TIME_PHASES } from '../../store/slices/timeSlice';
-import { FaSun, FaMoon, FaCloudSun, FaCloudMoon } from 'react-icons/fa';
 import styles from './ClockHUD.module.css';
 
+// Simple pixel-art-friendly text icons (avoids react-icons dependency)
 const PhaseIcons = {
-    [TIME_PHASES.DAWN]: <FaCloudSun />,
-    [TIME_PHASES.MORNING]: <FaSun />,
-    [TIME_PHASES.NOON]: <FaSun />,
-    [TIME_PHASES.AFTERNOON]: <FaSun />,
-    [TIME_PHASES.SUNSET]: <FaCloudMoon />,
-    [TIME_PHASES.NIGHT]: <FaMoon />,
+    [TIME_PHASES.DAWN]: '\u2600\uFE0E',     // sun symbol (text)
+    [TIME_PHASES.MORNING]: '\u2600\uFE0E',
+    [TIME_PHASES.NOON]: '\u2600\uFE0E',
+    [TIME_PHASES.AFTERNOON]: '\u2600\uFE0E',
+    [TIME_PHASES.SUNSET]: '\u263D',           // first quarter moon
+    [TIME_PHASES.NIGHT]: '\u263D',
 };
 
 const PhaseLabels = {
