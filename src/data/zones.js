@@ -125,6 +125,22 @@ const oasis_village = {
     { id: 'barrel-oasis-2', type: 'barrel', x: 26, y: 12, labelArabic: 'برميل', labelEnglish: 'Barrel', descriptionEnglish: 'A sealed barrel of dates stored near the oasis for trade.', vocabWordId: 'money_w30', vocabCategory: 'trade', repeatable: true },
     { id: 'lantern-oasis-3', type: 'lantern', x: 16, y: 24, labelArabic: 'فانوس', labelEnglish: 'Lantern', descriptionEnglish: 'A ground lantern marking the southern village path.', vocabWordId: 'sabah_al_khayr', vocabCategory: 'greetings', repeatable: true },
     { id: 'pot-oasis-2', type: 'pot', x: 9, y: 9, labelArabic: 'قِدر', labelEnglish: 'Pot', descriptionEnglish: 'A decorative clay pot filled with aromatic herbs.', vocabWordId: 'masaa_al_khayr', vocabCategory: 'greetings', repeatable: true },
+    // --- Phase 45: Hidden inscription (root family discovery) ---
+    {
+      id: 'inscription-oasis-1',
+      type: 'inscription',
+      x: 2, y: 27,
+      labelArabic: 'نَقش',
+      labelEnglish: 'Ancient Inscription',
+      rootFamily: 'ك-ت-ب',
+      rootFamilyEnglish: 'writing',
+      rootWords: ['write_1', 'read_1', 'learn_1', 'know_1'],
+      descriptionEnglish: 'An ancient stone inscription carved with the root of writing — ك-ت-ب — the root that gave Arabic its words for pen, book, and scribe.',
+      descriptionArabic: 'نَقشٌ حَجَري قَديم مَنقوشٌ بِجَذرِ الكِتابَة — ك-ت-ب.',
+      culturalNote: 'The root ك-ت-ب produced over 30 Arabic words. Medieval Islamic scribes (kuttaab) copied texts that preserved Greek, Persian, and Indian knowledge for the world.',
+      repeatable: false,
+      stateChange: 'discovered',
+    },
   ],
 
   exits: [
@@ -315,6 +331,22 @@ const ancient_library = {
     { id: 'barrel-library-1', type: 'barrel', x: 25, y: 10, labelArabic: 'برميل', labelEnglish: 'Ink Barrel', descriptionEnglish: 'A barrel of fine ink used by scribes for copying manuscripts.', culturalNote: 'Medieval Arab scribes used ink made from soot, gum arabic, and water.', vocabWordId: 'color_black', vocabCategory: 'colors', repeatable: true },
     { id: 'pot-library-1', type: 'pot', x: 14, y: 19, labelArabic: 'قِدر', labelEnglish: 'Incense Pot', descriptionEnglish: 'A clay pot burning frankincense, filling the courtyard with a sacred aroma.', culturalNote: 'Frankincense from the Arabian Peninsula has been traded for over 5000 years.', vocabWordId: 'i_am_fine_1', vocabCategory: 'phrases', repeatable: true },
     { id: 'pot-library-2', type: 'pot', x: 20, y: 19, labelArabic: 'قِدر', labelEnglish: 'Herbal Pot', descriptionEnglish: 'A pot of dried herbs used by scholars to stay alert during long study sessions.', vocabWordId: 'num_1', vocabCategory: 'numbers', repeatable: true },
+    // --- Phase 45: Hidden inscription (root family discovery) ---
+    {
+      id: 'inscription-library-1',
+      type: 'inscription',
+      x: 33, y: 2,
+      labelArabic: 'نَقش',
+      labelEnglish: 'Ancient Inscription',
+      rootFamily: 'ع-ل-م',
+      rootFamilyEnglish: 'knowledge',
+      rootWords: ['learn_1', 'know_1', 'understand_1', 'write_1'],
+      descriptionEnglish: 'A carved inscription near the library ruins bearing the root of knowledge — ع-ل-م — from which the Arabic words for scholar, science, and flag all derive.',
+      descriptionArabic: 'نَقشٌ مَنحوتٌ بِجَذرِ العِلم — ع-ل-م — جَذرُ كُلِّ مَعرِفَة.',
+      culturalNote: 'The root ع-ل-م gave Arabic its words for world (عالَم), flag (عَلَم), and scholar (عالِم). The House of Wisdom (Bayt al-Hikma) in Baghdad was the greatest library of the medieval world.',
+      repeatable: false,
+      stateChange: 'discovered',
+    },
   ],
 
   exits: [
@@ -461,6 +493,22 @@ const desert_marketplace = {
     { id: 'crate-market-2', type: 'crate', x: 6, y: 23, labelArabic: 'صندوق', labelEnglish: 'Storage Crate', descriptionEnglish: 'A wooden crate filled with dried herbs and medicinal roots.', vocabWordId: 'honey_1', vocabCategory: 'food', repeatable: true },
     { id: 'lantern-market-1', type: 'lantern', x: 20, y: 15, labelArabic: 'فانوس', labelEnglish: 'Market Lantern', descriptionEnglish: 'A tall iron lantern marking the crossroads of the main market streets.', vocabWordId: 'num_2', vocabCategory: 'numbers', repeatable: true },
     { id: 'lantern-market-2', type: 'lantern', x: 24, y: 19, labelArabic: 'فانوس', labelEnglish: 'Market Lantern', descriptionEnglish: 'A hanging lantern swaying gently above the south market square.', vocabWordId: 'cheap_w36', vocabCategory: 'trade', repeatable: true },
+    // --- Phase 45: Hidden inscription (root family discovery) ---
+    {
+      id: 'inscription-marketplace-1',
+      type: 'inscription',
+      x: 42, y: 3,
+      labelArabic: 'نَقش',
+      labelEnglish: 'Ancient Inscription',
+      rootFamily: 'ت-ج-ر',
+      rootFamilyEnglish: 'trade',
+      rootWords: ['price_w31', 'money_w30', 'shop_w28', 'merchant_w44'],
+      descriptionEnglish: 'A market inscription etched into the far corner wall, bearing the root of trade — ت-ج-ر — the root behind merchant, commerce, and all exchange.',
+      descriptionArabic: 'نَقشُ السُّوق المَحفورُ في رُكنِه البَعيد، بِجَذرِ التِّجارَة — ت-ج-ر.',
+      culturalNote: 'The root ت-ج-ر gave Arabic تاجِر (merchant) and تِجارَة (commerce). Arab traders controlled the Silk Road for centuries, spreading language and knowledge alongside goods.',
+      repeatable: false,
+      stateChange: 'discovered',
+    },
   ],
 
   exits: [
@@ -591,6 +639,22 @@ const farmland = {
     { id: 'crate-farm-1', type: 'crate', x: 34, y: 6, labelArabic: 'صندوق', labelEnglish: 'Tool Crate', descriptionEnglish: 'A wooden crate holding farming tools: hoes, sickles, and rope.', vocabWordId: 'wind_w24', vocabCategory: 'nature', loot: { type: 'dirhams', min: 4, max: 10 }, repeatable: false, stateChange: 'inspected' },
     { id: 'painting-farm-1', type: 'painting', x: 9, y: 24, labelArabic: 'لوحة', labelEnglish: 'Harvest Mural', descriptionEnglish: 'A cheerful mural painted on the farmhouse wall showing the autumn harvest.', vocabWordId: 'sky_w18', vocabCategory: 'nature', repeatable: true },
     { id: 'stall-farm-1', type: 'stall', x: 25, y: 22, labelArabic: 'دكان', labelEnglish: 'Farm Stand', descriptionEnglish: 'A roadside stand selling fresh eggs, honey, and goat cheese.', vocabWordId: 'goat_1', vocabCategory: 'animals', repeatable: true },
+    // --- Phase 45: Hidden inscription (root family discovery) ---
+    {
+      id: 'inscription-farmland-1',
+      type: 'inscription',
+      x: 2, y: 32,
+      labelArabic: 'نَقش',
+      labelEnglish: 'Ancient Inscription',
+      rootFamily: 'ز-ر-ع',
+      rootFamilyEnglish: 'planting',
+      rootWords: ['tree_w27', 'water_w13', 'sun_w14', 'rain_w25'],
+      descriptionEnglish: 'A weathered stone at the farmland\'s edge carved with the root of planting — ز-ر-ع — connecting seeds, agriculture, and all growth in Arabic.',
+      descriptionArabic: 'حَجَرٌ قَديمٌ عَلى طَرَف الأَرض، مَنقوشٌ بِجَذرِ الزِّراعَة — ز-ر-ع.',
+      culturalNote: 'The root ز-ر-ع gave Arabic زَراعَة (agriculture) and مَزرَعَة (farm). Islamic agricultural science introduced crop rotation, irrigation, and new plants to Europe during the Golden Age.',
+      repeatable: false,
+      stateChange: 'discovered',
+    },
   ],
 
   exits: [
@@ -716,6 +780,22 @@ const bedouin_camp = {
     { id: 'pot-camp-1', type: 'pot', x: 17, y: 15, labelArabic: 'قِدر', labelEnglish: 'Coffee Pot', descriptionEnglish: 'A traditional dallah coffee pot warming over the embers. The aroma of cardamom fills the air.', culturalNote: 'Arabic coffee (qahwa) with cardamom is a cornerstone of Bedouin hospitality. Refusing a cup is considered rude.', vocabWordId: 'welcome_1', vocabCategory: 'phrases', repeatable: true },
     { id: 'barrel-camp-1', type: 'barrel', x: 28, y: 9, labelArabic: 'برميل', labelEnglish: 'Water Barrel', descriptionEnglish: 'A precious barrel of water, the most valuable resource in the desert.', vocabWordId: 'tomorrow_1', vocabCategory: 'time', loot: { type: 'dirhams', min: 3, max: 8 }, repeatable: false, stateChange: 'inspected' },
     { id: 'statue-camp-1', type: 'statue', x: 20, y: 4, labelArabic: 'تمثال', labelEnglish: 'Wayfinder Stone', descriptionEnglish: 'An ancient carved stone used as a directional marker by desert travellers.', culturalNote: 'Stone cairns and markers guided caravans across the Arabian deserts long before compasses arrived.', vocabWordId: 'old_1', vocabCategory: 'adjectives', repeatable: true },
+    // --- Phase 45: Hidden inscription (root family discovery) ---
+    {
+      id: 'inscription-bedouin-1',
+      type: 'inscription',
+      x: 32, y: 22,
+      labelArabic: 'نَقش',
+      labelEnglish: 'Ancient Inscription',
+      rootFamily: 'س-ف-ر',
+      rootFamilyEnglish: 'travel',
+      rootWords: ['star_w16', 'moon_w15', 'desert_w18', 'camel_1'],
+      descriptionEnglish: 'A Bedouin inscription hidden at the camp\'s far corner, bearing the root of travel — س-ف-ر — the root behind journey, traveler, and the ambassador.',
+      descriptionArabic: 'نَقشٌ بَدَوي في رُكنِ المُخَيَّم، يَحمِلُ جَذرَ السَّفَر — س-ف-ر.',
+      culturalNote: 'The root س-ف-ر gave Arabic سَفَر (journey), سَفير (ambassador), and سِفر (book). Bedouin caravans were the information highways of the ancient Arab world.',
+      repeatable: false,
+      stateChange: 'discovered',
+    },
   ],
 
   exits: [
@@ -844,6 +924,22 @@ const mountain_village = {
     { id: 'fountain-mountain-1', type: 'fountain', x: 29, y: 10, labelArabic: 'نافورة', labelEnglish: 'Stream Fountain', descriptionEnglish: 'A natural spring channelled into a stone basin beside the mountain stream.', culturalNote: 'Mountain springs are considered blessed in Arab tradition, often named after saints or prophets.', vocabWordId: 'beautiful_1', vocabCategory: 'adjectives', repeatable: true },
     { id: 'barrel-mountain-1', type: 'barrel', x: 13, y: 21, labelArabic: 'برميل', labelEnglish: 'Wool Barrel', descriptionEnglish: 'A barrel of raw mountain wool waiting to be spun by the weaver.', vocabWordId: 'turban_w7', vocabCategory: 'clothing', loot: { type: 'dirhams', min: 6, max: 14 }, repeatable: false, stateChange: 'inspected' },
     { id: 'crate-mountain-1', type: 'crate', x: 27, y: 21, labelArabic: 'صندوق', labelEnglish: 'Medicine Crate', descriptionEnglish: 'A crate of herbal remedies prepared by the village healer for trade.', vocabWordId: 'new_1', vocabCategory: 'adjectives', loot: { type: 'dirhams', min: 8, max: 20 }, repeatable: false, stateChange: 'inspected' },
+    // --- Phase 45: Hidden inscription (root family discovery) ---
+    {
+      id: 'inscription-mountain-1',
+      type: 'inscription',
+      x: 2, y: 3,
+      labelArabic: 'نَقش',
+      labelEnglish: 'Ancient Inscription',
+      rootFamily: 'ش-ف-ي',
+      rootFamilyEnglish: 'healing',
+      rootWords: ['water_w13', 'old_1', 'new_1', 'big_1'],
+      descriptionEnglish: 'An inscription carved high on the mountain path, bearing the healing root — ش-ف-ي — connecting cure, recovery, and the lips in Arabic.',
+      descriptionArabic: 'نَقشٌ مَحفورٌ عالياً في طَريقِ الجَبَل، يَحمِلُ جَذرَ الشِّفاء — ش-ف-ي.',
+      culturalNote: 'The root ش-ف-ي gave Arabic شِفاء (healing) and شَفَة (lip). Ibn Sina\'s Canon of Medicine (القانون في الطِّبّ), written in Arabic, was the primary medical textbook in Europe until the 17th century.',
+      repeatable: false,
+      stateChange: 'discovered',
+    },
   ],
 
   exits: [
@@ -978,6 +1074,22 @@ const coastal_port = {
     { id: 'painting-port-2', type: 'painting', x: 23, y: 21, labelArabic: 'لوحة', labelEnglish: 'Port Map', descriptionEnglish: 'A detailed painted map showing trade routes connecting this port to distant lands.', vocabWordId: 'west_1', vocabCategory: 'directions', repeatable: true },
     { id: 'fountain-port-1', type: 'fountain', x: 18, y: 14, labelArabic: 'نافورة', labelEnglish: 'Town Fountain', descriptionEnglish: 'A large stone fountain in the port town centre where sailors refill their water skins.', vocabWordId: 'water_1', vocabCategory: 'food', repeatable: true },
     { id: 'statue-port-1', type: 'statue', x: 22, y: 14, labelArabic: 'تمثال', labelEnglish: 'Navigator Statue', descriptionEnglish: 'A bronze statue of a famous navigator holding a compass and map scroll.', culturalNote: 'Ibn Majid, the "Lion of the Sea", wrote over 40 navigational texts in the 15th century.', vocabWordId: 'near_1', vocabCategory: 'directions', repeatable: true },
+    // --- Phase 45: Hidden inscription (root family discovery) ---
+    {
+      id: 'inscription-port-1',
+      type: 'inscription',
+      x: 42, y: 3,
+      labelArabic: 'نَقش',
+      labelEnglish: 'Ancient Inscription',
+      rootFamily: 'ب-ح-ر',
+      rootFamilyEnglish: 'sea',
+      rootWords: ['sea_w23', 'wind_w26', 'north_1', 'fish_animal_1'],
+      descriptionEnglish: 'A sailor\'s inscription carved at the port\'s far edge, bearing the root of the sea — ب-ح-ر — from which Arabic draws its words for ocean, lake, and the vast expanse.',
+      descriptionArabic: 'نَقشُ البَحّارَة في طَرَف المِيناء، بِجَذرِ البَحر — ب-ح-ر.',
+      culturalNote: 'The root ب-ح-ر gave Arabic بَحر (sea), بُحيرَة (lake), and بَحّار (sailor). Arab navigators mapped the Indian Ocean trade routes 500 years before European explorers.',
+      repeatable: false,
+      stateChange: 'discovered',
+    },
   ],
 
   exits: [
@@ -1135,6 +1247,22 @@ const royal_palace = {
     { id: 'crate-palace-2', type: 'crate', x: 44, y: 15, labelArabic: 'صندوق', labelEnglish: 'Treasure Crate', descriptionEnglish: 'Another tribute crate, this one filled with rare manuscripts and astronomical instruments.', vocabWordId: 'i_speak_arabic_1', vocabCategory: 'phrases', loot: { type: 'dirhams', min: 25, max: 60 }, repeatable: false, stateChange: 'inspected' },
     { id: 'pot-palace-1', type: 'pot', x: 21, y: 17, labelArabic: 'قِدر', labelEnglish: 'Rose Water Pot', descriptionEnglish: 'A pot of rose water used to perfume the palace gardens and receiving halls.', culturalNote: 'Rose water (ma ward) has been distilled in the Arab world since the 8th century.', vocabWordId: 'color_pink', vocabCategory: 'colors', repeatable: true },
     { id: 'pot-palace-2', type: 'pot', x: 29, y: 17, labelArabic: 'قِدر', labelEnglish: 'Incense Pot', descriptionEnglish: 'A pot burning oud incense, filling the garden with a rich, woody fragrance.', culturalNote: 'Oud (agarwood) is called "liquid gold" in the Arab world and has been prized for over 3000 years.', vocabWordId: 'good_evening_1', vocabCategory: 'phrases', repeatable: true },
+    // --- Phase 45: Hidden inscription (root family discovery) ---
+    {
+      id: 'inscription-palace-1',
+      type: 'inscription',
+      x: 2, y: 37,
+      labelArabic: 'نَقش',
+      labelEnglish: 'Ancient Inscription',
+      rootFamily: 'م-ل-ك',
+      rootFamilyEnglish: 'kingdom',
+      rootWords: ['big_1', 'old_1', 'new_1', 'brave_1'],
+      descriptionEnglish: 'A royal inscription hidden in the palace outer garden, bearing the root of kingship — م-ل-ك — the root behind king, kingdom, angel, and possession in Arabic.',
+      descriptionArabic: 'نَقشٌ مَلَكي في حَديقَةِ القَصرِ الخارِجيَّة، بِجَذرِ المُلك — م-ل-ك.',
+      culturalNote: 'The root م-ل-ك gave Arabic مَلِك (king), مَملَكَة (kingdom), مَلَك (angel), and مَلَكَ (to possess). The Abbasid Caliphate at its peak governed from Central Asia to North Africa.',
+      repeatable: false,
+      stateChange: 'discovered',
+    },
   ],
 
   exits: [
