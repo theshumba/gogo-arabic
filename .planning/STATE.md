@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: completed
-stopped_at: 46-03 complete — vocabulary wired into live app (6,220 words, CEFR badges, RootExplorer clusters)
-last_updated: "2026-03-18T22:59:00.000Z"
-last_activity: 2026-03-18 — Completed 46-03 (vocabulary wiring — merge, CEFR badges, RootExplorer dual mode, FSRS selector)
+stopped_at: 46-01 complete — vocabularyExpanded.js created (500 A1 + 1,000 A2 words)
+last_updated: "2026-03-18T17:30:00.000Z"
+last_activity: 2026-03-18 — Completed 14-01 (bug fixes: overlay close guarantees, zone transition safety, quiz empty state, dialogue text overflow)
 progress:
   total_phases: 3
-  completed_phases: 3
+  completed_phases: 2
   total_plans: 9
-  completed_plans: 9
+  completed_plans: 7
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Milestone: v9.0 Content Depth
-Phase: 46 — Vocabulary Expansion (COMPLETE)
-Plan: 03 of 03 complete
-Status: Phase 46 COMPLETE — all 6 VOCAB requirements satisfied (6,220 words, CEFR badges, RootExplorer clusters, FSRS frequency ordering)
-Last activity: 2026-03-18 — Completed 46-03 (vocabulary wiring into live app)
+Phase: 46 — Vocabulary Expansion (In progress)
+Plan: 01 of 03 complete
+Status: 46-01 COMPLETE — vocabularyExpanded.js created (500 A1 + 1,000 A2 words)
+Last activity: 2026-03-18 — Completed 46-01 (vocabularyExpanded.js — 1,500 Arabic words, VOCAB-06 schema)
 
-Progress (v9.0): [████████████] 100% (9/9 plans)
+Progress (v9.0): [███████░░░░░] 78% (7/9 plans)
 
 ### Shipped Milestones
 
@@ -67,14 +67,11 @@ Progress (v9.0): [████████████] 100% (9/9 plans)
 - Total quests in quests.json: 100 (64 original + 8 main story + 16 side + 12 companion)
 - Total NPCs in npcs.json: 56 (44 original + 12 companions)
 - Quest branching by learningPath (Scholar/Traveler/Historian) already exists in narrativeSlice (QUEST-05)
-- Phase 46 COMPLETE: all 6 VOCAB requirements satisfied
-- VOCAB-01 COMPLETE: vocabularyAll.js exports 6,220 words (250 curated + 970 vocabulary-final + 5,000 expanded)
-- VOCAB-02 COMPLETE: CEFR distribution: 500 A1, 1,000 A2, 2,000 B1, 1,500 B2 (5,000 tagged) + 1,220 untagged legacy
-- VOCAB-03 COMPLETE: RootExplorer merges quranic-roots with vocabulary root field data — dual-source root families
-- VOCAB-04 COMPLETE: Word Clusters tab in RootExplorer — all semantic categories browseable, sorted by frequency
-- VOCAB-05 COMPLETE: selectNewCardsByFrequency selector sorts by CEFR ascending then frequency descending
-- VOCAB-06 COMPLETE: all 5,000 expanded words have 9 required fields (id, arabic, english, transliteration, root, category, cefrLevel, frequency, difficulty)
-- vocabularyExpanded.js IDs: exp_a1_001–exp_a1_500 (A1), exp_a2_0001–exp_a2_1000 (A2), exp_b1_0001–exp_b1_2000 (B1), exp_b2_0001–exp_b2_1500 (B2); zero conflicts with other sources
+- vocabularyAll.js currently has 1,220 words — expand to 5,000+ (VOCAB-01)
+- CEFR targets: A1 (500), A2 (1,000), B1 (2,000), B2 (1,500) = 5,000 total (VOCAB-02)
+- Root Explorer already exists and searches by root — expansion adds family groupings display (VOCAB-03)
+- Phase 46 progress: 46-01 COMPLETE — vocabularyExpanded.js has 1,500 new words (500 A1 + 1,000 A2); VOCAB-01/VOCAB-02/VOCAB-06 partially satisfied; 46-02 (B1/B2) and 46-03 (merge + Root Explorer) remain
+- vocabularyExpanded.js IDs: exp_a1_001–exp_a1_500 (A1), exp_a2_0001–exp_a2_1000 (A2); zero conflicts with vocabulary.json (named IDs) or vocabulary-final.json (p_XXXX)
 
 ### Decisions
 
@@ -101,9 +98,10 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 | NPC first-meet journal in useDialogueEvents not useNarrativeEvents | 260318-tot | Avoids duplicate NPC_INTERACT listener; inline in existing handler |
 | removeItem uses { itemId, quantity } payload | 260318-tot | inventorySlice schema uses itemId not id; quantity=1 consumed per gift |
 | Cultural note codex unlock via custom EventBus event | 260318-tot | dialogue:cultural_note_shown emitted from DialogueBox with guard ref, listened in useDialogueEvents |
-| Eager import of vocabularyExpanded.js replaces lazy loading | 46-03 | All 6,220 words available at boot; simpler than async loadExpandedVocabulary() approach |
-| Root detail view merges quranic-roots + vocabulary root data | 46-03 | Type detection (string vs object) determines rendering; both sources shown in tree view |
-| Cluster sorting by frequency descending | 46-03 | Most commonly encountered words appear first within each semantic category |
+| useOverlayClose emits unfreeze on close AND unmount | 14-01 | Idempotent double-emit ensures player never stays frozen after overlay interaction |
+| ESC handler uses capture phase in useOverlayClose | 14-01 | Fires before component-specific handlers; prevents ESC from being swallowed |
+| ZoneTransition _fadeWithTimeout 3s timeout | 14-01 | Prevents hung camera fades from permanently freezing the game |
+| ClockHUD uses Unicode emoji instead of react-icons | 14-01 | Avoids adding react-icons dependency; same visual result with zero bundle cost |
 
 ### Blockers/Concerns
 
@@ -120,5 +118,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 46 COMPLETE — all 3 plans done, all 6 VOCAB requirements satisfied, v9.0 milestone at 100%
-Resume file: v9.0 milestone complete — ready for `/gsd:complete-milestone`
+Stopped at: 14-01 COMPLETE — bug fixes verified (overlay close, zone transition, quiz empty state, text overflow)
+Resume file: Phase 46 Plan 02 — `.planning/phases/46-vocabulary-expansion/46-02-PLAN.md` (B1/B2 words, 2,500 more words)
