@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
-status: completed
-stopped_at: Phase 38 complete — both plans done, all Kenmi assets loading in BootScene
-last_updated: "2026-03-16T23:35:27.352Z"
-last_activity: 2026-03-16 — Completed 38-02-PLAN.md (BootScene Kenmi catalog loader)
+status: in_progress
+stopped_at: Phase 39 plan 02 complete — BIOME_TILESETS config + tilesetTheme on 8 main zones
+last_updated: "2026-03-18T00:22:00Z"
+last_activity: 2026-03-18 — Completed 39-02-PLAN.md (Biome tileset system + tilesetTheme on 8 zones)
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 2
-  completed_plans: 7
+  completed_plans: 9
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 38: Asset Pipeline & BootScene
+**Current focus:** v8.0 Visual Overhaul — Phase 39: Terrain Rendering
 
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 39 of 43 (next: terrain rendering)
-Plan: Phase 38 complete (2/2 plans done)
-Status: Phase 38 complete — ready for Phase 39
-Last activity: 2026-03-16 — Completed 38-02-PLAN.md (BootScene Kenmi catalog loader)
+Phase: 39 of 43 (terrain rendering)
+Plan: 39-02 complete (2/3 plans in phase 39 done)
+Status: Phase 39 in progress — ready for Plan 39-03 (dungeon/volcano/mushroom + placeholder zones)
+Last activity: 2026-03-18 — Completed 39-02-PLAN.md (Biome tileset system + tilesetTheme on 8 zones)
 
-Progress (v8.0): [█░░░░░░░░░] 13% (2/16 plans)
+Progress (v8.0): [██░░░░░░░░] 19% (4/16 plans)
 
 ### Shipped Milestones
 
@@ -53,7 +53,9 @@ Progress (v8.0): [█░░░░░░░░░] 13% (2/16 plans)
 - Assets at `public/assets/kenmi/` — 10 packs, 969 PNGs, 16x16 base tiles (PIPE-01 complete)
 - KENMI_CATALOG at `src/data/kenmiCatalog.js` — 969 entries, 592 spritesheets, 377 images
 - TILE constant = 64, so 16x16 tiles scale 4x — no game logic changes needed
-- Current MapLoader renders flat colored squares — TilesetRenderer replaces it
+- MapLoader now dispatches to Kenmi pixel art tiles via BIOME_TILESETS config (desert/grass/snow active)
+- Flat tile fallback (_renderFlatTiles) preserved for when Kenmi textures not loaded
+- 8 main zones have tilesetTheme field — 16 placeholder zones still need it (Plan 39-03)
 - Current UI is React DOM overlays for everything — only in-game elements move to Phaser
 - Current NPCs are 128x128 faceless silhouettes — replaced with 16x16 Kenmi sprites
 - Phase 43 (cleanup) must run last — it removes placeholders after replacements are confirmed
@@ -72,6 +74,10 @@ v8.0 decisions:
 - 38-01: UI pack `ui-frames.png` is at `ui/ui/ui-frames.png` (nested Cute_Fantasy_UI/UI/ subdir)
 - 38-02: All 969 Kenmi assets loaded upfront in BootScene — zone-based lazy loading deferred to post-v8.0
 - 38-02: loaderror handler registered once before the catalog loop (not per-entry) — Phaser fires event per file
+- 39-02: Snow biome uses kenmi-base-tiles-grass-grass-tiles-1 (spritesheet) with blue tints — kenmi-christmas-decorations-christmass-grass is type 'image' (no frame indices)
+- 39-02: BIOME_TILESETS drives biome dispatch — extend this table in Plan 39-03 for dungeon/volcano/mushroom
+- 39-02: royal_palace uses 'desert' tilesetTheme (mixed biome — ICE_GRASS tinted blue via _renderGrassTile)
+- 39-02: Foam anim keys prefixed by foam spritesheet key (sanitised) to avoid cross-biome key collisions
 
 ### Blockers/Concerns
 
@@ -84,6 +90,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-16
-Stopped at: Phase 38 complete — both plans done, all Kenmi assets loading in BootScene
-Resume file: .planning/phases/39-terrain/ (next plan to be created)
+Last session: 2026-03-18
+Stopped at: Phase 39 plan 02 complete — BIOME_TILESETS + tilesetTheme on 8 main zones
+Resume file: .planning/phases/39-terrain-rendering/39-03-PLAN.md (dungeon/volcano/mushroom biomes + placeholder zones)

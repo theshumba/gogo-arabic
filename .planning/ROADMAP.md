@@ -276,7 +276,7 @@ Plans:
 
 Plans:
 - [x] 38-01-PLAN.md — Copy 10 packs to public/assets/kenmi/ + generate src/data/kenmiCatalog.js
-- [ ] 38-02-PLAN.md — BootScene loader loop from KENMI_CATALOG + human-verify texture cache
+- [x] 38-02-PLAN.md — BootScene loader loop from KENMI_CATALOG + human-verify texture cache
 
 #### Phase 39: Terrain Rendering
 **Goal**: Every zone renders real pixel art terrain with biome-correct tilesets, auto-tiled transitions, seeded random variants, and animated water edges instead of flat colored squares
@@ -292,12 +292,12 @@ Plans:
   4. Water shorelines display animated foam tiles from the Kenmi animated water set
   5. Each biome zone uses its correct tileset: desert pack for desert zones, base RPG grass/path for forest/farmland, Christmas snow pack for mountain/snow zones, Dungeon pack for fortress interiors, Volcano pack for lava/rock zones, ShroomLands pack for mushroom zones
 
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves (39-01 complete from prior session)
 
 Plans:
-- [ ] 39-01: TilesetRenderer system (MapLoader replacement, 4-neighbor auto-tiling, seeded variants)
-- [ ] 39-02: Desert tileset integration (TILE-01, TILE-02, TILE-03, TILE-05)
-- [ ] 39-03: Animated water foam (TILE-04) + remaining biome tilesets (TILE-06, TILE-07, TILE-08, TILE-09, TILE-10)
+- [x] 39-01-PLAN.md — Kenmi terrain rendering code (auto-tiling, frame maps, foam) — written but disabled
+- [x] 39-02-PLAN.md — Enable Kenmi rendering + BIOME_TILESETS config + tilesetTheme on 8 main zones (TILE-01 thru TILE-07)
+- [ ] 39-03-PLAN.md — Dungeon/volcano/mushroom biome configs + tilesetTheme on 16 placeholder zones + human verify (TILE-08, TILE-09, TILE-10)
 
 #### Phase 40: Buildings & Decorations
 **Goal**: Every zone's buildings are replaced with zone-appropriate Kenmi structures and filled with clustered decorative props that create visual density and world identity
