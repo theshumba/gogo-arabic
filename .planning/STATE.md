@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: in_progress
-stopped_at: Phase 44 Plan 01 complete — 12 NPCs expanded with Islamic Golden Age dialogue
-last_updated: "2026-03-18T08:00:00.000Z"
-last_activity: "2026-03-18 — 44-01 complete: 541 lines, 157 teachWords, 49 culturalNotes across 12 NPCs"
+stopped_at: Phase 44 Plan 02 complete — all 24 NPCs expanded with Islamic Golden Age dialogue
+last_updated: "2026-03-18T12:00:00.000Z"
+last_activity: "2026-03-18 — 44-02 complete: 647 lines, 209 teachWords, 36 culturalNotes across 12 more NPCs"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 9
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 
 Milestone: v9.0 Content Depth
 Phase: 44 — NPC Dialogue Expansion (in progress)
-Plan: 01 of 3 complete
+Plan: 02 of 3 complete
 Status: In progress
-Last activity: 2026-03-18 — Completed 44-01 (NPCs 1-12 dialogue expansion)
+Last activity: 2026-03-18 — Completed 44-02 (NPCs 13-24 + guide-amira dialogue expansion)
 
-Progress (v9.0): [█░░░░░░░░░░░] 11% (1/9 plans)
+Progress (v9.0): [██░░░░░░░░░░] 22% (2/9 plans)
 
 ### Shipped Milestones
 
@@ -51,9 +51,11 @@ Progress (v9.0): [█░░░░░░░░░░░] 11% (1/9 plans)
 
 ### Key v9.0 Context
 
-- Starting dialogue count: ~1,043 lines — target 1,543+ (500+ new lines via DIAL-03)
-- 23 main NPCs need rewritten dialogue trees (DIAL-01)
-- teachWord field integration requires wiring to existing FSRS fsrsSlice (DIAL-05)
+- Starting dialogue count: ~1,043 lines — 1,188 new lines added (Plans 01+02) — DIAL-03 COMPLETE
+- DIAL-01 COMPLETE: all 23 main NPCs + guide-amira rewritten with distinct Islamic Golden Age personalities
+- DIAL-02 COMPLETE: 12+ NPCs reference specific verifiable Islamic Golden Age historical facts
+- DIAL-05 COMPLETE: teachWord FSRS integration across all NPCs (366 total teachWord fields)
+- teachWord field integration requires wiring to existing FSRS fsrsSlice (DIAL-05) — DONE
 - 8-act main storyline uses time-traveling scholar collecting manuscript pages across all 8 zones (QUEST-01)
 - Quest branching by learningPath (Scholar/Traveler/Historian) already exists in narrativeSlice (QUEST-05)
 - vocabularyAll.js currently has 1,220 words — expand to 5,000+ (VOCAB-01)
@@ -68,6 +70,8 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 |----------|---------|---------|
 | Add new trees vs. rewrite existing | 44-01 | Added new trees (3-6 per NPC), preserving all existing hub/quest/topic trees |
 | teachWord IDs use vocabulary.json format | 44-01 | IDs like `big_1`, `head_1`, `water_w13` — verified against vocabulary.json before use |
+| guide-amira gets return_visit trees with NPC routing | 44-02 | Amira now actively routes players to content NPCs; amira_npc_hints is a choice-branch after progress_check |
+| player-choice branches use next pointers to named trees | 44-02 | Cleaner than inline choices; lets engine's handleChoice() navigate between trees |
 
 ### Blockers/Concerns
 
@@ -84,5 +88,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: 44-01 complete — NPCs 1-12 dialogue expanded
-Resume file: `.planning/phases/44-npc-dialogue-expansion/44-02-PLAN.md`
+Stopped at: 44-02 complete — all 24 NPCs (including guide-amira) dialogue expanded
+Resume file: `.planning/phases/44-npc-dialogue-expansion/44-03-PLAN.md`
