@@ -92,6 +92,48 @@ const FOAM_COLS = 20;
 
 const KENMI_SCALE = 4; // 16px tiles -> 64px game tiles
 
+// Biome-to-tileset config table.
+// NOTE: snow biome uses kenmi-base-tiles-grass-grass-tiles-1 (IS a spritesheet) with blue tints.
+// kenmi-christmas-decorations-christmass-grass is type 'image' (NOT spritesheet) — cannot use frame indices.
+const BIOME_TILESETS = {
+  desert: {
+    sandKeys: [
+      'kenmi-desert-tiles-desert-beach-tiles-1',
+      'kenmi-desert-tiles-desert-beach-tiles-2',
+      'kenmi-desert-tiles-desert-beach-tiles-3',
+    ],
+    sandCols: 5,
+    grassKey: 'kenmi-desert-tiles-desert-grass',
+    grassCols: 3,
+    waterKey: 'kenmi-desert-tiles-desert-water-tiles-1',
+    waterCols: 6,
+    foamKey: 'kenmi-desert-tiles-desert-water-foam-animation',
+    foamCols: 20,
+  },
+  grass: {
+    sandKeys: ['kenmi-base-tiles-grass-grass-tiles-1'],
+    sandCols: 16,
+    grassKey: 'kenmi-base-tiles-grass-grass-tiles-1',
+    grassCols: 16,
+    waterKey: 'kenmi-base-tiles-water-water-tile-1',
+    waterCols: 3,
+    foamKey: 'kenmi-base-tiles-water-water-foam-animation',
+    foamCols: 20,
+  },
+  snow: {
+    sandKeys: ['kenmi-base-tiles-grass-grass-tiles-1'],
+    sandCols: 16,
+    grassKey: 'kenmi-base-tiles-grass-grass-tiles-1',
+    grassCols: 16,
+    waterKey: 'kenmi-base-tiles-water-water-tile-1',
+    waterCols: 3,
+    foamKey: 'kenmi-base-tiles-water-water-foam-animation',
+    foamCols: 20,
+    iceGrassTint: 0xaaddff,
+    sandTint: 0xddeeff,
+  },
+};
+
 /**
  * Simple deterministic hash for seeded pseudo-random per tile.
  * Returns a float in [0, 1).
@@ -139,11 +181,14 @@ export class MapLoader {
     // Create collision group
     this.wallGroup = this.scene.physics.add.staticGroup();
 
-    // Render ground tiles
-    this.renderGroundTiles(groundData, mapWidth, mapHeight);
+    // Render ground tiles — biome drives tileset selection
+    const biome = zone.tilesetTheme || 'desert';
+    this.renderGroundTiles(groundData, mapWidth, mapHeight, biome);
 
-    // Water edge shimmer effect
-    this.addWaterEdgeEffect(groundData, mapWidth, mapHeight);
+    // Water edge shimmer effect — only for flat-tile fallback (skip when Kenmi tiles active)
+    if (!this._hasKenmiTiles()) {
+      this.addWaterEdgeEffect(groundData, mapWidth, mapHeight);
+    }
 
     // Setup collision (borders + water)
     this.setupCollision(groundData, mapWidth, mapHeight, exits);
@@ -168,12 +213,14 @@ export class MapLoader {
   // ================================================================
 
   /**
-   * Render ground tiles — uses Kenmi desert tileset if available, flat colors as fallback
+   * Render ground tiles — uses Kenmi tileset if available, flat colors as fallback
    */
-  renderGroundTiles(groundData, mapW, mapH) {
-    // TODO: Fix Kenmi terrain rendering (wrong frame indices cause tiling artifacts)
-    // For now, always use flat tiles which are known to work
-    this._renderFlatTiles(groundData, mapW, mapH);
+  renderGroundTiles(groundData, mapW, mapH, biome = 'desert') {
+    if (this._hasKenmiTiles()) {
+      this._renderKenmiTiles(groundData, mapW, mapH, biome);
+    } else {
+      this._renderFlatTiles(groundData, mapW, mapH);
+    }
   }
 
   /**
@@ -210,11 +257,14 @@ export class MapLoader {
   }
 
   /**
-   * Kenmi 16x16 desert tileset rendering with auto-tiling.
-   * Uses beach-tiles for sand, desert-grass for grass, water-tiles for water.
+   * Kenmi 16x16 tileset rendering with auto-tiling and biome dispatch.
+   * Uses biome config to select correct tileset keys for sand, grass, water, and foam.
    * All sprites scaled 4x (16px -> 64px).
    */
-  _renderKenmiTiles(groundData, mapW, mapH) {
+  _renderKenmiTiles(groundData, mapW, mapH, biome = 'desert') {
+    this._currentBiome = biome;
+    this._currentBiomeConfig = BIOME_TILESETS[biome] || BIOME_TILESETS.desert;
+
     // Create foam animation if not yet registered
     this._createFoamAnimations();
 
@@ -256,9 +306,10 @@ export class MapLoader {
 
   /**
    * Render a sand tile. Checks if any water neighbor exists to pick
-   * sand-water border frames from the beach tileset.
+   * sand-water border frames from the biome tileset.
    */
   _renderSandTile(px, py, neighbors, hash, groundData, tx, ty, mapW, mapH) {
+    const cfg = this._currentBiomeConfig;
     const nWater = neighbors.n === WATER;
     const sWater = neighbors.s === WATER;
     const wWater = neighbors.w === WATER;
@@ -266,24 +317,55 @@ export class MapLoader {
     const hasWaterNeighbor = nWater || sWater || wWater || eWater;
 
     if (!hasWaterNeighbor) {
-      // Solid sand — pick from 3 color variants for visual variety
-      const variantIdx = Math.floor(hash * 3);
-      const key = BEACH_KEYS[variantIdx];
-      // Use SAND_SOLID (frame 3) or sand variants for extra variety
-      const solidFrames = [BEACH.SAND_SOLID, BEACH.SAND_VAR_1, BEACH.SAND_VAR_2];
-      const varHash = tileHash(tx, ty, 99);
-      const frame = solidFrames[Math.floor(varHash * solidFrames.length)];
+      // Solid sand — pick from biome color variants for visual variety
+      const sandKeys = cfg.sandKeys;
+      const variantIdx = Math.floor(hash * sandKeys.length);
+      const key = sandKeys[variantIdx];
+
+      let frame;
+      if (this._currentBiome === 'desert') {
+        // Desert: use specific BEACH frame constants (5-col layout)
+        const solidFrames = [BEACH.SAND_SOLID, BEACH.SAND_VAR_1, BEACH.SAND_VAR_2];
+        const varHash = tileHash(tx, ty, 99);
+        frame = solidFrames[Math.floor(varHash * solidFrames.length)];
+      } else {
+        // Non-desert: 3×3 auto-tile block at top-left of sheet, center solid = row1,col1
+        const cols = cfg.sandCols;
+        const solidCenter = cols + 1;
+        const solidVariants = [solidCenter, solidCenter + 1, solidCenter + 2];
+        const varHash = tileHash(tx, ty, 99);
+        frame = solidVariants[Math.floor(varHash * solidVariants.length)];
+      }
+
       const sprite = this.scene.add.image(px, py, key, frame);
       sprite.setScale(KENMI_SCALE);
+      if (this._currentBiome === 'snow' && cfg.sandTint) {
+        sprite.setTint(cfg.sandTint);
+      }
       return sprite;
     }
 
-    // Sand bordering water — use beach transition frames
-    // Pick the primary beach variant (variant 1 for consistency at transitions)
-    const key = BEACH_KEYS[0];
-    const frame = this._pickSandWaterFrame(nWater, sWater, wWater, eWater, groundData, tx, ty, mapW, mapH);
+    // Sand bordering water — use biome transition frames
+    const key = cfg.sandKeys[0];
+
+    let frame;
+    if (this._currentBiome === 'desert') {
+      frame = this._pickSandWaterFrame(nWater, sWater, wWater, eWater, groundData, tx, ty, mapW, mapH);
+    } else {
+      // Non-desert: use generic 3×3 auto-tile edge frames
+      const cols = cfg.sandCols;
+      const TL = 0, T = 1, TR = 2;
+      const L = cols, R = cols + 2;
+      const BL = cols * 2, B = cols * 2 + 1, BR = cols * 2 + 2;
+      const solidCenter = cols + 1;
+      frame = this._pickEdgeFrame(nWater, sWater, wWater, eWater, TL, T, TR, L, B, R, solidCenter, BL, BR);
+    }
+
     const sprite = this.scene.add.image(px, py, key, frame);
     sprite.setScale(KENMI_SCALE);
+    if (this._currentBiome === 'snow' && cfg.sandTint) {
+      sprite.setTint(cfg.sandTint);
+    }
     return sprite;
   }
 
@@ -324,8 +406,10 @@ export class MapLoader {
 
   /**
    * Render a grass tile with auto-tiling edges.
+   * Uses biome config to select the correct grass spritesheet.
    */
   _renderGrassTile(px, py, neighbors, hash, tileType) {
+    const cfg = this._currentBiomeConfig;
     const isGrassLike = (t) => t === GRASS || t === ICE_GRASS;
     const nForeign = !isGrassLike(neighbors.n);
     const sForeign = !isGrassLike(neighbors.s);
@@ -333,26 +417,43 @@ export class MapLoader {
     const eForeign = !isGrassLike(neighbors.e);
 
     let frame;
-    if (!nForeign && !sForeign && !wForeign && !eForeign) {
-      // Fully surrounded by grass — solid fill with variation
-      const solids = [GRASS_F.SOLID, GRASS_F.VAR_1, GRASS_F.VAR_2, GRASS_F.VAR_3];
-      frame = solids[Math.floor(hash * solids.length)];
+    if (this._currentBiome === 'desert') {
+      // Desert grass: 3 cols x 5 rows
+      if (!nForeign && !sForeign && !wForeign && !eForeign) {
+        const solids = [GRASS_F.SOLID, GRASS_F.VAR_1, GRASS_F.VAR_2, GRASS_F.VAR_3];
+        frame = solids[Math.floor(hash * solids.length)];
+      } else {
+        frame = this._pickEdgeFrame(
+          nForeign, sForeign, wForeign, eForeign,
+          GRASS_F.CORNER_TL, GRASS_F.EDGE_TOP, GRASS_F.CORNER_TR,
+          GRASS_F.EDGE_LEFT, GRASS_F.EDGE_BOTTOM, GRASS_F.EDGE_RIGHT,
+          GRASS_F.SOLID,
+          GRASS_F.CORNER_BL, GRASS_F.CORNER_BR
+        );
+      }
     } else {
-      frame = this._pickEdgeFrame(
-        nForeign, sForeign, wForeign, eForeign,
-        GRASS_F.CORNER_TL, GRASS_F.EDGE_TOP, GRASS_F.CORNER_TR,
-        GRASS_F.EDGE_LEFT, GRASS_F.EDGE_BOTTOM, GRASS_F.EDGE_RIGHT,
-        GRASS_F.SOLID,
-        GRASS_F.CORNER_BL, GRASS_F.CORNER_BR
-      );
+      // Non-desert grass: use 3×3 auto-tile block at top-left of sheet
+      const cols = cfg.grassCols; // 16 for base grass
+      const TL = 0, T = 1, TR = 2;
+      const L = cols, CENTER = cols + 1, R = cols + 2;
+      const BL = cols * 2, B = cols * 2 + 1, BR = cols * 2 + 2;
+      if (!nForeign && !sForeign && !wForeign && !eForeign) {
+        // Solid fill variants from rows 1-2
+        const solids = [CENTER, CENTER + 1, cols * 2 + 1, cols * 2 + 2];
+        frame = solids[Math.floor(hash * solids.length)];
+      } else {
+        frame = this._pickEdgeFrame(nForeign, sForeign, wForeign, eForeign, TL, T, TR, L, B, R, CENTER, BL, BR);
+      }
     }
 
-    const sprite = this.scene.add.image(px, py, GRASS_KEY, frame);
+    const grassKey = cfg.grassKey;
+    const sprite = this.scene.add.image(px, py, grassKey, frame);
     sprite.setScale(KENMI_SCALE);
 
-    // Ice-grass: blue tint
+    // Ice-grass tint: use biome-aware tint if available, fall back to default
     if (tileType === ICE_GRASS) {
-      sprite.setTint(0x99ccff);
+      const iceTint = (cfg && cfg.iceGrassTint) || 0x99ccff;
+      sprite.setTint(iceTint);
     }
 
     return sprite;
@@ -363,31 +464,47 @@ export class MapLoader {
    * Also places animated foam sprites on water tiles bordering sand.
    */
   _renderWaterTile(px, py, neighbors, hash, groundData, tx, ty, mapW, mapH) {
+    const cfg = this._currentBiomeConfig;
     const nForeign = neighbors.n !== WATER;
     const sForeign = neighbors.s !== WATER;
     const wForeign = neighbors.w !== WATER;
     const eForeign = neighbors.e !== WATER;
 
     let frame;
-    if (!nForeign && !sForeign && !wForeign && !eForeign) {
-      // Fully surrounded by water — solid fill with variation
-      const solids = [WATER_F.SOLID_1, WATER_F.SOLID_2, WATER_F.SOLID_3,
-                      WATER_F.SOLID_4, WATER_F.SOLID_5];
-      frame = solids[Math.floor(hash * solids.length)];
+    if (this._currentBiome === 'desert') {
+      // Desert water: use WATER_F constants (6-col layout)
+      if (!nForeign && !sForeign && !wForeign && !eForeign) {
+        const solids = [WATER_F.SOLID_1, WATER_F.SOLID_2, WATER_F.SOLID_3,
+                        WATER_F.SOLID_4, WATER_F.SOLID_5];
+        frame = solids[Math.floor(hash * solids.length)];
+      } else {
+        frame = this._pickEdgeFrame(
+          nForeign, sForeign, wForeign, eForeign,
+          WATER_F.CORNER_TL, WATER_F.EDGE_TOP, WATER_F.CORNER_TR,
+          WATER_F.EDGE_LEFT, WATER_F.EDGE_BOTTOM, WATER_F.EDGE_RIGHT,
+          WATER_F.SOLID_1,
+          WATER_F.CORNER_BL, WATER_F.CORNER_BR
+        );
+      }
     } else {
-      frame = this._pickEdgeFrame(
-        nForeign, sForeign, wForeign, eForeign,
-        WATER_F.CORNER_TL, WATER_F.EDGE_TOP, WATER_F.CORNER_TR,
-        WATER_F.EDGE_LEFT, WATER_F.EDGE_BOTTOM, WATER_F.EDGE_RIGHT,
-        WATER_F.SOLID_1,
-        WATER_F.CORNER_BL, WATER_F.CORNER_BR
-      );
+      // Non-desert water: use 3×3 auto-tile from sheet top-left
+      const cols = cfg.waterCols; // 3 for base water
+      const TL = 0, T = 1, TR = 2;
+      const L = cols, CENTER = cols + 1, R = cols + 2;
+      const BL = cols * 2, B = cols * 2 + 1, BR = cols * 2 + 2;
+      if (!nForeign && !sForeign && !wForeign && !eForeign) {
+        const solids = [CENTER, CENTER + 1];
+        frame = solids[Math.floor(hash * solids.length)];
+      } else {
+        frame = this._pickEdgeFrame(nForeign, sForeign, wForeign, eForeign, TL, T, TR, L, B, R, CENTER, BL, BR);
+      }
     }
 
-    const sprite = this.scene.add.image(px, py, WATER_KEY, frame);
+    const waterKey = cfg.waterKey;
+    const sprite = this.scene.add.image(px, py, waterKey, frame);
     sprite.setScale(KENMI_SCALE);
 
-    // Add foam animation overlay on water tiles that border sand
+    // Add foam animation overlay on water tiles that border land
     if (nForeign || sForeign || wForeign || eForeign) {
       this._addFoamOverlay(px, py, nForeign, sForeign, wForeign, eForeign);
     }
@@ -449,51 +566,77 @@ export class MapLoader {
   // ================================================================
 
   /**
-   * Create foam animation configs (run once per zone load)
+   * Create foam animation configs (run once per zone load).
+   * Uses biome-specific foam spritesheet key and column count.
    */
   _createFoamAnimations() {
-    if (!this.scene.textures.exists(FOAM_KEY)) return;
-    if (this.scene.anims.exists('water-foam-top')) return;
+    const cfg = this._currentBiomeConfig || BIOME_TILESETS.desert;
+    const foamKey = cfg.foamKey;
+    if (!this.scene.textures.exists(foamKey)) return;
 
-    // Row 0 (frames 0-19): top/horizontal foam
+    // Use the foam key (sanitised) as a prefix to create unique anim keys per biome
+    const prefix = foamKey.replace(/[^a-z0-9]/g, '-');
+    const topKey = `${prefix}-foam-top`;
+    const leftKey = `${prefix}-foam-left`;
+    const bottomKey = `${prefix}-foam-bottom`;
+
+    if (this.scene.anims.exists(topKey)) {
+      // Already created for this biome — just store references
+      this._foamAnimKeys = { top: topKey, left: leftKey, bottom: bottomKey };
+      this._foamTextureKey = foamKey;
+      return;
+    }
+
+    const foamCols = cfg.foamCols;
+
+    // Row 0: top/horizontal foam
     this.scene.anims.create({
-      key: 'water-foam-top',
-      frames: this.scene.anims.generateFrameNumbers(FOAM_KEY, { start: 0, end: FOAM_COLS - 1 }),
+      key: topKey,
+      frames: this.scene.anims.generateFrameNumbers(foamKey, { start: 0, end: foamCols - 1 }),
       frameRate: 6,
       repeat: -1,
     });
-    // Row 1 (frames 20-39): left/vertical foam
+    // Row 1: left/vertical foam
     this.scene.anims.create({
-      key: 'water-foam-left',
-      frames: this.scene.anims.generateFrameNumbers(FOAM_KEY, { start: FOAM_COLS, end: FOAM_COLS * 2 - 1 }),
+      key: leftKey,
+      frames: this.scene.anims.generateFrameNumbers(foamKey, { start: foamCols, end: foamCols * 2 - 1 }),
       frameRate: 6,
       repeat: -1,
     });
-    // Row 2 (frames 40-59): bottom/other direction foam
+    // Row 2: bottom/other direction foam
     this.scene.anims.create({
-      key: 'water-foam-bottom',
-      frames: this.scene.anims.generateFrameNumbers(FOAM_KEY, { start: FOAM_COLS * 2, end: FOAM_COLS * 3 - 1 }),
+      key: bottomKey,
+      frames: this.scene.anims.generateFrameNumbers(foamKey, { start: foamCols * 2, end: foamCols * 3 - 1 }),
       frameRate: 6,
       repeat: -1,
     });
+
+    // Store current foam anim keys for _addFoamOverlay
+    this._foamAnimKeys = { top: topKey, left: leftKey, bottom: bottomKey };
+    this._foamTextureKey = foamKey;
   }
 
   /**
    * Add animated foam sprite overlay on a water tile that borders land.
+   * Uses biome-specific foam texture and animation keys.
    */
   _addFoamOverlay(px, py, nForeign, sForeign, wForeign, eForeign) {
-    if (!this.scene.textures.exists(FOAM_KEY)) return;
+    const foamKey = this._foamTextureKey;
+    if (!foamKey || !this.scene.textures.exists(foamKey)) return;
+
+    const keys = this._foamAnimKeys;
+    if (!keys) return;
 
     // Pick the foam animation direction based on which edge borders land
     let animKey = null;
-    if (nForeign) animKey = 'water-foam-top';
-    else if (sForeign) animKey = 'water-foam-bottom';
-    else if (wForeign) animKey = 'water-foam-left';
-    else if (eForeign) animKey = 'water-foam-left'; // flip for right side
+    if (nForeign) animKey = keys.top;
+    else if (sForeign) animKey = keys.bottom;
+    else if (wForeign) animKey = keys.left;
+    else if (eForeign) animKey = keys.left; // flip for right side
 
     if (!animKey || !this.scene.anims.exists(animKey)) return;
 
-    const foam = this.scene.add.sprite(px, py, FOAM_KEY, 0);
+    const foam = this.scene.add.sprite(px, py, foamKey, 0);
     foam.setScale(KENMI_SCALE);
     foam.setDepth(1);
     foam.setAlpha(0.7);
@@ -503,8 +646,8 @@ export class MapLoader {
     if (eForeign && !wForeign) {
       foam.setFlipX(true);
     }
-    // Flip vertically for bottom foam displayed via top anim
-    if (sForeign && !nForeign && animKey === 'water-foam-bottom') {
+    // Flip vertically for bottom foam
+    if (sForeign && !nForeign && animKey === keys.bottom) {
       foam.setFlipY(true);
     }
 
