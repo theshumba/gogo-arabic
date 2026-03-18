@@ -425,10 +425,12 @@ Plans:
   4. Players can discover hidden Arabic inscriptions placed in the world that, when found, teach a root family grouping and add associated words to review
   5. Quest dialogue branches differently based on the player's chosen learning path (Scholar/Traveler/Historian), so the same quest feels contextually appropriate for each path
 
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 45-01-PLAN.md — TBD
+- [ ] 45-01-PLAN.md — 8-act main storyline quests + act dialogue arcs in npcStoryArcs.js (QUEST-01)
+- [ ] 45-02-PLAN.md — 16 zone side quests + 12 companion personal quests + npcs.json dialogue (QUEST-02, QUEST-03)
+- [ ] 45-03-PLAN.md — Hidden inscription interactables + learningPath condition engine + per-path dialogue branches (QUEST-04, QUEST-05)
 
 #### Phase 46: Vocabulary Expansion
 **Goal**: The FSRS vocabulary system contains 5,000+ words organized so players always encounter the most useful Arabic first, with every word contextualized by CEFR level, root family, and semantic category
