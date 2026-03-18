@@ -355,12 +355,12 @@ Plans:
   4. Arabic text inside Phaser (zone names, NPC labels, sign text) renders correctly using Pixel AE BitmapFont with proper letter joining (js-arabic-reshaper) and right-to-left direction
   5. React overlays (HUD bar, main menu, settings, profile, wardrobe) remain as React components — only in-game elements have moved to Phaser Canvas
 
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 42-01: Phaser NineSlice dialogue panel (UI-01, UI-03) + Kenmi pixel font for English text (UI-06)
-- [ ] 42-02: NPC interaction prompts as Phaser sprites (UI-02) + Kenmi bars/icons (UI-04, UI-05, UI-07)
-- [ ] 42-03: Arabic BitmapFont integration (ARAB-01, ARAB-02, ARAB-03, ARAB-04)
+- [x] 42-01-PLAN.md — Phaser DialogueBox wired to WorldScene + PixelAE Arabic font + ArabicText utility (UI-01, UI-03, UI-06) — COMPLETE 2026-03-18
+- [x] 42-02-PLAN.md — NPC Arabic name labels in Phaser + Kenmi PanelFactory + DOM label removal (UI-02, UI-04, UI-05, UI-07) — COMPLETE 2026-03-18
+- [ ] 42-03-PLAN.md — Arabic BitmapFont integration in DialogueBox + zone name toast (ARAB-01, ARAB-02, ARAB-03, ARAB-04)
 
 #### Phase 43: Zone References & Cleanup
 **Goal**: Zone data files reference Kenmi sprite keys throughout, a Tiled-compatible export structure exists for future collaborators, and all placeholder sprites are removed from the project
@@ -428,11 +428,11 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 39. Terrain Rendering | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 40. Buildings & Decorations | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 41. Characters & Ambient Life | v8.0 | Complete    | 2026-03-18 | 2026-03-18 |
-| 42. Phaser UI & Arabic BitmapFont | v8.0 | 0/3 | Not started | — |
+| 42. Phaser UI & Arabic BitmapFont | v8.0 | 2/3 | In progress | — |
 | 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
 
-**Cumulative:** 41 phases shipped (38-41 complete in v8.0), 122 plans complete, 7 milestones shipped (v8.0 in progress)
+**Cumulative:** 41 phases shipped (38-41 complete in v8.0), 124 plans complete (42-01 + 42-02 done), 7 milestones shipped (v8.0 in progress)
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 41 complete (3/3 plans) — Kenmi player, NPC sprites, hijab overlay, enemy battle sprites, ambient desert animals*
+*Last updated: 2026-03-18 — Phase 42 in progress (42-01 + 42-02 complete) — NPC Arabic labels in Phaser, Kenmi PanelFactory, UI-07 compliance*

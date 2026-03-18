@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
-status: completed
-stopped_at: Phase 41 complete — Phase 42 (Phaser UI & Arabic BitmapFont) is next
-last_updated: "2026-03-18T02:08:14.221Z"
-last_activity: "2026-03-18 — Phase 41 all 3 plans complete + checkpoint:human-verify approved"
+status: in_progress
+stopped_at: Phase 42 Plan 02 complete — ready for 42-03 (BootScene spritesheet registration + SignPanel + ObjectPanel)
+last_updated: "2026-03-18T00:12:00Z"
+last_activity: "2026-03-18 — 42-02 complete: NPC Arabic labels migrated to Phaser, Kenmi PanelFactory methods added"
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 10
-  completed_plans: 13
+  completed_plans: 15
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 41 complete, ready for Phase 42: Phaser UI & Arabic BitmapFont
+**Current focus:** v8.0 Visual Overhaul — Phase 42 in progress (42-01 + 42-02 complete, 42-03 next)
 
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 41 of 43 (characters-ambient-life) — COMPLETE
-Plan: 3/3 plans complete — visual verification approved
-Status: Phase 41 done — next is Phase 42 (Phaser UI & Arabic BitmapFont)
-Last activity: 2026-03-18 — Phase 41 all 3 plans complete + checkpoint:human-verify approved
+Phase: 42 of 43 (phaser-ui-arabic) — IN PROGRESS (2/3 plans done)
+Plan: 2/3 complete — 42-03 next (BootScene kenmi-ui-frames-sheet spritesheet + SignPanel + ObjectPanel)
+Status: 42-02 done — ready for 42-03
+Last activity: 2026-03-18 — 42-02: NPC Arabic name labels migrated to Phaser, Kenmi PanelFactory methods added
 
-Progress (v8.0): [██████████░] 87% (16/19 plans total — 41-01 + 41-02 + 41-03 now done, 42 and 43 remain)
+Progress (v8.0): [███████████░] 90% (18/20 plans total — 42-01 + 42-02 done, 42-03 + Phase 43 remain)
 
 ### Shipped Milestones
 
@@ -106,6 +106,9 @@ v8.0 decisions:
 - 41-03: Kenmi battle sprites at 6x scale (16px * 6 = 96px) for battle scene visibility
 - 41-03: safeFrames() in _createAnimalAnimations uses Object.keys(tex.frames).length - 1 (subtracts Phaser __BASE pseudo-frame)
 - 41-03: Desert-zone guard uses zone.tilesetTheme || 'desert' matching existing biome dispatch pattern
+- 42-02: arabicNameLabel positioned at y-70 (above English nameLabel at y-56) — stacks cleanly, null when nameArabic is falsy
+- 42-02: NineSlice.js kenmi preset uses texture 'kenmi-ui-frames-sheet' at cornerSize 6 — requires BootScene spritesheet registration (Plan 42-03)
+- 42-02: UI-07 boundary documented as code comment in PanelFactory.js — clear React/Phaser ownership for future maintainers
 
 ### Blockers/Concerns
 
@@ -114,10 +117,12 @@ v8.0 decisions:
 
 ### Pending Todos
 
-None — Phase 41 complete and verified.
+- Plan 42-03: Register kenmi-ui-frames-sheet as Phaser spritesheet in BootScene (required by kenmi PANEL_PRESET)
+- Plan 42-03: Build SignPanel + ObjectPanel as Phaser NineSlice panels replacing React overlays
+- Plan 43: Zone cleanup — remove DOM overlay infrastructure after Phase 42 replacements confirmed
 
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 41 complete — Phase 42 (Phaser UI & Arabic BitmapFont) is next
-Resume file: .planning/ROADMAP.md (Phase 42 plan list — 42-01 through 42-03)
+Stopped at: Phase 42 Plan 02 complete
+Resume file: .planning/phases/42-phaser-ui-arabic/42-03-PLAN.md
