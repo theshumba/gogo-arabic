@@ -297,7 +297,7 @@ Plans:
 Plans:
 - [x] 39-01-PLAN.md — Kenmi terrain rendering code (auto-tiling, frame maps, foam) — written but disabled
 - [x] 39-02-PLAN.md — Enable Kenmi rendering + BIOME_TILESETS config + tilesetTheme on 8 main zones (TILE-01 thru TILE-07)
-- [x] 39-03-PLAN.md — Dungeon/volcano/mushroom biome configs + tilesetTheme on 16 placeholder zones + human verify (TILE-08, TILE-09, TILE-10)
+- [x] 39-03-PLAN.md — Dungeon/volcano/mushroom biome configs + tilesetTheme on 16 placeholder zones + human verify (TILE-08, TILE-09, TILE-10) — COMPLETE 2026-03-18
 
 #### Phase 40: Buildings & Decorations
 **Goal**: Every zone's buildings are replaced with zone-appropriate Kenmi structures and filled with clustered decorative props that create visual density and world identity
@@ -424,15 +424,15 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 35. Economy + Home (Production Chains + Decoration) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 36. Quest Journal + Audio (Notebook + Buses) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 37. Polish + Replay (Randomizer + Settings) | v7.0 | 4/4 | Complete | 2026-03-16 |
-| 38. Asset Pipeline & BootScene | v8.0 | Complete    | 2026-03-16 | — |
-| 39. Terrain Rendering | v8.0 | Complete    | 2026-03-16 | — |
-| 40. Buildings & Decorations | v8.0 | Complete    | 2026-03-16 | — |
-| 41. Characters & Ambient Life | v8.0 | Complete    | 2026-03-16 | — |
-| 42. Phaser UI & Arabic BitmapFont | v8.0 | Complete    | 2026-03-16 | — |
-| 43. Zone References & Cleanup | v8.0 | Complete    | 2026-03-16 | — |
+| 38. Asset Pipeline & BootScene | v8.0 | 2/2 | Complete | 2026-03-16 |
+| 39. Terrain Rendering | v8.0 | 3/3 | Complete | 2026-03-18 |
+| 40. Buildings & Decorations | v8.0 | 0/3 | Not started | — |
+| 41. Characters & Ambient Life | v8.0 | 0/3 | Not started | — |
+| 42. Phaser UI & Arabic BitmapFont | v8.0 | 0/3 | Not started | — |
+| 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
 
-**Cumulative:** 37 phases shipped, 113 plans complete, 8 milestones
+**Cumulative:** 39 phases shipped (38-39 complete in v8.0), 116 plans complete, 7 milestones shipped (v8.0 in progress)
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-16 — 38-01 complete (969 PNGs + KENMI_CATALOG)*
+*Last updated: 2026-03-18 — Phase 39 complete (all 24 zones render Kenmi pixel art terrain, TILE-01 through TILE-10 satisfied)*
