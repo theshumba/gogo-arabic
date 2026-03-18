@@ -5,7 +5,7 @@ milestone_name: Content Depth
 status: completed
 stopped_at: 46-01 complete — vocabularyExpanded.js created (500 A1 + 1,000 A2 words)
 last_updated: "2026-03-18T17:30:00.000Z"
-last_activity: 2026-03-18 — Completed quick task 260318-tot (wire disconnected systems: menu routes, gameplay dispatchers, gift UI)
+last_activity: 2026-03-18 — Completed 14-01 (bug fixes: overlay close guarantees, zone transition safety, quiz empty state, dialogue text overflow)
 progress:
   total_phases: 3
   completed_phases: 2
@@ -98,6 +98,10 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 | NPC first-meet journal in useDialogueEvents not useNarrativeEvents | 260318-tot | Avoids duplicate NPC_INTERACT listener; inline in existing handler |
 | removeItem uses { itemId, quantity } payload | 260318-tot | inventorySlice schema uses itemId not id; quantity=1 consumed per gift |
 | Cultural note codex unlock via custom EventBus event | 260318-tot | dialogue:cultural_note_shown emitted from DialogueBox with guard ref, listened in useDialogueEvents |
+| useOverlayClose emits unfreeze on close AND unmount | 14-01 | Idempotent double-emit ensures player never stays frozen after overlay interaction |
+| ESC handler uses capture phase in useOverlayClose | 14-01 | Fires before component-specific handlers; prevents ESC from being swallowed |
+| ZoneTransition _fadeWithTimeout 3s timeout | 14-01 | Prevents hung camera fades from permanently freezing the game |
+| ClockHUD uses Unicode emoji instead of react-icons | 14-01 | Avoids adding react-icons dependency; same visual result with zero bundle cost |
 
 ### Blockers/Concerns
 
@@ -114,5 +118,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Quick task 260318-tot complete — all disconnected systems wired into live game
+Stopped at: 14-01 COMPLETE — bug fixes verified (overlay close, zone transition, quiz empty state, text overflow)
 Resume file: Phase 46 Plan 02 — `.planning/phases/46-vocabulary-expansion/46-02-PLAN.md` (B1/B2 words, 2,500 more words)
