@@ -29,6 +29,7 @@ import statsReducer from './slices/statsSlice.js';
 import skillTreeReducer from './slices/skillTreeSlice.js';
 import factionReducer from './slices/factionSlice.js';
 import journalReducer from './slices/journalSlice.js';
+import codexReducer from './slices/codexSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -153,6 +154,7 @@ const rootReducer = combineReducers({
   skillTree: skillTreeReducer,
   faction: factionReducer,
   journal: journalReducer,
+  codex: codexReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
