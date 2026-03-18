@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-03-18T22:12:07.345Z",
+  "phase": "visual-rebuild",
+  "phase_name": "Complete Visual Rebuild with Kenmi Only",
+  "phase_dir": "N/A — this is a cross-cutting rewrite",
+  "plan": 0,
+  "task": 0,
+  "total_tasks": 5,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 0, "name": "Multiple attempts to fix black squares by patching frame indices", "status": "failed", "progress": "3 attempts, all still show black squares. Auto-tiling math is fundamentally broken."}
+  ],
+  "remaining_tasks": [
+    {"id": 1, "name": "Strip WorldScene.create() of ALL old visual rendering", "status": "not_started"},
+    {"id": 2, "name": "Write new clean terrain renderer using Kenmi textures with NO frame indices", "status": "not_started"},
+    {"id": 3, "name": "Replace old player sprite with Kenmi character sprite", "status": "not_started"},
+    {"id": 4, "name": "Replace all NPC rendering with Kenmi character sprites", "status": "not_started"},
+    {"id": 5, "name": "Remove all old placeholder assets and DOM overlay visual elements", "status": "not_started"}
+  ],
+  "blockers": [
+    {
+      "description": "Kenmi tile spritesheets loaded via KENMI_CATALOG have frameWidth:16, frameHeight:16 but the frame index math in MapLoader doesn't match actual spritesheet layouts. desert-beach-tiles-1 is 80x48 (5x3=15 frames), desert-water-tiles-1 is 96x48 (6x3=18 frames), desert-grass is 48x80 (3x5=15 frames). The auto-tiling code mixes constants from different sheets.",
+      "type": "technical",
+      "workaround": "Don't use frame indices at all. Use Phaser tileSprite or load tiles as individual images instead of spritesheets."
+    }
+  ],
+  "human_actions_pending": [],
+  "decisions": [
+    {"decision": "Nuke entire visual layer and rebuild from scratch with only Kenmi assets", "rationale": "3 patch attempts failed. Old rendering code is too entangled to fix incrementally.", "phase": "visual-rebuild"},
+    {"decision": "Keep React overlays (HUD, quest tracker, dialogue, menus) untouched", "rationale": "User explicitly said keep overlays, only strip the Phaser canvas visuals", "phase": "visual-rebuild"},
+    {"decision": "Loading screen (koi fish) must NOT be touched", "rationale": "User loves it", "phase": "visual-rebuild"},
+    {"decision": "Add 4th learning path 'Polymath' that covers all 3 focuses", "rationale": "User requested", "phase": "visual-rebuild"}
+  ],
+  "uncommitted_files": ["src/game/systems/MapLoader.js", "src/game/sprites/Player.js", "and 18 others from agent modifications"],
+  "next_action": "Read WorldScene.js create() method completely. Understand every visual element it creates. Then strip ALL old sprite/tile creation and replace with a dead-simple Kenmi-only renderer: 1) TileSprite for ground fill (no frame indices), 2) Kenmi building images at object positions, 3) Kenmi character sprite for player, 4) Kenmi NPC sprites. Test each step visually.",
+  "context_notes": "The user has been patient through 3 failed fix attempts. They want EVERYTHING visual nuked and rebuilt clean — not patched. The old sprite system, old auto-tiling, old DOM overlays for in-game elements — all must go. Only Kenmi pixel art should remain. The under-the-hood systems (Redux, quests, vocabulary, factions, etc.) are all solid and should NOT be touched."
+}
