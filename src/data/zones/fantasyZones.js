@@ -1,4 +1,4 @@
-import { buildPlaceholderMap, defaultSpawnPoint, defaultObjects } from './mapPlaceholder';
+import { buildPlaceholderMap, defaultSpawnPoint, getDefaultObjects } from './mapPlaceholder';
 
 /**
  * Fantasy Arabic Zones (8 zones)
@@ -21,7 +21,7 @@ export const fantasyZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('desert'),
     },
     mountain_of_words: {
         id: 'mountain_of_words',
@@ -39,7 +39,7 @@ export const fantasyZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('snow'),
     },
     sea_of_ink: {
         id: 'sea_of_ink',
@@ -57,7 +57,7 @@ export const fantasyZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('grass'),
     },
     forest_of_tales: {
         id: 'forest_of_tales',
@@ -75,7 +75,7 @@ export const fantasyZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('mushroom'),
     },
     desert_of_silence: {
         id: 'desert_of_silence',
@@ -93,7 +93,7 @@ export const fantasyZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('volcano'),
     },
     merchants_island: {
         id: 'merchants_island',
@@ -111,7 +111,7 @@ export const fantasyZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('grass'),
     },
     fortress_of_secrets: {
         id: 'fortress_of_secrets',
@@ -129,7 +129,7 @@ export const fantasyZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('dungeon'),
     },
     garden_of_spirits: {
         id: 'garden_of_spirits',
@@ -147,6 +147,6 @@ export const fantasyZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('grass'),
     },
 };

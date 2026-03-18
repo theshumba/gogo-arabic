@@ -1,4 +1,4 @@
-import { buildPlaceholderMap, defaultSpawnPoint, defaultObjects } from './mapPlaceholder';
+import { buildPlaceholderMap, defaultSpawnPoint, getDefaultObjects } from './mapPlaceholder';
 
 /**
  * Real World Zones (8 zones)
@@ -22,7 +22,7 @@ export const realWorldZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('desert'),
     },
     cordoba: {
         id: 'cordoba',
@@ -41,7 +41,7 @@ export const realWorldZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('desert'),
     },
     timbuktu: {
         id: 'timbuktu',
@@ -60,7 +60,7 @@ export const realWorldZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('desert'),
     },
     damascus: {
         id: 'damascus',
@@ -79,7 +79,7 @@ export const realWorldZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('desert'),
     },
     cairo: {
         id: 'cairo',
@@ -98,7 +98,7 @@ export const realWorldZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('desert'),
     },
     fez: {
         id: 'fez',
@@ -117,7 +117,7 @@ export const realWorldZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('desert'),
     },
     samarkand: {
         id: 'samarkand',
@@ -136,7 +136,7 @@ export const realWorldZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('desert'),
     },
     granada: {
         id: 'granada',
@@ -155,6 +155,6 @@ export const realWorldZones = {
         mapWidth: 40,
         mapHeight: 30,
         spawnPoint: defaultSpawnPoint,
-        objects: defaultObjects,
+        objects: getDefaultObjects('desert'),
     },
 };
