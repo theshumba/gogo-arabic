@@ -1558,5 +1558,292 @@
     },
     "npcGiver": "healer",
     "storyArc": "mountain_wisdom_arc"
+  },
+
+  {
+    "id": "act_1_manuscript_call",
+    "title": "The Scholar's Calling",
+    "titleArabic": "نِداء العالِم",
+    "description": "Guide Amira reveals that a cosmic sandstorm has scattered 8 pages of an ancient manuscript across the land — and only a time-traveling scholar can recover them.",
+    "descriptionArabic": "تَكشِفُ المُرشِدَة أَميرَة أَنَّ عاصِفَة رَمليَّة كَونيَّة بَعثَرَت ثَمانيَ صَفَحات مِن مَخطوطَة قَديمَة عَبرَ الأَرض",
+    "zone": "oasis_village",
+    "type": "main_story",
+    "storyAct": 1,
+    "target": 1,
+    "trackEvent": "story_act_complete",
+    "autoStart": false,
+    "prerequisites": ["words_of_oasis"],
+    "reward": {
+      "xp": 200,
+      "dirhams": 70
+    },
+    "npcGiver": "guide",
+    "storyFlag": "act_1_complete",
+    "objectives": [
+      {
+        "id": "receive_calling",
+        "description": "Listen to Guide Amira's account of the scattered manuscript",
+        "descriptionArabic": "اِستَمِع إلى رِوايَة المُرشِدَة أَميرَة عَن المَخطوطَة المُبَعثَرَة"
+      },
+      {
+        "id": "find_page_oasis",
+        "description": "Locate the first manuscript page hidden in the oasis ruins",
+        "descriptionArabic": "اعثُر عَلى الصَّفحَة الأُولى مِن المَخطوطَة المَخبوءَة في أَطلال الواحَة"
+      },
+      {
+        "id": "decipher_opening_verse",
+        "description": "Decipher the opening Arabic verse inscribed on the page",
+        "descriptionArabic": "افكُكَّ البَيتَ الشِّعري العَرَبيّ الأَوَّل المَنقوش عَلى الصَّفحَة"
+      }
+    ],
+    "lore": "The oasis of Bayt al-Hikma mirrors the real House of Wisdom in Abbasid Baghdad, where scholars translated Greek, Persian, and Indian texts into Arabic during the Golden Age."
+  },
+
+  {
+    "id": "act_2_library_cipher",
+    "title": "The Library's Cipher",
+    "titleArabic": "شِفرَة المَكتَبَة",
+    "description": "Librarian Ibrahim holds the key to deciphering the second manuscript page locked inside the ancient library's cipher room.",
+    "descriptionArabic": "يَحمِلُ المَكتَبيُّ إبراهيم مِفتاح فَكِّ شِفرَة الصَّفحَة الثّانيَة المَحبوسَة في غُرفَة التَّشفير بِالمَكتَبَة القَديمَة",
+    "zone": "ancient_library",
+    "type": "main_story",
+    "storyAct": 2,
+    "target": 1,
+    "trackEvent": "story_act_complete",
+    "autoStart": false,
+    "prerequisites": ["act_1_manuscript_call"],
+    "reward": {
+      "xp": 250,
+      "dirhams": 90
+    },
+    "npcGiver": "librarian",
+    "storyFlag": "act_2_complete",
+    "objectives": [
+      {
+        "id": "find_cipher_room",
+        "description": "Locate the hidden cipher room in the ancient library",
+        "descriptionArabic": "اعثُر عَلى غُرفَة التَّشفير المَخفيَّة في المَكتَبَة القَديمَة"
+      },
+      {
+        "id": "decipher_3_roots",
+        "description": "Decipher 3 Arabic root words inscribed on the second page",
+        "descriptionArabic": "افكُكَّ ثَلاثَة جُذور عَرَبيَّة مَنقوشَة عَلى الصَّفحَة الثّانيَة"
+      }
+    ],
+    "lore": "The Abbasid library system, culminating in Bayt al-Hikma, classified books using abjad numerals — the same root-word system the page's cipher is based on."
+  },
+
+  {
+    "id": "act_3_market_bargain_scroll",
+    "title": "The Market Bargain Scroll",
+    "titleArabic": "طومار السُّوق المَكنون",
+    "description": "Merchant Fatima has unknowingly wrapped goods in the third manuscript page — the scholar must negotiate its return through the art of Arabic market speech.",
+    "descriptionArabic": "لَفَّت التّاجِرَة فاطِمَة بَضاعَتَها بِالصَّفحَة الثّالِثَة مِن المَخطوطَة — يَجِبُ عَلى العالِم استِعادَتُها بِفَنِّ الحِوار التِّجاري",
+    "zone": "desert_marketplace",
+    "type": "main_story",
+    "storyAct": 3,
+    "target": 1,
+    "trackEvent": "story_act_complete",
+    "autoStart": false,
+    "prerequisites": ["act_2_library_cipher"],
+    "reward": {
+      "xp": 300,
+      "dirhams": 110
+    },
+    "npcGiver": "merchant",
+    "storyFlag": "act_3_complete",
+    "objectives": [
+      {
+        "id": "identify_wrapped_scroll",
+        "description": "Identify the manuscript page among Fatima's market wares",
+        "descriptionArabic": "حَدِّد صَفحَة المَخطوطَة بَينَ بَضائِع فاطِمَة في السُّوق"
+      },
+      {
+        "id": "negotiate_return",
+        "description": "Use market Arabic to negotiate the page's return from the merchant",
+        "descriptionArabic": "استَخدِم لُغَة السُّوق العَرَبيَّة لِلتَّفاوُض عَلى اسِتِعادَة الصَّفحَة"
+      },
+      {
+        "id": "read_trade_verse",
+        "description": "Read aloud the trade verse on the third page to unlock its meaning",
+        "descriptionArabic": "اِقرَأ بَيتَ التِّجارَة عَلى الصَّفحَة الثّالِثَة بِصَوت عالٍ لِفَكِّ مَعناهُ"
+      }
+    ],
+    "lore": "The desert marketplace reflects the great Islamic trade routes stretching from Andalusia to the Silk Road, where Arabic became the lingua franca of commerce."
+  },
+
+  {
+    "id": "act_4_farmland_harvest_clue",
+    "title": "The Harvest Clue",
+    "titleArabic": "سِرُّ المَوسِم",
+    "description": "Farmer Omar discovered a manuscript page buried in his field during harvest season — its agricultural verses hold clues to the next page's location.",
+    "descriptionArabic": "عَثَرَ المُزارِع عُمَر عَلى صَفحَة مِن المَخطوطَة مَدفونَة في حَقلِهِ أَثناءَ الحَصاد — أَبياتُها الزِّراعيَّة تَحمِلُ إشارات لِمَوقِع الصَّفحَة التّاليَة",
+    "zone": "farmland",
+    "type": "main_story",
+    "storyAct": 4,
+    "target": 1,
+    "trackEvent": "story_act_complete",
+    "autoStart": false,
+    "prerequisites": ["act_3_market_bargain_scroll"],
+    "reward": {
+      "xp": 350,
+      "dirhams": 130
+    },
+    "npcGiver": "farmer",
+    "storyFlag": "act_4_complete",
+    "objectives": [
+      {
+        "id": "help_harvest",
+        "description": "Help Farmer Omar complete the harvest to earn his trust",
+        "descriptionArabic": "ساعِدِ المُزارِع عُمَر في إتمام الحَصاد لِتَكسِبَ ثِقَتَه"
+      },
+      {
+        "id": "read_agricultural_verse",
+        "description": "Read the agricultural Arabic verse inscribed on the fourth page",
+        "descriptionArabic": "اِقرَأ البَيتَ الزِّراعي العَرَبي المَنقوش عَلى الصَّفحَة الرّابِعَة"
+      }
+    ],
+    "lore": "Islamic agricultural science produced Al-Filaha al-Nabatiyya and Ibn al-Awwam's Kitab al-Filaha — comprehensive farming encyclopedias that transformed Andalusian agriculture."
+  },
+
+  {
+    "id": "act_5_bedouin_night_vision",
+    "title": "The Bedouin Night Vision",
+    "titleArabic": "رُؤيَة اللَّيل البَدَويَّة",
+    "description": "Wanderer Ali glimpsed the fifth manuscript page falling from the sky during a desert night — he hid it among the stars, encoded in the Bedouin navigation songs he knows by heart.",
+    "descriptionArabic": "رَأى الرَّحّالَة عَليّ الصَّفحَة الخامِسَة تَسقُطُ مِن السَّماء ذات لَيلَة — أَخفاها في النُّجوم مُشَفَّرَةً في أَغاني المَلّاحَة البَدَويَّة",
+    "zone": "bedouin_camp",
+    "type": "main_story",
+    "storyAct": 5,
+    "target": 1,
+    "trackEvent": "story_act_complete",
+    "autoStart": false,
+    "prerequisites": ["act_4_farmland_harvest_clue"],
+    "reward": {
+      "xp": 400,
+      "dirhams": 150
+    },
+    "npcGiver": "wanderer",
+    "storyFlag": "act_5_complete",
+    "objectives": [
+      {
+        "id": "learn_navigation_song",
+        "description": "Learn the Bedouin navigation song that encodes the page's location",
+        "descriptionArabic": "تَعَلَّم أُغنيَة المَلّاحَة البَدَويَّة التي تُشَفِّر مَوقِع الصَّفحَة"
+      },
+      {
+        "id": "decode_star_verse",
+        "description": "Decode the star-navigation verse on the fifth manuscript page",
+        "descriptionArabic": "افكُكَّ بَيتَ مَلّاحَة النُّجوم عَلى الصَّفحَة الخامِسَة"
+      }
+    ],
+    "lore": "Bedouin navigators memorised hundreds of star names in Arabic — many still used today, such as Altair (al-nasr al-tair, the flying eagle) and Aldebaran (al-dabaraan, the follower)."
+  },
+
+  {
+    "id": "act_6_mountain_healer_secret",
+    "title": "The Healer's Secret Page",
+    "titleArabic": "صَفحَة سِرِّ المُعالِجَة",
+    "description": "Healer Khadija has kept the sixth manuscript page for years, believing its medical Arabic verses could cure a mysterious illness — she will only part with it if the scholar can read its prescriptions aloud.",
+    "descriptionArabic": "احتَفَظَت المُعالِجَة خَديجَة بِالصَّفحَة السّادِسَة لِسَنَوات، مُؤمِنَةً بِأَنَّ أَبياتَها الطِّبيَّة العَرَبيَّة قادِرَة عَلى علاج مَرَض غامِض",
+    "zone": "mountain_village",
+    "type": "main_story",
+    "storyAct": 6,
+    "target": 1,
+    "trackEvent": "story_act_complete",
+    "autoStart": false,
+    "prerequisites": ["act_5_bedouin_night_vision"],
+    "reward": {
+      "xp": 450,
+      "dirhams": 170
+    },
+    "npcGiver": "healer",
+    "storyFlag": "act_6_complete",
+    "objectives": [
+      {
+        "id": "earn_healers_trust",
+        "description": "Earn Healer Khadija's trust by demonstrating knowledge of healing vocabulary",
+        "descriptionArabic": "اكسِب ثِقَة المُعالِجَة خَديجَة بِإِظهار مَعرِفَتِكَ بِمُفرَدات الشِّفاء"
+      },
+      {
+        "id": "read_medical_verse",
+        "description": "Read aloud the medical Arabic verse on the sixth page to prove its safety",
+        "descriptionArabic": "اِقرَأ البَيتَ الطِّبيَّ العَرَبي عَلى الصَّفحَة السّادِسَة لِإِثبات سَلامَتِه"
+      }
+    ],
+    "lore": "Ibn Sina's Canon of Medicine (al-Qanun fi al-Tibb) was written in Arabic and remained the standard medical text in Europe and the Islamic world until the 17th century."
+  },
+
+  {
+    "id": "act_7_port_navigator_compass",
+    "title": "The Navigator's Compass",
+    "titleArabic": "بوصلَة المَلّاح",
+    "description": "Captain Rashid retrieved the seventh manuscript page from the sea but cannot read its nautical Arabic — the scholar must translate it before the next tide carries the final clue away.",
+    "descriptionArabic": "أَنقَذَ القُبطان رَشيد الصَّفحَة السّابِعَة مِن البَحر لَكِنَّهُ لا يَستَطيعُ قِراءَة عَرَبيَّتِها البَحريَّة — يَجِبُ عَلى العالِم تَرجَمَتُها قَبلَ أَن يَحمِلَ المَدُّ التّالي الخَيطَ الأَخير",
+    "zone": "coastal_port",
+    "type": "main_story",
+    "storyAct": 7,
+    "target": 1,
+    "trackEvent": "story_act_complete",
+    "autoStart": false,
+    "prerequisites": ["act_6_mountain_healer_secret"],
+    "reward": {
+      "xp": 500,
+      "dirhams": 190
+    },
+    "npcGiver": "navigator",
+    "storyFlag": "act_7_complete",
+    "objectives": [
+      {
+        "id": "meet_captain_rashid",
+        "description": "Meet Captain Rashid at the dock and examine the waterlogged manuscript page",
+        "descriptionArabic": "قابِل القُبطان رَشيد عِندَ الرَّصيف وَافحَص صَفحَة المَخطوطَة المُبلَّلَة"
+      },
+      {
+        "id": "translate_nautical_verse",
+        "description": "Translate the nautical Arabic verse to reveal the royal palace coordinates",
+        "descriptionArabic": "تَرجِم البَيتَ البَحريَّ العَرَبيَّ لِلكَشف عَن إحداثيَّات القَصر المَلَكي"
+      }
+    ],
+    "lore": "Arab navigator Ahmad ibn Majid wrote over 40 nautical texts in verse form, using Arabic poetry as a mnemonic for sailing routes — the same technique used in this manuscript page."
+  },
+
+  {
+    "id": "act_8_palace_final_assembly",
+    "title": "The Final Assembly",
+    "titleArabic": "التَّجميع الأَخير",
+    "description": "Scholar Yusuf at the royal palace holds the eighth and final page — reassembling all 8 pages reveals an ancient Arabic poem that unlocks the manuscript's cosmic secret.",
+    "descriptionArabic": "يَحمِلُ الشَّيخ يوسُف في القَصر المَلَكي الصَّفحَة الثّامِنَة والأَخيرَة — إعادَة تَجميع كُلِّ الصَّفَحات الثَّماني تَكشِفُ قَصيدَةً عَرَبيَّة قَديمَة",
+    "zone": "royal_palace",
+    "type": "main_story",
+    "storyAct": 8,
+    "target": 1,
+    "trackEvent": "story_act_complete",
+    "autoStart": false,
+    "prerequisites": ["act_7_port_navigator_compass"],
+    "reward": {
+      "xp": 550,
+      "dirhams": 210
+    },
+    "npcGiver": "scholar",
+    "storyFlag": "act_8_complete",
+    "objectives": [
+      {
+        "id": "present_seven_pages",
+        "description": "Present the seven recovered pages to Scholar Yusuf at the royal palace",
+        "descriptionArabic": "قَدِّم الصَّفَحات السَّبع المُسترَدَّة إلى الشَّيخ يوسُف في القَصر المَلَكي"
+      },
+      {
+        "id": "receive_final_page",
+        "description": "Receive the eighth page from Scholar Yusuf and complete the manuscript",
+        "descriptionArabic": "استَلِم الصَّفحَة الثّامِنَة مِن الشَّيخ يوسُف وَأَتِمَّ المَخطوطَة"
+      },
+      {
+        "id": "recite_ancient_poem",
+        "description": "Recite the complete ancient Arabic poem aloud to unlock its cosmic secret",
+        "descriptionArabic": "أَنشِدِ القَصيدَة العَرَبيَّة القَديمَة كامِلَةً بِصَوت عالٍ لِفَكِّ سِرِّها الكَوني"
+      }
+    ],
+    "lore": "The Bayt al-Hikma in Baghdad housed over 400,000 manuscripts before the Mongol invasion of 1258 CE — many texts survived only because scholars memorised and transcribed them by heart."
   }
 ]
