@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: in_progress
-stopped_at: 45-02 complete — QUEST-02 + QUEST-03 done (16 side quests + 12 companion quests)
-last_updated: "2026-03-18T13:15:00Z"
-last_activity: 2026-03-18 — Completed 45-02 (16 side quests + 12 companion quests + NPC dialogue trees)
+stopped_at: 45-03 complete — QUEST-04 + QUEST-05 done (8 inscriptions + learningPath branching)
+last_updated: "2026-03-18T13:32:03Z"
+last_activity: 2026-03-18 — Completed 45-03 (8 inscription interactables + learningPath dialogue branches)
 progress:
   total_phases: 3
   completed_phases: 1
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Milestone: v9.0 Content Depth
-Phase: 45 — Quest Storylines (IN PROGRESS)
-Plan: 02 of N complete — side quests + companion quests done
-Status: In progress — Phase 45 plan 2 complete; QUEST-02 + QUEST-03 satisfied
-Last activity: 2026-03-18 — Completed 45-02 (16 side quests + 12 companion quests + NPC dialogue trees)
+Phase: 45 — Quest Storylines (COMPLETE)
+Plan: 03 of 03 complete — Phase 45 fully done
+Status: Phase 45 COMPLETE — all 5 QUEST requirements (QUEST-01 through QUEST-05) satisfied
+Last activity: 2026-03-18 — Completed 45-03 (8 inscription interactables + learningPath dialogue branches)
 
-Progress (v9.0): [█████░░░░░░░] 55% (5/9 plans)
+Progress (v9.0): [██████░░░░░░] 67% (6/9 plans)
 
 ### Shipped Milestones
 
@@ -61,6 +61,9 @@ Progress (v9.0): [█████░░░░░░░] 55% (5/9 plans)
 - QUEST-01 COMPLETE: 8-act main storyline (time-traveling scholar + manuscript pages) in quests.json + 16 STORY_ACT_ARCS in npcStoryArcs.js
 - QUEST-02 COMPLETE: 16 side quests (2/zone × 8 zones) with narrative-embedded Arabic learning objectives
 - QUEST-03 COMPLETE: 12 companion personal quests in quests.json + 12 companion NPC entries in npcs.json with personal_quest start/complete dialogue trees
+- QUEST-04 COMPLETE: 8 hidden inscription interactables in zones.js (one per zone), type:'inscription', each with rootFamily, rootWords[4], culturalNote
+- QUEST-05 COMPLETE: DialogueEngine.evaluateCondition supports { learningPath: 'scholar'|'traveler'|'historian' } conditions; 8 act start arcs have 3 learningPath-branched lines each; 12 companion personal_quest trees have 3 learningPath-branched lines each
+- Phase 45 COMPLETE: all 5 QUEST requirements satisfied
 - Total quests in quests.json: 100 (64 original + 8 main story + 16 side + 12 companion)
 - Total NPCs in npcs.json: 56 (44 original + 12 companions)
 - Quest branching by learningPath (Scholar/Traveler/Historian) already exists in narrativeSlice (QUEST-05)
@@ -85,6 +88,9 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 | Companions mapped to base 8 zones (sacred_library→ancient_library etc.) | 45-02 | companions.js zone names differ slightly from zones.js zone ids; mapped each to closest base 8 zone |
 | companion_fatima and companion_tariq (ancient_ruins) mapped to royal_palace | 45-02 | ancient_ruins is not a standalone base zone; both are late-game companions fitting royal_palace/master_of_arabic gate |
 | Companions added as full NPC entries in npcs.json | 45-02 | Consistent with existing NPC format; DialogueEngine looks up NPCs by id, needs full entry |
+| rootWords use real verified vocabulary IDs | 45-03 | All rootWords arrays use IDs confirmed in vocabulary.json before writing (write_1, sea_w23, etc.) |
+| filterLines helper added to DialogueEngine | 45-03 | Mirrors getFilteredChoices pattern; enables line-level learningPath filtering without breaking existing flow |
+| learningPath lines appended at end of lines array | 45-03 | null-path players see lines 0-2 (unchanged); path players also see their matching variant line |
 
 ### Blockers/Concerns
 
@@ -101,5 +107,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: 45-02 complete — QUEST-02 + QUEST-03 done (16 side quests + 12 companion quests + NPC trees)
-Resume file: `.planning/phases/45-quest-storylines/` (Phase 45 plan 03 next — quest branching by learningPath, if exists)
+Stopped at: 45-03 complete — Phase 45 DONE (QUEST-01 through QUEST-05 all satisfied)
+Resume file: Phase 46 (Vocabulary Expansion) — `/gsd:plan-phase 46` to plan vocabulary expansion to 5,000+ words
