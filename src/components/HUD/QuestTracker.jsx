@@ -14,6 +14,7 @@ function deriveObjectiveText(trackEvent) {
   if (!trackEvent) return null;
   const map = {
     tutorial_step: 'Follow the tutorial steps',
+    object_word_learned: 'Discover words in the world',
     alphabet_group_complete: 'Complete alphabet groups',
     quiz_challenge_passed: 'Pass a quiz challenge',
     npcs_visited: 'Talk to NPCs',

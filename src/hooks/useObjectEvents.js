@@ -33,10 +33,22 @@ import { store } from '../store/store.js';
  */
 export function useObjectEvents(playSFX) {
   const dispatch = useDispatch();
-  const fsrsCards = useSelector((state) => state.vocabulary.fsrsCards);
-  const quests = useSelector((state) => state.quests.quests);
 
   useEffect(() => {
+    // Track generic quest events by trackEvent string
+    const trackQuestEvent = (eventName) => {
+      const quests = store.getState().quests.quests;
+      for (const qd of questsData) {
+        if (qd.trackEvent === eventName && quests[qd.id]?.status === 'active') {
+          dispatch(updateQuestProgress({ questId: qd.id, amount: 1 }));
+          const current = (quests[qd.id]?.progress || 0) + 1;
+          if (current >= qd.target) {
+            dispatch(completeQuest(qd.id));
+          }
+        }
+      }
+    };
+
     // Track word learned for quest progress
     const trackWordLearned = (category) => {
       const categoryToEvent = {
@@ -57,6 +69,9 @@ export function useObjectEvents(playSFX) {
         phrases: 'word_learned_phrases',
       };
       const event = categoryToEvent[category];
+
+      // Read quests from store directly (not stale closure)
+      const quests = store.getState().quests.quests;
 
       // Update category-specific quest
       if (event) {
@@ -98,15 +113,17 @@ export function useObjectEvents(playSFX) {
       if (!reread) {
         dispatch(markBookRead(id));
       }
+      // Read fsrsCards from store directly (not stale closure)
+      const currentFsrsCards = store.getState().vocabulary.fsrsCards;
       // Find a random word from this category that the player hasn't learned
       const categoryWords = vocabulary.filter((w) => w.category === category);
-      const unknownWords = categoryWords.filter((w) => !fsrsCards[w.id]);
+      const unknownWords = categoryWords.filter((w) => !currentFsrsCards[w.id]);
       const pool = unknownWords.length > 0 ? unknownWords : categoryWords;
       const word = pool[Math.floor(Math.random() * pool.length)];
 
       if (word && !reread) {
         // Teach the word if it's new
-        if (!fsrsCards[word.id]) {
+        if (!currentFsrsCards[word.id]) {
           dispatch(addFsrsCard({ wordId: word.id, card: createNewCard(), source: 'bookshelf' }));
           dispatch(incrementWordsLearned());
           dispatch(addXP(XP_REWARDS.NEW_WORD));
@@ -142,14 +159,13 @@ export function useObjectEvents(playSFX) {
       dispatch(recordChestOpened(id));
 
       // Check treasure hunter quest
+      const quests = store.getState().quests.quests;
       for (const qd of questsData) {
         if (qd.trackEvent === 'chest_opened' && quests[qd.id]?.status === 'active') {
-          const state = store.getState();
-          const chestsOpened = state.quests.chestsOpened || [];
+          const currentState = store.getState();
+          const chestsOpened = currentState.quests.chestsOpened || [];
           const chestsCount = chestsOpened.length;
-          if (quests[qd.id]) {
-            quests[qd.id].progress = chestsCount;
-          }
+          dispatch(updateQuestProgress({ questId: qd.id, amount: chestsCount }));
           if (chestsCount >= qd.target) {
             dispatch(completeQuest(qd.id));
             dispatch(showNotification({ message: `Quest complete: ${qd.title}`, type: 'quest' }));
@@ -204,6 +220,9 @@ export function useObjectEvents(playSFX) {
           if (vocabCategory) {
             trackWordLearned(vocabCategory);
           }
+          // Track for object_word_learned quests (Tier 3C — first words quest)
+          EventBus.emit(EVENTS.SFX_WORDLEARNED);
+          trackQuestEvent('object_word_learned');
           overlayData.taughtWord = { arabic: word.arabic, english: word.english };
         } else if (word) {
           // Word already known — still show it in overlay for reference
@@ -242,5 +261,5 @@ export function useObjectEvents(playSFX) {
       EventBus.off(EVENTS.DOOR_LOCKED, handleDoorLocked);
       EventBus.off(EVENTS.OBJECT_INTERACT, handleObjectInteract);
     };
-  }, [dispatch, fsrsCards, quests, playSFX]);
+  }, [dispatch, playSFX]);
 }

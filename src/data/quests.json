@@ -11,12 +11,64 @@
     "trackEvent": "tutorial_step",
     "autoStart": true,
     "prerequisites": [],
-    "reward": { "xp": 50, "dirhams": 20 },
+    "reward": {
+      "xp": 50,
+      "dirhams": 20
+    },
     "npcGiver": "guide",
     "objectives": [
-      { "id": "talk_amira", "description": "Talk to Guide Amira", "descriptionArabic": "تَكَلَّم مَع المُرشِدَة أَميرَة" },
-      { "id": "learn_word", "description": "Learn your first Arabic word", "descriptionArabic": "تَعَلَّم أَوَّل كَلِمَة عَرَبِيَّة" },
-      { "id": "talk_yusuf", "description": "Talk to Scholar Yusuf", "descriptionArabic": "تَكَلَّم مَع الشَّيْخ يوسُف" }
+      {
+        "id": "talk_amira",
+        "description": "Talk to Guide Amira",
+        "descriptionArabic": "تَكَلَّم مَع المُرشِدَة أَميرَة"
+      },
+      {
+        "id": "learn_word",
+        "description": "Learn your first Arabic word",
+        "descriptionArabic": "تَعَلَّم أَوَّل كَلِمَة عَرَبِيَّة"
+      },
+      {
+        "id": "talk_yusuf",
+        "description": "Talk to Scholar Yusuf",
+        "descriptionArabic": "تَكَلَّم مَع الشَّيْخ يوسُف"
+      }
+    ]
+  },
+  {
+    "id": "discover_first_words",
+    "title": "Words in the World",
+    "titleArabic": "كلمات في العالم",
+    "description": "Discover 3 Arabic words from objects in Oasis Village",
+    "descriptionArabic": "اكتشف ٣ كلمات عربية من الأشياء في واحة الحروف",
+    "zone": "oasis_village",
+    "type": "tutorial",
+    "target": 3,
+    "trackEvent": "object_word_learned",
+    "autoStart": false,
+    "prerequisites": [
+      "tutorial_welcome"
+    ],
+    "reward": {
+      "xp": 75,
+      "dirhams": 30
+    },
+    "npcGiver": "guide",
+    "objectives": [
+      {
+        "id": "learn_word_1",
+        "description": "Touch a glowing word in the village",
+        "descriptionArabic": "المس كلمة متوهجة في القرية"
+      },
+      {
+        "id": "learn_word_2",
+        "description": "Find another Arabic word",
+        "descriptionArabic": "اعثر على كلمة عربية أخرى"
+      },
+      {
+        "id": "learn_word_3",
+        "description": "Discover one more word",
+        "descriptionArabic": "اكتشف كلمة أخرى"
+      }
     ]
   },
   {
@@ -30,7 +82,10 @@
     "trackEvent": "alphabet_group_complete",
     "autoStart": true,
     "prerequisites": [],
-    "reward": { "xp": 100, "dirhams": 30 },
+    "reward": {
+      "xp": 100,
+      "dirhams": 30
+    },
     "npcGiver": "scholar"
   },
   {
@@ -44,7 +99,10 @@
     "trackEvent": "word_learned_greetings",
     "autoStart": true,
     "prerequisites": [],
-    "reward": { "xp": 150, "dirhams": 50 },
+    "reward": {
+      "xp": 150,
+      "dirhams": 50
+    },
     "npcGiver": "scholar"
   },
   {
@@ -58,7 +116,10 @@
     "trackEvent": "word_learned_trade",
     "autoStart": true,
     "prerequisites": [],
-    "reward": { "xp": 150, "dirhams": 75 },
+    "reward": {
+      "xp": 150,
+      "dirhams": 75
+    },
     "npcGiver": "merchant"
   },
   {
@@ -71,8 +132,13 @@
     "target": 1,
     "trackEvent": "quiz_challenge_passed",
     "autoStart": false,
-    "prerequisites": ["greetings_of_oasis"],
-    "reward": { "xp": 200, "dirhams": 50 },
+    "prerequisites": [
+      "greetings_of_oasis"
+    ],
+    "reward": {
+      "xp": 200,
+      "dirhams": 50
+    },
     "npcGiver": "student"
   },
   {
@@ -85,11 +151,18 @@
     "target": 50,
     "trackEvent": "word_learned_any",
     "autoStart": false,
-    "prerequisites": ["learn_first_letters", "greetings_of_oasis", "market_talk", "quiz_challenge"],
-    "reward": { "xp": 500, "dirhams": 200 },
+    "prerequisites": [
+      "learn_first_letters",
+      "greetings_of_oasis",
+      "market_talk",
+      "quiz_challenge"
+    ],
+    "reward": {
+      "xp": 500,
+      "dirhams": 200
+    },
     "npcGiver": "scholar"
   },
-
   {
     "id": "library_numbers",
     "title": "The Book of Numbers",
@@ -100,8 +173,13 @@
     "target": 10,
     "trackEvent": "word_learned_numbers",
     "autoStart": false,
-    "prerequisites": ["words_of_oasis"],
-    "reward": { "xp": 200, "dirhams": 75 },
+    "prerequisites": [
+      "words_of_oasis"
+    ],
+    "reward": {
+      "xp": 200,
+      "dirhams": 75
+    },
     "npcGiver": "librarian"
   },
   {
@@ -114,8 +192,13 @@
     "target": 8,
     "trackEvent": "word_learned_colors",
     "autoStart": false,
-    "prerequisites": ["words_of_oasis"],
-    "reward": { "xp": 200, "dirhams": 75 },
+    "prerequisites": [
+      "words_of_oasis"
+    ],
+    "reward": {
+      "xp": 200,
+      "dirhams": 75
+    },
     "npcGiver": "librarian"
   },
   {
@@ -128,8 +211,13 @@
     "target": 10,
     "trackEvent": "word_learned_phrases",
     "autoStart": false,
-    "prerequisites": ["words_of_oasis"],
-    "reward": { "xp": 200, "dirhams": 75 },
+    "prerequisites": [
+      "words_of_oasis"
+    ],
+    "reward": {
+      "xp": 200,
+      "dirhams": 75
+    },
     "npcGiver": "scribe"
   },
   {
@@ -142,11 +230,17 @@
     "target": 100,
     "trackEvent": "word_learned_any",
     "autoStart": false,
-    "prerequisites": ["library_numbers", "library_colors", "scribe_phrases"],
-    "reward": { "xp": 600, "dirhams": 250 },
+    "prerequisites": [
+      "library_numbers",
+      "library_colors",
+      "scribe_phrases"
+    ],
+    "reward": {
+      "xp": 600,
+      "dirhams": 250
+    },
     "npcGiver": "librarian"
   },
-
   {
     "id": "spice_knowledge",
     "title": "Spice Knowledge",
@@ -157,8 +251,13 @@
     "target": 12,
     "trackEvent": "word_learned_food",
     "autoStart": false,
-    "prerequisites": ["master_of_letters"],
-    "reward": { "xp": 250, "dirhams": 100 },
+    "prerequisites": [
+      "master_of_letters"
+    ],
+    "reward": {
+      "xp": 250,
+      "dirhams": 100
+    },
     "npcGiver": "spice-seller"
   },
   {
@@ -171,8 +270,13 @@
     "target": 10,
     "trackEvent": "word_learned_trade",
     "autoStart": false,
-    "prerequisites": ["master_of_letters"],
-    "reward": { "xp": 250, "dirhams": 100 },
+    "prerequisites": [
+      "master_of_letters"
+    ],
+    "reward": {
+      "xp": 250,
+      "dirhams": 100
+    },
     "npcGiver": "trader"
   },
   {
@@ -185,8 +289,13 @@
     "target": 8,
     "trackEvent": "word_learned_directions",
     "autoStart": false,
-    "prerequisites": ["master_of_letters"],
-    "reward": { "xp": 250, "dirhams": 100 },
+    "prerequisites": [
+      "master_of_letters"
+    ],
+    "reward": {
+      "xp": 250,
+      "dirhams": 100
+    },
     "npcGiver": "guard"
   },
   {
@@ -199,11 +308,17 @@
     "target": 150,
     "trackEvent": "word_learned_any",
     "autoStart": false,
-    "prerequisites": ["spice_knowledge", "trader_bargains", "guard_directions"],
-    "reward": { "xp": 700, "dirhams": 300 },
+    "prerequisites": [
+      "spice_knowledge",
+      "trader_bargains",
+      "guard_directions"
+    ],
+    "reward": {
+      "xp": 700,
+      "dirhams": 300
+    },
     "npcGiver": "trader"
   },
-
   {
     "id": "farm_nature",
     "title": "Nature's Names",
@@ -214,8 +329,13 @@
     "target": 10,
     "trackEvent": "word_learned_nature",
     "autoStart": false,
-    "prerequisites": ["merchant_master"],
-    "reward": { "xp": 300, "dirhams": 120 },
+    "prerequisites": [
+      "merchant_master"
+    ],
+    "reward": {
+      "xp": 300,
+      "dirhams": 120
+    },
     "npcGiver": "farmer"
   },
   {
@@ -228,8 +348,13 @@
     "target": 10,
     "trackEvent": "word_learned_animals",
     "autoStart": false,
-    "prerequisites": ["merchant_master"],
-    "reward": { "xp": 300, "dirhams": 120 },
+    "prerequisites": [
+      "merchant_master"
+    ],
+    "reward": {
+      "xp": 300,
+      "dirhams": 120
+    },
     "npcGiver": "herbalist"
   },
   {
@@ -242,8 +367,13 @@
     "target": 8,
     "trackEvent": "word_learned_verbs_basic",
     "autoStart": false,
-    "prerequisites": ["merchant_master"],
-    "reward": { "xp": 300, "dirhams": 120 },
+    "prerequisites": [
+      "merchant_master"
+    ],
+    "reward": {
+      "xp": 300,
+      "dirhams": 120
+    },
     "npcGiver": "farmer"
   },
   {
@@ -256,11 +386,17 @@
     "target": 200,
     "trackEvent": "word_learned_any",
     "autoStart": false,
-    "prerequisites": ["farm_nature", "farm_animals", "farm_verbs"],
-    "reward": { "xp": 800, "dirhams": 350 },
+    "prerequisites": [
+      "farm_nature",
+      "farm_animals",
+      "farm_verbs"
+    ],
+    "reward": {
+      "xp": 800,
+      "dirhams": 350
+    },
     "npcGiver": "farmer"
   },
-
   {
     "id": "bedouin_time",
     "title": "Time in the Desert",
@@ -271,8 +407,13 @@
     "target": 8,
     "trackEvent": "word_learned_time",
     "autoStart": false,
-    "prerequisites": ["natures_scholar"],
-    "reward": { "xp": 350, "dirhams": 140 },
+    "prerequisites": [
+      "natures_scholar"
+    ],
+    "reward": {
+      "xp": 350,
+      "dirhams": 140
+    },
     "npcGiver": "elder"
   },
   {
@@ -285,8 +426,13 @@
     "target": 10,
     "trackEvent": "word_learned_adjectives",
     "autoStart": false,
-    "prerequisites": ["natures_scholar"],
-    "reward": { "xp": 350, "dirhams": 140 },
+    "prerequisites": [
+      "natures_scholar"
+    ],
+    "reward": {
+      "xp": 350,
+      "dirhams": 140
+    },
     "npcGiver": "storyteller"
   },
   {
@@ -299,8 +445,13 @@
     "target": 10,
     "trackEvent": "word_learned_verbs_basic",
     "autoStart": false,
-    "prerequisites": ["natures_scholar"],
-    "reward": { "xp": 350, "dirhams": 140 },
+    "prerequisites": [
+      "natures_scholar"
+    ],
+    "reward": {
+      "xp": 350,
+      "dirhams": 140
+    },
     "npcGiver": "wanderer"
   },
   {
@@ -313,11 +464,17 @@
     "target": 250,
     "trackEvent": "word_learned_any",
     "autoStart": false,
-    "prerequisites": ["bedouin_time", "bedouin_stories", "wanderer_verbs"],
-    "reward": { "xp": 900, "dirhams": 400 },
+    "prerequisites": [
+      "bedouin_time",
+      "bedouin_stories",
+      "wanderer_verbs"
+    ],
+    "reward": {
+      "xp": 900,
+      "dirhams": 400
+    },
     "npcGiver": "elder"
   },
-
   {
     "id": "mountain_clothing",
     "title": "Mountain Garments",
@@ -328,8 +485,13 @@
     "target": 10,
     "trackEvent": "word_learned_clothing",
     "autoStart": false,
-    "prerequisites": ["tales_of_desert"],
-    "reward": { "xp": 400, "dirhams": 160 },
+    "prerequisites": [
+      "tales_of_desert"
+    ],
+    "reward": {
+      "xp": 400,
+      "dirhams": 160
+    },
     "npcGiver": "weaver"
   },
   {
@@ -342,8 +504,13 @@
     "target": 10,
     "trackEvent": "word_learned_body",
     "autoStart": false,
-    "prerequisites": ["tales_of_desert"],
-    "reward": { "xp": 400, "dirhams": 160 },
+    "prerequisites": [
+      "tales_of_desert"
+    ],
+    "reward": {
+      "xp": 400,
+      "dirhams": 160
+    },
     "npcGiver": "healer"
   },
   {
@@ -356,8 +523,13 @@
     "target": 8,
     "trackEvent": "word_learned_directions",
     "autoStart": false,
-    "prerequisites": ["tales_of_desert"],
-    "reward": { "xp": 400, "dirhams": 160 },
+    "prerequisites": [
+      "tales_of_desert"
+    ],
+    "reward": {
+      "xp": 400,
+      "dirhams": 160
+    },
     "npcGiver": "guide"
   },
   {
@@ -370,11 +542,17 @@
     "target": 300,
     "trackEvent": "word_learned_any",
     "autoStart": false,
-    "prerequisites": ["mountain_clothing", "mountain_healing", "mountain_paths"],
-    "reward": { "xp": 1000, "dirhams": 450 },
+    "prerequisites": [
+      "mountain_clothing",
+      "mountain_healing",
+      "mountain_paths"
+    ],
+    "reward": {
+      "xp": 1000,
+      "dirhams": 450
+    },
     "npcGiver": "guide"
   },
-
   {
     "id": "port_navigation",
     "title": "Navigation Skills",
@@ -385,8 +563,13 @@
     "target": 8,
     "trackEvent": "word_learned_directions",
     "autoStart": false,
-    "prerequisites": ["mountain_wisdom"],
-    "reward": { "xp": 450, "dirhams": 180 },
+    "prerequisites": [
+      "mountain_wisdom"
+    ],
+    "reward": {
+      "xp": 450,
+      "dirhams": 180
+    },
     "npcGiver": "captain"
   },
   {
@@ -399,8 +582,13 @@
     "target": 10,
     "trackEvent": "word_learned_food",
     "autoStart": false,
-    "prerequisites": ["mountain_wisdom"],
-    "reward": { "xp": 450, "dirhams": 180 },
+    "prerequisites": [
+      "mountain_wisdom"
+    ],
+    "reward": {
+      "xp": 450,
+      "dirhams": 180
+    },
     "npcGiver": "fishmonger"
   },
   {
@@ -413,8 +601,13 @@
     "target": 8,
     "trackEvent": "word_learned_verbs_basic",
     "autoStart": false,
-    "prerequisites": ["mountain_wisdom"],
-    "reward": { "xp": 450, "dirhams": 180 },
+    "prerequisites": [
+      "mountain_wisdom"
+    ],
+    "reward": {
+      "xp": 450,
+      "dirhams": 180
+    },
     "npcGiver": "blacksmith"
   },
   {
@@ -427,11 +620,17 @@
     "target": 350,
     "trackEvent": "word_learned_any",
     "autoStart": false,
-    "prerequisites": ["port_navigation", "port_market", "port_smithing"],
-    "reward": { "xp": 1200, "dirhams": 500 },
+    "prerequisites": [
+      "port_navigation",
+      "port_market",
+      "port_smithing"
+    ],
+    "reward": {
+      "xp": 1200,
+      "dirhams": 500
+    },
     "npcGiver": "captain"
   },
-
   {
     "id": "palace_wisdom",
     "title": "Royal Wisdom",
@@ -442,8 +641,13 @@
     "target": 10,
     "trackEvent": "word_learned_phrases",
     "autoStart": false,
-    "prerequisites": ["port_of_knowledge"],
-    "reward": { "xp": 500, "dirhams": 200 },
+    "prerequisites": [
+      "port_of_knowledge"
+    ],
+    "reward": {
+      "xp": 500,
+      "dirhams": 200
+    },
     "npcGiver": "vizier"
   },
   {
@@ -456,8 +660,13 @@
     "target": 8,
     "trackEvent": "word_learned_colors",
     "autoStart": false,
-    "prerequisites": ["port_of_knowledge"],
-    "reward": { "xp": 500, "dirhams": 200 },
+    "prerequisites": [
+      "port_of_knowledge"
+    ],
+    "reward": {
+      "xp": 500,
+      "dirhams": 200
+    },
     "npcGiver": "princess"
   },
   {
@@ -470,8 +679,13 @@
     "target": 8,
     "trackEvent": "word_learned_adjectives",
     "autoStart": false,
-    "prerequisites": ["port_of_knowledge"],
-    "reward": { "xp": 500, "dirhams": 200 },
+    "prerequisites": [
+      "port_of_knowledge"
+    ],
+    "reward": {
+      "xp": 500,
+      "dirhams": 200
+    },
     "npcGiver": "poet"
   },
   {
@@ -484,8 +698,13 @@
     "target": 8,
     "trackEvent": "word_learned_family",
     "autoStart": false,
-    "prerequisites": ["port_of_knowledge"],
-    "reward": { "xp": 500, "dirhams": 200 },
+    "prerequisites": [
+      "port_of_knowledge"
+    ],
+    "reward": {
+      "xp": 500,
+      "dirhams": 200
+    },
     "npcGiver": "imam"
   },
   {
@@ -498,11 +717,18 @@
     "target": 400,
     "trackEvent": "word_learned_any",
     "autoStart": false,
-    "prerequisites": ["palace_wisdom", "palace_colors", "palace_poetry", "palace_faith"],
-    "reward": { "xp": 2000, "dirhams": 1000 },
+    "prerequisites": [
+      "palace_wisdom",
+      "palace_colors",
+      "palace_poetry",
+      "palace_faith"
+    ],
+    "reward": {
+      "xp": 2000,
+      "dirhams": 1000
+    },
     "npcGiver": "vizier"
   },
-
   {
     "id": "explore_oasis",
     "title": "Village Explorer",
@@ -514,10 +740,21 @@
     "target": 3,
     "trackEvent": "npcs_visited",
     "autoStart": false,
-    "prerequisites": ["tutorial_welcome"],
-    "reward": { "xp": 100, "dirhams": 50 },
+    "prerequisites": [
+      "tutorial_welcome"
+    ],
+    "reward": {
+      "xp": 100,
+      "dirhams": 50
+    },
     "npcGiver": "scholar",
-    "requirements": { "npcsVisited": ["scholar-yusuf", "merchant-fatima", "student-khalid"] }
+    "requirements": {
+      "npcsVisited": [
+        "scholar-yusuf",
+        "merchant-fatima",
+        "student-khalid"
+      ]
+    }
   },
   {
     "id": "explore_marketplace",
@@ -530,10 +767,18 @@
     "target": 5,
     "trackEvent": "npcs_visited_marketplace",
     "autoStart": false,
-    "prerequisites": ["master_of_letters"],
-    "reward": { "xp": 200, "dirhams": 100 },
+    "prerequisites": [
+      "master_of_letters"
+    ],
+    "reward": {
+      "xp": 200,
+      "dirhams": 100
+    },
     "npcGiver": "trader",
-    "requirements": { "zone": "desert_marketplace", "npcCount": 5 }
+    "requirements": {
+      "zone": "desert_marketplace",
+      "npcCount": 5
+    }
   },
   {
     "id": "explore_all_zones",
@@ -546,12 +791,18 @@
     "target": 8,
     "trackEvent": "zones_visited",
     "autoStart": false,
-    "prerequisites": ["words_of_oasis"],
-    "reward": { "xp": 500, "dirhams": 300 },
+    "prerequisites": [
+      "words_of_oasis"
+    ],
+    "reward": {
+      "xp": 500,
+      "dirhams": 300
+    },
     "npcGiver": "wanderer",
-    "requirements": { "zonesCount": 8 }
+    "requirements": {
+      "zonesCount": 8
+    }
   },
-
   {
     "id": "color_collector",
     "title": "Rainbow Collector",
@@ -563,10 +814,18 @@
     "target": 10,
     "trackEvent": "word_learned_colors",
     "autoStart": false,
-    "prerequisites": ["words_of_oasis"],
-    "reward": { "xp": 250, "dirhams": 150 },
+    "prerequisites": [
+      "words_of_oasis"
+    ],
+    "reward": {
+      "xp": 250,
+      "dirhams": 150
+    },
     "npcGiver": "librarian",
-    "requirements": { "wordsFromCategory": "colors", "count": 10 }
+    "requirements": {
+      "wordsFromCategory": "colors",
+      "count": 10
+    }
   },
   {
     "id": "greeting_collector",
@@ -579,10 +838,18 @@
     "target": 15,
     "trackEvent": "word_learned_greetings",
     "autoStart": false,
-    "prerequisites": ["greetings_of_oasis"],
-    "reward": { "xp": 200, "dirhams": 120 },
+    "prerequisites": [
+      "greetings_of_oasis"
+    ],
+    "reward": {
+      "xp": 200,
+      "dirhams": 120
+    },
     "npcGiver": "scholar",
-    "requirements": { "wordsFromCategory": "greetings", "count": 15 }
+    "requirements": {
+      "wordsFromCategory": "greetings",
+      "count": 15
+    }
   },
   {
     "id": "verb_collector",
@@ -595,12 +862,19 @@
     "target": 25,
     "trackEvent": "word_learned_verbs_basic",
     "autoStart": false,
-    "prerequisites": ["merchant_master"],
-    "reward": { "xp": 400, "dirhams": 250 },
+    "prerequisites": [
+      "merchant_master"
+    ],
+    "reward": {
+      "xp": 400,
+      "dirhams": 250
+    },
     "npcGiver": "farmer",
-    "requirements": { "wordsFromCategory": "verbs_basic", "count": 25 }
+    "requirements": {
+      "wordsFromCategory": "verbs_basic",
+      "count": 25
+    }
   },
-
   {
     "id": "review_master_1",
     "title": "Review Master I",
@@ -612,10 +886,18 @@
     "target": 3,
     "trackEvent": "review_session_high_accuracy",
     "autoStart": false,
-    "prerequisites": ["greetings_of_oasis"],
-    "reward": { "xp": 300, "dirhams": 150 },
+    "prerequisites": [
+      "greetings_of_oasis"
+    ],
+    "reward": {
+      "xp": 300,
+      "dirhams": 150
+    },
     "npcGiver": "student",
-    "requirements": { "reviewSessions": 3, "minAccuracy": 80 }
+    "requirements": {
+      "reviewSessions": 3,
+      "minAccuracy": 80
+    }
   },
   {
     "id": "review_master_2",
@@ -628,10 +910,18 @@
     "target": 5,
     "trackEvent": "review_session_very_high_accuracy",
     "autoStart": false,
-    "prerequisites": ["review_master_1"],
-    "reward": { "xp": 500, "dirhams": 250 },
+    "prerequisites": [
+      "review_master_1"
+    ],
+    "reward": {
+      "xp": 500,
+      "dirhams": 250
+    },
     "npcGiver": "scribe",
-    "requirements": { "reviewSessions": 5, "minAccuracy": 90 }
+    "requirements": {
+      "reviewSessions": 5,
+      "minAccuracy": 90
+    }
   },
   {
     "id": "review_master_3",
@@ -644,12 +934,19 @@
     "target": 3,
     "trackEvent": "review_session_perfect",
     "autoStart": false,
-    "prerequisites": ["review_master_2"],
-    "reward": { "xp": 800, "dirhams": 400 },
+    "prerequisites": [
+      "review_master_2"
+    ],
+    "reward": {
+      "xp": 800,
+      "dirhams": 400
+    },
     "npcGiver": "vizier",
-    "requirements": { "reviewSessions": 3, "minAccuracy": 100 }
+    "requirements": {
+      "reviewSessions": 3,
+      "minAccuracy": 100
+    }
   },
-
   {
     "id": "elder_wisdom",
     "title": "Elder's Wisdom",
@@ -661,10 +958,17 @@
     "target": 1,
     "trackEvent": "dialogue_completed",
     "autoStart": false,
-    "prerequisites": ["greetings_of_oasis"],
-    "reward": { "xp": 100, "dirhams": 75 },
+    "prerequisites": [
+      "greetings_of_oasis"
+    ],
+    "reward": {
+      "xp": 100,
+      "dirhams": 75
+    },
     "npcGiver": "scholar",
-    "requirements": { "dialogueCompleted": "elder_calligraphy_story" }
+    "requirements": {
+      "dialogueCompleted": "elder_calligraphy_story"
+    }
   },
   {
     "id": "merchant_tales",
@@ -677,10 +981,21 @@
     "target": 3,
     "trackEvent": "merchant_dialogue_completed",
     "autoStart": false,
-    "prerequisites": ["master_of_letters"],
-    "reward": { "xp": 250, "dirhams": 150 },
+    "prerequisites": [
+      "master_of_letters"
+    ],
+    "reward": {
+      "xp": 250,
+      "dirhams": 150
+    },
     "npcGiver": "trader",
-    "requirements": { "dialoguesCompleted": ["trader_silk_road_1", "trader_silk_road_2", "trader_silk_road_3"] }
+    "requirements": {
+      "dialoguesCompleted": [
+        "trader_silk_road_1",
+        "trader_silk_road_2",
+        "trader_silk_road_3"
+      ]
+    }
   },
   {
     "id": "poetry_listener",
@@ -693,12 +1008,24 @@
     "target": 5,
     "trackEvent": "poetry_dialogue_completed",
     "autoStart": false,
-    "prerequisites": ["port_of_knowledge"],
-    "reward": { "xp": 350, "dirhams": 200 },
+    "prerequisites": [
+      "port_of_knowledge"
+    ],
+    "reward": {
+      "xp": 350,
+      "dirhams": 200
+    },
     "npcGiver": "poet",
-    "requirements": { "dialoguesCompleted": ["poet_verse_1", "poet_verse_2", "poet_verse_3", "poet_verse_4", "poet_verse_5"] }
+    "requirements": {
+      "dialoguesCompleted": [
+        "poet_verse_1",
+        "poet_verse_2",
+        "poet_verse_3",
+        "poet_verse_4",
+        "poet_verse_5"
+      ]
+    }
   },
-
   {
     "id": "quiz_master_1",
     "title": "Quiz Champion I",
@@ -710,10 +1037,18 @@
     "target": 5,
     "trackEvent": "quiz_passed_80_percent",
     "autoStart": false,
-    "prerequisites": ["greetings_of_oasis"],
-    "reward": { "xp": 200, "dirhams": 100 },
+    "prerequisites": [
+      "greetings_of_oasis"
+    ],
+    "reward": {
+      "xp": 200,
+      "dirhams": 100
+    },
     "npcGiver": "student",
-    "requirements": { "quizzesPassed": 5, "minAccuracy": 80 }
+    "requirements": {
+      "quizzesPassed": 5,
+      "minAccuracy": 80
+    }
   },
   {
     "id": "quiz_master_2",
@@ -726,10 +1061,18 @@
     "target": 10,
     "trackEvent": "quiz_passed_90_percent",
     "autoStart": false,
-    "prerequisites": ["quiz_master_1"],
-    "reward": { "xp": 400, "dirhams": 200 },
+    "prerequisites": [
+      "quiz_master_1"
+    ],
+    "reward": {
+      "xp": 400,
+      "dirhams": 200
+    },
     "npcGiver": "scribe",
-    "requirements": { "quizzesPassed": 10, "minAccuracy": 90 }
+    "requirements": {
+      "quizzesPassed": 10,
+      "minAccuracy": 90
+    }
   },
   {
     "id": "sentence_builder",
@@ -742,12 +1085,18 @@
     "target": 10,
     "trackEvent": "sentence_quiz_completed",
     "autoStart": false,
-    "prerequisites": ["library_numbers"],
-    "reward": { "xp": 350, "dirhams": 180 },
+    "prerequisites": [
+      "library_numbers"
+    ],
+    "reward": {
+      "xp": 350,
+      "dirhams": 180
+    },
     "npcGiver": "librarian",
-    "requirements": { "sentenceQuizzes": 10 }
+    "requirements": {
+      "sentenceQuizzes": 10
+    }
   },
-
   {
     "id": "speed_learner",
     "title": "Speed Learner",
@@ -759,10 +1108,17 @@
     "target": 20,
     "trackEvent": "words_learned_today",
     "autoStart": false,
-    "prerequisites": ["words_of_oasis"],
-    "reward": { "xp": 400, "dirhams": 250 },
+    "prerequisites": [
+      "words_of_oasis"
+    ],
+    "reward": {
+      "xp": 400,
+      "dirhams": 250
+    },
     "npcGiver": "librarian",
-    "requirements": { "wordsInOneDay": 20 }
+    "requirements": {
+      "wordsInOneDay": 20
+    }
   },
   {
     "id": "alphabet_master",
@@ -775,10 +1131,17 @@
     "target": 28,
     "trackEvent": "alphabet_letter_mastered",
     "autoStart": false,
-    "prerequisites": ["learn_first_letters"],
-    "reward": { "xp": 600, "dirhams": 300 },
+    "prerequisites": [
+      "learn_first_letters"
+    ],
+    "reward": {
+      "xp": 600,
+      "dirhams": 300
+    },
     "npcGiver": "scholar",
-    "requirements": { "lettersMastered": 28 }
+    "requirements": {
+      "lettersMastered": 28
+    }
   },
   {
     "id": "treasure_hunter",
@@ -792,11 +1155,15 @@
     "trackEvent": "chest_opened",
     "autoStart": true,
     "prerequisites": [],
-    "reward": { "xp": 300, "dirhams": 200 },
+    "reward": {
+      "xp": 300,
+      "dirhams": 200
+    },
     "npcGiver": "merchant",
-    "requirements": { "chestsOpened": 10 }
+    "requirements": {
+      "chestsOpened": 10
+    }
   },
-
   {
     "id": "scholars_dilemma",
     "title": "The Scholar's Dilemma",
@@ -808,8 +1175,13 @@
     "target": 1,
     "trackEvent": "story_choice_made",
     "autoStart": false,
-    "prerequisites": ["words_of_oasis"],
-    "reward": { "xp": 400, "dirhams": 150 },
+    "prerequisites": [
+      "words_of_oasis"
+    ],
+    "reward": {
+      "xp": 400,
+      "dirhams": 150
+    },
     "npcGiver": "scholar",
     "choices": [
       {
@@ -818,10 +1190,26 @@
         "descriptionArabic": "أَعِد المَخطوطَة إلى الشَّيْخ يوسُف",
         "storyFlag": "manuscript_returned_scholar",
         "effects": [
-          { "type": "relationship_change", "npcId": "scholar-yusuf", "amount": 2 },
-          { "type": "relationship_change", "npcId": "merchant-fatima", "amount": -1 },
-          { "type": "story_flag", "flag": "scholar_path", "value": true },
-          { "type": "reward", "xp": 200, "dirhams": 0 }
+          {
+            "type": "relationship_change",
+            "npcId": "scholar-yusuf",
+            "amount": 2
+          },
+          {
+            "type": "relationship_change",
+            "npcId": "merchant-fatima",
+            "amount": -1
+          },
+          {
+            "type": "story_flag",
+            "flag": "scholar_path",
+            "value": true
+          },
+          {
+            "type": "reward",
+            "xp": 200,
+            "dirhams": 0
+          }
         ]
       },
       {
@@ -830,10 +1218,26 @@
         "descriptionArabic": "دَع التّاجِرَة فاطِمَة تَحتَفِظ بِها — مَن وَجَد شَيئاً فَهُوَ لَه",
         "storyFlag": "manuscript_kept_merchant",
         "effects": [
-          { "type": "relationship_change", "npcId": "merchant-fatima", "amount": 2 },
-          { "type": "relationship_change", "npcId": "scholar-yusuf", "amount": -1 },
-          { "type": "story_flag", "flag": "merchant_path", "value": true },
-          { "type": "reward", "xp": 100, "dirhams": 200 }
+          {
+            "type": "relationship_change",
+            "npcId": "merchant-fatima",
+            "amount": 2
+          },
+          {
+            "type": "relationship_change",
+            "npcId": "scholar-yusuf",
+            "amount": -1
+          },
+          {
+            "type": "story_flag",
+            "flag": "merchant_path",
+            "value": true
+          },
+          {
+            "type": "reward",
+            "xp": 100,
+            "dirhams": 200
+          }
         ]
       }
     ]
@@ -849,8 +1253,13 @@
     "target": 1,
     "trackEvent": "dialogue_completed",
     "autoStart": false,
-    "prerequisites": ["scholars_dilemma"],
-    "reward": { "xp": 300, "dirhams": 100 },
+    "prerequisites": [
+      "scholars_dilemma"
+    ],
+    "reward": {
+      "xp": 300,
+      "dirhams": 100
+    },
     "npcGiver": "scholar"
   },
   {
@@ -864,8 +1273,13 @@
     "target": 1,
     "trackEvent": "story_choice_made",
     "autoStart": false,
-    "prerequisites": ["tales_of_desert"],
-    "reward": { "xp": 600, "dirhams": 200 },
+    "prerequisites": [
+      "tales_of_desert"
+    ],
+    "reward": {
+      "xp": 600,
+      "dirhams": 200
+    },
     "npcGiver": "elder",
     "choices": [
       {
@@ -874,10 +1288,26 @@
         "descriptionArabic": "اِسلُك طَريق القافِلَة الآمِن مَع الرَّحّالَة عَلي",
         "storyFlag": "chose_caravan_route",
         "effects": [
-          { "type": "relationship_change", "npcId": "wanderer-ali", "amount": 2 },
-          { "type": "relationship_change", "npcId": "elder-tariq", "amount": 1 },
-          { "type": "story_flag", "flag": "caravan_path", "value": true },
-          { "type": "world_state", "objectId": "desert_bridge", "objectState": "open" }
+          {
+            "type": "relationship_change",
+            "npcId": "wanderer-ali",
+            "amount": 2
+          },
+          {
+            "type": "relationship_change",
+            "npcId": "elder-tariq",
+            "amount": 1
+          },
+          {
+            "type": "story_flag",
+            "flag": "caravan_path",
+            "value": true
+          },
+          {
+            "type": "world_state",
+            "objectId": "desert_bridge",
+            "objectState": "open"
+          }
         ]
       },
       {
@@ -886,11 +1316,31 @@
         "descriptionArabic": "اِسلُك الطَّريق المُختَصَر عَبرَ الأَطلال — كَلِمات نادِرَة بِانتِظارِك",
         "storyFlag": "chose_ruins_shortcut",
         "effects": [
-          { "type": "relationship_change", "npcId": "storyteller-noor", "amount": 2 },
-          { "type": "story_flag", "flag": "ruins_path", "value": true },
-          { "type": "story_flag", "flag": "learned_ancient_script", "value": true },
-          { "type": "reward", "xp": 300, "dirhams": 0 },
-          { "type": "world_state", "objectId": "ruins_gate", "objectState": "explored" }
+          {
+            "type": "relationship_change",
+            "npcId": "storyteller-noor",
+            "amount": 2
+          },
+          {
+            "type": "story_flag",
+            "flag": "ruins_path",
+            "value": true
+          },
+          {
+            "type": "story_flag",
+            "flag": "learned_ancient_script",
+            "value": true
+          },
+          {
+            "type": "reward",
+            "xp": 300,
+            "dirhams": 0
+          },
+          {
+            "type": "world_state",
+            "objectId": "ruins_gate",
+            "objectState": "explored"
+          }
         ]
       }
     ]
@@ -906,8 +1356,13 @@
     "target": 1,
     "trackEvent": "dialogue_completed",
     "autoStart": false,
-    "prerequisites": ["desert_crossing"],
-    "reward": { "xp": 400, "dirhams": 150 },
+    "prerequisites": [
+      "desert_crossing"
+    ],
+    "reward": {
+      "xp": 400,
+      "dirhams": 150
+    },
     "npcGiver": "guide"
   },
   {
@@ -921,8 +1376,13 @@
     "target": 1,
     "trackEvent": "story_choice_made",
     "autoStart": false,
-    "prerequisites": ["port_of_knowledge"],
-    "reward": { "xp": 800, "dirhams": 300 },
+    "prerequisites": [
+      "port_of_knowledge"
+    ],
+    "reward": {
+      "xp": 800,
+      "dirhams": 300
+    },
     "npcGiver": "vizier",
     "choices": [
       {
@@ -931,11 +1391,31 @@
         "descriptionArabic": "قَدِّم نَفسَكَ كَعالِمٍ يَبحَثُ عَن الحِكمَة",
         "storyFlag": "palace_scholar_identity",
         "effects": [
-          { "type": "relationship_change", "npcId": "vizier-abbas", "amount": 2 },
-          { "type": "relationship_change", "npcId": "poet-rumi", "amount": 1 },
-          { "type": "story_flag", "flag": "palace_scholar", "value": true },
-          { "type": "story_flag", "flag": "palace_audience_granted", "value": true },
-          { "type": "reward", "xp": 400, "dirhams": 0 }
+          {
+            "type": "relationship_change",
+            "npcId": "vizier-abbas",
+            "amount": 2
+          },
+          {
+            "type": "relationship_change",
+            "npcId": "poet-rumi",
+            "amount": 1
+          },
+          {
+            "type": "story_flag",
+            "flag": "palace_scholar",
+            "value": true
+          },
+          {
+            "type": "story_flag",
+            "flag": "palace_audience_granted",
+            "value": true
+          },
+          {
+            "type": "reward",
+            "xp": 400,
+            "dirhams": 0
+          }
         ]
       },
       {
@@ -944,11 +1424,31 @@
         "descriptionArabic": "قَدِّم نَفسَكَ كَتاجِرٍ يَحمِلُ هَدايا غَريبَة",
         "storyFlag": "palace_merchant_identity",
         "effects": [
-          { "type": "relationship_change", "npcId": "princess-aisha", "amount": 2 },
-          { "type": "relationship_change", "npcId": "imam-muhammad", "amount": 1 },
-          { "type": "story_flag", "flag": "palace_merchant", "value": true },
-          { "type": "story_flag", "flag": "palace_audience_granted", "value": true },
-          { "type": "reward", "xp": 200, "dirhams": 500 }
+          {
+            "type": "relationship_change",
+            "npcId": "princess-aisha",
+            "amount": 2
+          },
+          {
+            "type": "relationship_change",
+            "npcId": "imam-muhammad",
+            "amount": 1
+          },
+          {
+            "type": "story_flag",
+            "flag": "palace_merchant",
+            "value": true
+          },
+          {
+            "type": "story_flag",
+            "flag": "palace_audience_granted",
+            "value": true
+          },
+          {
+            "type": "reward",
+            "xp": 200,
+            "dirhams": 500
+          }
         ]
       }
     ]
@@ -964,8 +1464,13 @@
     "target": 1,
     "trackEvent": "dialogue_completed",
     "autoStart": false,
-    "prerequisites": ["palace_audience"],
-    "reward": { "xp": 500, "dirhams": 200 },
+    "prerequisites": [
+      "palace_audience"
+    ],
+    "reward": {
+      "xp": 500,
+      "dirhams": 200
+    },
     "npcGiver": "vizier"
   },
   {
@@ -979,8 +1484,14 @@
     "target": 5,
     "trackEvent": "fragment_found",
     "autoStart": false,
-    "prerequisites": ["library_numbers", "library_colors"],
-    "reward": { "xp": 350, "dirhams": 175 },
+    "prerequisites": [
+      "library_numbers",
+      "library_colors"
+    ],
+    "reward": {
+      "xp": 350,
+      "dirhams": 175
+    },
     "npcGiver": "librarian",
     "storyArc": "library_mysteries"
   },
@@ -995,8 +1506,14 @@
     "target": 1,
     "trackEvent": "mediation_complete",
     "autoStart": false,
-    "prerequisites": ["spice_knowledge", "trader_bargains"],
-    "reward": { "xp": 400, "dirhams": 250 },
+    "prerequisites": [
+      "spice_knowledge",
+      "trader_bargains"
+    ],
+    "reward": {
+      "xp": 400,
+      "dirhams": 250
+    },
     "npcGiver": "spice-seller",
     "storyArc": "marketplace_harmony"
   },
@@ -1011,8 +1528,13 @@
     "target": 8,
     "trackEvent": "word_learned_astronomy",
     "autoStart": false,
-    "prerequisites": ["bedouin_stories"],
-    "reward": { "xp": 500, "dirhams": 200 },
+    "prerequisites": [
+      "bedouin_stories"
+    ],
+    "reward": {
+      "xp": 500,
+      "dirhams": 200
+    },
     "npcGiver": "storyteller",
     "storyArc": "desert_legends"
   },
@@ -1027,8 +1549,13 @@
     "target": 1,
     "trackEvent": "trial_passed",
     "autoStart": false,
-    "prerequisites": ["mountain_healing"],
-    "reward": { "xp": 450, "dirhams": 180 },
+    "prerequisites": [
+      "mountain_healing"
+    ],
+    "reward": {
+      "xp": 450,
+      "dirhams": 180
+    },
     "npcGiver": "healer",
     "storyArc": "mountain_wisdom_arc"
   }
