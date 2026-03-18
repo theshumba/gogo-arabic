@@ -2425,5 +2425,461 @@
         "descriptionArabic": "تُلِ الكَلِمات الثَّلاث لِلشّاعِر الرّومي لِإِكمال القَصيدَة المَلَكِيَّة"
       }
     ]
+  },
+
+  {
+    "id": "companion_quest_amira",
+    "title": "Amira's Chronicle",
+    "titleArabic": "سِجِلّ أَميرَة",
+    "description": "Amira the Chronicler needs a fellow scholar to help complete her historical record of the Ancient Library — earn her trust and dictate a sentence in her grammar-perfect style.",
+    "descriptionArabic": "تَحتاجُ أَميرَة المُؤَرِّخَة إلى عالِمٍ لِمُساعَدَتِها في إتمام سِجِلِّها التّاريخيِّ لِلمَكتَبَة القَديمَة",
+    "zone": "ancient_library",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["master_of_letters"],
+    "npcGiver": "companion_amira",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["sentence_w1", "verb_w1", "noun_w1"],
+    "objectives": [
+      {
+        "id": "earn_trust",
+        "description": "Earn Amira's trust by completing the Library quest",
+        "descriptionArabic": "اكسِب ثِقَة أَميرَة بِإِكمال مَهمَّة المَكتَبَة"
+      },
+      {
+        "id": "grammar_lesson",
+        "description": "Complete Amira's grammar lesson on verb conjugation",
+        "descriptionArabic": "أَكمِل دَرسَ أَميرَة في تَصريف الأَفعال"
+      },
+      {
+        "id": "chronicle_entry",
+        "description": "Dictate a grammatically correct sentence for Amira's chronicle",
+        "descriptionArabic": "أَملِ جُملَةً نَحوِيَّةً صَحيحَةً لِسِجِلِّ أَميرَة"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_khalid",
+    "title": "Khalid's Trade Routes",
+    "titleArabic": "طُرُق خالِد التِّجارِيَّة",
+    "description": "Desert Wanderer Khalid has memorised dozens of rare trade words along his routes — help him map them out to create a vocabulary atlas of the land.",
+    "descriptionArabic": "حَفِظَ الرَّحّالَة خالِد عَشَرات الكَلِمات التِّجارِيَّة النّادِرَة عَلى طُرُقِه — ساعِدهُ في رَسمِها لِإِنشاء أَطلَس مُفرَدات",
+    "zone": "oasis_village",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["words_of_oasis"],
+    "npcGiver": "companion_khalid",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["big_1", "small_w19", "good_w20"],
+    "objectives": [
+      {
+        "id": "meet_khalid",
+        "description": "Meet Khalid and hear about his vocabulary atlas plan",
+        "descriptionArabic": "اِلتَقِ بِخالِد وَاِستَمِع لِخِطَّتِه لِأَطلَس المُفرَدات"
+      },
+      {
+        "id": "learn_route_words",
+        "description": "Learn the three key trade vocabulary words Khalid uses on his route",
+        "descriptionArabic": "تَعَلَّم الكَلِمات التِّجارِيَّة الثَّلاث الرَّئيسِيَّة التي يَستَخدِمُها خالِد في طَريقِه"
+      },
+      {
+        "id": "complete_atlas",
+        "description": "Compile the atlas entry by reciting the learned words to Khalid",
+        "descriptionArabic": "أَتِمَّ مَدخَل الأَطلَس بِتِلاوَة الكَلِمات المُتَعَلَّمَة لِخالِد"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_zahra",
+    "title": "Zahra's Flower Verses",
+    "titleArabic": "أَبيات زَهرَة",
+    "description": "Flower Speaker Zahra teaches pronunciation through poetry — help her compose a verse where each word's correct pronunciation blooms like a flower.",
+    "descriptionArabic": "تُعَلِّمُ مُحَدِّثَةُ الأَزهار زَهرَة النُّطقَ مِن خِلالِ الشِّعر — ساعِدها في نَظمِ بَيتٍ يَتَفَتَّحُ فيه نُطقُ كُلِّ كَلِمَة كَزَهرَة",
+    "zone": "coastal_port",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["port_of_knowledge"],
+    "npcGiver": "companion_zahra",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["ahlan", "marhaba", "sabah_al_khayr"],
+    "objectives": [
+      {
+        "id": "find_zahra",
+        "description": "Find Zahra at the coastal port and listen to her pronunciation poetry",
+        "descriptionArabic": "اِبحَث عَن زَهرَة في المِيناء وَاِستَمِع لِشِعرِها في النُّطق"
+      },
+      {
+        "id": "practice_pronunciation",
+        "description": "Practice pronouncing the three greeting words with Zahra's coaching",
+        "descriptionArabic": "تَدَرَّب عَلى نُطق كَلِمات التَّرحيب الثَّلاث بِتَوجيه زَهرَة"
+      },
+      {
+        "id": "recite_flower_verse",
+        "description": "Recite the completed flower verse with perfect pronunciation",
+        "descriptionArabic": "أَنشِد بَيتَ الزَّهرَة المُكتَمَل بِنُطقٍ سَليم"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_omar",
+    "title": "Omar's Missing Ledger",
+    "titleArabic": "دَفتَر عُمَر المَفقود",
+    "description": "Market Keeper Omar has lost his trade ledger in the desert marketplace — the words inside are the key to recovering his business reputation.",
+    "descriptionArabic": "فَقَدَ صاحِبُ السُّوق عُمَر دَفتَرَ تِجارَتِه في سوق الصَّحراء — الكَلِمات بِداخِلِه مِفتاحٌ لِاستِعادَة سُمعَتِه التِّجارِيَّة",
+    "zone": "desert_marketplace",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["merchant_master"],
+    "npcGiver": "companion_omar",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["big_1", "small_w19", "good_w20"],
+    "objectives": [
+      {
+        "id": "meet_omar_market",
+        "description": "Meet Omar in the market and hear about his lost ledger",
+        "descriptionArabic": "اِلتَقِ بِعُمَر في السُّوق وَاِستَمِع لِقِصَّة دَفتَرِه المَفقود"
+      },
+      {
+        "id": "search_market_vocab",
+        "description": "Learn the market vocabulary words listed in the ledger",
+        "descriptionArabic": "تَعَلَّم مُفرَدات السُّوق المُدرَجَة في الدَّفتَر"
+      },
+      {
+        "id": "restore_reputation",
+        "description": "Recite the trade words to the marketplace guild to restore Omar's standing",
+        "descriptionArabic": "تُلِ كَلِمات التِّجارَة لِنِقابَة السُّوق لِاستِعادَة مَكانَة عُمَر"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_layla",
+    "title": "Layla's Midnight Grammar",
+    "titleArabic": "نَحوُ لَيلى في مُنتَصَف اللَّيل",
+    "description": "Night Scholar Layla has been secretly correcting a manuscript's grammar errors — she needs one last scholar to verify her work before dawn.",
+    "descriptionArabic": "تُصَحِّحُ عالِمَةُ اللَّيل لَيلى سِرَّاً أَخطاءَ النَّحوِ في مَخطوطَة — تَحتاجُ إلى عالِمٍ أَخير لِلتَّحَقُّق مِن عَمَلِها قَبلَ الفَجر",
+    "zone": "ancient_library",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["master_of_letters"],
+    "npcGiver": "companion_layla",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["sentence_w1", "verb_w1", "noun_w1"],
+    "objectives": [
+      {
+        "id": "find_layla_midnight",
+        "description": "Find Layla working late in the library and examine her corrected manuscript",
+        "descriptionArabic": "اِبحَث عَن لَيلى تَعمَلُ مُتَأَخِّرَةً في المَكتَبَة وَافحَص مَخطوطَتَها المُصَحَّحَة"
+      },
+      {
+        "id": "verify_grammar",
+        "description": "Identify and verify the three key grammar corrections Layla made",
+        "descriptionArabic": "حَدِّد وَتَحَقَّق مِن تَصحيحات النَّحو الثَّلاث الرَّئيسِيَّة التي أَجرَتها لَيلى"
+      },
+      {
+        "id": "approve_corrections",
+        "description": "Confirm the corrections are accurate — صحيح — and complete the work",
+        "descriptionArabic": "أَكِّد أَنَّ التَّصحيحات دَقيقَة — صَحيح — وَأَتِمَّ العَمَل"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_hassan",
+    "title": "Hassan's Warrior Code",
+    "titleArabic": "مِيثاق حَسَن المُحارِب",
+    "description": "Mountain Guide Hassan guards the ancient highland warrior code — a cultural text that names each virtue in classical Arabic, preserved for centuries.",
+    "descriptionArabic": "يَحرُسُ دَليلُ الجِبال حَسَن مِيثاقَ المُحارِب الجَبَليَّ القَديم — نَصٌّ ثَقافِيٌّ يُسَمِّي كُلَّ فَضيلَة بِالعَرَبِيَّة الكِلاسيكِيَّة",
+    "zone": "mountain_village",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["mountain_wisdom"],
+    "npcGiver": "companion_hassan",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["ustadh", "write_1", "book_w1"],
+    "objectives": [
+      {
+        "id": "earn_hassan_trust",
+        "description": "Prove your worth to Hassan by demonstrating knowledge of mountain culture",
+        "descriptionArabic": "أَثبِت جَدارَتَكَ لِحَسَن بِإِظهار مَعرِفَتِكَ بِثَقافَة الجَبَل"
+      },
+      {
+        "id": "read_warrior_code",
+        "description": "Read the warrior code aloud and learn the three virtue words",
+        "descriptionArabic": "اِقرَأ مِيثاقَ المُحارِب بِصَوت عالٍ وَتَعَلَّم كَلِمات الفَضائِل الثَّلاث"
+      },
+      {
+        "id": "recite_code",
+        "description": "Recite the code back to Hassan from memory in the highland tradition",
+        "descriptionArabic": "أَعِد تِلاوَة المِيثاق لِحَسَن مِن الذّاكِرَة وَفقَ تَقليد الهِضاب"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_fatima",
+    "title": "Fatima's Hidden Archive",
+    "titleArabic": "أَرشيف فاطِمَة المَخفِيّ",
+    "description": "Ruin Keeper Fatima has unearthed an archive of cultural inscriptions — she needs a scholar to read the ancient text aloud so the words can be formally recorded.",
+    "descriptionArabic": "اِكتَشَفَت حارِسَةُ الأَطلال فاطِمَة أَرشيفاً مِن النُّقوش الثَّقافِيَّة — تَحتاجُ إلى عالِمٍ لِقِراءَة النَّصِّ القَديم بِصَوت عالٍ حَتَّى تُسَجَّلَ الكَلِمات رَسمِيَّاً",
+    "zone": "royal_palace",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["master_of_arabic"],
+    "npcGiver": "companion_fatima",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["ustadh", "write_1", "book_w1"],
+    "objectives": [
+      {
+        "id": "find_fatima_ruins",
+        "description": "Find Fatima at the palace ruins section and view the newly unearthed archive",
+        "descriptionArabic": "اِبحَث عَن فاطِمَة في قِسمِ الأَطلال بِالقَصر وَاِطَّلِع عَلى الأَرشيف المُكتَشَف"
+      },
+      {
+        "id": "decipher_inscriptions",
+        "description": "Decipher the cultural inscriptions and identify the three key cultural words",
+        "descriptionArabic": "فُكَّ رُموزَ النُّقوش الثَّقافِيَّة وَحَدِّد الكَلِمات الثَّقافِيَّة الثَّلاث الرَّئيسِيَّة"
+      },
+      {
+        "id": "record_words",
+        "description": "Read the words aloud to Fatima to formally archive them — سُبْحان الله",
+        "descriptionArabic": "اِقرَأ الكَلِمات بِصَوت عالٍ لِفاطِمَة لِتَأريخِها رَسمِيَّاً — سُبْحان الله"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_ali",
+    "title": "Ali's Healing Prayer",
+    "titleArabic": "دُعاء عَلي لِلشِّفاء",
+    "description": "Oasis Healer Ali knows a traditional healing prayer in classical Arabic — he needs the player to learn and recite it correctly before he can teach it to the village.",
+    "descriptionArabic": "يَعرِفُ طَبيبُ الواحَة عَليّ دُعاءَ شِفاءٍ تَقليدِيّاً بِالعَرَبِيَّة الكِلاسيكِيَّة — يَحتاجُ مِن اللاعِب تَعَلُّمَه وَتِلاوَتَه بِصِحَّة قَبلَ أَن يُعَلِّمَه لِلقَرية",
+    "zone": "oasis_village",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["words_of_oasis"],
+    "npcGiver": "companion_ali",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["ahlan", "marhaba", "sabah_al_khayr"],
+    "objectives": [
+      {
+        "id": "meet_ali_healer",
+        "description": "Meet Ali at his healing station and hear about the traditional prayer",
+        "descriptionArabic": "اِلتَقِ بِعَليّ في مَحَطَّة علاجِه وَاِستَمِع عَن الدُّعاء التَّقليدي"
+      },
+      {
+        "id": "learn_prayer_words",
+        "description": "Study the pronunciation of the prayer words with Ali's guidance — إن شاء الله",
+        "descriptionArabic": "اِدرُس نُطقَ كَلِمات الدُّعاء بِتَوجيه عَليّ — إن شاء الله"
+      },
+      {
+        "id": "recite_prayer",
+        "description": "Recite the complete healing prayer to Ali with correct pronunciation",
+        "descriptionArabic": "أَنشِد الدُّعاءَ الشِّفائيَّ الكامِل لِعَليّ بِنُطقٍ سَليم"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_maryam",
+    "title": "Maryam's Battle Grammar",
+    "titleArabic": "نَحوُ مَريَم القِتالِيّ",
+    "description": "Coastal Warrior Maryam uses Arabic grammar to command her troops — she needs the player to master her battle command sentence structure.",
+    "descriptionArabic": "تَستَخدِمُ مُحارِبَةُ الساحِل مَريَم قَواعِدَ العَرَبِيَّة لِقِيادَة قُوَّاتِها — تَحتاجُ مِن اللاعِب إِتقانَ بِنيَة جُمَل أَوامِر المَعرَكَة",
+    "zone": "coastal_port",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["port_of_knowledge"],
+    "npcGiver": "companion_maryam",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["sentence_w1", "verb_w1", "noun_w1"],
+    "objectives": [
+      {
+        "id": "meet_maryam_coast",
+        "description": "Find Maryam at the coastal port and hear her challenge — يَلَّا",
+        "descriptionArabic": "اِبحَث عَن مَريَم في المِيناء وَاِستَمِع لِتَحَدِّيها — يَلَّا"
+      },
+      {
+        "id": "master_command_grammar",
+        "description": "Study Maryam's battle command grammar — verb-subject-object structure",
+        "descriptionArabic": "اِدرُس قَواعِدَ أَوامِر مَريَم القِتالِيَّة — بِنيَة فِعل-فاعِل-مَفعول"
+      },
+      {
+        "id": "demonstrate_command",
+        "description": "Demonstrate the correct command structure to Maryam to earn her respect",
+        "descriptionArabic": "أَظهِر بِنيَة الأَمر الصَّحيحَة لِمَريَم لِكَسبِ اِحتِرامِها"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_samir",
+    "title": "Samir's Rapid Fire",
+    "titleArabic": "نيران سَمير السَّريعَة",
+    "description": "Market Brawler Samir teaches pronunciation through rapid-fire word challenges — survive his verbal gauntlet to earn his loyalty.",
+    "descriptionArabic": "يُعَلِّمُ مُصارِعُ السُّوق سَمير النُّطقَ مِن خِلالِ تَحَدِّيات الكَلِمات السَّريعَة — اِجتَز مُواجَهَتَه اللَّفظِيَّة لِكَسبِ وَلائِه",
+    "zone": "desert_marketplace",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["merchant_master"],
+    "npcGiver": "companion_samir",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["ahlan", "marhaba", "sabah_al_khayr"],
+    "objectives": [
+      {
+        "id": "find_samir_market",
+        "description": "Find Samir at the market and accept his pronunciation challenge — وَالله",
+        "descriptionArabic": "اِبحَث عَن سَمير في السُّوق وَاقبَل تَحَدِّيَهُ النُّطقيَّ — وَالله"
+      },
+      {
+        "id": "pronounce_three_words",
+        "description": "Correctly pronounce three greetings in Samir's rapid-fire style",
+        "descriptionArabic": "انطِق ثَلاث تَحِيَّات بِصِحَّة عَلى النَّمَط السَّريع لِسَمير"
+      },
+      {
+        "id": "win_challenge",
+        "description": "Win Samir's verbal challenge and earn his friendship",
+        "descriptionArabic": "اِفُز بِتَحَدِّي سَمير اللَّفظيِّ وَاكسِب صَداقَتَه"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_nadia",
+    "title": "Nadia's Herb Tradition",
+    "titleArabic": "تَقاليد نادِيَة العِشبِيَّة",
+    "description": "Mountain Herbalist Nadia preserves ancient folk remedy culture through the Arabic names of herbs — help her teach the tradition to the next generation.",
+    "descriptionArabic": "تَحفَظُ عَشَّابَةُ الجِبال نادِيَة ثَقافَةَ الدَّواء الشَّعبي القَديم مِن خِلالِ الأَسماء العَرَبِيَّة لِلأَعشاب — ساعِدها في تَعليم التَّقليد لِلجيل القادِم",
+    "zone": "mountain_village",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["mountain_wisdom"],
+    "npcGiver": "companion_nadia",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["ustadh", "write_1", "book_w1"],
+    "objectives": [
+      {
+        "id": "find_nadia_mountain",
+        "description": "Find Nadia gathering herbs and learn about her cultural preservation mission — الله أكبر",
+        "descriptionArabic": "اِبحَث عَن نادِيَة وَهيَ تَجمَعُ الأَعشابَ وَتَعَلَّم عَن مُهمَّتِها الثَّقافِيَّة — الله أكبر"
+      },
+      {
+        "id": "document_herb_names",
+        "description": "Document three herb names in Arabic with Nadia to preserve the tradition",
+        "descriptionArabic": "وَثِّق ثَلاثَة أَسماء أَعشاب بِالعَرَبِيَّة مَع نادِيَة لِلحِفاظِ عَلى التَّقليد"
+      },
+      {
+        "id": "teach_student",
+        "description": "Help Nadia teach the herb vocabulary to a young village student",
+        "descriptionArabic": "ساعِد نادِيَة في تَعليم مُفرَدات الأَعشاب لِطالِبٍ شابٍّ مِن القَرية"
+      }
+    ]
+  },
+
+  {
+    "id": "companion_quest_tariq",
+    "title": "Tariq's Inscription Vigil",
+    "titleArabic": "حِراسَة طارِق لِلنُّقوش",
+    "description": "Ruin Defender Tariq guards inscriptions that teach vocabulary through their very text — help him decode and record the ancient word-inscriptions before looters destroy them.",
+    "descriptionArabic": "يَحرُسُ مُدافِعُ الأَطلال طارِق نُقوشاً تُعَلِّمُ المُفرَدات مِن خِلالِ نَصِّها — ساعِدهُ في فَكِّ رُموزِها وَتَسجيلِها قَبلَ أَن يُدَمِّرَها النَّهَّابونَ",
+    "zone": "royal_palace",
+    "type": "companion_quest",
+    "target": 1,
+    "trackEvent": "companion_quest_complete",
+    "autoStart": false,
+    "prerequisites": ["master_of_arabic"],
+    "npcGiver": "companion_tariq",
+    "reward": {
+      "xp": 200,
+      "dirhams": 80,
+      "relationshipIncrease": 2
+    },
+    "teachWords": ["big_1", "small_w19", "good_w20"],
+    "objectives": [
+      {
+        "id": "meet_tariq_vigil",
+        "description": "Find Tariq on his nightly vigil and view the threatened inscriptions — بالتأكيد",
+        "descriptionArabic": "اِبحَث عَن طارِق في حِراسَتِه اللَّيلِيَّة وَشاهِد النُّقوش المُهَدَّدَة — بالتأكيد"
+      },
+      {
+        "id": "decode_inscriptions",
+        "description": "Decode the three vocabulary words hidden in the inscription text",
+        "descriptionArabic": "فُكَّ رُموزَ الكَلِمات الثَّلاث المُخفاة في نَصِّ النَّقوش"
+      },
+      {
+        "id": "record_and_protect",
+        "description": "Record the decoded words with Tariq and help him secure the site",
+        "descriptionArabic": "سَجِّل الكَلِمات المُفَكَّكَة مَع طارِق وَساعِدهُ في تَأمين المَوقِع"
+      }
+    ]
   }
 ]
