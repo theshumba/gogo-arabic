@@ -334,12 +334,12 @@ Plans:
   4. Enemy encounter sprites use Kenmi Desert Warriors (2 weapon types x 2 variants) and Mummy; all NPC sprites have idle and walk animations loaded from spritesheets
   5. Desert zones contain camels (3 variants), vultures (4 variants), and scarabs (4 color variants) as ambient non-interactive sprites with idle/walk animations that add world life without blocking gameplay
 
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 41-01: Player sprite replacement (CHAR-01, 4-direction walk anims from Kenmi spritesheet)
-- [ ] 41-02: NPC sprite replacement (CHAR-02, CHAR-03, CHAR-05, CHAR-06 — Desert_Person + hijab variants + RPG pack NPCs)
-- [ ] 41-03: Enemy sprites + ambient animals (CHAR-04, ANIM-01, ANIM-02, ANIM-03, ANIM-04)
+- [x] 41-01-PLAN.md — Player sprite replacement with Kenmi knight character (CHAR-01)
+- [x] 41-02-PLAN.md — NPC sprite verification + hijab overlay for female NPCs (CHAR-02, CHAR-03, CHAR-05, CHAR-06)
+- [ ] 41-03-PLAN.md — Enemy Kenmi battle sprites + enable ambient desert animals (CHAR-04, ANIM-01, ANIM-02, ANIM-03, ANIM-04)
 
 #### Phase 42: Phaser UI & Arabic BitmapFont
 **Goal**: In-game UI elements render natively inside Phaser Canvas using Kenmi UI panels and Pixel AE Arabic BitmapFont — dialogue boxes, interaction prompts, and zone labels no longer use React DOM overlays
@@ -426,7 +426,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 37. Polish + Replay (Randomizer + Settings) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 38. Asset Pipeline & BootScene | v8.0 | 2/2 | Complete | 2026-03-16 |
 | 39. Terrain Rendering | v8.0 | 3/3 | Complete | 2026-03-18 |
-| 40. Buildings & Decorations | v8.0 | Complete    | 2026-03-18 | 2026-03-18 |
+| 40. Buildings & Decorations | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 41. Characters & Ambient Life | v8.0 | 0/3 | Not started | — |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 0/3 | Not started | — |
 | 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
@@ -435,4 +435,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 40 complete (all 3 plans) — animated decorations, landmark obelisks, NPC-adjacent props verified*
+*Last updated: 2026-03-18 — Phase 41 planned (3 plans in 2 waves) — player sprite, NPC hijab, enemy sprites, ambient animals*

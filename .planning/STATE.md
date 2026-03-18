@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
-status: verifying
-stopped_at: Phase 40 complete — ready for Phase 41 Characters & Ambient Life
-last_updated: "2026-03-18T01:22:36.976Z"
-last_activity: 2026-03-18 — Phase 40 complete (40-03 checkpoint approved)
+status: in_progress
+stopped_at: Phase 41 Plan 02 complete — FEMALE_NPC_IDS + hijab overlay shipped
+last_updated: "2026-03-18T01:39:21Z"
+last_activity: 2026-03-18 — Phase 41 Plan 02 complete (41-02 hijab overlay)
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 7
-  completed_plans: 11
+  completed_plans: 13
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 41: Characters & Ambient Life (Phase 40 complete, next up)
+**Current focus:** v8.0 Visual Overhaul — Phase 41: Characters & Ambient Life (Plans 41-01 and 41-02 complete)
 
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 41 of 43 (characters-ambient-life) — READY TO START
-Plan: 0/3 plans in phase 41
-Status: Phase 40 complete — all 3 plans verified and shipped
-Last activity: 2026-03-18 — Phase 40 complete (40-03 checkpoint approved)
+Phase: 41 of 43 (characters-ambient-life) — IN PROGRESS
+Plan: 2/3 plans in phase 41 complete
+Status: Plans 41-01 and 41-02 shipped — NPC sprites + hijab overlay done
+Last activity: 2026-03-18 — Phase 41 Plan 02 complete (FEMALE_NPC_IDS + hijab overlay)
 
-Progress (v8.0): [██████░░░░] 62% (10/16 plans)
+Progress (v8.0): [████████░░] 75% (12/16 plans)
 
 ### Shipped Milestones
 
@@ -96,6 +96,11 @@ v8.0 decisions:
 - 40-03: Flies placed at shore-adjacent WATER tiles with 15% sparse probability — avoids overwhelming water edges
 - 40-03: NPC positions verified from actual zone data — plan's listed positions adjusted to match real coords
 - 40-03: Guard Hamza prop placed in desert_marketplace (actual zone) not royal_palace (plan listed wrong zone)
+- 41-01: NPC_KEY_MAP maps 23 NPCs to Kenmi sprites; NPC.js auto-detects Kenmi via texture key lookup; Kenmi uses 12-col × 20-row layout at 4x scale
+- 41-02: FEMALE_NPC_IDS checked against `key` (includes `npc-` prefix) not `id` — matches Set entries
+- 41-02: Hijab texture per-NPC with `hijab-overlay-{id}` key — avoids collision when two females share base sprite
+- 41-02: _hijabSprite initialized null via post-constructor guard for legacy/non-female NPCs
+- 41-02: Additive overlay pattern — hijab is a separate scene.add.sprite(), position synced in update() and setInteractionHint()
 
 ### Blockers/Concerns
 
@@ -109,5 +114,5 @@ v8.0 decisions:
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 40 complete — ready for Phase 41 Characters & Ambient Life
-Resume file: .planning/phases/41-characters-ambient-life/ (run /gsd:plan-phase 41 to begin)
+Stopped at: Phase 41 Plan 02 complete — 2/3 plans in Phase 41 done
+Resume file: .planning/phases/41-characters-ambient-life/41-03-PLAN.md (or run /gsd:plan-phase 41 for next plan)
