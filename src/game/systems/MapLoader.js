@@ -1282,6 +1282,70 @@ export class MapLoader {
       }
     }
 
+    // --- Clustering pass: add prop groups of 2-4 near buildings (DECO-02) ---
+    const buildingObjects = (zone.objects || []).filter(obj =>
+      obj.key && (
+        obj.key.includes('house') || obj.key.includes('tent') ||
+        obj.key.includes('temple') || obj.key.includes('pergola') ||
+        obj.key.includes('tower') || obj.key.includes('arch') ||
+        obj.key.includes('inn') || obj.key.includes('barn') ||
+        obj.key.includes('shroom')
+      )
+    );
+
+    const CLUSTER_PROPS_DESERT = [
+      'kenmi-desert-props-desert-pots-sacks',
+      'kenmi-desert-props-desert-rugs',
+      'kenmi-desert-props-sleeping-mat',
+      'kenmi-desert-props-water-sack-on-stick',
+      'kenmi-desert-props-fire-pit',
+      'kenmi-desert-props-desert-ladder',
+    ];
+
+    const CLUSTER_PROPS_GRASS = [
+      'kenmi-base-outdoor-decoration-barrels',
+      'kenmi-base-outdoor-decoration-camp-decor',
+      'kenmi-base-outdoor-decoration-hay-bales',
+      'kenmi-base-outdoor-decoration-benches',
+    ];
+
+    const clusterProps = biome === 'grass' ? CLUSTER_PROPS_GRASS : CLUSTER_PROPS_DESERT;
+
+    for (let bi = 0; bi < buildingObjects.length; bi++) {
+      const bldg = buildingObjects[bi];
+      const clusterSize = 2 + Math.floor(tileHash(bldg.x, bldg.y, DECO_SEED + 100) * 3); // 2-4
+
+      for (let ci = 0; ci < clusterSize; ci++) {
+        // Offset 1.5-3.5 tiles from building in random direction
+        const angle = tileHash(bldg.x + ci, bldg.y, DECO_SEED + 101 + ci) * Math.PI * 2;
+        const dist = 1.5 + tileHash(bldg.x, bldg.y + ci, DECO_SEED + 102 + ci) * 2;
+        const tx = Math.round(bldg.x + Math.cos(angle) * dist);
+        const ty = Math.round(bldg.y + Math.sin(angle) * dist);
+
+        // Bounds, occupancy, and water checks
+        if (tx < 1 || tx >= mapW - 1 || ty < 1 || ty >= mapH - 1) continue;
+        if (occupiedTiles.has(`${tx},${ty}`)) continue;
+        if (exitTiles.has(`${tx},${ty}`)) continue;
+        if (groundData[ty][tx] === WATER) continue;
+
+        const propIdx = Math.floor(tileHash(tx, ty, DECO_SEED + 200 + ci) * clusterProps.length);
+        const propKey = clusterProps[propIdx];
+        if (!this.scene.textures.exists(propKey)) continue;
+
+        const offsetX = (tileHash(tx, ty, DECO_SEED + 201) - 0.5) * 16;
+        const offsetY = (tileHash(tx, ty, DECO_SEED + 202) - 0.5) * 16;
+        const px = tx * TILE + TILE / 2 + offsetX;
+        const py = ty * TILE + TILE / 2 + offsetY;
+
+        const sprite = this._createDecoSprite(px, py, propKey, tileHash(tx, ty, DECO_SEED + 203));
+        if (sprite) {
+          this.decoSprites.push(sprite);
+          // Mark occupied so no more props overlap here
+          occupiedTiles.add(`${tx},${ty}`);
+        }
+      }
+    }
+
     // --- Animated campfires: 1-2 per desert zone near center (DECO-03) ---
     if (biome === 'desert' && this.scene.anims.exists('deco-campfire')) {
       const campfireCount = 1 + Math.floor(tileHash(3, 3, DECO_SEED + 300) * 2);
