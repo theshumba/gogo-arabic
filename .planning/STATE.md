@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Visual Overhaul
-status: verifying
-stopped_at: Phase 39 complete — ready for Phase 40 (Buildings & Decorations)
-last_updated: "2026-03-18T00:42:01.800Z"
-last_activity: 2026-03-18 — Completed 39-03 all tasks (human verify approved); Phase 39 Terrain Rendering COMPLETE
+status: in_progress
+stopped_at: Phase 40 Plan 01 complete — zone buildings upgraded to Kenmi
+last_updated: "2026-03-18T01:03:08Z"
+last_activity: 2026-03-18 — Completed 40-01 (BIOME_BUILDING_SETS + all 24 zones Kenmi buildings)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 4
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-16)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v8.0 Visual Overhaul — Phase 39: Terrain Rendering (checkpoint verification)
+**Current focus:** v8.0 Visual Overhaul — Phase 40: Buildings & Decorations (plan 01 complete)
 
 ## Current Position
 
 Milestone: v8.0 Visual Overhaul
-Phase: 39 of 43 (terrain rendering) — COMPLETE
-Plan: 39-03 complete (3/3 plans in phase 39 done)
-Status: Phase 39 fully complete — human verify approved. Ready to start Phase 40 (Buildings & Decorations)
-Last activity: 2026-03-18 — Completed 39-03 all tasks (human verify approved); Phase 39 Terrain Rendering COMPLETE
+Phase: 40 of 43 (buildings-decorations) — IN PROGRESS
+Plan: 40-01 complete (1/3 plans in phase 40 done)
+Status: Plan 40-01 complete — Kenmi buildings in all 24 zones. Continue with 40-02.
+Last activity: 2026-03-18 — Completed 40-01 (BIOME_BUILDING_SETS + zone building sprites)
 
-Progress (v8.0): [████░░░░░░] 37% (6/16 plans)
+Progress (v8.0): [████░░░░░░] 43% (7/16 plans)
 
 ### Shipped Milestones
 
@@ -84,6 +84,10 @@ v8.0 decisions:
 - 39-03: Mushroom water falls back to base water tiles — no dedicated shroom water spritesheet in catalog
 - 39-03: desert_of_silence assigned 'volcano' (desolate wasteland, TILE-09); fortress_of_secrets assigned 'dungeon' (TILE-08); forest_of_tales assigned 'mushroom' (TILE-10)
 - 39-03: All 8 real-world zones assigned 'desert' (historical Middle East/North Africa settings)
+- 40-01: BIOME_BUILDING_SETS in spriteKeyMap.js is single source of truth for all biome building key arrays
+- 40-01: getDefaultObjects(tilesetTheme) in mapPlaceholder.js replaces old 4-identical-ruin-pillar defaultObjects
+- 40-01: gate-pillar key (royal_palace) replaced with kenmi-desert-temple-desert-obelisk-small-1 (no dedicated gate-pillar in Kenmi)
+- 40-01: mapPlaceholder references BIOME_BUILDING_SETS via import, not inline strings — acceptance criteria grep was design-based not literal
 
 ### Blockers/Concerns
 
@@ -97,5 +101,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: Phase 39 complete — ready for Phase 40 (Buildings & Decorations)
-Resume file: Run `/gsd:plan-phase 40` to plan Phase 40 (Buildings & Decorations)
+Stopped at: Phase 40 Plan 01 complete — all 24 zones have Kenmi building sprites
+Resume file: .planning/phases/40-buildings-decorations/40-02-PLAN.md

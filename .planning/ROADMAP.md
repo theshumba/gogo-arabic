@@ -252,7 +252,7 @@ Plans:
 
 </details>
 
-### 🚧 v8.0 Visual Overhaul (Phases 38-43) — In Progress
+### v8.0 Visual Overhaul (Phases 38-43) — In Progress
 
 **Milestone Goal:** Replace all placeholder art with the Kenmi Cute Fantasy 16x16 pixel art bundle, move in-game UI from React DOM overlays into Phaser Canvas, and add Arabic BitmapFont rendering — making the game look like a polished Pokemon/Stardew Valley RPG.
 
@@ -307,18 +307,18 @@ Plans:
 **Requirements**: BLDG-01, BLDG-02, BLDG-03, BLDG-04, BLDG-05, BLDG-06, BLDG-07, DECO-01, DECO-02, DECO-03, DECO-04, DECO-05, DECO-06, DECO-07
 
 **Success Criteria** (what must be TRUE):
-  1. Oasis Village displays Kenmi desert houses (4 designs × 4 color variants), desert temple structures appear in library/palace zones, and zone-specific building sets (dungeon arches, military tents, mushroom houses) are used in their correct zones — no placeholder rectangle buildings remain
+  1. Oasis Village displays Kenmi desert houses (4 designs x 4 color variants), desert temple structures appear in library/palace zones, and zone-specific building sets (dungeon arches, military tents, mushroom houses) are used in their correct zones — no placeholder rectangle buildings remain
   2. Desert zones contain Kenmi props (cacti, rocks, bones, pots, sacks, rugs, campfires, palm trees, acacia trees) with a minimum of 20 decoration objects per zone
   3. Decoration placement uses clustering: props appear in groups of 2-4 near buildings and along paths rather than uniformly scattered across the map
   4. Animated decorations (grass sway, campfire flicker, water foam, flies) play in-game at the correct locations
   5. Landmark locations (temple entrances, quest sites) have obelisks or golden pots as visual anchors, NPC spawn points have sleeping mats or water sacks nearby, and barren/edge areas of desert zones use dead trees and dead bushes
 
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 40-01: Building sprite replacement (BLDG-01 through BLDG-07, zone data updates)
-- [ ] 40-02: Decoration placement system (clustering algorithm, DECO-01, DECO-02, DECO-06, DECO-07)
-- [ ] 40-03: Animated decorations + landmark/NPC-adjacent props (DECO-03, DECO-04, DECO-05)
+- [x] 40-01-PLAN.md — BIOME_BUILDING_SETS + Kenmi building keys in all 24 zone objects arrays (BLDG-01 through BLDG-07) — COMPLETE 2026-03-18
+- [ ] 40-02-PLAN.md — Fix + enable scatterDecorations with multi-item crop, clustering near buildings (DECO-01, DECO-02, DECO-06, DECO-07)
+- [ ] 40-03-PLAN.md — Animated campfire/flies decorations + landmark obelisks/golden pots + NPC-adjacent props (DECO-03, DECO-04, DECO-05)
 
 #### Phase 41: Characters & Ambient Life
 **Goal**: The player and all NPCs, enemies, and ambient animals are replaced with Kenmi pixel art sprites with proper 4-direction walk and idle animations
@@ -331,7 +331,7 @@ Plans:
   1. The player character uses a Kenmi 16x16 sprite with smooth 4-direction walk animations (no faceless silhouette)
   2. Desert NPCs use Kenmi Desert_Person sprites (4 standard variants, Pharaoh, and 3 Trader variants); non-desert NPCs use base RPG pack premade characters (Chef, Farmer, Fisherman, etc.)
   3. Female NPC sprites have hijab head covering variants — pixel-modified from base sprites — on all female characters across all zones
-  4. Enemy encounter sprites use Kenmi Desert Warriors (2 weapon types × 2 variants) and Mummy; all NPC sprites have idle and walk animations loaded from spritesheets
+  4. Enemy encounter sprites use Kenmi Desert Warriors (2 weapon types x 2 variants) and Mummy; all NPC sprites have idle and walk animations loaded from spritesheets
   5. Desert zones contain camels (3 variants), vultures (4 variants), and scarabs (4 color variants) as ambient non-interactive sprites with idle/walk animations that add world life without blocking gameplay
 
 **Plans**: TBD
@@ -425,8 +425,8 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 36. Quest Journal + Audio (Notebook + Buses) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 37. Polish + Replay (Randomizer + Settings) | v7.0 | 4/4 | Complete | 2026-03-16 |
 | 38. Asset Pipeline & BootScene | v8.0 | 2/2 | Complete | 2026-03-16 |
-| 39. Terrain Rendering | v8.0 | Complete    | 2026-03-18 | 2026-03-18 |
-| 40. Buildings & Decorations | v8.0 | 0/3 | Not started | — |
+| 39. Terrain Rendering | v8.0 | 3/3 | Complete | 2026-03-18 |
+| 40. Buildings & Decorations | v8.0 | 0/3 | Planned | — |
 | 41. Characters & Ambient Life | v8.0 | 0/3 | Not started | — |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 0/3 | Not started | — |
 | 43. Zone References & Cleanup | v8.0 | 0/2 | Not started | — |
@@ -435,4 +435,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — Phase 39 complete (all 24 zones render Kenmi pixel art terrain, TILE-01 through TILE-10 satisfied)*
+*Last updated: 2026-03-18 — Phase 40 Plan 01 complete (BIOME_BUILDING_SETS + Kenmi buildings in all 24 zones)*
