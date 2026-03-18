@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
-status: ready_to_plan
-stopped_at: Roadmap created — ready to plan Phase 44
-last_updated: "2026-03-18T04:00:00.000Z"
-last_activity: "2026-03-18 — v9.0 roadmap created (Phases 44-46, 16 requirements mapped)"
+status: in_progress
+stopped_at: Phase 44 Plan 01 complete — 12 NPCs expanded with Islamic Golden Age dialogue
+last_updated: "2026-03-18T08:00:00.000Z"
+last_activity: "2026-03-18 — 44-01 complete: 541 lines, 157 teachWords, 49 culturalNotes across 12 NPCs"
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 9
+  completed_plans: 1
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-16)
 ## Current Position
 
 Milestone: v9.0 Content Depth
-Phase: 44 — NPC Dialogue Expansion (not started)
-Plan: —
-Status: Ready to plan Phase 44
-Last activity: 2026-03-18 — v9.0 roadmap created (Phases 44-46)
+Phase: 44 — NPC Dialogue Expansion (in progress)
+Plan: 01 of 3 complete
+Status: In progress
+Last activity: 2026-03-18 — Completed 44-01 (NPCs 1-12 dialogue expansion)
 
-Progress (v9.0): [░░░░░░░░░░░░] 0%
+Progress (v9.0): [█░░░░░░░░░░░] 11% (1/9 plans)
 
 ### Shipped Milestones
 
@@ -64,6 +64,11 @@ Progress (v9.0): [░░░░░░░░░░░░] 0%
 
 All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 
+| Decision | Context | Outcome |
+|----------|---------|---------|
+| Add new trees vs. rewrite existing | 44-01 | Added new trees (3-6 per NPC), preserving all existing hub/quest/topic trees |
+| teachWord IDs use vocabulary.json format | 44-01 | IDs like `big_1`, `head_1`, `water_w13` — verified against vocabulary.json before use |
+
 ### Blockers/Concerns
 
 - Bundle at 862KB (well over 500KB target) — vocabulary expansion (5,000 words) will increase bundle further; lazy loading deferred to post-v9.0
@@ -79,5 +84,5 @@ All v2.0-v8.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-18
-Stopped at: v9.0 roadmap created — Phase 44 ready to plan
-Resume file: Run `/gsd:plan-phase 44`
+Stopped at: 44-01 complete — NPCs 1-12 dialogue expanded
+Resume file: `.planning/phases/44-npc-dialogue-expansion/44-02-PLAN.md`
