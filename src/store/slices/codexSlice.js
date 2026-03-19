@@ -1,4 +1,5 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
+import { LORE_ENTRIES } from '../../data/loreCodex.js';
 
 const initialState = {
   unlockedEntries: [],
@@ -40,8 +41,8 @@ export const selectCodexProgress = createSelector(
   [selectUnlockedEntries],
   (unlocked) => ({
     unlocked: unlocked.length,
-    total: 308,
-    percentage: Math.round((unlocked.length / 308) * 100),
+    total: LORE_ENTRIES.length,
+    percentage: Math.round((unlocked.length / LORE_ENTRIES.length) * 100),
   })
 );
 

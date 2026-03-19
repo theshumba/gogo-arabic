@@ -216,10 +216,6 @@ export default function GameLayout() {
     prevPhaseRef.current = tutorialPhase;
   }, [tutorialPhase, onboardingComplete]);
 
-  // Lazy-load the 5,000-word expanded vocabulary after the game boots.
-  // Expanded vocabulary is now eagerly merged into vocabularyAll.js at import time.
-  // No lazy loading needed — the full 6,220-word set is available immediately.
-
   // J key toggles journal
   useEffect(() => {
     const handleKeyDown = (e) => {

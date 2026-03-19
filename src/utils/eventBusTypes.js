@@ -62,6 +62,8 @@ export const EVENTS = Object.freeze({
   // ────────────────────────────────────────────────
   /** Phaser → React: player pressed SPACE near NPC, open dialogue overlay */
   NPC_INTERACT: 'phaser:npc:interact',
+  /** Phaser → Phaser: route simple NPC dialogue to in-canvas DialogueBox */
+  NPC_SIMPLE_DIALOGUE: 'phaser:npc:simple-dialogue',
 
   // ────────────────────────────────────────────────
   // DIALOGUE — dialogue lifecycle events (Phase 20)

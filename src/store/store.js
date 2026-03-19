@@ -38,8 +38,8 @@ import { rootFsrsSyncMiddleware } from './middleware/rootFsrsSyncMiddleware.js';
 import { battleRewardsMiddleware } from './middleware/battleRewardsMiddleware.js';
 import { craftingVocabMiddleware } from './middleware/craftingVocabMiddleware.js';
 import { statusEffectVocabMiddleware } from './middleware/statusEffectVocabMiddleware.js';
-import { friendshipMiddleware } from './slices/friendshipMiddleware.js';
-import { utilityBonusMiddleware } from './slices/utilityBonusMiddleware.js';
+import { friendshipMiddleware } from './middleware/friendshipMiddleware.js';
+import { utilityBonusMiddleware } from './middleware/utilityBonusMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -123,7 +123,29 @@ const persistedCraftingReducer = persistReducer(craftingPersistConfig, craftingR
 const persistConfig = {
   key: 'gogo-arabic',
   storage, // localStorage
-  whitelist: ['player', 'quests', 'alphabet', 'settings', 'npc', 'achievements', 'dailyGoals', 'grammar', 'narrative', 'economy', 'arena', 'time', 'weather', 'worldState', 'home', 'stats', 'skillTree', 'faction', 'journal', 'endgame'],
+  whitelist: [
+    'player',
+    'quests',
+    'alphabet',
+    'settings',
+    'npc',
+    'achievements',
+    'dailyGoals',
+    'grammar',
+    'narrative',
+    'economy',
+    'arena',
+    'time',
+    'weather',
+    'worldState',
+    'home',
+    'stats',
+    'skillTree',
+    'faction',
+    'journal',
+    'codex',
+    'endgame',
+  ],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
 

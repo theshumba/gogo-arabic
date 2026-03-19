@@ -9,8 +9,9 @@ import { MapLoader } from '../systems/MapLoader.js';
 import { store } from '../../store/store.js';
 import { markBuildingVisited } from '../../store/slices/narrativeSlice.js';
 import { INTERIORS } from '../../data/interiors.js';
+import { TILE } from '../../data/zones.js';
 
-const INTERACT_RANGE = 64 * 2;
+const INTERACT_RANGE = TILE * 2;
 
 export class InteriorScene extends Phaser.Scene {
   constructor() {
@@ -77,8 +78,8 @@ export class InteriorScene extends Phaser.Scene {
 
     // Spawn player at interior spawn point
     const player = this.playerController.create(
-      interior.spawnPoint.x * 64,
-      interior.spawnPoint.y * 64,
+      interior.spawnPoint.x * TILE,
+      interior.spawnPoint.y * TILE,
       wallGroup
     );
 
@@ -89,7 +90,7 @@ export class InteriorScene extends Phaser.Scene {
     this.interactableManager.create(interior.interactables || [], this.mapLoader.getObjectSprites());
 
     // Camera
-    this.playerController.setupCamera(interior.mapWidth * 64, interior.mapHeight * 64);
+    this.playerController.setupCamera(interior.mapWidth * TILE, interior.mapHeight * TILE);
 
     // Input
     this.interactKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);

@@ -190,18 +190,6 @@ function GrammarLessonRoute() {
   );
 }
 
-function DailyRoute() {
-  return (
-    <PageTransition>
-      <ErrorBoundary>
-        <Suspense fallback={<LoadingScreen />}>
-          <DailyDashboard />
-        </Suspense>
-      </ErrorBoundary>
-    </PageTransition>
-  );
-}
-
 function WordSearchDirectRoute() {
   const { goBack } = useGameNavigation();
 
@@ -403,7 +391,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/daily',
-    element: <DailyRoute />,
+    element: <Navigate to="/dashboard" replace />,
     errorElement: <RouteErrorBoundary />,
   },
   {

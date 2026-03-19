@@ -178,7 +178,7 @@ export class WorldScene extends Phaser.Scene {
     this.dialogueBox = new DialogueBox(this);
 
     // Listen for simple dialogue requests routed to the Phaser DialogueBox
-    EventBus.on('phaser:npc:simple-dialogue', this._handleSimpleDialogue, this);
+    EventBus.on(EVENTS.NPC_SIMPLE_DIALOGUE, this._handleSimpleDialogue, this);
 
     EventBus.emit(EVENTS.SCENE_READY, this);
 
@@ -696,7 +696,7 @@ export class WorldScene extends Phaser.Scene {
     }
 
     // Remove simple-dialogue listener
-    EventBus.off('phaser:npc:simple-dialogue', this._handleSimpleDialogue, this);
+    EventBus.off(EVENTS.NPC_SIMPLE_DIALOGUE, this._handleSimpleDialogue, this);
 
     if (this.autoSave) { this.autoSave.stop(); this.autoSave = null; }
     if (this.gameplayStats) { this.gameplayStats.stop(); this.gameplayStats = null; }

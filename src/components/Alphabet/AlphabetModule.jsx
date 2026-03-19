@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addXP } from '../../store/slices/playerSlice.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { shuffle } from '../../utils/shuffle.js';
@@ -328,7 +328,6 @@ const styles = {
 
 export default function AlphabetModule({ onBack }) {
   const dispatch = useDispatch();
-  useSelector((s) => s.player.lettersLearned);
   const [completedIds, setCompletedIds] = useState(new Set());
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [currentLetterIdx, setCurrentLetterIdx] = useState(0);

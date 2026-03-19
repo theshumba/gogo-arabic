@@ -1,4 +1,4 @@
-import { adjustFriendship } from './npcSlice.js';
+import { adjustFriendship } from '../slices/npcSlice.js';
 
 // Friendship deltas by event type
 const FRIENDSHIP_DELTAS = {

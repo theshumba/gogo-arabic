@@ -75,7 +75,6 @@ const ZONE_CONNECTIONS = [
   ['forest_of_tales', 'royal_palace'],
   ['mountain_of_words', 'mountain_village'],
   ['desert_of_silence', 'bedouin_camp'],
-  ['merchants_island', 'grade'], // Typo fix: presumably granada or coastal_port. Let's do coastal_port
   ['merchants_island', 'coastal_port'],
   ['fortress_of_secrets', 'royal_palace'],
   ['garden_of_spirits', 'timbuktu'],

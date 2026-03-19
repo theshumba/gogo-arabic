@@ -60,6 +60,46 @@ const initialState = {
   arabicUsedThisBattle: [], // [{ word, accuracy, timestamp, comboType? }] for post-battle review
 };
 
+/**
+ * Returns a clean battle state object for resetting transient fields.
+ * Used by endBattle, resetBattle, and startBattle to avoid duplication.
+ * Does NOT touch bossesDefeated, battleHistory, playerMaxHP, or playerMaxMP — those persist across battles.
+ */
+const getResetBattleFields = () => ({
+  activeBattle: null,
+  bossHP: 0,
+  maxBossHP: 0,
+  currentRound: 0,
+  streak: 0,
+  hintsUsed: 0,
+  turnCount: 0,
+  currentTurn: null,
+  isPlayerDefending: false,
+  playerEffects: [],
+  enemyEffects: [],
+  grammarCombo: 0,
+  maxStreak: 0,
+  wordsUsed: [],
+  encounterType: null,
+  battleZone: null,
+  battleStartTimestamp: null,
+  enemyData: null,
+  // Companion battle state
+  companionHP: null,
+  companionMaxHP: null,
+  companionMP: null,
+  companionMaxMP: null,
+  companionEffects: [],
+  companionDefending: false,
+  // Phase 32: Multi-target & combo fields
+  enemies: [],
+  comboMeter: 0,
+  grammarComboState: null,
+  targetIndex: 0,
+  playerRow: 'front',
+  arabicUsedThisBattle: [],
+});
+
 const battleSlice = createSlice({
   name: 'battle',
   initialState,
@@ -67,6 +107,11 @@ const battleSlice = createSlice({
     startBattle(state, action) {
       // payload: { bossId, bossHP, encounterType?, zone?, enemyData?, playerMaxHP?, playerMaxMP? }
       const { bossId, bossHP, encounterType, zone, enemyData, playerMaxHP, playerMaxMP } = action.payload;
+
+      // Reset all transient fields to clean slate
+      Object.assign(state, getResetBattleFields());
+
+      // Apply payload-specific overrides
       state.activeBattle = bossId;
       state.playerMaxHP = playerMaxHP || 100;
       state.playerHP = state.playerMaxHP;
@@ -74,28 +119,10 @@ const battleSlice = createSlice({
       state.playerMP = state.playerMaxMP;
       state.bossHP = bossHP;
       state.maxBossHP = bossHP;
-      state.currentRound = 0;
-      state.streak = 0;
-      state.hintsUsed = 0;
-      state.turnCount = 0;
-      state.currentTurn = null;
-      state.isPlayerDefending = false;
-      state.playerEffects = [];
-      state.enemyEffects = [];
-      state.grammarCombo = 0;
-      state.maxStreak = 0;
-      state.wordsUsed = [];
       state.encounterType = encounterType || null;
       state.battleZone = zone || null;
       state.battleStartTimestamp = Date.now();
       state.enemyData = enemyData || null;
-      // Phase 32: Reset multi-target & combo fields
-      state.enemies = [];
-      state.comboMeter = 0;
-      state.grammarComboState = null;
-      state.targetIndex = 0;
-      state.playerRow = 'front';
-      state.arabicUsedThisBattle = [];
     },
 
     dealDamage(state, action) {
@@ -211,78 +238,18 @@ const battleSlice = createSlice({
       });
       state.battleHistory = state.battleHistory.slice(0, 20);
 
-      // Reset active battle
-      state.activeBattle = null;
+      // Reset all transient fields + restore HP/MP to max
+      Object.assign(state, getResetBattleFields());
       state.playerHP = state.playerMaxHP;
       state.playerMP = state.playerMaxMP;
-      state.bossHP = 0;
-      state.maxBossHP = 0;
-      state.currentRound = 0;
-      state.streak = 0;
-      state.hintsUsed = 0;
-      state.turnCount = 0;
-      state.currentTurn = null;
-      state.isPlayerDefending = false;
-      state.playerEffects = [];
-      state.enemyEffects = [];
-      state.grammarCombo = 0;
-      state.maxStreak = 0;
-      state.wordsUsed = [];
-      state.encounterType = null;
-      state.battleZone = null;
-      state.battleStartTimestamp = null;
-      state.enemyData = null;
-      // Clear companion battle state
-      state.companionHP = null;
-      state.companionMaxHP = null;
-      state.companionMP = null;
-      state.companionMaxMP = null;
-      state.companionEffects = [];
-      state.companionDefending = false;
       state.activeBuffs = [];
-      // Phase 32: Reset multi-target & combo fields
-      state.enemies = [];
-      state.comboMeter = 0;
-      state.grammarComboState = null;
-      state.targetIndex = 0;
-      state.playerRow = 'front';
-      state.arabicUsedThisBattle = [];
     },
 
     resetBattle(state) {
-      state.activeBattle = null;
+      // Reset all transient fields + restore HP/MP to max (keeps activeBuffs unlike endBattle)
+      Object.assign(state, getResetBattleFields());
       state.playerHP = state.playerMaxHP;
       state.playerMP = state.playerMaxMP;
-      state.bossHP = 0;
-      state.maxBossHP = 0;
-      state.currentRound = 0;
-      state.streak = 0;
-      state.hintsUsed = 0;
-      state.turnCount = 0;
-      state.currentTurn = null;
-      state.isPlayerDefending = false;
-      state.playerEffects = [];
-      state.enemyEffects = [];
-      state.grammarCombo = 0;
-      state.maxStreak = 0;
-      state.wordsUsed = [];
-      state.encounterType = null;
-      state.battleZone = null;
-      state.battleStartTimestamp = null;
-      state.enemyData = null;
-      state.companionHP = null;
-      state.companionMaxHP = null;
-      state.companionMP = null;
-      state.companionMaxMP = null;
-      state.companionEffects = [];
-      state.companionDefending = false;
-      // Phase 32: Reset multi-target & combo fields
-      state.enemies = [];
-      state.comboMeter = 0;
-      state.grammarComboState = null;
-      state.targetIndex = 0;
-      state.playerRow = 'front';
-      state.arabicUsedThisBattle = [];
     },
 
     // ─── Companion battle reducers (Phase 30) ─────────────
