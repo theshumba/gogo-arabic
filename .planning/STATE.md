@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v9.0
-milestone_name: Content Depth
-status: unknown
-stopped_at: "Phase 50 plan 02 complete (50-02-SUMMARY.md created) — Phase 50 fully complete; next action is `/gsd:plan-phase 51`"
-last_updated: "2026-03-19T22:20:53.494Z"
+milestone: v11.0
+milestone_name: Dialogue Foundation & Learning Paths
+status: in_progress
+stopped_at: "Phase 51 plan 01 complete (51-01-SUMMARY.md created) — next action is Phase 51 Plan 02"
+last_updated: "2026-03-19T23:55:00Z"
 progress:
-  total_phases: 12
-  completed_phases: 5
-  total_plans: 15
-  completed_plans: 15
+  total_phases: 4
+  completed_phases: 0
+  total_plans: 13
+  completed_plans: 1
 ---
 
 # Project State
@@ -19,12 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 50 — infrastructure-baseline
+**Current focus:** Phase 51 — dialogue-foundation-learning-paths
 
 ## Current Position
 
-Phase: 50 (infrastructure-baseline) — COMPLETE
-Plan: 3 of 3 COMPLETE (all plans done 2026-03-19)
+Phase: 51 (dialogue-foundation-learning-paths) — EXECUTING
+Plan: 2 of 4 (Plan 1 complete)
+
+Progress: [█░░░░░░░░░░░░] 1/13 plans complete
 
 ### Shipped Milestones
 
@@ -40,13 +42,13 @@ Plan: 3 of 3 COMPLETE (all plans done 2026-03-19)
 | v8.0 Visual Overhaul | 38-43 | ~18 | 2026-03-18 |
 | v9.0 Content Depth | 44-46 | 9 | 2026-03-18 |
 
-**Cumulative:** 46 phases, 136+ plans, 9 milestones
+**Cumulative:** 46 phases, 137+ plans, 9 milestones
 
 ## Accumulated Context
 
 ### Key v11.0 Context
 
-- inkjs NOT installed — must be installed in Phase 51 before any ink work begins
+- inkjs@2.4.0 NOW INSTALLED — InkDialogueEngine adapter created in Phase 51-01
 - rollup-plugin-visualizer INSTALLED — use `npm run build:analyze` for treemap; see dist/bundle-report.html
 - Bundle NOW 402KB (under 500KB target) — Phase 50-01 complete; safe to add Phase 51 systems
 - worldStateSlice is the root dependency: inkjs, factions, gossip, and learning path all write to it
@@ -55,6 +57,8 @@ Plan: 3 of 3 COMPLETE (all plans done 2026-03-19)
 - 573 missing companion dialogue lines — fill in Phase 51 while already touching DialogueEngine
 - Phases 48-49 from v10.0 (learning path + first quest) are absorbed into Phase 51
 - Visual/UI/world/tileset work explicitly out of scope — user builds in LDtk separately
+- EXTERNAL declarations required in .ink source — all ink files must declare EXTERNAL for any function called via ~ syntax
+- npm run ink:compile regenerates all .ink.json from src/data/ink-source/*.ink using inkjs/compiler/Compiler
 
 ### Decisions
 
@@ -73,11 +77,12 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | worldStateMiddleware last in chain | Ordering consistency | Added after utilityBonusMiddleware, matches project convention |
 | Zone asset manifest (50-02) | BootScene loaded ALL zone tilesets upfront; zone-specific Kenmi tilesets moved to ZONE_ASSET_MANIFESTS | loadZoneAssets() called during ZoneTransition fade-out; TextureManager cache skip on revisit |
 | KENMI_CATALOG stays in BootScene (50-02) | Decorative sprites used across all zones; not zone-specific | KENMI_CATALOG loop untouched in BootScene; only desert tileset images moved to ZONE_ASSET_MANIFESTS |
+| syncStateOut uses WORLD_STATE_KEYS values (51-01) | Iterating raw ink globalVariables risks polluting Redux store with ink-internal variables | syncStateOut() iterates known WORLD_STATE_KEYS set only |
+| EXTERNAL declarations required in .ink (51-01) | inkjs Compiler throws on ~ function calls without EXTERNAL declaration | All .ink source files must declare EXTERNAL at top for all bound functions |
 
 ### Blockers/Concerns
 
 - v9.0 Phase 46 still in progress (46-02 and 46-03 remain) — v10.0/v11.0 can proceed in parallel but Phase 52 (vocab expansion) must not conflict with Phase 46 output
-- Bundle at 402KB — Phase 50 complete; safe to start Phase 51
 - Phase 47 (Cinematic Intro) at human-verify checkpoint — needs user to verify 5-beat sequence in-game before v10.0 can be closed out
 
 ### Pending Todos
@@ -89,5 +94,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Phase 50 plan 02 complete (50-02-SUMMARY.md created) — Phase 50 fully complete; next action is `/gsd:plan-phase 51`
-Resume file: None
+Stopped at: Phase 51 plan 01 complete (51-01-SUMMARY.md created) — inkjs adapter + 5 NPC ink files
+Resume file: .planning/phases/51-dialogue-foundation-learning-paths/51-02-PLAN.md

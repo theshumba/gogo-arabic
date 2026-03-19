@@ -344,10 +344,10 @@ Plans:
   5. A returning player who completed onboarding bypasses the cinematic intro and path prompt entirely and drops into normal gameplay
   6. Player can switch learning path from settings with a visible warning that priority bonuses reset
 
-**Plans**: TBD
+**Plans**: 4 plans in 2 waves
 
 Plans:
-- [ ] 51-01-PLAN.md — inkjs install + InkDialogueEngine with adapter fallback (legacy JSON + .ink.json) + 5-NPC pilot migration (INFRA-07, INFRA-08, INFRA-09)
+- [x] 51-01-PLAN.md — inkjs install + InkDialogueEngine with adapter fallback (legacy JSON + .ink.json) + 5-NPC pilot migration (INFRA-07, INFRA-08, INFRA-09) — 2026-03-19
 - [ ] 51-02-PLAN.md — Fill 573 missing companion dialogue lines across 12 companions (CONT-01)
 - [ ] 51-03-PLAN.md — PATH-01/PATH-02: Amira ink dialogue tree for path choice + DialogueEngine choice handler wiring
 - [ ] 51-04-PLAN.md — PATH-03/PATH-04/PATH-05/PATH-06/PATH-07: FSRS queue reordering by path + path-gated quest/mentor assignment + switch UI + onboarding skip flag
@@ -367,7 +367,7 @@ Plans:
   5. Running `npm run vocab:validate` exits 0 with no duplicate, missing-root, or missing-CEFR-tag warnings
   6. Words tagged `ambiguous: true` retain tashkeel in all UI views regardless of the player's FSRS mastery level
 
-**Plans**: TBD
+**Plans**: 4 plans in 2 waves
 
 Plans:
 - [ ] 52-01-PLAN.md — Expand to 5,000+ words with CEFR, root, semantic cluster, domain affinity, and ambiguity fields (CONT-02, CONT-07)
@@ -388,7 +388,7 @@ Plans:
   4. ActionSetExecutor accepts `factionRequired` conditions in NPC and zone data — faction-gated content is data-driven, not hardcoded
   5. Each faction teaches at least 10 domain-specific vocabulary words at the Friendly threshold — unlocking those words adds them to the player's FSRS queue
 
-**Plans**: TBD
+**Plans**: 4 plans in 2 waves
 
 Plans:
 - [ ] 53-01-PLAN.md — factionSlice (6 factions, 0-100 scores, tier constants, IndexedDB persist) + factionMiddleware (FACT-01, FACT-02)
@@ -409,7 +409,7 @@ Plans:
   4. At least 20 interactive inscriptions/scrolls are placed across all 8 zones; touching one reads the inscription, adds unknown words to the FSRS queue, and can teach a root family grouping
   5. A word tagged `ambiguous: true` retains its tashkeel regardless of mastery level; a player on the Scholar path loses tashkeel more slowly than a Traveler at equivalent FSRS mastery
 
-**Plans**: TBD
+**Plans**: 4 plans in 2 waves
 
 Plans:
 - [ ] 54-01-PLAN.md — PricingAgent supply/demand model in EconomyFlow.js + faction modifier + price floor/ceiling + ShopOverlay price change indicators (ECON-01, ECON-02, ECON-03, ECON-04)
@@ -431,7 +431,7 @@ Plans:
   4. Poetry battles are untimed — no countdown, no time pressure; both player and NPC poet fill blanks at their own pace; the winner earns XP and vocabulary rewards
   5. Completing a calligraphy letter at 2+ stars or winning a poetry battle adds the practiced vocabulary to the FSRS review queue
 
-**Plans**: TBD
+**Plans**: 4 plans in 2 waves
 
 Plans:
 - [ ] 55-01-PLAN.md — BattleStateMachine + GrammarComboDetector + StatusEffectBar test coverage (prerequisite for poetry battle builds on combat system)
