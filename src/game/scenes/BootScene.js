@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { KENMI_CATALOG } from '../../data/kenmiCatalog.js';
+import { SHARED_ASSETS } from '../../data/zoneAssetManifests.js';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -69,147 +70,23 @@ export class BootScene extends Phaser.Scene {
     });
 
     // =========================================================
-    // TILESETS
+    // SHARED ASSETS — loaded from manifest (tilesets, player, NPCs, UI, BG)
+    // Zone-specific assets (desert Kenmi tilesets) are deferred to zone
+    // transition via loadZoneAssets() in ZoneTransition.js.
     // =========================================================
-    this.load.image('tileset-world', '/assets/tilesets/world.png');
-    this.load.image('tileset-coast', '/assets/tilesets/coast.png');
-    this.load.image('tileset-indoor', '/assets/tilesets/indoor.png');
-
-    // =========================================================
-    // GROUND TILES (flat fallback — needed until Kenmi terrain is fixed)
-    // =========================================================
-    this.load.image('tile-sand', '/assets/sprites/objects/sand.png');
-    this.load.image('tile-grass', '/assets/sprites/objects/grass.png');
-    this.load.image('grass-ice', '/assets/sprites/objects/grass_ice.png');
-
     // Old placeholder object sprites (palm, house-*, rock*, ruin-*, green-tree*, ice-tree)
     // have been fully replaced by Kenmi keys in zone data and InteractableManager.
-    // These load calls are no longer needed — assets stay on disk but are not loaded.
-
-    this.load.spritesheet('world-tileset', '/assets/tilesets/world.png', {
-      frameWidth: 64,
-      frameHeight: 64,
-    });
-
-    this.load.spritesheet('desert-tiles', '/assets/tilesets/desert-32x32/Desert Tileset 32x32/DESERT TILESET 32x32.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-
-    // =========================================================
-    // PLAYER BODY SPRITESHEETS (12 outfits)
-    // =========================================================
-    const bodyOutfits = [
-      'simple-thobe', 'simple-abaya', 'travellers-cloak',
-      'desert-thobe', 'blue-thobe', 'green-abaya',
-      'scholars-robe', 'merchants-vest', 'bedouin-wrap',
-      'mountain-cloak', 'captains-coat', 'royal-garment',
-    ];
-    bodyOutfits.forEach((outfit) => {
-      this.load.spritesheet(
-        `body-${outfit}`,
-        `/assets/sprites/player/bodies/${outfit}.png`,
-        { frameWidth: 128, frameHeight: 128 }
-      );
-    });
-
-    // Legacy fallback
-    this.load.spritesheet('player', '/assets/sprites/player/bodies/simple-thobe.png', {
-      frameWidth: 128,
-      frameHeight: 128,
-    });
-
-    // =========================================================
-    // PLAYER HEAD COVERING SPRITESHEETS (6 coverings)
-    // =========================================================
-    const headCoverings = ['kufi', 'ghutra', 'turban', 'hijab', 'hood', 'none'];
-    headCoverings.forEach((covering) => {
-      this.load.spritesheet(
-        `head-${covering}`,
-        `/assets/sprites/player/heads/${covering}.png`,
-        { frameWidth: 128, frameHeight: 128 }
-      );
-    });
-
-    // =========================================================
-    // NPC SPRITES — Faceless versions
-    // =========================================================
-    const facelessNpcs = [
-      'scholar-yusuf', 'merchant-fatima', 'student-khalid',
-      'librarian-ibrahim', 'scribe-amina',
-      'trader-hassan', 'spice-seller-layla',
-      'farmer-omar', 'herbalist-maryam',
-      'elder-tariq', 'storyteller-noor',
-      'guide-salim', 'weaver-zahra',
-      'captain-rashid', 'fishmonger-hana',
-      'vizier-abbas', 'princess-aisha', 'guard-hamza',
-      'wanderer-ali', 'healer-khadija', 'imam-muhammad',
-      'blacksmith-daud', 'poet-rumi',
-    ];
-    facelessNpcs.forEach((npcId) => {
-      this.load.spritesheet(
-        `npc-${npcId}`,
-        `/assets/sprites/npcs/faceless/${npcId}.png`,
-        { frameWidth: 128, frameHeight: 128 }
-      );
-    });
-
-    // =========================================================
-    // NPC PORTRAITS (silhouettes)
-    // =========================================================
-    facelessNpcs.forEach((npcId) => {
-      this.load.image(`portrait-${npcId}`, `/assets/portraits/${npcId}.png`);
-    });
-
-    // =========================================================
-    // OBJECT SPRITES (legacy — only exit markers + special)
-    // Old placeholder sprites (palm, house-*, rock*, ruin-*, green-tree*,
-    // ice-tree) have been replaced by Kenmi keys directly in zone data.
-    // =========================================================
-    this.load.image('hospital', '/assets/sprites/objects/hospital.png');
-    this.load.image('gate-pillar', '/assets/sprites/objects/gate_pillar.png');
-    this.load.image('gate-top', '/assets/sprites/objects/gate_top.png');
-    this.load.image('shadow', '/assets/sprites/shadow.png');
-
-    // =========================================================
-    // UI ICONS
-    // =========================================================
-    this.load.image('ui-alert', '/assets/ui/alert.png');
-    this.load.image('ui-star', '/assets/ui/star.png');
-    this.load.image('ui-health', '/assets/ui/health.png');
-    this.load.image('ui-energy', '/assets/ui/energy.png');
-    this.load.image('ui-shield', '/assets/ui/shield.png');
-    this.load.image('ui-sword', '/assets/ui/sword.png');
-    this.load.image('ui-cross', '/assets/ui/cross.png');
-    this.load.image('ui-hand', '/assets/ui/hand.png');
-    this.load.image('ui-arrows', '/assets/ui/arrows.png');
-
-    // =========================================================
-    // BACKGROUNDS
-    // =========================================================
-    this.load.image('bg-sand', '/assets/backgrounds/sand.png');
-    this.load.image('bg-forest', '/assets/backgrounds/forest.png');
-    this.load.image('bg-ice', '/assets/backgrounds/ice.png');
-
-    // Audio is handled entirely by Howler.js (AudioManager singleton).
-    // No Phaser audio loading needed.
-
-    // =========================================================
-    // BDRAGON PANEL ASSETS (for future spritesheet extraction)
-    // =========================================================
-    this.load.image('bdragon-border-1', '/assets/ui/bdragon-panels/Border All 1.png');
-    this.load.image('bdragon-border-2', '/assets/ui/bdragon-panels/Border All 2.png');
-    this.load.image('bdragon-border-3', '/assets/ui/bdragon-panels/Border All 3.png');
-    this.load.image('bdragon-border-4', '/assets/ui/bdragon-panels/Border All 4.png');
-    this.load.image('bdragon-deco-1', '/assets/ui/bdragon-panels/Deco All 1.png');
-    this.load.image('bdragon-deco-2', '/assets/ui/bdragon-panels/Deco All 2.png');
-
-    // =========================================================
-    // RPG UI KIT — Main tile sheet for NineSlice panels
-    // =========================================================
-    this.load.image('rpg-ui-tiles', '/assets/ui/rpg-ui-kit/PNG/Main_tiles.png');
-    this.load.image('rpg-ui-buttons', '/assets/ui/rpg-ui-kit/PNG/Buttons.png');
-    this.load.image('rpg-ui-icons', '/assets/ui/rpg-ui-kit/PNG/Icons.png');
+    // Audio is handled entirely by Howler.js (AudioManager singleton) -- no Phaser audio loading.
+    for (const asset of SHARED_ASSETS) {
+      if (asset.type === 'spritesheet') {
+        this.load.spritesheet(asset.key, asset.path, {
+          frameWidth: asset.frameWidth,
+          frameHeight: asset.frameHeight,
+        });
+      } else {
+        this.load.image(asset.key, asset.path);
+      }
+    }
 
     // =========================================================
     // TILED MAP JSON FILES
@@ -218,16 +95,6 @@ export class BootScene extends Phaser.Scene {
     // Convention: key = "map-{zone-id-with-hyphens}", path = "/assets/maps/{zone}.json"
     // Example: this.load.tilemapTiledJSON('map-oasis-village', '/assets/maps/oasis-village.json');
     this.load.tilemapTiledJSON('map-test-map', '/assets/maps/test-map.json');
-
-    // Tileset images for Tiled maps — the key must match the tileset name in the Tiled JSON.
-    // For now, register short aliases for the Kenmi tilesets that Tiled maps reference.
-    this.load.image('desert-beach-tiles-1', '/assets/kenmi/desert/tiles/desert-beach-tiles-1.png');
-    this.load.image('desert-beach-tiles-2', '/assets/kenmi/desert/tiles/desert-beach-tiles-2.png');
-    this.load.image('desert-beach-tiles-3', '/assets/kenmi/desert/tiles/desert-beach-tiles-3.png');
-    this.load.image('desert-grass', '/assets/kenmi/desert/tiles/desert-grass.png');
-    this.load.image('desert-water-tiles-1', '/assets/kenmi/desert/tiles/desert-water-tiles-1.png');
-    this.load.image('desert-water-tiles-2', '/assets/kenmi/desert/tiles/desert-water-tiles-2.png');
-    this.load.image('desert-water-tiles-3', '/assets/kenmi/desert/tiles/desert-water-tiles-3.png');
 
     // =========================================================
     // KENMI CUTE FANTASY ASSETS — loaded from catalog

@@ -16,6 +16,8 @@
  *   zone-transition           → ZONE_TRANSITION
  *   check-zone-unlock         → ZONE_CHECK_UNLOCK
  *   fast-travel               → FAST_TRAVEL
+ *   zone-loading-start        → ZONE_LOADING_START
+ *   zone-loading-end          → ZONE_LOADING_END
  *   show-sign                 → SIGN_SHOW
  *   bookshelf-interact        → BOOKSHELF_INTERACT
  *   chest-opened              → CHEST_OPENED
@@ -90,6 +92,10 @@ export const EVENTS = Object.freeze({
   ZONE_CHECK_UNLOCK: 'phaser:zone:check-unlock',
   /** React → React: zone gate blocked, show requirements to player */
   ZONE_GATE_BLOCKED: 'react:zone:gate-blocked',
+  /** Phaser → React: zone-specific assets are loading (during fade-out) */
+  ZONE_LOADING_START: 'phaser:zone:loading-start',
+  /** Phaser → React: zone-specific asset loading complete */
+  ZONE_LOADING_END: 'phaser:zone:loading-end',
   /** React → Phaser: fast travel from world map to target zone */
   FAST_TRAVEL: 'react:zone:fast-travel',
 
