@@ -1,532 +1,355 @@
-# Technology Stack — Root Magic, Equipment/Inventory, Companion AI, Economy
+# Stack Research — v11.0 Deep Systems & Content Engine
 
-**Project:** GoGo Arabic v6.0 Combat & RPG Systems (Phases 27-32)
-**Researched:** 2026-02-12
-**Confidence:** HIGH
-
-## Executive Summary
-
-The existing v5.0 stack (React 19 + Phaser 3 + Redux Toolkit + Framer Motion + CSS Modules + Vite) already provides everything needed for the new systems. **NO new runtime dependencies required.** All new features can be built with existing libraries using new patterns, data structures, and Phaser subsystems.
-
-**Key finding:** The project's architectural decisions (EventBus pattern, Phaser subsystems, Redux slices, CSS Modules for UI) scale perfectly to inventory grids, spell builders, AI systems, and shop UIs. The gap is implementation, not tooling.
+**Project:** GoGo Arabic v11.0 (17 new systems layered onto 196K+ LOC codebase)
+**Researched:** 2026-03-19
+**Confidence:** HIGH for inkjs integration | MEDIUM for AceBase | HIGH for bundle optimization | HIGH for calligraphy | HIGH for faction/world-state patterns
 
 ---
 
-## Recommended Stack (No Changes to package.json)
+## Executive Summary
 
-### Core Technologies (Already Installed, Validated for New Features)
+The existing stack (React 19 + Phaser 3 + Redux Toolkit + Vite 7) handles most v11.0 systems without new dependencies. **Two new npm packages are required:** `inkjs` for ink dialogue scripting, and `rollup-plugin-visualizer` for bundle analysis. AceBase is listed as "already installed" in milestone context but is **NOT in node_modules or package.json** — this needs resolving. The bundle optimization is achievable with existing Vite manualChunks patterns already in place.
 
-| Technology | Version | Purpose | Why It's Sufficient |
-|------------|---------|---------|---------------------|
-| **React 19** | ^19.2.4 | Inventory UI, spell builder grid, shop UI, item comparison overlays | Grid layouts via CSS Grid/Flexbox, controlled state for drag-drop (no lib needed), Modal patterns already proven in Wardrobe.jsx |
-| **Phaser 3** | ^3.90.0 | Battle companion AI, equipment sprites, item drop animations, VFX | Existing subsystem pattern (BattleStateMachine, BattleSpriteManager) extends perfectly to CompanionAI and ItemSpriteManager |
-| **Redux Toolkit** | ^2.11.2 | Equipment state, inventory state, companion state, shop state, root mastery tracking | 13 slices already proven at scale; new slices follow existing patterns (inventorySlice, equipmentSlice, companionSlice, economySlice) |
-| **Framer Motion** | ^11.15.0 | Item equip animations, spell cast effects, shop haggle UI, inventory transitions | Already used for Wardrobe grid animations and LevelUpModal; same patterns apply to InventoryGrid.jsx |
-| **CSS Modules** | (Vite native) | Grid-based inventory UI, equipment comparison panels, spell builder layout | Wardrobe.module.css proves 200-item grids are feasible; existing CSS patterns scale |
-| **Zod** | ^4.3.6 | Item schema validation, equipment affix validation, companion dialogue schema | Already validates NPCs with dialogueSchema.js; extend to itemSchema.js, equipmentSchema.js |
+**Critical finding:** inkjs v2.4.0 and acebase v1.29.5 are NOT installed despite the milestone context claiming they are. Both need `npm install`.
 
-### Phaser Subsystems (New, Built on Existing Patterns)
+---
 
-| Subsystem | Purpose | Implementation Pattern |
-|-----------|---------|------------------------|
-| **CompanionBattleAI** | Companion battle decision-making (attack/defend/skill selection) | Extends BattleStateMachine pattern; decision tree based on role + situation + relationship level |
-| **CompanionDialogueAI** | Contextual exploration comments, Arabic hints | Reads Redux state (currentZone, nearbyObjects, recentBattles); emits EVENTS.COMPANION_COMMENT |
-| **ItemSpriteManager** | Renders equipped items on character sprites | Similar to BattleSpriteManager; composite sprites (base + equipment layers) |
-| **InventoryManager** | Handles item stacking, sorting, capacity limits | Reads inventorySlice, dispatches add/remove/sort/equip actions |
-| **ShopManager** | Shop UI state, haggling logic, supply/demand | Reads economySlice + player.dirhams; haggling = mini-game state machine |
-| **RootMagicBuilder** | Spell casting UI in battle (root letter selection) | React overlay (like BattleMenu.jsx) with 3-letter grid, submits to BattleStateMachine |
+## New Dependencies Needed
 
-### Redux Slices (New, Follow Existing Patterns)
+### Required: Install Now
 
-| Slice | Purpose | Key State | Reducers |
-|-------|---------|-----------|----------|
-| **inventorySlice** | 200-item inventory management | `items: [{ id, quantity, locked }]` | addItem, removeItem, sortBy, equipItem, unequipItem |
-| **equipmentSlice** | 8 equipment slots + stats | `slots: { head, robe, cloak, belt, boots, gloves, accessory1, accessory2 }`, `stats: { atk, def, mp, affinityBonus }` | equipToSlot, unequip, calculateStats |
-| **companionSlice** | 12 companion states + relationships | `companions: [{ id, relationship, mood, active, battleRole }]` | recruitCompanion, setActive, increaseRelationship, updateMood |
-| **economySlice** | Shop inventories, prices, haggle state | `shops: { [zoneId]: { inventory, priceModifiers } }`, `haggleState: { offer, counterOffer, attempts }` | initShop, updatePrices, haggle, purchase |
-| **rootMasterySlice** | Root affinity levels, unlocked forms | `affinity: { primary, secondary }`, `rootMastery: { [rootId]: { level, unlockedForms } }` | discoverAffinity, masteryXP, unlockForm |
+| Package | Version | Purpose | Why Needed |
+|---------|---------|---------|------------|
+| `inkjs` | `^2.4.0` | Ink narrative scripting runtime | Compiles `.ink` files to JSON, runs branching dialogue via `Story.Continue()` / `ChooseChoiceIndex()`. Replaces hardcoded JSON dialogue trees. Zero dependencies, 0-dep, works in browser. |
+| `rollup-plugin-visualizer` | `^5.12.0` | Bundle composition analysis | Dev-only. Generates interactive treemap showing which modules are eating bundle size. Required to identify what to cut from 862KB → 500KB target. |
+
+### Already Claimed But NOT Installed (Verify First)
+
+| Package | Status | Action |
+|---------|--------|--------|
+| `inkjs` | NOT in package.json or node_modules | `npm install inkjs` |
+| `acebase` | NOT in package.json or node_modules | Decision needed — see AceBase section below |
+
+---
+
+## System-by-System Stack Decisions
+
+### 1. inkjs Dialogue Engine
+
+**Decision: Use inkjs v2.4.0 — install it**
+
+inkjs is the official JavaScript port of inkle's ink scripting language. Version 2.4.0 was released February 17, 2025. Zero dependencies, browser-compatible, well-maintained (regular releases through 2023-2025).
+
+**Why ink over the existing JSON dialogue system:**
+The existing DialogueEngine reads from npcs.json with flat hub-and-spoke arrays. ink provides conditional branching (`{visited_kira}`, `{faction_rep > 50}`), knots/stitches as named sections, `CHOICE` syntax, variable tracking, and `ChoosePathString("knot.stitch")` for jumping to scenes. All of this replaces hundreds of lines of custom conditional logic in DialogueEngine.js with declarative `.ink` files.
+
+**Core API (HIGH confidence, verified on GitHub):**
+```javascript
+import { Story } from 'inkjs';
+
+// Load compiled JSON (output of ink Compiler or Inky editor)
+const story = new Story(compiledInkJSON);
+
+// Advance narrative
+while (story.canContinue) {
+  const text = story.Continue();
+  // render text
+}
+
+// Present choices
+const choices = story.currentChoices; // [{ text, index }]
+story.ChooseChoiceIndex(0);
+
+// Jump to named knot
+story.ChoosePathString('desert_zone.meet_merchant');
+
+// Read/write ink variables (faction rep, world flags)
+story.variablesState['faction_scholar_rep'] = 45;
+const rep = story.variablesState['faction_scholar_rep'];
+```
+
+**Integration point:** Replace DialogueEngine.js JSON parsing. Load `.ink.json` files per NPC/zone via dynamic import. Keep EventBus (`EVENTS.DIALOGUE_START`, `EVENTS.DIALOGUE_END`) unchanged — only the engine internals change.
+
+**Bundle impact:** inkjs adds ~120KB unminified. Assign to its own chunk in vite.config.js:
+```javascript
+if (id.includes('node_modules/inkjs')) return 'inkjs-vendor';
+```
+
+---
+
+### 2. AceBase Realtime Sync
+
+**Decision: DEFER — evaluate whether it's actually needed for v11.0**
+
+**Status found:** AceBase v1.29.5 (released October 2, 2024) — actively maintained, last update 5 months ago. However, it is NOT installed in this project despite the milestone context claiming it is.
+
+**The problem with adding AceBase now:**
+- The project already has IndexedDB hybrid persistence (v6.0, 5 slices via redux-persist) for offline storage
+- The backend (Express 5 + MongoDB) already handles cloud sync with version vectors and conflict resolution (v1.0)
+- AceBase would add a third persistence layer, creating three competing sources of truth: MongoDB (backend), IndexedDB (frontend persist), and AceBase (?)
+- Bundle cost: acebase adds ~200-300KB — a major problem when the target is 862KB → 500KB
+
+**What AceBase actually provides that the current stack doesn't:**
+- Live data proxy: automatic object mutation tracking without manual `dispatch()` calls
+- Real-time cross-tab sync: changes in tab A immediately reflect in tab B
+- Observable queries: `ref.on('value', callback)` pattern
+
+**Recommendation: Replace AceBase's intended role with plain Redux + redux-persist patterns.** The "replace manual CRUD" goal can be achieved with RTK's `createAsyncThunk` + `useSelector` memoization, not a new database layer. If the world state machine needs 500+ variables tracked, a dedicated `worldStateSlice` with IndexedDB persistence is architecturally cleaner than AceBase.
+
+**If the team insists on AceBase:** Install `acebase@^1.29.5`. Use browser-mode only (IndexedDB backend, no server). The live data proxy API allows `proxy.world_flags.desert_gate_open = true` to auto-persist — but this conflicts with Redux's unidirectional data flow.
+
+**MEDIUM confidence** on this recommendation — the tradeoffs depend on how much real-time cross-tab sync matters for this single-player game.
+
+---
+
+### 3. Faction Reputation Engine
+
+**Decision: Plain Redux slice — no new library**
+
+A `factionSlice` with 6 faction objects is the right pattern. Each faction has a reputation score (0-100), tier thresholds (hostile/neutral/friendly/revered), and content gates. This is 150 lines of Redux, not a library problem.
+
+```javascript
+// factionSlice.js
+const initialState = {
+  factions: {
+    scholars: { reputation: 0, tier: 'neutral', unlockedContent: [] },
+    merchants: { reputation: 0, tier: 'neutral', unlockedContent: [] },
+    guardians: { reputation: 0, tier: 'neutral', unlockedContent: [] },
+    poets: { reputation: 0, tier: 'neutral', unlockedContent: [] },
+    travelers: { reputation: 0, tier: 'neutral', unlockedContent: [] },
+    ancient_order: { reputation: 0, tier: 'neutral', unlockedContent: [] },
+  }
+};
+```
+
+**Content gating pattern:** `selectCanEnterZone(zoneId)` selector checks faction tier + vocabulary count. All existing zone-gate infrastructure from v7.0 (`ActionSetExecutor`, `visibilityFlag`) supports this without changes.
+
+---
+
+### 4. World State Machine (500+ Variables)
+
+**Decision: `worldStateSlice` with IndexedDB persistence — no XState, no external library**
+
+XState is overkill. The 500+ variables are not a state machine with transitions — they're a flat key-value store of flags: `{ desert_gate_open: true, met_elder_ibrahim: false, ... }`. XState adds 60KB for transition modeling that isn't needed here.
+
+**Pattern:**
+```javascript
+// worldStateSlice.js
+const worldStateSlice = createSlice({
+  name: 'worldState',
+  initialState: { flags: {}, counters: {}, timestamps: {} },
+  reducers: {
+    setFlag: (state, action) => { state.flags[action.payload.key] = action.payload.value; },
+    incrementCounter: (state, action) => { state.counters[action.payload.key] = (state.counters[action.payload.key] || 0) + 1; },
+  }
+});
+```
+
+**Ink integration:** inkjs `variablesState` syncs bidirectionally with this slice — reading Redux flags into ink variables before each dialogue, writing ink variable changes back to Redux after.
+
+**Persistence:** Add `worldState` to the existing IndexedDB persist configuration (already proven in v6.0 for 5 slices).
+
+---
+
+### 5. Dynamic Market Simulation
+
+**Decision: Pure JavaScript agent logic — no library**
+
+Agent-based market pricing is 200 lines of math, not a library problem. Each NPC merchant has a `pricingAgent` object with supply/demand state:
+
+```javascript
+class PricingAgent {
+  constructor(basePrice, supplyLevel, demandFactors) { ... }
+
+  recalculatePrice(playerPurchaseHistory, timeOfDay, factionRep) {
+    const demand = this.demandFactors.reduce((acc, f) => acc * f.weight, 1.0);
+    const supply = this.supplyLevel / this.maxSupply;
+    return Math.floor(this.basePrice * (demand / supply) * this.factionModifier);
+  }
+}
+```
+
+Runs on zone entry and after each purchase. No realtime needed — deterministic recalculation. Integrates with existing `economySlice` from v6.0.
+
+---
+
+### 6. Calligraphy Mini-Game (Letter Tracing)
+
+**Decision: Phaser 3 Graphics API — no Canvas library**
+
+Phaser 3 already has Graphics drawing, pointer input, and path tracking. No external library needed.
+
+**Technique:**
+1. Render reference letter path using Phaser `Graphics.strokePath()` with a template outline
+2. Track `this.input.on('pointermove', ...)` to capture player stroke coordinates
+3. Compare player path against reference path using Frechet distance (simple 2D math) — score is deviation from ideal stroke
+4. Render accuracy feedback using Phaser `Graphics.lineStyle(thickness, color)`
+
+**Why no library (Fabric.js, Atrament, etc.):** The game already runs in a Phaser canvas context. Adding a second canvas library creates two canvas renderers fighting for control. Phaser's built-in pointer events + Graphics are sufficient for letter-tracing accuracy scoring.
+
+**Verified:** Phaser 3 official examples include "Stroke Path" demonstrating this exact pattern. Touch/pointer events work identically on mobile and desktop.
+
+---
+
+### 7. Arabic Poetry Battles
+
+**Decision: Pure React + existing FSRS integration — no library**
+
+Fill-in-the-blank poetry is a quiz variant. The existing quiz infrastructure (6 quiz types, FSRS integration) is directly extendable:
+- New quiz type: `POETRY_FILL`
+- Data structure: `{ poem: string[], blanks: [{ index, word, arabicWord }], difficultyLevel }`
+- Scoring: combines answer accuracy with timing (streak mechanic from existing battle system)
+
+No new library needed. Reuses existing `QuizOverlay.jsx` patterns with a custom poem rendering component.
+
+---
+
+### 8. Bundle Optimization (862KB → 500KB)
+
+**Decision: rollup-plugin-visualizer (new dev dependency) + Vite manualChunks refinement**
+
+The current vite.config.js already has a solid manualChunks strategy. The problem is identifying what's actually bloating the 862KB — that requires visualization first.
+
+**Step 1: Diagnose with rollup-plugin-visualizer**
+```javascript
+// vite.config.js
+import { visualizer } from 'rollup-plugin-visualizer';
+
+plugins: [
+  react({ jsxRuntime: 'automatic' }),
+  validateDialoguePlugin(),
+  visualizer({ open: true, gzipSize: true, brotliSize: true }) // dev only
+]
+```
+
+**Step 2: Expected wins based on codebase analysis:**
+
+| Optimization | Estimated Savings | Technique |
+|-------------|------------------|-----------|
+| inkjs lazy-loaded | ~120KB from initial load | Dynamic import only when dialogue opens |
+| Game overlays lazy-loaded | ~80-120KB | `React.lazy()` for InventoryGrid, QuestJournal, etc. |
+| Vocabulary data deferred | ~150KB | Already split to `vocabulary-data` chunk, ensure not in initial |
+| NPC data deferred | ~60KB | Already split to `npc-data` chunk |
+| Phaser scene lazy-loading | ~100KB+ | Load non-starter zones on demand via `scene.launch()` |
+
+**Target strategy:** Initial load = React shell + auth + loading screen + BootScene only. Defer all game data, overlays, and inkjs until after initial render.
+
+**Current Vite config status:** Already splits Phaser, React, Redux, vocabulary-data, npc-data into separate chunks. The 862KB likely reflects the main app chunk + untracked large imports. Visualizer will reveal the exact culprit.
+
+---
+
+## Full Package Change Summary
+
+### Install (New)
+```bash
+npm install inkjs@^2.4.0
+npm install -D rollup-plugin-visualizer@^5.12.0
+```
+
+### Verify Installation (Context Says Installed, But They Are Not)
+```bash
+# These are NOT in node_modules or package.json — install before any v11.0 phase
+npm install inkjs@^2.4.0   # dialogue engine migration
+# npm install acebase@^1.29.5  # DEFER — see decision above
+```
+
+### No Changes Needed
+```bash
+# Everything else already installed and sufficient:
+# react@19.2.4, phaser@3.90.0, @reduxjs/toolkit@2.11.2
+# framer-motion@11.15.0, redux-persist@6.0.0, ts-fsrs@5.2.3
+# zod@4.3.6, howler@2.2.4
+```
 
 ---
 
 ## What NOT to Add
 
-### Avoid: External Drag-and-Drop Libraries
-
-| Library | Why Avoid | Use Instead |
-|---------|-----------|-------------|
-| react-dnd | 100KB+ for features not needed (complex nested drag targets, sortable lists across containers) | Native React state + CSS transforms. Wardrobe.jsx proves click-to-equip works better for pixel-art grids. Drag-drop adds complexity without UX gain. |
-| react-beautiful-dnd | Designed for Trello-style vertical lists, not 2D grids. Poor touch support. | CSS Grid + controlled state. Inventory sorting = array reordering, not DOM manipulation. |
-| @dnd-kit/core | Modern but overkill. 50KB+ for accessibility features already covered by keyboard nav (existing pattern in useFocusTrap.js). | Click/tap selection + arrow key navigation (proven in Quiz.jsx, Wardrobe.jsx). |
-
-**Rationale:** Drag-and-drop in pixel-art RPGs is a mouse-centric pattern that breaks on touch, fails with gamepads, and complicates testing. Pokemon, Stardew Valley, Undertale all use cursor-based selection + confirm button. The project already has this pattern working (Wardrobe, Quiz).
-
-### Avoid: State Management Alternatives
-
-| Library | Why Avoid | Use Instead |
-|---------|-----------|-------------|
-| Zustand | Simpler API but loses Redux DevTools time-travel debugging (critical for testing 200-item inventory edge cases, companion AI decision paths). | Redux Toolkit (already installed). 13 slices proven stable. |
-| Jotai / Recoil | Atom-based state works for small apps but struggles with deeply connected systems (equipment stats affect battle damage, companion mood affects dialogue, root mastery affects spell power). | Redux Toolkit with memoized selectors (createSelector pattern already used in 13 slices). |
-| MobX | Observable pattern conflicts with React 19's concurrent rendering. Debugging inventory sync issues across Phaser + React becomes harder. | Redux Toolkit (single source of truth, predictable updates). |
-
-**Rationale:** The expansion adds 200K+ LOC with deep cross-system dependencies (Phase 28 root magic needs Phase 29 equipment affixes, Phase 30 companions need Phase 27 battle AI, Phase 31 crafting needs Phase 29 items). Redux's centralized state + DevTools are essential for debugging combinatorial interactions.
-
-### Avoid: AI/Behavior Tree Libraries
-
-| Library | Why Avoid | Use Instead |
-|---------|-----------|-------------|
-| behavior3js | Designed for game engines with scene graphs, not Redux state. 30KB for features not needed (decorators, composite nodes). | Plain JavaScript decision trees reading Redux state. CompanionBattleAI is ~400 LOC of if/else logic (role + HP% + streak → action). |
-| Yuka AI | 3D game AI library (steering, pathfinding). 2D Phaser game doesn't need it. | Phaser's built-in pathfinding (already used in NPCManager for patrol routes). |
-
-**Rationale:** Companion AI is deterministic (not learning, not adaptive beyond reading FSRS data). A 100-line function is easier to test, debug, and modify than a behavior tree graph. Pokemon's companion AI is simple state machines - we don't need more complexity.
-
-### Avoid: UI Component Libraries
-
-| Library | Why Avoid | Use Instead |
-|---------|-----------|-------------|
-| Material-UI / Chakra / Ant Design | Pixel-art aesthetic conflicts with modern design systems. 500KB+ bundle size. Hard to override default styles to match Islamic geometric patterns + pixel fonts. | CSS Modules (already used in 27 components). Wardrobe.module.css proves custom grid layouts work. |
-| Headless UI / Radix | Accessibility primitives are valuable BUT project already has useFocusTrap.js, keyboard nav in Quiz.jsx, ARIA labels in DialogueOverlay.jsx. Adding 50KB for duplicated logic. | Extend existing accessibility patterns. Build InventoryGrid.jsx following Wardrobe.jsx (proven accessible). |
-
-**Rationale:** Every UI component library was tested and rejected in v4.0 for breaking the pixel-art aesthetic. CSS Modules + Framer Motion already deliver 60fps animations, accessible overlays, and full design control. Don't regress.
-
----
-
-## New Patterns (Not New Libraries)
-
-### 1. Grid-Based Inventory UI (React + CSS Grid)
-
-**Pattern:**
-```jsx
-// InventoryGrid.jsx (similar to Wardrobe.jsx)
-<div className={styles.inventoryGrid}> {/* CSS: display: grid; grid-template-columns: repeat(10, 1fr); */}
-  {inventory.map((item, index) => (
-    <InventorySlot
-      key={item.id}
-      item={item}
-      index={index}
-      onSelect={handleSelect}
-      isSelected={selectedIndex === index}
-    />
-  ))}
-</div>
-```
-
-**Why it works:**
-- CSS Grid handles layout (no JS needed)
-- Keyboard nav: arrow keys move selectedIndex, Enter/Space to equip
-- Touch: tap to select, tap again to equip
-- Sorting: `inventory.sort((a, b) => ...)` triggers re-render (React handles DOM)
-- Already proven in Wardrobe.jsx (40-item grid, stagger animations, focus trap)
-
-**Comparison overlay:**
-```jsx
-// ItemComparison.jsx (similar to DialogueOverlay.jsx)
-<motion.div className={styles.comparisonOverlay}>
-  <ItemCard item={equipped} label="Equipped" />
-  <ComparisonArrows statDiff={calculateStatDiff(equipped, inspected)} />
-  <ItemCard item={inspected} label="In Inventory" />
-</motion.div>
-```
-
-### 2. Companion AI Decision Trees (Phaser + Redux Selectors)
-
-**Pattern:**
-```javascript
-// CompanionBattleAI.js (similar to BattleStateMachine.js)
-class CompanionBattleAI {
-  decideAction(companionId) {
-    const state = store.getState();
-    const companion = selectCompanionById(companionId)(state);
-    const battle = state.battle;
-    const playerHP = battle.playerHP / battle.playerMaxHP;
-
-    // Decision tree based on role
-    if (companion.battleRole === 'healer') {
-      if (playerHP < 0.3) return { action: 'heal', target: 'player' };
-      if (battle.playerEffects.some(e => e.id === 'poison')) return { action: 'cure', target: 'player' };
-      return { action: 'attack', target: 'enemy' };
-    }
-
-    if (companion.battleRole === 'defender') {
-      if (playerHP < 0.5 && !battle.isPlayerDefending) return { action: 'protect', target: 'player' };
-      if (battle.streak > 3) return { action: 'boost', target: 'player' }; // capitalize on streak
-      return { action: 'attack', target: 'enemy' };
-    }
-
-    // ... attacker, support roles
-  }
-}
-```
-
-**Why it works:**
-- Reads Redux state (no polling, no subscriptions needed)
-- Called once per companion turn by BattleStateMachine
-- Testable in isolation (mock state object, assert action output)
-- Relationship level can modify decision weights (higher relationship = smarter choices)
-
-### 3. Root Magic Spell Builder (React Overlay + Arabic Input)
-
-**Pattern:**
-```jsx
-// RootMagicBuilder.jsx (extends BattleArabicInput.jsx)
-function RootMagicBuilder({ onCastSpell, onCancel }) {
-  const [selectedRoot, setSelectedRoot] = useState(null);
-  const [selectedForm, setSelectedForm] = useState(1); // Form I-X
-  const unlockedRoots = useSelector(selectUnlockedRoots);
-
-  return (
-    <motion.div className={styles.spellBuilder}>
-      {/* Step 1: Select root (3-letter grid) */}
-      <RootGrid roots={unlockedRoots} onSelect={setSelectedRoot} />
-
-      {/* Step 2: Select verb form (if root mastery unlocked) */}
-      {selectedRoot && (
-        <FormSelector
-          root={selectedRoot}
-          unlockedForms={getUnlockedForms(selectedRoot)}
-          onSelect={setSelectedForm}
-        />
-      )}
-
-      {/* Step 3: Derive word, confirm spell */}
-      {selectedForm && (
-        <SpellPreview
-          derivedWord={deriveWord(selectedRoot, selectedForm)}
-          effect={calculateEffect(selectedRoot, selectedForm)}
-          mpCost={calculateMPCost(selectedForm)}
-          onConfirm={() => onCastSpell(selectedRoot, selectedForm)}
-        />
-      )}
-    </motion.div>
-  );
-}
-```
-
-**Why it works:**
-- Teaches Arabic root system (core pedagogy goal)
-- 3-step UI prevents accidental casts (select root → form → confirm)
-- MP cost visible before commit (no "gotcha" moments)
-- Unlocked roots/forms drive progression (FSRS mastery gates stronger spells)
-- Fits existing BattleOverlay.jsx pattern (React over Phaser, EventBus communication)
-
-### 4. Shop Haggling Mini-Game (State Machine + Timer)
-
-**Pattern:**
-```javascript
-// HaggleStateMachine.js (similar to BattleStateMachine.js)
-class HaggleStateMachine {
-  constructor(basePrice, playerLevel, npcRelationship) {
-    this.basePrice = basePrice;
-    this.minPrice = basePrice * 0.7; // Max 30% discount
-    this.maxPrice = basePrice * 1.3; // Max 30% markup
-    this.playerOffer = basePrice;
-    this.npcCounter = basePrice;
-    this.attemptsLeft = 3;
-    this.state = 'PLAYER_OFFER';
-  }
-
-  makeOffer(amount) {
-    if (this.state !== 'PLAYER_OFFER') return;
-
-    this.playerOffer = amount;
-    this.attemptsLeft--;
-
-    // NPC response logic (Arabic number negotiation teaches counting)
-    const enthusiasm = (this.playerOffer - this.minPrice) / (this.basePrice - this.minPrice);
-
-    if (this.playerOffer >= this.basePrice) {
-      this.state = 'ACCEPTED';
-      return { accepted: true, finalPrice: this.playerOffer };
-    }
-
-    if (this.attemptsLeft === 0) {
-      this.state = 'REJECTED';
-      return { accepted: false };
-    }
-
-    // Counter-offer (closer to player's offer if enthusiastic)
-    this.npcCounter = Math.floor(this.basePrice - (this.basePrice - this.playerOffer) * 0.5 * enthusiasm);
-    this.state = 'NPC_COUNTER';
-
-    return { accepted: false, counter: this.npcCounter, attemptsLeft: this.attemptsLeft };
-  }
-}
-```
-
-**Why it works:**
-- Teaches Arabic numbers (prices in Eastern Arabic numerals: ٠١٢٣٤٥٦٧٨٩)
-- Time pressure optional (advanced mode: 10 seconds per offer)
-- Relationship affects NPC flexibility (higher relationship = better deals)
-- No new libraries needed (state machine + setTimeout)
-
----
-
-## Development Tools (No Changes)
-
-| Tool | Purpose | Notes |
-|------|---------|-------|
-| **Vite** | Build system, HMR, chunk splitting | Already configured for large data files (vocabulary-data.js, npc-data.js chunks). Equipment/item data follows same pattern. |
-| **Vitest** | Unit testing (Redux slices, utilities) | 592 tests passing. New slices (inventorySlice, equipmentSlice, companionSlice) use same test patterns as battleSlice. |
-| **Playwright** | E2E testing (future) | Not yet used but planned for v10.0 Phase 52. Shop haggling + inventory management need E2E tests. |
-| **ESLint + Prettier** | Code quality | Already configured. No changes needed. |
-
----
-
-## Integration Points
-
-### React ↔ Phaser Communication (Existing EventBus Pattern)
-
-**Inventory example:**
-```javascript
-// Phaser: ItemSpriteManager.js
-EventBus.emit(EVENTS.ITEM_EQUIPPED, { itemId: 'blessed-robe', slot: 'robe' });
-
-// React: InventoryGrid.jsx
-useEffect(() => {
-  const handler = ({ itemId, slot }) => {
-    dispatch(equipToSlot({ slot, itemId }));
-    showToast(`Equipped ${itemId}`);
-  };
-  EventBus.on(EVENTS.ITEM_EQUIPPED, handler);
-  return () => EventBus.off(EVENTS.ITEM_EQUIPPED, handler);
-}, [dispatch]);
-```
-
-**Companion example:**
-```javascript
-// Phaser: CompanionBattleAI.js
-const action = this.decideAction(companionId);
-EventBus.emit(EVENTS.COMPANION_ACTION, { companionId, action });
-
-// React: BattleOverlay.jsx
-EventBus.on(EVENTS.COMPANION_ACTION, ({ companionId, action }) => {
-  setCompanionIntent(`${companionId} is preparing ${action}...`);
-});
-```
-
-### Redux State Structure (New Slices)
-
-**inventorySlice.js:**
-```javascript
-const initialState = {
-  items: [], // [{ id, quantity, locked, equipped, slot }]
-  capacity: 200,
-  sortBy: 'type', // 'type' | 'rarity' | 'alphabetical' | 'recent'
-  selectedIndex: null,
-};
-```
-
-**equipmentSlice.js:**
-```javascript
-const initialState = {
-  slots: {
-    head: null,
-    robe: null,
-    cloak: null,
-    belt: null,
-    boots: null,
-    gloves: null,
-    accessory1: null,
-    accessory2: null,
-  },
-  stats: { atk: 0, def: 0, mp: 0, affinity: {} }, // computed from equipped items
-};
-```
-
-**companionSlice.js:**
-```javascript
-const initialState = {
-  companions: [], // [{ id, relationship, mood, active, battleRole, teachingSpecialty }]
-  activeCompanion: null,
-  maxActive: 2, // 1 battle + 1 exploration
-  giftHistory: {}, // { [companionId]: [{ itemId, timestamp, relationshipGain }] }
-};
-```
-
-**economySlice.js:**
-```javascript
-const initialState = {
-  shops: {}, // { [zoneId]: { inventory: [], priceModifiers: {}, lastRestock: timestamp } }
-  haggleState: null, // { basePrice, playerOffer, npcCounter, attemptsLeft }
-  auctionHouse: [], // cross-zone trading (future)
-};
-```
-
----
-
-## Scaling Considerations (From Technical Debt Audit)
-
-### 1. localStorage → IndexedDB Migration (Phase 52)
-
-**Problem:** 5K+ FSRS cards + 200-item inventory + 12 companions will exceed 5MB localStorage limit.
-
-**Solution (no new libs):**
-```javascript
-// Use native IndexedDB API (no wrapper needed)
-const db = await openDB('gogo-arabic-db', 1, {
-  upgrade(db) {
-    db.createObjectStore('inventory', { keyPath: 'id' });
-    db.createObjectStore('fsrs', { keyPath: 'cardId' });
-    db.createObjectStore('companions', { keyPath: 'id' });
-  },
-});
-
-// redux-persist adapter
-import { createTransform } from 'redux-persist';
-const inventoryTransform = createTransform(
-  (inbound) => inbound, // save to IndexedDB
-  (outbound) => outbound, // load from IndexedDB
-  { whitelist: ['inventory', 'equipment', 'companions'] }
-);
-```
-
-**Why no library:** IndexedDB API is stable, well-documented, and doesn't need a wrapper for our use case (simple key-value stores). Libraries like `idb` (7KB) or `localForage` (20KB) add abstraction without value.
-
-### 2. Zone-Based Asset Loading (Phase 33)
-
-**Pattern:**
-```javascript
-// AssetStreamingManager.js (new Phaser subsystem)
-class AssetStreamingManager {
-  async loadZoneAssets(zoneId) {
-    const manifest = await fetch(`/assets/manifests/${zoneId}.json`).then(r => r.json());
-
-    manifest.items.forEach(item => {
-      if (!this.scene.textures.exists(item.key)) {
-        this.scene.load.image(item.key, item.path);
-      }
-    });
-
-    return new Promise(resolve => {
-      this.scene.load.once('complete', resolve);
-      this.scene.load.start();
-    });
-  }
-}
-```
-
-**Why no library:** Phaser's loader is already async and event-driven. Adding a library (preloadjs, howler's sprite loader) duplicates logic.
-
-### 3. Item Data Splitting (Phase 29)
-
-**Pattern:**
-```javascript
-// data/items/ directory structure
-// ├── weapons.js
-// ├── armor.js
-// ├── accessories.js
-// ├── consumables.js
-// └── crafting.js
-
-// items.js (barrel export)
-export * from './weapons.js';
-export * from './armor.js';
-// ... etc
-
-// Vite tree-shaking removes unused items
-import { BLESSED_ROBE } from '@/data/items/armor.js';
-```
-
-**Why no library:** Vite's native ES modules + tree-shaking handle this. No webpack plugins, no special loaders.
+| Avoid | Why | Use Instead |
+|-------|-----|-------------|
+| **XState** | 60KB for state machine modeling not needed — world flags are flat key-value, not transition graphs | Plain `worldStateSlice` with Redux |
+| **Fabric.js / Atrament** | Second canvas renderer conflicts with Phaser's canvas context | Phaser 3 `Graphics` API + pointer events |
+| **AceBase** (for now) | 200-300KB bundle cost; third persistence layer conflicts with existing IndexedDB + MongoDB; single-player game doesn't need real-time cross-tab sync | `worldStateSlice` + IndexedDB persist (already proven) |
+| **React Query / SWR** | Server state management libraries for REST/GraphQL — overkill when Express 5 backend already handles sync | Existing `createAsyncThunk` patterns in Redux slices |
+| **react-konva** | Canvas-in-React abstraction for calligraphy tracing | Phaser 3 Graphics (already integrated, no React-canvas bridge needed) |
+| **GreenSock (GSAP)** | Animation library already covered by Framer Motion + Phaser tweens | Existing `Phaser.Tweens` + Framer Motion |
+| **Immer standalone** | RTK bundles Immer internally — no separate install needed | RTK's `createSlice` (already mutable write syntax works) |
 
 ---
 
 ## Version Compatibility
 
-| Package | Current Version | Compatible With | Notes |
-|---------|----------------|-----------------|-------|
-| React | 19.2.4 | Redux Toolkit 2.11.2, Framer Motion 11.15.0 | React 19 concurrent rendering tested with all deps |
-| Phaser | 3.90.0 | React 19 (via EventBus isolation) | No React-Phaser bridge needed; EventBus prevents conflicts |
-| Redux Toolkit | 2.11.2 | React 19, React-Redux 9.2.0 | RTK 2.x requires React-Redux 9.x (already installed) |
-| Framer Motion | 11.15.0 | React 19 | v11 supports React 19's useOptimistic and useTransition |
-| Zod | 4.3.6 | All (no React dependency) | Validation at build time (dialogueSchema.js) + runtime (form validation) |
-
-**No breaking changes expected.** All dependencies are latest stable versions (as of 2026-02-12).
+| Package | Version | Compatible With | Notes |
+|---------|---------|-----------------|-------|
+| `inkjs` | 2.4.0 | React 19, Vite 7, all browsers | Zero deps. Works via ESM import. Add to manualChunks. |
+| `rollup-plugin-visualizer` | ~5.12.0 | Vite 7 (uses Rollup 4 internally) | Dev dependency only. Does not affect production bundle. |
+| `acebase` | 1.29.5 | React 19, IndexedDB (browser) | Last release Oct 2024. Single maintainer. Evaluate before committing. |
 
 ---
 
-## Installation (No New Dependencies)
+## Integration Points for Phases
 
-```bash
-# Nothing to install — all features use existing dependencies
+### inkjs → DialogueEngine.js
+- Load compiled `.ink.json` per zone via dynamic import (not all upfront)
+- `InkDialogueEngine.js` wraps `inkjs.Story`, exposes `advance()`, `getChoices()`, `jumpToKnot()`
+- EventBus interface unchanged: `EVENTS.DIALOGUE_START` / `EVENTS.DIALOGUE_END`
+- `narrativeSlice` stores ink save state (`story.state.toJson()`) for persistence
 
-# To verify current versions:
-npm list react phaser @reduxjs/toolkit framer-motion zod
+### worldStateSlice → inkjs
+- Before dialogue: inject Redux flags into `story.variablesState`
+- After dialogue: sync ink variable mutations back to Redux via `setFlag` dispatches
+- Bidirectional sync pattern — same approach as existing FSRS-root mastery sync (v6.0)
 
-# Expected output:
-# react@19.2.4
-# phaser@3.90.0
-# @reduxjs/toolkit@2.11.2
-# framer-motion@11.15.0
-# zod@4.3.6
-```
+### factionSlice → ActionSetExecutor
+- Existing `ActionSetExecutor` (9 actions, 7 requirements from v7.0) gains `factionRequired` requirement type
+- No new infrastructure — one new requirement type in existing executor
 
-**Future (Phase 52 - Infrastructure):**
-```bash
-# ONLY IF IndexedDB performance becomes critical:
-npm install idb@8.0.0  # 7KB wrapper for better TypeScript support (OPTIONAL)
-```
+### Bundle optimization → vite.config.js
+- Add `rollup-plugin-visualizer` to existing plugins array (dev only)
+- Add inkjs to `manualChunks` (loaded lazily)
+- Add `React.lazy()` to heavy overlays (InventoryGrid, QuestJournal, CompanionPanel)
 
 ---
 
-## What's Actually Needed (Implementation, Not Libraries)
+## Alternatives Considered
 
-### Phase 27-28: Battle + Root Magic
-- **NEW:** `RootMagicBuilder.jsx` (React overlay, 3-letter grid)
-- **NEW:** `rootMasterySlice.js` (Redux slice, affinity tracking)
-- **NEW:** `BattleEffectManager.js` extensions (10 elemental VFX with Arabic calligraphy particles)
-- **EXTEND:** `BattleOverlay.jsx` (add spell builder state)
-
-### Phase 29: Equipment + Inventory
-- **NEW:** `inventorySlice.js` (200-item array, sorting, stacking)
-- **NEW:** `equipmentSlice.js` (8 slots, stat calculation)
-- **NEW:** `InventoryGrid.jsx` (CSS Grid, keyboard nav, similar to Wardrobe.jsx)
-- **NEW:** `ItemComparison.jsx` (stat diff overlay, Framer Motion)
-- **NEW:** `ItemSpriteManager.js` (Phaser subsystem, composite sprites)
-- **NEW:** `data/items/` (split item data by category)
-
-### Phase 30: Companions
-- **NEW:** `companionSlice.js` (12 companions, relationship, mood, active state)
-- **NEW:** `CompanionBattleAI.js` (decision tree reading Redux state)
-- **NEW:** `CompanionDialogueAI.js` (contextual comments via EventBus)
-- **NEW:** `CompanionPanel.jsx` (party management UI, gift system)
-- **EXTEND:** `BattleScene.js` (spawn companion sprites, handle companion turn)
-
-### Phase 31: Crafting + Economy
-- **NEW:** `economySlice.js` (shops, prices, haggling)
-- **NEW:** `ShopUI.jsx` (inventory grid variant, purchase flow)
-- **NEW:** `HaggleStateMachine.js` (3-attempt negotiation, Arabic numbers)
-- **NEW:** `CraftingUI.jsx` (recipe book, ingredient selection, mini-games)
-- **NEW:** `data/recipes.js` (crafting recipes with Arabic ingredient names)
+| Recommended | Alternative | Why Not |
+|-------------|-------------|---------|
+| inkjs (for dialogue scripting) | Keep JSON dialogue trees | JSON trees can't handle 500+ world state variables conditionally — would require rewriting DialogueEngine from scratch anyway |
+| Phaser Graphics (calligraphy) | Fabric.js or Atrament | Two canvas renderers conflict; Phaser already handles input events correctly |
+| Plain Redux slice (world state) | XState | 60KB cost; FSM transition modeling adds complexity without benefit for flat flag stores |
+| rollup-plugin-visualizer | vite-bundle-analyzer | rollup-plugin-visualizer is more mature, Vite-compatible, generates treemap/sunburst views |
+| Defer AceBase | Add AceBase now | Bundle cost + architectural conflict with existing IndexedDB persist makes it a v12.0 consideration |
 
 ---
 
 ## Sources
 
-**Existing Codebase Analysis:**
-- `src/components/Wardrobe/Wardrobe.jsx` — Grid UI pattern (40-item grid, Framer Motion, focus trap)
-- `src/components/Battle/BattleOverlay.jsx` — React-Phaser EventBus pattern
-- `src/game/systems/battle/BattleStateMachine.js` — State machine pattern for game logic
-- `src/store/slices/battleSlice.js` — Redux slice pattern with memoized selectors
-- `package.json` — Current dependency versions verified 2026-02-12
-- `.planning/research/EXPANSION-COMBAT-RPG.md` — Feature requirements (phases 27-32)
-- `.planning/research/TECHNICAL-DEBT-AUDIT.md` — Scaling concerns (localStorage, asset loading)
-- `.planning/research/AAA-QUALITY-GAPS.md` — UI/UX quality standards
-
-**Training Data (LOW confidence, not verified):**
-- React 19 concurrent rendering patterns
-- Phaser 3 subsystem architecture
-- Redux Toolkit memoized selector patterns
-- CSS Grid inventory layouts (Pokemon-style)
-
-**Confidence Assessment:**
-- **HIGH** for "no new libraries needed" (verified existing patterns cover all use cases)
-- **HIGH** for Redux slice patterns (13 slices already proven at scale)
-- **HIGH** for Phaser subsystem patterns (7 subsystems already implemented)
-- **HIGH** for React overlay patterns (Wardrobe, BattleOverlay, DialogueOverlay proven)
-- **MEDIUM** for IndexedDB migration (no implementation yet, but API is stable)
+- [inkjs GitHub (inkle)](https://github.com/inkle/inkjs) — Official repo, API reference, v2.4.0 release Feb 2025 (MEDIUM confidence — no Context7 entry, GitHub verified)
+- [inkjs GitHub (y-lohse fork)](https://github.com/y-lohse/inkjs) — Releases page, v2.4.0 confirmed Feb 17 2025 (MEDIUM confidence)
+- [AceBase GitHub](https://github.com/appy-one/acebase) — v1.29.5 release Oct 2, 2024, 521 stars, actively maintained (MEDIUM confidence — single maintainer risk)
+- [rollup-plugin-visualizer GitHub](https://github.com/btd/rollup-plugin-visualizer) — Vite integration, Node.js 22 requirement confirmed (MEDIUM confidence)
+- [Phaser 3 Graphics Docs](https://docs.phaser.io/phaser/concepts/gameobjects/graphics) — strokePath, pointer events for tracing mini-game (HIGH confidence — official docs)
+- [Vite manualChunks discussion](https://github.com/vitejs/vite/discussions/17730) — Code splitting patterns for large apps (MEDIUM confidence)
+- Existing `package.json` (frontend + server) — All installed versions verified 2026-03-19 (HIGH confidence)
+- Existing `vite.config.js` — Current manualChunks strategy analyzed 2026-03-19 (HIGH confidence)
+- `node_modules/` inspection — Confirmed inkjs and acebase NOT installed (HIGH confidence)
 
 ---
 
-*Stack research for: Root magic spell casting, equipment/inventory management, companion AI, economy systems*
-*Researched: 2026-02-12*
-*Confidence: HIGH (all recommendations based on verified existing patterns)*
+## Confidence Assessment
+
+| Area | Confidence | Notes |
+|------|------------|-------|
+| inkjs API | MEDIUM | GitHub verified, not in Context7. Core `Story` API stable since v2.0. |
+| AceBase recommendation | MEDIUM | Single maintainer; "don't add it yet" is defensive but evidence-based |
+| Bundle optimization | HIGH | Vite manualChunks well-documented, existing config analyzed |
+| Calligraphy (Phaser Graphics) | HIGH | Phaser official docs confirm Graphics + pointer events sufficient |
+| Faction/world-state (plain Redux) | HIGH | 17 existing slices prove the pattern scales |
+| inkjs not installed | HIGH | Verified by inspecting node_modules and package.json |
+
+---
+
+*Stack research for: v11.0 Deep Systems & Content Engine (inkjs, AceBase, faction system, world state, dynamic market, calligraphy, poetry battles, bundle optimization)*
+*Researched: 2026-03-19*
+*Confidence: HIGH (installation status verified; new packages identified; patterns confirmed against existing 196K LOC codebase)*
