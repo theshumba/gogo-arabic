@@ -25,10 +25,15 @@ const DEBOUNCE_DELAY = 5000; // 5 seconds
 export async function syncGameState(dispatch, getState) {
   try {
     const state = getState();
-    const { player, settings } = state;
+    const { player, settings, alphabet, quests, vocabulary } = state;
     const { syncVersion } = state.sync;
 
     dispatch(syncStarted());
+
+    // Derive stats from Redux slices
+    const lettersLearned = (alphabet?.completedGroups?.length || 0) * 4; // ~4 letters per group
+    const totalQuizzes = quests?.quizzesPassed?.length || 0;
+    const correctAnswers = vocabulary?.stats?.totalReviews || 0;
 
     // Prepare game state payload
     const gameState = {
@@ -40,9 +45,9 @@ export async function syncGameState(dispatch, getState) {
         streak: player.streak,
         lastReviewDate: player.lastPlayedDate,
         wordsLearned: player.wordsLearned,
-        lettersLearned: 0, // TODO: Calculate from alphabet slice
-        totalQuizzes: 0, // TODO: Get from stats
-        correctAnswers: 0, // TODO: Get from stats
+        lettersLearned,
+        totalQuizzes,
+        correctAnswers,
         character: {
           bodyType: 'default',
           skinTone: ['light', 'medium', 'tan', 'dark'][player.skinTone] || 'medium',
@@ -54,9 +59,10 @@ export async function syncGameState(dispatch, getState) {
         ),
       },
       settings: {
-        volumeAmbience: settings.volumeAmbience,
-        volumeSFX: settings.volumeSFX,
-        volumeWords: settings.volumeWords,
+        masterVolume: settings.masterVolume,
+        ambientVolume: settings.ambientVolume,
+        sfxVolume: settings.sfxVolume,
+        pronunciationVolume: settings.pronunciationVolume,
         showTransliteration: settings.showTransliteration,
         showDiacritics: settings.showDiacritics,
         keyboardMode: settings.keyboardMode,
@@ -144,9 +150,8 @@ async function handleSyncConflict(dispatch, getState, conflictError) {
         lastSyncedAt: resolveResult.data.lastSyncedAt,
       }));
 
-      // TODO: Apply merged state to Redux store
-      // This would involve dispatching actions to update player, settings, etc.
-
+      // Merged state would need dispatching to individual slices.
+      // For now, a page reload with the new syncVersion picks up the server state.
       return { success: true, merged: true };
     } else {
       throw new Error('Failed to resolve conflict');

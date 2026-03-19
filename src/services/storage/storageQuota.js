@@ -43,7 +43,7 @@ export const checkStorageQuota = async () => {
     const usageMB = (usage / (1024 * 1024)).toFixed(2);
     const quotaMB = (quota / (1024 * 1024)).toFixed(2);
 
-    console.log(`[StorageQuota] Usage: ${usageMB}MB / ${quotaMB}MB (${percentage}%)`);
+    if (import.meta.env.DEV) console.log(`[StorageQuota] Usage: ${usageMB}MB / ${quotaMB}MB (${percentage}%)`);
 
     return {
       usage,
@@ -81,7 +81,7 @@ export const requestPersistentStorage = async () => {
     const isPersisted = await navigator.storage.persist();
 
     if (isPersisted) {
-      console.log('[StorageQuota] Persistent storage granted');
+      if (import.meta.env.DEV) console.log('[StorageQuota] Persistent storage granted');
     } else {
       console.warn('[StorageQuota] Persistent storage denied — data may be evicted under storage pressure');
     }

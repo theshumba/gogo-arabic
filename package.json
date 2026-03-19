@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "node server/src/server.js",
-    "server:dev": "nodemon server/src/server.js",
+    "server:dev": "cd server && npm run dev",
     "seed": "node scripts/seed-db.js",
     "build:alphabet": "node scripts/build-alphabet.js",
     "build:vocabulary": "node scripts/build-vocabulary.js",
