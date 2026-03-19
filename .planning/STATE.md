@@ -4,7 +4,7 @@ milestone: v11.0
 milestone_name: Narrative Depth
 status: in_progress
 stopped_at: "Phase 50 COMPLETE — all 3 plans done; next: /gsd:plan-phase 51"
-last_updated: "2026-03-19T22:50:00.000Z"
+last_updated: "2026-03-19T22:11:09Z"
 progress:
   total_phases: 12
   completed_phases: 5
@@ -71,6 +71,8 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | Lazy overlay Suspense fallback=null (50-01) | No spinner flash over Phaser canvas when opening battle/inventory first time | Canvas stays visible; overlays load silently |
 | worldState moved to IndexedDB | 562 flags → localStorage 5-10MB limit risk | Nested persistReducer, CURRENT_VERSION=8, migration cleans old data |
 | worldStateMiddleware last in chain | Ordering consistency | Added after utilityBonusMiddleware, matches project convention |
+| Zone asset manifest (50-02) | BootScene loaded ALL zone tilesets upfront; zone-specific Kenmi tilesets moved to ZONE_ASSET_MANIFESTS | loadZoneAssets() called during ZoneTransition fade-out; TextureManager cache skip on revisit |
+| KENMI_CATALOG stays in BootScene (50-02) | Decorative sprites used across all zones; not zone-specific | KENMI_CATALOG loop untouched in BootScene; only desert tileset images moved to ZONE_ASSET_MANIFESTS |
 
 ### Blockers/Concerns
 
@@ -87,5 +89,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Phase 50 complete — next action is `/gsd:plan-phase 51`
+Stopped at: Phase 50 plan 02 complete (50-02-SUMMARY.md created) — Phase 50 fully complete; next action is `/gsd:plan-phase 51`
 Resume file: None
