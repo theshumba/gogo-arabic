@@ -40,6 +40,7 @@ import { craftingVocabMiddleware } from './middleware/craftingVocabMiddleware.js
 import { statusEffectVocabMiddleware } from './middleware/statusEffectVocabMiddleware.js';
 import { friendshipMiddleware } from './middleware/friendshipMiddleware.js';
 import { utilityBonusMiddleware } from './middleware/utilityBonusMiddleware.js';
+import { worldStateMiddleware } from './middleware/worldStateMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -61,10 +62,11 @@ import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
  * - Version 3 (Phase 29): inventory added to IndexedDB, economy added to localStorage
  * - Version 4 (Phase 30): companions added to IndexedDB
  * - Version 5 (Phase 31): crafting added to IndexedDB
+ * - Version 8 (Phase 50): worldState moved to IndexedDB
  *
  * Storage backends:
  * - localStorage (root): player, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, narrative, economy
- * - IndexedDB (nested): vocabulary, battle, magic, inventory, companions, crafting
+ * - IndexedDB (nested): vocabulary, battle, magic, inventory, companions, crafting, worldState
  * - Not persisted (transient): ui, sync
  */
 
@@ -111,6 +113,13 @@ const craftingPersistConfig = {
   migrate,
 };
 
+const worldStatePersistConfig = {
+  key: 'gogo-arabic-world-state',
+  storage: indexedDBStorage,
+  version: CURRENT_VERSION,
+  migrate,
+};
+
 // Wrap heavy reducers with nested persistReducer
 const persistedVocabularyReducer = persistReducer(vocabularyPersistConfig, vocabularyReducer);
 const persistedBattleReducer = persistReducer(battlePersistConfig, battleReducer);
@@ -118,6 +127,7 @@ const persistedMagicReducer = persistReducer(magicPersistConfig, magicReducer);
 const persistedInventoryReducer = persistReducer(inventoryPersistConfig, inventoryReducer);
 const persistedCompanionReducer = persistReducer(companionPersistConfig, companionReducer);
 const persistedCraftingReducer = persistReducer(craftingPersistConfig, craftingReducer);
+const persistedWorldStateReducer = persistReducer(worldStatePersistConfig, worldStateReducer);
 
 // Root persist config (localStorage) — vocabulary, battle, magic, inventory, crafting excluded (they have nested configs)
 const persistConfig = {
@@ -137,7 +147,6 @@ const persistConfig = {
     'arena',
     'time',
     'weather',
-    'worldState',
     'home',
     'stats',
     'skillTree',
@@ -171,7 +180,7 @@ const rootReducer = combineReducers({
   arena: arenaReducer,
   time: timeReducer,
   weather: weatherReducer,
-  worldState: worldStateReducer,
+  worldState: persistedWorldStateReducer, // IndexedDB (nested) — Phase 50
   home: homeReducer,
   stats: statsReducer,
   skillTree: skillTreeReducer,
@@ -191,7 +200,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware),
 });
 
 export const persistor = persistStore(store);

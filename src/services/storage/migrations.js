@@ -10,6 +10,7 @@
  * - Version 3 (Phase 29): inventory + economy added
  * - Version 4 (Phase 30): companions added to IndexedDB
  * - Version 5 (Phase 31): crafting added to IndexedDB
+ * - Version 8 (Phase 50): worldState moved to IndexedDB
  *
  * Key design:
  * - Migration function receives already-deserialized state from redux-persist
@@ -21,7 +22,7 @@
 
 import { createMigrate } from 'redux-persist';
 
-export const CURRENT_VERSION = 7;
+export const CURRENT_VERSION = 8;
 
 /**
  * Migration definitions
@@ -174,6 +175,43 @@ const migrations = {
     if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
       console.log('[Migration] v6 -> v7 complete');
+    }
+    return state;
+  },
+
+  // Version 8: worldState moved from localStorage to IndexedDB (Phase 50)
+  8: (state) => {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] Starting v7 -> v8: worldState moved to IndexedDB');
+    }
+
+    // Schedule cleanup of old localStorage worldState data after rehydration
+    setTimeout(() => {
+      try {
+        const rootKey = 'persist:gogo-arabic';
+        const oldData = localStorage.getItem(rootKey);
+
+        if (oldData) {
+          const parsed = JSON.parse(oldData);
+
+          // Remove worldState from root localStorage persist (now in IndexedDB)
+          delete parsed.worldState;
+
+          localStorage.setItem(rootKey, JSON.stringify(parsed));
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.log('[Migration] Cleaned up old localStorage worldState data');
+          }
+        }
+      } catch (cleanupError) {
+        console.warn('[Migration] Failed to cleanup old localStorage worldState:', cleanupError);
+      }
+    }, 5000);
+
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] v7 -> v8 complete');
     }
     return state;
   },

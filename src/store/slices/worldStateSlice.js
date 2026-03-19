@@ -1,3 +1,11 @@
+/**
+ * World State Slice — stores flags and counters for world progression.
+ *
+ * IMPORTANT: After Phase 50, use WORLD_STATE_KEYS from src/data/worldStateKeys.js
+ * for all flag/counter key names. Do not use raw string literals.
+ *
+ * Persisted via IndexedDB (nested persistReducer in store.js).
+ */
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
