@@ -109,6 +109,14 @@ None — no external service configuration required.
 - sequencer.onWordLearned hook ready — Plan 47-03 assigns this callback to trigger Amira's arrival scene (Beat 5)
 - Plan 47-03 can proceed immediately
 
+## Self-Check: PASSED
+
+- `src/game/objects/FloatingWordObject.js` — FOUND
+- `src/game/systems/CinematicIntroSequencer.js` — FOUND
+- `.planning/phases/47-cinematic-intro/47-02-SUMMARY.md` — FOUND
+- Commit `0f3a93d` (Task 1) — FOUND
+- Commit `7cab02c` (Task 2) — FOUND
+
 ---
 *Phase: 47-cinematic-intro*
 *Completed: 2026-03-19*
