@@ -27,6 +27,7 @@
     "@reduxjs/toolkit": "^2.11.2",
     "framer-motion": "^11.15.0",
     "howler": "^2.2.4",
+    "inkjs": "^2.4.0",
     "js-arabic-reshaper": "^1.0.0",
     "phaser": "^3.90.0",
     "prop-types": "^15.8.1",

@@ -76,6 +76,10 @@ export default defineConfig({
           if (id.includes('src/data/loreCodex.js')) {
             return 'lore-data';
           }
+          // Compiled ink dialogue files
+          if (id.includes('src/data/ink/') && id.endsWith('.ink.json')) {
+            return 'ink-dialogue';
+          }
           // Skill/achievement/faction data
           if (id.includes('src/data/skillTrees.js') ||
             id.includes('src/data/achievements.js') ||
@@ -85,6 +89,10 @@ export default defineConfig({
           }
 
           if (id.includes('node_modules')) {
+            // inkjs dialogue runtime
+            if (id.includes('node_modules/inkjs')) {
+              return 'ink-vendor';
+            }
             // Phaser library (~1.2MB)
             if (id.includes('node_modules/phaser')) {
               return 'phaser';
