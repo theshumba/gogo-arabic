@@ -1,5 +1,9 @@
 # GOGO ARABIC — Complete Project Handoff
 
+> **STALE (2026-03-19):** This document was written around v6.1. The project is now on
+> v10.0 with ~110K LOC, 29 Redux slices, and 9 middleware. For current state, see
+> `GOGO_ARABIC_OVERVIEW.md` and `.planning/STATE.md`.
+
 > Copy-paste this entire document into your new AI coding tool. It contains everything needed to continue development.
 
 ---

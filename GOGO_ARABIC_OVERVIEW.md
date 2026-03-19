@@ -72,7 +72,7 @@ These are non-negotiable design rules that override every other decision:
 |---|---|---|
 | React | 19.2.4 | All UI: menus, quizzes, HUD, dialogue, shop, inventory, battle overlays |
 | Phaser 3 | 3.90.0 | Game world: tile maps, sprites, camera, physics, collision, scene management |
-| Redux Toolkit | 2.11.2 | Global state management (19 slices) |
+| Redux Toolkit | 2.11.2 | Global state management (29 slices) |
 | redux-persist | 6.0.0 | Persistence layer (localStorage + IndexedDB) |
 | ts-fsrs | 5.2.3 | Spaced repetition algorithm for vocabulary cards |
 | Howler.js | 2.2.4 | Audio: ambient loops, SFX, Arabic word pronunciation |
@@ -121,7 +121,7 @@ These are non-negotiable design rules that override every other decision:
                    │
 ┌──────────────────▼───────────────────────────────────────────────┐
 │  REDUX STORE (Shared State)                                      │
-│  19 slices, 7 middleware, hybrid persist                        │
+│  29 slices, 9 middleware, hybrid persist                        │
 │  Both React and Phaser read from / dispatch to this store       │
 └──────────────────┬───────────────────────────────────────────────┘
                    │  (future)
@@ -552,9 +552,9 @@ gogo-arabic/
 │   │   └── useReducedMotion.js  # Respects prefers-reduced-motion
 │   │
 │   ├── store/                   # Redux store
-│   │   ├── store.js             # 19 slices, 7 middleware, hybrid persist config
+│   │   ├── store.js             # 29 slices, 9 middleware, hybrid persist config
 │   │   ├── slices/              # 19 Redux slices (see section 6)
-│   │   └── middleware/          # 7 middleware files (see section 6)
+│   │   └── middleware/          # 9 middleware files (see section 6)
 │   │
 │   ├── services/                # External service wrappers
 │   │   ├── fsrs.js              # ts-fsrs wrapper (createCard, reviewCard, getDueCards)
@@ -624,7 +624,7 @@ gogo-arabic/
 ### Current Stats
 - **Tests:** 1,121 passing, 0 failing (62 test files)
 - **Build:** Succeeds. Main bundle 862KB (223KB gzipped)
-- **LOC:** ~133K
+- **LOC:** ~110K
 - **Commits:** 302+
 - **Git tags:** v6.0, v6.1
 
@@ -781,4 +781,4 @@ cd server && node src/server.js
 
 ---
 
-*Last updated: 2026-02-26. Based on v6.1 codebase (~133K LOC, 302 commits).*
+*Last updated: 2026-03-19. Based on v10.0 codebase (~110K LOC, 29 slices, 9 middleware).*

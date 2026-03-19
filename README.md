@@ -2,12 +2,15 @@
 
 An Arabic learning RPG that teaches Modern Standard Arabic through exploration, quests, and turn-based word battles in a pixel-art world.
 
-## Tech Stack
+## Architecture
 
-- **Frontend:** React 19, Phaser 3, Redux Toolkit, Framer Motion
-- **Backend:** Express 5, MongoDB
+This is a **hybrid React + Phaser** application. React handles all UI (menus, quizzes, HUD, overlays) while Phaser 3 runs the game world (tile maps, sprites, camera, physics). They communicate through a centralized EventBus (`src/utils/eventBusTypes.js`). Redux Toolkit manages shared state across both layers.
+
+- **Frontend:** React 19, Phaser 3, Redux Toolkit (29 slices, 9 middleware), Framer Motion
+- **Backend:** Express 5, MongoDB (optional — frontend works fully offline with localStorage/IndexedDB)
 - **Testing:** Vitest, Testing Library, Playwright
 - **Build:** Vite 7
+- **Node:** 22+ required (ESM, `"type": "module"`)
 
 ## Getting Started
 
@@ -15,7 +18,7 @@ An Arabic learning RPG that teaches Modern Standard Arabic through exploration, 
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (runs on port 3000)
 npm run dev
 
 # Run tests
@@ -24,6 +27,40 @@ npm test
 # Build for production
 npm run build
 ```
+
+The backend server is optional. To run it:
+```bash
+cd server
+cp .env.example .env  # Edit with your MongoDB URI and JWT secret
+npm install
+npm run dev
+```
+
+## Project Structure
+
+```
+src/
+  components/   # 37 feature directories (Battle/, Quiz/, NPC/, etc.)
+  data/         # Game data (vocabulary, NPCs, zones, quests, grammar)
+  game/
+    scenes/     # 4 Phaser scenes (World, Interior, Battle, Boot)
+    systems/    # 40+ game systems (NPC, Map, Zone, Equipment, etc.)
+    sprites/    # Phaser game objects (Player, NPC, etc.)
+    events/     # EventBus type registry
+    ui/         # Phaser-layer UI elements
+  hooks/        # 19 custom React hooks
+  store/
+    slices/     # 29 Redux slices (player, battle, vocabulary, etc.)
+    middleware/  # 9 middleware (achievements, battle rewards, etc.)
+  services/     # Storage, sync, audio services
+  styles/       # Theme and shared styles
+  utils/        # Helpers and utilities
+  world/        # Zone management
+server/         # Express API (MVC: controllers, routes, models, middleware)
+.planning/      # GSD workflow: roadmap, phase plans, state tracking
+```
+
+For a comprehensive project reference, see `GOGO_ARABIC_OVERVIEW.md`.
 
 ## Features
 
@@ -46,20 +83,6 @@ This project follows culturally respectful design principles:
 - **No music** — Audio design uses ambient soundscapes and sound effects only
 - **Arabic-first** — All in-game Arabic text uses proper right-to-left rendering with tashkeel (diacritical marks)
 - **Historically grounded** — Zones and narratives draw from real Arabic and Islamic history and culture
-
-## Project Structure
-
-```
-src/
-  components/   # React UI components
-  data/         # Game data (vocabulary, NPCs, zones, quests)
-  game/         # Phaser scenes and systems
-  hooks/        # Custom React hooks
-  store/        # Redux slices and store config
-  styles/       # Theme and shared styles
-  utils/        # Helpers and utilities
-server/         # Express API server
-```
 
 ## License
 

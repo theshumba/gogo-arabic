@@ -1,11 +1,16 @@
 # GoGo Arabic — MASTER PLAN
 
+> **DEPRECATED (2026-03-19):** This document reflects the v5.0/v6.0 plan and is no longer
+> the source of truth. Phases were renumbered starting at v7.0, and the project is now on
+> v10.0 Phase 47. For current state, see `.planning/STATE.md` and `.planning/ROADMAP.md`.
+> This file is retained as historical reference only — do NOT execute phases from this plan.
+
 ## How to Use This Document
 
-**Every new session, say this:**
-> "Continue executing the Master Plan. Check `.planning/MASTER-PLAN.md` for where we left off."
+~~**Every new session, say this:**~~
+~~> "Continue executing the Master Plan. Check `.planning/MASTER-PLAN.md` for where we left off."~~
 
-That's it. Claude will read this file, see exactly which phase is next, and pick up where things stopped.
+**Use `.planning/STATE.md` instead.** This document is archived.
 
 ---
 
