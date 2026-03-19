@@ -1,16 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v10.0
-milestone_name: Onboarding & First 5 Minutes
-status: in_progress
-stopped_at: null
-last_updated: "2026-03-19T00:00:00.000Z"
-last_activity: 2026-03-19 — v10.0 roadmap created (Phases 47-49)
+milestone: v9.0
+milestone_name: Content Depth
+status: unknown
+stopped_at: v10.0 roadmap created — ROADMAP.md + STATE.md + REQUIREMENTS.md updated
+last_updated: "2026-03-19T11:03:59.903Z"
 progress:
-  total_phases: 3
-  completed_phases: 0
-  total_plans: 9
-  completed_plans: 0
+  total_phases: 6
+  completed_phases: 3
+  total_plans: 12
+  completed_plans: 9
 ---
 
 # Project State
@@ -20,17 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v10.0 Onboarding & First 5 Minutes — Phase 47: Cinematic Intro
+**Current focus:** Phase 47 — Cinematic Intro
 
 ## Current Position
 
-Milestone: v10.0 Onboarding & First 5 Minutes
-Phase: 47 of 49 (Cinematic Intro) — Not started
-Plan: —
-Status: Ready to plan Phase 47
-Last activity: 2026-03-19 — v10.0 roadmap created, 18 requirements mapped across 3 phases
-
-Progress (v10.0): [░░░░░░░░░░░░] 0%
+Phase: 47 (Cinematic Intro) — EXECUTING
+Plan: 1 of 3 COMPLETE — resume at Plan 2
 
 ### Shipped Milestones
 
@@ -68,6 +62,10 @@ All v2.0-v9.0 decisions logged in PROJECT.md Key Decisions table.
 |----------|---------|---------|
 | learningPath already in narrativeSlice | v9.0 Phase 45 | Extend existing slice, no new slice needed |
 | guide-amira dialogue trees exist | v9.0 Phase 44 | Add new trees for PATH-01 prompt, don't rewrite existing |
+| Crawl text at depth 9800 | Phase 47-01 | Below DialogueBox (10000), above DayNightCycle (9000) |
+| Per-timer cancel in _skipCrawl() | Phase 47-01 | this._timers[].remove(false) — avoids removeAllEvents() breaking other timers |
+| onPanComplete as callback, not EventBus | Phase 47-01 | Plan 47-02 assigns sequencer.onPanComplete; sequencer owns lifecycle cleanly |
+| Sequencer trigger after SCENE_READY emit | Phase 47-01 | All subsystems ready before PLAYER_FREEZE is called |
 
 ### Blockers/Concerns
 
@@ -83,5 +81,5 @@ All v2.0-v9.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: v10.0 roadmap created — ROADMAP.md + STATE.md + REQUIREMENTS.md updated
-Resume file: Start with `/gsd:plan-phase 47` after Phase 46 ships
+Stopped at: Phase 47 Plan 1 complete — CinematicIntroSequencer.js created, WorldScene wired, GameLayout bypassed
+Resume file: .planning/phases/47-cinematic-intro/47-02-PLAN.md (wire onPanComplete → FloatingWordObject)

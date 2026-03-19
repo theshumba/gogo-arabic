@@ -480,7 +480,7 @@ Plans:
 **Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 47-01-PLAN.md — CinematicIntroSequencer.js (text crawl + camera fade + dawn pan) + bypass React CinematicIntro in GameLayout
+- [x] 47-01-PLAN.md — CinematicIntroSequencer.js (text crawl + camera fade + dawn pan) + bypass React CinematicIntro in GameLayout
 - [ ] 47-02-PLAN.md — FloatingWordObject.js (gold glow + Arabic text + proximity SPACE interact + FSRS dispatch) + sequencer integration
 - [ ] 47-03-PLAN.md — Amira arrival dialogue + setTutorialPhase(awaiting_mentor) + setActiveQuest(tutorial_welcome) + human verify
 
