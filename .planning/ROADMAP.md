@@ -11,6 +11,7 @@
 - ✅ **v7.0 World & Content** — Phases 33-37 (shipped 2026-03-16) → [archive](milestones/v7.0-ROADMAP.md)
 - ✅ **v8.0 Visual Overhaul** — Phases 38-43 (shipped 2026-03-18)
 - 🚧 **v9.0 Content Depth** — Phases 44-46 (in progress)
+- 📋 **v10.0 Onboarding & First 5 Minutes** — Phases 47-49 (planned)
 
 ## Phases
 
@@ -453,10 +454,82 @@ Plans:
 - [ ] 46-02-PLAN.md — Append B1 (2,000 words) + B2 (1,500 words) to vocabularyExpanded.js
 - [ ] 46-03-PLAN.md — Merge into vocabularyAll.js + CEFR badge in TeacherWordCard + Root Explorer cluster browsing + frequency-ordered FSRS selector
 
+---
+
+### v10.0 Onboarding & First 5 Minutes (Phases 47-49) — Planned
+
+**Milestone Goal:** Create a cinematic, discovery-driven onboarding that teaches the core game loop in under 2 minutes without a single tutorial popup — the first 30 seconds decide if someone keeps playing.
+
+**Coverage:** 18 requirements across 3 phases (INTRO-01 to INTRO-05, PATH-01 to PATH-05, QUEST-01 to QUEST-05, UX-01 to UX-03)
+
+#### Phase 47: Cinematic Intro
+**Goal**: New players experience a scripted cinematic opening — text crawl, dawn pan, first floating Arabic word, discovery moment, and Guide Amira's arrival — with no menus or tutorial popups interrupting the flow
+
+**Depends on**: Phase 46 (v9.0 content complete — Amira's dialogue trees and vocabulary data are in place)
+
+**Requirements**: INTRO-01, INTRO-02, INTRO-03, INTRO-04, INTRO-05, UX-01, UX-02
+
+**Success Criteria** (what must be TRUE):
+  1. A new player sees a 5-second text crawl ("A young scholar discovers an ancient manuscript...") immediately after the loading screen, before any game UI appears
+  2. After the text crawl, the camera fades into Oasis Village at dawn and pans slowly to the player character — no HUD, menus, or overlays are visible during this sequence
+  3. A glowing, interactive Arabic word appears floating in the world; the player can walk to it and touch it without any prompt telling them to do so
+  4. Touching the first floating word plays a reward animation and teaches the word — no quiz, no explanation screen, just discovery feedback
+  5. Guide Amira appears after the first word is learned, delivers one contextual line, and hands the player their first quest — the entire opening from text crawl to quest receipt takes under 60 seconds
+  6. The existing 6-step onboarding tutorial is bypassed for new players who have gone through the cinematic intro — the two flows do not both run
+
+**Plans**: TBD
+
+Plans:
+- [ ] 47-01-PLAN.md — OnboardingOrchestrator + cinematic state machine (text crawl → dawn fade → first word spawn)
+- [ ] 47-02-PLAN.md — FloatingWordObject (Phaser interactive sprite with glow + reward animation) + WorldScene integration
+- [ ] 47-03-PLAN.md — Amira arrival trigger + first quest handoff + old OnboardingFlow bypass via onboardingSlice flag
+
+#### Phase 48: Learning Path Choice
+**Goal**: After learning the first word, players are prompted by Guide Amira to choose their Arabic learning focus — Scholar, Traveler, or Historian — and the game immediately begins shaping their experience around that choice
+
+**Depends on**: Phase 47 (cinematic intro complete — Amira is present and first quest has been given)
+
+**Requirements**: PATH-01, PATH-02, PATH-03, PATH-04, PATH-05
+
+**Success Criteria** (what must be TRUE):
+  1. After the first word is learned, Guide Amira asks "What draws you to Arabic?" — the prompt appears as natural in-world dialogue, not a menu screen
+  2. Player picks one of three paths (Scholar القارئ, Traveler المسافر, Historian المؤرخ) through a choice in the existing dialogue system — no new overlay required
+  3. All three paths teach the same Fusha Arabic — a player on any path encounters the same language, just in a different word-frequency order and with different NPC emphasis
+  4. The chosen path is reflected immediately: the first real quest assigned, the next NPC the player is pointed toward, and the initial FSRS word ordering all differ by path
+  5. A player can switch their learning path from the settings/profile at any time; the interface shows a warning that priority bonuses reset on switch
+
+**Plans**: TBD
+
+Plans:
+- [ ] 48-01-PLAN.md — learningPathSlice (Scholar/Traveler/Historian state + switch action) + path-aware FSRS word ordering
+- [ ] 48-02-PLAN.md — PATH-01/PATH-02 Amira dialogue tree + path choice wired to DialogueEngine choice handler
+- [ ] 48-03-PLAN.md — PATH-03/PATH-04 path effects (quest routing, NPC relationship bonuses) + PATH-05 switch UI in settings/profile
+
+#### Phase 49: First Quest & Loop Completion
+**Goal**: Players complete the first quest by learning 3 Arabic words from village objects, receive a meaningful reward, and finish onboarding having understood the core loop — without a single tutorial popup
+
+**Depends on**: Phase 48 (learning path chosen — first quest content and mentor NPC depend on path)
+
+**Requirements**: QUEST-01, QUEST-02, QUEST-03, QUEST-04, QUEST-05, UX-03
+
+**Success Criteria** (what must be TRUE):
+  1. Words float visibly above pots, signs, and buildings in the village — the player can see at least 3 interactable floating words without moving far from the start position
+  2. Touching each floating word teaches it with visual Arabic script, transliteration, and an audio pronunciation cue — no separate quiz screen required
+  3. After learning 3 words, the player receives a gold coin reward, sees an achievement toast ("You know 3 Arabic words!"), and the quest completes — all without leaving the world
+  4. The first real quest offered after completion (and the mentor NPC assigned) differs based on the player's chosen learning path — Scholar, Traveler, and Historian each get a thematically matched follow-up
+  5. A returning player who has completed onboarding skips directly to the normal game start — onboarding completion is stored in the game's persist layer (IndexedDB) and survives page reload
+
+**Plans**: TBD
+
+Plans:
+- [ ] 49-01-PLAN.md — FloatingWordObjects for 3+ village items (pots/signs/buildings) + teach-on-touch with visual+audio feedback (QUEST-01, QUEST-02)
+- [ ] 49-02-PLAN.md — Quest completion trigger: 3 words learned → gold reward + achievement toast + "You know 3 Arabic words!" (QUEST-03)
+- [ ] 49-03-PLAN.md — Path-gated first real quest + mentor NPC assignment + onboarding completion flag in IndexedDB (QUEST-04, QUEST-05, UX-03)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 → 33 → ... → 46
+Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 → 33 → ... → 49
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -503,12 +576,15 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 41. Characters & Ambient Life | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 42. Phaser UI & Arabic BitmapFont | v8.0 | 3/3 | Complete | 2026-03-18 |
 | 43. Zone References & Cleanup | v8.0 | 2/2 | Complete | 2026-03-18 |
-| 44. NPC Dialogue Expansion | v9.0 | Complete | 2026-03-18 | 2026-03-18 |
-| 45. Quest Storylines | v9.0 | Complete | 2026-03-18 | 2026-03-18 |
-| 46. Vocabulary Expansion | v9.0 | Complete    | 2026-03-18 | — |
+| 44. NPC Dialogue Expansion | v9.0 | 3/3 | Complete | 2026-03-18 |
+| 45. Quest Storylines | v9.0 | 3/3 | Complete | 2026-03-18 |
+| 46. Vocabulary Expansion | v9.0 | 1/3 | In progress | — |
+| 47. Cinematic Intro | v10.0 | 0/3 | Not started | — |
+| 48. Learning Path Choice | v10.0 | 0/3 | Not started | — |
+| 49. First Quest & Loop Completion | v10.0 | 0/3 | Not started | — |
 
-**Cumulative:** 45 phases shipped (Phase 45 complete), 133 plans complete, 8 milestones shipped
+**Cumulative:** 46 phases shipped (Phase 45 complete), 133 plans complete, 8 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-18 — 46-01 complete: vocabularyExpanded.js with 1,500 words (500 A1 + 1,000 A2)*
+*Last updated: 2026-03-19 — v10.0 roadmap added (Phases 47-49, 18 requirements mapped)*

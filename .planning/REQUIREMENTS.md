@@ -54,30 +54,30 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INTRO-01 | — | Pending |
-| INTRO-02 | — | Pending |
-| INTRO-03 | — | Pending |
-| INTRO-04 | — | Pending |
-| INTRO-05 | — | Pending |
-| PATH-01 | — | Pending |
-| PATH-02 | — | Pending |
-| PATH-03 | — | Pending |
-| PATH-04 | — | Pending |
-| PATH-05 | — | Pending |
-| QUEST-01 | — | Pending |
-| QUEST-02 | — | Pending |
-| QUEST-03 | — | Pending |
-| QUEST-04 | — | Pending |
-| QUEST-05 | — | Pending |
-| UX-01 | — | Pending |
-| UX-02 | — | Pending |
-| UX-03 | — | Pending |
+| INTRO-01 | Phase 47 | Pending |
+| INTRO-02 | Phase 47 | Pending |
+| INTRO-03 | Phase 47 | Pending |
+| INTRO-04 | Phase 47 | Pending |
+| INTRO-05 | Phase 47 | Pending |
+| UX-01 | Phase 47 | Pending |
+| UX-02 | Phase 47 | Pending |
+| PATH-01 | Phase 48 | Pending |
+| PATH-02 | Phase 48 | Pending |
+| PATH-03 | Phase 48 | Pending |
+| PATH-04 | Phase 48 | Pending |
+| PATH-05 | Phase 48 | Pending |
+| QUEST-01 | Phase 49 | Pending |
+| QUEST-02 | Phase 49 | Pending |
+| QUEST-03 | Phase 49 | Pending |
+| QUEST-04 | Phase 49 | Pending |
+| QUEST-05 | Phase 49 | Pending |
+| UX-03 | Phase 49 | Pending |
 
 **Coverage:**
 - v10.0 requirements: 18 total
-- Mapped to phases: 0
-- Unmapped: 18 ⚠️
+- Mapped to phases: 18
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after initial definition*
+*Last updated: 2026-03-19 — all 18 requirements mapped to Phases 47-49*
