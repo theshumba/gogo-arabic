@@ -482,7 +482,7 @@ Plans:
 Plans:
 - [x] 47-01-PLAN.md — CinematicIntroSequencer.js (text crawl + camera fade + dawn pan) + bypass React CinematicIntro in GameLayout
 - [x] 47-02-PLAN.md — FloatingWordObject.js (gold glow + Arabic text + proximity SPACE interact + FSRS dispatch) + sequencer integration
-- [ ] 47-03-PLAN.md — Amira arrival dialogue + setTutorialPhase(awaiting_mentor) + setActiveQuest(tutorial_welcome) + human verify
+- [x] 47-03-PLAN.md — Amira arrival dialogue + setTutorialPhase(awaiting_mentor) + setActiveQuest(tutorial_welcome) + human verify
 
 #### Phase 48: Learning Path Choice
 **Goal**: After learning the first word, players are prompted by Guide Amira to choose their Arabic learning focus — Scholar, Traveler, or Historian — and the game immediately begins shaping their experience around that choice
@@ -579,7 +579,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 44. NPC Dialogue Expansion | v9.0 | 3/3 | Complete | 2026-03-18 |
 | 45. Quest Storylines | v9.0 | 3/3 | Complete | 2026-03-18 |
 | 46. Vocabulary Expansion | v9.0 | 1/3 | In progress | — |
-| 47. Cinematic Intro | v10.0 | 0/3 | Not started | — |
+| 47. Cinematic Intro | v10.0 | 3/3 | At checkpoint | 2026-03-19 |
 | 48. Learning Path Choice | v10.0 | 0/3 | Not started | — |
 | 49. First Quest & Loop Completion | v10.0 | 0/3 | Not started | — |
 
@@ -587,4 +587,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-19 — v10.0 roadmap added (Phases 47-49, 18 requirements mapped)*
+*Last updated: 2026-03-19 — Phase 47 all 3 plans complete, at human-verify checkpoint*
