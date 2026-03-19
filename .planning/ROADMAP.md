@@ -308,7 +308,7 @@ Plans:
 
 **Visual/UI/world/tileset work is out of scope** — user builds world visuals separately in LDtk.
 
-#### Phase 50: Infrastructure Baseline
+#### Phase 50: Infrastructure Baseline — COMPLETE (2026-03-19)
 **Goal**: The game loads under 500KB and every downstream v11.0 system has the foundation it needs — world state machine, bundle optimization, and zone-based asset loading all in place before any feature work begins
 
 **Depends on**: Phase 49 (v10.0 complete or absorbed)
@@ -325,9 +325,9 @@ Plans:
 **Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 50-01-PLAN.md — rollup-plugin-visualizer install + build:analyze script + lazy-wrap 10 heavy GameLayout overlays to reduce bundle from 1,235KB to under 500KB (INFRA-01, INFRA-03)
-- [ ] 50-02-PLAN.md — BootScene zone-based lazy loading: shared assets upfront, zone assets on transition (INFRA-02)
-- [ ] 50-03-PLAN.md — worldStateSlice (500+ flags, WORLD_STATE_KEYS constants, IndexedDB persist) + worldStateMiddleware (INFRA-04, INFRA-05, INFRA-06)
+- [x] 50-01-PLAN.md — rollup-plugin-visualizer install + build:analyze script + lazy-wrap 10 heavy GameLayout overlays to reduce bundle from 1,235KB to under 500KB (INFRA-01, INFRA-03) — 2026-03-19
+- [x] 50-02-PLAN.md — BootScene zone-based lazy loading: shared assets upfront, zone assets on transition (INFRA-02) — 2026-03-19
+- [x] 50-03-PLAN.md — worldStateSlice (500+ flags, WORLD_STATE_KEYS constants, IndexedDB persist) + worldStateMiddleware (INFRA-04, INFRA-05, INFRA-06) — 2026-03-19
 
 #### Phase 51: Dialogue Foundation & Learning Paths
 **Goal**: The dialogue engine supports ink scripting for future narrative work, all 573 missing companion dialogue lines are filled, and players choose a learning path that immediately shapes their FSRS word queue and first quest assignment — absorbing v10.0 Phases 48-49
@@ -498,7 +498,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 55
 | 47. Cinematic Intro | v10.0 | 3/3 | At checkpoint | 2026-03-19 |
 | 48. Learning Path Choice | v10.0 | 0/3 | Not started (absorbed into Phase 51) | — |
 | 49. First Quest & Loop Completion | v10.0 | 0/3 | Not started (absorbed into Phase 51) | — |
-| 50. Infrastructure Baseline | v11.0 | 0/3 | Not started | — |
+| 50. Infrastructure Baseline | v11.0 | 1/3 | In progress | — |
 | 51. Dialogue Foundation & Learning Paths | v11.0 | 0/4 | Not started | — |
 | 52. Vocabulary Expansion | v11.0 | 0/3 | Not started | — |
 | 53. Faction Reputation Engine | v11.0 | 0/3 | Not started | — |

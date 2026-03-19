@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
 milestone: v11.0
-milestone_name: Deep Systems & Content Engine
-status: roadmap_complete
-stopped_at: Roadmap created — ready to plan Phase 50
-last_updated: "2026-03-19T18:00:00Z"
+milestone_name: Narrative Depth
+status: in_progress
+stopped_at: "Phase 50 COMPLETE — all 3 plans done; next: /gsd:plan-phase 51"
+last_updated: "2026-03-19T22:50:00.000Z"
 progress:
-  total_phases: 6
-  completed_phases: 0
-  total_plans: 22
-  completed_plans: 0
+  total_phases: 12
+  completed_phases: 5
+  total_plans: 15
+  completed_plans: 15
 ---
 
 # Project State
@@ -19,16 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v11.0 Phase 50 — Infrastructure Baseline
+**Current focus:** Phase 50 — infrastructure-baseline
 
 ## Current Position
 
-Phase: 50 of 55 (Infrastructure Baseline)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-03-19 — v11.0 roadmap created (6 phases, 56 requirements mapped)
-
-Progress: [░░░░░░░░░░] 0% (v11.0) | 46 phases shipped overall
+Phase: 50 (infrastructure-baseline) — COMPLETE
+Plan: 3 of 3 COMPLETE (all plans done 2026-03-19)
 
 ### Shipped Milestones
 
@@ -51,8 +47,8 @@ Progress: [░░░░░░░░░░] 0% (v11.0) | 46 phases shipped overal
 ### Key v11.0 Context
 
 - inkjs NOT installed — must be installed in Phase 51 before any ink work begins
-- rollup-plugin-visualizer NOT installed — Phase 50 installs it as dev dependency
-- Bundle currently 862KB (well over 500KB target) — Phase 50 must resolve this before adding any systems
+- rollup-plugin-visualizer INSTALLED — use `npm run build:analyze` for treemap; see dist/bundle-report.html
+- Bundle NOW 402KB (under 500KB target) — Phase 50-01 complete; safe to add Phase 51 systems
 - worldStateSlice is the root dependency: inkjs, factions, gossip, and learning path all write to it
 - Adapter pattern for inkjs: check .ink.json first, fallback to legacy JSON — never big-bang migrate all NPCs
 - Faction gates must cover bonus content only — all main quests completable at faction score 0
@@ -71,11 +67,15 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | Phases 48-49 absorbed into Phase 51 | v10.0 not started, absorb cleaner than maintaining two roadmaps | Single phase delivers full learning path + first quest flow |
 | WORLD_STATE_KEYS constants file | 500+ flags, naming chaos risk | {zone}_{action}_{target} convention enforced from Phase 50 day one |
 | Faction gates bonus-content-only | Soft-lock risk if faction tied to main quest | Main storyline completable at all-0 faction scores |
+| GameLayout lazy at route level (50-01) | Overlay-only lazy wrapping only reduced index to 1,068KB; store+scene deps enter via different path | routes.jsx uses lazy() for GameLayout; index=402KB; game code defers to /game navigation |
+| Lazy overlay Suspense fallback=null (50-01) | No spinner flash over Phaser canvas when opening battle/inventory first time | Canvas stays visible; overlays load silently |
+| worldState moved to IndexedDB | 562 flags → localStorage 5-10MB limit risk | Nested persistReducer, CURRENT_VERSION=8, migration cleans old data |
+| worldStateMiddleware last in chain | Ordering consistency | Added after utilityBonusMiddleware, matches project convention |
 
 ### Blockers/Concerns
 
 - v9.0 Phase 46 still in progress (46-02 and 46-03 remain) — v10.0/v11.0 can proceed in parallel but Phase 52 (vocab expansion) must not conflict with Phase 46 output
-- Bundle at 862KB — Phase 50 is a hard prerequisite; do not start Phase 51 until bundle is under 500KB
+- Bundle at 402KB — Phase 50 complete; safe to start Phase 51
 - Phase 47 (Cinematic Intro) at human-verify checkpoint — needs user to verify 5-beat sequence in-game before v10.0 can be closed out
 
 ### Pending Todos
@@ -87,5 +87,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: v11.0 roadmap created — next action is `/gsd:plan-phase 50`
+Stopped at: Phase 50 complete — next action is `/gsd:plan-phase 51`
 Resume file: None
