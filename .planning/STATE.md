@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: in_progress
-stopped_at: Phase 47 Plan 2 complete — FloatingWordObject created, sequencer wired
+stopped_at: Phase 47 Plan 3 Task 1 complete — at checkpoint:human-verify (Task 2)
 last_updated: "2026-03-19T11:28:00Z"
 progress:
   total_phases: 6
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 47 (Cinematic Intro) — EXECUTING
-Plan: 2 of 3 COMPLETE — resume at Plan 3
+Plan: 3 of 3 — Task 1 complete, PAUSED at checkpoint:human-verify (Task 2)
 
 ### Shipped Milestones
 
@@ -69,6 +69,9 @@ All v2.0-v9.0 decisions logged in PROJECT.md Key Decisions table.
 | FloatingWordObject update via scene.events 'update' | Phase 47-02 | Sequencer registers/deregisters listener — object does not own its update lifecycle |
 | PLAYER_UNFREEZE in _spawnFloatingWord() | Phase 47-02 | Player walks naturally to word after pan — organic discovery, no forced guidance |
 | onWordLearned hook initialized as null in constructor | Phase 47-02 | Plan 47-03 assigns this at sequencer creation time for Amira arrival trigger |
+| PLAYER_FREEZE before Amira pan | Phase 47-03 | _triggerAmiraArrival() emits PLAYER_FREEZE; DialogueBox.show() also does — safe redundancy |
+| _showAmiraDialogue() null guard | Phase 47-03 | Falls through to _completeSequence() if dialogueBox missing — prevents sequence hang |
+| setActiveQuest after setTutorialPhase | Phase 47-03 | tutorial_welcome autoStart:true ensures 'active' status when dispatch fires |
 
 ### Blockers/Concerns
 
@@ -84,5 +87,5 @@ All v2.0-v9.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Phase 47 Plan 2 complete — FloatingWordObject.js created, CinematicIntroSequencer wired with spawn + onWordLearned hook
-Resume file: .planning/phases/47-cinematic-intro/47-03-PLAN.md (Amira arrival + path choice — hooks via sequencer.onWordLearned)
+Stopped at: Phase 47 Plan 3 — Task 1 complete (a6ead59), PAUSED at Task 2 checkpoint:human-verify
+Resume file: .planning/phases/47-cinematic-intro/47-03-PLAN.md (Task 2 checkpoint — human must verify full 5-beat sequence in-game)
