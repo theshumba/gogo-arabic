@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, lazy, Suspense } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -28,16 +28,16 @@ import { useTutorialTrigger } from '../../hooks/useTutorialTrigger.js';
 import LevelUpModal from '../UI/LevelUpModal.jsx';
 import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
 import AchievementToast from '../Achievements/AchievementToast.jsx';
-import Wardrobe from '../Wardrobe/Wardrobe.jsx';
-import BattleOverlay from '../Battle/BattleOverlay.jsx';
-import MagicOverlay from '../Magic/MagicOverlay.jsx';
-import SpellMenu from '../Magic/SpellMenu.jsx';
-import RootDiscoveryToast from '../Magic/RootDiscoveryToast.jsx';
-import InventoryUI from '../Inventory/InventoryUI.jsx';
-import RecipeBook from '../Crafting/RecipeBook.jsx';
-import CraftingMiniGame from '../Crafting/CraftingMiniGame.jsx';
-import ShopOverlay from '../Shop/ShopOverlay.jsx';
-import QuestJournal from '../Quest/QuestJournal.jsx';
+const BattleOverlay = lazy(() => import('../Battle/BattleOverlay.jsx'));
+const MagicOverlay = lazy(() => import('../Magic/MagicOverlay.jsx'));
+const SpellMenu = lazy(() => import('../Magic/SpellMenu.jsx'));
+const RootDiscoveryToast = lazy(() => import('../Magic/RootDiscoveryToast.jsx'));
+const InventoryUI = lazy(() => import('../Inventory/InventoryUI.jsx'));
+const RecipeBook = lazy(() => import('../Crafting/RecipeBook.jsx'));
+const CraftingMiniGame = lazy(() => import('../Crafting/CraftingMiniGame.jsx'));
+const ShopOverlay = lazy(() => import('../Shop/ShopOverlay.jsx'));
+const QuestJournal = lazy(() => import('../Quest/QuestJournal.jsx'));
+const Wardrobe = lazy(() => import('../Wardrobe/Wardrobe.jsx'));
 import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate }) {
@@ -291,7 +291,11 @@ export default function GameLayout() {
 
       {/* Conditional overlays */}
       {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}
-      {dialogueOpen && dialogueConfig?.type === 'shop' && <ShopOverlay />}
+      {dialogueOpen && dialogueConfig?.type === 'shop' && (
+        <Suspense fallback={null}>
+          <ShopOverlay />
+        </Suspense>
+      )}
       {dialogueOpen && dialogueConfig?.type !== 'quest-log' && dialogueConfig?.type !== 'shop' && <DialogueOverlay />}
       {quizOpen && <QuizOverlay />}
       {signOpen && <SignOverlay />}
@@ -316,55 +320,79 @@ export default function GameLayout() {
 
       {/* Quest Journal overlay (v7.0) */}
       <AnimatePresence>
-        {journalOpen && <QuestJournal onClose={() => dispatch(closeJournal())} />}
+        {journalOpen && (
+          <Suspense fallback={null}>
+            <QuestJournal onClose={() => dispatch(closeJournal())} />
+          </Suspense>
+        )}
       </AnimatePresence>
 
       {/* Battle overlay (v6.0 turn-based combat) */}
-      <BattleOverlay />
+      <Suspense fallback={null}>
+        <BattleOverlay />
+      </Suspense>
 
       {/* Magic overlay (v6.0 spell hotbar) */}
-      <MagicOverlay />
+      <Suspense fallback={null}>
+        <MagicOverlay />
+      </Suspense>
 
       {/* Spell menu overlay */}
-      <SpellMenu />
+      <Suspense fallback={null}>
+        <SpellMenu />
+      </Suspense>
 
       {/* Root discovery toast */}
-      <RootDiscoveryToast />
+      <Suspense fallback={null}>
+        <RootDiscoveryToast />
+      </Suspense>
 
       {/* Inventory overlay (v6.0 equipment & inventory) */}
       <AnimatePresence>
-        {inventoryOpen && <InventoryUI onClose={() => dispatch(closeInventory())} />}
+        {inventoryOpen && (
+          <Suspense fallback={null}>
+            <InventoryUI onClose={() => dispatch(closeInventory())} />
+          </Suspense>
+        )}
       </AnimatePresence>
 
       {/* Wardrobe overlay */}
       <AnimatePresence>
-        {showWardrobe && <Wardrobe onClose={() => setShowWardrobe(false)} />}
+        {showWardrobe && (
+          <Suspense fallback={null}>
+            <Wardrobe onClose={() => setShowWardrobe(false)} />
+          </Suspense>
+        )}
       </AnimatePresence>
 
       {/* RecipeBook overlay (v6.1 crafting) */}
       <AnimatePresence>
         {recipeBookOpen && (
-          <RecipeBook
-            onClose={() => dispatch(closeRecipeBook())}
-            onSelectRecipe={(recipeId, professionId) => {
-              dispatch(closeRecipeBook());
-              dispatch(startCraftingMiniGame({ recipeId, professionId }));
-            }}
-          />
+          <Suspense fallback={null}>
+            <RecipeBook
+              onClose={() => dispatch(closeRecipeBook())}
+              onSelectRecipe={(recipeId, professionId) => {
+                dispatch(closeRecipeBook());
+                dispatch(startCraftingMiniGame({ recipeId, professionId }));
+              }}
+            />
+          </Suspense>
         )}
       </AnimatePresence>
 
       {/* CraftingMiniGame overlay (v6.1 crafting) */}
       <AnimatePresence>
         {craftingMiniGameActive && craftingRecipeId && craftingProfessionId && (
-          <CraftingMiniGame
-            professionId={craftingProfessionId}
-            recipeId={craftingRecipeId}
-            onComplete={() => {
-              dispatch(endCraftingMiniGame());
-            }}
-            onCancel={() => dispatch(endCraftingMiniGame())}
-          />
+          <Suspense fallback={null}>
+            <CraftingMiniGame
+              professionId={craftingProfessionId}
+              recipeId={craftingRecipeId}
+              onComplete={() => {
+                dispatch(endCraftingMiniGame());
+              }}
+              onCancel={() => dispatch(endCraftingMiniGame())}
+            />
+          </Suspense>
         )}
       </AnimatePresence>
 

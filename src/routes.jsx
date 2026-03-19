@@ -6,8 +6,11 @@ import NotFoundPage from './components/ErrorBoundary/NotFoundPage.jsx';
 import LoadingScreen from './components/UI/LoadingScreen.jsx';
 import PageTransition from './components/UI/PageTransition.jsx';
 import { ProtectedRoute, CharacterCreationGuard } from './components/Router/ProtectedRoute.jsx';
-import GameLayout from './components/Router/GameLayout.jsx';
 import { useGameNavigation } from './hooks/useGameNavigation.js';
+
+// Lazy-load GameLayout so all game system code (Phaser scenes, store reducers via hooks,
+// overlays) is deferred until the user navigates to /game — keeps the main menu bundle lean.
+const GameLayout = lazy(() => import('./components/Router/GameLayout.jsx'));
 
 // Eager-load MainMenu (keep in main bundle for fast initial load)
 import MainMenu from './components/Menu/MainMenu.jsx';
@@ -453,7 +456,9 @@ export const router = createBrowserRouter([
     path: '/game',
     element: (
       <ProtectedRoute>
-        <GameLayout />
+        <Suspense fallback={<LoadingScreen />}>
+          <GameLayout />
+        </Suspense>
       </ProtectedRoute>
     ),
     errorElement: <RouteErrorBoundary />,
