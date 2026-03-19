@@ -31,6 +31,7 @@ import { evaluateActionSets, executeActions } from '../systems/ActionSetExecutor
 import { buildActionContext } from '../systems/actionContext.js';
 import { DialogueBox } from '../ui/DialogueBox.js';
 import { createArabicText } from '../ui/ArabicText.js';
+import { CinematicIntroSequencer } from '../systems/CinematicIntroSequencer.js';
 
 
 // ============================================================
@@ -69,6 +70,9 @@ export class WorldScene extends Phaser.Scene {
 
     // DialogueBox (Phaser in-canvas dialogue)
     this.dialogueBox = null;
+
+    // Phase 47: Phaser-native cinematic intro sequencer (new players only)
+    this.introSequencer = null;
 
     // Suppress zone name toast on first load (game start)
     this._suppressZoneToast = true;
@@ -177,6 +181,13 @@ export class WorldScene extends Phaser.Scene {
     EventBus.on('phaser:npc:simple-dialogue', this._handleSimpleDialogue, this);
 
     EventBus.emit(EVENTS.SCENE_READY, this);
+
+    // Phase 47: Cinematic intro for new players
+    const playerState = store.getState().player;
+    if (!playerState.onboardingComplete && playerState.tutorialPhase === 'cinematic_intro') {
+      this.introSequencer = new CinematicIntroSequencer(this);
+      this.introSequencer.run();
+    }
   }
 
   /**
@@ -672,6 +683,12 @@ export class WorldScene extends Phaser.Scene {
   // ============================================================
 
   shutdown() {
+    // Phase 47: Clean up cinematic intro sequencer
+    if (this.introSequencer) {
+      this.introSequencer.cleanup();
+      this.introSequencer = null;
+    }
+
     // Destroy Phaser DialogueBox
     if (this.dialogueBox) {
       this.dialogueBox.destroy();

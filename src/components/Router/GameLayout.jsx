@@ -282,8 +282,7 @@ export default function GameLayout() {
       {/* Level up modal */}
       <LevelUpModal />
 
-      {/* Cinematic intro — black screen text crawl for brand new players */}
-      {tutorialPhase === 'cinematic_intro' && <CinematicIntro />}
+      {/* Phase 47: CinematicIntro replaced by Phaser-native sequence in CinematicIntroSequencer.js */}
 
       {/* Learning path choice — Scholar/Traveler/Historian */}
       {tutorialPhase === 'path_choice' && <PathChoice />}
