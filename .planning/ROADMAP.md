@@ -322,10 +322,10 @@ Plans:
   4. A `WORLD_STATE_KEYS` constants file exists and every world flag write anywhere in the codebase uses a key from that file — no raw string flag names
   5. Quest completion, NPC interactions, and purchases automatically set world state flags without any manual dispatch — worldStateMiddleware handles propagation
 
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 50-01-PLAN.md — Vite manualChunks refinement + rollup-plugin-visualizer install + build:analyze script (INFRA-01, INFRA-03)
+- [ ] 50-01-PLAN.md — rollup-plugin-visualizer install + build:analyze script + lazy-wrap 10 heavy GameLayout overlays to reduce bundle from 1,235KB to under 500KB (INFRA-01, INFRA-03)
 - [ ] 50-02-PLAN.md — BootScene zone-based lazy loading: shared assets upfront, zone assets on transition (INFRA-02)
 - [ ] 50-03-PLAN.md — worldStateSlice (500+ flags, WORLD_STATE_KEYS constants, IndexedDB persist) + worldStateMiddleware (INFRA-04, INFRA-05, INFRA-06)
 
