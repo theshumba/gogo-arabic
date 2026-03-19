@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
-status: unknown
-stopped_at: v10.0 roadmap created — ROADMAP.md + STATE.md + REQUIREMENTS.md updated
-last_updated: "2026-03-19T11:03:59.903Z"
+status: in_progress
+stopped_at: Phase 47 Plan 2 complete — FloatingWordObject created, sequencer wired
+last_updated: "2026-03-19T11:28:00Z"
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 12
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 47 (Cinematic Intro) — EXECUTING
-Plan: 1 of 3 COMPLETE — resume at Plan 2
+Plan: 2 of 3 COMPLETE — resume at Plan 3
 
 ### Shipped Milestones
 
@@ -66,6 +66,9 @@ All v2.0-v9.0 decisions logged in PROJECT.md Key Decisions table.
 | Per-timer cancel in _skipCrawl() | Phase 47-01 | this._timers[].remove(false) — avoids removeAllEvents() breaking other timers |
 | onPanComplete as callback, not EventBus | Phase 47-01 | Plan 47-02 assigns sequencer.onPanComplete; sequencer owns lifecycle cleanly |
 | Sequencer trigger after SCENE_READY emit | Phase 47-01 | All subsystems ready before PLAYER_FREEZE is called |
+| FloatingWordObject update via scene.events 'update' | Phase 47-02 | Sequencer registers/deregisters listener — object does not own its update lifecycle |
+| PLAYER_UNFREEZE in _spawnFloatingWord() | Phase 47-02 | Player walks naturally to word after pan — organic discovery, no forced guidance |
+| onWordLearned hook initialized as null in constructor | Phase 47-02 | Plan 47-03 assigns this at sequencer creation time for Amira arrival trigger |
 
 ### Blockers/Concerns
 
@@ -81,5 +84,5 @@ All v2.0-v9.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Phase 47 Plan 1 complete — CinematicIntroSequencer.js created, WorldScene wired, GameLayout bypassed
-Resume file: .planning/phases/47-cinematic-intro/47-02-PLAN.md (wire onPanComplete → FloatingWordObject)
+Stopped at: Phase 47 Plan 2 complete — FloatingWordObject.js created, CinematicIntroSequencer wired with spawn + onWordLearned hook
+Resume file: .planning/phases/47-cinematic-intro/47-03-PLAN.md (Amira arrival + path choice — hooks via sequencer.onWordLearned)
