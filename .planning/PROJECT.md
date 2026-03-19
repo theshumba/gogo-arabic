@@ -68,20 +68,30 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
-## Current Milestone: v10.0 Onboarding & First 5 Minutes
+## Current Milestone: v11.0 Deep Systems & Content Engine
 
-**Goal:** Create a cinematic, discovery-driven onboarding that teaches the core game loop in under 2 minutes without a single tutorial popup — the first 30 seconds decide if someone keeps playing.
+**Goal:** Build all the under-the-hood systems that make the game feel alive — dialogue engine migration, realtime sync, learning paths, factions, world state, dynamic economy, content expansion, and new mini-games. Absorbs remaining v9.0/v10.0 work.
 
 **Target features:**
-- Cinematic intro: text crawl → dawn pan → first floating Arabic word → discovery moment
-- Learning path choice: Scholar (القارئ), Traveler (المسافر), Historian (المؤرخ) — all Fusha, different word ordering and mentor emphasis
-- First quest flow: learn 3 Arabic words from world objects → reward → path choice → mentor assignment
-- Guide Amira as onboarding mentor with contextual one-liners
-- Floating interactive Arabic words in the world (glowing, touchable)
-- Reward animations for first word learned
-- No menus, no settings, no explanation — pure discovery
+- inkjs dialogue engine (replace hardcoded JSON with branching narrative scripting)
+- AceBase realtime sync (replace manual CRUD with live object sync)
+- Learning path system: Scholar/Traveler/Historian (complete v10.0 Phases 48-49)
+- Faction reputation engine: 6 factions gating content
+- World state machine: 500+ variables remembering player choices
+- Dynamic market simulation: agent-based NPC pricing
+- Progressive tashkeel refinement (build on v2.0 foundation)
+- 8-act main storyline completion (build on v9.0 Phase 45)
+- Floating Arabic words in world (complete v10.0 Phase 49)
+- NPC gossip system (build on v7.0 schedules)
+- Calligraphy mini-game: trace Arabic letters, scored on accuracy
+- Arabic poetry battles: fill-in-the-blank competitive poetry
+- Vocabulary-gated zones: can't enter areas without knowing enough words
+- Environmental storytelling: inscriptions, scrolls, readable signs
+- 573 missing NPC dialogue lines filled
+- Vocabulary expansion to 5,000+ words (complete v9.0 Phase 46)
+- Bundle optimization: 862KB → 500KB
 
-**Previous milestone:** v9.0 Content Depth (in progress) — NPC dialogue expansion, quest storylines, vocabulary expansion to 5,000+ words
+**Previous milestone:** v10.0 Onboarding & First 5 Minutes (Phase 47 code complete, Phases 48-49 absorbed into v11.0)
 
 ### Out of Scope
 
