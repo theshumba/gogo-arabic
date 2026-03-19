@@ -477,12 +477,12 @@ Plans:
   5. Guide Amira appears after the first word is learned, delivers one contextual line, and hands the player their first quest — the entire opening from text crawl to quest receipt takes under 60 seconds
   6. The existing 6-step onboarding tutorial is bypassed for new players who have gone through the cinematic intro — the two flows do not both run
 
-**Plans**: TBD
+**Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 47-01-PLAN.md — OnboardingOrchestrator + cinematic state machine (text crawl → dawn fade → first word spawn)
-- [ ] 47-02-PLAN.md — FloatingWordObject (Phaser interactive sprite with glow + reward animation) + WorldScene integration
-- [ ] 47-03-PLAN.md — Amira arrival trigger + first quest handoff + old OnboardingFlow bypass via onboardingSlice flag
+- [ ] 47-01-PLAN.md — CinematicIntroSequencer.js (text crawl + camera fade + dawn pan) + bypass React CinematicIntro in GameLayout
+- [ ] 47-02-PLAN.md — FloatingWordObject.js (gold glow + Arabic text + proximity SPACE interact + FSRS dispatch) + sequencer integration
+- [ ] 47-03-PLAN.md — Amira arrival dialogue + setTutorialPhase(awaiting_mentor) + setActiveQuest(tutorial_welcome) + human verify
 
 #### Phase 48: Learning Path Choice
 **Goal**: After learning the first word, players are prompted by Guide Amira to choose their Arabic learning focus — Scholar, Traveler, or Historian — and the game immediately begins shaping their experience around that choice
