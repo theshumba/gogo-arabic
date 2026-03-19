@@ -1,83 +1,131 @@
-# Requirements: GoGo Arabic v10.0 Onboarding & First 5 Minutes
+# Requirements: GoGo Arabic v11.0 — Deep Systems & Content Engine
 
 **Defined:** 2026-03-19
-**Core Value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
+**Core Value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world
 
-## v10.0 Requirements
+## v11.0 Requirements
 
-### Cinematic Intro
+### Infrastructure
 
-- [ ] **INTRO-01**: Player sees a 5-second text crawl after loading screen: "A young scholar discovers an ancient manuscript..."
-- [ ] **INTRO-02**: Camera fades into Oasis Village at dawn, slowly panning to player character
-- [ ] **INTRO-03**: First floating Arabic word appears in the world (glowing, interactive)
-- [ ] **INTRO-04**: Player walks to the word, touches it, learns first word with reward animation
-- [ ] **INTRO-05**: Guide Amira appears, speaks one line, gives first quest
+- [ ] **INFRA-01**: Bundle optimization reduces initial JS load from 862KB to under 500KB using Vite manualChunks refinement and lazy-loaded routes
+- [ ] **INFRA-02**: BootScene loads only shared assets (player, UI, common NPCs) upfront; zone-specific assets load on zone transition with a loading indicator
+- [ ] **INFRA-03**: rollup-plugin-visualizer is integrated as dev dependency and generates treemap on `npm run build:analyze`
+- [ ] **INFRA-04**: worldStateSlice stores 500+ flags/counters with `{zone}_{action}_{target}` naming convention and WORLD_STATE_KEYS constants file
+- [ ] **INFRA-05**: worldStateSlice is persisted via IndexedDB (same pattern as existing 5 persisted slices)
+- [ ] **INFRA-06**: worldStateMiddleware listens for game events (quest complete, NPC interaction, purchase) and auto-sets world state flags
+- [ ] **INFRA-07**: inkjs is installed and InkDialogueEngine wraps both ink Story and legacy JSON via adapter pattern
+- [ ] **INFRA-08**: Compiled .ink.json files load via dynamic import (not upfront) and get their own Vite chunk
+- [ ] **INFRA-09**: InkDialogueEngine syncs Redux state into ink variablesState before dialogue and flushes ink mutations back to Redux after dialogue ends
 
-### Learning Path
+### Content
 
-- [ ] **PATH-01**: After first word learned, Guide Amira asks "What draws you to Arabic?"
-- [ ] **PATH-02**: Player picks one of three focus paths: Scholar (القارئ), Traveler (المسافر), Historian (المؤرخ)
-- [ ] **PATH-03**: Path choice affects vocabulary ordering, NPC relationship bonuses, quest recommendations, and mentor assignment
-- [ ] **PATH-04**: All paths teach the same Fusha (MSA) — difference is which words come first and which NPCs are highlighted
-- [ ] **PATH-05**: Player can switch paths later (loses priority bonuses)
+- [ ] **CONT-01**: All 573 missing companion dialogue lines are filled across 12 companions
+- [ ] **CONT-02**: vocabularyAll.js contains 5,000+ words expanded from 1,220 baseline with no duplicates
+- [ ] **CONT-03**: Every vocabulary word has a CEFR level tag (A1, A2, B1, B2) displayed in TeacherWordCard
+- [ ] **CONT-04**: Root Explorer shows complete root family groupings — searching a trilateral root surfaces all derived forms together
+- [ ] **CONT-05**: Words are browseable by semantic cluster (food, family, travel, nature, etc.) in vocabulary interface
+- [ ] **CONT-06**: Within each CEFR level, high-frequency words appear before rare ones in FSRS new card generation
+- [ ] **CONT-07**: Ambiguous words are tagged with `ambiguous: true` and retain tashkeel regardless of mastery level
+- [ ] **CONT-08**: Build-time vocabulary validation script checks for duplicates, missing roots, and CEFR tag integrity
 
-### First Quest
+### Learning Paths
 
-- [ ] **QUEST-01**: First quest: "Learn 3 Arabic words from objects in the village" — words float above pots, signs, buildings
-- [ ] **QUEST-02**: Each word teaches with visual + Arabic + transliteration + audio
-- [ ] **QUEST-03**: After 3 words: gold coin reward, achievement toast, "You know 3 Arabic words!"
-- [ ] **QUEST-04**: Based on path choice: different first real quest and mentor NPC assigned
-- [ ] **QUEST-05**: Player has learned the core loop in under 2 minutes without a single tutorial popup
+- [ ] **PATH-01**: After first word learned, Guide Amira asks "What draws you to Arabic?" as in-world dialogue (not menu)
+- [ ] **PATH-02**: Player picks Scholar (القارئ), Traveler (المسافر), or Historian (المؤرخ) through dialogue choice system
+- [ ] **PATH-03**: Chosen path reorders FSRS word queue by domain affinity — minimum 200 words differ in first-encounter order between paths
+- [ ] **PATH-04**: First real quest and mentor NPC assignment differ by path
+- [ ] **PATH-05**: Player can switch learning path from settings; interface shows warning that priority bonuses reset
+- [ ] **PATH-06**: First quest flow: player learns 3 Arabic words from floating village objects, receives gold reward and achievement toast
+- [ ] **PATH-07**: Returning players who completed onboarding skip directly to normal game start (persisted in IndexedDB)
 
-### Onboarding UX
+### Faction Reputation
 
-- [ ] **UX-01**: No menus, settings, or explanation screens during onboarding — pure discovery
-- [ ] **UX-02**: Existing onboarding tutorial (6 steps) is bypassed/replaced by this cinematic flow
-- [ ] **UX-03**: Onboarding state persisted so returning players skip it
+- [ ] **FACT-01**: factionSlice tracks 6 factions (Scholars, Merchants, Artisans, Travelers, Guardians, Artists) with 0-100 reputation scores
+- [ ] **FACT-02**: Faction reputation changes on quest completion, dialogue choices, purchases, and NPC interactions via factionMiddleware
+- [ ] **FACT-03**: Content unlocks at faction tier thresholds (25=friendly, 50=trusted, 75=allied, 100=revered): additional dialogue, side quests, shop discounts
+- [ ] **FACT-04**: Faction gating affects bonus content only — all main storyline quests are completable with faction scores at 0
+- [ ] **FACT-05**: ActionSetExecutor supports `factionRequired` requirement type for data-driven content gating
+- [ ] **FACT-06**: Each faction unlocks faction-specific vocabulary words at tier thresholds
 
-## Future Requirements
+### Dynamic Economy
 
-- Path of the Polymath (المتعلم) — 4th learning path combining all three focuses (noted in .continue-here.md)
-- Gradual HUD reveal during onboarding (Tier 8 AAA polish)
-- Diagnostic assessment at game start to place players at right level (Tier 5)
+- [ ] **ECON-01**: PricingAgent calculates dynamic prices using supply/demand model: price = base × (maxSupply/currentSupply) × factionModifier
+- [ ] **ECON-02**: Supply decreases on purchase and partially restores on rest; prices have floor (50%) and ceiling (200%) caps
+- [ ] **ECON-03**: Player's faction membership affects shop prices (allied faction = 15% discount, hostile = 15% markup)
+- [ ] **ECON-04**: Price changes are visible to the player in ShopOverlay with up/down indicators
+
+### NPC Gossip
+
+- [ ] **GOSP-01**: GossipManager creates gossip tokens from world state flag changes (quest completions, NPC interactions)
+- [ ] **GOSP-02**: NPCs with relationship ≥ 25 receive gossip tokens; tokens expire after 3 game-days
+- [ ] **GOSP-03**: Gossip surfaces as ink dialogue lines when player talks to NPCs who hold tokens
+- [ ] **GOSP-04**: Each NPC holds max 2 gossip tokens; once delivered, token is marked heard and not repeated
+- [ ] **GOSP-05**: Gossip teaches narrative Arabic (past tense verbs, proper nouns in context)
+
+### Progressive Tashkeel
+
+- [ ] **TASH-01**: Tashkeel fading is context-sensitive: ambiguous words keep diacritics regardless of mastery
+- [ ] **TASH-02**: Tashkeel removal rate correlates with both FSRS mastery AND player's chosen learning path
+- [ ] **TASH-03**: Environmental inscriptions display tashkeel appropriate to the player's current proficiency level
+
+### Environmental Storytelling
+
+- [ ] **ENVR-01**: At least 20 readable inscriptions/scrolls placed across all 8 zones as interactive objects
+- [ ] **ENVR-02**: Inscriptions use ink knots — player's known vocabulary determines comprehension level
+- [ ] **ENVR-03**: Unknown words in inscriptions are added to FSRS review queue on encounter
+- [ ] **ENVR-04**: Discovering inscriptions can teach root family groupings and add associated words to review
+
+### Calligraphy Mini-Game
+
+- [ ] **CALL-01**: CalligraphyScene is a separate lazy-loaded Phaser scene accessible from mini-games hub
+- [ ] **CALL-02**: Player traces Arabic letters using pointer/touch input; stroke path is captured as coordinate array
+- [ ] **CALL-03**: 28 isolated letter forms have reference stroke paths stored as JSON
+- [ ] **CALL-04**: Accuracy scoring compares player path against reference using path deviation algorithm; 3-star rating system
+- [ ] **CALL-05**: Completing a letter at 2+ stars marks it as "practiced" in alphabet progress
+
+### Arabic Poetry Battles
+
+- [ ] **POET-01**: Poetry battle is a new battle mode accessible via NPC poets in zones
+- [ ] **POET-02**: 10 curated classical Arabic poems (public domain, pre-1900) with fill-in-the-blank positions
+- [ ] **POET-03**: Player fills missing words from 4 FSRS-sourced options at appropriate difficulty
+- [ ] **POET-04**: Poetry battles are untimed (no time pressure — pedagogically correct per Krashen affective filter)
+- [ ] **POET-05**: NPC poet also fills blanks; scores compared; winner earns XP and vocabulary rewards
+
+## v12.0 Requirements (Deferred)
+
+### AceBase Realtime Sync
+- **SYNC-01**: AceBase replaces manual CRUD with live object proxies
+- **SYNC-02**: Cross-tab state sync for single-player save consistency
+
+### Enhanced Vocabulary-Gated Zones
+- **GATE-01**: Zone gates show exact word count gap ("learn 3 more words to enter")
+- **GATE-02**: Missing words surface in next FSRS review session
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Dialect selection during onboarding | All paths teach Fusha only — dialects excluded project-wide |
-| Character creation/customization | Wardrobe system already exists, keep onboarding focused |
-| Difficulty selection during onboarding | Defer to Tier 5 learning systems |
-| Voice narration for intro | No audio infrastructure for voice, cultural constraint on music |
+| AceBase in v11.0 | Third persistence layer conflicts with existing IndexedDB + MongoDB; 200-300KB bundle cost; defer to v12.0 |
+| LLM-powered NPC gossip | Ongoing API cost, output inconsistency, culturally inappropriate risk |
+| Full RL-based economy | MMORPG-scale infrastructure inappropriate for single-player |
+| inkjs managing all game logic | Ink is for narrative, Redux for state — clear separation |
+| Procedural poetry generation | Classical Arabic meter (عروض) too complex for reliable generation |
+| ML-based calligraphy scoring | Requires server-side inference; deterministic path comparison sufficient |
+| Positional letter forms (initial/medial/final) in calligraphy | Start with 28 isolated forms; positional forms in v12.0 |
+| Real-time multiplayer | Explicitly out of scope since v1.0 |
+| Visual/UI/world/tileset work | Deferred — user building world visuals separately in LDtk |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INTRO-01 | Phase 47 | Pending |
-| INTRO-02 | Phase 47 | Pending |
-| INTRO-03 | Phase 47 | Pending |
-| INTRO-04 | Phase 47 | Pending |
-| INTRO-05 | Phase 47 | Pending |
-| UX-01 | Phase 47 | Pending |
-| UX-02 | Phase 47 | Pending |
-| PATH-01 | Phase 48 | Pending |
-| PATH-02 | Phase 48 | Pending |
-| PATH-03 | Phase 48 | Pending |
-| PATH-04 | Phase 48 | Pending |
-| PATH-05 | Phase 48 | Pending |
-| QUEST-01 | Phase 49 | Pending |
-| QUEST-02 | Phase 49 | Pending |
-| QUEST-03 | Phase 49 | Pending |
-| QUEST-04 | Phase 49 | Pending |
-| QUEST-05 | Phase 49 | Pending |
-| UX-03 | Phase 49 | Pending |
+| (Populated during roadmap creation) | | |
 
 **Coverage:**
-- v10.0 requirements: 18 total
-- Mapped to phases: 18
-- Unmapped: 0
+- v11.0 requirements: 47 total
+- Mapped to phases: 0 (pending roadmap)
+- Unmapped: 47 ⚠️
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 — all 18 requirements mapped to Phases 47-49*
+*Last updated: 2026-03-19 after research synthesis*
