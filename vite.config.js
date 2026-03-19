@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -25,7 +26,17 @@ function validateDialoguePlugin() {
 }
 
 export default defineConfig({
-  plugins: [react({ jsxRuntime: 'automatic' }), validateDialoguePlugin()],
+  plugins: [
+    react({ jsxRuntime: 'automatic' }),
+    validateDialoguePlugin(),
+    process.env.ANALYZE === 'true' && visualizer({
+      template: 'treemap',
+      open: true,
+      filename: 'dist/bundle-report.html',
+      gzipSize: true,
+      brotliSize: false,
+    }),
+  ].filter(Boolean),
   publicDir: 'public',
   server: {
     port: 3000,
