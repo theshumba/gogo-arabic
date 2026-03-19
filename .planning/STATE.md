@@ -1,36 +1,36 @@
 ---
 gsd_state_version: 1.0
-milestone: v9.0
-milestone_name: Content Depth
-status: completed
-stopped_at: 46-01 complete — vocabularyExpanded.js created (500 A1 + 1,000 A2 words)
-last_updated: "2026-03-18T22:55:00.000Z"
-last_activity: 2026-03-18 — Created 37-03 and 37-04 SUMMARY files + fixed 6 build blockers
+milestone: v10.0
+milestone_name: Onboarding & First 5 Minutes
+status: in_progress
+stopped_at: null
+last_updated: "2026-03-19T00:00:00.000Z"
+last_activity: 2026-03-19 — Milestone v10.0 started
 progress:
-  total_phases: 3
-  completed_phases: 2
-  total_plans: 9
-  completed_plans: 7
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-16)
+See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v9.0 Content Depth — NPC dialogue expansion (Phase 44), quest storylines (Phase 45), vocabulary expansion (Phase 46)
+**Current focus:** v10.0 Onboarding & First 5 Minutes — Cinematic intro, learning path choice, first quest flow
 
 ## Current Position
 
-Milestone: v9.0 Content Depth
-Phase: 46 — Vocabulary Expansion (In progress)
-Plan: 01 of 03 complete
-Status: 46-01 COMPLETE — vocabularyExpanded.js created (500 A1 + 1,000 A2 words)
-Last activity: 2026-03-18 — Completed 46-01 (vocabularyExpanded.js — 1,500 Arabic words, VOCAB-06 schema)
+Milestone: v10.0 Onboarding & First 5 Minutes
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-19 — Milestone v10.0 started
 
-Progress (v9.0): [███████░░░░░] 78% (7/9 plans)
+Progress (v10.0): [░░░░░░░░░░░░] 0%
 
 ### Shipped Milestones
 
@@ -44,8 +44,9 @@ Progress (v9.0): [███████░░░░░] 78% (7/9 plans)
 | v6.1 Crafting & Advanced Combat | 31-32 | 19 | 2026-02-18 |
 | v7.0 World & Content | 33-37 | 18 | 2026-03-16 |
 | v8.0 Visual Overhaul | 38-43 | ~18 | 2026-03-18 |
+| v9.0 Content Depth | 44-46 | 9 | 2026-03-18 |
 
-**Cumulative:** 43 phases, 127+ plans, 8 milestones
+**Cumulative:** 46 phases, 136+ plans, 9 milestones
 
 ## Accumulated Context
 

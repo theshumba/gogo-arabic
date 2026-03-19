@@ -68,21 +68,20 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
-## Current Milestone: v9.0 Content Depth
+## Current Milestone: v10.0 Onboarding & First 5 Minutes
 
-**Goal:** Fill the game with substance — rich NPC dialogue with real Islamic Golden Age history, a fleshed-out quest storyline spanning all zones, and vocabulary expansion from 1,220 to 5,000+ words with CEFR tagging and root family groupings.
+**Goal:** Create a cinematic, discovery-driven onboarding that teaches the core game loop in under 2 minutes without a single tutorial popup — the first 30 seconds decide if someone keeps playing.
 
 **Target features:**
-- 500+ new NPC dialogue lines with researched cultural/historical content across 23 NPCs
-- 8-act main storyline with manuscript page collection spanning all zones
-- Zone-specific side quests tied to Arabic learning and narrative
-- Vocabulary expansion from 1,220 to 5,000+ words with frequency-based ordering
-- CEFR-tagged vocabulary: A1 (500), A2 (1,000), B1 (2,000), B2 (1,500)
-- Root family groupings (ك-ت-ب → كتاب، كاتب، مكتوب، مكتبة)
-- Semantic clusters (food, family, travel, nature, body, etc.)
-- Cultural notes on vocabulary showing Arabic loanwords in English and historical context
+- Cinematic intro: text crawl → dawn pan → first floating Arabic word → discovery moment
+- Learning path choice: Scholar (القارئ), Traveler (المسافر), Historian (المؤرخ) — all Fusha, different word ordering and mentor emphasis
+- First quest flow: learn 3 Arabic words from world objects → reward → path choice → mentor assignment
+- Guide Amira as onboarding mentor with contextual one-liners
+- Floating interactive Arabic words in the world (glowing, touchable)
+- Reward animations for first word learned
+- No menus, no settings, no explanation — pure discovery
 
-**Previous milestone:** v8.0 Visual Overhaul (shipped 2026-03-18) — Kenmi pixel art across all zones, Phaser-native UI, Arabic BitmapFont
+**Previous milestone:** v9.0 Content Depth (in progress) — NPC dialogue expansion, quest storylines, vocabulary expansion to 5,000+ words
 
 ### Out of Scope
 
@@ -158,4 +157,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-16 after v8.0 milestone start*
+*Last updated: 2026-03-19 after v10.0 milestone start*
