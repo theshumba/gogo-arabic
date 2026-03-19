@@ -119,13 +119,68 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (Populated during roadmap creation) | | |
+| INFRA-01 | Phase 50 | Pending |
+| INFRA-02 | Phase 50 | Pending |
+| INFRA-03 | Phase 50 | Pending |
+| INFRA-04 | Phase 50 | Pending |
+| INFRA-05 | Phase 50 | Pending |
+| INFRA-06 | Phase 50 | Pending |
+| INFRA-07 | Phase 51 | Pending |
+| INFRA-08 | Phase 51 | Pending |
+| INFRA-09 | Phase 51 | Pending |
+| CONT-01 | Phase 51 | Pending |
+| PATH-01 | Phase 51 | Pending |
+| PATH-02 | Phase 51 | Pending |
+| PATH-03 | Phase 51 | Pending |
+| PATH-04 | Phase 51 | Pending |
+| PATH-05 | Phase 51 | Pending |
+| PATH-06 | Phase 51 | Pending |
+| PATH-07 | Phase 51 | Pending |
+| CONT-02 | Phase 52 | Pending |
+| CONT-03 | Phase 52 | Pending |
+| CONT-04 | Phase 52 | Pending |
+| CONT-05 | Phase 52 | Pending |
+| CONT-06 | Phase 52 | Pending |
+| CONT-07 | Phase 52 | Pending |
+| CONT-08 | Phase 52 | Pending |
+| FACT-01 | Phase 53 | Pending |
+| FACT-02 | Phase 53 | Pending |
+| FACT-03 | Phase 53 | Pending |
+| FACT-04 | Phase 53 | Pending |
+| FACT-05 | Phase 53 | Pending |
+| FACT-06 | Phase 53 | Pending |
+| ECON-01 | Phase 54 | Pending |
+| ECON-02 | Phase 54 | Pending |
+| ECON-03 | Phase 54 | Pending |
+| ECON-04 | Phase 54 | Pending |
+| GOSP-01 | Phase 54 | Pending |
+| GOSP-02 | Phase 54 | Pending |
+| GOSP-03 | Phase 54 | Pending |
+| GOSP-04 | Phase 54 | Pending |
+| GOSP-05 | Phase 54 | Pending |
+| TASH-01 | Phase 54 | Pending |
+| TASH-02 | Phase 54 | Pending |
+| TASH-03 | Phase 54 | Pending |
+| ENVR-01 | Phase 54 | Pending |
+| ENVR-02 | Phase 54 | Pending |
+| ENVR-03 | Phase 54 | Pending |
+| ENVR-04 | Phase 54 | Pending |
+| CALL-01 | Phase 55 | Pending |
+| CALL-02 | Phase 55 | Pending |
+| CALL-03 | Phase 55 | Pending |
+| CALL-04 | Phase 55 | Pending |
+| CALL-05 | Phase 55 | Pending |
+| POET-01 | Phase 55 | Pending |
+| POET-02 | Phase 55 | Pending |
+| POET-03 | Phase 55 | Pending |
+| POET-04 | Phase 55 | Pending |
+| POET-05 | Phase 55 | Pending |
 
 **Coverage:**
-- v11.0 requirements: 47 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 47 ⚠️
+- v11.0 requirements: 56 total (9 INFRA + 8 CONT + 7 PATH + 6 FACT + 4 ECON + 5 GOSP + 3 TASH + 4 ENVR + 5 CALL + 5 POET)
+- Mapped to phases: 56
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-19*
-*Last updated: 2026-03-19 after research synthesis*
+*Last updated: 2026-03-19 — traceability populated after roadmap creation*

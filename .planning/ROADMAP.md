@@ -12,11 +12,12 @@
 - ✅ **v8.0 Visual Overhaul** — Phases 38-43 (shipped 2026-03-18)
 - 🚧 **v9.0 Content Depth** — Phases 44-46 (in progress)
 - 📋 **v10.0 Onboarding & First 5 Minutes** — Phases 47-49 (planned)
+- 📋 **v11.0 Deep Systems & Content Engine** — Phases 50-55 (planned)
 
 ## Phases
 
 **Phase Numbering:**
-- Integer phases (1-32): Planned milestone work
+- Integer phases (1-55): Planned milestone work
 - Decimal phases (27.1): Urgent insertions between phases (marked INSERTED)
 
 <details>
@@ -82,15 +83,6 @@
 <details>
 <summary>✅ v6.1 Crafting & Advanced Combat (Phases 31-32) — SHIPPED 2026-02-18</summary>
 
-**Milestone Goal:** Add crafting professions with Arabic recipes and advanced combat mechanics including status effects, grammar-based combos, and arena challenges.
-
-**Target Features:**
-- 6 crafting professions with Arabic recipe names and vocabulary integration
-- Status effects system tied to Arabic vocabulary mastery
-- Grammar pattern combat combos (sentence structures = attack chains)
-- Wave-based arena challenges with progressive difficulty
-- Crafting-combat integration (crafted items enhance combat abilities)
-
 #### Phase 31: Crafting & Professions
 **Goal**: Players master 6 crafting professions with Arabic recipes that enhance combat
 
@@ -129,259 +121,39 @@ Plans:
 **Requirements**: STAT-01, STAT-02, STAT-03, STAT-04, COMBO-01, COMBO-02, COMBO-03, COMBO-04, COMBO-05, ADVB-01, ADVB-02, ADVB-03, ADVB-04, ADVB-05, ARENA-01, ARENA-02, ARENA-03, ARENA-04
 
 **Success Criteria** (what must be TRUE):
-  1. Battle system supports 20+ status effects with Arabic names (حيرة/Confusion, قوة/Strength, سرعة/Speed, حماية/Protection, سم/Poison, صمت/Silence, عمى/Blindness, شجاعة/Courage, حكمة/Wisdom, بركة/Blessing, etc.)
-  2. Applying a status effect in battle requires knowing the Arabic vocabulary word
-  3. Status effect vocabulary is auto-added to FSRS review queue when first encountered in battle
-  4. Status effect combinations create compound effects (e.g., سرعة + قوة = devastating attack bonus)
-  5. Player can execute noun+adjective combos (إضافة constructions) by describing targets accurately for bonus damage
-  6. Player can chain verb conjugations across forms (Form I → Form II → Form IV) for escalating damage multipliers
-  7. Player can construct complete Arabic sentences for ultimate attacks with combo meter tracking
-  8. Combo meter displays with Arabic numerals and builds with consecutive correct Arabic answers
-  9. Battle system supports multi-target encounters (up to 4 enemies) with front/back row positioning
-  10. Player can use crafted battle items (potions, scrolls, food) during combat via item menu
-  11. Player can retreat from battle by correctly answering an Arabic question (vocabulary or grammar)
-  12. Post-battle review screen shows all Arabic vocabulary and grammar used with accuracy statistics
-  13. Player can enter wave-based survival arena with increasing Arabic difficulty each wave
-  14. Player can attempt boss rush mode (all bosses sequentially) with story interludes between battles
-  15. Puzzle battles require specific Arabic knowledge patterns (not brute-forceable with stats alone)
-  16. Arena has a leaderboard tracking player performance metrics and win streaks
+  1. Battle system supports 20+ status effects with Arabic names tied to vocabulary mastery
+  2. Grammar combo system supports noun+adjective, verb conjugation chains, and full sentence constructions
+  3. Multi-target battles support up to 4 enemies with front/back row positioning
+  4. Wave-based arena, 6-boss rush, and 3 puzzle battle types are all playable
+  5. Post-battle review screen shows all Arabic vocabulary and grammar used with accuracy statistics
 
 **Plans**: 11 plans in 7 waves
 
 Plans:
-- [x] 32-01-PLAN.md — Status effects expansion (24 effects + compounds) + FSRS middleware + EventBus constants
-- [x] 32-02-PLAN.md — Grammar combo data (noun+adj, verb chains, sentences) + arena challenges + arenaSlice
-- [x] 32-03-PLAN.md — TDD: GrammarComboDetector + CompoundEffectResolver
-- [x] 32-04-PLAN.md — Multi-target battleSlice (enemies array, combo meter) + MultiTargetManager
-- [x] 32-05-PLAN.md — StatusEffectBar + ComboMeter UI components
-- [x] 32-06-PLAN.md — GrammarComboInput + BattleItemMenu + TargetSelector + BattleArabicInput flee mode
-- [x] 32-07-PLAN.md — ArenaController (wave survival) + ArenaHUD
-- [x] 32-08-PLAN.md — BossRushController + PuzzleBattleManager + BossRushInterlude
-- [x] 32-09-PLAN.md — PostBattleReview + ArenaLeaderboard
-- [x] 32-10-PLAN.md — BattleStateMachine FSM integration + arabicUsedThisBattle capture
-- [x] 32-11-PLAN.md — BattleOverlay UI wiring + BattleMenu/BattleResult + arenaSlice store registration
+- [x] 32-01-PLAN.md through 32-11-PLAN.md — Complete
 
 </details>
 
 <details>
 <summary>✅ v7.0 World & Content (Phases 33-37) — SHIPPED 2026-03-16</summary>
 
-**Milestone Goal:** Transform Gogo Arabic from a functional prototype into a polished, Pokemon/Zelda-quality RPG. NPCs move and follow schedules, events are data-driven, economy feels alive, quests are clearly tracked, and the game is replayable.
-
-**Source:** Research from 9 open-source game repos (see memory: gogo-arabic-game-patterns.md).
-
-#### Phase 33: Living World (NPC Schedules + Movement)
-**Goal**: Make the world feel alive — NPCs move, wander, and follow schedules
-
-**Depends on**: Phase 32 (v6.1 complete — stable NPC/world systems)
-
-**Success Criteria** (what must be TRUE):
-  1. NPCs have schedule data (time ranges + zone + location + behavior)
-  2. ScheduleEvaluator evaluates NPC schedule based on time, zone, and story flags
-  3. NPCManager filters spawns by schedule (only spawn NPCs scheduled for current zone/time)
-  4. NPCs exhibit movement patterns: wander, patrol, scripted paths
-  5. NPCs face player on interact (flip sprite based on relative position)
-  6. TimeSystem triggers schedule re-evaluation on time phase change
-  7. Night BGM switches on day/night transition per zone
-
-**Key files**: `npcsEnriched.js`, `NPCManager.js`, `NPC.js`, `TimeSystem.js`, `audioConfig.js`
-
-**Plans**: 3 plans in 3 waves
-
-Plans:
-- [x] 33-01-PLAN.md — Schedule data + ScheduleEvaluator + NPCManager spawn filter
-- [x] 33-02-PLAN.md — NPC movement patterns (wander/patrol) + face player on interact
-- [x] 33-03-PLAN.md — TimeSystem schedule re-evaluation + night ambient BGM switching
-
-#### Phase 34: Data-Driven Events (ActionSets + Event Scripts)
-**Goal**: Replace hardcoded NPC logic with pure-data behavior definitions
-
-**Depends on**: Phase 33 (schedule system provides time-aware NPC context)
-
-**Key files**: new `ActionSetExecutor.js`, new `EventScriptRunner.js`, `npcsEnriched.js`, `zones.js`, `WorldScene.js`
-
-**Plans**: 3 plans in 3 waves
-
-Plans:
-- [x] 34-01-PLAN.md — ActionSetExecutor + action/requirement types + event constants
-- [x] 34-02-PLAN.md — NPC actionSets data + visibilityFlag + EventScriptRunner + NPCManager wiring
-- [x] 34-03-PLAN.md — Step triggers in zone data + WorldScene detection
-
-#### Phase 35: Economy + Home (Production Chains + Decoration)
-**Goal**: Create a living economy and meaningful player housing
-
-**Depends on**: Phase 34 (events can trigger economic actions, NPC businesses use action sets)
-
-**Key files**: `shops.js`, new `EconomyFlow.js`, `zones.js`, new `HomeDecoration.js`, `furniture.js`, `npcSlice.js`
-
-**Plans**: 4 plans in 3 waves
-
-Plans:
-- [x] 35-01-PLAN.md — Production chains on shops + EconomyFlow + zone weather/battle-bg
-- [x] 35-02-PLAN.md — Friendship system in npcSlice + friendshipMiddleware
-- [x] 35-03-PLAN.md — Home decoration grid + furniture utilities + homeSlice
-- [x] 35-04-PLAN.md — Utility bonus middleware + store registration
-
-#### Phase 36: Quest Journal + Audio (Bomber's Notebook + Audio Buses)
-**Goal**: Clear quest tracking and immersive audio
-
-**Depends on**: Phase 35 (economy/home provide trackable content for journal)
-
-**Key files**: new `QuestJournal.jsx`, `audioConfig.js`, `audio.js`, new `GameplayStats.js`, `zones.js`
-
-**Plans**: 4 plans in 2 waves
-
-Plans:
-- [x] 36-01-PLAN.md — QuestJournal UI (Bomber's Notebook) + NPC schedule viewer + GameLayout wiring
-- [x] 36-02-PLAN.md — Bus-based audio + ambient sound layers + continueBGM for buildings
-- [x] 36-03-PLAN.md — AutoSave system + GameplayStats tracker + statsSlice
-- [x] 36-04-PLAN.md — Sub-zone areas + WorldScene detection + store/system registration
-
-#### Phase 37: Polish + Replay (Randomizer + Settings + Difficulty)
-**Goal**: Replayability, accessibility, and professional polish
-
-**Depends on**: Phase 36 (journal/stats provide data for difficulty tuning)
-
-**Key files**: new `VocabRandomizer.js`, `settingsSlice.js`, `migrations.js`, new `CalendarEvents.js`, new `ActorRegistry.js`
-
-**Plans**: 4 plans in 2 waves
-
-Plans:
-- [x] 37-01-PLAN.md — VocabRandomizer + difficulty settings in settingsSlice
-- [x] 37-02-PLAN.md — CalendarEvents + Town Knowledge Rating
-- [x] 37-03-PLAN.md — BattleActionQueue + tiered currency (fils/dirham/dinar)
-- [x] 37-04-PLAN.md — Unified ActorRegistry + v7.0 save migrations
+- [x] Phase 33: Living World (NPC Schedules + Movement) (3/3 plans) — 2026-03-16
+- [x] Phase 34: Data-Driven Events (ActionSets + Event Scripts) (3/3 plans) — 2026-03-16
+- [x] Phase 35: Economy + Home (Production Chains + Decoration) (4/4 plans) — 2026-03-16
+- [x] Phase 36: Quest Journal + Audio (Notebook + Buses) (4/4 plans) — 2026-03-16
+- [x] Phase 37: Polish + Replay (Randomizer + Settings) (4/4 plans) — 2026-03-16
 
 </details>
 
 <details>
 <summary>✅ v8.0 Visual Overhaul (Phases 38-43) — SHIPPED 2026-03-18</summary>
 
-**Milestone Goal:** Replace all placeholder art with the Kenmi Cute Fantasy 16x16 pixel art bundle, move in-game UI from React DOM overlays into Phaser Canvas, and add Arabic BitmapFont rendering — making the game look like a polished Pokemon/Stardew Valley RPG.
-
-**Asset source:** Kenmi Art — Cute Fantasy RPG bundle (13 packs, ~1,200 PNGs, 16x16 base, commercial license). Assets downloaded to `/tmp/kenmi/`.
-
-**Scope constraint:** Visual-only overhaul. No gameplay logic changes, no new zones, no new NPCs.
-
-#### Phase 38: Asset Pipeline & BootScene
-**Goal**: All Kenmi assets are cataloged, organized in the project, and BootScene loads them correctly so every subsequent phase can reference them
-
-**Depends on**: Phase 37 (v7.0 stable baseline)
-
-**Requirements**: PIPE-01, PIPE-02
-
-**Success Criteria** (what must be TRUE):
-  1. All 10 Kenmi packs copied to `public/assets/kenmi/` with kebab-case naming and catalog file at src/data/kenmiCatalog.js
-  2. BootScene loads all KENMI_CATALOG entries without errors (correct 16x16 frame dims for spritesheets)
-  3. Phaser texture cache contains 800+ keys starting with "kenmi-" after BootScene finishes
-
-**Plans**: 2 plans in 2 waves
-
-Plans:
-- [x] 38-01-PLAN.md — Copy 10 packs to public/assets/kenmi/ + generate src/data/kenmiCatalog.js
-- [x] 38-02-PLAN.md — BootScene loader loop from KENMI_CATALOG + human-verify texture cache
-
-#### Phase 39: Terrain Rendering
-**Goal**: Every zone renders real pixel art terrain with biome-correct tilesets, auto-tiled transitions, seeded random variants, and animated water edges instead of flat colored squares
-
-**Depends on**: Phase 38 (Kenmi spritesheets loaded in BootScene)
-
-**Requirements**: TILE-01, TILE-02, TILE-03, TILE-04, TILE-05, TILE-06, TILE-07, TILE-08, TILE-09, TILE-10
-
-**Success Criteria** (what must be TRUE):
-  1. All zones render 16x16 Kenmi tiles scaled 4x (64px grid) — no flat colored squares remain anywhere in any zone
-  2. Terrain edges auto-tile correctly: sand-to-grass, sand-to-water, and sand-to-cliff transitions show proper transition tiles using 4-neighbor edge detection
-  3. Sand terrain displays at least 3 visually distinct tile variants distributed using seeded randomness, so no large area looks uniform
-  4. Water shorelines display animated foam tiles from the Kenmi animated water set
-  5. Each biome zone uses its correct tileset: desert pack for desert zones, base RPG grass/path for forest/farmland, Christmas snow pack for mountain/snow zones, Dungeon pack for fortress interiors, Volcano pack for lava/rock zones, ShroomLands pack for mushroom zones
-
-**Plans**: 3 plans in 2 waves (39-01 complete from prior session)
-
-Plans:
-- [x] 39-01-PLAN.md — Kenmi terrain rendering code (auto-tiling, frame maps, foam) — written but disabled
-- [x] 39-02-PLAN.md — Enable Kenmi rendering + BIOME_TILESETS config + tilesetTheme on 8 main zones (TILE-01 thru TILE-07)
-- [x] 39-03-PLAN.md — Dungeon/volcano/mushroom biome configs + tilesetTheme on 16 placeholder zones + human verify (TILE-08, TILE-09, TILE-10) — COMPLETE 2026-03-18
-
-#### Phase 40: Buildings & Decorations
-**Goal**: Every zone's buildings are replaced with zone-appropriate Kenmi structures and filled with clustered decorative props that create visual density and world identity
-
-**Depends on**: Phase 39 (terrain rendered — buildings and props are placed on top of terrain layer)
-
-**Requirements**: BLDG-01, BLDG-02, BLDG-03, BLDG-04, BLDG-05, BLDG-06, BLDG-07, DECO-01, DECO-02, DECO-03, DECO-04, DECO-05, DECO-06, DECO-07
-
-**Success Criteria** (what must be TRUE):
-  1. Oasis Village displays Kenmi desert houses (4 designs x 4 color variants), desert temple structures appear in library/palace zones, and zone-specific building sets (dungeon arches, military tents, mushroom houses) are used in their correct zones — no placeholder rectangle buildings remain
-  2. Desert zones contain Kenmi props (cacti, rocks, bones, pots, sacks, rugs, campfires, palm trees, acacia trees) with a minimum of 20 decoration objects per zone
-  3. Decoration placement uses clustering: props appear in groups of 2-4 near buildings and along paths rather than uniformly scattered across the map
-  4. Animated decorations (grass sway, campfire flicker, water foam, flies) play in-game at the correct locations
-  5. Landmark locations (temple entrances, quest sites) have obelisks or golden pots as visual anchors, NPC spawn points have sleeping mats or water sacks nearby, and barren/edge areas of desert zones use dead trees and dead bushes
-
-**Plans**: 3 plans in 2 waves
-
-Plans:
-- [x] 40-01-PLAN.md — BIOME_BUILDING_SETS + Kenmi building keys in all 24 zone objects arrays (BLDG-01 through BLDG-07) — COMPLETE 2026-03-18
-- [x] 40-02-PLAN.md — Fix + enable scatterDecorations with multi-item crop, clustering near buildings (DECO-01, DECO-02, DECO-06, DECO-07) — COMPLETE 2026-03-18
-- [x] 40-03-PLAN.md — Animated campfire/flies decorations + landmark obelisks/golden pots + NPC-adjacent props (DECO-03, DECO-04, DECO-05) — COMPLETE 2026-03-18
-
-#### Phase 41: Characters & Ambient Life
-**Goal**: The player and all NPCs, enemies, and ambient animals are replaced with Kenmi pixel art sprites with proper 4-direction walk and idle animations
-
-**Depends on**: Phase 40 (world visuals stable — character sprites are the final layer of world population)
-
-**Requirements**: CHAR-01, CHAR-02, CHAR-03, CHAR-04, CHAR-05, CHAR-06, ANIM-01, ANIM-02, ANIM-03, ANIM-04
-
-**Success Criteria** (what must be TRUE):
-  1. The player character uses a Kenmi 16x16 sprite with smooth 4-direction walk animations (no faceless silhouette)
-  2. Desert NPCs use Kenmi Desert_Person sprites (4 standard variants, Pharaoh, and 3 Trader variants); non-desert NPCs use base RPG pack premade characters (Chef, Farmer, Fisherman, etc.)
-  3. Female NPC sprites have hijab head covering variants — pixel-modified from base sprites — on all female characters across all zones
-  4. Enemy encounter sprites use Kenmi Desert Warriors (2 weapon types x 2 variants) and Mummy; all NPC sprites have idle and walk animations loaded from spritesheets
-  5. Desert zones contain camels (3 variants), vultures (4 variants), and scarabs (4 color variants) as ambient non-interactive sprites with idle/walk animations that add world life without blocking gameplay
-
-**Plans**: 3 plans in 2 waves
-
-Plans:
-- [x] 41-01-PLAN.md — Player sprite replacement with Kenmi knight character (CHAR-01)
-- [x] 41-02-PLAN.md — NPC sprite verification + hijab overlay for female NPCs (CHAR-02, CHAR-03, CHAR-05, CHAR-06)
-- [x] 41-03-PLAN.md — Enemy Kenmi battle sprites + enable ambient desert animals (CHAR-04, ANIM-01, ANIM-02, ANIM-03, ANIM-04) — COMPLETE 2026-03-18
-
-#### Phase 42: Phaser UI & Arabic BitmapFont
-**Goal**: In-game UI elements render natively inside Phaser Canvas using Kenmi UI panels and Pixel AE Arabic BitmapFont — dialogue boxes, interaction prompts, and zone labels no longer use React DOM overlays
-
-**Depends on**: Phase 41 (all world art in place — UI is the final visual layer rendered on top)
-
-**Requirements**: UI-01, UI-02, UI-03, UI-04, UI-05, UI-06, UI-07, ARAB-01, ARAB-02, ARAB-03, ARAB-04
-
-**Success Criteria** (what must be TRUE):
-  1. The in-game dialogue box renders inside Phaser Canvas as a NineSlice panel with Kenmi UI frame art, typewriter text effect, and a blinking cursor — the React DOM dialogue overlay is no longer used for in-game conversations
-  2. NPC interaction prompts ("Press E") render as Phaser sprites with Kenmi icon art, positioned above NPC sprites in world space — not as DOM overlay elements
-  3. Kenmi UI pack frames, bars, and icons are used for in-game health/XP/stamina displays and inventory/quest/map buttons
-  4. Arabic text inside Phaser (zone names, NPC labels, sign text) renders correctly using Pixel AE BitmapFont with proper letter joining (js-arabic-reshaper) and right-to-left direction
-  5. React overlays (HUD bar, main menu, settings, profile, wardrobe) remain as React components — only in-game elements have moved to Phaser Canvas
-
-**Plans**: 3 plans in 2 waves
-
-Plans:
-- [x] 42-01-PLAN.md — Phaser DialogueBox wired to WorldScene + PixelAE Arabic font + ArabicText utility (UI-01, UI-03, UI-06) — COMPLETE 2026-03-18
-- [x] 42-02-PLAN.md — NPC Arabic name labels in Phaser + Kenmi PanelFactory + DOM label removal (UI-02, UI-04, UI-05, UI-07) — COMPLETE 2026-03-18
-- [x] 42-03-PLAN.md — Arabic-aware DialogueBox + zone name toast (ARAB-01, ARAB-02, ARAB-03, ARAB-04) — COMPLETE 2026-03-18
-
-#### Phase 43: Zone References & Cleanup
-**Goal**: Zone data files reference Kenmi sprite keys throughout, a Tiled-compatible export structure exists for future collaborators, and all placeholder sprites are removed from the project
-
-**Depends on**: Phase 42 (full visual overhaul complete — cleanup and handoff structure as final step)
-
-**Requirements**: PIPE-03, PIPE-04, PIPE-05
-
-**Success Criteria** (what must be TRUE):
-  1. All zone data files (zones.js, building definitions, NPC spawn data) reference Kenmi sprite keys exclusively — no placeholder keys (tile-sand, tile-grass, placeholder-house, etc.) remain in any data file
-  2. A Tiled-compatible JSON map export structure exists at `src/assets/maps/` that documents zone layout, NPC spawn points, interactables, and exits in a format a collaborator could open in Tiled Map Editor
-  3. All old placeholder sprite assets are removed from `src/assets/` and no console errors about missing textures appear during any zone load
-
-**Plans**: 2 plans in 2 waves
-
-Plans:
-- [x] 43-01-PLAN.md — Replace old placeholder keys in gathering spots, interior zones, InteriorGenerator, InteractableManager (PIPE-03)
-- [x] 43-02-PLAN.md — Remove old sprite loads from BootScene + Tiled JSON export + test updates (PIPE-04, PIPE-05)
+- [x] Phase 38: Asset Pipeline & BootScene (2/2 plans) — 2026-03-16
+- [x] Phase 39: Terrain Rendering (3/3 plans) — 2026-03-18
+- [x] Phase 40: Buildings & Decorations (3/3 plans) — 2026-03-18
+- [x] Phase 41: Characters & Ambient Life (3/3 plans) — 2026-03-18
+- [x] Phase 42: Phaser UI & Arabic BitmapFont (3/3 plans) — 2026-03-18
+- [x] Phase 43: Zone References & Cleanup (2/2 plans) — 2026-03-18
 
 </details>
 
@@ -443,7 +215,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. vocabularyAll.js contains 5,000+ words (expanded from 1,220 baseline), with no duplicate entries
   2. Every word in the vocabulary review UI displays its CEFR level tag (A1, A2, B1, or B2) alongside the Arabic and English
-  3. Root Explorer shows complete root family groupings — searching a trilateral root like ك-ت-ب surfaces all derived forms (كتاب، كاتب، مكتوب، مكتبة) together in one view
+  3. Root Explorer shows complete root family groupings — searching a trilateral root like ك-ت-ب surfaces all derived forms together in one view
   4. Words are browseable by semantic cluster (food, family, travel, nature, body, colors, numbers, etc.) in the vocabulary interface, so a player can study a topic end-to-end
   5. Within each CEFR level, high-frequency words appear before rare ones in new FSRS card generation — a player who just started A2 encounters common words first
 
@@ -489,7 +261,7 @@ Plans:
 
 **Depends on**: Phase 47 (cinematic intro complete — Amira is present and first quest has been given)
 
-**Requirements**: PATH-01, PATH-02, PATH-03, PATH-04, PATH-05
+**Requirements**: PATH-01, PATH-02, PATH-03, PATH-04, PATH-05 *(absorbed into v11.0 Phase 51)*
 
 **Success Criteria** (what must be TRUE):
   1. After the first word is learned, Guide Amira asks "What draws you to Arabic?" — the prompt appears as natural in-world dialogue, not a menu screen
@@ -498,7 +270,7 @@ Plans:
   4. The chosen path is reflected immediately: the first real quest assigned, the next NPC the player is pointed toward, and the initial FSRS word ordering all differ by path
   5. A player can switch their learning path from the settings/profile at any time; the interface shows a warning that priority bonuses reset on switch
 
-**Plans**: TBD
+**Plans**: TBD (absorbed into v11.0 Phase 51)
 
 Plans:
 - [ ] 48-01-PLAN.md — learningPathSlice (Scholar/Traveler/Historian state + switch action) + path-aware FSRS word ordering
@@ -510,7 +282,7 @@ Plans:
 
 **Depends on**: Phase 48 (learning path chosen — first quest content and mentor NPC depend on path)
 
-**Requirements**: QUEST-01, QUEST-02, QUEST-03, QUEST-04, QUEST-05, UX-03
+**Requirements**: QUEST-01, QUEST-02, QUEST-03, QUEST-04, QUEST-05, UX-03 *(absorbed into v11.0 Phase 51)*
 
 **Success Criteria** (what must be TRUE):
   1. Words float visibly above pots, signs, and buildings in the village — the player can see at least 3 interactable floating words without moving far from the start position
@@ -519,17 +291,161 @@ Plans:
   4. The first real quest offered after completion (and the mentor NPC assigned) differs based on the player's chosen learning path — Scholar, Traveler, and Historian each get a thematically matched follow-up
   5. A returning player who has completed onboarding skips directly to the normal game start — onboarding completion is stored in the game's persist layer (IndexedDB) and survives page reload
 
-**Plans**: TBD
+**Plans**: TBD (absorbed into v11.0 Phase 51)
 
 Plans:
 - [ ] 49-01-PLAN.md — FloatingWordObjects for 3+ village items (pots/signs/buildings) + teach-on-touch with visual+audio feedback (QUEST-01, QUEST-02)
 - [ ] 49-02-PLAN.md — Quest completion trigger: 3 words learned → gold reward + achievement toast + "You know 3 Arabic words!" (QUEST-03)
 - [ ] 49-03-PLAN.md — Path-gated first real quest + mentor NPC assignment + onboarding completion flag in IndexedDB (QUEST-04, QUEST-05, UX-03)
 
+---
+
+### v11.0 Deep Systems & Content Engine (Phases 50-55) — Planned
+
+**Milestone Goal:** Build all the under-the-hood systems that make the game feel alive — bundle optimization, world state machine, inkjs dialogue migration, learning path wiring, faction reputation, dynamic economy, NPC gossip, environmental storytelling, progressive tashkeel refinement, calligraphy mini-game, and Arabic poetry battles. Absorbs v10.0 Phases 48-49.
+
+**Coverage:** 56 requirements across 6 phases (INFRA-01 to INFRA-09, CONT-01 to CONT-08, PATH-01 to PATH-07, FACT-01 to FACT-06, ECON-01 to ECON-04, GOSP-01 to GOSP-05, TASH-01 to TASH-03, ENVR-01 to ENVR-04, CALL-01 to CALL-05, POET-01 to POET-05)
+
+**Visual/UI/world/tileset work is out of scope** — user builds world visuals separately in LDtk.
+
+#### Phase 50: Infrastructure Baseline
+**Goal**: The game loads under 500KB and every downstream v11.0 system has the foundation it needs — world state machine, bundle optimization, and zone-based asset loading all in place before any feature work begins
+
+**Depends on**: Phase 49 (v10.0 complete or absorbed)
+
+**Requirements**: INFRA-01, INFRA-02, INFRA-03, INFRA-04, INFRA-05, INFRA-06
+
+**Success Criteria** (what must be TRUE):
+  1. Running `npm run build` produces an initial JS bundle under 500KB (down from 862KB), with zone-specific assets excluded from the initial load
+  2. Running `npm run build:analyze` opens a treemap in the browser showing which modules account for bundle size
+  3. Entering a zone for the first time shows a loading indicator while zone-specific assets load; shared assets (player sprite, UI, common NPCs) are available immediately with no flash
+  4. A `WORLD_STATE_KEYS` constants file exists and every world flag write anywhere in the codebase uses a key from that file — no raw string flag names
+  5. Quest completion, NPC interactions, and purchases automatically set world state flags without any manual dispatch — worldStateMiddleware handles propagation
+
+**Plans**: TBD
+
+Plans:
+- [ ] 50-01-PLAN.md — Vite manualChunks refinement + rollup-plugin-visualizer install + build:analyze script (INFRA-01, INFRA-03)
+- [ ] 50-02-PLAN.md — BootScene zone-based lazy loading: shared assets upfront, zone assets on transition (INFRA-02)
+- [ ] 50-03-PLAN.md — worldStateSlice (500+ flags, WORLD_STATE_KEYS constants, IndexedDB persist) + worldStateMiddleware (INFRA-04, INFRA-05, INFRA-06)
+
+#### Phase 51: Dialogue Foundation & Learning Paths
+**Goal**: The dialogue engine supports ink scripting for future narrative work, all 573 missing companion dialogue lines are filled, and players choose a learning path that immediately shapes their FSRS word queue and first quest assignment — absorbing v10.0 Phases 48-49
+
+**Depends on**: Phase 50 (worldStateSlice provides the state machine ink needs to read and write)
+
+**Requirements**: INFRA-07, INFRA-08, INFRA-09, CONT-01, PATH-01, PATH-02, PATH-03, PATH-04, PATH-05, PATH-06, PATH-07
+
+**Success Criteria** (what must be TRUE):
+  1. Talking to any of the 5 pilot NPCs runs their dialogue from a compiled `.ink.json` file; talking to any non-migrated NPC runs their legacy JSON dialogue without errors — both paths work simultaneously
+  2. All 12 companions have complete dialogue — no companion responds with a placeholder or empty line in any conversation
+  3. After the first word is learned in the village, Guide Amira asks "What draws you to Arabic?" as in-world dialogue (no menu overlay), and the player chooses Scholar, Traveler, or Historian
+  4. The first real quest assigned and the FSRS word ordering both differ visibly between paths — a Scholar and a Traveler starting fresh see different first NPCs and different new card sequences
+  5. A returning player who completed onboarding bypasses the cinematic intro and path prompt entirely and drops into normal gameplay
+  6. Player can switch learning path from settings with a visible warning that priority bonuses reset
+
+**Plans**: TBD
+
+Plans:
+- [ ] 51-01-PLAN.md — inkjs install + InkDialogueEngine with adapter fallback (legacy JSON + .ink.json) + 5-NPC pilot migration (INFRA-07, INFRA-08, INFRA-09)
+- [ ] 51-02-PLAN.md — Fill 573 missing companion dialogue lines across 12 companions (CONT-01)
+- [ ] 51-03-PLAN.md — PATH-01/PATH-02: Amira ink dialogue tree for path choice + DialogueEngine choice handler wiring
+- [ ] 51-04-PLAN.md — PATH-03/PATH-04/PATH-05/PATH-06/PATH-07: FSRS queue reordering by path + path-gated quest/mentor assignment + switch UI + onboarding skip flag
+
+#### Phase 52: Vocabulary Expansion
+**Goal**: The FSRS system contains 5,000+ words with domain affinity tags, CEFR levels, root families, semantic clusters, ambiguity flags, and a build-time validation script — giving every downstream system (faction vocab rewards, poetry battles, learning path differentiation) a rich word corpus to draw from
+
+**Depends on**: Phase 51 (learning path wired — path domain affinity tags must be applied during the expansion pass, not retrofitted)
+
+**Requirements**: CONT-02, CONT-03, CONT-04, CONT-05, CONT-06, CONT-07, CONT-08
+
+**Success Criteria** (what must be TRUE):
+  1. vocabularyAll.js contains 5,000+ words with no duplicate Arabic entries, each tagged with CEFR level, root, semantic cluster, and domain affinity (Scholar/Traveler/Historian)
+  2. Every word card in the review UI shows its CEFR level badge (A1/A2/B1/B2) alongside the Arabic and English
+  3. Root Explorer surfaces all derived forms of a trilateral root together — searching ك-ت-ب returns كتاب، كاتب، مكتوب، مكتبة in one grouped view
+  4. Words are browseable by semantic cluster in the vocabulary interface — a player can select "food" and review all food-domain words end-to-end
+  5. Running `npm run vocab:validate` exits 0 with no duplicate, missing-root, or missing-CEFR-tag warnings
+  6. Words tagged `ambiguous: true` retain tashkeel in all UI views regardless of the player's FSRS mastery level
+
+**Plans**: TBD
+
+Plans:
+- [ ] 52-01-PLAN.md — Expand to 5,000+ words with CEFR, root, semantic cluster, domain affinity, and ambiguity fields (CONT-02, CONT-07)
+- [ ] 52-02-PLAN.md — Build-time validation script + CEFR badge in TeacherWordCard + Root Explorer root family groupings (CONT-03, CONT-04, CONT-08)
+- [ ] 52-03-PLAN.md — Semantic cluster browsing UI + frequency-ordered FSRS selector per CEFR level + ambiguous word tashkeel lock (CONT-05, CONT-06, CONT-07)
+
+#### Phase 53: Faction Reputation Engine
+**Goal**: Six factions track the player's standing across all interactions, gate bonus content at reputation thresholds, and teach faction-specific vocabulary — making every quest completion, purchase, and conversation a meaningful faction investment
+
+**Depends on**: Phase 52 (vocabulary expansion complete — faction-specific vocabulary rewards draw from the full 5,000+ corpus with domain affinity tags already applied)
+
+**Requirements**: FACT-01, FACT-02, FACT-03, FACT-04, FACT-05, FACT-06
+
+**Success Criteria** (what must be TRUE):
+  1. A player's faction scores for all 6 factions (Scholars, Merchants, Artisans, Travelers, Guardians, Artists) are visible somewhere in the UI with their current tier label (Neutral/Friendly/Trusted/Allied/Revered)
+  2. Completing a quest, making a purchase, or choosing a dialogue option that favors a faction visibly changes that faction's score — the player can see the effect of their choices
+  3. Reaching Friendly (25) with a faction unlocks additional dialogue lines from faction NPCs; Trusted (50) unlocks a side quest; Allied (75) grants a shop discount; all main storyline quests remain completable with all factions at 0
+  4. ActionSetExecutor accepts `factionRequired` conditions in NPC and zone data — faction-gated content is data-driven, not hardcoded
+  5. Each faction teaches at least 10 domain-specific vocabulary words at the Friendly threshold — unlocking those words adds them to the player's FSRS queue
+
+**Plans**: TBD
+
+Plans:
+- [ ] 53-01-PLAN.md — factionSlice (6 factions, 0-100 scores, tier constants, IndexedDB persist) + factionMiddleware (FACT-01, FACT-02)
+- [ ] 53-02-PLAN.md — ActionSetExecutor factionRequired requirement type + faction-gated dialogue/quest/shop data for Scholars and Merchants factions (FACT-03, FACT-04, FACT-05)
+- [ ] 53-03-PLAN.md — Remaining 4 factions gated content + faction vocabulary rewards at thresholds + faction score UI (FACT-03, FACT-06)
+
+#### Phase 54: World Life Systems
+**Goal**: The world feels alive and reactive — shop prices shift based on supply and player faction standing, NPCs gossip about recent events in ink dialogue, environmental inscriptions teach Arabic in context, and tashkeel fading accounts for ambiguity and learning path
+
+**Depends on**: Phase 53 (faction scores are inputs to dynamic pricing; ink engine from Phase 51 powers gossip and inscription dialogue)
+
+**Requirements**: ECON-01, ECON-02, ECON-03, ECON-04, GOSP-01, GOSP-02, GOSP-03, GOSP-04, GOSP-05, TASH-01, TASH-02, TASH-03, ENVR-01, ENVR-02, ENVR-03, ENVR-04
+
+**Success Criteria** (what must be TRUE):
+  1. Shop prices visibly change between visits — buying multiple items of the same type raises the price; waiting and resting partially restores supply and lowers it; price floor is 50% of base, ceiling is 200%
+  2. Faction-allied players see a 15% price discount at that faction's shops; a player can observe the price difference by checking faction alignment vs non-aligned shop prices
+  3. After completing a quest or notable interaction, at least one NPC who knew the player (relationship ≥ 25) mentions it in their next conversation — gossip tokens surface as natural ink dialogue lines, not a separate gossip UI
+  4. At least 20 interactive inscriptions/scrolls are placed across all 8 zones; touching one reads the inscription, adds unknown words to the FSRS queue, and can teach a root family grouping
+  5. A word tagged `ambiguous: true` retains its tashkeel regardless of mastery level; a player on the Scholar path loses tashkeel more slowly than a Traveler at equivalent FSRS mastery
+
+**Plans**: TBD
+
+Plans:
+- [ ] 54-01-PLAN.md — PricingAgent supply/demand model in EconomyFlow.js + faction modifier + price floor/ceiling + ShopOverlay price change indicators (ECON-01, ECON-02, ECON-03, ECON-04)
+- [ ] 54-02-PLAN.md — GossipManager: EventBus token creation, NPC propagation (relationship ≥ 25), 3-day expiry, ink dialogue surfacing, heard flag, Arabic grammar annotation (GOSP-01, GOSP-02, GOSP-03, GOSP-04, GOSP-05)
+- [ ] 54-03-PLAN.md — 20 environmental inscriptions/scrolls as ink interactions across 8 zones + FSRS queue integration + root family teaching (ENVR-01, ENVR-02, ENVR-03, ENVR-04)
+- [ ] 54-04-PLAN.md — Progressive tashkeel refinement: ambiguity-aware fading + learning path fading rate + inscription proficiency-appropriate tashkeel (TASH-01, TASH-02, TASH-03)
+
+#### Phase 55: Mini-Games and Content Polish
+**Goal**: Two new Arabic learning mini-games — calligraphy tracing and poetry battles — give players deep, unique practice modes that no other Arabic learning app offers; battle code tests establish a safety net before poetry battles build on the combat system
+
+**Depends on**: Phase 54 (vocabulary expansion from Phase 52 provides the word corpus poetry battles draw from; ink engine from Phase 51 wires poetry battle NPC dialogue)
+
+**Requirements**: CALL-01, CALL-02, CALL-03, CALL-04, CALL-05, POET-01, POET-02, POET-03, POET-04, POET-05
+
+**Success Criteria** (what must be TRUE):
+  1. The mini-games hub has a Calligraphy entry; selecting it launches CalligraphyScene as a separate lazy-loaded Phaser scene
+  2. Player can trace any of the 28 isolated Arabic letter forms using pointer or touch input; after completing the trace, the scene shows a 1-3 star rating and marks the letter as "practiced" at 2+ stars
+  3. Player can find NPC poets in the world and challenge them to a poetry battle; the battle mode presents a fill-in-the-blank verse with 4 FSRS-sourced word choices at appropriate difficulty
+  4. Poetry battles are untimed — no countdown, no time pressure; both player and NPC poet fill blanks at their own pace; the winner earns XP and vocabulary rewards
+  5. Completing a calligraphy letter at 2+ stars or winning a poetry battle adds the practiced vocabulary to the FSRS review queue
+
+**Plans**: TBD
+
+Plans:
+- [ ] 55-01-PLAN.md — BattleStateMachine + GrammarComboDetector + StatusEffectBar test coverage (prerequisite for poetry battle builds on combat system)
+- [ ] 55-02-PLAN.md — CalligraphyScene: lazy-loaded Phaser scene + pointer path capture + 28 reference stroke paths as JSON (CALL-01, CALL-02, CALL-03)
+- [ ] 55-03-PLAN.md — CalligraphyScene: Frechet distance scoring + 3-star feedback + "practiced" flag in alphabet progress + mini-games hub wiring (CALL-04, CALL-05)
+- [ ] 55-04-PLAN.md — poetrySlice + 10 curated classical Arabic poems with fill-in-blank positions + FSRS word sourcing (POET-01, POET-02, POET-03)
+- [ ] 55-05-PLAN.md — Poetry battle mode UI + NPC poet opponent AI + untimed scoring + XP/vocab rewards + GameLayout wiring (POET-04, POET-05)
+
+---
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 → 33 → ... → 49
+Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 55
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -580,11 +496,17 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → 31 → 32 �
 | 45. Quest Storylines | v9.0 | 3/3 | Complete | 2026-03-18 |
 | 46. Vocabulary Expansion | v9.0 | 1/3 | In progress | — |
 | 47. Cinematic Intro | v10.0 | 3/3 | At checkpoint | 2026-03-19 |
-| 48. Learning Path Choice | v10.0 | 0/3 | Not started | — |
-| 49. First Quest & Loop Completion | v10.0 | 0/3 | Not started | — |
+| 48. Learning Path Choice | v10.0 | 0/3 | Not started (absorbed into Phase 51) | — |
+| 49. First Quest & Loop Completion | v10.0 | 0/3 | Not started (absorbed into Phase 51) | — |
+| 50. Infrastructure Baseline | v11.0 | 0/3 | Not started | — |
+| 51. Dialogue Foundation & Learning Paths | v11.0 | 0/4 | Not started | — |
+| 52. Vocabulary Expansion | v11.0 | 0/3 | Not started | — |
+| 53. Faction Reputation Engine | v11.0 | 0/3 | Not started | — |
+| 54. World Life Systems | v11.0 | 0/4 | Not started | — |
+| 55. Mini-Games and Content Polish | v11.0 | 0/5 | Not started | — |
 
 **Cumulative:** 46 phases shipped (Phase 45 complete), 133 plans complete, 8 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-19 — Phase 47 all 3 plans complete, at human-verify checkpoint*
+*Last updated: 2026-03-19 — v11.0 roadmap added (Phases 50-55, 56 requirements mapped)*

@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v11.0
 milestone_name: Deep Systems & Content Engine
-status: in_progress
-stopped_at: Defining requirements
-last_updated: "2026-03-19T17:30:00Z"
+status: roadmap_complete
+stopped_at: Roadmap created — ready to plan Phase 50
+last_updated: "2026-03-19T18:00:00Z"
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
-  total_plans: 0
+  total_plans: 22
   completed_plans: 0
 ---
 
@@ -19,14 +19,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** v11.0 milestone initialization — defining requirements
+**Current focus:** v11.0 Phase 50 — Infrastructure Baseline
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-19 — Milestone v11.0 started
+Phase: 50 of 55 (Infrastructure Baseline)
+Plan: 0 of 3 in current phase
+Status: Ready to plan
+Last activity: 2026-03-19 — v11.0 roadmap created (6 phases, 56 requirements mapped)
+
+Progress: [░░░░░░░░░░] 0% (v11.0) | 46 phases shipped overall
 
 ### Shipped Milestones
 
@@ -46,39 +48,35 @@ Last activity: 2026-03-19 — Milestone v11.0 started
 
 ## Accumulated Context
 
-### Key v10.0 Context
+### Key v11.0 Context
 
-- learningPath (Scholar/Traveler/Historian) already exists in narrativeSlice from v9.0 (QUEST-05)
-- Guide Amira (guide-amira) has full dialogue trees from v9.0 Phase 44 — use as base for PATH-01 prompt
-- DialogueEngine already evaluates { learningPath: ... } conditions — reuse for path-based quest routing
-- FloatingWordObject must be a Phaser interactive sprite (not React DOM) — Kenmi visual assets available
-- Old OnboardingFlow (6-step, Phase 21 v5.0) must be bypassed via flag in onboardingSlice, not deleted
-- Onboarding completion must persist in IndexedDB (same pattern as 5 other persisted slices)
-- UX-01 constraint: zero menus/overlays during the cinematic flow — everything in-world
+- inkjs NOT installed — must be installed in Phase 51 before any ink work begins
+- rollup-plugin-visualizer NOT installed — Phase 50 installs it as dev dependency
+- Bundle currently 862KB (well over 500KB target) — Phase 50 must resolve this before adding any systems
+- worldStateSlice is the root dependency: inkjs, factions, gossip, and learning path all write to it
+- Adapter pattern for inkjs: check .ink.json first, fallback to legacy JSON — never big-bang migrate all NPCs
+- Faction gates must cover bonus content only — all main quests completable at faction score 0
+- 573 missing companion dialogue lines — fill in Phase 51 while already touching DialogueEngine
+- Phases 48-49 from v10.0 (learning path + first quest) are absorbed into Phase 51
+- Visual/UI/world/tileset work explicitly out of scope — user builds in LDtk separately
 
 ### Decisions
 
-All v2.0-v9.0 decisions logged in PROJECT.md Key Decisions table.
+All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 
 | Decision | Context | Outcome |
 |----------|---------|---------|
-| learningPath already in narrativeSlice | v9.0 Phase 45 | Extend existing slice, no new slice needed |
-| guide-amira dialogue trees exist | v9.0 Phase 44 | Add new trees for PATH-01 prompt, don't rewrite existing |
-| Crawl text at depth 9800 | Phase 47-01 | Below DialogueBox (10000), above DayNightCycle (9000) |
-| Per-timer cancel in _skipCrawl() | Phase 47-01 | this._timers[].remove(false) — avoids removeAllEvents() breaking other timers |
-| onPanComplete as callback, not EventBus | Phase 47-01 | Plan 47-02 assigns sequencer.onPanComplete; sequencer owns lifecycle cleanly |
-| Sequencer trigger after SCENE_READY emit | Phase 47-01 | All subsystems ready before PLAYER_FREEZE is called |
-| FloatingWordObject update via scene.events 'update' | Phase 47-02 | Sequencer registers/deregisters listener — object does not own its update lifecycle |
-| PLAYER_UNFREEZE in _spawnFloatingWord() | Phase 47-02 | Player walks naturally to word after pan — organic discovery, no forced guidance |
-| onWordLearned hook initialized as null in constructor | Phase 47-02 | Plan 47-03 assigns this at sequencer creation time for Amira arrival trigger |
-| PLAYER_FREEZE before Amira pan | Phase 47-03 | _triggerAmiraArrival() emits PLAYER_FREEZE; DialogueBox.show() also does — safe redundancy |
-| _showAmiraDialogue() null guard | Phase 47-03 | Falls through to _completeSequence() if dialogueBox missing — prevents sequence hang |
-| setActiveQuest after setTutorialPhase | Phase 47-03 | tutorial_welcome autoStart:true ensures 'active' status when dispatch fires |
+| inkjs adapter pattern (not big-bang migration) | Research: 23 NPCs, breaking risk | Pilot 5 NPCs, fallback to legacy JSON |
+| AceBase deferred to v12.0 | Bundle cost 200-300KB conflicts with 500KB target | IndexedDB hybrid covers persistence needs |
+| Phases 48-49 absorbed into Phase 51 | v10.0 not started, absorb cleaner than maintaining two roadmaps | Single phase delivers full learning path + first quest flow |
+| WORLD_STATE_KEYS constants file | 500+ flags, naming chaos risk | {zone}_{action}_{target} convention enforced from Phase 50 day one |
+| Faction gates bonus-content-only | Soft-lock risk if faction tied to main quest | Main storyline completable at all-0 faction scores |
 
 ### Blockers/Concerns
 
-- v9.0 Phase 46 still in progress (46-02 and 46-03 remain) — v10.0 can start after Phase 46 ships
-- Bundle at 862KB (well over 500KB target) — floating word objects + cinematic assets will add more; lazy loading deferred
+- v9.0 Phase 46 still in progress (46-02 and 46-03 remain) — v10.0/v11.0 can proceed in parallel but Phase 52 (vocab expansion) must not conflict with Phase 46 output
+- Bundle at 862KB — Phase 50 is a hard prerequisite; do not start Phase 51 until bundle is under 500KB
+- Phase 47 (Cinematic Intro) at human-verify checkpoint — needs user to verify 5-beat sequence in-game before v10.0 can be closed out
 
 ### Pending Todos
 
@@ -89,5 +87,5 @@ All v2.0-v9.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-19
-Stopped at: Phase 47 Plan 3 — Task 1 complete (a6ead59), PAUSED at Task 2 checkpoint:human-verify
-Resume file: .planning/phases/47-cinematic-intro/47-03-PLAN.md (Task 2 checkpoint — human must verify full 5-beat sequence in-game)
+Stopped at: v11.0 roadmap created — next action is `/gsd:plan-phase 50`
+Resume file: None
