@@ -1,6 +1,21 @@
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { createArabicText } from '../ui/ArabicText.js';
+import { FloatingWordObject } from '../objects/FloatingWordObject.js';
+
+// ============================================================
+// WORD DATA — first Arabic word the player encounters
+// ============================================================
+
+const FIRST_WORD = {
+  wordId: 'q_0002',
+  arabic: 'كِتَاب',
+  english: 'book',
+};
+
+// Spawn position: near oasis pool, just north of player spawn (tile 14,17 = world 896, 1088)
+const WORD_SPAWN_X = 14 * 64; // 896
+const WORD_SPAWN_Y = 17 * 64; // 1088
 
 /**
  * CinematicIntroSequencer — Phase 47 Plan 01
@@ -30,10 +45,20 @@ export class CinematicIntroSequencer {
     // Assign: sequencer.onPanComplete = () => { ... }
     this.onPanComplete = null;
 
+    // Optional hook for Plan 47-03: called after word is learned (DialogueBox dismissed)
+    // Assign: sequencer.onWordLearned = () => { ... }
+    this.onWordLearned = null;
+
     // Internal state
     this._glowTween = null;
     this._wordObject = null;
     this._active = true;
+
+    // FloatingWordObject instance (Plan 47-02)
+    this._floatingWord = null;
+
+    // Bound scene 'update' listener for per-frame proximity check
+    this._updateBound = null;
   }
 
   // ============================================================
@@ -68,13 +93,25 @@ export class CinematicIntroSequencer {
   cleanup() {
     this._active = false;
 
-    // Destroy any remaining text objects
+    // Destroy any remaining crawl text objects
     this._crawlObjects.forEach((o) => o?.destroy());
     this._crawlObjects = [];
 
-    // Cancel any pending timers
-    this._timers.forEach((t) => t.remove(false));
+    // Cancel any pending delayedCall timers
+    this._timers.forEach((t) => t?.remove(false));
     this._timers = [];
+
+    // Destroy floating word if still present
+    if (this._floatingWord) {
+      this._floatingWord.destroy();
+      this._floatingWord = null;
+    }
+
+    // Remove per-frame update listener if registered
+    if (this._updateBound) {
+      this.scene.events.off('update', this._updateBound);
+      this._updateBound = null;
+    }
 
     // Unfreeze player so the scene shuts down cleanly
     EventBus.emit(EVENTS.PLAYER_UNFREEZE);
@@ -310,10 +347,8 @@ export class CinematicIntroSequencer {
    * Called when the camera pan reaches 100% progress.
    *
    * Emits a named EventBus event so other systems can hook in,
-   * and calls the optional onPanComplete callback assigned by Plan 47-02.
-   *
-   * Plan 47-02 wires in the FloatingWordObject spawn via:
-   *   sequencer.onPanComplete = () => { this._spawnFloatingWord(); };
+   * calls the optional legacy onPanComplete callback for compatibility,
+   * then spawns the FloatingWordObject (Beat 3: INTRO-03).
    */
   _onPanComplete() {
     if (!this._active) return;
@@ -321,9 +356,70 @@ export class CinematicIntroSequencer {
     // EventBus signal for any listener interested in pan completion
     EventBus.emit('cinematic:pan_complete', this.scene);
 
-    // Callback hook for Plan 47-02
+    // Expose hook for external callers (legacy — kept for compatibility)
     if (typeof this.onPanComplete === 'function') {
       this.onPanComplete();
+    }
+
+    // Spawn the floating word — Beat 3 (INTRO-03)
+    this._spawnFloatingWord();
+  }
+
+  // ============================================================
+  // BEAT 3: FLOATING WORD SPAWN (INTRO-03)
+  // ============================================================
+
+  /**
+   * Create a FloatingWordObject near the oasis pool at world (896, 1088).
+   * Register per-frame scene 'update' listener to check player proximity.
+   * Unfreeze the player so they can walk to it naturally.
+   */
+  _spawnFloatingWord() {
+    if (!this._active) return;
+
+    this._floatingWord = new FloatingWordObject(
+      this.scene,
+      WORD_SPAWN_X,
+      WORD_SPAWN_Y,
+      FIRST_WORD,
+      () => this._onWordLearned()
+    );
+
+    // Register per-frame update to check proximity + SPACE
+    this._updateBound = () => {
+      if (!this._floatingWord || !this._active) return;
+      const player = this.scene.playerController?.getPlayer();
+      if (player) {
+        this._floatingWord.update(player.x, player.y);
+      }
+    };
+    this.scene.events.on('update', this._updateBound);
+
+    // Unfreeze player so they can walk to the floating word
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+  }
+
+  // ============================================================
+  // BEAT 4: WORD LEARNED HOOK (INTRO-04 → Plan 47-03)
+  // ============================================================
+
+  /**
+   * Called after FloatingWordObject interaction + DialogueBox dismiss.
+   * Removes the per-frame update listener, then exposes the onWordLearned
+   * hook for Plan 47-03 (Amira arrival).
+   *
+   * Assign: sequencer.onWordLearned = () => { ... }
+   */
+  _onWordLearned() {
+    // Remove update listener — no more proximity checks needed
+    if (this._updateBound) {
+      this.scene.events.off('update', this._updateBound);
+      this._updateBound = null;
+    }
+
+    // Expose hook for Plan 47-03 (Amira arrival / path choice)
+    if (typeof this.onWordLearned === 'function') {
+      this.onWordLearned();
     }
   }
 }
