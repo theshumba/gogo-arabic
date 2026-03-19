@@ -323,5 +323,11 @@ function HUD({ onMenu }) {
   );
 }
 
-// Memoize component to prevent re-renders when parent updates
+import PropTypes from 'prop-types';
+
+HUD.propTypes = {
+  /** Callback when user clicks the Menu button */
+  onMenu: PropTypes.func.isRequired,
+};
+
 export default memo(HUD);

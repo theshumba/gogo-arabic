@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styles from '../../App.module.css';
 
 /**
@@ -19,3 +20,8 @@ export default function PauseMenu({ onResume, onMainMenu }) {
     </div>
   );
 }
+
+PauseMenu.propTypes = {
+  onResume: PropTypes.func.isRequired,
+  onMainMenu: PropTypes.func.isRequired,
+};

@@ -117,3 +117,10 @@ export default function BattleMenu({ visible, availableActions, onAction }) {
     </AnimatePresence>
   );
 }
+
+import PropTypes from 'prop-types';
+BattleMenu.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  availableActions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onAction: PropTypes.func.isRequired,
+};

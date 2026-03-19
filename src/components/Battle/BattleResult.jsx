@@ -270,3 +270,11 @@ export default function BattleResult({ bossId, victory, onClose, onReview }) {
     </motion.div>
   );
 }
+
+import PropTypes from 'prop-types';
+BattleResult.propTypes = {
+  bossId: PropTypes.string.isRequired,
+  victory: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onReview: PropTypes.func,
+};

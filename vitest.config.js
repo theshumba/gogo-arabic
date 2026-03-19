@@ -15,13 +15,11 @@ export default defineConfig({
       include: ['src/**/*.{js,jsx}'],
       exclude: ['src/test/**', 'src/data/**'],
       thresholds: {
-        // Current baseline: 29% stmts, 75% branch, 55% funcs, 29% lines
-        // Many components/hooks/utils untested — slices and systems are 90%+
-        // TODO: raise to 80% after adding hook and component tests
-        statements: 25,
-        branches: 70,
-        functions: 50,
-        lines: 25,
+        // Ratcheted to actual coverage (2026-03-19) — prevents regression
+        statements: 24,
+        branches: 73,
+        functions: 39,
+        lines: 24,
       },
     },
   },

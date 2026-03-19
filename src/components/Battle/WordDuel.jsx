@@ -338,3 +338,9 @@ export default function WordDuel({ bossId, onClose }) {
     </motion.div>
   );
 }
+
+import PropTypes from 'prop-types';
+WordDuel.propTypes = {
+  bossId: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
