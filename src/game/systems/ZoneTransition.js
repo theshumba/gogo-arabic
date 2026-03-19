@@ -1,5 +1,6 @@
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
+import { loadZoneAssets } from '../../data/zoneAssetManifests.js';
 
 // ZoneTransition handles moving between world zones.
 // Per PRD: walk onto exit tile -> fade to black (0.5s) -> load new zone -> fade in (0.5s).
@@ -40,6 +41,16 @@ class ZoneTransition {
 
       // Notify Redux of zone change
       EventBus.emit(EVENTS.ZONE_CHANGE, { zone: zoneName, x: entryX, y: entryY });
+
+      // Load zone-specific assets if not already cached (during fade-out, screen is black)
+      EventBus.emit(EVENTS.ZONE_LOADING_START, { zone: zoneName });
+      try {
+        await loadZoneAssets(this.scene, zoneName);
+      } catch (loadErr) {
+        console.warn('[ZoneTransition] Zone asset loading failed, continuing:', loadErr);
+        // Non-fatal -- zone may render with missing textures but won't crash
+      }
+      EventBus.emit(EVENTS.ZONE_LOADING_END, { zone: zoneName });
 
       // Load the new zone (WorldScene handles this via loadZone method)
       this.scene.loadZone(zoneName, entryX, entryY);

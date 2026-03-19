@@ -202,6 +202,18 @@ export default function GameLayout() {
   const anyOverlayOpen = useSelector(selectAnyOverlayOpen);
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
+  const [zoneLoading, setZoneLoading] = React.useState(false);
+
+  useEffect(() => {
+    const onStart = () => setZoneLoading(true);
+    const onEnd = () => setZoneLoading(false);
+    EventBus.on(EVENTS.ZONE_LOADING_START, onStart);
+    EventBus.on(EVENTS.ZONE_LOADING_END, onEnd);
+    return () => {
+      EventBus.off(EVENTS.ZONE_LOADING_START, onStart);
+      EventBus.off(EVENTS.ZONE_LOADING_END, onEnd);
+    };
+  }, []);
 
   // Welcome splash — show when arriving at awaiting_mentor (after cinematic + path choice)
   const tutorialPhase = useSelector((state) => state.player.tutorialPhase);
@@ -259,6 +271,23 @@ export default function GameLayout() {
     <div className={styles.container}>
       {/* Phaser canvas - full screen, lowest z-index */}
       <PhaserGame ref={phaserRef} />
+
+      {/* Zone loading indicator -- shown during zone transition asset loading */}
+      {zoneLoading && (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          color: '#D4A843',
+          fontFamily: "'Press Start 2P', monospace",
+          fontSize: '12px',
+          zIndex: 9999,
+          pointerEvents: 'none',
+        }}>
+          Loading zone...
+        </div>
+      )}
 
       {/* HUD overlay bar */}
       <HUD onMenu={() => { audioManager.playSFX('click'); dispatch(toggleMenu()); }} />
