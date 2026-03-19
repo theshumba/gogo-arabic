@@ -219,19 +219,13 @@ export class BootScene extends Phaser.Scene {
     // Example: this.load.tilemapTiledJSON('map-oasis-village', '/assets/maps/oasis-village.json');
     this.load.tilemapTiledJSON('map-test-map', '/assets/maps/test-map.json');
 
-    // Tileset images for Tiled maps — the key must match the tileset name in the Tiled JSON.
-    // For now, register short aliases for the Kenmi tilesets that Tiled maps reference.
-    this.load.image('desert-beach-tiles-1', '/assets/kenmi/desert/tiles/desert-beach-tiles-1.png');
-    this.load.image('desert-beach-tiles-2', '/assets/kenmi/desert/tiles/desert-beach-tiles-2.png');
-    this.load.image('desert-beach-tiles-3', '/assets/kenmi/desert/tiles/desert-beach-tiles-3.png');
-    this.load.image('desert-grass', '/assets/kenmi/desert/tiles/desert-grass.png');
-    this.load.image('desert-water-tiles-1', '/assets/kenmi/desert/tiles/desert-water-tiles-1.png');
-    this.load.image('desert-water-tiles-2', '/assets/kenmi/desert/tiles/desert-water-tiles-2.png');
-    this.load.image('desert-water-tiles-3', '/assets/kenmi/desert/tiles/desert-water-tiles-3.png');
-
     // =========================================================
     // KENMI CUTE FANTASY ASSETS — loaded from catalog
     // =========================================================
+    // NOTE: Tiled map tileset aliases (short keys like 'desert-beach-tiles-1')
+    // are registered AFTER loading via texture key aliases in create(), not here.
+    // Loading the same file path as both image and spritesheet causes Phaser to
+    // skip spritesheet frame slicing, resulting in black squares.
     // Register error handler once (fires per failed asset)
     this.load.on('loaderror', (file) => {
       console.warn(`[BootScene] Failed to load asset: ${file.key} @ ${file.url}`);
@@ -252,6 +246,25 @@ export class BootScene extends Phaser.Scene {
   create() {
     // Generate pixel art panel textures for NineSlice use
     this._generatePanelTextures();
+
+    // Register short-key aliases for Tiled map tileset references.
+    // The actual textures were loaded as spritesheets via KENMI_CATALOG with long keys.
+    // Tiled JSON files reference short keys, so we create aliases that point to the same texture.
+    const tiledAliases = [
+      ['desert-beach-tiles-1', 'kenmi-desert-tiles-desert-beach-tiles-1'],
+      ['desert-beach-tiles-2', 'kenmi-desert-tiles-desert-beach-tiles-2'],
+      ['desert-beach-tiles-3', 'kenmi-desert-tiles-desert-beach-tiles-3'],
+      ['desert-grass', 'kenmi-desert-tiles-desert-grass'],
+      ['desert-water-tiles-1', 'kenmi-desert-tiles-desert-water-tiles-1'],
+      ['desert-water-tiles-2', 'kenmi-desert-tiles-desert-water-tiles-2'],
+      ['desert-water-tiles-3', 'kenmi-desert-tiles-desert-water-tiles-3'],
+    ];
+    for (const [alias, sourceKey] of tiledAliases) {
+      if (this.textures.exists(sourceKey) && !this.textures.exists(alias)) {
+        const source = this.textures.get(sourceKey);
+        this.textures.addImage(alias, source.getSourceImage());
+      }
+    }
 
     this.scene.start('WorldScene');
     EventBus.emit(EVENTS.SCENE_READY);
