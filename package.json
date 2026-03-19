@@ -14,6 +14,7 @@
     "seed": "node scripts/seed-db.js",
     "build:alphabet": "node scripts/build-alphabet.js",
     "build:vocabulary": "node scripts/build-vocabulary.js",
+    "ink:compile": "node scripts/compile-ink.mjs",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
