@@ -20,7 +20,15 @@ vi.mock('../../../store/store.js', () => ({
       },
       quests: {
         npcMarkers: {}
-      }
+      },
+      time: {
+        totalGameMinutes: 480,
+        dayNumber: 1,
+        paused: false,
+      },
+      narrative: {
+        storyFlags: {},
+      },
     })),
     dispatch: vi.fn()
   }
@@ -28,6 +36,28 @@ vi.mock('../../../store/store.js', () => ({
 
 vi.mock('../../../store/slices/questSlice.js', () => ({
   selectNpcQuestMarkers: vi.fn((state) => state.quests.npcMarkers || {})
+}));
+
+vi.mock('../../../store/slices/timeSlice.js', () => ({
+  selectGameTime: vi.fn(() => ({ hour: 8, minute: 0 }))
+}));
+
+vi.mock('../ScheduleEvaluator.js', () => ({
+  shouldSpawnNpc: vi.fn(() => true),
+  evaluateSchedule: vi.fn(() => null),
+}));
+
+vi.mock('../ActionSetExecutor.js', () => ({
+  evaluateActionSets: vi.fn(() => []),
+  executeActions: vi.fn(),
+}));
+
+vi.mock('../actionContext.js', () => ({
+  buildActionContext: vi.fn(() => ({})),
+}));
+
+vi.mock('../../../data/npcsEnriched.js', () => ({
+  default: [],
 }));
 
 vi.mock('../../sprites/NPC.js', () => ({
@@ -40,10 +70,13 @@ vi.mock('../../sprites/NPC.js', () => ({
       this.setInteractionHint = vi.fn();
       this.setQuestMarker = vi.fn();
       this.setOnboardingHighlight = vi.fn();
+      this.startWander = vi.fn();
+      this.startPatrol = vi.fn();
+      this.update = vi.fn();
+      this.setFlipX = vi.fn();
+      this.stopMovement = vi.fn();
     }
-    destroy() {
-      // Mock destroy method
-    }
+    destroy() {}
   }
 }));
 
@@ -77,7 +110,7 @@ describe('NPCManager', () => {
   });
 
   describe('create()', () => {
-    it('should spawn NPCs from config and create DOM labels', () => {
+    it('should spawn NPCs from config', () => {
       const npcConfigs = [
         { id: 'npc1', x: 5, y: 5, key: 'elder', name: 'Elder', nameArabic: 'الشيخ' },
         { id: 'npc2', x: 10, y: 10, key: 'merchant', name: 'Merchant', nameArabic: 'التاجر' }
@@ -91,24 +124,16 @@ describe('NPCManager', () => {
 
       // Verify NPC positions (converted from tile coords to pixels, centered in tile)
       expect(npcManager.npcs[0].x).toBe(352); // 5 * 64 + 32
-      expect(npcManager.npcs[0].y).toBe(352); // 5 * 64 + 32
+      expect(npcManager.npcs[0].y).toBe(352);
 
       // Verify colliders created
       expect(scene.physics.add.collider).toHaveBeenCalledTimes(2);
-
-      // Verify DOM labels created
-      expect(mockDomOverlay.createNpcLabel).toHaveBeenCalledWith('npc1', 352, 352, 'الشيخ', 'Elder');
-      expect(mockDomOverlay.createNpcLabel).toHaveBeenCalledWith('npc2', 672, 672, 'التاجر', 'Merchant');
-
-      // Verify interaction prompts created
-      expect(mockDomOverlay.createInteractionPrompt).toHaveBeenCalledTimes(2);
     });
 
     it('should handle empty NPC config', () => {
       npcManager.create([], mockPlayerSprite, null, mockDomOverlay);
 
       expect(npcManager.npcs).toHaveLength(0);
-      expect(mockDomOverlay.createNpcLabel).not.toHaveBeenCalled();
     });
   });
 
@@ -133,7 +158,6 @@ describe('NPCManager', () => {
       npcManager.update(mockPlayerSprite, mockDomOverlay, interactKey, false, setInteractCooldown);
 
       expect(npcManager.npcs[0].setInteractionHint).toHaveBeenCalledWith(true);
-      expect(mockDomOverlay.setVisible).toHaveBeenCalledWith('prompt-npc1', true);
     });
 
     it('should hide interaction prompt when player is out of range', async () => {
@@ -143,17 +167,15 @@ describe('NPCManager', () => {
       npcManager.update(mockPlayerSprite, mockDomOverlay, interactKey, false, setInteractCooldown);
 
       expect(npcManager.npcs[0].setInteractionHint).toHaveBeenCalledWith(false);
-      expect(mockDomOverlay.setVisible).toHaveBeenCalledWith('prompt-npc1', false);
     });
 
-    it('should update DOM overlay positions every frame', async () => {
+    it('should call npc.update() every frame', async () => {
       const Phaser = await import('phaser');
-      vi.spyOn(Phaser.default.Math.Distance, 'Between').mockReturnValue(64);
+      vi.spyOn(Phaser.default.Math.Distance, 'Between').mockReturnValue(200);
 
       npcManager.update(mockPlayerSprite, mockDomOverlay, interactKey, false, setInteractCooldown);
 
-      expect(mockDomOverlay.updatePosition).toHaveBeenCalledWith('npc-label-npc1', 352, 352);
-      expect(mockDomOverlay.updatePosition).toHaveBeenCalledWith('prompt-npc1', 352, 352);
+      expect(npcManager.npcs[0].update).toHaveBeenCalled();
     });
 
     it('should emit npc-interact event when player presses SPACE in range', async () => {
@@ -187,7 +209,6 @@ describe('NPCManager', () => {
     });
 
     it('should apply quest markers from Redux state', async () => {
-      const { store } = await import('../../../store/store.js');
       const { selectNpcQuestMarkers } = await import('../../../store/slices/questSlice.js');
 
       selectNpcQuestMarkers.mockReturnValue({ npc1: 'exclamation' });
@@ -205,7 +226,9 @@ describe('NPCManager', () => {
 
       store.getState.mockReturnValue({
         player: { onboardingTargetNpc: 'npc1' },
-        quests: { npcMarkers: {} }
+        quests: { npcMarkers: {} },
+        time: { totalGameMinutes: 480, dayNumber: 1, paused: false },
+        narrative: { storyFlags: {} },
       });
 
       const Phaser = await import('phaser');

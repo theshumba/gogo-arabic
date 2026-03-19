@@ -39,6 +39,8 @@ describe('EquipmentManager', () => {
     }));
 
     scene = createMockScene();
+    // EquipmentManager checks textures.exists before creating sprites
+    scene.textures.exists = vi.fn(() => true);
     playerSprite = {
       x: 100,
       y: 200,

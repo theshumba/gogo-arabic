@@ -36,6 +36,7 @@ describe('uiSlice', () => {
         notification: null,
         craftingRecipeId: null,
         craftingProfessionId: null,
+        journalOpen: false,
       });
     });
   });

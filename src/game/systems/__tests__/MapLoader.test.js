@@ -5,9 +5,14 @@ import { MapLoader } from '../MapLoader.js';
 // Mock zone data constants
 vi.mock('../../../data/zones.js', () => ({
   TILE: 64,
+  SAND: 0,
   GRASS: 1,
   WATER: 2,
-  ICE_GRASS: 3
+  ICE_GRASS: 3,
+  STONE: 4,
+  WOOD: 5,
+  ZONES: {},
+  ZONE_ORDER: [],
 }));
 
 describe('MapLoader', () => {

@@ -16,6 +16,8 @@ describe('npcSlice', () => {
     it('should return the initial state', () => {
       expect(initialState).toEqual({
         dialogueState: {},
+        friendship: {},
+        giftsGiven: {},
       });
     });
   });

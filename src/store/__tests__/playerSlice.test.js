@@ -36,6 +36,7 @@ describe('playerSlice', () => {
       xp: 0,
       xpToNextLevel: 100,
       dirhams: 0,
+      currency: { fils: 0, dirhams: 0, dinars: 0 },
       wordsLearned: 0,
       streak: 0,
       lastPlayedDate: null,
@@ -53,9 +54,10 @@ describe('playerSlice', () => {
       levelUpRewards: null,
       streakRewardPending: null,
       onboardingComplete: false,
-      tutorialPhase: 'awaiting_mentor',
+      tutorialPhase: 'cinematic_intro',
       mentorAvailable: true,
       onboardingTargetNpc: null,
+      learningPath: null,
     };
   });
 

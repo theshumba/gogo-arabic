@@ -105,6 +105,13 @@ export function createMockScene(overrides = {}) {
     setTint: vi.fn().mockReturnThis(),
     setVisible: vi.fn().mockReturnThis(),
     setAlpha: vi.fn().mockReturnThis(),
+    setFlipX: vi.fn().mockReturnThis(),
+    setFlipY: vi.fn().mockReturnThis(),
+    setFrame: vi.fn().mockReturnThis(),
+    setTexture: vi.fn().mockReturnThis(),
+    setPosition: vi.fn().mockReturnThis(),
+    setAngle: vi.fn().mockReturnThis(),
+    setCrop: vi.fn().mockReturnThis(),
     body: {
       setSize: vi.fn(),
       setOffset: vi.fn()
@@ -329,9 +336,13 @@ export function createMockScene(overrides = {}) {
       })
     },
 
-    // Textures
+    // Textures — default to false so MapLoader falls through to flat tile rendering
     textures: {
-      exists: vi.fn(() => true)
+      exists: vi.fn(() => false),
+      get: vi.fn(() => ({
+        getFrameNames: vi.fn(() => []),
+        frames: {},
+      })),
     },
 
     // Game reference for MapLoader and DOMOverlay

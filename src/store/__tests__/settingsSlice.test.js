@@ -32,6 +32,17 @@ describe('settingsSlice', () => {
         pronunciationVolume: 100,
         isMuted: false,
         textSize: 'medium',
+        difficulty: 'normal',
+        vowelMarks: true,
+        hintFrequency: 'normal',
+        battleSpeed: 1,
+        vocabRandomizerSeed: null,
+        showRomanization: true,
+        colorBlindMode: 'none',
+        fontScale: 1,
+        reducedMotion: false,
+        highContrast: false,
+        screenReaderMode: false,
       });
     });
   });

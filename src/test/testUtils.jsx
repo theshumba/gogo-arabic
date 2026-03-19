@@ -21,6 +21,18 @@ import magicReducer from '../store/slices/magicSlice.js';
 import inventoryReducer from '../store/slices/inventorySlice.js';
 import economyReducer from '../store/slices/economySlice.js';
 import companionReducer from '../store/slices/companionSlice.js';
+import arenaReducer from '../store/slices/arenaSlice.js';
+import codexReducer from '../store/slices/codexSlice.js';
+import craftingReducer from '../store/slices/craftingSlice.js';
+import endgameReducer from '../store/slices/endgameSlice.js';
+import factionReducer from '../store/slices/factionSlice.js';
+import homeReducer from '../store/slices/homeSlice.js';
+import journalReducer from '../store/slices/journalSlice.js';
+import skillTreeReducer from '../store/slices/skillTreeSlice.js';
+import statsReducer from '../store/slices/statsSlice.js';
+import timeReducer from '../store/slices/timeSlice.js';
+import weatherReducer from '../store/slices/weatherSlice.js';
+import worldStateReducer from '../store/slices/worldStateSlice.js';
 
 /**
  * Creates a test store with optional preloaded state.
@@ -47,6 +59,18 @@ export function createTestStore(preloadedState = {}) {
     inventory: inventoryReducer,
     economy: economyReducer,
     companions: companionReducer,
+    arena: arenaReducer,
+    codex: codexReducer,
+    crafting: craftingReducer,
+    endgame: endgameReducer,
+    faction: factionReducer,
+    home: homeReducer,
+    journal: journalReducer,
+    skillTree: skillTreeReducer,
+    stats: statsReducer,
+    time: timeReducer,
+    weather: weatherReducer,
+    worldState: worldStateReducer,
   });
 
   return configureStore({
