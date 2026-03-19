@@ -89,7 +89,7 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - Environmental storytelling: inscriptions, scrolls, readable signs
 - 573 missing NPC dialogue lines filled
 - Vocabulary expansion to 5,000+ words (complete v9.0 Phase 46)
-- Bundle optimization: 862KB → 500KB
+- Bundle optimization: 862KB → 500KB ✓ (achieved 402KB in Phase 50)
 
 **Previous milestone:** v10.0 Onboarding & First 5 Minutes (Phase 47 code complete, Phases 48-49 absorbed into v11.0)
 
@@ -125,11 +125,11 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 **v2.0 shipped (2026-02-08):** 9 phases, 14 plans. Quest guidance, feature discoverability, daily dashboard, world map, player profile, outfits.
 
-**Codebase:** ~133K LOC (JS/JSX/CSS/JSON frontend). React 19 + Phaser 3 + Redux Toolkit (17 slices, 5 middleware) + Express 5 + MongoDB.
+**Codebase:** ~196K LOC (JS/JSX/CSS/JSON frontend). React 19 + Phaser 3 + Redux Toolkit (17 slices, 6 middleware) + Express 5 + MongoDB.
 
 **Known tech debt:**
-- Bundle 661KB (exceeds 500KB target, approaching 700KB warning)
-- BootScene loads ALL assets upfront (77 calls) — needs zone-based lazy loading
+- ~~Bundle 661KB~~ → 402KB (Phase 50, lazy-loaded overlays + lazy GameLayout)
+- ~~BootScene loads ALL assets upfront~~ → Zone-based lazy loading (Phase 50, shared upfront + zone on-demand)
 - No tests for Phase 27 battle code (~2.6K LOC)
 - ShopOverlay + CompanionUI not wired to GameLayout (~25 lines to fix)
 - 573 missing companion dialogue lines, 12 missing companion sprite PNGs (content/art gaps)
@@ -139,7 +139,7 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - **Tech stack**: React 19 + Phaser 3 + Redux Toolkit + Express 5 + MongoDB (established, no changes)
 - **Browser**: Modern browsers, no IE11
 - **Mobile**: Responsive web, minimum 375px viewport
-- **Performance**: Main bundle < 500KB after splitting (currently 661KB — needs optimization)
+- **Performance**: Main bundle < 500KB after splitting (402KB as of Phase 50)
 - **Accessibility**: WCAG AA compliance for all overlays, prefers-reduced-motion for all VFX
 - **Cultural**: No music, no eyes/faces, no deity characters. Arabic-first, culturally respectful, historically accurate.
 
@@ -167,4 +167,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-19 after v10.0 milestone start*
+*Last updated: 2026-03-19 after Phase 50 (Infrastructure Baseline) complete*
