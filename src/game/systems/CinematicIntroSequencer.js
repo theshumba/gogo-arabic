@@ -2,6 +2,9 @@ import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { createArabicText } from '../ui/ArabicText.js';
 import { FloatingWordObject } from '../objects/FloatingWordObject.js';
+import { store } from '../../store/store.js';
+import { setTutorialPhase } from '../../store/slices/playerSlice.js';
+import { setActiveQuest } from '../../store/slices/questSlice.js';
 
 // ============================================================
 // WORD DATA — first Arabic word the player encounters
@@ -411,15 +414,85 @@ export class CinematicIntroSequencer {
    * Assign: sequencer.onWordLearned = () => { ... }
    */
   _onWordLearned() {
-    // Remove update listener — no more proximity checks needed
+    if (!this._active) return;
+    // Remove update listener (FloatingWordObject proximity check)
     if (this._updateBound) {
       this.scene.events.off('update', this._updateBound);
       this._updateBound = null;
     }
+    // Expose external hook (for testing / Phase 48-49 wiring)
+    if (this.onWordLearned) this.onWordLearned();
+    // Proceed to beat 5: Amira arrival
+    this._triggerAmiraArrival();
+  }
 
-    // Expose hook for Plan 47-03 (Amira arrival / path choice)
-    if (typeof this.onWordLearned === 'function') {
-      this.onWordLearned();
+  // ============================================================
+  // BEAT 5: AMIRA ARRIVAL (INTRO-05)
+  // ============================================================
+
+  /**
+   * Pan camera to Guide Amira's position (tile 14,18 → world 896, 1152),
+   * then open her arrival dialogue.
+   * Player remains frozen (DialogueBox.show() emits PLAYER_FREEZE again).
+   */
+  _triggerAmiraArrival() {
+    if (!this._active) return;
+
+    // Freeze player while Amira speaks
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+
+    // Pan camera to Amira's position (tile 14,18 → world 896, 1152)
+    const amiraWorldX = 14 * 64; // 896
+    const amiraWorldY = 18 * 64; // 1152
+    this.scene.cameras.main.pan(amiraWorldX, amiraWorldY, 1000, 'Power2', false, (cam, progress) => {
+      if (progress === 1) {
+        this._showAmiraDialogue();
+      }
+    });
+  }
+
+  /**
+   * Show Guide Amira's two-line arrival dialogue via DialogueBox.
+   * On completion, calls _completeSequence().
+   */
+  _showAmiraDialogue() {
+    if (!this._active || !this.scene.dialogueBox) {
+      this._completeSequence();
+      return;
     }
+
+    const messages = [
+      'السَّلامُ عَلَيْكُم، أَيُّها المُسافِر.',
+      'I have been waiting for you. Speak to me when you are ready.',
+    ];
+
+    this.scene.dialogueBox.show('Guide Amira', messages, () => {
+      this._completeSequence();
+    });
+  }
+
+  // ============================================================
+  // SEQUENCE COMPLETION
+  // ============================================================
+
+  /**
+   * Dispatches Redux state transitions and calls cleanup().
+   * - setTutorialPhase('awaiting_mentor') un-blocks TutorialHints
+   *   and triggers the "Walk to Guide Amira" arrow hint
+   * - setActiveQuest('tutorial_welcome') hands the player their first quest
+   */
+  _completeSequence() {
+    if (!this._active) return;
+
+    // Dispatch: transition tutorial phase to awaiting_mentor
+    // This un-blocks TutorialHints (see GameLayout.jsx line ~292)
+    // and triggers the "Walk to Guide Amira" arrow hint (TutorialHints.jsx line ~131)
+    store.dispatch(setTutorialPhase('awaiting_mentor'));
+
+    // Dispatch: set first quest as active
+    store.dispatch(setActiveQuest('tutorial_welcome'));
+
+    // Cleanup: unfreeze player, destroy all objects
+    this.cleanup();
   }
 }
