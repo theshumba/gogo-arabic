@@ -71,6 +71,26 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Dev helper: visit localhost:3000?reset to clear all save data and start fresh
+      if (new URLSearchParams(window.location.search).has('reset')) {
+        localStorage.clear();
+        indexedDB.databases().then(dbs => dbs.forEach(db => indexedDB.deleteDatabase(db.name)));
+        window.location.href = window.location.origin;
+      }
+      // Debug overlay — shows errors and game state on screen
+      window._debugLog = [];
+      var debugDiv = document.createElement('div');
+      debugDiv.id = 'debug-overlay';
+      debugDiv.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.9);color:#0f0;font:12px monospace;padding:8px;z-index:99999;max-height:200px;overflow:auto;pointer-events:none;';
+      document.body.appendChild(debugDiv);
+      function dbg(msg) { window._debugLog.push(msg); debugDiv.textContent = window._debugLog.slice(-10).join('\n'); }
+      window.addEventListener('error', function(e) { dbg('ERROR: ' + e.message + ' @ ' + e.filename + ':' + e.lineno); });
+      window.addEventListener('unhandledrejection', function(e) { dbg('PROMISE ERROR: ' + e.reason); });
+      var origWarn = console.warn; console.warn = function() { var m = [].join.call(arguments, ' '); if (m.includes('Failed to load')) dbg('WARN: ' + m); origWarn.apply(console, arguments); };
+      var origLog = console.log; console.log = function() { var m = [].join.call(arguments, ' '); if (m.includes('BootScene') || m.includes('WorldScene') || m.includes('cinematic')) dbg(m); origLog.apply(console, arguments); };
+      dbg('Debug overlay active — waiting for game...');
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

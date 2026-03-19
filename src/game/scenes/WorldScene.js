@@ -301,9 +301,9 @@ export class WorldScene extends Phaser.Scene {
       this.mapLoader.destroy();
     }
     this.usingTiledMap = false;
-    this.npcManager.destroy();
-    this.interactableManager.destroy();
-    this.playerController.destroy();
+    if (this.npcManager) this.npcManager.destroy();
+    if (this.interactableManager) this.interactableManager.destroy();
+    if (this.playerController) this.playerController.destroy();
   }
 
   // Build a zone by name (data-driven from zones.js)
@@ -426,7 +426,7 @@ export class WorldScene extends Phaser.Scene {
 
   handleFastTravel({ zoneName }) {
     if (this.fastTravelManager) {
-      this.fastTravelManager.travelToZone(zoneName);
+      this.fastTravelManager.travelTo(zoneName);
     } else {
       // Fallback if manager fails
       this.loadZone(zoneName);
@@ -496,7 +496,7 @@ export class WorldScene extends Phaser.Scene {
 
     // Emit player position for HUD compass (throttled: every 6 frames ~10Hz at 60fps)
     this._frameCount = (this._frameCount || 0) + 1;
-    if (this._frameCount % 6 === 0) {
+    if (this._frameCount % 6 === 0 && player) {
       EventBus.emit(EVENTS.PLAYER_POSITION_UPDATE, { x: player.x, y: player.y });
     }
 
@@ -547,8 +547,8 @@ export class WorldScene extends Phaser.Scene {
     if (this.timeSystem) this.timeSystem.update(time, delta);
     if (this.weatherSystem) this.weatherSystem.update(time, delta);
 
-    // Check fast travel unlocks
-    if (this.fastTravelManager && this.playerController) {
+    // Check fast travel unlocks (guarded — checkCurrentLocation not yet implemented)
+    if (this.fastTravelManager && typeof this.fastTravelManager.checkCurrentLocation === 'function' && this.playerController) {
       const p = this.playerController.getPlayer();
       if (p) {
         this.fastTravelManager.checkCurrentLocation(p.x, p.y, this.currentZone);

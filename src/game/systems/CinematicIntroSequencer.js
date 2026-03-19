@@ -77,7 +77,8 @@ export class CinematicIntroSequencer {
     EventBus.emit(EVENTS.PLAYER_FREEZE);
 
     // Fade in from black (camera starts black from Phaser default)
-    this.scene.cameras.main.fadeIn(1500, 0, 0, 0, (camera, progress) => {
+    // Phaser signature: fadeIn(duration, red, green, blue, force, callback)
+    this.scene.cameras.main.fadeIn(1500, 0, 0, 0, false, (camera, progress) => {
       if (progress === 1) {
         this._applyDawnTint();
       }
