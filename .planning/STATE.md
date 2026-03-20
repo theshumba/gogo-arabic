@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: unknown
-stopped_at: Phase 53 plan 03 complete — faction vocab rewards + FactionPanel UI; Phase 53 fully complete
-last_updated: "2026-03-20T21:32:11.971Z"
+stopped_at: Phase 54 plan 04 complete — path-aware tashkeel fading (TASH-01/02/03)
+last_updated: "2026-03-20T22:48:00.000Z"
 progress:
   total_phases: 3
   completed_phases: 3
@@ -19,15 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 53 — faction-reputation-engine
+**Current focus:** Phase 54 — world-life-systems
 
 ## Current Position
 
-Phase: 53
-Plan: Not started
-Next: Phase 54
-
-Progress: ███ (3/3 plans complete in Phase 53)
+Phase: 54 (world-life-systems) — COMPLETE
+Plan: 4 of 4
 
 ### Shipped Milestones
 
@@ -106,6 +103,8 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | PATH_MENTORS lookup at runtime in each handler, not cached at hook mount (51-06) | Stale closure risk: learningPath is null at mount, set during ink dialogue | store.getState().player.learningPath read inside event handler body |
 | Path quest prerequisites = ["tutorial_welcome"] not [] (51-06) | Empty array would activate all 3 path quests at app startup before path chosen | tutorial_welcome gates unlock to post-onboarding; learningPath field on quest def handles display filtering |
 | 'met_yusuf' phase name preserved despite mentor being path-variable (51-06) | Changing phase name breaks existing save files | Comment documents misleading name; save compatibility maintained |
+| FADE_DIVISOR at module level in useFormatArabic (54-04) | Avoids per-render object allocation; scalar constant for path-to-rate mapping | Module-level const; scholar: 2.0, historian: 1.33, traveler: 1.0 |
+| learningPath in getTashkeelOpacity useCallback deps (54-04) | Prevents stale closure when path changes without fsrsCards changing (Pitfall 7) | [fsrsCards, learningPath] deps array |
 | FACTION_TIERS as frozen object with threshold + labels (53-01) | Consistent with other constant patterns in codebase | Object.freeze with threshold/label/labelArabic fields |
 | faction moved to IndexedDB CURRENT_VERSION=9 (53-01) | Faction scores can grow large; consistent with worldState v8 migration | Nested persistReducer, migration 9 cleans old localStorage faction key |
 | factionMiddleware last in chain after worldStateMiddleware (53-01) | Ordering consistency | Appended to concat() chain after worldStateMiddleware |
@@ -131,5 +130,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 53 plan 03 complete — faction vocab rewards + FactionPanel UI; Phase 53 fully complete
-Resume file: .planning/phases/54-gossip-rumour-system/ (Phase 54 next)
+Stopped at: Phase 54 plan 04 complete — path-aware tashkeel fading; Phase 54 fully complete
+Resume file: .planning/phases/55-next/ (Phase 55 next)

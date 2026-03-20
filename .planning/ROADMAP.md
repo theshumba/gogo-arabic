@@ -414,10 +414,10 @@ Plans:
 **Plans**: 4 plans in 2 waves
 
 Plans:
-- [ ] 54-01-PLAN.md — PricingAgent supply/demand model in EconomyFlow.js + faction modifier + price floor/ceiling + ShopOverlay price change indicators (ECON-01, ECON-02, ECON-03, ECON-04)
-- [ ] 54-02-PLAN.md — GossipManager: EventBus token creation, NPC propagation (relationship ≥ 25), 3-day expiry, ink dialogue surfacing, heard flag, Arabic grammar annotation (GOSP-01, GOSP-02, GOSP-03, GOSP-04, GOSP-05)
-- [ ] 54-03-PLAN.md — 20 environmental inscriptions/scrolls as ink interactions across 8 zones + FSRS queue integration + root family teaching (ENVR-01, ENVR-02, ENVR-03, ENVR-04)
-- [ ] 54-04-PLAN.md — Progressive tashkeel refinement: ambiguity-aware fading + learning path fading rate + inscription proficiency-appropriate tashkeel (TASH-01, TASH-02, TASH-03)
+- [x] 54-01-PLAN.md — PricingAgent supply/demand model in EconomyFlow.js + faction modifier + price floor/ceiling + ShopOverlay price change indicators (ECON-01, ECON-02, ECON-03, ECON-04)
+- [x] 54-02-PLAN.md — GossipManager: EventBus token creation, NPC propagation (relationship ≥ 25), 3-day expiry, ink dialogue surfacing, heard flag, Arabic grammar annotation (GOSP-01, GOSP-02, GOSP-03, GOSP-04, GOSP-05)
+- [x] 54-03-PLAN.md — 20 environmental inscriptions/scrolls as ink interactions across 8 zones + FSRS queue integration + root family teaching (ENVR-01, ENVR-02, ENVR-03, ENVR-04)
+- [x] 54-04-PLAN.md — Progressive tashkeel refinement: ambiguity-aware fading + learning path fading rate + inscription proficiency-appropriate tashkeel (TASH-01, TASH-02, TASH-03)
 
 #### Phase 55: Mini-Games and Content Polish
 **Goal**: Two new Arabic learning mini-games — calligraphy tracing and poetry battles — give players deep, unique practice modes that no other Arabic learning app offers; battle code tests establish a safety net before poetry battles build on the combat system
