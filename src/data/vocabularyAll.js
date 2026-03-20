@@ -74,6 +74,83 @@ const CATEGORY_AFFINITY = {
   phrases: ['traveler', 'scholar'],
   adjectives: ['scholar', 'traveler', 'historian'],
   verbs_basic: ['scholar', 'traveler', 'historian'],
+
+  // Extended Scholar domain
+  grammar_patterns: ['scholar'],
+  grammar_particles: ['scholar'],
+  academic_discourse: ['scholar'],
+  verbs_form_II_III: ['scholar'],
+  advanced_grammar_forms: ['scholar'],
+  advanced_verbs: ['scholar'],
+  abstract_general: ['scholar'],
+  advanced_nouns_abstract: ['scholar'],
+  science_nature: ['scholar'],
+  philosophy_advanced: ['scholar'],
+  psychology_sociology: ['scholar'],
+  verbs_intermediate: ['scholar', 'traveler', 'historian'],
+  adjectives_intermediate: ['scholar', 'traveler', 'historian'],
+
+  // Extended Traveler domain
+  professions: ['traveler'],
+  house_home: ['traveler'],
+  travel: ['traveler'],
+  health: ['traveler'],
+  work_business: ['traveler'],
+  transport: ['traveler'],
+  emotions: ['traveler', 'scholar'],
+  media_communication: ['traveler'],
+  shopping: ['traveler'],
+  sports_leisure: ['traveler'],
+  technology: ['traveler', 'scholar'],
+  social_life: ['traveler'],
+  city_urban: ['traveler'],
+  hospitality: ['traveler'],
+  tools_objects: ['traveler'],
+  kitchen_cooking: ['traveler'],
+
+  // Extended Historian domain
+  history_civilization: ['historian'],
+  literary_arabic: ['historian'],
+  law_society: ['historian'],
+  rhetoric_eloquence: ['historian'],
+  arts_culture: ['historian'],
+  arts_literature: ['historian'],
+  religion_philosophy: ['historian'],
+  quranic_classical: ['historian', 'scholar'],
+  islamic_sciences_advanced: ['historian'],
+  philosophy_thought: ['scholar', 'historian'],
+
+  // Extended Shared domains
+  economy_finance: ['traveler', 'historian'],
+  politics_governance: ['historian', 'scholar'],
+  environment: ['traveler', 'historian'],
+  medicine_health: ['scholar', 'traveler'],
+  education_teaching: ['scholar'],
+  language_linguistics: ['scholar'],
+  music_arts: ['historian', 'traveler'],
+  agriculture: ['traveler', 'historian'],
+  maritime_naval: ['traveler', 'historian'],
+  advanced_natural_science: ['scholar'],
+  islamic_jurisprudence: ['historian'],
+  calligraphy_art: ['historian', 'scholar'],
+  poetry_literature: ['historian'],
+  astronomy_advanced: ['scholar'],
+  philosophy_ethics: ['scholar', 'historian'],
+  diplomacy: ['historian', 'traveler'],
+  trade_commerce: ['traveler'],
+  crafts_manufacturing: ['traveler', 'historian'],
+  urban_planning: ['historian'],
+  water_irrigation: ['traveler', 'historian'],
+  navigation: ['traveler'],
+  textiles: ['traveler'],
+  ceramics_pottery: ['historian'],
+  metallurgy: ['scholar', 'historian'],
+  optics_physics: ['scholar'],
+  alchemy_chemistry: ['scholar'],
+  cartography: ['historian', 'scholar'],
+  music_theory: ['historian'],
+  medicine_pharmacology: ['scholar'],
+  library_sciences: ['scholar'],
 };
 
 // Build a Set of IDs already present in the curated dataset
@@ -113,13 +190,38 @@ const allExistingIds = new Set([
 // Filter expanded words: exclude any ID already present in higher-priority sources
 const newExpandedWords = expandedWords.filter((w) => !allExistingIds.has(w.id));
 
-// Final export: curated first (richest metadata), then additional, then expanded
-const vocabulary = [...curatedWords, ...additionalWords, ...newExpandedWords];
+// Merge: curated first (richest metadata), then additional, then expanded
+const merged = [...curatedWords, ...additionalWords, ...newExpandedWords];
+
+// Secondary dedup: remove entries with duplicate Arabic text (keep first occurrence = highest priority source)
+const seenArabic = new Set();
+const vocabulary = [];
+for (const word of merged) {
+  if (seenArabic.has(word.arabic)) continue;
+  seenArabic.add(word.arabic);
+  vocabulary.push(word);
+}
 
 // Post-process: assign domainAffinity to every word based on its category.
 // Words matching a learning path's domain appear first in selectNewCardsByPath.
 for (const word of vocabulary) {
   word.domainAffinity = CATEGORY_AFFINITY[word.category] || [];
+}
+
+// Infer CEFR level for legacy words (vocabulary.json / vocabulary-final.json) that lack cefrLevel.
+// Uses frequency bands matching vocabularyExpanded.js conventions, with difficulty fallback.
+for (const word of vocabulary) {
+  if (!word.cefrLevel) {
+    if (word.frequency >= 4000) word.cefrLevel = 'A1';
+    else if (word.frequency >= 2000) word.cefrLevel = 'A2';
+    else if (word.frequency >= 500) word.cefrLevel = 'B1';
+    else if (word.frequency != null) word.cefrLevel = 'B2';
+    else if (word.difficulty === 1) word.cefrLevel = 'A1';
+    else if (word.difficulty === 2) word.cefrLevel = 'A2';
+    else if (word.difficulty === 3) word.cefrLevel = 'B1';
+    else if (word.difficulty === 4) word.cefrLevel = 'B2';
+    else word.cefrLevel = 'A2'; // safe fallback for words with no frequency or difficulty
+  }
 }
 
 // Dev-mode affinity summary (stripped by bundler in production via dead-code elimination)
