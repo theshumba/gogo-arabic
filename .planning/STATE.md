@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v11.0
 milestone_name: Dialogue Foundation & Learning Paths
 status: in_progress
-stopped_at: "Phase 51 plan 04 complete (51-04-SUMMARY.md created) — Phase 51 all 4 plans complete"
-last_updated: "2026-03-20T02:05:00Z"
+stopped_at: "Phase 51 plan 06 complete (51-06-SUMMARY.md created) — gap closure done"
+last_updated: "2026-03-20T01:49:10Z"
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 13
-  completed_plans: 4
+  completed_plans: 6
 ---
 
 # Project State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 51 — dialogue-foundation-learning-paths (COMPLETE)
+**Current focus:** Phase 51 — dialogue-foundation-learning-paths (gap closure complete)
 
 ## Current Position
 
-Phase: 51 (dialogue-foundation-learning-paths) — COMPLETE (all 4 plans done)
-Plan: 4 of 4 — COMPLETE
+Phase: 51 (dialogue-foundation-learning-paths) — gap closure complete (plans 05+06 done)
+Plan: 6 of 13 — COMPLETE
 
-Progress: [████░░░░░░░░░] 4/13 plans complete
+Progress: [██████░░░░░░░] 6/13 plans complete
 
 ### Shipped Milestones
 
@@ -92,6 +92,12 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | Onboarding 3-word reward uses Object.keys(fsrsCards).length (51-04) | No separate counter state needed; avoids duplication | worldStateMiddleware checks post-reduction fsrsCards count === 3 |
 | worldStateMiddleware dual-write covers both completeOnboarding + setTutorialPhase('complete') (51-04) | Both code paths can complete onboarding; both must write IndexedDB flag | Middleware intercepts both action types |
 | ActivitiesMenu 'learning-path' opens PathChoice via onOpenPathSwitch (not route) (51-04) | No /learning-path route exists; settings mode is an overlay not a page | PauseMenu threads onOpenPathSwitch → GameLayout showPathSwitch state |
+| fsrs.js imports store directly for getNewCardsForSession (51-05) | Service module not a React component; avoids prop-drilling for Redux state access | Acceptable pattern for service layer; getNewCardsForSession(maxCards) usable anywhere |
+| isNew flag + null card for new word entries in ReviewSession (51-05) | FSRS requires a card object; new words have no card yet | createNewCard() called before reviewCard(); addFsrsCard dispatched on first answer |
+| Fallback to unordered filter in rootFsrsSyncMiddleware (51-05) | Edge case: root with no path-matched words would add zero new cards | Falls back to original .filter().slice(0,3) if pathOrderedNewCards intersection is empty |
+| PATH_MENTORS lookup at runtime in each handler, not cached at hook mount (51-06) | Stale closure risk: learningPath is null at mount, set during ink dialogue | store.getState().player.learningPath read inside event handler body |
+| Path quest prerequisites = ["tutorial_welcome"] not [] (51-06) | Empty array would activate all 3 path quests at app startup before path chosen | tutorial_welcome gates unlock to post-onboarding; learningPath field on quest def handles display filtering |
+| 'met_yusuf' phase name preserved despite mentor being path-variable (51-06) | Changing phase name breaks existing save files | Comment documents misleading name; save compatibility maintained |
 
 ### Blockers/Concerns
 
@@ -107,5 +113,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 51 plan 04 complete — PATH-03 through PATH-07 satisfied; Phase 51 fully done
-Resume file: (Phase 51 complete — next phase TBD)
+Stopped at: Phase 51 plan 06 complete — PATH-04 gap closed; useTutorialTrigger uses PATH_MENTORS, path quest prerequisites fixed
+Resume file: .planning/phases/51-dialogue-foundation-learning-paths/ (gap closure done — check ROADMAP for next phase)
