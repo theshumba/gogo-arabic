@@ -29,6 +29,13 @@ export const WORLD_STATE_KEYS = {
   ONBOARDING_MAP_OPENED: 'onboarding_map_opened',
   ONBOARDING_JOURNAL_OPENED: 'onboarding_journal_opened',
 
+  // Learning path mentor + first quest tracking (PATH-04)
+  MENTOR_NPC_ID: 'mentor_npc_id',
+  FIRST_QUEST_ASSIGNED: 'first_quest_assigned',
+  FIRST_QUEST_ID: 'first_quest_id',
+  ONBOARDING_WORDS_LEARNED_COUNT: 'onboarding_words_learned_count',
+  ONBOARDING_FIRST_QUEST_COMPLETE: 'onboarding_first_quest_complete',
+
   // Time
   TIME_PHASE: 'time_phase',
   TIME_IS_NIGHT: 'is_night',

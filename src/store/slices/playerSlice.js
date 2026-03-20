@@ -3,6 +3,28 @@ import { getXPForLevel } from '../../utils/xpCalculator.js';
 import { getLevelReward } from '../../data/levelRewards.js';
 import { getStreakReward } from '../../data/streakRewards.js';
 
+/**
+ * PATH_MENTORS — maps learning path ID to the mentor NPC ID assigned on path selection.
+ * Scholar gets Yusuf (library/manuscript focus), Traveler gets Amira (village/greetings),
+ * Historian gets Tariq (ruins/inscriptions). Polymath falls back to Amira. (PATH-04)
+ */
+export const PATH_MENTORS = {
+  scholar: 'scholar-yusuf',
+  traveler: 'guide-amira',
+  historian: 'elder-tariq',
+  polymath: 'guide-amira', // fallback
+};
+
+/**
+ * PATH_FIRST_QUESTS — maps learning path ID to the first path-gated quest ID. (PATH-04)
+ */
+export const PATH_FIRST_QUESTS = {
+  scholar: 'path_scholar_first_quest',
+  traveler: 'path_traveler_first_quest',
+  historian: 'path_historian_first_quest',
+  polymath: 'path_traveler_first_quest', // fallback
+};
+
 const initialState = {
   name: '',
   skinTone: 0, // index 0-3
@@ -290,6 +312,8 @@ const playerSlice = createSlice({
       const validPaths = ['scholar', 'traveler', 'historian', 'polymath'];
       if (validPaths.includes(action.payload)) {
         state.learningPath = action.payload;
+        // Auto-assign the mentor NPC for this path (PATH-04)
+        state.onboardingTargetNpc = PATH_MENTORS[action.payload] || 'guide-amira';
       }
     },
 
@@ -404,5 +428,17 @@ export const selectTotalFils = (state) => {
   const c = state.player?.currency || { fils: 0, dirhams: 0, dinars: 0 };
   return c.dinars * 10000 + c.dirhams * 100 + c.fils;
 };
+
+// Select the mentor NPC ID for the player's current learning path (PATH-04)
+export const selectMentorNpcId = createSelector(
+  [(state) => state.player.learningPath],
+  (path) => PATH_MENTORS[path] || 'guide-amira'
+);
+
+// Select the first quest ID for the player's current learning path (PATH-04)
+export const selectFirstQuestId = createSelector(
+  [(state) => state.player.learningPath],
+  (path) => PATH_FIRST_QUESTS[path] || 'path_traveler_first_quest'
+);
 
 export default playerSlice.reducer;

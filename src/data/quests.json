@@ -2881,5 +2881,86 @@
         "descriptionArabic": "سَجِّل الكَلِمات المُفَكَّكَة مَع طارِق وَساعِدهُ في تَأمين المَوقِع"
       }
     ]
+  },
+  {
+    "id": "path_scholar_first_quest",
+    "title": "The Manuscript Fragment",
+    "titleAr": "قطعة المخطوط",
+    "description": "Scholar Yusuf has discovered a fragment of an ancient manuscript in the Sacred Library. Find him and help translate the text.",
+    "descriptionAr": "اكتشف العالم يوسف قطعة من مخطوط قديم في المكتبة المقدسة. اعثر عليه وساعده في ترجمة النص.",
+    "zone": "sacred_library",
+    "npcId": "scholar-yusuf",
+    "learningPath": "scholar",
+    "type": "main",
+    "objectives": [
+      {
+        "id": "find_yusuf",
+        "description": "Find Scholar Yusuf in the Sacred Library",
+        "descriptionAr": "اعثر على العالم يوسف في المكتبة المقدسة",
+        "target": 1
+      },
+      {
+        "id": "learn_manuscript_words",
+        "description": "Learn 3 words from the manuscript",
+        "descriptionAr": "تعلّم ٣ كلمات من المخطوط",
+        "target": 3
+      }
+    ],
+    "rewards": { "xp": 50, "dirhams": 10 },
+    "prerequisites": { "learningPath": "scholar" }
+  },
+  {
+    "id": "path_traveler_first_quest",
+    "title": "The Village Greeting",
+    "titleAr": "تحية القرية",
+    "description": "Guide Amira wants you to greet three villagers in Arabic. Walk around Oasis Village and practice your greetings.",
+    "descriptionAr": "تريد المرشدة أميرة أن تحيّي ثلاثة من أهل القرية بالعربية. تجوّل في واحة القرية ومارس تحياتك.",
+    "zone": "oasis_village",
+    "npcId": "guide-amira",
+    "learningPath": "traveler",
+    "type": "main",
+    "objectives": [
+      {
+        "id": "greet_villagers",
+        "description": "Greet 3 villagers in Arabic",
+        "descriptionAr": "حيِّ ٣ من أهل القرية بالعربية",
+        "target": 3
+      },
+      {
+        "id": "learn_greeting_words",
+        "description": "Learn 3 greeting words",
+        "descriptionAr": "تعلّم ٣ كلمات تحية",
+        "target": 3
+      }
+    ],
+    "rewards": { "xp": 50, "dirhams": 10 },
+    "prerequisites": { "learningPath": "traveler" }
+  },
+  {
+    "id": "path_historian_first_quest",
+    "title": "Echoes of the Past",
+    "titleAr": "أصداء الماضي",
+    "description": "Elder Tariq has found inscriptions near the Ancient Ruins. Help him decipher the historical text.",
+    "descriptionAr": "وجد الشيخ طارق نقوشاً قرب الأطلال القديمة. ساعده في فك رموز النص التاريخي.",
+    "zone": "ancient_ruins",
+    "npcId": "elder-tariq",
+    "learningPath": "historian",
+    "type": "main",
+    "objectives": [
+      {
+        "id": "find_tariq",
+        "description": "Find Elder Tariq near the Ancient Ruins",
+        "descriptionAr": "اعثر على الشيخ طارق قرب الأطلال القديمة",
+        "target": 1
+      },
+      {
+        "id": "learn_inscription_words",
+        "description": "Learn 3 words from the inscription",
+        "descriptionAr": "تعلّم ٣ كلمات من النقش",
+        "target": 3
+      }
+    ],
+    "rewards": { "xp": 50, "dirhams": 10 },
+    "prerequisites": { "learningPath": "historian" }
   }
 ]
