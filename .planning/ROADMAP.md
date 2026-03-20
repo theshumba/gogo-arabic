@@ -390,7 +390,7 @@ Plans:
   4. ActionSetExecutor accepts `factionRequired` conditions in NPC and zone data — faction-gated content is data-driven, not hardcoded
   5. Each faction teaches at least 10 domain-specific vocabulary words at the Friendly threshold — unlocking those words adds them to the player's FSRS queue
 
-**Plans:** 3 plans in 2 waves
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 53-01-PLAN.md — Extend factionSlice (0-100 clamp, tier constants, IndexedDB persist) + factionMiddleware auto-fires on game events (FACT-01, FACT-02)
@@ -503,7 +503,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 55
 | 50. Infrastructure Baseline | v11.0 | Complete    | 2026-03-19 | 2026-03-19 |
 | 51. Dialogue Foundation & Learning Paths | v11.0 | Complete    | 2026-03-20 | — |
 | 52. Vocabulary Expansion | v11.0 | Complete    | 2026-03-20 | 2026-03-20 |
-| 53. Faction Reputation Engine | v11.0 | 3/3 | Complete | 2026-03-20 |
+| 53. Faction Reputation Engine | v11.0 | 3/3 | Complete    | 2026-03-20 |
 | 54. World Life Systems | v11.0 | 0/4 | Not started | — |
 | 55. Mini-Games and Content Polish | v11.0 | 0/5 | Not started | — |
 
