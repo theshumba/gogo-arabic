@@ -29,6 +29,7 @@ import statsReducer from './slices/statsSlice.js';
 import skillTreeReducer from './slices/skillTreeSlice.js';
 import factionReducer from './slices/factionSlice.js';
 import gossipReducer from './slices/gossipSlice.js';
+import poetryReducer from './slices/poetrySlice.js';
 import journalReducer from './slices/journalSlice.js';
 import codexReducer from './slices/codexSlice.js';
 import endgameReducer from './slices/endgameSlice.js';
@@ -67,11 +68,12 @@ import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
  * - Version 5 (Phase 31): crafting added to IndexedDB
  * - Version 8 (Phase 50): worldState moved to IndexedDB
  * - Version 9 (Phase 53): faction moved to IndexedDB
+ * - Version 10 (Phase 55): poetry added to IndexedDB
  *
  * Storage backends:
  * - localStorage (root): player, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, narrative, economy
- * - IndexedDB (nested): vocabulary, battle, magic, inventory, companions, crafting, worldState, faction
- * - Not persisted (transient): ui, sync
+ * - IndexedDB (nested): vocabulary, battle, magic, inventory, companions, crafting, worldState, faction, poetry
+ * - Not persisted (transient): ui, sync, gossip
  */
 
 // Nested persist configs for heavy slices (IndexedDB)
@@ -131,6 +133,14 @@ const factionPersistConfig = {
   migrate,
 };
 
+const poetryPersistConfig = {
+  key: 'gogo-arabic-poetry',
+  storage: indexedDBStorage,
+  version: CURRENT_VERSION,
+  migrate,
+  blacklist: ['activeBattle'], // activeBattle is session-only (like gossip tokens)
+};
+
 // Wrap heavy reducers with nested persistReducer
 const persistedVocabularyReducer = persistReducer(vocabularyPersistConfig, vocabularyReducer);
 const persistedBattleReducer = persistReducer(battlePersistConfig, battleReducer);
@@ -140,6 +150,7 @@ const persistedCompanionReducer = persistReducer(companionPersistConfig, compani
 const persistedCraftingReducer = persistReducer(craftingPersistConfig, craftingReducer);
 const persistedWorldStateReducer = persistReducer(worldStatePersistConfig, worldStateReducer);
 const persistedFactionReducer = persistReducer(factionPersistConfig, factionReducer);
+const persistedPoetryReducer = persistReducer(poetryPersistConfig, poetryReducer);
 
 // Root persist config (localStorage) — vocabulary, battle, magic, inventory, crafting excluded (they have nested configs)
 const persistConfig = {
@@ -197,6 +208,7 @@ const rootReducer = combineReducers({
   skillTree: skillTreeReducer,
   faction: persistedFactionReducer, // IndexedDB (nested) — Phase 53
   gossip: gossipReducer,             // NOT persisted — session-ephemeral tokens
+  poetry: persistedPoetryReducer,    // IndexedDB (nested) — Phase 55
   journal: journalReducer,
   codex: codexReducer,
   endgame: endgameReducer,

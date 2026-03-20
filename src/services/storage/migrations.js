@@ -12,6 +12,7 @@
  * - Version 5 (Phase 31): crafting added to IndexedDB
  * - Version 8 (Phase 50): worldState moved to IndexedDB
  * - Version 9 (Phase 53): faction moved to IndexedDB
+ * - Version 10 (Phase 55): poetry added to IndexedDB
  *
  * Key design:
  * - Migration function receives already-deserialized state from redux-persist
@@ -23,7 +24,7 @@
 
 import { createMigrate } from 'redux-persist';
 
-export const CURRENT_VERSION = 9;
+export const CURRENT_VERSION = 10;
 
 /**
  * Migration definitions
@@ -245,6 +246,41 @@ const migrations = {
     if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
       console.log('[Migration] v8 -> v9 complete');
+    }
+    return state;
+  },
+
+  // Version 10: poetry added to IndexedDB (Phase 55)
+  10: (state) => {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] Starting v9 -> v10: poetry added to IndexedDB');
+    }
+
+    // Clean up any stale localStorage poetry key if it exists (defensive)
+    setTimeout(() => {
+      try {
+        const rootKey = 'persist:gogo-arabic';
+        const oldData = localStorage.getItem(rootKey);
+        if (oldData) {
+          const parsed = JSON.parse(oldData);
+          if (parsed.poetry) {
+            delete parsed.poetry;
+            localStorage.setItem(rootKey, JSON.stringify(parsed));
+            if (import.meta.env.DEV) {
+              // eslint-disable-next-line no-console
+              console.log('[Migration] Cleaned up old localStorage poetry data');
+            }
+          }
+        }
+      } catch (cleanupError) {
+        console.warn('[Migration] Failed to cleanup old localStorage poetry:', cleanupError);
+      }
+    }, 5000);
+
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] v9 -> v10 complete');
     }
     return state;
   },

@@ -462,4 +462,15 @@ export const EVENTS = Object.freeze({
   JOURNAL_OPEN: 'react:ui:journal-open',
   /** System → React: calendar event is active today (Ramadan, Eid, Friday) */
   CALENDAR_EVENT_ACTIVE: 'system:calendar:event-active',
+
+  // ────────────────────────────────────────────────
+  // POETRY — Poetry battle events (Phase 55)
+  // ────────────────────────────────────────────────
+
+  /** React → React: start a poetry battle with an NPC poet */
+  POETRY_BATTLE_START: 'react:poetry:battle-start',
+  /** React → React: poetry battle ended (show results) */
+  POETRY_BATTLE_END: 'react:poetry:battle-end',
+  /** React → React: player submitted answer for current blank */
+  POETRY_ANSWER_SUBMITTED: 'react:poetry:answer-submitted',
 });
