@@ -440,6 +440,15 @@ export const EVENTS = Object.freeze({
   ACTION_PLAY_SOUND: 'action:audio:play-sound',
 
   // ────────────────────────────────────────────────
+  // CALLIGRAPHY — Arabic letter tracing mini-game (Phase 55)
+  // ────────────────────────────────────────────────
+
+  /** Phaser CalligraphyScene → React: player completed a stroke; includes letterId, stars, frechetDistance */
+  CALLIGRAPHY_STROKE_COMPLETE: 'phaser:calligraphy:stroke-complete',
+  /** Phaser CalligraphyScene → React: player exited calligraphy scene */
+  CALLIGRAPHY_SCENE_EXIT: 'phaser:calligraphy:scene-exit',
+
+  // ────────────────────────────────────────────────
   // SYSTEM — AutoSave, stats, sub-areas (Phase 36)
   // ────────────────────────────────────────────────
 
