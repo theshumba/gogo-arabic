@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v11.0
 milestone_name: Dialogue Foundation & Learning Paths
 status: in_progress
-stopped_at: "Phase 51 plan 02 complete (51-02-SUMMARY.md created) — next action is Phase 51 Plan 03"
-last_updated: "2026-03-20T00:47:00Z"
+stopped_at: "Phase 51 plan 03 complete (51-03-SUMMARY.md created) — next action is Phase 51 Plan 04"
+last_updated: "2026-03-20T01:22:00Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 13
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -24,9 +24,9 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 51 (dialogue-foundation-learning-paths) — EXECUTING
-Plan: 3 of 4 (Plans 1-2 complete)
+Plan: 4 of 4 (Plans 1-3 complete)
 
-Progress: [██░░░░░░░░░░░] 2/13 plans complete
+Progress: [███░░░░░░░░░░] 3/13 plans complete
 
 ### Shipped Milestones
 
@@ -59,6 +59,9 @@ Progress: [██░░░░░░░░░░░] 2/13 plans complete
 - Visual/UI/world/tileset work explicitly out of scope — user builds in LDtk separately
 - EXTERNAL declarations required in .ink source — all ink files must declare EXTERNAL for any function called via ~ syntax
 - npm run ink:compile regenerates all .ink.json from src/data/ink-source/*.ink using inkjs/compiler/Compiler
+- INK_DIALOGUE_START event pattern: emit {engine, npcData} → DialogueOverlay renders ink story without legacy NPC lookup
+- INK_DIALOGUE_END event: emitted by DialogueOverlay on ink story completion; useTutorialTrigger listens to advance phase
+- Path-choice ink trigger: SFX_WORDLEARNED in met_mentor phase → InkDialogueEngine.loadPathChoice() → INK_DIALOGUE_START
 
 ### Decisions
 
@@ -81,6 +84,9 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | EXTERNAL declarations required in .ink (51-01) | inkjs Compiler throws on ~ function calls without EXTERNAL declaration | All .ink source files must declare EXTERNAL at top for all bound functions |
 | Zone corrections in companion dialogue (51-02) | Placeholders used wrong zones for Maryam/Nadia/Tariq vs plan spec | Applied plan-spec zones at write time; teaching specialty keys also corrected for Samir/Tariq/Maryam |
 | Amira gets ancient_ruins as 4th zone (51-02) | Plan called for adding ancient_ruins zone_comments to Amira | Added 5 entries; Amira now has 4 zones (sacred_library, oasis, market, coast, ruins) |
+| Ink path-choice triggered by SFX_WORDLEARNED not path_choice tutorialPhase (51-03) | CinematicIntroSequencer already skips tutorialPhase='path_choice'; word-learned is correct insertion point | useTutorialTrigger fires ink dialogue after SFX_WORDLEARNED in met_mentor phase |
+| INK_DIALOGUE_START/END event pair decouples overlay from phase management (51-03) | DialogueOverlay should not own phase transitions | Overlay emits INK_DIALOGUE_END; useTutorialTrigger advances to learned_word |
+| PathChoice.jsx preserved for PATH-05 (51-03) | Settings path-switch still needs PathChoice overlay | Guarded with !pathAlreadyChosen in GameLayout; never deleted |
 
 ### Blockers/Concerns
 
@@ -96,5 +102,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 51 plan 02 complete (51-02-SUMMARY.md created) — 2,295-line companionDialogue.js, CONT-01 satisfied
-Resume file: .planning/phases/51-dialogue-foundation-learning-paths/51-03-PLAN.md
+Stopped at: Phase 51 plan 03 complete (51-03-SUMMARY.md created) — Amira path-choice ink dialogue wired end-to-end, PATH-01 + PATH-02 satisfied
+Resume file: .planning/phases/51-dialogue-foundation-learning-paths/51-04-PLAN.md
