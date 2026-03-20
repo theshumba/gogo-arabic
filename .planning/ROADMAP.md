@@ -501,7 +501,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 55
 | 48. Learning Path Choice | v10.0 | 0/3 | Not started (absorbed into Phase 51) | — |
 | 49. First Quest & Loop Completion | v10.0 | 0/3 | Not started (absorbed into Phase 51) | — |
 | 50. Infrastructure Baseline | v11.0 | Complete    | 2026-03-19 | 2026-03-19 |
-| 51. Dialogue Foundation & Learning Paths | v11.0 | 4/6 | Gap closure | — |
+| 51. Dialogue Foundation & Learning Paths | v11.0 | Complete    | 2026-03-20 | — |
 | 52. Vocabulary Expansion | v11.0 | 0/3 | Not started | — |
 | 53. Faction Reputation Engine | v11.0 | 0/3 | Not started | — |
 | 54. World Life Systems | v11.0 | 0/4 | Not started | — |
