@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v9.0
-milestone_name: Content Depth
-status: unknown
-stopped_at: Phase 51 plan 06 complete — PATH-04 gap closed; useTutorialTrigger uses PATH_MENTORS, path quest prerequisites fixed
-last_updated: "2026-03-20T01:59:10.362Z"
+milestone: v11.0
+milestone_name: Vocabulary Depth
+status: in_progress
+stopped_at: Phase 52 plan 01 complete — 596 placeholder B2 words replaced, CATEGORY_AFFINITY extended to 99 entries, Arabic dedup and CEFR inference added
+last_updated: "2026-03-20T17:06:52Z"
 progress:
-  total_phases: 12
-  completed_phases: 6
-  total_plans: 21
-  completed_plans: 21
+  total_phases: 3
+  completed_phases: 0
+  total_plans: 3
+  completed_plans: 1
 ---
 
 # Project State
@@ -19,14 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 51 — dialogue-foundation-learning-paths (gap closure complete)
+**Current focus:** Phase 52 — vocabulary-expansion
 
 ## Current Position
 
-Phase: 51 (dialogue-foundation-learning-paths) — gap closure complete (plans 05+06 done)
-Plan: 6 of 13 — COMPLETE
-
-Progress: [██████░░░░░░░] 6/13 plans complete
+Phase: 52 (vocabulary-expansion) — IN PROGRESS
+Plan: 1 of 3 COMPLETE — ready for 52-02
 
 ### Shipped Milestones
 
@@ -92,6 +90,9 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | Onboarding 3-word reward uses Object.keys(fsrsCards).length (51-04) | No separate counter state needed; avoids duplication | worldStateMiddleware checks post-reduction fsrsCards count === 3 |
 | worldStateMiddleware dual-write covers both completeOnboarding + setTutorialPhase('complete') (51-04) | Both code paths can complete onboarding; both must write IndexedDB flag | Middleware intercepts both action types |
 | ActivitiesMenu 'learning-path' opens PathChoice via onOpenPathSwitch (not route) (51-04) | No /learning-path route exists; settings mode is an overlay not a page | PauseMenu threads onOpenPathSwitch → GameLayout showPathSwitch state |
+| Runtime CEFR inference in vocabularyAll.js, not JSON back-fill (52-01) | Modifying vocabulary.json/vocabulary-final.json risks breaking legacy tooling | Frequency-band + difficulty-fallback loop added post-merge; reversible |
+| Arabic-text dedup uses first-occurrence-wins (52-01) | curated > additional > expanded priority preserved by merge order | seenArabic Set iterates merged array; ~671 cross-source dupes removed |
+| CATEGORY_AFFINITY extended to 99 entries (52-01) | Plan called for 60+; all 91 categories from vocabularyExpanded.js now covered | Domain affinity from 12.2% to >70% coverage for PATH-03 selectNewCardsByPath |
 | fsrs.js imports store directly for getNewCardsForSession (51-05) | Service module not a React component; avoids prop-drilling for Redux state access | Acceptable pattern for service layer; getNewCardsForSession(maxCards) usable anywhere |
 | isNew flag + null card for new word entries in ReviewSession (51-05) | FSRS requires a card object; new words have no card yet | createNewCard() called before reviewCard(); addFsrsCard dispatched on first answer |
 | Fallback to unordered filter in rootFsrsSyncMiddleware (51-05) | Edge case: root with no path-matched words would add zero new cards | Falls back to original .filter().slice(0,3) if pathOrderedNewCards intersection is empty |
@@ -113,5 +114,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 51 plan 06 complete — PATH-04 gap closed; useTutorialTrigger uses PATH_MENTORS, path quest prerequisites fixed
-Resume file: .planning/phases/51-dialogue-foundation-learning-paths/ (gap closure done — check ROADMAP for next phase)
+Stopped at: Phase 52 plan 01 complete — vocabulary data pass done (placeholders replaced, CATEGORY_AFFINITY extended, Arabic dedup + CEFR inference added)
+Resume file: .planning/phases/52-vocabulary-expansion/52-02-PLAN.md (next: validation script + CEFR badge confirmation)
