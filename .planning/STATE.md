@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: unknown
-stopped_at: Phase 54 plan 04 complete — path-aware tashkeel fading (TASH-01/02/03)
-last_updated: "2026-03-20T22:48:00.000Z"
+stopped_at: Phase 54 plan 03 complete — environmental inscriptions + ink comprehension tiers (ENVR-01/02/03/04)
+last_updated: "2026-03-20T23:30:00.000Z"
 progress:
   total_phases: 3
   completed_phases: 3
@@ -103,6 +103,10 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | PATH_MENTORS lookup at runtime in each handler, not cached at hook mount (51-06) | Stale closure risk: learningPath is null at mount, set during ink dialogue | store.getState().player.learningPath read inside event handler body |
 | Path quest prerequisites = ["tutorial_welcome"] not [] (51-06) | Empty array would activate all 3 path quests at app startup before path chosen | tutorial_welcome gates unlock to post-onboarding; learningPath field on quest def handles display filtering |
 | 'met_yusuf' phase name preserved despite mentor being path-variable (51-06) | Changing phase name breaks existing save files | Comment documents misleading name; save compatibility maintained |
+| inscription type added to WORLD_OBJECT_SPRITES/WORLD_OBJECT_TYPES (54-03) | inscription objects were not handled in InteractableManager; silently ignored in handleInteractable | Added inscription sprite key; auto-included in WORLD_OBJECT_TYPES via Object.keys |
+| useObjectEvents handles async ink routing for inscriptions (54-03) | InteractableManager is synchronous Phaser class; ink loading is async | Same pattern as useTutorialTrigger; loadForNpc in handleObjectInteract async handler |
+| Ink multi-branch: separate {cond: -> knot} blocks not inline multi-branch (54-03) | inkjs Compiler rejects {cond: ... - cond2: ... - else: ...} for diverts | Each tier uses its own conditional block; unconditional divert as final fallback |
+| FSRS root family words capped at 5 (54-03) | Inscription encounter could add large batches of unknown root words | .slice(0,5) after filter; avoids overwhelming review queue |
 | FADE_DIVISOR at module level in useFormatArabic (54-04) | Avoids per-render object allocation; scalar constant for path-to-rate mapping | Module-level const; scholar: 2.0, historian: 1.33, traveler: 1.0 |
 | learningPath in getTashkeelOpacity useCallback deps (54-04) | Prevents stale closure when path changes without fsrsCards changing (Pitfall 7) | [fsrsCards, learningPath] deps array |
 | FACTION_TIERS as frozen object with threshold + labels (53-01) | Consistent with other constant patterns in codebase | Object.freeze with threshold/label/labelArabic fields |
@@ -133,5 +137,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 54 plan 04 complete — path-aware tashkeel fading; Phase 54 fully complete
-Resume file: .planning/phases/55-next/ (Phase 55 next)
+Stopped at: Phase 54 plan 03 complete — 24 environmental inscriptions, 5 ink comprehension dialogues, FSRS seeding
+Resume file: .planning/phases/54-world-life-systems/54-04-PLAN.md (plan 04 next)
