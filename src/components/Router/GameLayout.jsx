@@ -41,14 +41,15 @@ const QuestJournal = lazy(() => import('../Quest/QuestJournal.jsx'));
 const Wardrobe = lazy(() => import('../Wardrobe/Wardrobe.jsx'));
 import styles from './GameLayout.module.css';
 
-function ActivitiesMenu({ onBack, onNavigate }) {
+function ActivitiesMenu({ onBack, onNavigate, onOpenPathSwitch }) {
   const activities = [
     {
       id: 'learning-path',
       icon: '\u0645\u0633\u0627\u0631',
       label: 'Learning Path',
-      description: 'See your learning progression',
-      route: '/learning-path',
+      description: 'Change your learning path',
+      // No route — handled via onOpenPathSwitch for settings mode PathChoice
+      route: null,
     },
     {
       id: 'grammar',
@@ -89,7 +90,13 @@ function ActivitiesMenu({ onBack, onNavigate }) {
             <button
               key={activity.id}
               className={styles.activityCard}
-              onClick={() => onNavigate(activity.route)}
+              onClick={() => {
+                if (activity.id === 'learning-path' && onOpenPathSwitch) {
+                  onOpenPathSwitch();
+                } else if (activity.route) {
+                  onNavigate(activity.route);
+                }
+              }}
               aria-label={`${activity.label} - ${activity.description}`}
             >
               <div className={styles.activityCardArabic} lang="ar" aria-hidden="true">
@@ -108,7 +115,7 @@ function ActivitiesMenu({ onBack, onNavigate }) {
   );
 }
 
-function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe }) {
+function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe, onOpenPathSwitch }) {
   const [showActivities, setShowActivities] = React.useState(false);
 
   // ESC key handler for pause menu
@@ -128,6 +135,10 @@ function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe }) {
       <ActivitiesMenu
         onBack={() => setShowActivities(false)}
         onNavigate={onNavigate}
+        onOpenPathSwitch={() => {
+          setShowActivities(false);
+          if (onOpenPathSwitch) onOpenPathSwitch();
+        }}
       />
     );
   }
@@ -200,6 +211,12 @@ export default function GameLayout() {
   const craftingProfessionId = useSelector(selectCraftingProfessionId);
   const journalOpen = useSelector(selectJournalOpen);
   const onboardingComplete = useSelector((state) => state.player.onboardingComplete ?? true);
+  // PATH-07: dual-check — skip onboarding if either localStorage OR IndexedDB flag is set
+  const worldOnboardingComplete = useSelector(
+    (state) => state.worldState?.flags?.[WORLD_STATE_KEYS.ONBOARDING_COMPLETE] ?? false
+  );
+  // Resolved skip: either source confirms onboarding done
+  const onboardingSkip = onboardingComplete || worldOnboardingComplete;
   const anyOverlayOpen = useSelector(selectAnyOverlayOpen);
   // Guard: PathChoice overlay should not appear if path was already chosen via ink dialogue
   const pathAlreadyChosen = useSelector(
@@ -207,6 +224,7 @@ export default function GameLayout() {
   );
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
+  const [showPathSwitch, setShowPathSwitch] = React.useState(false);
   const [zoneLoading, setZoneLoading] = React.useState(false);
 
   useEffect(() => {
@@ -227,11 +245,11 @@ export default function GameLayout() {
 
   // Trigger welcome splash when transitioning into awaiting_mentor
   useEffect(() => {
-    if (prevPhaseRef.current !== 'awaiting_mentor' && tutorialPhase === 'awaiting_mentor' && !onboardingComplete) {
+    if (prevPhaseRef.current !== 'awaiting_mentor' && tutorialPhase === 'awaiting_mentor' && !onboardingSkip) {
       setShowWelcome(true);
     }
     prevPhaseRef.current = tutorialPhase;
-  }, [tutorialPhase, onboardingComplete]);
+  }, [tutorialPhase, onboardingSkip]);
 
   // J key toggles journal
   useEffect(() => {
@@ -319,8 +337,14 @@ export default function GameLayout() {
       {/* The ONBOARDING_PATH_CHOSEN guard prevents double-display in any edge case.       */}
       {tutorialPhase === 'path_choice' && !pathAlreadyChosen && <PathChoice />}
 
+      {/* PATH-05: Settings-mode path switch (triggered from Activities menu) */}
+      {showPathSwitch && (
+        <PathChoice mode="settings" onClose={() => setShowPathSwitch(false)} />
+      )}
+
       {/* Tutorial hints (non-blocking arrows/prompts) */}
-      {!onboardingComplete && tutorialPhase !== 'cinematic_intro' && tutorialPhase !== 'path_choice' && <TutorialHints />}
+      {/* PATH-07: skipped for returning players via onboardingSkip dual-check */}
+      {!onboardingSkip && tutorialPhase !== 'cinematic_intro' && tutorialPhase !== 'path_choice' && <TutorialHints />}
 
       {/* Welcome splash — auto-fades after 3 seconds */}
       {showWelcome && <WelcomeSplash onDone={() => setShowWelcome(false)} />}
@@ -350,6 +374,10 @@ export default function GameLayout() {
           onOpenWardrobe={() => {
             dispatch(toggleMenu());
             setShowWardrobe(true);
+          }}
+          onOpenPathSwitch={() => {
+            dispatch(toggleMenu());
+            setShowPathSwitch(true);
           }}
         />
       )}
