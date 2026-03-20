@@ -2907,7 +2907,7 @@
       }
     ],
     "rewards": { "xp": 50, "dirhams": 10 },
-    "prerequisites": { "learningPath": "scholar" }
+    "prerequisites": ["tutorial_welcome"]
   },
   {
     "id": "path_traveler_first_quest",
@@ -2934,7 +2934,7 @@
       }
     ],
     "rewards": { "xp": 50, "dirhams": 10 },
-    "prerequisites": { "learningPath": "traveler" }
+    "prerequisites": ["tutorial_welcome"]
   },
   {
     "id": "path_historian_first_quest",
@@ -2961,6 +2961,6 @@
       }
     ],
     "rewards": { "xp": 50, "dirhams": 10 },
-    "prerequisites": { "learningPath": "historian" }
+    "prerequisites": ["tutorial_welcome"]
   }
 ]
