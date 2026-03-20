@@ -87,6 +87,11 @@ export default defineConfig({
             id.includes('src/data/factionEvents.js')) {
             return 'skill-data';
           }
+          // Poetry battle data (lazy-loaded poems + service)
+          if (id.includes('src/data/poems') ||
+            id.includes('src/components/Poetry/')) {
+            return 'poetry-game';
+          }
 
           if (id.includes('node_modules')) {
             // inkjs dialogue runtime
