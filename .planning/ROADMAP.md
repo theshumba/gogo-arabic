@@ -344,7 +344,7 @@ Plans:
   5. A returning player who completed onboarding bypasses the cinematic intro and path prompt entirely and drops into normal gameplay
   6. Player can switch learning path from settings with a visible warning that priority bonuses reset
 
-**Plans**: 6 plans in 3 waves
+**Plans**: 4 plans in 2 waves
 
 Plans:
 - [x] 51-01-PLAN.md — inkjs install + InkDialogueEngine with adapter fallback (legacy JSON + .ink.json) + 5-NPC pilot migration (INFRA-07, INFRA-08, INFRA-09) — 2026-03-19
@@ -411,7 +411,7 @@ Plans:
   4. At least 20 interactive inscriptions/scrolls are placed across all 8 zones; touching one reads the inscription, adds unknown words to the FSRS queue, and can teach a root family grouping
   5. A word tagged `ambiguous: true` retains its tashkeel regardless of mastery level; a player on the Scholar path loses tashkeel more slowly than a Traveler at equivalent FSRS mastery
 
-**Plans**: 6 plans in 3 waves
+**Plans**: 4 plans in 2 waves
 
 Plans:
 - [ ] 54-01-PLAN.md — PricingAgent supply/demand model in EconomyFlow.js + faction modifier + price floor/ceiling + ShopOverlay price change indicators (ECON-01, ECON-02, ECON-03, ECON-04)
@@ -433,7 +433,7 @@ Plans:
   4. Poetry battles are untimed — no countdown, no time pressure; both player and NPC poet fill blanks at their own pace; the winner earns XP and vocabulary rewards
   5. Completing a calligraphy letter at 2+ stars or winning a poetry battle adds the practiced vocabulary to the FSRS review queue
 
-**Plans**: 6 plans in 3 waves
+**Plans**: 5 plans in 3 waves
 
 Plans:
 - [ ] 55-01-PLAN.md — BattleStateMachine + GrammarComboDetector + StatusEffectBar test coverage (prerequisite for poetry battle builds on combat system)
