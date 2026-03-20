@@ -390,12 +390,12 @@ Plans:
   4. ActionSetExecutor accepts `factionRequired` conditions in NPC and zone data — faction-gated content is data-driven, not hardcoded
   5. Each faction teaches at least 10 domain-specific vocabulary words at the Friendly threshold — unlocking those words adds them to the player's FSRS queue
 
-**Plans**: 6 plans in 3 waves
+**Plans:** 3 plans in 2 waves
 
 Plans:
-- [ ] 53-01-PLAN.md — factionSlice (6 factions, 0-100 scores, tier constants, IndexedDB persist) + factionMiddleware (FACT-01, FACT-02)
-- [ ] 53-02-PLAN.md — ActionSetExecutor factionRequired requirement type + faction-gated dialogue/quest/shop data for Scholars and Merchants factions (FACT-03, FACT-04, FACT-05)
-- [ ] 53-03-PLAN.md — Remaining 4 factions gated content + faction vocabulary rewards at thresholds + faction score UI (FACT-03, FACT-06)
+- [ ] 53-01-PLAN.md — Extend factionSlice (0-100 clamp, tier constants, IndexedDB persist) + factionMiddleware auto-fires on game events (FACT-01, FACT-02)
+- [ ] 53-02-PLAN.md — ActionSetExecutor factionRequired + shopGenerator fix + faction-gated dialogue/quest/shop data for all 6 factions (FACT-03, FACT-04, FACT-05)
+- [ ] 53-03-PLAN.md — Faction vocabulary rewards at tier thresholds + FactionPanel UI with animated tier bars (FACT-06, FACT-01, FACT-03)
 
 #### Phase 54: World Life Systems
 **Goal**: The world feels alive and reactive — shop prices shift based on supply and player faction standing, NPCs gossip about recent events in ink dialogue, environmental inscriptions teach Arabic in context, and tashkeel fading accounts for ambiguity and learning path
