@@ -130,6 +130,10 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | dynamic JSON import inside async create() (55-02) | calligraphyPaths.json loaded in async create() to keep it out of initial bundle per CALL-01 | Dynamic import() inside async create(); Phaser allows async scene lifecycle methods |
 | scene-level pointer events only (55-02) | game.input.on() listeners persist after scene stop; this.input.on() destroyed automatically | Always use this.input.on() in CalligraphyScene (Pitfall 4 prevention) |
 | Frechet paths resampled to 64 points (55-02) | Path-density mismatch causes artificially large Frechet distance for fast-drawn strokes | resamplePath(path, 64) on both player and reference before discreteFrechetDistance call |
+| poetrySlice activeBattle session-only (55-04) | In-progress battle should reset on reload; stale battle state would be confusing | activeBattle blacklisted from IndexedDB persist; completedBattles + unlockedPoems persisted |
+| NPC poet accuracy configurable float not FSRS-based (55-04) | FSRS NPC state would require separate card tracking per poet | Math.random() < npcAccuracy per blank; 0.5 beginner, 0.7 intermediate, 0.85 advanced, 0.95 master |
+| poetry WordIds use classical/symbolic IDs (55-04) | Classical Arabic blank words (azm, kiram, etc.) not in modern 5000-word corpus | _classical suffix IDs; getPoetryChoices fallback to corpus for distractors; correct answer always included |
+| CURRENT_VERSION bumped to 10 for poetry IndexedDB (55-04) | poetry slice added as nested persistReducer same as factionSlice/worldStateSlice | Nested persistReducer key gogo-arabic-poetry; v10 migration cleans stale localStorage key |
 
 ### Blockers/Concerns
 
@@ -145,6 +149,6 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 55 plan 02 complete — CalligraphyScene + frechetDistance + 28 reference paths
-Resume file: .planning/phases/55-mini-games-content-polish/55-02-SUMMARY.md
-Next plan: 55-03 — MiniGamesHub wiring + alphabetSlice practicedLetters + dynamic CalligraphyScene registration
+Stopped at: Phase 55 plan 04 complete — poetrySlice + 10 poems + poetryBattle service
+Resume file: .planning/phases/55-mini-games-content-polish/55-04-SUMMARY.md
+Next plan: 55-05 — PoetryBattleOverlay React UI + NPC poet wiring + ActionSetExecutor poetry:start-battle
