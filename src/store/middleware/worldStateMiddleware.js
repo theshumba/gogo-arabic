@@ -17,6 +17,7 @@ import { setFlag, incrementCounter } from '../slices/worldStateSlice.js';
 import { questCompleteKey, npcMetKey, shopPurchasesKey, WORLD_STATE_KEYS } from '../../data/worldStateKeys.js';
 import { addDirhams } from '../slices/playerSlice.js';
 import { showNotification } from '../slices/uiSlice.js';
+import { restoreSupply } from '../slices/economySlice.js';
 
 export const worldStateMiddleware = (store) => (next) => (action) => {
   // Guard: never intercept redux-persist internal actions
@@ -76,6 +77,15 @@ export const worldStateMiddleware = (store) => (next) => (action) => {
       store.getState().worldState?.flags?.[WORLD_STATE_KEYS.ONBOARDING_COMPLETE] ?? false;
     if (!alreadyFlagged) {
       store.dispatch(setFlag({ key: WORLD_STATE_KEYS.ONBOARDING_COMPLETE, value: true }));
+    }
+  }
+
+  // ECON-02: Time advance → restore 25% of max supply across all initialized shops.
+  // This simulates merchants restocking after the player rests or time passes.
+  if (action.type === 'time/advanceTime') {
+    const shopIds = Object.keys(store.getState().economy?.supplyLevels || {});
+    for (const shopId of shopIds) {
+      store.dispatch(restoreSupply({ shopId, restorePercent: 0.25 }));
     }
   }
 

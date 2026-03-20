@@ -10,6 +10,7 @@
 
 import { SHOP_BASE_ITEMS, SHOP_REPUTATION_ITEMS, SHOP_QUEST_ITEMS } from './shops.js';
 import { EQUIPMENT_DATA } from './equipment.js';
+import { calculateDynamicPrice, getFactionModifier, SUPPLY_DEFAULTS } from '../game/systems/pricingAgent.js';
 
 /**
  * Generate shop inventory based on game state
@@ -24,46 +25,57 @@ export function getShopInventory(shopId, gameState) {
   const playerLevel = gameState.player?.level || 1;
   const completedQuests = gameState.quests?.completed || [];
   const factionReputation = gameState.faction?.alignment || {};
-  const priceModifiers = gameState.economy?.priceModifiers || {};
 
-  // Get price modifier for this shop (default 1.0)
-  const priceModifier = priceModifiers[shopId] || 1.0;
+  // Faction for this shop (used for dynamic pricing modifier)
+  const shopFaction = getShopFaction(shopId);
+
+  // ECON-03: Compute faction modifier (allied discount / hostile markup) via pricingAgent
+  const factionModifier = getFactionModifier(shopFaction, factionReputation);
+
+  // Supply levels from Redux state (used by calculateDynamicPrice)
+  const supplyLevels = gameState.economy?.supplyLevels?.[shopId] || {};
+
+  /**
+   * Helper: compute dynamic price for one item.
+   * Falls back to SUPPLY_DEFAULTS if supply not yet initialized.
+   */
+  function getPricedItem(shopItem, unlockReason) {
+    const itemData = EQUIPMENT_DATA[shopItem.itemId];
+    if (!itemData) return null;
+
+    const basePrice = Math.round(itemData.sellPrice * 2); // 2× sell price = base buy price
+    const defaultMax = SUPPLY_DEFAULTS[itemData.rarity]?.max || 10;
+    const supply = supplyLevels[shopItem.itemId] ?? { current: defaultMax, max: defaultMax };
+
+    const { price, outOfStock } = calculateDynamicPrice(basePrice, supply, factionModifier);
+
+    return {
+      itemId: shopItem.itemId,
+      basePrice,   // preserved so UI can show price direction arrows
+      price,
+      outOfStock,
+      available: true,
+      unlockReason,
+    };
+  }
 
   // 1. Add base items filtered by player level
   const baseItems = SHOP_BASE_ITEMS[shopId] || [];
   for (const shopItem of baseItems) {
     if (playerLevel >= shopItem.minLevel) {
-      const itemData = EQUIPMENT_DATA[shopItem.itemId];
-      if (itemData) {
-        inventory.push({
-          itemId: shopItem.itemId,
-          price: Math.round(itemData.sellPrice * 2 * priceModifier), // Buy price is 2x sell price
-          available: true,
-          unlockReason: 'base',
-        });
-      }
+      const entry = getPricedItem(shopItem, 'base');
+      if (entry) inventory.push(entry);
     }
   }
 
-  // 2. Add reputation items if player has sufficient reputation
+  // 2. Add reputation items if player has sufficient reputation (Allied tier)
   const reputationItems = SHOP_REPUTATION_ITEMS[shopId] || [];
-  const shopFaction = getShopFaction(shopId);
   const reputation = factionReputation[shopFaction] || 0;
-
-  // Apply 15% faction discount at Allied (75+) tier
-  const factionDiscount = reputation >= 75 ? 0.85 : 1.0;
 
   for (const shopItem of reputationItems) {
     if (reputation >= 75 && playerLevel >= shopItem.minLevel) {
-      const itemData = EQUIPMENT_DATA[shopItem.itemId];
-      if (itemData) {
-        inventory.push({
-          itemId: shopItem.itemId,
-          price: Math.round(itemData.sellPrice * 2 * priceModifier * factionDiscount),
-          available: true,
-          unlockReason: 'reputation',
-        });
-      }
+      const entry = getPricedItem(shopItem, 'reputation');
+      if (entry) inventory.push(entry);
     }
   }
 
@@ -71,15 +83,8 @@ export function getShopInventory(shopId, gameState) {
   const questItems = SHOP_QUEST_ITEMS[shopId] || [];
   for (const shopItem of questItems) {
     if (completedQuests.includes(shopItem.questId) && playerLevel >= shopItem.minLevel) {
-      const itemData = EQUIPMENT_DATA[shopItem.itemId];
-      if (itemData) {
-        inventory.push({
-          itemId: shopItem.itemId,
-          price: Math.round(itemData.sellPrice * 2 * priceModifier),
-          available: true,
-          unlockReason: 'quest',
-        });
-      }
+      const entry = getPricedItem(shopItem, 'quest');
+      if (entry) inventory.push(entry);
     }
   }
 
