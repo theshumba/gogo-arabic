@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: in_progress
-stopped_at: Phase 53 plan 01 complete — faction tier constants, IndexedDB persistence, factionMiddleware auto-adjustment wired
-last_updated: "2026-03-20T21:09:29Z"
+stopped_at: Phase 53 plan 02 complete — factionRequired gate in ActionSetExecutor, shopGenerator fixed, factionGatedContent.js created
+last_updated: "2026-03-20T21:22:00Z"
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 53 (faction-reputation-engine) — EXECUTING
-Plan: 1 of 3 — COMPLETE (53-01-SUMMARY.md)
-Next: Plan 2 of 3
+Plan: 2 of 3 — COMPLETE (53-02-SUMMARY.md)
+Next: Plan 3 of 3
 
-Progress: █░░ (1/3 plans complete in Phase 53)
+Progress: ██░ (2/3 plans complete in Phase 53)
 
 ### Shipped Milestones
 
@@ -110,6 +110,9 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | faction moved to IndexedDB CURRENT_VERSION=9 (53-01) | Faction scores can grow large; consistent with worldState v8 migration | Nested persistReducer, migration 9 cleans old localStorage faction key |
 | factionMiddleware last in chain after worldStateMiddleware (53-01) | Ordering consistency | Appended to concat() chain after worldStateMiddleware |
 | QUEST_FACTION_MAP prefix-based faction routing (53-01) | Simple O(prefixes) lookup, no external data dependency | 12 prefixes covering all 6 factions (e.g. scholars_, library_ → SCHOLARS) |
+| factionRequired requirement type in ActionSetExecutor (53-02) | Data-driven faction gating for bonus content | context.factionScores?.[factionId] ?? 0 >= minScore; safe at faction 0 |
+| shopGenerator faction path fixed to state.faction.alignment (53-02) | Stale state.narrative.factionReputation was the old path pre-factionSlice | reputation threshold 75 (Allied), 15% discount on reputation items |
+| factionGatedContent.js bonus-content-only pattern (53-02) | FACT-04: main quests completable at faction 0 | All factionRequired entries in factionGatedContent.js; quests/ and npcStoryArcs.js have zero factionRequired |
 
 ### Blockers/Concerns
 
@@ -125,5 +128,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 53 plan 01 complete — faction tier constants, 0-100 clamp, IndexedDB persistence, factionMiddleware wired
-Resume file: .planning/phases/53-faction-reputation-engine/53-02-PLAN.md
+Stopped at: Phase 53 plan 02 complete — factionRequired gate, shopGenerator fix, factionGatedContent.js for all 6 factions
+Resume file: .planning/phases/53-faction-reputation-engine/53-03-PLAN.md
