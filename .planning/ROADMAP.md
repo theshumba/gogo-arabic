@@ -372,9 +372,9 @@ Plans:
 **Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 52-01-PLAN.md — Expand to 5,000+ words with CEFR, root, semantic cluster, domain affinity, and ambiguity fields (CONT-02, CONT-07)
-- [ ] 52-02-PLAN.md — Build-time validation script + CEFR badge in TeacherWordCard + Root Explorer root family groupings (CONT-03, CONT-04, CONT-08)
-- [ ] 52-03-PLAN.md — Semantic cluster browsing UI + frequency-ordered FSRS selector per CEFR level + ambiguous word tashkeel lock (CONT-05, CONT-06, CONT-07)
+- [x] 52-01-PLAN.md — Expand to 5,000+ words with CEFR, root, semantic cluster, domain affinity, and ambiguity fields (CONT-02, CONT-07)
+- [x] 52-02-PLAN.md — Build-time validation script + CEFR badge in TeacherWordCard + Root Explorer root family groupings (CONT-03, CONT-04, CONT-08)
+- [x] 52-03-PLAN.md — Semantic cluster browsing UI + frequency-ordered FSRS selector per CEFR level + ambiguous word tashkeel lock (CONT-05, CONT-06, CONT-07) — 2026-03-20
 
 #### Phase 53: Faction Reputation Engine
 **Goal**: Six factions track the player's standing across all interactions, gate bonus content at reputation thresholds, and teach faction-specific vocabulary — making every quest completion, purchase, and conversation a meaningful faction investment
@@ -502,7 +502,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 55
 | 49. First Quest & Loop Completion | v10.0 | 0/3 | Not started (absorbed into Phase 51) | — |
 | 50. Infrastructure Baseline | v11.0 | Complete    | 2026-03-19 | 2026-03-19 |
 | 51. Dialogue Foundation & Learning Paths | v11.0 | Complete    | 2026-03-20 | — |
-| 52. Vocabulary Expansion | v11.0 | 0/3 | Not started | — |
+| 52. Vocabulary Expansion | v11.0 | 3/3 | Complete | 2026-03-20 |
 | 53. Faction Reputation Engine | v11.0 | 0/3 | Not started | — |
 | 54. World Life Systems | v11.0 | 0/4 | Not started | — |
 | 55. Mini-Games and Content Polish | v11.0 | 0/5 | Not started | — |

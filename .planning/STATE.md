@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v11.0
 milestone_name: Vocabulary Depth
-status: in_progress
-stopped_at: Phase 52 plan 01 complete — 596 placeholder B2 words replaced, CATEGORY_AFFINITY extended to 99 entries, Arabic dedup and CEFR inference added
-last_updated: "2026-03-20T17:06:52Z"
+status: complete
+stopped_at: Phase 52 plan 03 complete — ambiguous tashkeel lock wired in TashkeelText.jsx and useFormatArabic.js; CONT-05/06/07 all verified; Phase 52 and v11.0 milestone fully done
+last_updated: "2026-03-20T17:12:07Z"
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 3
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 52 — vocabulary-expansion
+**Current focus:** Phase 52 — vocabulary-expansion COMPLETE — v11.0 Vocabulary Depth milestone done
 
 ## Current Position
 
-Phase: 52 (vocabulary-expansion) — IN PROGRESS
-Plan: 1 of 3 COMPLETE — ready for 52-02
+Phase: 52 (vocabulary-expansion) — COMPLETE (3/3 plans done)
+Plan: 3 of 3 COMPLETE — Phase 52 done, v11.0 milestone complete
 
 ### Shipped Milestones
 
@@ -93,6 +93,10 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | Runtime CEFR inference in vocabularyAll.js, not JSON back-fill (52-01) | Modifying vocabulary.json/vocabulary-final.json risks breaking legacy tooling | Frequency-band + difficulty-fallback loop added post-merge; reversible |
 | Arabic-text dedup uses first-occurrence-wins (52-01) | curated > additional > expanded priority preserved by merge order | seenArabic Set iterates merged array; ~671 cross-source dupes removed |
 | CATEGORY_AFFINITY extended to 99 entries (52-01) | Plan called for 60+; all 91 categories from vocabularyExpanded.js now covered | Domain affinity from 12.2% to >70% coverage for PATH-03 selectNewCardsByPath |
+| validate-vocab.mjs replicates merge inline, not via vocabularyAll.js import (52-02) | Node 24 requires 'with { type: "json" }' for JSON ESM imports; vocabularyAll.js uses import.meta.env.DEV | readFile for JSON + ESM import for vocabularyExpanded.js; Vite handles this in prod |
+| Missing root field in vocab:validate is WARN not ERROR (52-02) | 1,147 legacy/Quranic words have root: undefined — legitimate vocabulary | Erroring would force large JSON back-fill; warn preserves signal without blocking CI |
+| wordMeta useMemo in TashkeelText keyed on wordId (52-03) | vocabulary.find on every render would be O(n) per render on 5,000+ words | useMemo([wordId]) memoizes; find only runs when wordId changes |
+| vocabulary import in useFormatArabic.js is safe (52-03) | vocabularyAll.js is pure data with no Redux imports | No circular dependency risk; acceptable service-layer data access pattern |
 | fsrs.js imports store directly for getNewCardsForSession (51-05) | Service module not a React component; avoids prop-drilling for Redux state access | Acceptable pattern for service layer; getNewCardsForSession(maxCards) usable anywhere |
 | isNew flag + null card for new word entries in ReviewSession (51-05) | FSRS requires a card object; new words have no card yet | createNewCard() called before reviewCard(); addFsrsCard dispatched on first answer |
 | Fallback to unordered filter in rootFsrsSyncMiddleware (51-05) | Edge case: root with no path-matched words would add zero new cards | Falls back to original .filter().slice(0,3) if pathOrderedNewCards intersection is empty |
@@ -114,5 +118,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 52 plan 01 complete — vocabulary data pass done (placeholders replaced, CATEGORY_AFFINITY extended, Arabic dedup + CEFR inference added)
-Resume file: .planning/phases/52-vocabulary-expansion/52-02-PLAN.md (next: validation script + CEFR badge confirmation)
+Stopped at: Phase 52 plan 03 complete — ambiguous tashkeel lock implemented, CONT-05/06/07 verified, v11.0 milestone complete
+Resume file: run /gsd:complete-milestone to ship v11.0 Vocabulary Depth
