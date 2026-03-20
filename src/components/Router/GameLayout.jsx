@@ -39,6 +39,7 @@ const CraftingMiniGame = lazy(() => import('../Crafting/CraftingMiniGame.jsx'));
 const ShopOverlay = lazy(() => import('../Shop/ShopOverlay.jsx'));
 const QuestJournal = lazy(() => import('../Quest/QuestJournal.jsx'));
 const Wardrobe = lazy(() => import('../Wardrobe/Wardrobe.jsx'));
+const FactionPanel = lazy(() => import('../Faction/FactionPanel.jsx'));
 import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate, onOpenPathSwitch }) {
@@ -115,7 +116,7 @@ function ActivitiesMenu({ onBack, onNavigate, onOpenPathSwitch }) {
   );
 }
 
-function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe, onOpenPathSwitch }) {
+function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe, onOpenPathSwitch, onOpenFactionPanel }) {
   const [showActivities, setShowActivities] = React.useState(false);
 
   // ESC key handler for pause menu
@@ -158,6 +159,9 @@ function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe, onOpenPat
         </button>
         <button onClick={() => { audioManager.playSFX('click'); onOpenWardrobe(); }} className={styles.pauseMenuBtnActivities}>
           Wardrobe
+        </button>
+        <button onClick={() => { audioManager.playSFX('click'); if (onOpenFactionPanel) onOpenFactionPanel(); }} className={styles.pauseMenuBtnActivities}>
+          Factions
         </button>
         <button onClick={() => { audioManager.playSFX('click'); onNavigate('/skill-tree'); }} className={styles.pauseMenuBtnActivities}>
           Skill Trees
@@ -225,6 +229,7 @@ export default function GameLayout() {
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
   const [showPathSwitch, setShowPathSwitch] = React.useState(false);
+  const [showFactionPanel, setShowFactionPanel] = React.useState(false);
   const [zoneLoading, setZoneLoading] = React.useState(false);
 
   useEffect(() => {
@@ -379,6 +384,10 @@ export default function GameLayout() {
             dispatch(toggleMenu());
             setShowPathSwitch(true);
           }}
+          onOpenFactionPanel={() => {
+            dispatch(toggleMenu());
+            setShowFactionPanel(true);
+          }}
         />
       )}
 
@@ -428,6 +437,13 @@ export default function GameLayout() {
           </Suspense>
         )}
       </AnimatePresence>
+
+      {/* Faction panel overlay (Phase 53) */}
+      {showFactionPanel && (
+        <Suspense fallback={null}>
+          <FactionPanel onClose={() => setShowFactionPanel(false)} />
+        </Suspense>
+      )}
 
       {/* RecipeBook overlay (v6.1 crafting) */}
       <AnimatePresence>
