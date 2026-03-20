@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
+import vocabulary from '../../data/vocabularyAll.js';
 import styles from './TashkeelText.module.css';
 
 /**
@@ -26,12 +27,19 @@ export default function TashkeelText({ arabic, wordId, className = '', style = {
   const showDiacritics = useSelector((s) => s.settings.showDiacritics);
   const formatArabic = useFormatArabic();
 
-  // Calculate tashkeel opacity based on mastery
+  // CONT-07: Look up word metadata for ambiguous flag
+  const wordMeta = useMemo(
+    () => (wordId ? vocabulary.find((w) => w.id === wordId) : null),
+    [wordId]
+  );
+
+  // Calculate tashkeel opacity based on mastery — CONT-07: ambiguous words always keep full tashkeel
   const tashkeelOpacity = useMemo(() => {
     if (!showDiacritics) return 0; // User disabled diacritics = hide all
     if (!wordId) return 1.0; // No wordId = show full tashkeel
+    if (wordMeta?.ambiguous) return 1.0; // CONT-07: ambiguous words always retain tashkeel
     return formatArabic.getTashkeelOpacity(wordId);
-  }, [showDiacritics, wordId, formatArabic]);
+  }, [showDiacritics, wordId, formatArabic, wordMeta]);
 
   // Split Arabic text into segments: base characters and tashkeel marks
   const segments = useMemo(() => {

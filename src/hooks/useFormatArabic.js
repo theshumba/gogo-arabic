@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useCallback, useMemo } from 'react';
 import { stripDiacritics } from '../utils/arabicUtils.js';
+import vocabulary from '../data/vocabularyAll.js';
 
 /**
  * Hook that returns a function to conditionally strip Arabic diacritics (harakat)
@@ -42,6 +43,10 @@ export function useFormatArabic() {
   const getTashkeelOpacity = useCallback(
     (wordId) => {
       if (!wordId) return 1.0; // No wordId = show full tashkeel
+
+      // CONT-07: Ambiguous words always retain full tashkeel regardless of mastery
+      const wordMeta = vocabulary.find((w) => w.id === wordId);
+      if (wordMeta?.ambiguous) return 1.0;
 
       const fsrsCard = fsrsCards[wordId];
       if (!fsrsCard || !fsrsCard.card) return 1.0; // No card = show full tashkeel
