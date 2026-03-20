@@ -14,6 +14,24 @@ if (typeof window !== 'undefined' && typeof indexedDB !== 'undefined') {
   window.IDBTransaction = IDBTransaction;
 }
 
+// Mock window.matchMedia — not implemented in jsdom; required for components
+// that use prefers-reduced-motion at module level (e.g. StatusEffectBar.jsx)
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: (query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+  });
+}
+
 // Mock Phaser module to prevent loading errors
 vi.mock('phaser', () => ({
   default: {
