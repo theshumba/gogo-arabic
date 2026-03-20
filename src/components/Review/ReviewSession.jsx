@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { updateFsrsCard } from '../../store/slices/vocabularySlice.js';
+import { updateFsrsCard, addFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { addXP, updateStreak } from '../../store/slices/playerSlice.js';
 import { incrementReviews } from '../../store/slices/achievementSlice.js';
 import { checkPerfectQuiz } from '../../store/middleware/achievementMiddleware.js';
-import { reviewCard, getDueCards, Rating } from '../../services/fsrs.js';
+import { reviewCard, getDueCards, Rating, getNewCardsForSession, createNewCard } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { shuffle } from '../../utils/shuffle.js';
 import { prepareSentenceQuiz, removeDiacritics } from '../../utils/sentenceParser.js';
@@ -48,11 +48,29 @@ export default function ReviewSession({ onBack }) {
   const [sessionCards] = useState(() => {
     const dueIds = getDueCards(cards);
     // Map wordId strings back to { wordId, card } objects for scheduling
-    return dueIds
+    const dueEntries = dueIds
       .map((id) => ({ wordId: id, card: cards[id]?.card }))
       .filter((entry) => entry.card)
       .sort((a, b) => new Date(a.card.due || 0) - new Date(b.card.due || 0))
       .slice(0, 20);
+
+    // PATH-03: If fewer than 20 due cards, fill remaining slots with
+    // path-affinity-ordered new words so players encounter path-relevant words first
+    if (dueEntries.length < 20) {
+      const remaining = 20 - dueEntries.length;
+      const newWordIds = getNewCardsForSession(remaining);
+      const dueWordIdSet = new Set(dueEntries.map(e => e.wordId));
+      const newEntries = newWordIds
+        .filter(id => !dueWordIdSet.has(id))
+        .map((id) => ({
+          wordId: id,
+          card: null, // null card signals "new word introduction" (not yet in FSRS)
+          isNew: true,
+        }));
+      dueEntries.push(...newEntries);
+    }
+
+    return dueEntries;
   });
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState(false);
@@ -210,7 +228,18 @@ export default function ReviewSession({ onBack }) {
       rating = Rating.Easy;
     }
 
-    const result = reviewCard(currentEntry.card, rating);
+    // For new word introductions (PATH-03), create FSRS card on first encounter
+    const cardToReview = currentEntry.isNew && !currentEntry.card
+      ? createNewCard()
+      : currentEntry.card;
+    if (currentEntry.isNew && !currentEntry.card) {
+      dispatch(addFsrsCard({
+        wordId: currentEntry.wordId,
+        card: cardToReview,
+        source: 'review_session_new',
+      }));
+    }
+    const result = reviewCard(cardToReview, rating);
     dispatch(updateFsrsCard({
       wordId: currentEntry.wordId,
       card: result.card,
