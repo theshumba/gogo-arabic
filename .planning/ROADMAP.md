@@ -395,7 +395,7 @@ Plans:
 Plans:
 - [x] 53-01-PLAN.md — Extend factionSlice (0-100 clamp, tier constants, IndexedDB persist) + factionMiddleware auto-fires on game events (FACT-01, FACT-02)
 - [x] 53-02-PLAN.md — ActionSetExecutor factionRequired + shopGenerator fix + faction-gated dialogue/quest/shop data for all 6 factions (FACT-03, FACT-04, FACT-05)
-- [ ] 53-03-PLAN.md — Faction vocabulary rewards at tier thresholds + FactionPanel UI with animated tier bars (FACT-06, FACT-01, FACT-03)
+- [x] 53-03-PLAN.md — Faction vocabulary rewards at tier thresholds + FactionPanel UI with animated tier bars (FACT-06, FACT-01, FACT-03)
 
 #### Phase 54: World Life Systems
 **Goal**: The world feels alive and reactive — shop prices shift based on supply and player faction standing, NPCs gossip about recent events in ink dialogue, environmental inscriptions teach Arabic in context, and tashkeel fading accounts for ambiguity and learning path
@@ -503,7 +503,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 55
 | 50. Infrastructure Baseline | v11.0 | Complete    | 2026-03-19 | 2026-03-19 |
 | 51. Dialogue Foundation & Learning Paths | v11.0 | Complete    | 2026-03-20 | — |
 | 52. Vocabulary Expansion | v11.0 | Complete    | 2026-03-20 | 2026-03-20 |
-| 53. Faction Reputation Engine | v11.0 | 0/3 | Not started | — |
+| 53. Faction Reputation Engine | v11.0 | 3/3 | Complete | 2026-03-20 |
 | 54. World Life Systems | v11.0 | 0/4 | Not started | — |
 | 55. Mini-Games and Content Polish | v11.0 | 0/5 | Not started | — |
 

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: in_progress
-stopped_at: Phase 53 plan 02 complete — factionRequired gate in ActionSetExecutor, shopGenerator fixed, factionGatedContent.js created
-last_updated: "2026-03-20T21:22:00Z"
+stopped_at: Phase 53 plan 03 complete — faction vocab rewards on threshold crossing + FactionPanel UI in GameLayout
+last_updated: "2026-03-20T21:23:32Z"
 progress:
   total_phases: 1
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 
 ## Current Position
 
-Phase: 53 (faction-reputation-engine) — EXECUTING
-Plan: 2 of 3 — COMPLETE (53-02-SUMMARY.md)
-Next: Plan 3 of 3
+Phase: 53 (faction-reputation-engine) — COMPLETE
+Plan: 3 of 3 — COMPLETE (53-03-SUMMARY.md)
+Next: Phase 54
 
-Progress: ██░ (2/3 plans complete in Phase 53)
+Progress: ███ (3/3 plans complete in Phase 53)
 
 ### Shipped Milestones
 
@@ -113,6 +113,9 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | factionRequired requirement type in ActionSetExecutor (53-02) | Data-driven faction gating for bonus content | context.factionScores?.[factionId] ?? 0 >= minScore; safe at faction 0 |
 | shopGenerator faction path fixed to state.faction.alignment (53-02) | Stale state.narrative.factionReputation was the old path pre-factionSlice | reputation threshold 75 (Allied), 15% discount on reputation items |
 | factionGatedContent.js bonus-content-only pattern (53-02) | FACT-04: main quests completable at faction 0 | All factionRequired entries in factionGatedContent.js; quests/ and npcStoryArcs.js have zero factionRequired |
+| factionVocab.js word IDs are symbolic (53-03) | Non-corpus IDs; fsrsCards[wordId] guard prevents re-adding already-known words | addFsrsCard only dispatched if !fsrsCards[wordId] |
+| FACTION_*_FRIENDLY/TRUSTED/ALLIED flags as idempotency guards (53-03) | Prevents double vocab reward if score oscillates around threshold | setFlag fires on first crossing; worldFlags[worldKey] checked before each reward grant |
+| FactionPanel sorted by score via selectFactionRanks (53-03) | Highest-standing faction shown first | selectFactionRanks already sorts descending; panel reflects current standings |
 
 ### Blockers/Concerns
 
@@ -128,5 +131,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 53 plan 02 complete — factionRequired gate, shopGenerator fix, factionGatedContent.js for all 6 factions
-Resume file: .planning/phases/53-faction-reputation-engine/53-03-PLAN.md
+Stopped at: Phase 53 plan 03 complete — faction vocab rewards + FactionPanel UI; Phase 53 fully complete
+Resume file: .planning/phases/54-gossip-rumour-system/ (Phase 54 next)
