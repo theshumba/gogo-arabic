@@ -184,3 +184,25 @@ export const FACTIONS = Object.freeze([
 export const FACTION_BY_ID = Object.freeze(
   Object.fromEntries(FACTIONS.map((f) => [f.id, f]))
 );
+
+export const FACTION_TIERS = Object.freeze({
+  NEUTRAL:  { label: 'Neutral',  labelArabic: 'محايد',   threshold: 0  },
+  FRIENDLY: { label: 'Friendly', labelArabic: 'ودي',     threshold: 25 },
+  TRUSTED:  { label: 'Trusted',  labelArabic: 'موثوق',   threshold: 50 },
+  ALLIED:   { label: 'Allied',   labelArabic: 'حليف',    threshold: 75 },
+  REVERED:  { label: 'Revered',  labelArabic: 'موقّر',   threshold: 100 },
+});
+
+export function getFactionTier(score) {
+  if (score >= 100) return FACTION_TIERS.REVERED;
+  if (score >= 75)  return FACTION_TIERS.ALLIED;
+  if (score >= 50)  return FACTION_TIERS.TRUSTED;
+  if (score >= 25)  return FACTION_TIERS.FRIENDLY;
+  return FACTION_TIERS.NEUTRAL;
+}
+
+export const NPC_FACTION_MAP = Object.freeze(
+  Object.fromEntries(
+    FACTIONS.flatMap((f) => f.npcMembers.map((npcId) => [npcId, f.id]))
+  )
+);

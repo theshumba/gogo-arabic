@@ -1,5 +1,5 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
-import { FACTIONS, FACTION_BY_ID } from '../../data/factions.js';
+import { FACTIONS, FACTION_BY_ID, getFactionTier } from '../../data/factions.js';
 
 /**
  * factionSlice.js — 6-faction alignment system
@@ -60,8 +60,8 @@ const factionSlice = createSlice({
         return;
       }
 
-      // Alignment floor is 0 — you can't go negative with a faction
-      state.alignment[factionId] = Math.max(0, state.alignment[factionId] + amount);
+      // Alignment clamped 0-100 — floor is 0 (can't go negative), ceiling is 100 (max tier)
+      state.alignment[factionId] = Math.max(0, Math.min(100, state.alignment[factionId] + amount));
 
       // Recalculate leaders
       const { primary, secondary } = deriveLeaders(state.alignment);
@@ -148,5 +148,20 @@ export const selectFactionBonuses = createSelector(
  */
 export const selectFactionAlignment = (factionId) => (state) =>
   state.faction.alignment[factionId] ?? 0;
+
+/**
+ * selectFactionTiers — memoized selector returning the tier label for each faction.
+ * Returns { [factionId]: FactionTier } for all 6 factions.
+ */
+export const selectFactionTiers = createSelector(
+  [selectAlignment],
+  (alignment) =>
+    Object.fromEntries(
+      Object.entries(alignment).map(([factionId, score]) => [
+        factionId,
+        getFactionTier(score),
+      ])
+    )
+);
 
 export default factionSlice.reducer;
