@@ -436,8 +436,8 @@ Plans:
 **Plans**: 5 plans in 2 waves
 
 Plans:
-- [ ] 55-01-PLAN.md — BattleStateMachine + GrammarComboDetector + StatusEffectBar test coverage (prerequisite for poetry battle builds on combat system)
-- [ ] 55-02-PLAN.md — CalligraphyScene: lazy-loaded Phaser scene + pointer path capture + 28 reference stroke paths as JSON (CALL-01, CALL-02, CALL-03)
+- [x] 55-01-PLAN.md — BattleStateMachine + GrammarComboDetector + StatusEffectBar test coverage (prerequisite for poetry battle builds on combat system)
+- [x] 55-02-PLAN.md — CalligraphyScene: lazy-loaded Phaser scene + pointer path capture + 28 reference stroke paths as JSON (CALL-01, CALL-02, CALL-03)
 - [ ] 55-03-PLAN.md — CalligraphyScene: Frechet distance scoring + 3-star feedback + "practiced" flag in alphabet progress + mini-games hub wiring (CALL-04, CALL-05)
 - [ ] 55-04-PLAN.md — poetrySlice + 10 curated classical Arabic poems with fill-in-blank positions + FSRS word sourcing (POET-01, POET-02, POET-03)
 - [ ] 55-05-PLAN.md — Poetry battle mode UI + NPC poet opponent AI + untimed scoring + XP/vocab rewards + GameLayout wiring (POET-04, POET-05)

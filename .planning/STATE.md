@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: unknown
-stopped_at: Phase 54 plan 02 complete — gossip system (gossipSlice/gossipMiddleware/gossipTemplates + 5 pilot ink NPCs with gossip_knot)
-last_updated: "2026-03-20T23:04:34.400Z"
+stopped_at: Phase 55 plan 04 complete — poetrySlice + 10 classical Arabic poems + poetryBattle service (FSRS-sourced choices, NPC AI)
+last_updated: "2026-03-20T23:50:06Z"
 progress:
   total_phases: 3
   completed_phases: 3
@@ -19,12 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 54 — world-life-systems
+**Current focus:** Phase 55 — mini-games-content-polish
 
 ## Current Position
 
-Phase: 54
-Plan: Not started
+Phase: 55 (mini-games-content-polish) — EXECUTING
+Plan: 2 of 5 (55-02 complete)
+Progress: 55-01 [DONE] | 55-02 [DONE] | 55-03 [ ] | 55-04 [ ] | 55-05 [ ]
+Progress bar: [██░░░] 40%
 
 ### Shipped Milestones
 
@@ -125,6 +127,9 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | gossip NOT persisted (54-02) | Tokens are session-ephemeral (3-day expiry resets on reload); stale tokens should not persist | gossip: gossipReducer outside root persistConfig whitelist |
 | state.npc.friendship used for gossip threshold (54-02) | npcSlice has 0-100 scale; narrativeSlice has 0-5 tier; plan requires npc.friendship >= 25 | friendships = state.npc?.friendship ?? {} in gossipMiddleware |
 | gossip grammar annotations as [bracketed text] (54-02) | DialogueOverlay renders ink currentInkLine in <p> tag without bracket filtering | [{gossip_grammar}] in ink passes through unchanged; no DialogueOverlay changes needed |
+| dynamic JSON import inside async create() (55-02) | calligraphyPaths.json loaded in async create() to keep it out of initial bundle per CALL-01 | Dynamic import() inside async create(); Phaser allows async scene lifecycle methods |
+| scene-level pointer events only (55-02) | game.input.on() listeners persist after scene stop; this.input.on() destroyed automatically | Always use this.input.on() in CalligraphyScene (Pitfall 4 prevention) |
+| Frechet paths resampled to 64 points (55-02) | Path-density mismatch causes artificially large Frechet distance for fast-drawn strokes | resamplePath(path, 64) on both player and reference before discreteFrechetDistance call |
 
 ### Blockers/Concerns
 
@@ -140,5 +145,6 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 54 plan 02 complete — gossip system (gossipSlice/gossipMiddleware/gossipTemplates + 5 pilot ink NPCs with gossip_knot)
-Resume file: .planning/phases/54-world-life-systems/54-02-SUMMARY.md (plan 02 done; 54-01/03/04 also complete)
+Stopped at: Phase 55 plan 02 complete — CalligraphyScene + frechetDistance + 28 reference paths
+Resume file: .planning/phases/55-mini-games-content-polish/55-02-SUMMARY.md
+Next plan: 55-03 — MiniGamesHub wiring + alphabetSlice practicedLetters + dynamic CalligraphyScene registration
