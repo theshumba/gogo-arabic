@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v11.0
 milestone_name: Dialogue Foundation & Learning Paths
 status: in_progress
-stopped_at: "Phase 51 plan 03 complete (51-03-SUMMARY.md created) — next action is Phase 51 Plan 04"
-last_updated: "2026-03-20T01:22:00Z"
+stopped_at: "Phase 51 plan 04 complete (51-04-SUMMARY.md created) — Phase 51 all 4 plans complete"
+last_updated: "2026-03-20T02:05:00Z"
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 13
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 51 — dialogue-foundation-learning-paths
+**Current focus:** Phase 51 — dialogue-foundation-learning-paths (COMPLETE)
 
 ## Current Position
 
-Phase: 51 (dialogue-foundation-learning-paths) — EXECUTING
-Plan: 4 of 4 (Plans 1-3 complete)
+Phase: 51 (dialogue-foundation-learning-paths) — COMPLETE (all 4 plans done)
+Plan: 4 of 4 — COMPLETE
 
-Progress: [███░░░░░░░░░░] 3/13 plans complete
+Progress: [████░░░░░░░░░] 4/13 plans complete
 
 ### Shipped Milestones
 
@@ -87,6 +87,11 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | Ink path-choice triggered by SFX_WORDLEARNED not path_choice tutorialPhase (51-03) | CinematicIntroSequencer already skips tutorialPhase='path_choice'; word-learned is correct insertion point | useTutorialTrigger fires ink dialogue after SFX_WORDLEARNED in met_mentor phase |
 | INK_DIALOGUE_START/END event pair decouples overlay from phase management (51-03) | DialogueOverlay should not own phase transitions | Overlay emits INK_DIALOGUE_END; useTutorialTrigger advances to learned_word |
 | PathChoice.jsx preserved for PATH-05 (51-03) | Settings path-switch still needs PathChoice overlay | Guarded with !pathAlreadyChosen in GameLayout; never deleted |
+| PATH_MENTORS/PATH_FIRST_QUESTS as module-level constants (51-04) | Exported from playerSlice so they are testable and tree-shakeable without Redux | setLearningPath reducer imports and references PATH_MENTORS directly |
+| selectNewCardsByPath reads learningPath from state.player (not param) (51-04) | Consistent with Redux selector convention; avoids passing path as extra arg | Input selector: (state) => state.player.learningPath |
+| Onboarding 3-word reward uses Object.keys(fsrsCards).length (51-04) | No separate counter state needed; avoids duplication | worldStateMiddleware checks post-reduction fsrsCards count === 3 |
+| worldStateMiddleware dual-write covers both completeOnboarding + setTutorialPhase('complete') (51-04) | Both code paths can complete onboarding; both must write IndexedDB flag | Middleware intercepts both action types |
+| ActivitiesMenu 'learning-path' opens PathChoice via onOpenPathSwitch (not route) (51-04) | No /learning-path route exists; settings mode is an overlay not a page | PauseMenu threads onOpenPathSwitch → GameLayout showPathSwitch state |
 
 ### Blockers/Concerns
 
@@ -102,5 +107,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 51 plan 03 complete (51-03-SUMMARY.md created) — Amira path-choice ink dialogue wired end-to-end, PATH-01 + PATH-02 satisfied
-Resume file: .planning/phases/51-dialogue-foundation-learning-paths/51-04-PLAN.md
+Stopped at: Phase 51 plan 04 complete — PATH-03 through PATH-07 satisfied; Phase 51 fully done
+Resume file: (Phase 51 complete — next phase TBD)
