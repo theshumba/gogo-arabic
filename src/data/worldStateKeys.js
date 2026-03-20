@@ -222,6 +222,8 @@ export const WORLD_STATE_KEYS = {
   OASIS_FOUND_HIDDEN_AREA: 'oasis_found_hidden_area',
   OASIS_FOUND_INSCRIPTION_1: 'oasis_found_inscription_1',
   OASIS_INSCRIPTION_OASIS_1_DISCOVERED: 'oasis_inscription_oasis_1_discovered',
+  OASIS_INSCRIPTION_OASIS_2_DISCOVERED: 'oasis_inscription_oasis_2_discovered',
+  OASIS_INSCRIPTION_OASIS_3_DISCOVERED: 'oasis_inscription_oasis_3_discovered',
 
   // Purchase flags
   OASIS_PURCHASED_ITEM: 'oasis_purchased_item',
@@ -299,6 +301,8 @@ export const WORLD_STATE_KEYS = {
   // Discovery flags
   LIBRARY_FOUND_INSCRIPTION_1: 'library_found_inscription_1',
   LIBRARY_INSCRIPTION_LIBRARY_1_DISCOVERED: 'library_inscription_library_1_discovered',
+  LIBRARY_INSCRIPTION_LIBRARY_2_DISCOVERED: 'library_inscription_library_2_discovered',
+  LIBRARY_INSCRIPTION_LIBRARY_3_DISCOVERED: 'library_inscription_library_3_discovered',
   LIBRARY_REFLECTING_POOL_DISCOVERED: 'library_reflecting_pool_discovered',
 
   // Gathering
@@ -371,6 +375,8 @@ export const WORLD_STATE_KEYS = {
   // Discovery flags
   MARKETPLACE_FOUND_INSCRIPTION_1: 'marketplace_found_inscription_1',
   MARKETPLACE_INSCRIPTION_MARKETPLACE_1_DISCOVERED: 'marketplace_inscription_marketplace_1_discovered',
+  MARKETPLACE_INSCRIPTION_MARKETPLACE_2_DISCOVERED: 'marketplace_inscription_marketplace_2_discovered',
+  MARKETPLACE_INSCRIPTION_MARKETPLACE_3_DISCOVERED: 'marketplace_inscription_marketplace_3_discovered',
 
   // Purchase / haggling flags
   MARKETPLACE_FIRST_PURCHASE: 'marketplace_first_purchase',
@@ -446,6 +452,8 @@ export const WORLD_STATE_KEYS = {
   // Discovery flags
   FARMLAND_FOUND_INSCRIPTION_1: 'farmland_found_inscription_1',
   FARMLAND_INSCRIPTION_FARMLAND_1_DISCOVERED: 'farmland_inscription_farmland_1_discovered',
+  FARMLAND_INSCRIPTION_FARMLAND_2_DISCOVERED: 'farmland_inscription_farmland_2_discovered',
+  FARMLAND_INSCRIPTION_FARMLAND_3_DISCOVERED: 'farmland_inscription_farmland_3_discovered',
   FARMLAND_POND_DISCOVERED: 'farmland_pond_discovered',
   FARMLAND_IRRIGATION_CANAL_DISCOVERED: 'farmland_irrigation_canal_discovered',
 
@@ -519,6 +527,8 @@ export const WORLD_STATE_KEYS = {
   // Discovery flags
   BEDOUIN_FOUND_INSCRIPTION_1: 'bedouin_found_inscription_1',
   BEDOUIN_INSCRIPTION_CAMP_1_DISCOVERED: 'bedouin_inscription_camp_1_discovered',
+  BEDOUIN_INSCRIPTION_CAMP_2_DISCOVERED: 'bedouin_inscription_camp_2_discovered',
+  BEDOUIN_INSCRIPTION_CAMP_3_DISCOVERED: 'bedouin_inscription_camp_3_discovered',
   BEDOUIN_STARGAZING_SITE_DISCOVERED: 'bedouin_stargazing_site_discovered',
 
   // Gathering
@@ -591,6 +601,8 @@ export const WORLD_STATE_KEYS = {
   // Discovery flags
   MOUNTAIN_FOUND_INSCRIPTION_1: 'mountain_found_inscription_1',
   MOUNTAIN_INSCRIPTION_VILLAGE_1_DISCOVERED: 'mountain_inscription_village_1_discovered',
+  MOUNTAIN_INSCRIPTION_VILLAGE_2_DISCOVERED: 'mountain_inscription_village_2_discovered',
+  MOUNTAIN_INSCRIPTION_VILLAGE_3_DISCOVERED: 'mountain_inscription_village_3_discovered',
   MOUNTAIN_ANCIENT_PATH_DISCOVERED: 'mountain_ancient_path_discovered',
 
   // Gathering
@@ -663,6 +675,8 @@ export const WORLD_STATE_KEYS = {
   // Discovery flags
   COASTAL_FOUND_INSCRIPTION_1: 'coastal_found_inscription_1',
   COASTAL_INSCRIPTION_PORT_1_DISCOVERED: 'coastal_inscription_port_1_discovered',
+  COASTAL_INSCRIPTION_PORT_2_DISCOVERED: 'coastal_inscription_port_2_discovered',
+  COASTAL_INSCRIPTION_PORT_3_DISCOVERED: 'coastal_inscription_port_3_discovered',
   COASTAL_HIDDEN_COVE_DISCOVERED: 'coastal_hidden_cove_discovered',
 
   // Gathering
@@ -743,6 +757,8 @@ export const WORLD_STATE_KEYS = {
   // Discovery flags
   PALACE_FOUND_INSCRIPTION_1: 'palace_found_inscription_1',
   PALACE_INSCRIPTION_PALACE_1_DISCOVERED: 'palace_inscription_palace_1_discovered',
+  PALACE_INSCRIPTION_PALACE_2_DISCOVERED: 'palace_inscription_palace_2_discovered',
+  PALACE_INSCRIPTION_PALACE_3_DISCOVERED: 'palace_inscription_palace_3_discovered',
   PALACE_SECRET_PASSAGE_DISCOVERED: 'palace_secret_passage_discovered',
   PALACE_ROYAL_GARDEN_DISCOVERED: 'palace_royal_garden_discovered',
 
