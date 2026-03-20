@@ -11,6 +11,7 @@
  * - Version 4 (Phase 30): companions added to IndexedDB
  * - Version 5 (Phase 31): crafting added to IndexedDB
  * - Version 8 (Phase 50): worldState moved to IndexedDB
+ * - Version 9 (Phase 53): faction moved to IndexedDB
  *
  * Key design:
  * - Migration function receives already-deserialized state from redux-persist
@@ -22,7 +23,7 @@
 
 import { createMigrate } from 'redux-persist';
 
-export const CURRENT_VERSION = 8;
+export const CURRENT_VERSION = 9;
 
 /**
  * Migration definitions
@@ -212,6 +213,38 @@ const migrations = {
     if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
       console.log('[Migration] v7 -> v8 complete');
+    }
+    return state;
+  },
+
+  // Version 9: faction moved from localStorage to IndexedDB (Phase 53)
+  9: (state) => {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] Starting v8 -> v9: faction moved to IndexedDB');
+    }
+
+    setTimeout(() => {
+      try {
+        const rootKey = 'persist:gogo-arabic';
+        const oldData = localStorage.getItem(rootKey);
+        if (oldData) {
+          const parsed = JSON.parse(oldData);
+          delete parsed.faction;
+          localStorage.setItem(rootKey, JSON.stringify(parsed));
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.log('[Migration] Cleaned up old localStorage faction data');
+          }
+        }
+      } catch (cleanupError) {
+        console.warn('[Migration] Failed to cleanup old localStorage faction:', cleanupError);
+      }
+    }, 5000);
+
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] v8 -> v9 complete');
     }
     return state;
   },
