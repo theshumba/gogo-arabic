@@ -76,6 +76,12 @@ function evaluateRequirement(req, context) {
       return context.currentZone === req.zone;
     }
 
+    case 'factionRequired': {
+      // req = { type: 'factionRequired', factionId: 'scholars', minScore: 25 }
+      const score = context.factionScores?.[req.factionId] ?? 0;
+      return score >= (req.minScore ?? 0);
+    }
+
     default:
       // Unknown requirement type — fail safe (do not match)
       return false;
@@ -103,6 +109,7 @@ function evaluateRequirement(req, context) {
  *   @param {string[]} context.inventory      - Array of item id strings
  *   @param {number}   context.currentHour    - Current game hour (0-23)
  *   @param {string}   context.currentZone    - Current zone identifier
+ *   @param {Object}   context.factionScores  - Map of factionId -> alignment score (0-100)
  * @returns {Object|null} The first matching action set, or null if none matched
  */
 export function evaluateActionSets(actionSets, context) {

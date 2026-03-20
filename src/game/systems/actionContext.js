@@ -18,7 +18,9 @@ import { selectGameTime } from '../../store/slices/timeSlice.js';
  *
  * @param {string} [zoneOverride] - Optional zone override (e.g. from WorldScene.currentZone).
  *   When omitted, falls back to Redux player.currentZone.
- * @returns {Object} Context object for ActionSetExecutor requirement evaluation
+ * @returns {Object} Context object for ActionSetExecutor requirement evaluation:
+ *   questStatuses, storyFlags, vocabMastery, playerLevel, inventory,
+ *   currentHour, currentZone, factionScores
  */
 export function buildActionContext(zoneOverride) {
   const state = store.getState();
@@ -30,5 +32,6 @@ export function buildActionContext(zoneOverride) {
     inventory: state.inventory?.items?.map((i) => i.id) || [],
     currentHour: selectGameTime(state).hour,
     currentZone: zoneOverride || state.player?.currentZone || 'oasis_village',
+    factionScores: state.faction?.alignment || {},
   };
 }
