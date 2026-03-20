@@ -19,7 +19,8 @@ import {
   unlockForm,
   selectRootMastery,
 } from '../slices/magicSlice.js';
-import { addFsrsCard } from '../slices/vocabularySlice.js';
+import { addFsrsCard, selectNewCardsByPath } from '../slices/vocabularySlice.js';
+import vocabulary from '../../data/vocabularyAll.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 
@@ -112,13 +113,19 @@ export const rootFsrsSyncMiddleware = (store) => (next) => (action) => {
         const rootInfo = getRootWords(rootId);
 
         if (rootInfo && rootInfo.words) {
-          const fsrsCards = state.vocabulary?.fsrsCards || {};
+          // Use path-aware selector to pick words in affinity order (PATH-03)
+          const pathOrderedNewCards = selectNewCardsByPath(state, vocabulary, 100);
+          const rootWordSet = new Set(rootInfo.words);
+          let wordsToAdd = pathOrderedNewCards
+            .filter(w => rootWordSet.has(w.id))
+            .map(w => w.id)
+            .slice(0, 3);
 
-          // Filter words not yet in FSRS
-          const newWords = rootInfo.words.filter((wordId) => !fsrsCards[wordId]);
-
-          // Limit to 3 words per level-up to avoid flooding
-          const wordsToAdd = newWords.slice(0, 3);
+          // Fallback: if no root words appear in path-ordered list (edge case), use original filter
+          if (wordsToAdd.length === 0) {
+            const fsrsCards = state.vocabulary?.fsrsCards || {};
+            wordsToAdd = rootInfo.words.filter((wordId) => !fsrsCards[wordId]).slice(0, 3);
+          }
 
           wordsToAdd.forEach((wordId) => {
             store.dispatch(
