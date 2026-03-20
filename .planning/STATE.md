@@ -115,6 +115,9 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | factionVocab.js word IDs are symbolic (53-03) | Non-corpus IDs; fsrsCards[wordId] guard prevents re-adding already-known words | addFsrsCard only dispatched if !fsrsCards[wordId] |
 | FACTION_*_FRIENDLY/TRUSTED/ALLIED flags as idempotency guards (53-03) | Prevents double vocab reward if score oscillates around threshold | setFlag fires on first crossing; worldFlags[worldKey] checked before each reward grant |
 | FactionPanel sorted by score via selectFactionRanks (53-03) | Highest-standing faction shown first | selectFactionRanks already sorts descending; panel reflects current standings |
+| factionDiscount hardcode removed from shopGenerator (54-01) | Old 0.85 multiplier at rep >= 75 duplicated ECON-03 and missed hostile markup | getFactionModifier() handles all three tiers (allied/neutral/hostile); priceModifiers state key preserved |
+| pricingAgent.js as pure-function module (54-01) | No Redux imports; testable in isolation | calculateDynamicPrice + getFactionModifier imported by shopGenerator and ShopOverlay |
+| supplyLevels seeded idempotently on shop open (54-01) | initSupply skips already-initialized items; purchases preserved across opens | store.dispatch(initSupply) in shopInventory useMemo; safe to call every render |
 
 ### Blockers/Concerns
 
