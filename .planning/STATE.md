@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
-status: unknown
-stopped_at: Phase 52 plan 03 complete — ambiguous tashkeel lock implemented, CONT-05/06/07 verified, v11.0 milestone complete
-last_updated: "2026-03-20T17:20:01.321Z"
+status: in_progress
+stopped_at: Phase 53 plan 01 complete — faction tier constants, IndexedDB persistence, factionMiddleware auto-adjustment wired
+last_updated: "2026-03-20T21:09:29Z"
 progress:
-  total_phases: 12
-  completed_phases: 7
-  total_plans: 24
-  completed_plans: 24
+  total_phases: 1
+  completed_phases: 0
+  total_plans: 3
+  completed_plans: 1
 ---
 
 # Project State
@@ -19,12 +19,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-19)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 52 — vocabulary-expansion COMPLETE — v11.0 Vocabulary Depth milestone done
+**Current focus:** Phase 53 — faction-reputation-engine
 
 ## Current Position
 
-Phase: 52 (vocabulary-expansion) — COMPLETE (3/3 plans done)
-Plan: 3 of 3 COMPLETE — Phase 52 done, v11.0 milestone complete
+Phase: 53 (faction-reputation-engine) — EXECUTING
+Plan: 1 of 3 — COMPLETE (53-01-SUMMARY.md)
+Next: Plan 2 of 3
+
+Progress: █░░ (1/3 plans complete in Phase 53)
 
 ### Shipped Milestones
 
@@ -103,6 +106,10 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | PATH_MENTORS lookup at runtime in each handler, not cached at hook mount (51-06) | Stale closure risk: learningPath is null at mount, set during ink dialogue | store.getState().player.learningPath read inside event handler body |
 | Path quest prerequisites = ["tutorial_welcome"] not [] (51-06) | Empty array would activate all 3 path quests at app startup before path chosen | tutorial_welcome gates unlock to post-onboarding; learningPath field on quest def handles display filtering |
 | 'met_yusuf' phase name preserved despite mentor being path-variable (51-06) | Changing phase name breaks existing save files | Comment documents misleading name; save compatibility maintained |
+| FACTION_TIERS as frozen object with threshold + labels (53-01) | Consistent with other constant patterns in codebase | Object.freeze with threshold/label/labelArabic fields |
+| faction moved to IndexedDB CURRENT_VERSION=9 (53-01) | Faction scores can grow large; consistent with worldState v8 migration | Nested persistReducer, migration 9 cleans old localStorage faction key |
+| factionMiddleware last in chain after worldStateMiddleware (53-01) | Ordering consistency | Appended to concat() chain after worldStateMiddleware |
+| QUEST_FACTION_MAP prefix-based faction routing (53-01) | Simple O(prefixes) lookup, no external data dependency | 12 prefixes covering all 6 factions (e.g. scholars_, library_ → SCHOLARS) |
 
 ### Blockers/Concerns
 
@@ -118,5 +125,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 52 plan 03 complete — ambiguous tashkeel lock implemented, CONT-05/06/07 verified, v11.0 milestone complete
-Resume file: run /gsd:complete-milestone to ship v11.0 Vocabulary Depth
+Stopped at: Phase 53 plan 01 complete — faction tier constants, 0-100 clamp, IndexedDB persistence, factionMiddleware wired
+Resume file: .planning/phases/53-faction-reputation-engine/53-02-PLAN.md

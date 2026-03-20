@@ -393,7 +393,7 @@ Plans:
 **Plans:** 3 plans in 2 waves
 
 Plans:
-- [ ] 53-01-PLAN.md — Extend factionSlice (0-100 clamp, tier constants, IndexedDB persist) + factionMiddleware auto-fires on game events (FACT-01, FACT-02)
+- [x] 53-01-PLAN.md — Extend factionSlice (0-100 clamp, tier constants, IndexedDB persist) + factionMiddleware auto-fires on game events (FACT-01, FACT-02)
 - [ ] 53-02-PLAN.md — ActionSetExecutor factionRequired + shopGenerator fix + faction-gated dialogue/quest/shop data for all 6 factions (FACT-03, FACT-04, FACT-05)
 - [ ] 53-03-PLAN.md — Faction vocabulary rewards at tier thresholds + FactionPanel UI with animated tier bars (FACT-06, FACT-01, FACT-03)
 
