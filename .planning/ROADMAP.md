@@ -350,7 +350,7 @@ Plans:
 - [x] 51-01-PLAN.md — inkjs install + InkDialogueEngine with adapter fallback (legacy JSON + .ink.json) + 5-NPC pilot migration (INFRA-07, INFRA-08, INFRA-09) — 2026-03-19
 - [x] 51-02-PLAN.md — Fill 573 missing companion dialogue lines across 12 companions (CONT-01) — 2026-03-20
 - [x] 51-03-PLAN.md — PATH-01/PATH-02: Amira ink dialogue tree for path choice + DialogueOverlay ink mode + useTutorialTrigger integration — 2026-03-20
-- [ ] 51-04-PLAN.md — PATH-03/PATH-04/PATH-05/PATH-06/PATH-07: FSRS queue reordering by path + path-gated quest/mentor assignment + switch UI + onboarding skip flag
+- [x] 51-04-PLAN.md — PATH-03/PATH-04/PATH-05/PATH-06/PATH-07: FSRS queue reordering by path + path-gated quest/mentor assignment + switch UI + onboarding skip flag — 2026-03-20
 
 #### Phase 52: Vocabulary Expansion
 **Goal**: The FSRS system contains 5,000+ words with domain affinity tags, CEFR levels, root families, semantic clusters, ambiguity flags, and a build-time validation script — giving every downstream system (faction vocab rewards, poetry battles, learning path differentiation) a rich word corpus to draw from
