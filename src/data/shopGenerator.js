@@ -23,7 +23,7 @@ export function getShopInventory(shopId, gameState) {
   // Extract relevant state
   const playerLevel = gameState.player?.level || 1;
   const completedQuests = gameState.quests?.completed || [];
-  const factionReputation = gameState.narrative?.factionReputation || {};
+  const factionReputation = gameState.faction?.alignment || {};
   const priceModifiers = gameState.economy?.priceModifiers || {};
 
   // Get price modifier for this shop (default 1.0)
@@ -50,13 +50,16 @@ export function getShopInventory(shopId, gameState) {
   const shopFaction = getShopFaction(shopId);
   const reputation = factionReputation[shopFaction] || 0;
 
+  // Apply 15% faction discount at Allied (75+) tier
+  const factionDiscount = reputation >= 75 ? 0.85 : 1.0;
+
   for (const shopItem of reputationItems) {
-    if (reputation >= 50 && playerLevel >= shopItem.minLevel) {
+    if (reputation >= 75 && playerLevel >= shopItem.minLevel) {
       const itemData = EQUIPMENT_DATA[shopItem.itemId];
       if (itemData) {
         inventory.push({
           itemId: shopItem.itemId,
-          price: Math.round(itemData.sellPrice * 2 * priceModifier),
+          price: Math.round(itemData.sellPrice * 2 * priceModifier * factionDiscount),
           available: true,
           unlockReason: 'reputation',
         });
@@ -92,13 +95,13 @@ function getShopFaction(shopId) {
   const factionMap = {
     sacred_library_shop: 'scholars',
     desert_market_shop: 'merchants',
-    royal_palace_shop: 'royalty',
-    warriors_guild_shop: 'warriors',
-    explorers_outpost_shop: 'explorers',
-    healers_temple_shop: 'healers',
-    mystic_bazaar_shop: 'mystics',
-    oasis_village_shop: 'villagers',
+    royal_palace_shop: 'guardians',
+    warriors_guild_shop: 'guardians',
+    explorers_outpost_shop: 'travelers',
+    healers_temple_shop: 'scholars',
+    mystic_bazaar_shop: 'artists',
+    oasis_village_shop: 'merchants',
+    artisan_workshop_shop: 'artisans',
   };
-
-  return factionMap[shopId] || 'neutral';
+  return factionMap[shopId] || null;
 }
