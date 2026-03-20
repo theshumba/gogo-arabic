@@ -369,7 +369,7 @@ Plans:
   5. Running `npm run vocab:validate` exits 0 with no duplicate, missing-root, or missing-CEFR-tag warnings
   6. Words tagged `ambiguous: true` retain tashkeel in all UI views regardless of the player's FSRS mastery level
 
-**Plans**: 6 plans in 3 waves
+**Plans**: 3 plans in 2 waves
 
 Plans:
 - [ ] 52-01-PLAN.md — Expand to 5,000+ words with CEFR, root, semantic cluster, domain affinity, and ambiguity fields (CONT-02, CONT-07)
