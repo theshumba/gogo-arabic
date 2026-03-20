@@ -27,6 +27,8 @@ import questsData from '../data/quests.json';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
 import { store } from '../store/store.js';
+// ENVR-02: InkDialogueEngine for vocabulary-gated inscription comprehension
+import { InkDialogueEngine } from '../game/systems/InkDialogueEngine.js';
 
 /**
  * useObjectEvents — Sign, bookshelf, chest, door, and world object event handlers
@@ -192,10 +194,11 @@ export function useObjectEvents(playSFX) {
     };
 
     /**
-     * Handle OBJECT_INTERACT — unified handler for all 8 new world object types.
+     * Handle OBJECT_INTERACT — unified handler for all 8 new world object types + inscriptions.
      * Processes rewards (vocab, loot), persists state, then opens the overlay.
+     * ENVR-02: Ink inscriptions are routed to InkDialogueEngine for vocabulary-gated comprehension.
      */
-    const handleObjectInteract = (payload) => {
+    const handleObjectInteract = async (payload) => {
       playSFX('click');
 
       const {
@@ -204,7 +207,33 @@ export function useObjectEvents(playSFX) {
         vocabCategory,
         loot,
         stateChange,
+        useInk,
+        inkFile,
       } = payload;
+
+      // ENVR-02: Route ink inscriptions through InkDialogueEngine
+      if (useInk && inkFile) {
+        const engine = new InkDialogueEngine(null, null);
+        await engine.loadForNpc(inkFile);
+
+        if (engine.isInkLoaded) {
+          // Persist state change (discovery flag)
+          if (stateChange && id) {
+            dispatch(setWorldObjectState({ objectId: id, objectState: stateChange }));
+          }
+
+          EventBus.emit(EVENTS.INK_DIALOGUE_START, {
+            engine,
+            npcData: {
+              id: inkFile,
+              name: payload.labelEnglish || 'Inscription',
+              type: 'inscription',
+            },
+          });
+          return; // Ink handler takes over; skip OBJECT_INTERACT overlay
+        }
+        // Fallback: ink file not found — fall through to standard overlay
+      }
 
       // Build enriched payload for the overlay
       const overlayData = { ...payload };

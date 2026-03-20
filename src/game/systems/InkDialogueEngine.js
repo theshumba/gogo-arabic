@@ -4,6 +4,7 @@ import { WORLD_STATE_KEYS } from '../../data/worldStateKeys.js';
 import { setLearningPath, setTutorialPhase } from '../../store/slices/playerSlice.js';
 import { updateQuestProgress } from '../../store/slices/questSlice.js';
 import { incrementNpcRelationship } from '../../store/slices/narrativeSlice.js';
+import { addFsrsCard } from '../../store/slices/vocabularySlice.js';
 
 /**
  * InkDialogueEngine
@@ -192,6 +193,36 @@ export class InkDialogueEngine {
     // Read the player's current learning path (for ink conditionals)
     this._story.BindExternalFunction('getLearningPath', () => {
       return store.getState().player?.learningPath || '';
+    });
+
+    // ENVR-02: Check if player knows a word (returns 1 if has reps > 0, 0 if unknown)
+    this._story.BindExternalFunction('getVocabMastery', (wordId) => {
+      const state = store.getState();
+      const fsrsCards = state.vocabulary?.fsrsCards ?? {};
+      const cardEntry = fsrsCards[wordId];
+      return (cardEntry && cardEntry.card && cardEntry.card.reps > 0) ? 1 : 0;
+    });
+
+    // ENVR-02: Add FSRS card from ink context (only if word not already known)
+    this._story.BindExternalFunction('addFsrsCardFromInk', (wordId, source) => {
+      const state = store.getState();
+      const fsrsCards = state.vocabulary?.fsrsCards ?? {};
+      if (!fsrsCards[wordId]) {
+        store.dispatch(addFsrsCard({
+          wordId,
+          card: {
+            due: new Date().toISOString(),
+            stability: 0,
+            difficulty: 0,
+            elapsed_days: 0,
+            scheduled_days: 0,
+            reps: 0,
+            lapses: 0,
+            state: 'New',
+          },
+          source,
+        }));
+      }
     });
   }
 

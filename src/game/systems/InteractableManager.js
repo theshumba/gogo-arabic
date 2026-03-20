@@ -7,7 +7,7 @@ import { stripDiacritics } from '../../utils/arabicUtils.js';
 // Interactable proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
 
-// Sprite key mapping for the 8 new interactive object types — Kenmi keys
+// Sprite key mapping for the 8 new interactive object types + inscription — Kenmi keys
 const WORLD_OBJECT_SPRITES = {
   fountain: 'kenmi-desert-props-golden-pots',
   statue: 'kenmi-desert-temple-desert-obelisk-small-1',
@@ -17,6 +17,7 @@ const WORLD_OBJECT_SPRITES = {
   barrel: 'kenmi-desert-props-desert-rocks',
   crate: 'kenmi-desert-props-golden-pots',
   pot: 'kenmi-desert-props-golden-pots',
+  inscription: 'kenmi-desert-temple-desert-obelisk-small-2',
 };
 
 // Set of all new world object types (behavior composition, not class-per-type)
@@ -306,6 +307,12 @@ export class InteractableManager {
       loot: obj.loot || null,
       stateChange,
       repeatable,
+      // ENVR-01: Inscription-specific fields (rootFamily, rootWords, ink routing)
+      rootFamily: obj.rootFamily || null,
+      rootFamilyEnglish: obj.rootFamilyEnglish || null,
+      rootWords: obj.rootWords || null,
+      useInk: obj.useInk || false,
+      inkFile: obj.inkFile || null,
     });
     EventBus.emit(EVENTS.PLAYER_FREEZE);
 

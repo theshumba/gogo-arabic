@@ -189,6 +189,51 @@
   padding-top: 2px;
 }
 
+/* Inscription-specific styles (Phase 54 ENVR-03, ENVR-04) */
+.inscriptionArabic {
+  font-family: 'Amiri', var(--font-arabic), serif;
+  font-size: 20px;
+  color: #F5E6C8;
+  line-height: 1.8;
+  text-align: center;
+  padding: 12px 16px;
+  background: rgba(255, 215, 0, 0.06);
+  border-radius: 8px;
+  margin: 8px 0;
+  direction: rtl;
+}
+
+.rootFamily {
+  text-align: center;
+  padding: 8px;
+  margin: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rootFamilyLabel {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.rootFamilyArabic {
+  font-family: 'Amiri', var(--font-arabic), serif;
+  font-size: 24px;
+  color: #FFD700;
+  letter-spacing: 4px;
+  direction: rtl;
+}
+
+.rootFamilyEnglish {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .card {
