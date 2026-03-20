@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v11.0
 milestone_name: Dialogue Foundation & Learning Paths
 status: in_progress
-stopped_at: "Phase 51 plan 01 complete (51-01-SUMMARY.md created) — next action is Phase 51 Plan 02"
-last_updated: "2026-03-19T23:55:00Z"
+stopped_at: "Phase 51 plan 02 complete (51-02-SUMMARY.md created) — next action is Phase 51 Plan 03"
+last_updated: "2026-03-20T00:47:00Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 13
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,9 +24,9 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 ## Current Position
 
 Phase: 51 (dialogue-foundation-learning-paths) — EXECUTING
-Plan: 2 of 4 (Plan 1 complete)
+Plan: 3 of 4 (Plans 1-2 complete)
 
-Progress: [█░░░░░░░░░░░░] 1/13 plans complete
+Progress: [██░░░░░░░░░░░] 2/13 plans complete
 
 ### Shipped Milestones
 
@@ -54,7 +54,7 @@ Progress: [█░░░░░░░░░░░░] 1/13 plans complete
 - worldStateSlice is the root dependency: inkjs, factions, gossip, and learning path all write to it
 - Adapter pattern for inkjs: check .ink.json first, fallback to legacy JSON — never big-bang migrate all NPCs
 - Faction gates must cover bonus content only — all main quests completable at faction score 0
-- 573 missing companion dialogue lines — fill in Phase 51 while already touching DialogueEngine
+- 573 missing companion dialogue lines — FILLED in Phase 51-02 — zero Array.from placeholders remain
 - Phases 48-49 from v10.0 (learning path + first quest) are absorbed into Phase 51
 - Visual/UI/world/tileset work explicitly out of scope — user builds in LDtk separately
 - EXTERNAL declarations required in .ink source — all ink files must declare EXTERNAL for any function called via ~ syntax
@@ -79,6 +79,8 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | KENMI_CATALOG stays in BootScene (50-02) | Decorative sprites used across all zones; not zone-specific | KENMI_CATALOG loop untouched in BootScene; only desert tileset images moved to ZONE_ASSET_MANIFESTS |
 | syncStateOut uses WORLD_STATE_KEYS values (51-01) | Iterating raw ink globalVariables risks polluting Redux store with ink-internal variables | syncStateOut() iterates known WORLD_STATE_KEYS set only |
 | EXTERNAL declarations required in .ink (51-01) | inkjs Compiler throws on ~ function calls without EXTERNAL declaration | All .ink source files must declare EXTERNAL at top for all bound functions |
+| Zone corrections in companion dialogue (51-02) | Placeholders used wrong zones for Maryam/Nadia/Tariq vs plan spec | Applied plan-spec zones at write time; teaching specialty keys also corrected for Samir/Tariq/Maryam |
+| Amira gets ancient_ruins as 4th zone (51-02) | Plan called for adding ancient_ruins zone_comments to Amira | Added 5 entries; Amira now has 4 zones (sacred_library, oasis, market, coast, ruins) |
 
 ### Blockers/Concerns
 
@@ -93,6 +95,6 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 
 ## Session Continuity
 
-Last session: 2026-03-19
-Stopped at: Phase 51 plan 01 complete (51-01-SUMMARY.md created) — inkjs adapter + 5 NPC ink files
-Resume file: .planning/phases/51-dialogue-foundation-learning-paths/51-02-PLAN.md
+Last session: 2026-03-20
+Stopped at: Phase 51 plan 02 complete (51-02-SUMMARY.md created) — 2,295-line companionDialogue.js, CONT-01 satisfied
+Resume file: .planning/phases/51-dialogue-foundation-learning-paths/51-03-PLAN.md
