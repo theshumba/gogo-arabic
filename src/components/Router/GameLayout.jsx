@@ -243,6 +243,46 @@ export default function GameLayout() {
     };
   }, []);
 
+  // CalligraphyScene dynamic launcher — handles CALLIGRAPHY_LAUNCH_REQUESTED event
+  // and a window.__pendingCalligraphyLaunch set by MiniGamesHub before navigating to /game
+  useEffect(() => {
+    const handleCalligraphyLaunch = async (data) => {
+      const phaserGame = phaserRef.current?.game;
+      if (!phaserGame) return;
+      const { CalligraphyScene } = await import('../../game/scenes/CalligraphyScene.js');
+      if (!phaserGame.scene.getScene('CalligraphyScene')) {
+        phaserGame.scene.add('CalligraphyScene', CalligraphyScene, false);
+      }
+      const worldScene = phaserGame.scene.getScene('WorldScene');
+      if (worldScene?.sceneStackManager) {
+        worldScene.sceneStackManager.pushScene('CalligraphyScene', {
+          letterId: data?.letterId || 'alif',
+          returnSceneKey: 'WorldScene',
+        });
+      } else {
+        // Fallback: launch directly if sceneStackManager unavailable
+        phaserGame.scene.start('CalligraphyScene', {
+          letterId: data?.letterId || 'alif',
+          returnSceneKey: 'WorldScene',
+        });
+      }
+    };
+
+    EventBus.on(EVENTS.CALLIGRAPHY_LAUNCH_REQUESTED, handleCalligraphyLaunch);
+
+    // Check for pending launch set by MiniGamesHub before navigation
+    if (window.__pendingCalligraphyLaunch) {
+      const data = window.__pendingCalligraphyLaunch;
+      delete window.__pendingCalligraphyLaunch;
+      // Small delay for Phaser to initialize
+      setTimeout(() => handleCalligraphyLaunch(data), 800);
+    }
+
+    return () => {
+      EventBus.off(EVENTS.CALLIGRAPHY_LAUNCH_REQUESTED, handleCalligraphyLaunch);
+    };
+  }, []);
+
   // Welcome splash — show when arriving at awaiting_mentor (after cinematic + path choice)
   const tutorialPhase = useSelector((state) => state.player.tutorialPhase);
   const prevPhaseRef = useRef(tutorialPhase);

@@ -93,6 +93,12 @@ export default defineConfig({
             return 'poetry-game';
           }
 
+          // Calligraphy mini-game (lazy-loaded Phaser scene + reference paths)
+          if (id.includes('src/game/scenes/CalligraphyScene') ||
+            id.includes('src/data/calligraphyPaths')) {
+            return 'calligraphy-game';
+          }
+
           if (id.includes('node_modules')) {
             // inkjs dialogue runtime
             if (id.includes('node_modules/inkjs')) {

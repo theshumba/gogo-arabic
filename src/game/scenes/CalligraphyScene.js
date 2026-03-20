@@ -281,7 +281,6 @@ export class CalligraphyScene extends Phaser.Scene {
     }
 
     // Dispatch addFsrsCard for associated vocabulary word if letter has a wordId
-    const letterData = this._referencePaths?.[this._letterId];
     const wordId = letterData?.wordId;
     if (wordId && stars >= 2) {
       const fsrsCards = store.getState().vocabulary?.fsrsCards ?? {};

@@ -1,5 +1,7 @@
 import { COLORS, FONTS, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
 import { useGameNavigation } from '../../hooks/useGameNavigation.js';
+import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 
 /**
  * MiniGamesHub Component
@@ -38,6 +40,16 @@ export default function MiniGamesHub() {
       difficulty: 'Educational',
       icon: '🌳',
     },
+    {
+      id: 'calligraphy',
+      title: 'Calligraphy Practice',
+      titleArabic: 'تدريب الخط',
+      description: 'Trace Arabic letters and improve your handwriting. Master all 28 isolated letter forms.',
+      path: null, // Launches via Phaser scene, not React route
+      difficulty: 'All Levels',
+      icon: '✒️',
+      launchCalligraphy: true,
+    },
   ];
 
   return (
@@ -63,7 +75,15 @@ export default function MiniGamesHub() {
               Difficulty: {game.difficulty}
             </div>
             <button
-              onClick={() => goTo(game.path)}
+              onClick={() => {
+                if (game.launchCalligraphy) {
+                  // Navigate to game world, then GameLayout will launch CalligraphyScene
+                  window.__pendingCalligraphyLaunch = { letterId: 'alif' };
+                  goTo('/game');
+                  return;
+                }
+                goTo(game.path);
+              }}
               style={{
                 ...pixelBtnGold,
                 marginTop: 'auto',
