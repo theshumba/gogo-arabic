@@ -90,6 +90,8 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - 573 missing NPC dialogue lines filled
 - Vocabulary expansion to 5,000+ words (complete v9.0 Phase 46)
 - Bundle optimization: 862KB → 500KB ✓ (achieved 402KB in Phase 50)
+- inkjs dialogue engine (replace hardcoded JSON with branching narrative scripting) ✓ (Phase 51 — 5 pilot NPCs migrated, adapter with legacy fallback)
+- Learning path system: Scholar/Traveler/Historian (complete v10.0 Phases 48-49) ✓ (Phase 51 — in-world Amira ink dialogue, FSRS reordering, path-gated quests)
 
 **Previous milestone:** v10.0 Onboarding & First 5 Minutes (Phase 47 code complete, Phases 48-49 absorbed into v11.0)
 
@@ -167,4 +169,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-19 after Phase 50 (Infrastructure Baseline) complete*
+*Last updated: 2026-03-20 after Phase 51 (Dialogue Foundation & Learning Paths) complete*
