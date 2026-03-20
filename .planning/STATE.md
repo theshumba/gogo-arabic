@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: unknown
-stopped_at: Phase 54 plan 03 complete — environmental inscriptions + ink comprehension tiers (ENVR-01/02/03/04)
-last_updated: "2026-03-20T23:30:00.000Z"
+stopped_at: Phase 54 plan 02 complete — gossip system (gossipSlice + gossipMiddleware + 5 pilot ink NPCs)
+last_updated: "2026-03-20T22:54:00.000Z"
 progress:
   total_phases: 3
   completed_phases: 3
@@ -122,6 +122,9 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | factionDiscount hardcode removed from shopGenerator (54-01) | Old 0.85 multiplier at rep >= 75 duplicated ECON-03 and missed hostile markup | getFactionModifier() handles all three tiers (allied/neutral/hostile); priceModifiers state key preserved |
 | pricingAgent.js as pure-function module (54-01) | No Redux imports; testable in isolation | calculateDynamicPrice + getFactionModifier imported by shopGenerator and ShopOverlay |
 | supplyLevels seeded idempotently on shop open (54-01) | initSupply skips already-initialized items; purchases preserved across opens | store.dispatch(initSupply) in shopInventory useMemo; safe to call every render |
+| gossip NOT persisted (54-02) | Tokens are session-ephemeral (3-day expiry resets on reload); stale tokens should not persist | gossip: gossipReducer outside root persistConfig whitelist |
+| state.npc.friendship used for gossip threshold (54-02) | npcSlice has 0-100 scale; narrativeSlice has 0-5 tier; plan requires npc.friendship >= 25 | friendships = state.npc?.friendship ?? {} in gossipMiddleware |
+| gossip grammar annotations as [bracketed text] (54-02) | DialogueOverlay renders ink currentInkLine in <p> tag without bracket filtering | [{gossip_grammar}] in ink passes through unchanged; no DialogueOverlay changes needed |
 
 ### Blockers/Concerns
 
@@ -137,5 +140,5 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 ## Session Continuity
 
 Last session: 2026-03-20
-Stopped at: Phase 54 plan 03 complete — 24 environmental inscriptions, 5 ink comprehension dialogues, FSRS seeding
-Resume file: .planning/phases/54-world-life-systems/54-04-PLAN.md (plan 04 next)
+Stopped at: Phase 54 plan 02 complete — gossip system (gossipSlice/gossipMiddleware/gossipTemplates + 5 pilot ink NPCs with gossip_knot)
+Resume file: .planning/phases/54-world-life-systems/54-02-SUMMARY.md (plan 02 done; 54-01/03/04 also complete)
