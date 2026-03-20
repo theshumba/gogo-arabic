@@ -3,11 +3,29 @@ EXTERNAL setLearningPath(path)
 EXTERNAL startQuest(questId)
 EXTERNAL getFlag(key)
 EXTERNAL getLearningPath()
+EXTERNAL getGossipToken(npcId)
+EXTERNAL markGossipHeard(npcId)
+EXTERNAL getGossipGrammarNote(npcId)
 
 VAR onboarding_complete = false
 VAR onboarding_first_word_learned = false
 VAR onboarding_mentor_met = false
+VAR gossip_line = ""
+VAR gossip_grammar = ""
 
+~ gossip_line = getGossipToken("guide-amira")
+{gossip_line != "":
+  -> gossip_knot
+}
+-> main
+
+=== gossip_knot ===
+{gossip_line}
+~ gossip_grammar = getGossipGrammarNote("guide-amira")
+{gossip_grammar != "":
+  [{gossip_grammar}]
+}
+~ markGossipHeard("guide-amira")
 -> main
 
 === main ===

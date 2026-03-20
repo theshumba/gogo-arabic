@@ -3,9 +3,27 @@ EXTERNAL setLearningPath(path)
 EXTERNAL startQuest(questId)
 EXTERNAL getFlag(key)
 EXTERNAL getLearningPath()
+EXTERNAL getGossipToken(npcId)
+EXTERNAL markGossipHeard(npcId)
+EXTERNAL getGossipGrammarNote(npcId)
 
 VAR global_first_purchase_made = false
+VAR gossip_line = ""
+VAR gossip_grammar = ""
 
+~ gossip_line = getGossipToken("merchant-fatima")
+{gossip_line != "":
+  -> gossip_knot
+}
+-> main
+
+=== gossip_knot ===
+{gossip_line}
+~ gossip_grammar = getGossipGrammarNote("merchant-fatima")
+{gossip_grammar != "":
+  [{gossip_grammar}]
+}
+~ markGossipHeard("merchant-fatima")
 -> main
 
 === main ===

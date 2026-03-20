@@ -5,6 +5,8 @@ import { setLearningPath, setTutorialPhase } from '../../store/slices/playerSlic
 import { updateQuestProgress } from '../../store/slices/questSlice.js';
 import { incrementNpcRelationship } from '../../store/slices/narrativeSlice.js';
 import { addFsrsCard } from '../../store/slices/vocabularySlice.js';
+import { markTokenHeard } from '../../store/slices/gossipSlice.js';
+import { selectDayCount } from '../../store/slices/timeSlice.js';
 
 /**
  * InkDialogueEngine
@@ -223,6 +225,35 @@ export class InkDialogueEngine {
           source,
         }));
       }
+    });
+
+    // GOSP-03: Get first unheard, non-expired gossip token for an NPC
+    this._story.BindExternalFunction('getGossipToken', (npcId) => {
+      const state = store.getState();
+      const currentDay = selectDayCount(state);
+      const tokens = state.gossip?.npcTokens?.[npcId] || [];
+      const active = tokens.find(t => !t.heard && t.expiresDay > currentDay);
+      return active ? active.arabicLine : '';
+    });
+
+    // GOSP-04: Mark the first unheard, non-expired gossip token as heard so it is not repeated
+    this._story.BindExternalFunction('markGossipHeard', (npcId) => {
+      const state = store.getState();
+      const currentDay = selectDayCount(state);
+      const tokens = state.gossip?.npcTokens?.[npcId] || [];
+      const active = tokens.find(t => !t.heard && t.expiresDay > currentDay);
+      if (active) {
+        store.dispatch(markTokenHeard({ npcId, tokenId: active.tokenId }));
+      }
+    });
+
+    // GOSP-05: Get grammar note for the current gossip token
+    this._story.BindExternalFunction('getGossipGrammarNote', (npcId) => {
+      const state = store.getState();
+      const currentDay = selectDayCount(state);
+      const tokens = state.gossip?.npcTokens?.[npcId] || [];
+      const active = tokens.find(t => !t.heard && t.expiresDay > currentDay);
+      return active ? active.grammarNote : '';
     });
   }
 

@@ -3,9 +3,27 @@ EXTERNAL setLearningPath(path)
 EXTERNAL startQuest(questId)
 EXTERNAL getFlag(key)
 EXTERNAL getLearningPath()
+EXTERNAL getGossipToken(npcId)
+EXTERNAL markGossipHeard(npcId)
+EXTERNAL getGossipGrammarNote(npcId)
 
 VAR quest_act_1_complete = false
+VAR gossip_line = ""
+VAR gossip_grammar = ""
 
+~ gossip_line = getGossipToken("scholar-yusuf")
+{gossip_line != "":
+  -> gossip_knot
+}
+-> main
+
+=== gossip_knot ===
+{gossip_line}
+~ gossip_grammar = getGossipGrammarNote("scholar-yusuf")
+{gossip_grammar != "":
+  [{gossip_grammar}]
+}
+~ markGossipHeard("scholar-yusuf")
 -> main
 
 === main ===
