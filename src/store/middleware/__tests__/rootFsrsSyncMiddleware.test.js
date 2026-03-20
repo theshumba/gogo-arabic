@@ -211,6 +211,7 @@ describe('rootFsrsSyncMiddleware', () => {
           },
         },
         vocabulary: { fsrsCards: {} },
+        player: { learningPath: 'scholar' },
       };
 
       // After state: level 2, 110 XP
@@ -222,6 +223,7 @@ describe('rootFsrsSyncMiddleware', () => {
           },
         },
         vocabulary: { fsrsCards: {} },
+        player: { learningPath: 'scholar' },
       };
 
       let callCount = 0;
@@ -266,6 +268,7 @@ describe('rootFsrsSyncMiddleware', () => {
           },
         },
         vocabulary: { fsrsCards: {} },
+        player: { learningPath: 'scholar' },
       };
 
       const currentState = {
@@ -276,6 +279,7 @@ describe('rootFsrsSyncMiddleware', () => {
           },
         },
         vocabulary: { fsrsCards: {} },
+        player: { learningPath: 'scholar' },
       };
 
       let callCount = 0;
@@ -313,6 +317,7 @@ describe('rootFsrsSyncMiddleware', () => {
             maktab: { state: 'New' },
           },
         },
+        player: { learningPath: 'scholar' },
       };
 
       const currentState = {
@@ -329,6 +334,7 @@ describe('rootFsrsSyncMiddleware', () => {
             maktab: { state: 'New' },
           },
         },
+        player: { learningPath: 'scholar' },
       };
 
       let callCount = 0;
@@ -367,6 +373,7 @@ describe('rootFsrsSyncMiddleware', () => {
           },
         },
         vocabulary: { fsrsCards: {} },
+        player: { learningPath: 'scholar' },
       };
 
       store.getState.mockReturnValue(state);
@@ -406,6 +413,7 @@ describe('rootFsrsSyncMiddleware', () => {
           },
         },
         vocabulary: { fsrsCards: {} },
+        player: { learningPath: 'scholar' },
       };
 
       store.getState.mockReturnValue(state);
@@ -436,6 +444,7 @@ describe('rootFsrsSyncMiddleware', () => {
           },
         },
         vocabulary: { fsrsCards: {} },
+        player: { learningPath: 'scholar' },
       };
 
       store.getState.mockReturnValue(state);
