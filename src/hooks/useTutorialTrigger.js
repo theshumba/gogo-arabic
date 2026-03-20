@@ -4,15 +4,18 @@ import {
   setTutorialPhase,
   completeOnboarding,
   setOnboardingTargetNpc,
+  PATH_MENTORS,
+  PATH_FIRST_QUESTS,
 } from '../store/slices/playerSlice.js';
+import { checkPrerequisites } from '../store/slices/questSlice.js';
 import { store } from '../store/store.js';
 import { WORLD_STATE_KEYS } from '../data/worldStateKeys.js';
 import { InkDialogueEngine } from '../game/systems/InkDialogueEngine.js';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
+import questsData from '../data/quests.json';
 
 const MENTOR_NPC_ID = 'guide-amira';
-const SCHOLAR_NPC_ID = 'scholar-yusuf';
 
 /**
  * useTutorialTrigger
@@ -24,9 +27,9 @@ const SCHOLAR_NPC_ID = 'scholar-yusuf';
  * - 'path_choice': Scholar/Traveler/Historian selection (PathChoice component)
  * - 'awaiting_mentor': Auto-intro fires, freezes player, opens Guide Amira dialogue
  * - 'met_mentor': Waiting for word learn
- * - 'learned_word': Shows arrow to Scholar Yusuf
+ * - 'learned_word': Shows arrow to path-specific mentor NPC
  * - 'first_words_quest': Player exploring, learning words from objects
- * - 'met_yusuf': Tutorial complete
+ * - 'met_yusuf': Tutorial complete (phase name preserved for save compatibility)
  * - 'complete': Onboarding done
  */
 export function useTutorialTrigger() {
@@ -63,11 +66,15 @@ export function useTutorialTrigger() {
       if (tutorialPhase === 'awaiting_mentor' && npcId === MENTOR_NPC_ID) {
         dispatch(setTutorialPhase('met_mentor'));
         dispatch(setOnboardingTargetNpc(null));
-      } else if (tutorialPhase === 'learned_word' && npcId === SCHOLAR_NPC_ID) {
-        dispatch(setTutorialPhase('met_yusuf'));
-        dispatch(setOnboardingTargetNpc(null));
-        dispatch(setTutorialPhase('complete'));
-        dispatch(completeOnboarding());
+      } else if (tutorialPhase === 'learned_word') {
+        const currentPath = store.getState().player.learningPath;
+        const expectedMentor = PATH_MENTORS[currentPath] || 'guide-amira';
+        if (npcId === expectedMentor) {
+          dispatch(setTutorialPhase('met_yusuf'));
+          dispatch(setOnboardingTargetNpc(null));
+          dispatch(setTutorialPhase('complete'));
+          dispatch(completeOnboarding());
+        }
       }
     };
 
@@ -83,8 +90,10 @@ export function useTutorialTrigger() {
       // Check if path was already chosen (returning players / save reload)
       const pathAlreadyChosen = store.getState().worldState?.flags?.[WORLD_STATE_KEYS.ONBOARDING_PATH_CHOSEN];
       if (pathAlreadyChosen) {
+        const currentPath = store.getState().player.learningPath;
+        const mentorId = PATH_MENTORS[currentPath] || 'guide-amira';
         dispatch(setTutorialPhase('learned_word'));
-        dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+        dispatch(setOnboardingTargetNpc(mentorId));
         return;
       }
 
@@ -96,9 +105,11 @@ export function useTutorialTrigger() {
       await engine.loadPathChoice();
 
       if (!engine.isInkLoaded) {
-        // Fallback: skip ink path if file missing — advance normally
+        // Fallback: skip ink path if file missing — advance using path-aware mentor
+        const fallbackPath = store.getState().player.learningPath;
+        const fallbackMentorId = PATH_MENTORS[fallbackPath] || 'guide-amira';
         dispatch(setTutorialPhase('learned_word'));
-        dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+        dispatch(setOnboardingTargetNpc(fallbackMentorId));
         return;
       }
 
@@ -108,10 +119,18 @@ export function useTutorialTrigger() {
         npcData: { id: 'guide-amira', name: 'Guide Amira — أميرة' },
       });
 
-      // After ink dialogue ends, advance tutorial phase
+      // After ink dialogue ends, advance tutorial phase and activate path quest
       const handleInkEnd = () => {
+        const chosenPath = store.getState().player.learningPath;
+        const mentorId = PATH_MENTORS[chosenPath] || 'guide-amira';
+
         dispatch(setTutorialPhase('learned_word'));
-        dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+        dispatch(setOnboardingTargetNpc(mentorId));
+
+        // PATH-04: Activate the path-specific first quest
+        // prerequisites are ["tutorial_welcome"] so they unlock after onboarding begins
+        dispatch(checkPrerequisites(questsData));
+
         EventBus.off(EVENTS.INK_DIALOGUE_END, handleInkEnd);
       };
       EventBus.on(EVENTS.INK_DIALOGUE_END, handleInkEnd);
@@ -128,7 +147,9 @@ export function useTutorialTrigger() {
     if (tutorialPhase === 'awaiting_mentor') {
       dispatch(setOnboardingTargetNpc(MENTOR_NPC_ID));
     } else if (tutorialPhase === 'learned_word') {
-      dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+      const currentPath = store.getState().player.learningPath;
+      const mentorId = PATH_MENTORS[currentPath] || 'guide-amira';
+      dispatch(setOnboardingTargetNpc(mentorId));
     }
   }, [tutorialPhase, onboardingComplete, dispatch]);
 
