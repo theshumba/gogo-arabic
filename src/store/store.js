@@ -28,6 +28,7 @@ import homeReducer from './slices/homeSlice.js';
 import statsReducer from './slices/statsSlice.js';
 import skillTreeReducer from './slices/skillTreeSlice.js';
 import factionReducer from './slices/factionSlice.js';
+import gossipReducer from './slices/gossipSlice.js';
 import journalReducer from './slices/journalSlice.js';
 import codexReducer from './slices/codexSlice.js';
 import endgameReducer from './slices/endgameSlice.js';
@@ -42,6 +43,7 @@ import { friendshipMiddleware } from './middleware/friendshipMiddleware.js';
 import { utilityBonusMiddleware } from './middleware/utilityBonusMiddleware.js';
 import { worldStateMiddleware } from './middleware/worldStateMiddleware.js';
 import { factionMiddleware } from './middleware/factionMiddleware.js';
+import { gossipMiddleware } from './middleware/gossipMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -194,6 +196,7 @@ const rootReducer = combineReducers({
   stats: statsReducer,
   skillTree: skillTreeReducer,
   faction: persistedFactionReducer, // IndexedDB (nested) — Phase 53
+  gossip: gossipReducer,             // NOT persisted — session-ephemeral tokens
   journal: journalReducer,
   codex: codexReducer,
   endgame: endgameReducer,
@@ -209,7 +212,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware),
 });
 
 export const persistor = persistStore(store);
