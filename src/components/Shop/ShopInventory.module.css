@@ -190,3 +190,23 @@
   font-size: 16px;
   opacity: 0.5;
 }
+
+/* ECON-04: Price direction indicators */
+.priceUp {
+  color: #E63946;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.priceDown {
+  color: #2A9D8F;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.outOfStock {
+  color: #E63946;
+  font-size: 11px;
+  font-style: italic;
+  margin-left: 6px;
+}

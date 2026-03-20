@@ -85,7 +85,18 @@ function ShopInventory({ items, mode, onBuy, onSell, onHaggle, playerDirhams, vo
 
               <div className={styles.priceRow}>
                 <div className={styles.priceArabic}>{priceEastern}</div>
-                <div className={styles.priceWestern}>{price} dirhams</div>
+                <div className={styles.priceWestern}>
+                  {price} dirhams
+                  {/* ECON-04: Price direction indicator */}
+                  {item.basePrice && item.price !== item.basePrice && (
+                    <span className={item.price > item.basePrice ? styles.priceUp : styles.priceDown}>
+                      {item.price > item.basePrice ? ' \u25B2' : ' \u25BC'}
+                    </span>
+                  )}
+                </div>
+                {item.outOfStock && (
+                  <div className={styles.outOfStock}>Out of Stock</div>
+                )}
               </div>
 
               <div className={styles.actions}>

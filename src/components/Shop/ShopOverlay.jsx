@@ -5,12 +5,13 @@ import { closeDialogue } from '../../store/slices/uiSlice.js';
 import { spendDirhams, addDirhams } from '../../store/slices/playerSlice.js';
 import { recordShopPurchase } from '../../store/slices/achievementSlice.js';
 import { addItem, removeItem, unlockAffix, selectInventoryItems, selectIsInventoryFull } from '../../store/slices/inventorySlice.js';
-import { recordPurchase, recordHaggle } from '../../store/slices/economySlice.js';
+import { recordPurchase, recordHaggle, initSupply, decreaseSupply } from '../../store/slices/economySlice.js';
 import { addFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import { getShopInventory } from '../../data/shopGenerator.js';
 import { EQUIPMENT_DATA } from '../../data/equipment.js';
+import { SUPPLY_DEFAULTS } from '../../game/systems/pricingAgent.js';
 import { AFFIXES } from '../../data/affixes.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { EventBus } from '../../utils/eventBus.js';
@@ -45,7 +46,17 @@ function ShopOverlay() {
   const shopInventory = useMemo(() => {
     const state = store.getState();
     const shopId = dialogueConfig?.shopId || 'oasis_village_shop';
-    return getShopInventory(shopId, state);
+    const inv = getShopInventory(shopId, state);
+
+    // ECON-02: Initialize supply levels on first shop open (idempotent — initSupply skips existing)
+    const supplyItems = inv.map((item) => {
+      const itemData = EQUIPMENT_DATA[item.itemId];
+      const rarity = itemData?.rarity || 'common';
+      return { itemId: item.itemId, max: SUPPLY_DEFAULTS[rarity]?.max || 10 };
+    });
+    store.dispatch(initSupply({ shopId, items: supplyItems }));
+
+    return inv;
   }, [dialogueConfig, player.level, completedQuests]);
 
   // Shopkeeper info
@@ -75,6 +86,9 @@ function ShopOverlay() {
     // Record purchase
     dispatch(recordPurchase({ shopId, itemId, price, haggled: false }));
     dispatch(recordShopPurchase(price));
+
+    // ECON-02: Decrease supply for this item (raises price on next visit)
+    dispatch(decreaseSupply({ shopId, itemId, amount: 1 }));
 
     // Emit shop purchase event
     EventBus.emit(EVENTS.SHOP_PURCHASE, { shopId, itemId, price });
