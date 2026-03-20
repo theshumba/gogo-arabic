@@ -70,6 +70,10 @@ export const EVENTS = Object.freeze({
   // ────────────────────────────────────────────────
   // DIALOGUE — dialogue lifecycle events (Phase 20)
   // ────────────────────────────────────────────────
+  /** React → React: start an ink-scripted dialogue (path choice, scripted NPC events) */
+  INK_DIALOGUE_START: 'react:dialogue:ink-start',
+  /** React → React: ink-scripted dialogue finished (all lines + choices consumed) */
+  INK_DIALOGUE_END: 'react:dialogue:ink-end',
   /** React → Phaser: player selected a topic from hub menu */
   DIALOGUE_TOPIC_SELECTED: 'react:dialogue:topic-selected',
   /** Phaser → React: dialogue effect executed (for UI feedback) */

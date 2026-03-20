@@ -25,6 +25,7 @@ import TutorialHints, { WelcomeSplash } from '../Onboarding/TutorialHints.jsx';
 import CinematicIntro from '../Onboarding/CinematicIntro.jsx';
 import PathChoice from '../Onboarding/PathChoice.jsx';
 import { useTutorialTrigger } from '../../hooks/useTutorialTrigger.js';
+import { WORLD_STATE_KEYS } from '../../data/worldStateKeys.js';
 import LevelUpModal from '../UI/LevelUpModal.jsx';
 import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
 import AchievementToast from '../Achievements/AchievementToast.jsx';
@@ -200,6 +201,10 @@ export default function GameLayout() {
   const journalOpen = useSelector(selectJournalOpen);
   const onboardingComplete = useSelector((state) => state.player.onboardingComplete ?? true);
   const anyOverlayOpen = useSelector(selectAnyOverlayOpen);
+  // Guard: PathChoice overlay should not appear if path was already chosen via ink dialogue
+  const pathAlreadyChosen = useSelector(
+    (state) => state.worldState?.flags?.[WORLD_STATE_KEYS.ONBOARDING_PATH_CHOSEN] ?? false
+  );
 
   const [showWardrobe, setShowWardrobe] = React.useState(false);
   const [zoneLoading, setZoneLoading] = React.useState(false);
@@ -309,8 +314,10 @@ export default function GameLayout() {
 
       {/* Phase 47: CinematicIntro replaced by Phaser-native sequence in CinematicIntroSequencer.js */}
 
-      {/* Learning path choice — Scholar/Traveler/Historian */}
-      {tutorialPhase === 'path_choice' && <PathChoice />}
+      {/* Learning path choice — Scholar/Traveler/Historian (settings fallback only) */}
+      {/* The ink dialogue path (PATH-01/PATH-02) never sets tutorialPhase='path_choice'.  */}
+      {/* The ONBOARDING_PATH_CHOSEN guard prevents double-display in any edge case.       */}
+      {tutorialPhase === 'path_choice' && !pathAlreadyChosen && <PathChoice />}
 
       {/* Tutorial hints (non-blocking arrows/prompts) */}
       {!onboardingComplete && tutorialPhase !== 'cinematic_intro' && tutorialPhase !== 'path_choice' && <TutorialHints />}

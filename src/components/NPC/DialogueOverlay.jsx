@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { closeDialogue, showNotification } from '../../store/slices/uiSlice.js';
@@ -81,6 +81,77 @@ export default function DialogueOverlay() {
   const [showHistory, setShowHistory] = useState(false);
   const [showGiftPanel, setShowGiftPanel] = useState(false);
 
+  // ── Ink dialogue mode (PATH-01, PATH-02) ───────────────────────
+  // When an ink story starts (e.g. path-choice after first word learned),
+  // we bypass the legacy dialogue system and render directly from ink state.
+  // inkDialogueState: { lines: string[], choices: Choice[], engine, npcData } | null
+  const [inkDialogueState, setInkDialogueState] = useState(null);
+  const [inkLineIndex, setInkLineIndex] = useState(0);
+  const inkEngineRef = useRef(null);
+
+  useEffect(() => {
+    const handleInkStart = ({ engine, npcData: inkNpcData }) => {
+      inkEngineRef.current = engine;
+      engine.syncStateIn();
+      const lines = [];
+      while (engine.canContinue()) {
+        lines.push(engine.continue().trim());
+      }
+      const choices = engine.currentChoices();
+      setInkDialogueState({ lines: lines.filter(Boolean), choices, npcData: inkNpcData });
+      setInkLineIndex(0);
+      EventBus.emit(EVENTS.PLAYER_FREEZE);
+    };
+
+    EventBus.on(EVENTS.INK_DIALOGUE_START, handleInkStart);
+    return () => EventBus.off(EVENTS.INK_DIALOGUE_START, handleInkStart);
+  }, []);
+
+  const _closeInkDialogue = (engine) => {
+    // Flush ink variable mutations to Redux worldState (sets ONBOARDING_PATH_CHOSEN, etc.)
+    engine.syncStateOut();
+    engine.reset();
+    inkEngineRef.current = null;
+    setInkDialogueState(null);
+    setInkLineIndex(0);
+    // useTutorialTrigger listens for INK_DIALOGUE_END to advance tutorial phase
+    EventBus.emit(EVENTS.INK_DIALOGUE_END);
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+  };
+
+  const handleInkChoice = (choiceIndex) => {
+    const engine = inkEngineRef.current;
+    if (!engine) return;
+    engine.chooseChoiceIndex(choiceIndex);
+    const lines = [];
+    while (engine.canContinue()) {
+      lines.push(engine.continue().trim());
+    }
+    const choices = engine.currentChoices();
+    if (lines.filter(Boolean).length === 0 && choices.length === 0) {
+      // Ink story complete — syncStateOut dispatches setLearningPath + ONBOARDING_PATH_CHOSEN
+      _closeInkDialogue(engine);
+    } else {
+      setInkDialogueState((prev) => ({ ...prev, lines: lines.filter(Boolean), choices }));
+      setInkLineIndex(0);
+    }
+  };
+
+  const advanceInkLine = () => {
+    const engine = inkEngineRef.current;
+    if (!engine || !inkDialogueState) return;
+    const nextIdx = inkLineIndex + 1;
+    if (nextIdx < inkDialogueState.lines.length) {
+      setInkLineIndex(nextIdx);
+    } else if (inkDialogueState.choices.length > 0) {
+      // All lines shown — keep at last line so choices are visible
+    } else {
+      // No more lines AND no choices → ink story at END with no path choice shown
+      _closeInkDialogue(engine);
+    }
+  };
+  // ────────────────────────────────────────────────────────────────
+
   // Inventory items for gift panel
   const inventoryItems = useSelector(selectInventoryItems);
 
@@ -147,6 +218,103 @@ export default function DialogueOverlay() {
     return () => window.removeEventListener('keydown', handleKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [line, lineIndex, currentTree, isHubAndSpoke, filteredChoices]);
+
+  // ── Ink dialogue rendering (PATH-01 / PATH-02) ──────────────────
+  // Render directly from ink state — bypasses legacy NPC data entirely.
+  if (inkDialogueState) {
+    const currentInkLine = inkDialogueState.lines[inkLineIndex] ?? '';
+    const atLastLine = inkLineIndex >= inkDialogueState.lines.length - 1;
+    const inkNpc = inkDialogueState.npcData;
+    const showingChoices = atLastLine && inkDialogueState.choices.length > 0;
+
+    return (
+      <div ref={focusTrapRef} className={styles.overlay} role="dialog" aria-label="Dialogue with Guide Amira">
+        <motion.div
+          className={styles.backdrop}
+          onClick={!showingChoices ? advanceInkLine : undefined}
+          role={!showingChoices ? 'button' : undefined}
+          tabIndex={!showingChoices ? 0 : undefined}
+          aria-label={!showingChoices ? 'Continue dialogue' : undefined}
+          onKeyDown={!showingChoices ? (e) => {
+            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); advanceInkLine(); }
+          } : undefined}
+          variants={backdropVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        />
+        <motion.div
+          variants={dialogueBoxVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          style={{ width: '100%' }}
+        >
+          <div className={styles.dialogueBox}>
+            <div className={styles.content}>
+              {inkNpc && (
+                <div className={styles.npcHeader} style={{ marginBottom: 8 }}>
+                  <span style={{ color: '#D4A843', fontWeight: 'bold', fontSize: 14 }}>
+                    {inkNpc.name || 'Guide Amira'}
+                  </span>
+                </div>
+              )}
+              <p
+                dir="rtl"
+                lang="ar"
+                style={{ fontSize: 18, lineHeight: 1.8, color: '#fff', marginBottom: 12, minHeight: 48 }}
+              >
+                {currentInkLine}
+              </p>
+
+              {showingChoices ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+                  {inkDialogueState.choices.map((choice, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleInkChoice(idx)}
+                      dir="rtl"
+                      lang="ar"
+                      style={{
+                        background: 'rgba(212, 168, 67, 0.12)',
+                        border: '1px solid #D4A843',
+                        borderRadius: 6,
+                        color: '#D4A843',
+                        padding: '10px 16px',
+                        fontSize: 15,
+                        cursor: 'pointer',
+                        textAlign: 'right',
+                        transition: 'background 0.15s',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(212, 168, 67, 0.25)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(212, 168, 67, 0.12)'; }}
+                    >
+                      {choice.text}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                !atLastLine && (
+                  <div style={{ color: '#888', fontSize: 12, textAlign: 'center', marginTop: 8 }}>
+                    Press Space or click to continue
+                  </div>
+                )
+              )}
+
+              {atLastLine && inkDialogueState.choices.length === 0 && (
+                <div style={{ color: '#888', fontSize: 12, textAlign: 'center', marginTop: 8 }}>
+                  Press Space or click to continue
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+  // ─────────────────────────────────────────────────────────────────
 
   // Early return if invalid data
   if (!npc || !currentTree) {

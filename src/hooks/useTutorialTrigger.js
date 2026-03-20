@@ -5,6 +5,9 @@ import {
   completeOnboarding,
   setOnboardingTargetNpc,
 } from '../store/slices/playerSlice.js';
+import { store } from '../store/store.js';
+import { WORLD_STATE_KEYS } from '../data/worldStateKeys.js';
+import { InkDialogueEngine } from '../game/systems/InkDialogueEngine.js';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
 
@@ -72,13 +75,46 @@ export function useTutorialTrigger() {
     return () => EventBus.off(EVENTS.DIALOGUE_ENDED, handleDialogueEnded);
   }, [tutorialPhase, onboardingComplete, dispatch]);
 
-  // --- Track word learned to advance from met_mentor to learned_word ---
+  // --- Track word learned: fire ink path-choice dialogue, then advance phase ---
   useEffect(() => {
     if (tutorialPhase !== 'met_mentor') return;
 
-    const handleWordLearned = () => {
-      dispatch(setTutorialPhase('learned_word'));
-      dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+    const handleWordLearned = async () => {
+      // Check if path was already chosen (returning players / save reload)
+      const pathAlreadyChosen = store.getState().worldState?.flags?.[WORLD_STATE_KEYS.ONBOARDING_PATH_CHOSEN];
+      if (pathAlreadyChosen) {
+        dispatch(setTutorialPhase('learned_word'));
+        dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+        return;
+      }
+
+      // PATH-01 / PATH-02: Fire Amira's path-choice ink dialogue
+      // After ink story ends, DialogueOverlay dispatches setTutorialPhase('awaiting_mentor')
+      // which causes the welcome splash but then useTutorialTrigger re-fires auto-intro.
+      // Instead: listen for INK_DIALOGUE_END and then advance to learned_word.
+      const engine = new InkDialogueEngine(null, null);
+      await engine.loadPathChoice();
+
+      if (!engine.isInkLoaded) {
+        // Fallback: skip ink path if file missing — advance normally
+        dispatch(setTutorialPhase('learned_word'));
+        dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+        return;
+      }
+
+      // Emit ink dialogue start with Amira's NPC data
+      EventBus.emit(EVENTS.INK_DIALOGUE_START, {
+        engine,
+        npcData: { id: 'guide-amira', name: 'Guide Amira — أميرة' },
+      });
+
+      // After ink dialogue ends, advance tutorial phase
+      const handleInkEnd = () => {
+        dispatch(setTutorialPhase('learned_word'));
+        dispatch(setOnboardingTargetNpc(SCHOLAR_NPC_ID));
+        EventBus.off(EVENTS.INK_DIALOGUE_END, handleInkEnd);
+      };
+      EventBus.on(EVENTS.INK_DIALOGUE_END, handleInkEnd);
     };
 
     EventBus.on(EVENTS.SFX_WORDLEARNED, handleWordLearned);

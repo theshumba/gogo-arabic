@@ -65,6 +65,35 @@ export class InkDialogueEngine {
   }
 
   /**
+   * Load the path-choice ink story for Guide Amira.
+   * Fires after the first word is learned (ONBOARDING_FIRST_WORD_LEARNED),
+   * presenting Scholar / Traveler / Historian choices through in-world dialogue.
+   *
+   * PATH-01 / PATH-02: uses guide-amira-path.ink.json (not the general guide-amira.ink.json)
+   */
+  async loadPathChoice() {
+    const key = '../data/ink/guide-amira-path.ink.json';
+    const loader = INK_FILES[key];
+
+    if (!loader) {
+      this._inkLoaded = false;
+      return;
+    }
+
+    try {
+      const mod = await loader();
+      const { Story } = await import('inkjs');
+      this._story = new Story(mod.default);
+      this._bindExternalFunctions();
+      this._inkLoaded = true;
+      this._currentNpcId = 'guide-amira-path';
+    } catch (err) {
+      console.warn('[InkDialogueEngine] Failed to load path-choice ink story:', err);
+      this._inkLoaded = false;
+    }
+  }
+
+  /**
    * Whether an ink Story was successfully loaded for the current NPC.
    * @returns {boolean}
    */
