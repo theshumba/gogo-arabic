@@ -17,6 +17,9 @@ import Phaser from 'phaser';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { resamplePath, discreteFrechetDistance } from '../../utils/frechetDistance.js';
+import { store } from '../../store/store.js';
+import { markLetterPracticed } from '../../store/slices/alphabetSlice.js';
+import { addFsrsCard } from '../../store/slices/vocabularySlice.js';
 
 // Drawing constants
 const RESAMPLE_COUNT = 64;
@@ -59,6 +62,8 @@ export class CalligraphyScene extends Phaser.Scene {
     this._referenceGraphics = null;
     this._referencePaths = null;
     this._feedbackText = null;
+    this._debugText = null;
+    this._resultText = null;
     this._prevPtr = null;
   }
 
@@ -117,9 +122,23 @@ export class CalligraphyScene extends Phaser.Scene {
     }).setOrigin(1, 0).setInteractive({ useHandCursor: true });
     clearBtn.on('pointerdown', () => this._clearStroke());
 
-    // Feedback text (hidden until needed)
+    // Star rating feedback text (hidden until needed)
     this._feedbackText = this.add.text(width / 2, height / 2, '', {
-      fontSize: '28px',
+      fontSize: '36px',
+      fontFamily: 'Arial, sans-serif',
+      color: COLORS.STAR_GOLD,
+    }).setOrigin(0.5).setDepth(10);
+
+    // Debug accuracy text (shown below stars)
+    this._debugText = this.add.text(width / 2, height / 2 + 44, '', {
+      fontSize: '11px',
+      fontFamily: 'Arial, sans-serif',
+      color: COLORS.TEXT_MUTED,
+    }).setOrigin(0.5).setDepth(10);
+
+    // Result label text ("Practiced!" or "Try again!") — shown below debug
+    this._resultText = this.add.text(width / 2, height / 2 + 64, '', {
+      fontSize: '16px',
       fontFamily: 'Arial, sans-serif',
       color: COLORS.STAR_GOLD,
     }).setOrigin(0.5).setDepth(10);
@@ -243,10 +262,38 @@ export class CalligraphyScene extends Phaser.Scene {
       stars = 1;
     }
 
-    // Display star rating
+    // Display star rating (filled gold for earned, gray outline for unearned)
     const starStr = '★'.repeat(stars) + '☆'.repeat(3 - stars);
-    const color = stars >= 2 ? COLORS.STAR_GOLD : COLORS.STAR_GRAY;
-    this._showFeedback(starStr, color, 2000);
+    const starColor = stars >= 2 ? COLORS.STAR_GOLD : COLORS.STAR_GRAY;
+    this._feedbackText.setText(starStr).setColor(starColor).setAlpha(1);
+
+    // Show Frechet distance as debug accuracy info
+    this._debugText.setText(`Accuracy: ${frechetDist.toFixed(3)}`).setAlpha(1);
+
+    // Show practice result label
+    const resultMsg = stars >= 2 ? 'Practiced!' : 'Try again!';
+    const resultColor = stars >= 2 ? '#22cc66' : '#f5a623';
+    this._resultText.setText(resultMsg).setColor(resultColor).setAlpha(1);
+
+    // Dispatch markLetterPracticed to alphabetSlice if 2+ stars
+    if (stars >= 2) {
+      store.dispatch(markLetterPracticed({ letterId: this._letterId, stars }));
+    }
+
+    // Dispatch addFsrsCard for associated vocabulary word if letter has a wordId
+    const letterData = this._referencePaths?.[this._letterId];
+    const wordId = letterData?.wordId;
+    if (wordId && stars >= 2) {
+      const fsrsCards = store.getState().vocabulary?.fsrsCards ?? {};
+      if (!fsrsCards[wordId]) {
+        // Create a minimal FSRS card for the letter's associated word
+        store.dispatch(addFsrsCard({
+          wordId,
+          card: { due: new Date().toISOString(), stability: 1, difficulty: 5, elapsed_days: 0, scheduled_days: 1, reps: 0, lapses: 0, state: 0, last_review: null },
+          source: 'calligraphy',
+        }));
+      }
+    }
 
     // Emit result to React layer
     EventBus.emit(EVENTS.CALLIGRAPHY_STROKE_COMPLETE, {
@@ -255,8 +302,8 @@ export class CalligraphyScene extends Phaser.Scene {
       frechetDistance: frechetDist,
     });
 
-    // Auto-clear after delay so player can try again
-    this.time.delayedCall(2000, () => {
+    // Auto-clear after 2.5 seconds so player can try again
+    this.time.delayedCall(2500, () => {
       this._clearStroke();
     });
   }
@@ -272,6 +319,12 @@ export class CalligraphyScene extends Phaser.Scene {
     this._prevPtr = null;
     if (this._feedbackText) {
       this._feedbackText.setText('');
+    }
+    if (this._debugText) {
+      this._debugText.setText('');
+    }
+    if (this._resultText) {
+      this._resultText.setText('');
     }
   }
 

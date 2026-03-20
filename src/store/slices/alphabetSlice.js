@@ -4,6 +4,7 @@ const initialState = {
   groups: [], // loaded from alphabet.json
   completedGroups: [],
   currentLesson: null, // { groupId, step: 1-5 }
+  practicedLetters: {}, // { letterId: { stars: number, practicedAt: number } }
 };
 
 const alphabetSlice = createSlice({
@@ -41,6 +42,18 @@ const alphabetSlice = createSlice({
     resetLesson(state) {
       state.currentLesson = null;
     },
+
+    markLetterPracticed(state, action) {
+      // payload: { letterId, stars }
+      const { letterId, stars } = action.payload;
+      if (stars >= 2) {
+        const existing = state.practicedLetters[letterId];
+        // Only update if new stars are higher or no previous entry
+        if (!existing || stars > existing.stars) {
+          state.practicedLetters[letterId] = { stars, practicedAt: Date.now() };
+        }
+      }
+    },
   },
 });
 
@@ -50,6 +63,7 @@ export const {
   advanceStep,
   completeGroup,
   resetLesson,
+  markLetterPracticed,
 } = alphabetSlice.actions;
 
 // --- Selectors ---
@@ -68,5 +82,8 @@ export const selectAlphabetProgress = createSelector(
     percentage: groups.length > 0 ? Math.round((completedGroups.length / groups.length) * 100) : 0,
   })
 );
+
+export const selectPracticedLetters = (state) => state.alphabet.practicedLetters;
+export const selectLetterPracticed = (state, letterId) => !!state.alphabet.practicedLetters[letterId];
 
 export default alphabetSlice.reducer;

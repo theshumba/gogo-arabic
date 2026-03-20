@@ -447,6 +447,8 @@ export const EVENTS = Object.freeze({
   CALLIGRAPHY_STROKE_COMPLETE: 'phaser:calligraphy:stroke-complete',
   /** Phaser CalligraphyScene → React: player exited calligraphy scene */
   CALLIGRAPHY_SCENE_EXIT: 'phaser:calligraphy:scene-exit',
+  /** React MiniGamesHub → GameLayout: request to launch CalligraphyScene in Phaser */
+  CALLIGRAPHY_LAUNCH_REQUESTED: 'react:calligraphy:launch-requested',
 
   // ────────────────────────────────────────────────
   // SYSTEM — AutoSave, stats, sub-areas (Phase 36)
