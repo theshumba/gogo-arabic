@@ -18,11 +18,63 @@
  *
  * Every exported entry is guaranteed to have at minimum:
  *   id, arabic, english, category, difficulty
+ *
+ * domainAffinity: array of learning path IDs that this word is prioritized for.
+ * Assigned post-merge based on the word's category. Used by selectNewCardsByPath
+ * to reorder new card queues per player learning path (PATH-03).
  */
 
 import curatedWords from './vocabulary.json';
 import finalWords from './vocabulary-final.json';
 import expandedWords from './vocabularyExpanded.js';
+
+// ============================================================
+// DOMAIN AFFINITY MAPPING — category → learning path IDs
+// ============================================================
+// Scholar domain — reading, writing, formal language, sciences
+// Traveler domain — daily life, greetings, social, practical
+// Historian domain — history, culture, geography, architecture
+// ============================================================
+
+const CATEGORY_AFFINITY = {
+  // Scholar domain
+  grammar: ['scholar'],
+  numbers: ['scholar'],
+  colors: ['scholar'],
+  writing: ['scholar'],
+  education: ['scholar'],
+  science: ['scholar'],
+  mathematics: ['scholar'],
+  astronomy: ['scholar'],
+
+  // Traveler domain
+  greetings: ['traveler'],
+  food: ['traveler'],
+  trade: ['traveler'],
+  directions: ['traveler'],
+  family: ['traveler'],
+  body: ['traveler'],
+  clothing: ['traveler'],
+  daily_life: ['traveler'],
+  weather: ['traveler'],
+
+  // Historian domain
+  history: ['historian'],
+  culture: ['historian'],
+  geography: ['historian'],
+  architecture: ['historian'],
+  religion: ['historian'],
+  military: ['historian'],
+  government: ['historian'],
+
+  // Shared domains
+  nature: ['traveler', 'historian'],
+  animals: ['traveler', 'historian'],
+  time: ['scholar', 'traveler'],
+  phrases: ['traveler', 'scholar'],
+  adjectives: ['scholar', 'traveler', 'historian'],
+  verbs_basic: ['scholar', 'traveler', 'historian'],
+};
 
 // Build a Set of IDs already present in the curated dataset
 const curatedIds = new Set(curatedWords.map((w) => w.id));
@@ -63,5 +115,24 @@ const newExpandedWords = expandedWords.filter((w) => !allExistingIds.has(w.id));
 
 // Final export: curated first (richest metadata), then additional, then expanded
 const vocabulary = [...curatedWords, ...additionalWords, ...newExpandedWords];
+
+// Post-process: assign domainAffinity to every word based on its category.
+// Words matching a learning path's domain appear first in selectNewCardsByPath.
+for (const word of vocabulary) {
+  word.domainAffinity = CATEGORY_AFFINITY[word.category] || [];
+}
+
+// Dev-mode affinity summary (stripped by bundler in production via dead-code elimination)
+if (import.meta.env.DEV) {
+  const summary = { scholar: 0, traveler: 0, historian: 0, shared: 0, none: 0 };
+  for (const w of vocabulary) {
+    const a = w.domainAffinity;
+    if (a.length === 0) summary.none++;
+    else if (a.length > 1) summary.shared++;
+    else summary[a[0]]++;
+  }
+  // eslint-disable-next-line no-console
+  console.debug('[vocabularyAll] domainAffinity distribution:', summary);
+}
 
 export default vocabulary;

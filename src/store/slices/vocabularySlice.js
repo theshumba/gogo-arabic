@@ -145,4 +145,50 @@ export const selectNewCardsByFrequency = createSelector(
   }
 );
 
+/**
+ * Select unseen vocabulary words sorted by path domain affinity, then CEFR, then frequency.
+ * Words matching the player's learning path appear first within each CEFR level.
+ * This ensures Scholar and Traveler see different first-encounter card sequences (PATH-03).
+ *
+ * Sort order:
+ *   1. CEFR level ascending (A1 → A2 → B1 → B2 → untagged)
+ *   2. Path domain affinity match descending (path-matched words first)
+ *   3. Frequency descending within same CEFR + affinity tier
+ *
+ * @param {Object} state - Redux state
+ * @param {Array} allWords - Full vocabulary array (from vocabularyAll.js)
+ * @param {number} limit - Max cards to return (default 20)
+ */
+export const selectNewCardsByPath = createSelector(
+  [
+    selectFsrsCards,
+    (state) => state.player.learningPath,
+    (_state, allWords) => allWords,
+    (_state, _words, limit) => limit ?? 20,
+  ],
+  (cards, learningPath, allWords, limit) => {
+    const CEFR_ORDER = { A1: 1, A2: 2, B1: 3, B2: 4 };
+    const unseenWords = allWords.filter((w) => !cards[w.id]);
+
+    return unseenWords
+      .sort((a, b) => {
+        // Tier 1: CEFR level ascending (A1 before A2 before B1 before B2)
+        const cefrA = CEFR_ORDER[a.cefrLevel] ?? 5;
+        const cefrB = CEFR_ORDER[b.cefrLevel] ?? 5;
+        if (cefrA !== cefrB) return cefrA - cefrB;
+
+        // Tier 2: path domain affinity match (boost words matching player path)
+        if (learningPath) {
+          const aMatch = (a.domainAffinity ?? []).includes(learningPath) ? 1 : 0;
+          const bMatch = (b.domainAffinity ?? []).includes(learningPath) ? 1 : 0;
+          if (aMatch !== bMatch) return bMatch - aMatch; // matched words first
+        }
+
+        // Tier 3: frequency descending within same CEFR level
+        return (b.frequency ?? 0) - (a.frequency ?? 0);
+      })
+      .slice(0, limit);
+  }
+);
+
 export default vocabularySlice.reducer;
