@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: unknown
-stopped_at: Phase 55 plan 03 complete — CalligraphyScene scoring + alphabetSlice practicedLetters + MiniGamesHub + Vite chunk
-last_updated: "2026-03-20T24:15:00Z"
+stopped_at: Phase 55 plan 05 complete — PoetryBattleOverlay + 8 NPC poets + GameLayout + poetryRewardsMiddleware
+last_updated: "2026-03-21T00:45:00Z"
 progress:
   total_phases: 3
   completed_phases: 3
@@ -23,10 +23,10 @@ See: .planning/PROJECT.md (updated 2026-03-19)
 
 ## Current Position
 
-Phase: 55 (mini-games-content-polish) — EXECUTING
-Plan: 4 of 5 (55-04 complete)
-Progress: 55-01 [DONE] | 55-02 [DONE] | 55-03 [DONE] | 55-04 [DONE] | 55-05 [ ]
-Progress bar: [████░] 80%
+Phase: 55 (mini-games-content-polish) — COMPLETE
+Plan: 5 of 5 (55-05 complete)
+Progress: 55-01 [DONE] | 55-02 [DONE] | 55-03 [DONE] | 55-04 [DONE] | 55-05 [DONE]
+Progress bar: [█████] 100%
 
 ### Shipped Milestones
 
@@ -137,6 +137,9 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | window.__pendingCalligraphyLaunch for cross-route launch (55-03) | MiniGamesHub at /mini-games cannot emit to GameLayout at /game before navigation completes | Set window property before goTo('/game'); GameLayout checks and deletes on mount |
 | calligraphy-game manualChunks keeps scene out of initial bundle (55-03) | CalligraphyScene dynamically imported in GameLayout useEffect; must not appear in index chunk | manualChunks routes CalligraphyScene.js + calligraphyPaths.json to calligraphy-game chunk |
 | markLetterPracticed best-score-wins logic (55-03) | Player may retry; only highest star count should persist | if (!existing || stars > existing.stars) gate in reducer |
+| Poet NPCs require schema-valid greeting/dialogueTrees (55-05) | dialogueSchema.js Vite plugin validates all npcs.json entries including new poet type | Added greeting.arabic/english + dialogueTrees[] to each poet; actionSets kept as passthrough |
+| Pre-reducer state capture in poetryRewardsMiddleware (55-05) | endPoetryBattle reducer nulls activeBattle; middleware must read playerAnswers before next(action) | storeAPI.getState() called before next(action); battle snapshot used for FSRS rewards |
+| poetryRewardsMiddleware uses addXP not gainXP (55-05) | playerSlice exports addXP; plan mentioned gainXP but actual action is addXP | storeAPI.dispatch(addXP(50)) — verified against playerSlice.js exports |
 
 ### Blockers/Concerns
 
@@ -151,7 +154,7 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 
 ## Session Continuity
 
-Last session: 2026-03-20
-Stopped at: Phase 55 plan 04 complete — poetrySlice + 10 poems + poetryBattle service
-Resume file: .planning/phases/55-mini-games-content-polish/55-04-SUMMARY.md
-Next plan: 55-05 — PoetryBattleOverlay React UI + NPC poet wiring + ActionSetExecutor poetry:start-battle
+Last session: 2026-03-21
+Stopped at: Phase 55 plan 05 complete — PoetryBattleOverlay + 8 NPC poets + GameLayout + poetryRewardsMiddleware
+Resume file: .planning/phases/55-mini-games-content-polish/55-05-SUMMARY.md
+Next plan: Phase 56 (next phase after mini-games-content-polish complete)
