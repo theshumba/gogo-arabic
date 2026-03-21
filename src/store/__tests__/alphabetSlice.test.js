@@ -20,6 +20,7 @@ describe('alphabetSlice', () => {
         groups: [],
         completedGroups: [],
         currentLesson: null,
+        practicedLetters: {},
       });
     });
   });
