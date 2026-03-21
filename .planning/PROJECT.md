@@ -98,6 +98,8 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - NPC gossip system (build on v7.0 schedules) ✓ (Phase 54 — gossipMiddleware, ink surfacing, grammar annotations, 3-day expiry)
 - Environmental storytelling: inscriptions, scrolls, readable signs ✓ (Phase 54 — 24 inscriptions, 5 ink comprehension tiers, FSRS dispatch, root family teaching)
 - Progressive tashkeel refinement (build on v2.0 foundation) ✓ (Phase 54 — path-aware fading rates, ambiguous word preservation)
+- Calligraphy mini-game: trace Arabic letters, scored on accuracy ✓ (Phase 55 — CalligraphyScene, 28 letter paths, Frechet distance, 3-star rating, MiniGamesHub)
+- Arabic poetry battles: fill-in-the-blank competitive poetry ✓ (Phase 55 — 10 classical poems, FSRS word sourcing, 8 NPC poets, untimed battles, XP/vocab rewards)
 
 **Previous milestone:** v10.0 Onboarding & First 5 Minutes (Phase 47 code complete, Phases 48-49 absorbed into v11.0)
 
@@ -175,4 +177,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-20 after Phase 54 (World Life Systems) complete*
+*Last updated: 2026-03-21 after Phase 55 (Mini-Games and Content Polish) complete — v11.0 MILESTONE COMPLETE*
