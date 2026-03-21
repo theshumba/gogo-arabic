@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Content Depth
 status: unknown
-stopped_at: Phase 55 plan 04 complete — poetrySlice + 10 classical Arabic poems + poetryBattle service (FSRS-sourced choices, NPC AI)
-last_updated: "2026-03-20T23:50:06Z"
+stopped_at: Phase 55 plan 03 complete — CalligraphyScene scoring + alphabetSlice practicedLetters + MiniGamesHub + Vite chunk
+last_updated: "2026-03-20T24:15:00Z"
 progress:
   total_phases: 3
   completed_phases: 3
@@ -134,6 +134,9 @@ All v2.0-v10.0 decisions logged in PROJECT.md Key Decisions table.
 | NPC poet accuracy configurable float not FSRS-based (55-04) | FSRS NPC state would require separate card tracking per poet | Math.random() < npcAccuracy per blank; 0.5 beginner, 0.7 intermediate, 0.85 advanced, 0.95 master |
 | poetry WordIds use classical/symbolic IDs (55-04) | Classical Arabic blank words (azm, kiram, etc.) not in modern 5000-word corpus | _classical suffix IDs; getPoetryChoices fallback to corpus for distractors; correct answer always included |
 | CURRENT_VERSION bumped to 10 for poetry IndexedDB (55-04) | poetry slice added as nested persistReducer same as factionSlice/worldStateSlice | Nested persistReducer key gogo-arabic-poetry; v10 migration cleans stale localStorage key |
+| window.__pendingCalligraphyLaunch for cross-route launch (55-03) | MiniGamesHub at /mini-games cannot emit to GameLayout at /game before navigation completes | Set window property before goTo('/game'); GameLayout checks and deletes on mount |
+| calligraphy-game manualChunks keeps scene out of initial bundle (55-03) | CalligraphyScene dynamically imported in GameLayout useEffect; must not appear in index chunk | manualChunks routes CalligraphyScene.js + calligraphyPaths.json to calligraphy-game chunk |
+| markLetterPracticed best-score-wins logic (55-03) | Player may retry; only highest star count should persist | if (!existing || stars > existing.stars) gate in reducer |
 
 ### Blockers/Concerns
 
