@@ -1,5 +1,23 @@
 # Project Milestones: GoGo Arabic
 
+## v11.0 Deep Systems & Content Engine (Shipped: 2026-03-21)
+
+**Phases completed:** 3 phases, 9 plans, 16 tasks
+
+**Key accomplishments:**
+
+- One-liner:
+- Expanded dialogue trees for the final 12 NPCs — 647 new-era lines, 209 teachWord FSRS triggers, 36 culturalNote facts — completing the full 24-NPC dialogue overhaul with distinct Islamic Golden Age personalities.
+- culturalNote field wired to DialogueBox UI with red-accent styling, 49 invalid teachWord references fixed, and 1544 total dialogue lines verified — completing all 5 DIAL requirements across Plans 01-03.
+- 8-act time-traveling scholar manuscript quest chain in quests.json (QUEST-01) with 16 culturally-grounded NPC dialogue arcs in npcStoryArcs.js spanning all 8 zones
+- 28 new quests shipped: 16 narrative side quests (2/zone) and 12 companion personal quests with FSRS-linked dialogue trees and relationship rewards
+- 8 root-family inscription interactables placed across all zones + learningPath condition engine + 60 branched dialogue lines across 8 act arcs and 12 companion quests
+- 1,500 new MSA Arabic words (500 A1 + 1,000 A2) written to vocabularyExpanded.js with VOCAB-06 schema — zero duplicate IDs, all 9 fields present on every entry
+- 1. [Rule 1 - Bug] Replaced corrupted B1 and B2 entries
+- 6,220-word merged vocabulary with CEFR badges on TeacherWordCard, dual-mode RootExplorer (root families + semantic cluster browsing), and frequency-based FSRS new card selector
+
+---
+
 ## v7.0 World & Content (Shipped: 2026-03-16)
 
 **Delivered:** Transformed the RPG world into a living, breathing environment. NPCs follow schedules and move with personality, events are fully data-driven via ActionSets, economy has production chains and home decoration, quests are tracked in a Bomber's Notebook-style journal, and the game is replayable with randomizers and difficulty settings.
@@ -7,6 +25,7 @@
 **Phases completed:** 33-37 (18 plans total)
 
 **Key accomplishments:**
+
 - Built NPC schedule system with wander/patrol movement patterns and time-phase re-evaluation
 - Created data-driven event system (ActionSetExecutor + EventScriptRunner + step triggers)
 - Added production chain economy (EconomyFlow), friendship system, and home decoration with utility bonuses
@@ -16,6 +35,7 @@
 - Created unified ActorRegistry and v7.0 save migrations for backward compatibility
 
 **Stats:**
+
 - 5 phases, 18 plans
 - Shipped 2026-03-16
 
@@ -30,6 +50,7 @@
 **Phases completed:** 31-32 (19 plans total)
 
 **Key accomplishments:**
+
 - Built 6 crafting professions with Arabic recipe names and CSS Grid mini-games
 - Created 24 status effects with Arabic names tied to FSRS vocabulary review
 - Implemented grammar combo system (3 modes: إضافة, verb conjugation, sentence construction)
@@ -41,6 +62,7 @@
 - Added 98 new tests bringing total to 1,121 with zero regressions
 
 **Stats:**
+
 - 2 phases, 19 plans, ~34 commits
 - 5 days (2026-02-13 → 2026-02-18)
 
@@ -57,6 +79,7 @@
 **Phases completed:** 27.1, 28-30 (16 plans total)
 
 **Key accomplishments:**
+
 - Migrated 5 Redux slices to IndexedDB hybrid persistence, eliminating localStorage overflow risk
 - Built root magic system: 50 spells, 20 combos, affinity discovery, bidirectional FSRS sync, Arabic calligraphy VFX
 - Created equipment & economy: 64 items, 8 slots, 5 rarity tiers, vocabulary-gated bonuses, Arabic numeral haggling
@@ -65,6 +88,7 @@
 - Added 149 new tests bringing total to 1,023 with zero regressions across all systems
 
 **Stats:**
+
 - 160 files created/modified
 - 30,270 lines inserted, 311 deleted
 - 4 phases, 16 plans, 81 commits
@@ -83,6 +107,7 @@
 **Phases completed:** 19-26 (14 plans total)
 
 **Key accomplishments:**
+
 - Built EventBus architecture with 35 namespaced constants and 5 domain-specific hooks (22 LOC orchestrator)
 - Created narrativeSlice for story flags, NPC relationships (0-5), world object states, choice history
 - Built DialogueEngine Phaser system with condition evaluation, effect execution, hub-and-spoke topic filtering
@@ -97,6 +122,7 @@
 - Zod validation of npcs.json dialogue data at build time via Vite plugin
 
 **Stats:**
+
 - 8 phases, 14 plans
 - Tests: 589 passing (592 total, 3 pre-existing failures)
 - Bundle: ~403KB main (under 500KB limit)
@@ -115,6 +141,7 @@
 **Phases completed:** 14-18 (8 plans total)
 
 **Key accomplishments:**
+
 - Built complete audio system with zone BGM crossfade, UI/quiz/action SFX, footstep system, 4 volume sliders + mute, and mobile audio unlock
 - Added visual juice layer with screen shake (3 presets), particle effects (burst + continuous), zone fade transitions, 7-phase level-up celebration, and spring-bounce achievement toasts
 - Created Learning Path menu with 3-stage progression, DailyDashboard progress metrics, HUD progress strip, and onboarding reorder for alphabet discovery
@@ -122,6 +149,7 @@
 - Fixed critical bugs: overlay close guarantees, movement unlock safety nets, zone transition timeout protection, empty quiz states, dialogue text overflow
 
 **Stats:**
+
 - 28 files created/modified
 - 1,526 lines inserted, 119 lines deleted
 - 5 phases, 8 plans
@@ -140,6 +168,7 @@
 **Phases completed:** 10-11 of 13 (11 plans total)
 
 **Key accomplishments:**
+
 - Built 548-test suite across 31 files (unit, component, integration, E2E)
 - Coverage thresholds enforced (25% stmts / 70% branch / 50% funcs / 25% lines)
 - Refactored GameLayout from 607 to 209 lines via 3 custom hooks
@@ -150,6 +179,7 @@
 **Deferred:** Phases 12 (Backend Hardening) and 13 (Visual Polish) — user pivoted to game experience overhaul
 
 **Stats:**
+
 - 11 plans completed across 2 phases
 - Testing + architecture infrastructure established
 
@@ -164,6 +194,7 @@
 **Phases completed:** 1-9 (14 plans total)
 
 **Key accomplishments:**
+
 - Built quest guidance system with NPC markers (!/?) and compass arrow pointing to active objectives
 - Exposed hidden features (Grammar, Roots, Reading, Battles) through Activities menu and NPC dialogue hints
 - Reduced main bundle 91% (2.9MB to 264KB) via Vite bundle splitting
@@ -175,6 +206,7 @@
 - Added Wardrobe system with 12 outfits, shop, and equip functionality
 
 **Stats:**
+
 - 253 files created/modified
 - 35,391 lines of JS/JSX/CSS (frontend)
 - 9 phases, 14 plans
