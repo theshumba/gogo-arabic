@@ -45,6 +45,7 @@ import { utilityBonusMiddleware } from './middleware/utilityBonusMiddleware.js';
 import { worldStateMiddleware } from './middleware/worldStateMiddleware.js';
 import { factionMiddleware } from './middleware/factionMiddleware.js';
 import { gossipMiddleware } from './middleware/gossipMiddleware.js';
+import { poetryRewardsMiddleware } from './middleware/poetryRewardsMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -224,7 +225,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware),
 });
 
 export const persistor = persistStore(store);

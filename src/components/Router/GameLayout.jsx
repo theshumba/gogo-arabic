@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, lazy, Suspense } from 'react';
+import React, { useRef, useEffect, useState, lazy, Suspense } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -40,6 +40,10 @@ const ShopOverlay = lazy(() => import('../Shop/ShopOverlay.jsx'));
 const QuestJournal = lazy(() => import('../Quest/QuestJournal.jsx'));
 const Wardrobe = lazy(() => import('../Wardrobe/Wardrobe.jsx'));
 const FactionPanel = lazy(() => import('../Faction/FactionPanel.jsx'));
+const PoetryBattleOverlay = lazy(() => import('../Poetry/PoetryBattleOverlay.jsx'));
+import { startPoetryBattle } from '../../store/slices/poetrySlice.js';
+import { getPoemById, getPoemBlanks } from '../../data/poems.js';
+import { store } from '../../store/store.js';
 import styles from './GameLayout.module.css';
 
 function ActivitiesMenu({ onBack, onNavigate, onOpenPathSwitch }) {
@@ -232,6 +236,9 @@ export default function GameLayout() {
   const [showFactionPanel, setShowFactionPanel] = React.useState(false);
   const [zoneLoading, setZoneLoading] = React.useState(false);
 
+  // Poetry battle state — set on POETRY_BATTLE_START, cleared on POETRY_BATTLE_END
+  const [poetryBattleData, setPoetryBattleData] = useState(null);
+
   useEffect(() => {
     const onStart = () => setZoneLoading(true);
     const onEnd = () => setZoneLoading(false);
@@ -240,6 +247,40 @@ export default function GameLayout() {
     return () => {
       EventBus.off(EVENTS.ZONE_LOADING_START, onStart);
       EventBus.off(EVENTS.ZONE_LOADING_END, onEnd);
+    };
+  }, []);
+
+  // Poetry battle EventBus listeners
+  useEffect(() => {
+    const handlePoetryStart = (data) => {
+      // data: { poetId, poemId, npcAccuracy }
+      const poem = getPoemById(data.poemId);
+      if (!poem) {
+        console.error('[GameLayout] Poem not found:', data.poemId);
+        return;
+      }
+      const blanks = getPoemBlanks(poem);
+      store.dispatch(startPoetryBattle({
+        poemId: data.poemId,
+        poetId: data.poetId,
+        blanks,
+      }));
+      setPoetryBattleData(data);
+      // Freeze player while poetry overlay is open
+      EventBus.emit(EVENTS.PLAYER_FREEZE);
+    };
+
+    const handlePoetryEnd = () => {
+      setPoetryBattleData(null);
+      // Unfreeze player when poetry overlay closes
+      EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+    };
+
+    EventBus.on(EVENTS.POETRY_BATTLE_START, handlePoetryStart);
+    EventBus.on(EVENTS.POETRY_BATTLE_END, handlePoetryEnd);
+    return () => {
+      EventBus.off(EVENTS.POETRY_BATTLE_START, handlePoetryStart);
+      EventBus.off(EVENTS.POETRY_BATTLE_END, handlePoetryEnd);
     };
   }, []);
 
@@ -482,6 +523,13 @@ export default function GameLayout() {
       {showFactionPanel && (
         <Suspense fallback={null}>
           <FactionPanel onClose={() => setShowFactionPanel(false)} />
+        </Suspense>
+      )}
+
+      {/* Poetry battle overlay (Phase 55) — untimed fill-in-the-blank */}
+      {poetryBattleData && (
+        <Suspense fallback={null}>
+          <PoetryBattleOverlay npcAccuracy={poetryBattleData.npcAccuracy ?? 0.7} />
         </Suspense>
       )}
 

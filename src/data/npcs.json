@@ -18801,5 +18801,370 @@
         ]
       }
     ]
+  },
+
+  {
+    "id": "poet-oasis",
+    "name": "Poet Layla",
+    "nameArabic": "الشّاعِرَة لَيلى",
+    "type": "poet",
+    "zone": "oasis_village",
+    "position": { "x": 300, "y": 350 },
+    "sprite": "npc_scholar",
+    "schedule": "static",
+    "greeting": {
+      "arabic": "أَهلاً بِكَ يا مُسافِر — الشِّعرُ طَريقُ القَلب",
+      "english": "Welcome, traveller — poetry is the path of the heart",
+      "transliteration": "ahlan bika ya musafir — ash-shi'ru tariiqu al-qalb"
+    },
+    "dialogueTrees": [
+      {
+        "id": "poet-oasis-greeting",
+        "trigger": "interact",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أَهلاً بِكَ يا مُسافِر — الشِّعرُ طَريقُ القَلب",
+            "english": "Welcome, traveller — poetry is the path of the heart"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَل تُريدُ أَن تَخوضَ مُسابَقَةَ الشِّعر مَعي؟",
+            "english": "Would you like to enter a poetry contest with me?"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [],
+          "actions": [
+            { "type": "speech", "npcId": "poet-oasis", "dialogueKey": "poet-oasis-greeting" },
+            { "type": "poetry:start-battle", "poetId": "poet-oasis", "poemId": "poem_khansa_01", "npcAccuracy": 0.5 }
+          ]
+        }
+      ]
+    }
+  },
+
+  {
+    "id": "poet-library",
+    "name": "Scholar Poet Ibrahim",
+    "nameArabic": "الشّاعِر العالِم إبراهيم",
+    "type": "poet",
+    "zone": "sacred_library",
+    "position": { "x": 480, "y": 260 },
+    "sprite": "npc_scholar",
+    "schedule": "static",
+    "greeting": {
+      "arabic": "قَرَأتُ كُلَّ الدَّواوين — هَل تَجرُؤُ عَلى مُنافَستي؟",
+      "english": "I have read every divan — do you dare to compete with me?",
+      "transliteration": "qara'tu kulla al-dawaaween — hal tajru' ala munafasatii?"
+    },
+    "dialogueTrees": [
+      {
+        "id": "poet-library-greeting",
+        "trigger": "interact",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "قَرَأتُ كُلَّ الدَّواوين — هَل تَجرُؤُ عَلى مُنافَستي؟",
+            "english": "I have read every divan — do you dare to compete with me?"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "المُتَنَبّي قالَ: عَلى قَدرِ أَهلِ العَزم تَأتي العَزائِم",
+            "english": "Al-Mutanabbi said: According to the people of resolve, so come the great deeds"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَل أَنتَ مِن أَهلِ العَزم؟ أَثبِت ذَلِك!",
+            "english": "Are you among the people of resolve? Prove it!"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [],
+          "actions": [
+            { "type": "speech", "npcId": "poet-library", "dialogueKey": "poet-library-greeting" },
+            { "type": "poetry:start-battle", "poetId": "poet-library", "poemId": "poem_mutanabbi_01", "npcAccuracy": 0.8 }
+          ]
+        }
+      ]
+    }
+  },
+
+  {
+    "id": "poet-market",
+    "name": "Street Poet Nabil",
+    "nameArabic": "شاعِرُ السّوق نَبيل",
+    "type": "poet",
+    "zone": "market_district",
+    "position": { "x": 560, "y": 400 },
+    "sprite": "npc_scholar",
+    "schedule": "static",
+    "greeting": {
+      "arabic": "أُلقي الشِّعرَ في كُلِّ زاوِيَة مِن هَذا السّوق!",
+      "english": "I recite poetry in every corner of this market!",
+      "transliteration": "ulqii ash-shi'ra fii kulli zaawiya min haadha as-suuq!"
+    },
+    "dialogueTrees": [
+      {
+        "id": "poet-market-greeting",
+        "trigger": "interact",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "أُلقي الشِّعرَ في كُلِّ زاوِيَة مِن هَذا السّوق!",
+            "english": "I recite poetry in every corner of this market!"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "هَل تَسمَعُ؟ ابنُ زَيدون كانَ يَعِيشُ هُنا في قَلبِه — تَعال نَتَنافَس",
+            "english": "Do you hear? Ibn Zaydun lived here in his heart — come, let us compete"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [],
+          "actions": [
+            { "type": "speech", "npcId": "poet-market", "dialogueKey": "poet-market-greeting" },
+            { "type": "poetry:start-battle", "poetId": "poet-market", "poemId": "poem_ibn_zaydun_01", "npcAccuracy": 0.6 }
+          ]
+        }
+      ]
+    }
+  },
+
+  {
+    "id": "poet-desert",
+    "name": "Wandering Poet Karim",
+    "nameArabic": "الشّاعِر التّائِه كَريم",
+    "type": "poet",
+    "zone": "desert_expanse",
+    "position": { "x": 700, "y": 500 },
+    "sprite": "npc_scholar",
+    "schedule": "static",
+    "greeting": {
+      "arabic": "الصَّحراءُ تُعَلِّمُني الشِّعر — الرِّمالُ والنُّجوم ملهَمتي",
+      "english": "The desert teaches me poetry — sand and stars are my inspiration",
+      "transliteration": "as-sahraa tu'allimunii ash-shi'r — ar-rimaal wan-nujuum mulhimatii"
+    },
+    "dialogueTrees": [
+      {
+        "id": "poet-desert-greeting",
+        "trigger": "interact",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "الصَّحراءُ تُعَلِّمُني الشِّعر — الرِّمالُ والنُّجوم ملهَمتي",
+            "english": "The desert teaches me poetry — sand and stars are my inspiration"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "أَبو نُواس كانَ يَسير في هَذِه الصِّحراء — هَل تَعرِفُ شِعرَه؟",
+            "english": "Abu Nuwas walked this desert — do you know his poetry?"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [],
+          "actions": [
+            { "type": "speech", "npcId": "poet-desert", "dialogueKey": "poet-desert-greeting" },
+            { "type": "poetry:start-battle", "poetId": "poet-desert", "poemId": "poem_abu_nuwas_01", "npcAccuracy": 0.7 }
+          ]
+        }
+      ]
+    }
+  },
+
+  {
+    "id": "poet-ruins",
+    "name": "Spirit Poet Zahir",
+    "nameArabic": "روحُ الشّاعِر ظاهِر",
+    "type": "poet",
+    "zone": "ancient_ruins",
+    "position": { "x": 420, "y": 380 },
+    "sprite": "npc_scholar",
+    "schedule": "static",
+    "greeting": {
+      "arabic": "مِن هَذِه الأَطلال يُنادينا امرُؤُ القَيس عَبرَ الزَّمان",
+      "english": "From these ruins, Imru al-Qais calls to us across time",
+      "transliteration": "min hadhihi al-atlal yunaadinaa imru ul-qays abra az-zamaan"
+    },
+    "dialogueTrees": [
+      {
+        "id": "poet-ruins-greeting",
+        "trigger": "interact",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مِن هَذِه الأَطلال يُنادينا امرُؤُ القَيس عَبرَ الزَّمان",
+            "english": "From these ruins, Imru al-Qais calls to us across time"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "قِفا نَبكِ — هَل تَعرِفُ مَعنى هَذِه الكَلِمات العَتيقَة؟",
+            "english": "Halt, let us weep — do you know the meaning of these ancient words?"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [],
+          "actions": [
+            { "type": "speech", "npcId": "poet-ruins", "dialogueKey": "poet-ruins-greeting" },
+            { "type": "poetry:start-battle", "poetId": "poet-ruins", "poemId": "poem_imruulqais_01", "npcAccuracy": 0.75 }
+          ]
+        }
+      ]
+    }
+  },
+
+  {
+    "id": "poet-caves",
+    "name": "Hermit Poet Rashid",
+    "nameArabic": "الشّاعِر الزّاهِد رَشيد",
+    "type": "poet",
+    "zone": "mystic_caves",
+    "position": { "x": 340, "y": 290 },
+    "sprite": "npc_scholar",
+    "schedule": "static",
+    "greeting": {
+      "arabic": "في عُزلَتي هَذِه أَحفَظُ أَشعارَ العَرَب وأَتَأَمَّلُها",
+      "english": "In my solitude I memorise and contemplate the poetry of the Arabs",
+      "transliteration": "fii uzlatii hadhihi ahfadhu ash'aar al-arab wa ata'ammaluhaa"
+    },
+    "dialogueTrees": [
+      {
+        "id": "poet-caves-greeting",
+        "trigger": "interact",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "في عُزلَتي هَذِه أَحفَظُ أَشعارَ العَرَب وأَتَأَمَّلُها",
+            "english": "In my solitude I memorise and contemplate the poetry of the Arabs"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "السَّيفُ أَصدَقُ إِنباءً مِن الكُتُب — هَل تُحِبُّ أبا تَمّام؟",
+            "english": "The sword is more truthful than books — do you appreciate Abu Tammam?"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [],
+          "actions": [
+            { "type": "speech", "npcId": "poet-caves", "dialogueKey": "poet-caves-greeting" },
+            { "type": "poetry:start-battle", "poetId": "poet-caves", "poemId": "poem_abu_tammam_01", "npcAccuracy": 0.7 }
+          ]
+        }
+      ]
+    }
+  },
+
+  {
+    "id": "poet-coast",
+    "name": "Seafaring Poet Jad",
+    "nameArabic": "الشّاعِر البَحّار جاد",
+    "type": "poet",
+    "zone": "coastal_docks",
+    "position": { "x": 620, "y": 460 },
+    "sprite": "npc_scholar",
+    "schedule": "static",
+    "greeting": {
+      "arabic": "البَحرُ يُلهِمُني مِثلَما أَلهَمَ الشُّعَراءَ القُدامى",
+      "english": "The sea inspires me as it inspired the poets of old",
+      "transliteration": "al-bahru yulhimunii mithlamaa alhama ash-shu'araa al-qudaamaa"
+    },
+    "dialogueTrees": [
+      {
+        "id": "poet-coast-greeting",
+        "trigger": "interact",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "البَحرُ يُلهِمُني مِثلَما أَلهَمَ الشُّعَراءَ القُدامى",
+            "english": "The sea inspires me as it inspired the poets of old"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "حَسّانُ بنُ ثابِت مَدَحَ بِأَجمَلِ القَصائِد — هَل تَحفَظُ شَيئاً؟",
+            "english": "Hassan ibn Thabit praised with the most beautiful odes — do you know any?"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [],
+          "actions": [
+            { "type": "speech", "npcId": "poet-coast", "dialogueKey": "poet-coast-greeting" },
+            { "type": "poetry:start-battle", "poetId": "poet-coast", "poemId": "poem_hassan_ibn_thabit_01", "npcAccuracy": 0.65 }
+          ]
+        }
+      ]
+    }
+  },
+
+  {
+    "id": "poet-mountain",
+    "name": "Mountain Sage Poet Hakim",
+    "nameArabic": "حَكيمُ الجَبَل الشّاعِر",
+    "type": "poet",
+    "zone": "mountain_pass",
+    "position": { "x": 500, "y": 200 },
+    "sprite": "npc_scholar",
+    "schedule": "static",
+    "greeting": {
+      "arabic": "مِن أَعلى الجَبَل أَرى الدُّنيا كَما رَآها لَبيد بنُ رَبيعَة",
+      "english": "From the mountain top I see the world as Labid ibn Rabi'ah saw it",
+      "transliteration": "min a'laa al-jabal araa ad-dunyaa kamaa ra'aahaa labiid ibn rabii'a"
+    },
+    "dialogueTrees": [
+      {
+        "id": "poet-mountain-greeting",
+        "trigger": "interact",
+        "lines": [
+          {
+            "speaker": "npc",
+            "arabic": "مِن أَعلى الجَبَل أَرى الدُّنيا كَما رَآها لَبيد بنُ رَبيعَة",
+            "english": "From the mountain top I see the world as Labid ibn Rabi'ah saw it"
+          },
+          {
+            "speaker": "npc",
+            "arabic": "عَفَتِ الدِّيارُ — هَل تَعرِفُ مُعَلَّقَة لَبيد؟ سَنَختَبِرُ ذَلِك الآن",
+            "english": "The abodes have faded — do you know Labid's Ode? We shall test that now"
+          }
+        ]
+      }
+    ],
+    "actionSets": {
+      "interact": [
+        {
+          "requirements": [],
+          "actions": [
+            { "type": "speech", "npcId": "poet-mountain", "dialogueKey": "poet-mountain-greeting" },
+            { "type": "poetry:start-battle", "poetId": "poet-mountain", "poemId": "poem_labid_01", "npcAccuracy": 0.85 }
+          ]
+        }
+      ]
+    }
   }
 ]

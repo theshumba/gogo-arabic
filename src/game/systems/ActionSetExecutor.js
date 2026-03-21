@@ -17,6 +17,7 @@
  */
 
 import { EVENTS } from '../../utils/eventBusTypes.js';
+import { EventBus } from '../../utils/eventBus.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Requirement evaluation helpers
@@ -203,6 +204,16 @@ export function executeActions(actions, emitter) {
           soundId: action.soundId,
         });
         break;
+
+      case 'poetry:start-battle': {
+        const { poetId, poemId, npcAccuracy } = action;
+        EventBus.emit(EVENTS.POETRY_BATTLE_START, {
+          poetId,
+          poemId,
+          npcAccuracy: npcAccuracy ?? 0.7,
+        });
+        break;
+      }
 
       default:
         // Unknown action type — skip silently (forward compatible)
