@@ -48,8 +48,12 @@ export function pickDistractors(correctWord, count = 3, tier = 'normal') {
   }
 
   if (tier === 'easy') {
-    const pool = [...shuffle(others).slice(0, 3), ...shuffle(sameCat)];
-    return shuffle(pool).slice(0, count);
+    // Easy: guarantee at least (count - 1) cross-category distractors for clearly wrong answers
+    const crossCount = Math.min(count - 1, others.length);
+    const crossPool = shuffle(others).slice(0, crossCount);
+    const remaining = count - crossPool.length;
+    const fillPool = remaining > 0 ? shuffle(sameCat).slice(0, remaining) : [];
+    return shuffle([...crossPool, ...fillPool]).slice(0, count);
   }
 
   // Normal: existing behavior
