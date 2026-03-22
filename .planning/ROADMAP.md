@@ -266,7 +266,7 @@ Plans:
 
 Plans:
 - [x] 60-01-PLAN.md — GrammarFill.jsx component + verb paradigm data + useQuiz/QuizOverlay wiring + tests (QUIZ-01)
-- [ ] 60-02-PLAN.md — WordOrder.jsx + ClozePassage.jsx + QUIZ_TYPE_REGISTRY minLevel activation + deferred types cefrMin:B2 + all tests (QUIZ-01)
+- [x] 60-02-PLAN.md — WordOrder.jsx + ClozePassage.jsx + QUIZ_TYPE_REGISTRY minLevel activation + deferred types cefrMin:B2 + all tests (QUIZ-01)
 
 #### Phase 61: CEFR Placement Test
 **Goal**: New players start at the right CEFR level — the diagnostic test places them conservatively, pre-unlocks appropriate skill tree nodes and grammar lessons, and gives an escape hatch if placement feels wrong
@@ -391,14 +391,14 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 57. Skill Tree Infrastructure | v12.0 | 0/3 | Complete    | 2026-03-22 |
 | 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 59. Adaptive Difficulty Engine | v12.0 | 2/2 | Complete    | 2026-03-22 |
-| 60. Quiz Expansion (Core 3 Types) | v12.0 | 1/2 | In progress | 2026-03-22 |
+| 60. Quiz Expansion (Core 3 Types) | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 61. CEFR Placement Test | v12.0 | 0/3 | Not started | - |
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Not started | - |
 | 63. Achievement Expansion | v12.0 | 0/3 | Not started | - |
 | 64. CEFR Reports + Social Sharing | v12.0 | 0/3 | Not started | - |
 
-**Cumulative:** 55 phases shipped, 137+ plans complete, 11 milestones shipped
+**Cumulative:** 56 phases shipped, 139+ plans complete, 11 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-22 — Phase 59 COMPLETE (QUIZ-02 + QUIZ-03: adaptive difficulty engine — rolling session accuracy, per-cluster tracking, FSRS-due override, QUIZ_TYPE_REGISTRY 18 types, selectQuizTypeForPlayer grammar-weak routing)*
+*Last updated: 2026-03-22 — Phase 60 COMPLETE (QUIZ-01: 15 active quiz types + 3 deferred stubs — GrammarFill/WordOrder/ClozePassage renderers shipped, SentenceBuilder tile bug fixed, 1278 tests passing)*

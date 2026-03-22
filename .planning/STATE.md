@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Phase 60 Plan 01 complete — GrammarFill component + useQuiz wiring + QuizOverlay render + 5 tests (QUIZ-01 shipped).
-last_updated: "2026-03-22T23:24:00.000Z"
+stopped_at: Phase 60 Plan 02 complete — WordOrder + ClozePassage components + registry update + 10 component tests + SentenceBuilder bug fix. QUIZ-01 fully satisfied (15 active + 3 deferred = 18 quiz types).
+last_updated: "2026-03-22T23:32:26Z"
 progress:
   total_phases: 9
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 12
-  completed_plans: 10
+  completed_plans: 12
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 60 — quiz-expansion-core-3-types
+**Current focus:** Phase 60 — COMPLETE. Next: Phase 61 (Grammar CAT) or Phase 63 (Achievement Expansion)
 
 ## Current Position
 
-Phase: 60 (quiz-expansion-core-3-types) — EXECUTING
-Plan: 2 of 2
+Phase: 60 (quiz-expansion-core-3-types) — COMPLETE
+Plan: 2 of 2 — COMPLETE
 
 ### Shipped Milestones
 
@@ -64,6 +64,12 @@ Plan: 2 of 2
 - GrammarFill minLevel: 4 (was 999 stub) — active in adaptive routing for level 4+ players (60-01)
 - VERB_PARADIGMS exported from GrammarFill.jsx, imported by useQuiz.js — co-located with component (60-01)
 - paradigmContext shape: { verb, root, meaning, paradigm, pronoun } — embedded in each choice option by buildChoices (60-01)
+- WordOrder.jsx shipped (60-02): tile-click sentence ordering, "Arrange the words in the correct Arabic word order:", minLevel:5 cefrMin:B1
+- ClozePassage.jsx shipped (60-02): passage-with-blank fill, "Read the passage and fill in the blank:", fallback when no exampleSentence, minLevel:4 cefrMin:A2
+- SentenceBuilder.jsx latent bug fixed (60-02): tile options are objects {label,value,correct,tile} — extract .label for display, .value for answer
+- QUIZ_TYPE_REGISTRY Phase 60 complete: GrammarFill (minLevel:4 cefrMin:A2), ClozePassage (minLevel:4 cefrMin:A2), WordOrder (minLevel:5 cefrMin:B1) all active
+- QUIZ_TYPE_REGISTRY deferred: DialectIdentify/RootExpand/CulturalContext at minLevel:999 cefrMin:B2
+- 22 quiz type tests in quizTypes.test.js (was 16 — 6 new CEFR routing tests added); 1278 total tests passing (60-02)
 - grammar.js has 43 lessons (fixed from 47 — structural bug removed 4 duplicate/misplaced lessons)
 - grammar.js had structural bug: 40 lessons were in grammarCategories, not grammarLessons — FIXED (58-01)
 - 20 A1-A2 lessons now fully populated: 12+ exercises, 4+ types, 4+ quiz questions each (58-01)
@@ -105,6 +111,8 @@ Plan: 2 of 2
 | GrammarFill grading via choices.find not word.arabic | Conjugated form != dictionary form; choices carry source of truth for correct answer |
 | VERB_PARADIGMS co-located in GrammarFill.jsx | Paradigm data lives next to component; exported for useQuiz.js import |
 | GrammarFill minLevel 4 (not 999) on ship | Matches conjugation gate; unlocked for level 4+ players immediately |
+| Tile bank options are objects not strings | buildChoices returns {label,value,correct,tile} — component extracts .label/.value; same fix in SentenceBuilder |
+| Deferred types cefrMin updated to B2 | DialectIdentify/RootExpand/CulturalContext uniformly gated at B2; was B1/A2 (inconsistent) |
 | Phase 61 depends on both Phase 58 and 59 | Grammar content for CAT questions + adaptive engine for item selection |
 | Phase 63 last before display layer | All achievement event sources must exist before conditions are authored |
 | state.grammar accessed directly in isAchievementMet (not destructured) | Keeps diff minimal per plan spec; consistent with surgical change approach |
@@ -133,6 +141,6 @@ Plan: 2 of 2
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 60 Plan 01 complete — GrammarFill component + useQuiz wiring + QuizOverlay SFX + 5 tests (QUIZ-01 shipped).
-Resume file: .planning/phases/60-quiz-expansion-core-3-types/60-01-SUMMARY.md
-Next plan: Phase 60 Plan 02 — ClozePassage quiz type (or Phase 60-02 per roadmap)
+Stopped at: Phase 60 Plan 02 complete — WordOrder + ClozePassage + registry update + SentenceBuilder fix + 10 new tests. Phase 60 COMPLETE. QUIZ-01 fully satisfied.
+Resume file: .planning/phases/60-quiz-expansion-core-3-types/60-02-SUMMARY.md
+Next plan: Phase 61 (Grammar CAT) or Phase 63 (Achievement Expansion)
