@@ -1,0 +1,23 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-03-22T11:05:23.930Z",
+  "phase": "56",
+  "phase_name": "bug-fixes-redux-foundation",
+  "phase_dir": ".planning/phases/56-bug-fixes-redux-foundation",
+  "plan": 0,
+  "task": 0,
+  "total_tasks": 0,
+  "status": "not_started",
+  "completed_tasks": [],
+  "remaining_tasks": [],
+  "blockers": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {"decision": "v12.0 scope: all Tier 5 features (skill trees, grammar, quizzes, achievements)", "rationale": "User chose all recommended options", "phase": "milestone"},
+    {"decision": "9 phases (56-64) for v12.0", "rationale": "Research-driven phase ordering respecting dependency graph", "phase": "milestone"},
+    {"decision": "recharts v3.8.0 only new dependency", "rationale": "All other systems buildable on existing stack", "phase": "milestone"}
+  ],
+  "uncommitted_files": [".planning/milestones/v11.0-REQUIREMENTS.md", ".planning/milestones/v11.0-ROADMAP.md", ".planning/milestones/v12.0-ROADMAP.md"],
+  "next_action": "/gsd:plan-phase 56 — plan Bug Fixes & Redux Foundation phase",
+  "context_notes": "v11.0 milestone shipped (Phases 50-55, 24 plans). v12.0 Learning Systems initialized with 21 requirements across 9 phases. Research complete (STACK, FEATURES, ARCHITECTURE, PITFALLS). Grammar achievement bug discovered (FIX-01). Skill trees already built but need XP wiring. Grammar at 47/50 lessons. 12/18 quiz types exist."
+}
