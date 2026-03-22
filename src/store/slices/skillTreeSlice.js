@@ -123,10 +123,31 @@ const skillTreeSlice = createSlice({
 
       state.skillXP[treeId] += amount;
     },
+
+    /**
+     * bulkUnlockNodes — Mark multiple nodes as unlocked without XP deduction.
+     *
+     * Used exclusively by initializeSkillTree to bootstrap v11.0 saves.
+     * Bypasses XP cost check — does not deduct from skillXP.
+     *
+     * @param {string}   payload.treeId  - Tree identifier
+     * @param {string[]} payload.nodeIds - Array of node IDs to unlock
+     */
+    bulkUnlockNodes(state, action) {
+      const { treeId, nodeIds } = action.payload;
+      if (!Array.isArray(state.unlockedNodes[treeId])) {
+        state.unlockedNodes[treeId] = [];
+      }
+      nodeIds.forEach((nodeId) => {
+        if (!state.unlockedNodes[treeId].includes(nodeId)) {
+          state.unlockedNodes[treeId].push(nodeId);
+        }
+      });
+    },
   },
 });
 
-export const { unlockNode, addSkillXP } = skillTreeSlice.actions;
+export const { unlockNode, addSkillXP, bulkUnlockNodes } = skillTreeSlice.actions;
 export default skillTreeSlice.reducer;
 
 // ─────────────────────────────────────────────────────────────────────────────
