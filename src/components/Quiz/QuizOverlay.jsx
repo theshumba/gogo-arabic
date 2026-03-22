@@ -23,21 +23,11 @@ import ProgressBar from './ProgressBar.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './QuizOverlay.module.css';
+import { QUIZ_TYPE_REGISTRY } from '../../data/quizTypes.js';
 
-const QUIZ_TYPE_LABELS = {
-  'ar-to-en': 'Arabic > English',
-  'en-to-ar': 'English > Arabic',
-  'en-to-type-ar': 'Type Arabic',
-  'listen': 'Listen & Choose',
-  'match': 'Match Pairs',
-  'sentence-build': 'Build a Sentence',
-  'root-identify': 'Find the Root',
-  'fill-blank': 'Fill in the Blank',
-  'category-sort': 'Sort Categories',
-  'transliterate': 'Transliterate',
-  'conjugation': 'Conjugation',
-  'picture-word': 'Picture Word',
-};
+const QUIZ_TYPE_LABELS = Object.fromEntries(
+  Object.entries(QUIZ_TYPE_REGISTRY).map(([key, entry]) => [key, entry.label])
+);
 
 export default function QuizOverlay() {
   const { quiz, feedback, start, answer, next, close } = useQuiz();

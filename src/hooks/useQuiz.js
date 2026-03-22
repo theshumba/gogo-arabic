@@ -10,13 +10,8 @@ import { EVENTS } from '../utils/eventBusTypes.js';
 import { XP_REWARDS } from '../utils/xpCalculator.js';
 import { shuffle } from '../utils/shuffle.js';
 import vocabulary from '../data/vocabularyAll.js';
-
-const CLUSTER_MAP = {
-  'ar-to-en': 'vocabulary', 'en-to-ar': 'vocabulary', 'en-to-type-ar': 'vocabulary',
-  'listen': 'listening', 'match': 'vocabulary', 'sentence-build': 'reading',
-  'root-identify': 'roots', 'fill-blank': 'grammar', 'category-sort': 'vocabulary',
-  'transliterate': 'reading', 'conjugation': 'grammar', 'picture-word': 'vocabulary',
-};
+import { QUIZ_TYPE_REGISTRY, selectQuizTypeForPlayer } from '../data/quizTypes.js';
+import { selectCefrLevel } from '../store/slices/cefrProgressSlice.js';
 
 export function isFsrsDue(card) {
   if (!card || !card.due) return true;
@@ -61,25 +56,16 @@ export function pickDistractors(correctWord, count = 3, tier = 'normal') {
   return shuffle(pool).slice(0, count);
 }
 
-const QUIZ_TYPES = [
-  'ar-to-en',
-  'en-to-ar',
-  'en-to-type-ar',
-  'listen',
-  'root-identify',
-  'fill-blank',
-  'transliterate',
-  'picture-word',
-  'conjugation',
-];
-
 export function useQuiz() {
   const dispatch = useDispatch();
   const fsrsCards = useSelector((s) => s.vocabulary.fsrsCards);
+  const cefrLevel = useSelector(selectCefrLevel);
+  const playerLevel = useSelector((s) => s.player.level);
 
   const [quizState, setQuizState] = useState({
     active: false,
     quizType: null,
+    lockedType: null,
     sessionWords: [],
     currentWord: null,
     choices: [],
@@ -183,25 +169,35 @@ export function useQuiz() {
     return [];
   }
 
-  function loadQuestion(words, idx, type, fsrsCardsRef) {
+  function loadQuestion(words, idx, type, fsrsCardsRef, pLevel, cLevel) {
     if (idx >= words.length) return;
     const word = words[idx];
     const card = fsrsCardsRef?.[word.id]?.card;
     const isDue = isFsrsDue(card);
     setQuizState((prev) => {
       const tier = getDistractorTier(prev.sessionScore, prev.sessionTotal);
-      const choices = buildChoices(word, type, tier);
-      return { ...prev, currentWord: word, choices, fsrsDueOverride: isDue, distractorTier: tier };
+      // Re-evaluate quiz type based on accumulated cluster accuracy (format routing)
+      // Respect lockedType when caller explicitly specified a quiz type at session start
+      const effectiveType = prev.lockedType
+        ? prev.lockedType
+        : selectQuizTypeForPlayer(prev.clusterAccuracy, pLevel, cLevel);
+      const choices = buildChoices(word, effectiveType, tier);
+      return { ...prev, currentWord: word, choices, quizType: effectiveType, fsrsDueOverride: isDue, distractorTier: tier };
     });
     setFeedback(null);
   }
 
   const start = useCallback((words, quizType) => {
-    const type = quizType || QUIZ_TYPES[Math.floor(Math.random() * QUIZ_TYPES.length)];
+    const type = quizType || selectQuizTypeForPlayer(
+      {},  // empty clusterAccuracy at session start
+      playerLevel,
+      cefrLevel
+    );
     const shuffled = shuffle(words);
     setQuizState({
       active: true,
       quizType: type,
+      lockedType: quizType || null,
       sessionWords: shuffled,
       currentWord: null,
       choices: [],
@@ -231,7 +227,7 @@ export function useQuiz() {
       const choices = buildChoices(word, type, tier);
       setQuizState((prev) => ({ ...prev, currentWord: word, choices, fsrsDueOverride: isDue }));
     }
-  }, [fsrsCards]);
+  }, [fsrsCards, playerLevel, cefrLevel]);
 
   const answer = useCallback((userAnswer) => {
     const word = quizState.currentWord;
@@ -279,7 +275,7 @@ export function useQuiz() {
       correct = normalize(userAnswer) === normalize(word.arabic);
     }
 
-    const cluster = CLUSTER_MAP[quizState.quizType] ?? 'vocabulary';
+    const cluster = QUIZ_TYPE_REGISTRY[quizState.quizType]?.cluster ?? 'vocabulary';
     setQuizState((prev) => ({
       ...prev,
       sessionScore: prev.sessionScore + (correct ? 1 : 0),
@@ -337,14 +333,15 @@ export function useQuiz() {
       return true;
     }
     setQuestionIndex(nextIdx);
-    loadQuestion(words, nextIdx, quizState.quizType, fsrsCards);
+    loadQuestion(words, nextIdx, quizState.quizType, fsrsCards, playerLevel, cefrLevel);
     return false;
-  }, [questionIndex, quizState, dispatch]);
+  }, [questionIndex, quizState, dispatch, playerLevel, cefrLevel]);
 
   const close = useCallback(() => {
     setQuizState({
       active: false,
       quizType: null,
+      lockedType: null,
       sessionWords: [],
       currentWord: null,
       choices: [],
