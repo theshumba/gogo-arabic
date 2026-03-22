@@ -10,14 +10,15 @@
 - ✅ **v6.1 Crafting & Advanced Combat** — Phases 31-32 (shipped 2026-02-18) → [archive](milestones/v6.1-ROADMAP.md)
 - ✅ **v7.0 World & Content** — Phases 33-37 (shipped 2026-03-16) → [archive](milestones/v7.0-ROADMAP.md)
 - ✅ **v8.0 Visual Overhaul** — Phases 38-43 (shipped 2026-03-18)
-- 🚧 **v9.0 Content Depth** — Phases 44-46 (in progress)
-- 📋 **v10.0 Onboarding & First 5 Minutes** — Phases 47-49 (planned)
-- 📋 **v11.0 Deep Systems & Content Engine** — Phases 50-55 (planned)
+- ✅ **v9.0 Content Depth** — Phases 44-46 (shipped 2026-03-18)
+- ✅ **v10.0 Onboarding & First 5 Minutes** — Phases 47-49 (shipped 2026-03-19, Phases 48-49 absorbed into v11.0)
+- ✅ **v11.0 Deep Systems & Content Engine** — Phases 50-55 (shipped 2026-03-21) → [archive](milestones/v11.0-ROADMAP.md)
+- 🚧 **v12.0 Learning Systems** — Phases 56-64 (in progress) → [details](milestones/v12.0-ROADMAP.md)
 
 ## Phases
 
 **Phase Numbering:**
-- Integer phases (1-55): Planned milestone work
+- Integer phases (1-64): Planned milestone work
 - Decimal phases (27.1): Urgent insertions between phases (marked INSERTED)
 
 <details>
@@ -157,297 +158,176 @@ Plans:
 
 </details>
 
-### v9.0 Content Depth (Phases 44-46) — In Progress
+<details>
+<summary>✅ v9.0 Content Depth (Phases 44-46) — SHIPPED 2026-03-18</summary>
 
-**Milestone Goal:** Fill the game with substance — rich NPC dialogue grounded in real Islamic Golden Age history, a fleshed-out quest storyline spanning all zones, and vocabulary expansion from 1,220 to 5,000+ words with CEFR tagging, root family groupings, and semantic clusters.
+- [x] Phase 44: NPC Dialogue Expansion (3/3 plans) — 2026-03-18
+- [x] Phase 45: Quest Storylines (3/3 plans) — 2026-03-18
+- [x] Phase 46: Vocabulary Expansion (3/3 plans) — 2026-03-18
 
-**Coverage:** 16 requirements across 3 phases (DIAL-01 to DIAL-05, QUEST-01 to QUEST-05, VOCAB-01 to VOCAB-06)
+</details>
 
-#### Phase 44: NPC Dialogue Expansion
-**Goal**: Players encounter NPCs with rich, distinct personalities and historically grounded Arabic and Islamic cultural content that makes every conversation feel educational and alive
+<details>
+<summary>✅ v10.0 Onboarding & First 5 Minutes (Phase 47) — SHIPPED 2026-03-19 (Phases 48-49 absorbed into v11.0)</summary>
 
-**Depends on**: Phase 43 (v8.0 visual overhaul complete — NPC sprites and dialogue UI finalized)
+- [x] Phase 47: Cinematic Intro (3/3 plans) — 2026-03-19
+- [x] Phase 48: Learning Path Choice — absorbed into Phase 51
+- [x] Phase 49: First Quest & Loop Completion — absorbed into Phase 51
 
-**Requirements**: DIAL-01, DIAL-02, DIAL-03, DIAL-04, DIAL-05
+</details>
 
-**Success Criteria** (what must be TRUE):
-  1. All 23 main NPCs have a clearly distinct voice — talking to any two NPCs feels different in tone, humor, and cultural knowledge (no two NPCs share the same personality template)
-  2. At least 8 NPCs reference specific verifiable historical facts from the Islamic Golden Age, Silk Road, or House of Wisdom when conversed with
-  3. The game contains 1,543+ total dialogue lines (500+ new lines added to the ~1,043 existing baseline)
-  4. When a player learns a new vocabulary word through NPC dialogue, a cultural note surfaces showing either its Arabic loanword survival in English or its historical context of use
-  5. Words taught by NPCs via teachWord fields are added to the player's FSRS review queue and appear in the next scheduled review session
+<details>
+<summary>✅ v11.0 Deep Systems & Content Engine (Phases 50-55) — SHIPPED 2026-03-21</summary>
 
-**Plans**: 3 plans in 2 waves
+- [x] Phase 50: Infrastructure Baseline (3/3 plans) — 2026-03-19
+- [x] Phase 51: Dialogue Foundation & Learning Paths (6/6 plans) — 2026-03-20
+- [x] Phase 52: Vocabulary Expansion (3/3 plans) — 2026-03-20
+- [x] Phase 53: Faction Reputation Engine (3/3 plans) — 2026-03-20
+- [x] Phase 54: World Life Systems (4/4 plans) — 2026-03-20
+- [x] Phase 55: Mini-Games and Content Polish (5/5 plans) — 2026-03-21
 
-Plans:
-- [x] 44-01-PLAN.md — Rewrite dialogue for NPCs 1-12 (scholar-yusuf through storyteller-noor) with personality, cultural depth, teachWord, culturalNote
-- [x] 44-02-PLAN.md — Rewrite dialogue for NPCs 13-24 (wanderer-ali through guide-amira) with personality, cultural depth, teachWord, culturalNote
-- [x] 44-03-PLAN.md — Wire culturalNote display in DialogueOverlay + teachWord/FSRS verification + final line count
-
-#### Phase 45: Quest Storylines
-**Goal**: Players have a compelling narrative arc to pursue — an 8-act main storyline plus per-zone side content that makes every Arabic learning moment feel purposeful and story-motivated
-
-**Depends on**: Phase 44 (NPC dialogue expanded — quest dialogues build on the same NPC personalities and cultural grounding)
-
-**Requirements**: QUEST-01, QUEST-02, QUEST-03, QUEST-04, QUEST-05
-
-**Success Criteria** (what must be TRUE):
-  1. Player can follow an 8-act main storyline as a time-traveling scholar collecting manuscript pages, with each act unlocking in a different zone and advancing through a readable story
-  2. Every zone has at least 2 side quests where Arabic learning is woven into the narrative action — not presented as a bare vocabulary task
-  3. Each companion NPC has a personal quest available that, on completion, raises their relationship score and adds a batch of zone-specific vocabulary to the player's FSRS queue
-  4. Players can discover hidden Arabic inscriptions placed in the world that, when found, teach a root family grouping and add associated words to review
-  5. Quest dialogue branches differently based on the player's chosen learning path (Scholar/Traveler/Historian), so the same quest feels contextually appropriate for each path
-
-**Plans**: 3 plans in 2 waves
-
-Plans:
-- [x] 45-01-PLAN.md — 8-act main storyline quests + act dialogue arcs in npcStoryArcs.js (QUEST-01)
-- [x] 45-02-PLAN.md — 16 zone side quests + 12 companion personal quests + npcs.json dialogue (QUEST-02, QUEST-03)
-- [x] 45-03-PLAN.md — Hidden inscription interactables + learningPath condition engine + per-path dialogue branches (QUEST-04, QUEST-05)
-
-#### Phase 46: Vocabulary Expansion
-**Goal**: The FSRS vocabulary system contains 5,000+ words organized so players always encounter the most useful Arabic first, with every word contextualized by CEFR level, root family, and semantic category
-
-**Depends on**: Phase 45 (quest storylines define which vocabulary clusters matter most per zone — vocabulary expansion fills those clusters)
-
-**Requirements**: VOCAB-01, VOCAB-02, VOCAB-03, VOCAB-04, VOCAB-05, VOCAB-06
-
-**Success Criteria** (what must be TRUE):
-  1. vocabularyAll.js contains 5,000+ words (expanded from 1,220 baseline), with no duplicate entries
-  2. Every word in the vocabulary review UI displays its CEFR level tag (A1, A2, B1, or B2) alongside the Arabic and English
-  3. Root Explorer shows complete root family groupings — searching a trilateral root like ك-ت-ب surfaces all derived forms together in one view
-  4. Words are browseable by semantic cluster (food, family, travel, nature, body, colors, numbers, etc.) in the vocabulary interface, so a player can study a topic end-to-end
-  5. Within each CEFR level, high-frequency words appear before rare ones in new FSRS card generation — a player who just started A2 encounters common words first
-
-**Plans**: 3 plans in 3 waves
-
-Plans:
-- [x] 46-01-PLAN.md — Write A1 (500 words) + A2 (1,000 words) into vocabularyExpanded.js with VOCAB-06 schema
-- [ ] 46-02-PLAN.md — Append B1 (2,000 words) + B2 (1,500 words) to vocabularyExpanded.js
-- [ ] 46-03-PLAN.md — Merge into vocabularyAll.js + CEFR badge in TeacherWordCard + Root Explorer cluster browsing + frequency-ordered FSRS selector
+</details>
 
 ---
 
-### v10.0 Onboarding & First 5 Minutes (Phases 47-49) — Planned
+### v12.0 Learning Systems (Phases 56-64) — In Progress
 
-**Milestone Goal:** Create a cinematic, discovery-driven onboarding that teaches the core game loop in under 2 minutes without a single tutorial popup — the first 30 seconds decide if someone keeps playing.
+**Milestone Goal:** Build the teaching systems that make Gogo Arabic a structured Arabic course inside an RPG — 6 skill trees, 50 grammar lessons, 18 quiz types, adaptive difficulty, CEFR diagnostic placement, and 250+ achievements that reward mastery.
 
-**Coverage:** 18 requirements across 3 phases (INTRO-01 to INTRO-05, PATH-01 to PATH-05, QUEST-01 to QUEST-05, UX-01 to UX-03)
+**Coverage:** 21 requirements across 9 phases (FIX-01, FIX-02, SKILL-01 to SKILL-04, GRAM-01 to GRAM-04, QUIZ-01 to QUIZ-03, CEFR-01 to CEFR-04, ACH-01 to ACH-04)
 
-#### Phase 47: Cinematic Intro
-**Goal**: New players experience a scripted cinematic opening — text crawl, dawn pan, first floating Arabic word, discovery moment, and Guide Amira's arrival — with no menus or tutorial popups interrupting the flow
+Full phase details: [milestones/v12.0-ROADMAP.md](milestones/v12.0-ROADMAP.md)
 
-**Depends on**: Phase 46 (v9.0 content complete — Amira's dialogue trees and vocabulary data are in place)
-
-**Requirements**: INTRO-01, INTRO-02, INTRO-03, INTRO-04, INTRO-05, UX-01, UX-02
-
+#### Phase 56: Bug Fixes & Redux Foundation
+**Goal**: Two pre-existing bugs are fixed and every downstream v12.0 system has the Redux foundation it needs — no new feature can break because of missing middleware wiring or colliding lesson IDs
+**Depends on**: Phase 55 (v11.0 complete)
+**Requirements**: FIX-01, FIX-02
 **Success Criteria** (what must be TRUE):
-  1. A new player sees a 5-second text crawl ("A young scholar discovers an ancient manuscript...") immediately after the loading screen, before any game UI appears
-  2. After the text crawl, the camera fades into Oasis Village at dawn and pans slowly to the player character — no HUD, menus, or overlays are visible during this sequence
-  3. A glowing, interactive Arabic word appears floating in the world; the player can walk to it and touch it without any prompt telling them to do so
-  4. Touching the first floating word plays a reward animation and teaches the word — no quiz, no explanation screen, just discovery feedback
-  5. Guide Amira appears after the first word is learned, delivers one contextual line, and hands the player their first quest — the entire opening from text crawl to quest receipt takes under 60 seconds
-  6. The existing 6-step onboarding tutorial is bypassed for new players who have gone through the cinematic intro — the two flows do not both run
-
-**Plans**: 3 plans in 3 waves
+  1. Completing any grammar lesson fires achievement checks — a player who finishes lesson_verb_present and has the grammar achievement condition met sees the achievement toast appear in the same session
+  2. All existing grammar lesson references in quests, ink dialogue, and FSRS sync use string slug IDs — no numeric index references remain anywhere in the codebase
+  3. `placementSlice` and `cefrProgressSlice` are registered in store.js, persisted to IndexedDB with bumped CURRENT_VERSION and migration function, and hydrate without error on a real v11.0 save snapshot
+  4. `learningProgressMiddleware` is scaffolded and wired into the Redux middleware chain
 
 Plans:
-- [x] 47-01-PLAN.md — CinematicIntroSequencer.js (text crawl + camera fade + dawn pan) + bypass React CinematicIntro in GameLayout
-- [x] 47-02-PLAN.md — FloatingWordObject.js (gold glow + Arabic text + proximity SPACE interact + FSRS dispatch) + sequencer integration
-- [x] 47-03-PLAN.md — Amira arrival dialogue + setTutorialPhase(awaiting_mentor) + setActiveQuest(tutorial_welcome) + human verify
+- [ ] 56-01: achievementMiddleware grammar_lessons wiring + grammar lesson slug ID migration (FIX-01, FIX-02)
+- [ ] 56-02: placementSlice + cefrProgressSlice registration + IndexedDB CURRENT_VERSION bump + learningProgressMiddleware scaffold
 
-#### Phase 48: Learning Path Choice
-**Goal**: After learning the first word, players are prompted by Guide Amira to choose their Arabic learning focus — Scholar, Traveler, or Historian — and the game immediately begins shaping their experience around that choice
-
-**Depends on**: Phase 47 (cinematic intro complete — Amira is present and first quest has been given)
-
-**Requirements**: PATH-01, PATH-02, PATH-03, PATH-04, PATH-05 *(absorbed into v11.0 Phase 51)*
-
+#### Phase 57: Skill Tree Infrastructure
+**Goal**: Six skill trees reflect everything the player has already learned and gate all future v12.0 content — existing players see their mastery represented, new players earn their first unlocks within minutes
+**Depends on**: Phase 56 (learningProgressMiddleware scaffolded; grammar lesson slugs migrated)
+**Requirements**: SKILL-01, SKILL-02, SKILL-03, SKILL-04
 **Success Criteria** (what must be TRUE):
-  1. After the first word is learned, Guide Amira asks "What draws you to Arabic?" — the prompt appears as natural in-world dialogue, not a menu screen
-  2. Player picks one of three paths (Scholar القارئ, Traveler المسافر, Historian المؤرخ) through a choice in the existing dialogue system — no new overlay required
-  3. All three paths teach the same Fusha Arabic — a player on any path encounters the same language, just in a different word-frequency order and with different NPC emphasis
-  4. The chosen path is reflected immediately: the first real quest assigned, the next NPC the player is pointed toward, and the initial FSRS word ordering all differ by path
-  5. A player can switch their learning path from the settings/profile at any time; the interface shows a warning that priority bonuses reset on switch
-
-**Plans**: TBD (absorbed into v11.0 Phase 51)
+  1. Completing a quest, grammar lesson, quiz session, vocabulary review, calligraphy letter, or poetry battle awards XP to the appropriate skill tree — the XP bar in SkillTreeView visibly advances
+  2. A player who loads their v11.0 save sees their skill trees already populated — nodes are unlocked matching current FSRS mastery, quest completions, and grammar lessons; no earned content is retroactively locked
+  3. Unlocking a skill tree node can reveal a new spell, companion dialogue option, zone access flag, or NPC branch — at least one node of each type exists across the 6 trees
+  4. SkillTreeView displays XP progress bars per tree and shows the next 1-2 unlockable nodes highlighted; locked nodes beyond the visible frontier are collapsed
 
 Plans:
-- [ ] 48-01-PLAN.md — learningPathSlice (Scholar/Traveler/Historian state + switch action) + path-aware FSRS word ordering
-- [ ] 48-02-PLAN.md — PATH-01/PATH-02 Amira dialogue tree + path choice wired to DialogueEngine choice handler
-- [ ] 48-03-PLAN.md — PATH-03/PATH-04 path effects (quest routing, NPC relationship bonuses) + PATH-05 switch UI in settings/profile
+- [ ] 57-01: skillTrees.js expanded to 30 nodes per tree + initializeSkillTree(existingPlayerState) + learningProgressMiddleware XP routing (SKILL-01, SKILL-02)
+- [ ] 57-02: Skill tree node reward types: unlock_spell, unlock_dialogue, unlock_zone, unlock_npc_branch + ActionSetExecutor skill_tree_level condition (SKILL-03)
+- [ ] 57-03: SkillTreeView.jsx — one tree at a time, progressive disclosure, XP bars, next-node highlights, lazy-loaded (SKILL-04)
 
-#### Phase 49: First Quest & Loop Completion
-**Goal**: Players complete the first quest by learning 3 Arabic words from village objects, receive a meaningful reward, and finish onboarding having understood the core loop — without a single tutorial popup
-
-**Depends on**: Phase 48 (learning path chosen — first quest content and mentor NPC depend on path)
-
-**Requirements**: QUEST-01, QUEST-02, QUEST-03, QUEST-04, QUEST-05, UX-03 *(absorbed into v11.0 Phase 51)*
-
+#### Phase 58: Grammar A1-A2 + Lesson Wiring
+**Goal**: Players who open the Grammar section encounter a meaningful A1-A2 curriculum with real exercise variety, and every completed lesson awards Grammar skill tree XP and auto-unlocks the next lesson
+**Depends on**: Phase 57 (Grammar skill tree exists and can receive XP from lesson completion)
+**Requirements**: GRAM-02, GRAM-04
 **Success Criteria** (what must be TRUE):
-  1. Words float visibly above pots, signs, and buildings in the village — the player can see at least 3 interactable floating words without moving far from the start position
-  2. Touching each floating word teaches it with visual Arabic script, transliteration, and an audio pronunciation cue — no separate quiz screen required
-  3. After learning 3 words, the player receives a gold coin reward, sees an achievement toast ("You know 3 Arabic words!"), and the quest completes — all without leaving the world
-  4. The first real quest offered after completion (and the mentor NPC assigned) differs based on the player's chosen learning path — Scholar, Traveler, and Historian each get a thematically matched follow-up
-  5. A returning player who has completed onboarding skips directly to the normal game start — onboarding completion is stored in the game's persist layer (IndexedDB) and survives page reload
-
-**Plans**: TBD (absorbed into v11.0 Phase 51)
+  1. Each grammar lesson presents at least 12 distinct exercise types including conjugation drill, sentence transformation, word order, and error identification — a player completing any A1-A2 lesson encounters at least 4 different exercise formats
+  2. Completing a grammar lesson immediately awards Grammar skill tree XP visible in SkillTreeView and auto-unlocks the next lesson in sequence
 
 Plans:
-- [ ] 49-01-PLAN.md — FloatingWordObjects for 3+ village items (pots/signs/buildings) + teach-on-touch with visual+audio feedback (QUEST-01, QUEST-02)
-- [ ] 49-02-PLAN.md — Quest completion trigger: 3 words learned → gold reward + achievement toast + "You know 3 Arabic words!" (QUEST-03)
-- [ ] 49-03-PLAN.md — Path-gated first real quest + mentor NPC assignment + onboarding completion flag in IndexedDB (QUEST-04, QUEST-05, UX-03)
+- [ ] 58-01: 20 new A1-A2 grammar lessons in grammar.js with 12 exercise types + GrammarChecker.js + vocabulary_prerequisites build-time validation (GRAM-02)
+- [ ] 58-02: learningProgressMiddleware grammar completion → Grammar skill tree XP + auto-unlock next lesson + lesson sequence gating in GrammarOverlay (GRAM-04)
 
----
-
-### v11.0 Deep Systems & Content Engine (Phases 50-55) — Planned
-
-**Milestone Goal:** Build all the under-the-hood systems that make the game feel alive — bundle optimization, world state machine, inkjs dialogue migration, learning path wiring, faction reputation, dynamic economy, NPC gossip, environmental storytelling, progressive tashkeel refinement, calligraphy mini-game, and Arabic poetry battles. Absorbs v10.0 Phases 48-49.
-
-**Coverage:** 56 requirements across 6 phases (INFRA-01 to INFRA-09, CONT-01 to CONT-08, PATH-01 to PATH-07, FACT-01 to FACT-06, ECON-01 to ECON-04, GOSP-01 to GOSP-05, TASH-01 to TASH-03, ENVR-01 to ENVR-04, CALL-01 to CALL-05, POET-01 to POET-05)
-
-**Visual/UI/world/tileset work is out of scope** — user builds world visuals separately in LDtk.
-
-#### Phase 50: Infrastructure Baseline — COMPLETE (2026-03-19)
-**Goal**: The game loads under 500KB and every downstream v11.0 system has the foundation it needs — world state machine, bundle optimization, and zone-based asset loading all in place before any feature work begins
-
-**Depends on**: Phase 49 (v10.0 complete or absorbed)
-
-**Requirements**: INFRA-01, INFRA-02, INFRA-03, INFRA-04, INFRA-05, INFRA-06
-
+#### Phase 59: Adaptive Difficulty Engine
+**Goal**: Quiz sessions target a 70-85% success rate for every player and adapt question format to player weaknesses — in place before any new quiz types ship
+**Depends on**: Phase 57 (skill tree CEFR level data needed for QUIZ_TYPE_REGISTRY cefrMin gates)
+**Requirements**: QUIZ-02, QUIZ-03
 **Success Criteria** (what must be TRUE):
-  1. Running `npm run build` produces an initial JS bundle under 500KB (down from 862KB), with zone-specific assets excluded from the initial load
-  2. Running `npm run build:analyze` opens a treemap in the browser showing which modules account for bundle size
-  3. Entering a zone for the first time shows a loading indicator while zone-specific assets load; shared assets (player sprite, UI, common NPCs) are available immediately with no flash
-  4. A `WORLD_STATE_KEYS` constants file exists and every world flag write anywhere in the codebase uses a key from that file — no raw string flag names
-  5. Quest completion, NPC interactions, and purchases automatically set world state flags without any manual dispatch — worldStateMiddleware handles propagation
-
-**Plans**: 3 plans in 2 waves
+  1. A player struggling with grammar questions (below 70% accuracy) receives more grammar format questions in subsequent rounds — observable within a single extended quiz session
+  2. FSRS-due cards are always eligible regardless of difficulty tier — adaptive engine controls question format only, never filters scheduled cards
+  3. A player consistently answering correctly (above 85%) sees distractor difficulty increase — wrong answers become more plausible Arabic words
 
 Plans:
-- [x] 50-01-PLAN.md — rollup-plugin-visualizer install + build:analyze script + lazy-wrap 10 heavy GameLayout overlays to reduce bundle from 1,235KB to under 500KB (INFRA-01, INFRA-03) — 2026-03-19
-- [x] 50-02-PLAN.md — BootScene zone-based lazy loading: shared assets upfront, zone assets on transition (INFRA-02) — 2026-03-19
-- [x] 50-03-PLAN.md — worldStateSlice (500+ flags, WORLD_STATE_KEYS constants, IndexedDB persist) + worldStateMiddleware (INFRA-04, INFRA-05, INFRA-06) — 2026-03-19
+- [ ] 59-01: Rolling session accuracy tracker in useQuiz.js + per-content-cluster difficulty tracking + FSRS-due override flag (QUIZ-02)
+- [ ] 59-02: QUIZ_TYPE_REGISTRY in quizTypes.js with 18 types, minLevel/cefrMin gates + format-selection logic routing grammar-weak players to grammar quiz types (QUIZ-03)
 
-#### Phase 51: Dialogue Foundation & Learning Paths
-**Goal**: The dialogue engine supports ink scripting for future narrative work, all 573 missing companion dialogue lines are filled, and players choose a learning path that immediately shapes their FSRS word queue and first quest assignment — absorbing v10.0 Phases 48-49
-
-**Depends on**: Phase 50 (worldStateSlice provides the state machine ink needs to read and write)
-
-**Requirements**: INFRA-07, INFRA-08, INFRA-09, CONT-01, PATH-01, PATH-02, PATH-03, PATH-04, PATH-05, PATH-06, PATH-07
-
+#### Phase 60: Quiz Expansion (Core 3 Types)
+**Goal**: Three new quiz types are playable and gated by CEFR level, giving players fundamentally different practice modes compared to the existing 12 types
+**Depends on**: Phase 59 (adaptive difficulty engine in place — all new types inherit format selection and FSRS-due override from day one)
+**Requirements**: QUIZ-01
 **Success Criteria** (what must be TRUE):
-  1. Talking to any of the 5 pilot NPCs runs their dialogue from a compiled `.ink.json` file; talking to any non-migrated NPC runs their legacy JSON dialogue without errors — both paths work simultaneously
-  2. All 12 companions have complete dialogue — no companion responds with a placeholder or empty line in any conversation
-  3. After the first word is learned in the village, Guide Amira asks "What draws you to Arabic?" as in-world dialogue (no menu overlay), and the player chooses Scholar, Traveler, or Historian
-  4. The first real quest assigned and the FSRS word ordering both differ visibly between paths — a Scholar and a Traveler starting fresh see different first NPCs and different new card sequences
-  5. A returning player who completed onboarding bypasses the cinematic intro and path prompt entirely and drops into normal gameplay
-  6. Player can switch learning path from settings with a visible warning that priority bonuses reset
-
-**Plans**: 4 plans in 2 waves
+  1. A player at A2 CEFR level or above can access GrammarFill quizzes — completing a fill-in-blank conjugation exercise where selecting the correct Arabic verb form is required
+  2. A player can complete a WordOrder exercise by arranging Arabic word tokens using drag-and-drop at B1+ — appears in the quiz rotation
+  3. A player at A2+ can complete a ClozePassage quiz — reading a short Arabic paragraph with blanks and selecting correct missing words from FSRS-sourced options
+  4. All 18 quiz type definitions exist in QUIZ_TYPE_REGISTRY including the three deferred types (DialectIdentify, RootExpand, CulturalContext) marked cefrMin: 'B2'
 
 Plans:
-- [x] 51-01-PLAN.md — inkjs install + InkDialogueEngine with adapter fallback (legacy JSON + .ink.json) + 5-NPC pilot migration (INFRA-07, INFRA-08, INFRA-09) — 2026-03-19
-- [x] 51-02-PLAN.md — Fill 573 missing companion dialogue lines across 12 companions (CONT-01) — 2026-03-20
-- [x] 51-03-PLAN.md — PATH-01/PATH-02: Amira ink dialogue tree for path choice + DialogueOverlay ink mode + useTutorialTrigger integration — 2026-03-20
-- [x] 51-04-PLAN.md — PATH-03/PATH-04/PATH-05/PATH-06/PATH-07: FSRS queue reordering by path + path-gated quest/mentor assignment + switch UI + onboarding skip flag — 2026-03-20
-- [x] 51-05-PLAN.md — GAP CLOSURE (PATH-03): Wire selectNewCardsByPath into rootFsrsSyncMiddleware + ReviewSession for path-aware FSRS ordering — 2026-03-20
-- [x] 51-06-PLAN.md — GAP CLOSURE (PATH-04): Fix mentor NPC hardcode in useTutorialTrigger + fix quest prerequisites format + activate path quest — 2026-03-20
+- [ ] 60-01: GrammarFill.jsx — conjugation fill-in-blank with Arabic verb paradigm display + QuizOverlay switch integration (QUIZ-01)
+- [ ] 60-02: WordOrder.jsx — extends SentenceBuilder drag-and-drop for sentence arrangement at B1+ (QUIZ-01)
+- [ ] 60-03: ClozePassage.jsx — paragraph with FSRS-sourced blank options at A2+ + QUIZ_TYPE_REGISTRY 18-type completion with deferred type stubs (QUIZ-01)
 
-#### Phase 52: Vocabulary Expansion
-**Goal**: The FSRS system contains 5,000+ words with domain affinity tags, CEFR levels, root families, semantic clusters, ambiguity flags, and a build-time validation script — giving every downstream system (faction vocab rewards, poetry battles, learning path differentiation) a rich word corpus to draw from
-
-**Depends on**: Phase 51 (learning path wired — path domain affinity tags must be applied during the expansion pass, not retrofitted)
-
-**Requirements**: CONT-02, CONT-03, CONT-04, CONT-05, CONT-06, CONT-07, CONT-08
-
+#### Phase 61: CEFR Placement Test
+**Goal**: New players start at the right CEFR level — the diagnostic test places them conservatively, pre-unlocks appropriate skill tree nodes and grammar lessons, and gives an escape hatch if placement feels wrong
+**Depends on**: Phase 59 (adaptive difficulty engine provides CAT item selection) and Phase 58 (A1-A2 grammar content provides grammar section questions)
+**Requirements**: CEFR-01, CEFR-02, CEFR-04
 **Success Criteria** (what must be TRUE):
-  1. vocabularyAll.js contains 5,000+ words with no duplicate Arabic entries, each tagged with CEFR level, root, semantic cluster, and domain affinity (Scholar/Traveler/Historian)
-  2. Every word card in the review UI shows its CEFR level badge (A1/A2/B1/B2) alongside the Arabic and English
-  3. Root Explorer surfaces all derived forms of a trilateral root together — searching ك-ت-ب returns كتاب، كاتب، مكتوب، مكتبة in one grouped view
-  4. Words are browseable by semantic cluster in the vocabulary interface — a player can select "food" and review all food-domain words end-to-end
-  5. Running `npm run vocab:validate` exits 0 with no duplicate, missing-root, or missing-CEFR-tag warnings
-  6. Words tagged `ambiguous: true` retain tashkeel in all UI views regardless of the player's FSRS mastery level
-
-**Plans**: 3 plans in 2 waves
+  1. A new player on first launch is offered the placement test; completing it assigns a CEFR level one tier below their raw score with a "Start Lower" button to drop one more tier
+  2. After placement test completion, skill tree nodes and grammar lessons appropriate to the assigned CEFR level are pre-unlocked — a player placed at A2 can immediately access A2 grammar lessons
+  3. A player can navigate to Settings and retake the placement test with a warning explaining that retaking resets CEFR tracking history
 
 Plans:
-- [x] 52-01-PLAN.md — Expand to 5,000+ words with CEFR, root, semantic cluster, domain affinity, and ambiguity fields (CONT-02, CONT-07)
-- [x] 52-02-PLAN.md — Build-time validation script + CEFR badge in TeacherWordCard + Root Explorer root family groupings (CONT-03, CONT-04, CONT-08)
-- [x] 52-03-PLAN.md — Semantic cluster browsing UI + frequency-ordered FSRS selector per CEFR level + ambiguous word tashkeel lock (CONT-05, CONT-06, CONT-07) — 2026-03-20
+- [ ] 61-01: placementTest.js — 20-30 calibrated CAT questions spanning Pre-A1 through B1 across all 6 tree domains + placementEngine.js IRT binary search (CEFR-01)
+- [ ] 61-02: PlacementTestOverlay.jsx — reuses existing quiz type components, one-level-lower default, "Start Lower" escape hatch, B1 cap, early-exit at 10 consecutive correct (CEFR-01)
+- [ ] 61-03: Placement result fan-out via react-redux batch() — pre-unlock skill tree nodes + grammar lessons + write CEFR level to cefrProgressSlice + settings retake UI (CEFR-02, CEFR-04)
 
-#### Phase 53: Faction Reputation Engine
-**Goal**: Six factions track the player's standing across all interactions, gate bonus content at reputation thresholds, and teach faction-specific vocabulary — making every quest completion, purchase, and conversation a meaningful faction investment
-
-**Depends on**: Phase 52 (vocabulary expansion complete — faction-specific vocabulary rewards draw from the full 5,000+ corpus with domain affinity tags already applied)
-
-**Requirements**: FACT-01, FACT-02, FACT-03, FACT-04, FACT-05, FACT-06
-
+#### Phase 62: Grammar B1-B2 + CEFR Gating
+**Goal**: The grammar curriculum is complete at 50 lessons covering A1 through B2, with B1 and B2 lessons gated behind skill tree progression thresholds
+**Depends on**: Phase 61 (placement test assigns B1/B2 levels that now need grammar content to unlock; Phase 58 validated lesson schema in production)
+**Requirements**: GRAM-01, GRAM-03
 **Success Criteria** (what must be TRUE):
-  1. A player's faction scores for all 6 factions (Scholars, Merchants, Artisans, Travelers, Guardians, Artists) are visible somewhere in the UI with their current tier label (Neutral/Friendly/Trusted/Allied/Revered)
-  2. Completing a quest, making a purchase, or choosing a dialogue option that favors a faction visibly changes that faction's score — the player can see the effect of their choices
-  3. Reaching Friendly (25) with a faction unlocks additional dialogue lines from faction NPCs; Trusted (50) unlocks a side quest; Allied (75) grants a shop discount; all main storyline quests remain completable with all factions at 0
-  4. ActionSetExecutor accepts `factionRequired` conditions in NPC and zone data — faction-gated content is data-driven, not hardcoded
-  5. Each faction teaches at least 10 domain-specific vocabulary words at the Friendly threshold — unlocking those words adds them to the player's FSRS queue
-
-**Plans:** 3/3 plans complete
+  1. The grammar section contains 50 lessons total covering A1 through B2 — a player who has completed all A1 and A2 lessons can see B1 lessons listed (locked behind Grammar tree level 3) and B2 lessons (locked behind Grammar tree level 5)
+  2. A player who reaches Grammar tree level 3 sees B1 grammar lessons unlock automatically; reaching level 5 unlocks B2 — attempting to open a locked lesson shows "Requires Grammar Tree Level X" with current level shown
+  3. A "New content added" notification appears on first load after this phase ships for existing players whose grammar completion percentage has changed
 
 Plans:
-- [x] 53-01-PLAN.md — Extend factionSlice (0-100 clamp, tier constants, IndexedDB persist) + factionMiddleware auto-fires on game events (FACT-01, FACT-02)
-- [x] 53-02-PLAN.md — ActionSetExecutor factionRequired + shopGenerator fix + faction-gated dialogue/quest/shop data for all 6 factions (FACT-03, FACT-04, FACT-05)
-- [x] 53-03-PLAN.md — Faction vocabulary rewards at tier thresholds + FactionPanel UI with animated tier bars (FACT-06, FACT-01, FACT-03)
+- [ ] 62-01: 30 new B1-B2 grammar lessons in grammar.js completing the 50-lesson curriculum (GRAM-01)
+- [ ] 62-02: Skill tree gate enforcement in GrammarOverlay — B1 lessons locked until Grammar tree level 3, B2 until level 5 + "new content" toast for existing players (GRAM-03)
 
-#### Phase 54: World Life Systems
-**Goal**: The world feels alive and reactive — shop prices shift based on supply and player faction standing, NPCs gossip about recent events in ink dialogue, environmental inscriptions teach Arabic in context, and tashkeel fading accounts for ambiguity and learning path
-
-**Depends on**: Phase 53 (faction scores are inputs to dynamic pricing; ink engine from Phase 51 powers gossip and inscription dialogue)
-
-**Requirements**: ECON-01, ECON-02, ECON-03, ECON-04, GOSP-01, GOSP-02, GOSP-03, GOSP-04, GOSP-05, TASH-01, TASH-02, TASH-03, ENVR-01, ENVR-02, ENVR-03, ENVR-04
-
+#### Phase 63: Achievement Expansion
+**Goal**: The achievement system recognizes mastery across every learning activity — 250+ achievements in 4 tiers give players concrete milestones to pursue and a dedicated panel lets them track progress by category
+**Depends on**: Phase 62 (all event sources — skill tree, 50 grammar lessons, quiz expansion, placement — are complete; achievement conditions can be authored accurately)
+**Requirements**: ACH-01, ACH-02, ACH-04
 **Success Criteria** (what must be TRUE):
-  1. Shop prices visibly change between visits — buying multiple items of the same type raises the price; waiting and resting partially restores supply and lowers it; price floor is 50% of base, ceiling is 200%
-  2. Faction-allied players see a 15% price discount at that faction's shops; a player can observe the price difference by checking faction alignment vs non-aligned shop prices
-  3. After completing a quest or notable interaction, at least one NPC who knew the player (relationship ≥ 25) mentions it in their next conversation — gossip tokens surface as natural ink dialogue lines, not a separate gossip UI
-  4. At least 20 interactive inscriptions/scrolls are placed across all 8 zones; touching one reads the inscription, adds unknown words to the FSRS queue, and can teach a root family grouping
-  5. A word tagged `ambiguous: true` retains its tashkeel regardless of mastery level; a player on the Scholar path loses tashkeel more slowly than a Traveler at equivalent FSRS mastery
-
-**Plans**: 4 plans in 2 waves
+  1. The achievements data file contains 250+ entries across at least 15 categories — the Achievements panel shows achievements for vocabulary milestones, grammar completion, quiz streaks, skill tree progress, CEFR level reached, and placement test completion
+  2. Every achievement has a tier label (Bronze, Silver, Gold, or Legendary) and the Achievements panel displays the tier badge visually
+  3. Achievement progress is visible before completion — a player can filter by category and see how close they are to each unearned achievement
 
 Plans:
-- [x] 54-01-PLAN.md — PricingAgent supply/demand model in EconomyFlow.js + faction modifier + price floor/ceiling + ShopOverlay price change indicators (ECON-01, ECON-02, ECON-03, ECON-04)
-- [x] 54-02-PLAN.md — GossipManager: EventBus token creation, NPC propagation (relationship ≥ 25), 3-day expiry, ink dialogue surfacing, heard flag, Arabic grammar annotation (GOSP-01, GOSP-02, GOSP-03, GOSP-04, GOSP-05)
-- [x] 54-03-PLAN.md — 20 environmental inscriptions/scrolls as ink interactions across 8 zones + FSRS queue integration + root family teaching (ENVR-01, ENVR-02, ENVR-03, ENVR-04)
-- [x] 54-04-PLAN.md — Progressive tashkeel refinement: ambiguity-aware fading + learning path fading rate + inscription proficiency-appropriate tashkeel (TASH-01, TASH-02, TASH-03)
+- [ ] 63-01: achievements.js expanded with 206 new entries in existing 20-category schema + Bronze/Silver/Gold/Legendary tier field on all achievements (ACH-01, ACH-02)
+- [ ] 63-02: New isAchievementMet() requirement types: skill_tree_nodes, skill_tree_complete, quiz_type_streak, cefr_level_reached, placement_complete + quizTypeStats in achievementSlice.stats (ACH-01)
+- [ ] 63-03: AchievementsPanel.jsx — category filter tabs, tier badge display, progress bars on incomplete achievements, lazy-loaded (ACH-04)
 
-#### Phase 55: Mini-Games and Content Polish
-**Goal**: Two new Arabic learning mini-games — calligraphy tracing and poetry battles — give players deep, unique practice modes that no other Arabic learning app offers; battle code tests establish a safety net before poetry battles build on the combat system
-
-**Depends on**: Phase 54 (vocabulary expansion from Phase 52 provides the word corpus poetry battles draw from; ink engine from Phase 51 wires poetry battle NPC dialogue)
-
-**Requirements**: CALL-01, CALL-02, CALL-03, CALL-04, CALL-05, POET-01, POET-02, POET-03, POET-04, POET-05
-
+#### Phase 64: CEFR Reports + Social Sharing
+**Goal**: Players can see their CEFR level progress over time as a visual report and share their Arabic learning milestone as a social card — the report never shows CEFR going backwards and the share card works without external image dependencies
+**Depends on**: Phase 63 (all upstream data — placement baseline, grammar completions, FSRS aggregation, skill tree state — is complete and stable)
+**Requirements**: CEFR-03, ACH-03
 **Success Criteria** (what must be TRUE):
-  1. The mini-games hub has a Calligraphy entry; selecting it launches CalligraphyScene as a separate lazy-loaded Phaser scene
-  2. Player can trace any of the 28 isolated Arabic letter forms using pointer or touch input; after completing the trace, the scene shows a 1-3 star rating and marks the letter as "practiced" at 2+ stars
-  3. Player can find NPC poets in the world and challenge them to a poetry battle; the battle mode presents a fill-in-the-blank verse with 4 FSRS-sourced word choices at appropriate difficulty
-  4. Poetry battles are untimed — no countdown, no time pressure; both player and NPC poet fill blanks at their own pace; the winner earns XP and vocabulary rewards
-  5. Completing a calligraphy letter at 2+ stars or winning a poetry battle adds the practiced vocabulary to the FSRS review queue
-
-**Plans**: 5 plans in 2 waves
+  1. A player can open a CEFR Progress Report showing a radar chart of skill distribution across 6 trees and a line chart of CEFR level over time — both charts are visible on the first session after taking the placement test
+  2. The CEFR level shown in the progress report never goes backwards — only upward level changes are recorded; write-once-per-session snapshot model
+  3. A player can generate a shareable card showing their Arabic learning milestone and either share via Web Share API or copy to clipboard — the card is generated without any external image requests and works in production
 
 Plans:
-- [x] 55-01-PLAN.md — BattleStateMachine + GrammarComboDetector + StatusEffectBar test coverage (prerequisite for poetry battle builds on combat system)
-- [x] 55-02-PLAN.md — CalligraphyScene: lazy-loaded Phaser scene + pointer path capture + 28 reference stroke paths as JSON (CALL-01, CALL-02, CALL-03)
-- [x] 55-03-PLAN.md — CalligraphyScene: Frechet distance scoring + 3-star feedback + "practiced" flag in alphabet progress + mini-games hub wiring (CALL-04, CALL-05)
-- [x] 55-04-PLAN.md — poetrySlice + 10 curated classical Arabic poems with fill-in-blank positions + FSRS word sourcing (POET-01, POET-02, POET-03)
-- [x] 55-05-PLAN.md — Poetry battle mode UI + NPC poet opponent AI + untimed scoring + XP/vocab rewards + GameLayout wiring (POET-04, POET-05)
+- [ ] 64-01: recharts install (v3.8.0) + CefrProgressReport.jsx — RadarChart + LineChart, lazy-loaded in charts-vendor chunk; write-once-per-session CEFR snapshot in cefrProgressSlice (CEFR-03)
+- [ ] 64-02: Scholar's Scroll ink dialogue — Amira delivers CEFR milestone moments reusing inkjs v11.0 + Amira companion (CEFR-03)
+- [ ] 64-03: SocialShareCard.jsx — SVG-only design, Web Share API + clipboard fallback; html-to-image v1.11.13 conditional install (ACH-03)
 
 ---
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 55
+Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -496,19 +376,28 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 55
 | 43. Zone References & Cleanup | v8.0 | 2/2 | Complete | 2026-03-18 |
 | 44. NPC Dialogue Expansion | v9.0 | 3/3 | Complete | 2026-03-18 |
 | 45. Quest Storylines | v9.0 | 3/3 | Complete | 2026-03-18 |
-| 46. Vocabulary Expansion | v9.0 | 1/3 | In progress | — |
-| 47. Cinematic Intro | v10.0 | 3/3 | At checkpoint | 2026-03-19 |
-| 48. Learning Path Choice | v10.0 | 0/3 | Not started (absorbed into Phase 51) | — |
-| 49. First Quest & Loop Completion | v10.0 | 0/3 | Not started (absorbed into Phase 51) | — |
-| 50. Infrastructure Baseline | v11.0 | Complete    | 2026-03-19 | 2026-03-19 |
-| 51. Dialogue Foundation & Learning Paths | v11.0 | Complete    | 2026-03-20 | — |
-| 52. Vocabulary Expansion | v11.0 | Complete    | 2026-03-20 | 2026-03-20 |
-| 53. Faction Reputation Engine | v11.0 | 3/3 | Complete    | 2026-03-20 |
-| 54. World Life Systems | v11.0 | 0/4 | Complete    | 2026-03-20 |
-| 55. Mini-Games and Content Polish | v11.0 | 0/5 | Complete    | 2026-03-21 |
+| 46. Vocabulary Expansion | v9.0 | 3/3 | Complete | 2026-03-18 |
+| 47. Cinematic Intro | v10.0 | 3/3 | Complete | 2026-03-19 |
+| 48. Learning Path Choice | v10.0 | — | Absorbed into Phase 51 | — |
+| 49. First Quest & Loop Completion | v10.0 | — | Absorbed into Phase 51 | — |
+| 50. Infrastructure Baseline | v11.0 | 3/3 | Complete | 2026-03-19 |
+| 51. Dialogue Foundation & Learning Paths | v11.0 | 6/6 | Complete | 2026-03-20 |
+| 52. Vocabulary Expansion | v11.0 | 3/3 | Complete | 2026-03-20 |
+| 53. Faction Reputation Engine | v11.0 | 3/3 | Complete | 2026-03-20 |
+| 54. World Life Systems | v11.0 | 4/4 | Complete | 2026-03-20 |
+| 55. Mini-Games and Content Polish | v11.0 | 5/5 | Complete | 2026-03-21 |
+| 56. Bug Fixes & Redux Foundation | v12.0 | 0/2 | Not started | - |
+| 57. Skill Tree Infrastructure | v12.0 | 0/3 | Not started | - |
+| 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 0/2 | Not started | - |
+| 59. Adaptive Difficulty Engine | v12.0 | 0/2 | Not started | - |
+| 60. Quiz Expansion (Core 3 Types) | v12.0 | 0/3 | Not started | - |
+| 61. CEFR Placement Test | v12.0 | 0/3 | Not started | - |
+| 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Not started | - |
+| 63. Achievement Expansion | v12.0 | 0/3 | Not started | - |
+| 64. CEFR Reports + Social Sharing | v12.0 | 0/3 | Not started | - |
 
-**Cumulative:** 46 phases shipped (Phase 45 complete), 133 plans complete, 8 milestones shipped
+**Cumulative:** 55 phases shipped, 137+ plans complete, 11 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-19 — v11.0 roadmap added (Phases 50-55, 56 requirements mapped)*
+*Last updated: 2026-03-22 — v12.0 roadmap added (Phases 56-64, 21 requirements mapped)*

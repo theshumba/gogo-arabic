@@ -71,33 +71,33 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FIX-01 | TBD | Pending |
-| FIX-02 | TBD | Pending |
-| SKILL-01 | TBD | Pending |
-| SKILL-02 | TBD | Pending |
-| SKILL-03 | TBD | Pending |
-| SKILL-04 | TBD | Pending |
-| GRAM-01 | TBD | Pending |
-| GRAM-02 | TBD | Pending |
-| GRAM-03 | TBD | Pending |
-| GRAM-04 | TBD | Pending |
-| QUIZ-01 | TBD | Pending |
-| QUIZ-02 | TBD | Pending |
-| QUIZ-03 | TBD | Pending |
-| CEFR-01 | TBD | Pending |
-| CEFR-02 | TBD | Pending |
-| CEFR-03 | TBD | Pending |
-| CEFR-04 | TBD | Pending |
-| ACH-01 | TBD | Pending |
-| ACH-02 | TBD | Pending |
-| ACH-03 | TBD | Pending |
-| ACH-04 | TBD | Pending |
+| FIX-01 | Phase 56 | Pending |
+| FIX-02 | Phase 56 | Pending |
+| SKILL-01 | Phase 57 | Pending |
+| SKILL-02 | Phase 57 | Pending |
+| SKILL-03 | Phase 57 | Pending |
+| SKILL-04 | Phase 57 | Pending |
+| GRAM-02 | Phase 58 | Pending |
+| GRAM-04 | Phase 58 | Pending |
+| QUIZ-02 | Phase 59 | Pending |
+| QUIZ-03 | Phase 59 | Pending |
+| QUIZ-01 | Phase 60 | Pending |
+| CEFR-01 | Phase 61 | Pending |
+| CEFR-02 | Phase 61 | Pending |
+| CEFR-04 | Phase 61 | Pending |
+| GRAM-01 | Phase 62 | Pending |
+| GRAM-03 | Phase 62 | Pending |
+| ACH-01 | Phase 63 | Pending |
+| ACH-02 | Phase 63 | Pending |
+| ACH-04 | Phase 63 | Pending |
+| CEFR-03 | Phase 64 | Pending |
+| ACH-03 | Phase 64 | Pending |
 
 **Coverage:**
 - v12.0 requirements: 21 total
-- Mapped to phases: 0
-- Unmapped: 21 (pending roadmap)
+- Mapped to phases: 21
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-22*
-*Last updated: 2026-03-22 after initial definition*
+*Last updated: 2026-03-22 — traceability complete, all 21 requirements mapped to Phases 56-64*
