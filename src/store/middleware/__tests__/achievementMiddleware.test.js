@@ -5,6 +5,8 @@ import achievementReducer from '../../slices/achievementSlice.js';
 import playerReducer, { incrementWordsLearned, addXP } from '../../slices/playerSlice.js';
 import vocabularyReducer from '../../slices/vocabularySlice.js';
 import questReducer, { completeQuest } from '../../slices/questSlice.js';
+import grammarReducer, { completeLesson } from '../../slices/grammarSlice.js';
+import alphabetReducer from '../../slices/alphabetSlice.js';
 
 /**
  * Achievement Middleware Integration Tests
@@ -187,5 +189,69 @@ describe('achievementMiddleware', () => {
       // Achievement unlock time should remain unchanged
       expect(unlockTime2).toBe(unlockTime1);
     });
+  });
+});
+
+describe('grammar_lessons achievements (FIX-01)', () => {
+  let store;
+
+  beforeEach(() => {
+    store = configureStore({
+      reducer: {
+        achievements: achievementReducer,
+        player: playerReducer,
+        vocabulary: vocabularyReducer,
+        quests: questReducer,
+        grammar: grammarReducer,
+        alphabet: alphabetReducer,
+      },
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(achievementMiddleware),
+    });
+  });
+
+  it('should unlock grammar_first when completing first grammar lesson', () => {
+    store.dispatch(completeLesson({ lessonId: 'basic-verb-conjugation', exerciseScore: 100, quizScore: 100 }));
+
+    const state = store.getState();
+    expect(state.achievements.unlockedAchievements).toHaveProperty('grammar_first');
+    expect(state.player.xp).toBeGreaterThan(0);
+  });
+
+  it('should NOT fire grammar_first for actions unrelated to grammar', () => {
+    store.dispatch(incrementWordsLearned());
+
+    const state = store.getState();
+    expect(state.achievements.unlockedAchievements).not.toHaveProperty('grammar_first');
+  });
+
+  it('should unlock grammar_5 after 5 completed lessons', () => {
+    const lessonIds = [
+      'al-definite',
+      'noun-adjective-agreement',
+      'personal-pronouns',
+      'possessive-suffixes',
+      'basic-verb-conjugation',
+    ];
+
+    lessonIds.forEach((lessonId) => {
+      store.dispatch(completeLesson({ lessonId, exerciseScore: 80, quizScore: 80 }));
+    });
+
+    const state = store.getState();
+    expect(state.grammar.completedLessons).toHaveLength(5);
+    expect(state.achievements.unlockedAchievements).toHaveProperty('grammar_first');
+    expect(state.achievements.unlockedAchievements).toHaveProperty('grammar_5');
+  });
+
+  it('should not duplicate grammar_first on repeated completeLesson for same lesson', () => {
+    store.dispatch(completeLesson({ lessonId: 'al-definite', exerciseScore: 80, quizScore: 80 }));
+    const state1 = store.getState();
+    const firstUnlockTime = state1.achievements.unlockedAchievements.grammar_first;
+
+    store.dispatch(completeLesson({ lessonId: 'al-definite', exerciseScore: 90, quizScore: 90 }));
+    const state2 = store.getState();
+
+    expect(state2.achievements.unlockedAchievements.grammar_first).toBe(firstUnlockTime);
   });
 });

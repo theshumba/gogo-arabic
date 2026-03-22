@@ -87,6 +87,11 @@ function isAchievementMet(achievement, state) {
       return unlockedCount >= totalAchievements;
     }
 
+    case 'grammar_lessons': {
+      const completedCount = state.grammar?.completedLessons?.length || 0;
+      return completedCount >= req.threshold;
+    }
+
     default:
       return false;
   }
@@ -107,6 +112,7 @@ const ACTION_TO_ACHIEVEMENT_TYPES = {
   'achievements/recordShopPurchase': ['shop_purchases', 'dirhams_spent'],
   'player/spendDirhams': ['dirhams_spent'],
   'player/addDirhams': ['dirhams_held'],
+  'grammar/completeLesson': ['grammar_lessons'],
 };
 
 // Re-entrancy guard: prevents infinite dispatch cascade when addXP triggers
