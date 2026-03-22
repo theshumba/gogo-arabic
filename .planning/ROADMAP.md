@@ -209,7 +209,7 @@ Full phase details: [milestones/v12.0-ROADMAP.md](milestones/v12.0-ROADMAP.md)
   4. `learningProgressMiddleware` is scaffolded and wired into the Redux middleware chain
 
 Plans:
-- [ ] 56-01: achievementMiddleware grammar_lessons wiring + grammar lesson slug ID migration (FIX-01, FIX-02)
+- [x] 56-01: achievementMiddleware grammar_lessons wiring + grammar lesson slug ID migration (FIX-01, FIX-02)
 - [ ] 56-02: placementSlice + cefrProgressSlice registration + IndexedDB CURRENT_VERSION bump + learningProgressMiddleware scaffold
 
 #### Phase 57: Skill Tree Infrastructure
@@ -386,7 +386,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 53. Faction Reputation Engine | v11.0 | 3/3 | Complete | 2026-03-20 |
 | 54. World Life Systems | v11.0 | 4/4 | Complete | 2026-03-20 |
 | 55. Mini-Games and Content Polish | v11.0 | 5/5 | Complete | 2026-03-21 |
-| 56. Bug Fixes & Redux Foundation | v12.0 | 0/2 | Not started | - |
+| 56. Bug Fixes & Redux Foundation | v12.0 | 1/2 | In progress | - |
 | 57. Skill Tree Infrastructure | v12.0 | 0/3 | Not started | - |
 | 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 0/2 | Not started | - |
 | 59. Adaptive Difficulty Engine | v12.0 | 0/2 | Not started | - |
@@ -400,4 +400,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-22 — v12.0 roadmap added (Phases 56-64, 21 requirements mapped)*
+*Last updated: 2026-03-22 — Phase 56 Plan 01 complete (FIX-01 + FIX-02)*

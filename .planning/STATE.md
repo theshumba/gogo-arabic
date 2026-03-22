@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
-status: ready_to_plan
-stopped_at: Roadmap created — Phase 56 ready to plan
-last_updated: "2026-03-22"
+status: in_progress
+stopped_at: Phase 56 Plan 01 complete — grammar achievement wiring (FIX-01) + v11 migration (FIX-02)
+last_updated: "2026-03-22T12:28:00Z"
 progress:
   total_phases: 9
   completed_phases: 0
-  total_plans: 23
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # Project State
@@ -23,12 +23,8 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 ## Current Position
 
-Phase: 56 of 64 (Bug Fixes & Redux Foundation)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-03-22 — v12.0 roadmap created, 21 requirements mapped across 9 phases
-
-Progress: [░░░░░░░░░] 0% (v12.0)
+Phase: 56 (bug-fixes-redux-foundation) — EXECUTING
+Plan: 2 of 2 (Plan 01 complete)
 
 ### Shipped Milestones
 
@@ -74,6 +70,9 @@ Progress: [░░░░░░░░░] 0% (v12.0)
 | Phase 59 (adaptive) before Phase 60 (quiz types) | New quiz types must inherit adaptive behavior from day one |
 | Phase 61 depends on both Phase 58 and 59 | Grammar content for CAT questions + adaptive engine for item selection |
 | Phase 63 last before display layer | All achievement event sources must exist before conditions are authored |
+| state.grammar accessed directly in isAchievementMet (not destructured) | Keeps diff minimal per plan spec; consistent with surgical change approach |
+| migrations object exported separately from migrate | Enables unit tests to instantiate single-migration runners via createMigrate({ N: migrations[N] }) |
+| Migration tests use currentVersion=N (not N-1) | redux-persist createMigrate skips migration when inboundVersion === currentVersion; must pass target version |
 
 ### Blockers/Concerns
 
@@ -88,6 +87,6 @@ Progress: [░░░░░░░░░] 0% (v12.0)
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Roadmap created for v12.0 — 9 phases (56-64), 21 requirements mapped, 23 plans estimated
-Resume file: None — ready to plan Phase 56
-Next plan: `/gsd:plan-phase 56`
+Stopped at: Phase 56 Plan 01 complete — FIX-01 (grammar achievement wiring) + FIX-02 (v11 migration)
+Resume file: .planning/phases/56-bug-fixes-redux-foundation/56-01-SUMMARY.md
+Next plan: Phase 56 Plan 02 (placementSlice + cefrProgressSlice)
