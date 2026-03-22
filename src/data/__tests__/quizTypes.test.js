@@ -18,15 +18,21 @@ describe('QUIZ_TYPE_REGISTRY', () => {
     });
   });
 
-  it('remaining Phase 60 stubs have minLevel: 999 (not yet active)', () => {
-    // GrammarFill renderer shipped in Phase 60-01 — its minLevel was lowered to 4
-    const phase60Stubs = ['ClozePassage', 'WordOrder', 'DialectIdentify', 'RootExpand', 'CulturalContext'];
-    phase60Stubs.forEach(t => {
-      expect(QUIZ_TYPE_REGISTRY[t]).toBeDefined();
+  it('active Phase 60 types (GrammarFill, WordOrder, ClozePassage) have real minLevel values', () => {
+    expect(QUIZ_TYPE_REGISTRY['GrammarFill'].minLevel).toBe(4);
+    expect(QUIZ_TYPE_REGISTRY['GrammarFill'].cefrMin).toBe('A2');
+    expect(QUIZ_TYPE_REGISTRY['WordOrder'].minLevel).toBe(5);
+    expect(QUIZ_TYPE_REGISTRY['WordOrder'].cefrMin).toBe('B1');
+    expect(QUIZ_TYPE_REGISTRY['ClozePassage'].minLevel).toBe(4);
+    expect(QUIZ_TYPE_REGISTRY['ClozePassage'].cefrMin).toBe('A2');
+  });
+
+  it('deferred types (DialectIdentify, RootExpand, CulturalContext) remain at minLevel:999 and cefrMin:B2', () => {
+    const deferred = ['DialectIdentify', 'RootExpand', 'CulturalContext'];
+    deferred.forEach(t => {
       expect(QUIZ_TYPE_REGISTRY[t].minLevel).toBe(999);
+      expect(QUIZ_TYPE_REGISTRY[t].cefrMin).toBe('B2');
     });
-    // GrammarFill is now active
-    expect(QUIZ_TYPE_REGISTRY['GrammarFill'].minLevel).toBeLessThan(999);
   });
 
   it('every entry has label, cluster, minLevel, and cefrMin fields', () => {
@@ -96,15 +102,49 @@ describe('selectQuizTypeForPlayer', () => {
     expect(typesWithCefrMin.length).toBeGreaterThan(0);
   });
 
-  it('never returns remaining Phase 60 stubs (minLevel 999)', () => {
-    // GrammarFill renderer shipped — only the 5 remaining stubs are still gated
-    const phase60Stubs = ['ClozePassage', 'WordOrder', 'DialectIdentify', 'RootExpand', 'CulturalContext'];
+  it('never returns deferred types (minLevel 999)', () => {
+    const deferred = ['DialectIdentify', 'RootExpand', 'CulturalContext'];
     const results = Array.from({ length: 200 }, () =>
       selectQuizTypeForPlayer({}, 50, 'B2')
     );
     results.forEach(t => {
-      expect(phase60Stubs).not.toContain(t);
+      expect(deferred).not.toContain(t);
     });
+  });
+
+  it('GrammarFill appears in rotation for A2 player at level 4+', () => {
+    const results = Array.from({ length: 300 }, () =>
+      selectQuizTypeForPlayer({}, 4, 'A2')
+    );
+    expect(results).toContain('GrammarFill');
+  });
+
+  it('GrammarFill does not appear for A1 player', () => {
+    const results = Array.from({ length: 200 }, () =>
+      selectQuizTypeForPlayer({}, 10, 'A1')
+    );
+    expect(results).not.toContain('GrammarFill');
+  });
+
+  it('WordOrder appears in rotation for B1 player at level 5+', () => {
+    const results = Array.from({ length: 300 }, () =>
+      selectQuizTypeForPlayer({}, 5, 'B1')
+    );
+    expect(results).toContain('WordOrder');
+  });
+
+  it('WordOrder does not appear for A2 player', () => {
+    const results = Array.from({ length: 300 }, () =>
+      selectQuizTypeForPlayer({}, 10, 'A2')
+    );
+    expect(results).not.toContain('WordOrder');
+  });
+
+  it('ClozePassage appears in rotation for A2 player at level 4+', () => {
+    const results = Array.from({ length: 300 }, () =>
+      selectQuizTypeForPlayer({}, 4, 'A2')
+    );
+    expect(results).toContain('ClozePassage');
   });
 
   it('biases toward grammar types when grammar cluster is weak', () => {

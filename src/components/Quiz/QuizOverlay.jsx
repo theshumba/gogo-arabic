@@ -19,6 +19,8 @@ import CategorySort from './CategorySort.jsx';
 import Transliteration from './Transliteration.jsx';
 import ConjugationPick from './ConjugationPick.jsx';
 import GrammarFill from './GrammarFill.jsx';
+import WordOrder from './WordOrder.jsx';
+import ClozePassage from './ClozePassage.jsx';
 import PictureWord from './PictureWord.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
@@ -100,6 +102,12 @@ export default function QuizOverlay() {
         isCorrect = true; // feedback from hook is authoritative
       } else if (quiz.quizType === 'GrammarFill') {
         isCorrect = quiz.choices.find((c) => c.correct)?.value === userAnswer;
+      } else if (quiz.quizType === 'WordOrder') {
+        const expected = (word.exampleSentence?.arabic || word.arabic)
+          .split(/\s+/).filter(Boolean).join(' ');
+        isCorrect = normalize(userAnswer) === normalize(expected);
+      } else if (quiz.quizType === 'ClozePassage') {
+        isCorrect = normalize(userAnswer) === normalize(word.arabic);
       } else {
         isCorrect = normalize(userAnswer) === normalize(word.arabic);
       }
@@ -399,6 +407,24 @@ export default function QuizOverlay() {
 
         {quiz.quizType === 'GrammarFill' && (
           <GrammarFill
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'WordOrder' && (
+          <WordOrder
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'ClozePassage' && (
+          <ClozePassage
             word={quiz.currentWord}
             options={quiz.choices}
             feedback={combinedFeedback}

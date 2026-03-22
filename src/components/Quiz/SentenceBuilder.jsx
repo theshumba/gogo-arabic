@@ -110,7 +110,9 @@ export default function SentenceBuilder({ word, options, onAnswer, feedback }) {
   const handleTileClick = (tile, idx) => {
     if (feedback) return;
     if (usedIndices.includes(idx)) return;
-    const newPlaced = [...placed, { tile, idx }];
+    // tile may be a string or an object with .value; normalize to string
+    const tileStr = (tile && typeof tile === 'object') ? tile.value : tile;
+    const newPlaced = [...placed, { tile: tileStr, idx }];
     setPlaced(newPlaced);
     setUsedIndices((prev) => [...prev, idx]);
   };
@@ -156,6 +158,8 @@ export default function SentenceBuilder({ word, options, onAnswer, feedback }) {
       <div style={styles.tileBank}>
         {tiles.map((tile, idx) => {
           const isUsed = usedIndices.includes(idx);
+          // tile may be a string or object with .label
+          const tileLabel = (tile && typeof tile === 'object') ? tile.label : tile;
           return (
             <button
               key={idx}
@@ -163,7 +167,7 @@ export default function SentenceBuilder({ word, options, onAnswer, feedback }) {
               onClick={() => handleTileClick(tile, idx)}
               disabled={!!feedback || isUsed}
             >
-              {formatArabic(tile)}
+              {formatArabic(tileLabel)}
             </button>
           );
         })}
