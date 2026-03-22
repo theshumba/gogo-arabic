@@ -24,7 +24,7 @@
 
 import { createMigrate } from 'redux-persist';
 
-export const CURRENT_VERSION = 10;
+export const CURRENT_VERSION = 11;
 
 /**
  * Migration definitions
@@ -284,9 +284,82 @@ const migrations = {
     }
     return state;
   },
+
+  // Version 11: FIX-02 grammar slug migration + placementSlice + cefrProgressSlice init (Phase 56)
+  11: (state) => {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] Starting v10 -> v11: placement + cefr slices + grammar slug fix');
+    }
+
+    // FIX-02: Remap any numeric lesson IDs in grammar.completedLessons to slugs.
+    // 42 entries matching grammar.js lesson order exactly.
+    const LESSON_SLUGS = [
+      'al-definite', 'noun-adjective-agreement', 'personal-pronouns', 'possessive-suffixes',
+      'basic-verb-conjugation', 'question-words', 'prepositions', 'numbers-1-10',
+      'basic-adjectives', 'demonstratives', 'possessive-pronouns', 'basic-negation',
+      'present-tense', 'future-tense', 'dual-form', 'sound-plural', 'broken-plural',
+      'comparative', 'active-participle', 'verb-forms-2-5', 'verb-forms-6-10',
+      'relative-clauses', 'passive-voice', 'verbal-nouns', 'object-pronouns',
+      'adverbs-time-place', 'conjunctions', 'exception-illa', 'emphasis-inna', 'hal-clause',
+      'tamyiz', 'indirect-object', 'complex-conditionals', 'oath-expressions', 'exclamation',
+      'wonder-verb', 'praise-blame', 'absolute-object', 'mafuul-liajlih', 'mafuul-maah',
+      'literary-particles', 'formal-letter',
+    ];
+
+    // Only apply grammar fix to configs that have a grammar key (root persist config)
+    if (state?.grammar?.completedLessons) {
+      state.grammar.completedLessons = state.grammar.completedLessons.map((id) => {
+        if (typeof id === 'number' || (typeof id === 'string' && /^\d+$/.test(id))) {
+          return LESSON_SLUGS[parseInt(id, 10)] || id;
+        }
+        return id;
+      });
+
+      // Also remap lessonScores keys (object keyed by lessonId)
+      if (state.grammar.lessonScores) {
+        const remapped = {};
+        for (const [key, value] of Object.entries(state.grammar.lessonScores)) {
+          if (/^\d+$/.test(key)) {
+            const slug = LESSON_SLUGS[parseInt(key, 10)];
+            if (slug) remapped[slug] = value;
+          } else {
+            remapped[key] = value;
+          }
+        }
+        state.grammar.lessonScores = remapped;
+      }
+    }
+
+    // Initialize placementSlice if missing
+    if (state && !state.placement) {
+      state.placement = {
+        hasCompleted: false,
+        assignedLevel: null,
+        rawScore: null,
+        completedAt: null,
+      };
+    }
+
+    // Initialize cefrProgressSlice if missing
+    if (state && !state.cefrProgress) {
+      state.cefrProgress = {
+        currentLevel: null,
+        levelHistory: [],
+        lastAssessedAt: null,
+      };
+    }
+
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] v10 -> v11 complete');
+    }
+    return state;
+  },
 };
 
 /**
  * Create redux-persist migration function
  */
 export const migrate = createMigrate(migrations, { debug: false });
+export { migrations };
