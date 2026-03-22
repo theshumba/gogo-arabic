@@ -20,7 +20,7 @@ import { selectGameTime } from '../../store/slices/timeSlice.js';
  *   When omitted, falls back to Redux player.currentZone.
  * @returns {Object} Context object for ActionSetExecutor requirement evaluation:
  *   questStatuses, storyFlags, vocabMastery, playerLevel, inventory,
- *   currentHour, currentZone, factionScores
+ *   currentHour, currentZone, factionScores, skillTreeUnlocked
  */
 export function buildActionContext(zoneOverride) {
   const state = store.getState();
@@ -33,5 +33,6 @@ export function buildActionContext(zoneOverride) {
     currentHour: selectGameTime(state).hour,
     currentZone: zoneOverride || state.player?.currentZone || 'oasis_village',
     factionScores: state.faction?.alignment || {},
+    skillTreeUnlocked: state.skillTree?.unlockedNodes || {},
   };
 }

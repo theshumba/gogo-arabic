@@ -83,6 +83,12 @@ function evaluateRequirement(req, context) {
       return score >= (req.minScore ?? 0);
     }
 
+    case 'skill_tree_level': {
+      // req = { type: 'skill_tree_level', treeId: 'grammar', minNodes: 3 }
+      const unlockedCount = context.skillTreeUnlocked?.[req.treeId]?.length ?? 0;
+      return unlockedCount >= (req.minNodes ?? 1);
+    }
+
     default:
       // Unknown requirement type — fail safe (do not match)
       return false;
@@ -110,7 +116,8 @@ function evaluateRequirement(req, context) {
  *   @param {string[]} context.inventory      - Array of item id strings
  *   @param {number}   context.currentHour    - Current game hour (0-23)
  *   @param {string}   context.currentZone    - Current zone identifier
- *   @param {Object}   context.factionScores  - Map of factionId -> alignment score (0-100)
+ *   @param {Object}   context.factionScores      - Map of factionId -> alignment score (0-100)
+ *   @param {Object}   context.skillTreeUnlocked  - Map of treeId -> string[] of unlocked nodeIds
  * @returns {Object|null} The first matching action set, or null if none matched
  */
 export function evaluateActionSets(actionSets, context) {
