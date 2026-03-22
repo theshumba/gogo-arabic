@@ -184,6 +184,21 @@ export function useQuiz() {
       ]);
     }
 
+    // WordOrder: tiles are the words of the example sentence (or word itself)
+    if (type === 'WordOrder') {
+      const sentence = word.exampleSentence?.arabic || word.arabic;
+      const tiles = sentence.split(/\s+/).map((t) => t.trim()).filter(Boolean);
+      return tiles.map((t, i) => ({ label: t, value: t, correct: i === 0, tile: true }));
+    }
+
+    // ClozePassage: Arabic choices (same as fill-blank)
+    if (type === 'ClozePassage') {
+      return shuffle([
+        { label: word.arabic, value: word.arabic, correct: true },
+        ...distractors.map((d) => ({ label: d.arabic, value: d.arabic, correct: false })),
+      ]);
+    }
+
     return [];
   }
 
@@ -293,6 +308,12 @@ export function useQuiz() {
       // Grade against the correct conjugated form in choices, NOT word.arabic
       const correctForm = quizState.choices.find((c) => c.correct)?.value || '';
       correct = normalize(userAnswer) === normalize(correctForm);
+    } else if (quizState.quizType === 'WordOrder') {
+      const expectedSentence = (word.exampleSentence?.arabic || word.arabic)
+        .split(/\s+/).map((t) => t.trim()).filter(Boolean).join(' ');
+      correct = normalize(userAnswer) === normalize(expectedSentence);
+    } else if (quizState.quizType === 'ClozePassage') {
+      correct = normalize(userAnswer) === normalize(word.arabic);
     } else {
       correct = normalize(userAnswer) === normalize(word.arabic);
     }
@@ -339,6 +360,10 @@ export function useQuiz() {
       correctAnswer = word.exampleSentence?.arabic || word.arabic;
     } else if (quizState.quizType === 'GrammarFill') {
       correctAnswer = quizState.choices.find((c) => c.correct)?.value || word.arabic;
+    } else if (quizState.quizType === 'WordOrder') {
+      correctAnswer = word.exampleSentence?.arabic || word.arabic;
+    } else if (quizState.quizType === 'ClozePassage') {
+      correctAnswer = word.arabic;
     } else {
       correctAnswer = word.arabic;
     }
