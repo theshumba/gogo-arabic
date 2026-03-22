@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Phase 56 Plan 01 complete — grammar achievement wiring (FIX-01) + v11 migration (FIX-02)
-last_updated: "2026-03-22T12:28:00Z"
+stopped_at: Phase 56 Plan 02 complete — placementSlice + cefrProgressSlice + learningProgressMiddleware scaffold
+last_updated: "2026-03-22T12:32:27Z"
 progress:
   total_phases: 9
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -19,12 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 56 — bug-fixes-redux-foundation
+**Current focus:** Phase 57 — placement-test (next)
 
 ## Current Position
 
-Phase: 56 (bug-fixes-redux-foundation) — EXECUTING
-Plan: 2 of 2 (Plan 01 complete)
+Phase: 56 (bug-fixes-redux-foundation) — COMPLETE
+Plan: 2 of 2 (both plans complete)
+
+Progress: █░░░░░░░░ (1/9 phases complete)
 
 ### Shipped Milestones
 
@@ -73,6 +75,8 @@ Plan: 2 of 2 (Plan 01 complete)
 | state.grammar accessed directly in isAchievementMet (not destructured) | Keeps diff minimal per plan spec; consistent with surgical change approach |
 | migrations object exported separately from migrate | Enables unit tests to instantiate single-migration runners via createMigrate({ N: migrations[N] }) |
 | Migration tests use currentVersion=N (not N-1) | redux-persist createMigrate skips migration when inboundVersion === currentVersion; must pass target version |
+| placement + cefrProgress use localStorage (not IndexedDB) | Write-once-per-session slices are lightweight; IndexedDB tier reserved for heavy data (vocabulary, battle, magic, inventory, crafting) |
+| learningProgressMiddleware is last in .concat() chain | Processes learning events after all reward/state middleware; ready for Phases 57-59 population |
 
 ### Blockers/Concerns
 
@@ -87,6 +91,6 @@ Plan: 2 of 2 (Plan 01 complete)
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 56 Plan 01 complete — FIX-01 (grammar achievement wiring) + FIX-02 (v11 migration)
-Resume file: .planning/phases/56-bug-fixes-redux-foundation/56-01-SUMMARY.md
-Next plan: Phase 56 Plan 02 (placementSlice + cefrProgressSlice)
+Stopped at: Phase 56 Plan 02 complete — placementSlice + cefrProgressSlice + learningProgressMiddleware scaffold registered in store.js
+Resume file: .planning/phases/56-bug-fixes-redux-foundation/56-02-SUMMARY.md
+Next plan: Phase 57 (placement-test) — /gsd:plan-phase 57

@@ -198,7 +198,7 @@ Plans:
 
 Full phase details: [milestones/v12.0-ROADMAP.md](milestones/v12.0-ROADMAP.md)
 
-#### Phase 56: Bug Fixes & Redux Foundation
+#### Phase 56: Bug Fixes & Redux Foundation — COMPLETE (2026-03-22)
 **Goal**: Two pre-existing bugs are fixed and every downstream v12.0 system has the Redux foundation it needs — no new feature can break because of missing middleware wiring or colliding lesson IDs
 **Depends on**: Phase 55 (v11.0 complete)
 **Requirements**: FIX-01, FIX-02
@@ -210,7 +210,7 @@ Full phase details: [milestones/v12.0-ROADMAP.md](milestones/v12.0-ROADMAP.md)
 
 Plans:
 - [x] 56-01: achievementMiddleware grammar_lessons wiring + grammar lesson slug ID migration (FIX-01, FIX-02)
-- [ ] 56-02: placementSlice + cefrProgressSlice registration + IndexedDB CURRENT_VERSION bump + learningProgressMiddleware scaffold
+- [x] 56-02: placementSlice + cefrProgressSlice registration + localStorage persistence + learningProgressMiddleware scaffold — 2026-03-22
 
 #### Phase 57: Skill Tree Infrastructure
 **Goal**: Six skill trees reflect everything the player has already learned and gate all future v12.0 content — existing players see their mastery represented, new players earn their first unlocks within minutes
