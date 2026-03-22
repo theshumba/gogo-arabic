@@ -3,6 +3,7 @@ import { grammarLessons } from '../../data/grammar.js';
 
 const initialState = {
   completedLessons: [], // array of lesson IDs
+  unlockedLessons: ['al-definite'], // First lesson always unlocked
   lessonScores: {}, // { lessonId: { exerciseScore, quizScore, attempts, lastAttempt } }
   currentLessonId: null,
 };
@@ -87,8 +88,23 @@ const grammarSlice = createSlice({
 
     resetGrammarProgress(state) {
       state.completedLessons = [];
+      state.unlockedLessons = ['al-definite'];
       state.lessonScores = {};
       state.currentLessonId = null;
+    },
+
+    unlockNextLesson(state, action) {
+      // payload: { completedLessonId }
+      const completedLesson = grammarLessons.find(l => l.id === action.payload.completedLessonId);
+      if (!completedLesson) return;
+
+      // Find the next lesson by order (across all categories)
+      const sortedLessons = [...grammarLessons].sort((a, b) => a.order - b.order);
+      const nextLesson = sortedLessons.find(l => l.order > completedLesson.order);
+
+      if (nextLesson && !state.unlockedLessons.includes(nextLesson.id)) {
+        state.unlockedLessons.push(nextLesson.id);
+      }
     },
   },
 });
@@ -100,6 +116,7 @@ export const {
   recordQuizProgress,
   clearCurrentLesson,
   resetGrammarProgress,
+  unlockNextLesson,
 } = grammarSlice.actions;
 
 // ========== SELECTORS ==========
@@ -107,6 +124,10 @@ export const {
 export const selectCompletedLessons = (state) => state.grammar.completedLessons;
 export const selectLessonScores = (state) => state.grammar.lessonScores;
 export const selectCurrentLessonId = (state) => state.grammar.currentLessonId;
+export const selectUnlockedLessons = (state) => state.grammar.unlockedLessons;
+
+export const selectIsLessonUnlocked = (lessonId) => (state) =>
+  state.grammar.unlockedLessons.includes(lessonId);
 
 // Calculate overall grammar progress (percentage)
 export const selectGrammarProgress = createSelector(
@@ -130,8 +151,8 @@ export const selectIsLessonCompleted = (lessonId) => (state) => {
 
 // Get lessons by category with completion status
 export const selectLessonsByCategory = createSelector(
-  [selectCompletedLessons, selectLessonScores],
-  (completedLessons, lessonScores) => {
+  [selectCompletedLessons, selectLessonScores, selectUnlockedLessons],
+  (completedLessons, lessonScores, unlockedLessons) => {
     const lessonsByCategory = {};
 
     grammarLessons.forEach((lesson) => {
@@ -142,6 +163,7 @@ export const selectLessonsByCategory = createSelector(
       lessonsByCategory[lesson.category].push({
         ...lesson,
         isCompleted: completedLessons.includes(lesson.id),
+        isUnlocked: unlockedLessons.includes(lesson.id),
         score: lessonScores[lesson.id] || null,
       });
     });

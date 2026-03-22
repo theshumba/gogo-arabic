@@ -6,12 +6,16 @@ import grammarReducer, {
   recordQuizProgress,
   clearCurrentLesson,
   resetGrammarProgress,
+  unlockNextLesson,
   selectCompletedLessons,
   selectLessonScores,
   selectCurrentLessonId,
   selectGrammarProgress,
   selectLessonScore,
   selectIsLessonCompleted,
+  selectUnlockedLessons,
+  selectIsLessonUnlocked,
+  selectLessonsByCategory,
 } from '../slices/grammarSlice.js';
 
 // Mock the grammar lessons data
@@ -19,8 +23,12 @@ vi.mock('../../data/grammar.js', () => ({
   grammarLessons: [
     { id: 'lesson1', category: 'nouns', order: 1 },
     { id: 'lesson2', category: 'nouns', order: 2 },
-    { id: 'lesson3', category: 'verbs', order: 1 },
-    { id: 'lesson4', category: 'verbs', order: 2 },
+    { id: 'lesson3', category: 'verbs', order: 3 },
+    { id: 'lesson4', category: 'verbs', order: 4 },
+  ],
+  grammarCategories: [
+    { id: 'nouns', name: 'Nouns' },
+    { id: 'verbs', name: 'Verbs' },
   ],
 }));
 
@@ -35,9 +43,14 @@ describe('grammarSlice', () => {
     it('should return the initial state', () => {
       expect(initialState).toEqual({
         completedLessons: [],
+        unlockedLessons: ['al-definite'],
         lessonScores: {},
         currentLessonId: null,
       });
+    });
+
+    it('should include al-definite in unlockedLessons', () => {
+      expect(initialState.unlockedLessons).toEqual(['al-definite']);
     });
   });
 
@@ -263,6 +276,7 @@ describe('grammarSlice', () => {
     it('should reset all grammar progress', () => {
       const startState = {
         completedLessons: ['lesson1', 'lesson2'],
+        unlockedLessons: ['lesson1', 'lesson2', 'lesson3'],
         lessonScores: {
           lesson1: { exerciseScore: 85, quizScore: 90, attempts: 2 },
           lesson2: { exerciseScore: 80, quizScore: 85, attempts: 1 },
@@ -274,12 +288,75 @@ describe('grammarSlice', () => {
 
       expect(state).toEqual(initialState);
     });
+
+    it('should reset unlockedLessons to [\'al-definite\']', () => {
+      const startState = {
+        completedLessons: ['lesson1'],
+        unlockedLessons: ['lesson1', 'lesson2'],
+        lessonScores: {},
+        currentLessonId: null,
+      };
+
+      const state = grammarReducer(startState, resetGrammarProgress());
+
+      expect(state.unlockedLessons).toEqual(['al-definite']);
+    });
+  });
+
+  describe('unlockNextLesson', () => {
+    it('should unlock the next lesson by order', () => {
+      const startState = {
+        ...initialState,
+        unlockedLessons: ['lesson1'],
+        completedLessons: ['lesson1'],
+      };
+      const state = grammarReducer(startState, unlockNextLesson({ completedLessonId: 'lesson1' }));
+      expect(state.unlockedLessons).toContain('lesson2');
+    });
+
+    it('should not duplicate an already-unlocked lesson', () => {
+      const startState = {
+        ...initialState,
+        unlockedLessons: ['lesson1', 'lesson2'],
+        completedLessons: ['lesson1'],
+      };
+      const state = grammarReducer(startState, unlockNextLesson({ completedLessonId: 'lesson1' }));
+      expect(state.unlockedLessons.filter(id => id === 'lesson2')).toHaveLength(1);
+    });
+
+    it('should handle completing the last lesson gracefully', () => {
+      const startState = {
+        ...initialState,
+        unlockedLessons: ['lesson1', 'lesson2', 'lesson3', 'lesson4'],
+        completedLessons: ['lesson1', 'lesson2', 'lesson3', 'lesson4'],
+      };
+      const state = grammarReducer(startState, unlockNextLesson({ completedLessonId: 'lesson4' }));
+      // No crash, no new lesson added
+      expect(state.unlockedLessons).toHaveLength(4);
+    });
+
+    it('should handle unknown lesson ID gracefully', () => {
+      const state = grammarReducer(initialState, unlockNextLesson({ completedLessonId: 'nonexistent' }));
+      expect(state.unlockedLessons).toEqual(['al-definite']);
+    });
+
+    it('should unlock across categories (lesson1 nouns → lesson2 nouns by order)', () => {
+      const startState = {
+        ...initialState,
+        unlockedLessons: ['lesson1'],
+        completedLessons: ['lesson1'],
+      };
+      const state = grammarReducer(startState, unlockNextLesson({ completedLessonId: 'lesson1' }));
+      // lesson2 has order 2 (next after order 1), regardless of category
+      expect(state.unlockedLessons).toContain('lesson2');
+    });
   });
 
   describe('selectors', () => {
     const mockState = {
       grammar: {
         completedLessons: ['lesson1', 'lesson2'],
+        unlockedLessons: ['lesson1', 'lesson2'],
         lessonScores: {
           lesson1: {
             exerciseScore: 85,
@@ -342,6 +419,41 @@ describe('grammarSlice', () => {
     it('selectIsLessonCompleted should return false for incomplete lesson', () => {
       const isCompleted = selectIsLessonCompleted('lesson3')(mockState);
       expect(isCompleted).toBe(false);
+    });
+
+    it('selectLessonsByCategory should annotate isUnlocked on lesson objects', () => {
+      const lessonsByCategory = selectLessonsByCategory(mockState);
+      const nounLessons = lessonsByCategory['nouns'];
+      expect(nounLessons).toBeDefined();
+      const lesson1 = nounLessons.find(l => l.id === 'lesson1');
+      expect(lesson1).toBeDefined();
+      expect(lesson1.isUnlocked).toBe(true);
+    });
+
+    it('selectLessonsByCategory should mark locked lessons as isUnlocked: false', () => {
+      const lessonsByCategory = selectLessonsByCategory(mockState);
+      const verbLessons = lessonsByCategory['verbs'];
+      expect(verbLessons).toBeDefined();
+      const lesson3 = verbLessons.find(l => l.id === 'lesson3');
+      expect(lesson3).toBeDefined();
+      expect(lesson3.isUnlocked).toBe(false);
+    });
+  });
+
+  describe('selectors - unlockedLessons', () => {
+    it('selectUnlockedLessons returns unlockedLessons array', () => {
+      const mockState = { grammar: { ...initialState, unlockedLessons: ['lesson1', 'lesson2'] } };
+      expect(selectUnlockedLessons(mockState)).toEqual(['lesson1', 'lesson2']);
+    });
+
+    it('selectIsLessonUnlocked returns true for unlocked lesson', () => {
+      const mockState = { grammar: { ...initialState, unlockedLessons: ['lesson1'] } };
+      expect(selectIsLessonUnlocked('lesson1')(mockState)).toBe(true);
+    });
+
+    it('selectIsLessonUnlocked returns false for locked lesson', () => {
+      const mockState = { grammar: { ...initialState, unlockedLessons: ['lesson1'] } };
+      expect(selectIsLessonUnlocked('lesson3')(mockState)).toBe(false);
     });
   });
 });
