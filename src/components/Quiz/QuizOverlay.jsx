@@ -18,6 +18,7 @@ import FillInBlank from './FillInBlank.jsx';
 import CategorySort from './CategorySort.jsx';
 import Transliteration from './Transliteration.jsx';
 import ConjugationPick from './ConjugationPick.jsx';
+import GrammarFill from './GrammarFill.jsx';
 import PictureWord from './PictureWord.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
@@ -97,6 +98,8 @@ export default function QuizOverlay() {
       } else if (quiz.quizType === 'category-sort') {
         // Optimistic: trust the hook answer result — SFX handled after answer() resolves
         isCorrect = true; // feedback from hook is authoritative
+      } else if (quiz.quizType === 'GrammarFill') {
+        isCorrect = quiz.choices.find((c) => c.correct)?.value === userAnswer;
       } else {
         isCorrect = normalize(userAnswer) === normalize(word.arabic);
       }
@@ -387,6 +390,15 @@ export default function QuizOverlay() {
 
         {quiz.quizType === 'conjugation' && (
           <ConjugationPick
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'GrammarFill' && (
+          <GrammarFill
             word={quiz.currentWord}
             options={quiz.choices}
             feedback={combinedFeedback}
