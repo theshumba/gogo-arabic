@@ -170,4 +170,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-22 after Phase 57 (Skill Tree Infrastructure) complete — 6 trees x 30 nodes, XP routing for 6 event types, initializeSkillTree for v11 saves, reward dispatch (spell/zone/dialogue/NPC), SkillTreeView with XP bars + frontier highlights + lazy-load*
+*Last updated: 2026-03-22 after Phase 58 (Grammar A1-A2 + Lesson Wiring) complete — 20 A1-A2 lessons with 12 exercise types, 9 new ExerciseStage renderers, auto-unlock lesson chain, GrammarModule Locked/New/Completed badges, migration 12*
