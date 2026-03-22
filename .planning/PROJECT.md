@@ -68,6 +68,21 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
+## Current Milestone: v12.0 Learning Systems
+
+**Goal:** Build the teaching systems that make Gogo Arabic a structured Arabic course inside an RPG — 6 skill trees, 50 grammar lessons, 18 quiz types, adaptive difficulty, diagnostic placement, and 250+ achievements that reward mastery.
+
+**Target features:**
+- 6 skill trees (Reading, Writing, Listening, Conversation, Grammar, Culture) with unlockable node progression
+- Grammar expansion from 7 to 50 lessons covering A1-B2 with 12 exercise types per lesson
+- Quiz expansion from 6 to 18 quiz types with adaptive difficulty engine
+- Diagnostic placement test to start players at their correct CEFR level
+- CEFR progress reports showing level advancement over time
+- Achievement expansion from 44 to 250+ achievements across all categories
+- Shareable "I learned X Arabic words" social cards
+
+**Previous milestone:** v11.0 Deep Systems & Content Engine (Phases 50-55, shipped 2026-03-21)
+
 ## Shipped: v11.0 Deep Systems & Content Engine (2026-03-21)
 
 **Delivered:** 6 phases (50-55), 24 plans, 83 commits across 2 days. All under-the-hood systems that make the game feel alive.
@@ -155,4 +170,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-21 after v11.0 milestone shipped*
+*Last updated: 2026-03-22 after v12.0 milestone started*
