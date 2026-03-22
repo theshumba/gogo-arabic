@@ -225,7 +225,7 @@ Plans:
 Plans:
 - [x] 57-01: skillTrees.js expanded to 30 nodes per tree + initializeSkillTree(existingPlayerState) + learningProgressMiddleware XP routing (SKILL-01, SKILL-02)
 - [x] 57-02: Skill tree node reward types: unlock_spell, unlock_dialogue, unlock_zone, unlock_npc_branch + ActionSetExecutor skill_tree_level condition (SKILL-03)
-- [ ] 57-03: SkillTreeView.jsx — one tree at a time, progressive disclosure, XP bars, next-node highlights, lazy-loaded (SKILL-04)
+- [x] 57-03: SkillTreeView.jsx — one tree at a time, progressive disclosure, XP bars, next-node highlights, lazy-loaded (SKILL-04) — 2026-03-22
 
 #### Phase 58: Grammar A1-A2 + Lesson Wiring
 **Goal**: Players who open the Grammar section encounter a meaningful A1-A2 curriculum with real exercise variety, and every completed lesson awards Grammar skill tree XP and auto-unlocks the next lesson

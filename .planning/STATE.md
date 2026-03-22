@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Phase 57 Plan 02 complete — skill tree reward dispatch wired, skill_tree_level condition added to ActionSetExecutor, skillTreeUnlocked in actionContext
-last_updated: "2026-03-22T13:50:00Z"
+stopped_at: Phase 57 Plan 03 complete — SkillTreeView XP progress bar + frontier highlighting + collapsed locked nodes + lazy-load via React.lazy
+last_updated: "2026-03-22T14:07:00Z"
 progress:
   total_phases: 9
   completed_phases: 1
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 57 — skill-tree-infrastructure
+**Current focus:** Phase 57 complete — skill-tree-infrastructure shipped
 
 ## Current Position
 
-Phase: 57 (skill-tree-infrastructure) — IN PROGRESS
-Plan: 3 of 3 (57-02 complete — 57-03 remaining)
+Phase: 57 (skill-tree-infrastructure) — COMPLETE
+Plan: 3 of 3 (57-03 complete — phase done)
 
-Progress: ███░░░░░░░ (4/5 plans complete across v12.0)
+Progress: █████░░░░░ (5/5 plans complete across v12.0 so far)
 
 ### Shipped Milestones
 
@@ -44,7 +44,7 @@ Progress: ███░░░░░░░ (4/5 plans complete across v12.0)
 | v10.0 Onboarding | 47 | 3 | 2026-03-19 |
 | v11.0 Deep Systems | 50-55 | 25 | 2026-03-21 |
 
-**Cumulative:** 55 phases, 160+ plans, 11 milestones
+**Cumulative:** 55 phases, 163+ plans, 11 milestones
 
 ## Accumulated Context
 
@@ -64,6 +64,8 @@ Progress: ███░░░░░░░ (4/5 plans complete across v12.0)
 - Grammar lesson ID migration: lesson_0 → lesson_verb_present etc. — must complete before any new lesson is authored
 - poetry.completedBattles (not poetry.history) — confirmed from poetrySlice.js
 - state.quests (not state.quest) — confirmed from store.js rootReducer key mapping
+- SkillTreeView (Phase 57-03) is lazy-loaded — code-split chunk, only loaded when player opens skill tree menu
+- Frontier nodes (next 1-2 reachable) have pulsing gold highlight; deeply locked nodes collapsed into summary count
 
 ### Decisions
 
@@ -85,6 +87,7 @@ Progress: ███░░░░░░░ (4/5 plans complete across v12.0)
 | unlock_zone/dialogue/npc_branch use distinct setFlag key prefixes | zone_access_/dialogue_/npc_branch_ prevent namespace collisions in worldState.flags |
 | unlock_spell dispatches discoverRoot with element: 'earth' | Element is cosmetic/not skill-tree-gating-critical; 'earth' is a valid ROOT_ELEMENTS value |
 | skillTreeUnlocked exposed as full unlockedNodes map in actionContext | Avoids per-tree selector calls at context-build time; ActionSetExecutor reads [treeId].length |
+| frontierNodeIds limited to slice(0,2) | Plan specifies 1-2 reachable nodes; keeps UI focused on immediate goals |
 
 ### Blockers/Concerns
 
@@ -99,6 +102,6 @@ Progress: ███░░░░░░░ (4/5 plans complete across v12.0)
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 57 Plan 02 complete — reward dispatch wired, skill_tree_level condition added, skillTreeUnlocked in actionContext
-Resume file: .planning/phases/57-skill-tree-infrastructure/57-02-SUMMARY.md
-Next plan: Phase 57 Plan 03 — /gsd:execute-phase (57-03)
+Stopped at: Phase 57 Plan 03 complete — SkillTreeView UI polish + lazy-loading (SKILL-04 shipped)
+Resume file: .planning/phases/57-skill-tree-infrastructure/57-03-SUMMARY.md
+Next plan: Phase 58 — /gsd:plan-phase 58
