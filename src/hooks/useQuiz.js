@@ -11,13 +11,48 @@ import { XP_REWARDS } from '../utils/xpCalculator.js';
 import { shuffle } from '../utils/shuffle.js';
 import vocabulary from '../data/vocabularyAll.js';
 
-function pickDistractors(correctWord, count = 3) {
+const CLUSTER_MAP = {
+  'ar-to-en': 'vocabulary', 'en-to-ar': 'vocabulary', 'en-to-type-ar': 'vocabulary',
+  'listen': 'listening', 'match': 'vocabulary', 'sentence-build': 'reading',
+  'root-identify': 'roots', 'fill-blank': 'grammar', 'category-sort': 'vocabulary',
+  'transliterate': 'reading', 'conjugation': 'grammar', 'picture-word': 'vocabulary',
+};
+
+export function isFsrsDue(card) {
+  if (!card || !card.due) return true;
+  return new Date(card.due) <= new Date();
+}
+
+export function getDistractorTier(score, total) {
+  if (total < 3) return 'normal';
+  const accuracy = score / total;
+  if (accuracy < 0.70) return 'easy';
+  if (accuracy > 0.85) return 'hard';
+  return 'normal';
+}
+
+export function pickDistractors(correctWord, count = 3, tier = 'normal') {
   const sameCat = vocabulary.filter(
     (w) => w.category === correctWord.category && w.id !== correctWord.id
   );
   const others = vocabulary.filter(
     (w) => w.category !== correctWord.category && w.id !== correctWord.id
   );
+
+  if (tier === 'hard') {
+    const sameDifficulty = sameCat.filter(w => w.difficulty === correctWord.difficulty);
+    const pool = sameDifficulty.length >= count
+      ? sameDifficulty
+      : [...sameDifficulty, ...sameCat];
+    return shuffle(pool).slice(0, count);
+  }
+
+  if (tier === 'easy') {
+    const pool = [...shuffle(others).slice(0, 3), ...shuffle(sameCat)];
+    return shuffle(pool).slice(0, count);
+  }
+
+  // Normal: existing behavior
   const pool = [...shuffle(sameCat).slice(0, 2), ...shuffle(others)];
   return shuffle(pool).slice(0, count);
 }
@@ -46,12 +81,15 @@ export function useQuiz() {
     choices: [],
     sessionScore: 0,
     sessionTotal: 0,
+    clusterAccuracy: {},
+    fsrsDueOverride: false,
+    distractorTier: 'normal',
   });
   const [questionIndex, setQuestionIndex] = useState(0);
   const [feedback, setFeedback] = useState(null);
 
-  function buildChoices(word, type) {
-    const distractors = pickDistractors(word);
+  function buildChoices(word, type, tier = 'normal') {
+    const distractors = pickDistractors(word, 3, tier);
 
     if (type === 'ar-to-en' || type === 'listen') {
       return shuffle([
@@ -141,11 +179,16 @@ export function useQuiz() {
     return [];
   }
 
-  function loadQuestion(words, idx, type) {
+  function loadQuestion(words, idx, type, fsrsCardsRef) {
     if (idx >= words.length) return;
     const word = words[idx];
-    const choices = buildChoices(word, type);
-    setQuizState((prev) => ({ ...prev, currentWord: word, choices }));
+    const card = fsrsCardsRef?.[word.id]?.card;
+    const isDue = isFsrsDue(card);
+    setQuizState((prev) => {
+      const tier = getDistractorTier(prev.sessionScore, prev.sessionTotal);
+      const choices = buildChoices(word, type, tier);
+      return { ...prev, currentWord: word, choices, fsrsDueOverride: isDue, distractorTier: tier };
+    });
     setFeedback(null);
   }
 
@@ -160,6 +203,9 @@ export function useQuiz() {
       choices: [],
       sessionScore: 0,
       sessionTotal: 0,
+      clusterAccuracy: {},
+      fsrsDueOverride: false,
+      distractorTier: 'normal',
     });
     setQuestionIndex(0);
     setFeedback(null);
@@ -175,10 +221,13 @@ export function useQuiz() {
 
     const word = shuffled[0];
     if (word) {
-      const choices = buildChoices(word, type);
-      setQuizState((prev) => ({ ...prev, currentWord: word, choices }));
+      const card = fsrsCards[word.id]?.card;
+      const isDue = isFsrsDue(card);
+      const tier = 'normal'; // first question always normal (0 answers so far)
+      const choices = buildChoices(word, type, tier);
+      setQuizState((prev) => ({ ...prev, currentWord: word, choices, fsrsDueOverride: isDue }));
     }
-  }, []);
+  }, [fsrsCards]);
 
   const answer = useCallback((userAnswer) => {
     const word = quizState.currentWord;
@@ -226,10 +275,18 @@ export function useQuiz() {
       correct = normalize(userAnswer) === normalize(word.arabic);
     }
 
+    const cluster = CLUSTER_MAP[quizState.quizType] ?? 'vocabulary';
     setQuizState((prev) => ({
       ...prev,
       sessionScore: prev.sessionScore + (correct ? 1 : 0),
       sessionTotal: prev.sessionTotal + 1,
+      clusterAccuracy: {
+        ...prev.clusterAccuracy,
+        [cluster]: {
+          correct: (prev.clusterAccuracy[cluster]?.correct ?? 0) + (correct ? 1 : 0),
+          total: (prev.clusterAccuracy[cluster]?.total ?? 0) + 1,
+        },
+      },
     }));
 
     // FSRS card management
@@ -276,7 +333,7 @@ export function useQuiz() {
       return true;
     }
     setQuestionIndex(nextIdx);
-    loadQuestion(words, nextIdx, quizState.quizType);
+    loadQuestion(words, nextIdx, quizState.quizType, fsrsCards);
     return false;
   }, [questionIndex, quizState, dispatch]);
 
@@ -289,6 +346,9 @@ export function useQuiz() {
       choices: [],
       sessionScore: 0,
       sessionTotal: 0,
+      clusterAccuracy: {},
+      fsrsDueOverride: false,
+      distractorTier: 'normal',
     });
     dispatch(closeQuiz());
     EventBus.emit(EVENTS.PLAYER_UNFREEZE);
@@ -302,6 +362,9 @@ export function useQuiz() {
     choices: quizState.choices,
     sessionScore: quizState.sessionScore,
     sessionTotal: quizState.sessionTotal,
+    clusterAccuracy: quizState.clusterAccuracy,
+    fsrsDueOverride: quizState.fsrsDueOverride,
+    distractorTier: quizState.distractorTier,
   };
 
   return { quiz, feedback, start, answer, next, close };

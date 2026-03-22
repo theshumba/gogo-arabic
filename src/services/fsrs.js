@@ -50,4 +50,16 @@ export function getNewCardsForSession(maxCards = 5) {
   return pathOrdered.map(w => w.id);
 }
 
+/**
+ * Get FSRS retrievability for a card as a 0-1 float.
+ * Returns 1.0 for new cards (reps=0).
+ * @param {Object} card - FSRS card object from vocabulary state
+ * @param {Date} [now] - reference date (defaults to current time)
+ * @returns {number} 0-1 float (1 = perfectly retained)
+ */
+export function getRetrievability(card, now = new Date()) {
+  if (!card || card.reps === 0 || !card.stability) return 1.0;
+  return scheduler.get_retrievability(card, now, false);
+}
+
 export { Rating };
