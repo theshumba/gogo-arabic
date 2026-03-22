@@ -265,7 +265,7 @@ Plans:
 **Plans:** 2 plans in 2 waves
 
 Plans:
-- [ ] 60-01-PLAN.md — GrammarFill.jsx component + verb paradigm data + useQuiz/QuizOverlay wiring + tests (QUIZ-01)
+- [x] 60-01-PLAN.md — GrammarFill.jsx component + verb paradigm data + useQuiz/QuizOverlay wiring + tests (QUIZ-01)
 - [ ] 60-02-PLAN.md — WordOrder.jsx + ClozePassage.jsx + QUIZ_TYPE_REGISTRY minLevel activation + deferred types cefrMin:B2 + all tests (QUIZ-01)
 
 #### Phase 61: CEFR Placement Test
@@ -391,7 +391,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 57. Skill Tree Infrastructure | v12.0 | 0/3 | Complete    | 2026-03-22 |
 | 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 59. Adaptive Difficulty Engine | v12.0 | 2/2 | Complete    | 2026-03-22 |
-| 60. Quiz Expansion (Core 3 Types) | v12.0 | 0/2 | Not started | - |
+| 60. Quiz Expansion (Core 3 Types) | v12.0 | 1/2 | In progress | 2026-03-22 |
 | 61. CEFR Placement Test | v12.0 | 0/3 | Not started | - |
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Not started | - |
 | 63. Achievement Expansion | v12.0 | 0/3 | Not started | - |

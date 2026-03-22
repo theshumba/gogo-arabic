@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Phase 59 Plan 02 complete — QUIZ_TYPE_REGISTRY + selectQuizTypeForPlayer + quizTypes.test.js + useQuiz.js wired (QUIZ-03 shipped)
-last_updated: "2026-03-22T20:49:11Z"
+stopped_at: Phase 60 Plan 01 complete — GrammarFill component + useQuiz wiring + QuizOverlay render + 5 tests (QUIZ-01 shipped).
+last_updated: "2026-03-22T23:24:00.000Z"
 progress:
   total_phases: 9
-  completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  completed_phases: 4
+  total_plans: 12
+  completed_plans: 10
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 59 — adaptive-difficulty-engine
+**Current focus:** Phase 60 — quiz-expansion-core-3-types
 
 ## Current Position
 
-Phase: 59 (adaptive-difficulty-engine) — COMPLETE
-Plan: 2 of 2 (Plan 02 COMPLETE — 59-02-SUMMARY.md)
+Phase: 60 (quiz-expansion-core-3-types) — EXECUTING
+Plan: 2 of 2
 
 ### Shipped Milestones
 
@@ -59,6 +59,11 @@ Plan: 2 of 2 (Plan 02 COMPLETE — 59-02-SUMMARY.md)
 - lockedType in quizState: null = adaptive routing, non-null = caller-locked type preserved through session (59-02)
 - QuizOverlay QUIZ_TYPE_LABELS derived from QUIZ_TYPE_REGISTRY — single source of truth for type names (59-02)
 - 16 quiz type tests in src/data/__tests__/quizTypes.test.js — all passing; full suite 1257 tests green (59-02)
+- GrammarFill.jsx shipped (60-01): 15 VERB_PARADIGMS (كَتَبَ/ذَهَبَ/قَرَأَ/فَهِمَ/سَكَنَ/سَافَرَ), wired into useQuiz+QuizOverlay, 5 tests pass
+- GrammarFill grading: choices.find(c => c.correct)?.value NOT word.arabic — conjugated form ≠ dictionary form (60-01)
+- GrammarFill minLevel: 4 (was 999 stub) — active in adaptive routing for level 4+ players (60-01)
+- VERB_PARADIGMS exported from GrammarFill.jsx, imported by useQuiz.js — co-located with component (60-01)
+- paradigmContext shape: { verb, root, meaning, paradigm, pronoun } — embedded in each choice option by buildChoices (60-01)
 - grammar.js has 43 lessons (fixed from 47 — structural bug removed 4 duplicate/misplaced lessons)
 - grammar.js had structural bug: 40 lessons were in grammarCategories, not grammarLessons — FIXED (58-01)
 - 20 A1-A2 lessons now fully populated: 12+ exercises, 4+ types, 4+ quiz questions each (58-01)
@@ -97,6 +102,9 @@ Plan: 2 of 2 (Plan 02 COMPLETE — 59-02-SUMMARY.md)
 | order-based unlock in unlockNextLesson | Sorts all grammarLessons by order field — works regardless of category |
 | migration 12 conservative unlock | al-definite + all completed + one ahead of highest; middleware handles future unlocks |
 | Phase 59 (adaptive) before Phase 60 (quiz types) | New quiz types must inherit adaptive behavior from day one |
+| GrammarFill grading via choices.find not word.arabic | Conjugated form != dictionary form; choices carry source of truth for correct answer |
+| VERB_PARADIGMS co-located in GrammarFill.jsx | Paradigm data lives next to component; exported for useQuiz.js import |
+| GrammarFill minLevel 4 (not 999) on ship | Matches conjugation gate; unlocked for level 4+ players immediately |
 | Phase 61 depends on both Phase 58 and 59 | Grammar content for CAT questions + adaptive engine for item selection |
 | Phase 63 last before display layer | All achievement event sources must exist before conditions are authored |
 | state.grammar accessed directly in isAchievementMet (not destructured) | Keeps diff minimal per plan spec; consistent with surgical change approach |
@@ -125,6 +133,6 @@ Plan: 2 of 2 (Plan 02 COMPLETE — 59-02-SUMMARY.md)
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 59 Plan 02 complete — QUIZ_TYPE_REGISTRY + selectQuizTypeForPlayer format routing + 16 unit tests (QUIZ-03 shipped). Phase 59 COMPLETE.
-Resume file: .planning/phases/59-adaptive-difficulty-engine/59-02-SUMMARY.md
-Next plan: Phase 60 — New quiz types (GrammarFill, ClozePassage, WordOrder, DialectIdentify, RootExpand, CulturalContext)
+Stopped at: Phase 60 Plan 01 complete — GrammarFill component + useQuiz wiring + QuizOverlay SFX + 5 tests (QUIZ-01 shipped).
+Resume file: .planning/phases/60-quiz-expansion-core-3-types/60-01-SUMMARY.md
+Next plan: Phase 60 Plan 02 — ClozePassage quiz type (or Phase 60-02 per roadmap)
