@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Phase 56 Plan 02 complete — placementSlice + cefrProgressSlice + learningProgressMiddleware scaffold
-last_updated: "2026-03-22T12:32:27Z"
+stopped_at: Phase 57 Plan 01 complete — 6 skill trees expanded to 30 nodes, learningProgressMiddleware populated, initializeSkillTree created and wired
+last_updated: "2026-03-22T13:38:00Z"
 progress:
   total_phases: 9
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 5
+  completed_plans: 3
 ---
 
 # Project State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 57 — placement-test (next)
+**Current focus:** Phase 57 — skill-tree-infrastructure
 
 ## Current Position
 
-Phase: 56 (bug-fixes-redux-foundation) — COMPLETE
-Plan: 2 of 2 (both plans complete)
+Phase: 57 (skill-tree-infrastructure) — IN PROGRESS
+Plan: 2 of 3 (57-01 complete)
 
-Progress: █░░░░░░░░ (1/9 phases complete)
+Progress: ██░░░░░░░░ (3/5 plans complete across v12.0)
 
 ### Shipped Milestones
 
@@ -44,7 +44,7 @@ Progress: █░░░░░░░░ (1/9 phases complete)
 | v10.0 Onboarding | 47 | 3 | 2026-03-19 |
 | v11.0 Deep Systems | 50-55 | 25 | 2026-03-21 |
 
-**Cumulative:** 55 phases, 159+ plans, 11 milestones
+**Cumulative:** 55 phases, 160+ plans, 11 milestones
 
 ## Accumulated Context
 
@@ -52,16 +52,18 @@ Progress: █░░░░░░░░ (1/9 phases complete)
 
 - grammar.js has 47 lessons (not 50 as documented) — confirmed by research source inspection
 - grammar_lessons achievement never fires — ACTION_TO_ACHIEVEMENT_TYPES missing 'grammar/completeLesson' mapping in achievementMiddleware
-- CURRENT_VERSION is 10 (set in Phase 55 for poetry IndexedDB) — v12.0 must bump to 11 for placementSlice + cefrProgressSlice
-- Two new Redux slices needed: placementSlice + cefrProgressSlice (both write-once-per-session, no live CEFR regression)
-- learningProgressMiddleware is new (separate from achievementMiddleware to avoid switch/case bloat)
+- CURRENT_VERSION is 11 (set in Phase 56 for placementSlice + cefrProgressSlice)
+- Two new Redux slices added: placementSlice + cefrProgressSlice (both write-once-per-session, no live CEFR regression)
+- learningProgressMiddleware now POPULATED (Phase 57-01) — 6 XP routing rules active
 - recharts v3.8.0 is the ONE new npm install — React 19 peer dep confirmed; lazy-load in charts-vendor chunk
 - html-to-image v1.11.13 is conditional (only if social card needs character art — SVG-only is preferred)
-- Skill trees already exist at ~10-12 nodes each in skillTrees.js — expand to 30 nodes per tree
-- initializeSkillTree(existingPlayerState) must run on first v12.0 load to prevent retroactive content locking
+- Skill trees now at 30 nodes each (Phase 57-01 complete) — expanded from 10-12 nodes
+- initializeSkillTree wired in main.jsx via persistor.subscribe — idempotent bootstrap for v11.0 saves
 - Placement test cap: B1 maximum; default one level below raw score; "Start Lower" escape hatch required
 - Achievement expansion: 206 new entries, ship 80-100 meaningful at launch + remainder in patches
 - Grammar lesson ID migration: lesson_0 → lesson_verb_present etc. — must complete before any new lesson is authored
+- poetry.completedBattles (not poetry.history) — confirmed from poetrySlice.js
+- state.quests (not state.quest) — confirmed from store.js rootReducer key mapping
 
 ### Decisions
 
@@ -77,10 +79,13 @@ Progress: █░░░░░░░░ (1/9 phases complete)
 | Migration tests use currentVersion=N (not N-1) | redux-persist createMigrate skips migration when inboundVersion === currentVersion; must pass target version |
 | placement + cefrProgress use localStorage (not IndexedDB) | Write-once-per-session slices are lightweight; IndexedDB tier reserved for heavy data (vocabulary, battle, magic, inventory, crafting) |
 | learningProgressMiddleware is last in .concat() chain | Processes learning events after all reward/state middleware; ready for Phases 57-59 population |
+| bulkUnlockNodes bypasses XP deduction | Used exclusively by initializeSkillTree — avoids XP math complications during bootstrap |
+| initializeSkillTree gated on skillXP > 0 OR unlockedNodes.length > 0 | Dual guard prevents double-init across both fresh and returning player paths |
+| unlock_spell/dialogue/zone/npc_branch placed at C2 nodes | Terminal-tier rewards for SKILL-03 upstream content dispatch |
 
 ### Blockers/Concerns
 
-- None at roadmap stage
+- None
 
 ### Pending Todos
 
@@ -91,6 +96,6 @@ Progress: █░░░░░░░░ (1/9 phases complete)
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 56 Plan 02 complete — placementSlice + cefrProgressSlice + learningProgressMiddleware scaffold registered in store.js
-Resume file: .planning/phases/56-bug-fixes-redux-foundation/56-02-SUMMARY.md
-Next plan: Phase 57 (placement-test) — /gsd:plan-phase 57
+Stopped at: Phase 57 Plan 01 complete — skill trees expanded, XP routing live, initializeSkillTree wired
+Resume file: .planning/phases/57-skill-tree-infrastructure/57-01-SUMMARY.md
+Next plan: Phase 57 Plan 02 — /gsd:execute-phase (57-02)
