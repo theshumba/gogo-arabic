@@ -170,4 +170,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-22 after v12.0 milestone started*
+*Last updated: 2026-03-22 after Phase 56 (Bug Fixes & Redux Foundation) complete — grammar achievement wiring fixed, v11 migration shipped, placementSlice + cefrProgressSlice + learningProgressMiddleware scaffolded*
