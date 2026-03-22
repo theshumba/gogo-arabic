@@ -24,7 +24,7 @@
 
 import { createMigrate } from 'redux-persist';
 
-export const CURRENT_VERSION = 11;
+export const CURRENT_VERSION = 12;
 
 /**
  * Migration definitions
@@ -353,6 +353,57 @@ const migrations = {
     if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
       console.log('[Migration] v10 -> v11 complete');
+    }
+    return state;
+  },
+
+  // Version 12: Add grammar.unlockedLessons for lesson gating (Phase 58)
+  12: (state) => {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] Starting v11 -> v12: grammar unlockedLessons init');
+    }
+
+    // Only apply to root persist config (has grammar key)
+    if (state?.grammar) {
+      if (!Array.isArray(state.grammar.unlockedLessons)) {
+        const completed = state.grammar.completedLessons ?? [];
+        // Unlock: al-definite (always) + all completed lessons + the next one after highest completed
+        const unlockedSet = new Set(['al-definite', ...completed]);
+
+        // Ordered lesson IDs (same order as grammar.js lesson.order)
+        const ORDERED_LESSON_IDS = [
+          'al-definite', 'noun-adjective-agreement', 'personal-pronouns', 'possessive-suffixes',
+          'basic-verb-conjugation', 'question-words', 'prepositions', 'colors-and-shapes',
+          'numbers-1-10', 'basic-adjectives', 'demonstratives', 'possessive-pronouns', 'basic-negation',
+          'present-tense', 'future-tense', 'dual-form', 'sound-plural', 'broken-plural',
+          'comparative', 'active-participle',
+          'verb-forms-2-5', 'verb-forms-6-10', 'relative-clauses', 'passive-voice', 'verbal-nouns',
+          'object-pronouns', 'adverbs-time-place', 'conjunctions', 'exception-illa', 'emphasis-inna',
+          'hal-clause', 'tamyiz', 'indirect-object', 'complex-conditionals', 'oath-expressions',
+          'exclamation', 'wonder-verb', 'praise-blame', 'absolute-object', 'mafuul-liajlih',
+          'mafuul-maah', 'literary-particles', 'formal-letter',
+        ];
+
+        // Find highest completed lesson index
+        let highestCompletedIndex = -1;
+        for (const id of completed) {
+          const idx = ORDERED_LESSON_IDS.indexOf(id);
+          if (idx > highestCompletedIndex) highestCompletedIndex = idx;
+        }
+
+        // Unlock the next lesson after the highest completed
+        if (highestCompletedIndex >= 0 && highestCompletedIndex < ORDERED_LESSON_IDS.length - 1) {
+          unlockedSet.add(ORDERED_LESSON_IDS[highestCompletedIndex + 1]);
+        }
+
+        state.grammar.unlockedLessons = [...unlockedSet];
+      }
+    }
+
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log('[Migration] v11 -> v12 complete');
     }
     return state;
   },

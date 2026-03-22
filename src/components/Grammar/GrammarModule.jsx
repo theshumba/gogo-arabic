@@ -169,7 +169,7 @@ export default function GrammarModule({ onBack }) {
               <LessonCard
                 key={lesson.id}
                 lesson={lesson}
-                onClick={() => setSelectedLessonId(lesson.id)}
+                onClick={lesson.isUnlocked ? () => setSelectedLessonId(lesson.id) : undefined}
               />
             ))}
           </div>
@@ -184,14 +184,15 @@ function LessonCard({ lesson, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
 
   const cardStyle = {
-    background: COLORS.white,
-    border: `4px solid ${lesson.isCompleted ? COLORS.green : COLORS.brown}`,
+    background: lesson.isUnlocked ? COLORS.white : '#e8e8e8',
+    border: `4px solid ${lesson.isCompleted ? COLORS.green : lesson.isUnlocked ? COLORS.brown : '#999'}`,
     padding: '20px',
-    cursor: 'pointer',
+    cursor: lesson.isUnlocked ? 'pointer' : 'not-allowed',
     transition: 'transform 0.1s, box-shadow 0.1s',
     position: 'relative',
-    transform: isHovered ? 'translateY(-2px)' : 'none',
-    boxShadow: isHovered ? `0 4px 8px ${COLORS.darkBrown}` : 'none',
+    opacity: lesson.isUnlocked ? 1 : 0.5,
+    transform: isHovered && lesson.isUnlocked ? 'translateY(-2px)' : 'none',
+    boxShadow: isHovered && lesson.isUnlocked ? `0 4px 8px ${COLORS.darkBrown}` : 'none',
   };
 
   const statusBadgeStyle = {
@@ -201,7 +202,7 @@ function LessonCard({ lesson, onClick }) {
     fontFamily: FONTS.pixel,
     fontSize: '10px',
     color: COLORS.white,
-    background: lesson.isCompleted ? COLORS.green : COLORS.gray,
+    background: lesson.isCompleted ? COLORS.green : lesson.isUnlocked ? COLORS.gray : '#666',
     padding: '4px 8px',
     borderRadius: '2px',
   };
@@ -247,12 +248,12 @@ function LessonCard({ lesson, onClick }) {
   return (
     <motion.div
       style={cardStyle}
-      onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
+      onClick={lesson.isUnlocked ? onClick : undefined}
+      onMouseEnter={() => lesson.isUnlocked && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileTap={{ scale: 0.98 }}
+      whileTap={lesson.isUnlocked ? { scale: 0.98 } : undefined}
     >
-      <div style={statusBadgeStyle}>{lesson.isCompleted ? 'Completed' : 'New'}</div>
+      <div style={statusBadgeStyle}>{lesson.isCompleted ? 'Completed' : lesson.isUnlocked ? 'New' : 'Locked'}</div>
 
       <div style={titleStyle}>{lesson.title}</div>
       <div style={titleArabicStyle}>{lesson.titleArabic}</div>

@@ -8,6 +8,7 @@
  *
  * XP routing table:
  *   grammar/completeLesson         → grammar tree   +40 XP
+ *                                  → unlockNextLesson (auto-unlock next lesson in sequence)
  *   quests/completeQuest           → culture tree   +30 XP
  *   achievements/recordPerfectQuiz → reading tree   +20 XP
  *   achievements/incrementReviews  → reading tree   +10 XP
@@ -29,6 +30,7 @@ import { addSkillXP } from '../slices/skillTreeSlice.js';
 import { SKILL_TREES } from '../../data/skillTrees.js';
 import { discoverRoot } from '../slices/magicSlice.js';
 import { setFlag } from '../slices/worldStateSlice.js';
+import { unlockNextLesson } from '../slices/grammarSlice.js';
 
 export const learningProgressMiddleware = (store) => (next) => (action) => {
   const result = next(action);
@@ -36,6 +38,7 @@ export const learningProgressMiddleware = (store) => (next) => (action) => {
   switch (action.type) {
     case 'grammar/completeLesson':
       store.dispatch(addSkillXP({ treeId: 'grammar', amount: 40 }));
+      store.dispatch(unlockNextLesson({ completedLessonId: action.payload.lessonId }));
       break;
     case 'quests/completeQuest':
       store.dispatch(addSkillXP({ treeId: 'culture', amount: 30 }));

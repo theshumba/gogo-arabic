@@ -94,4 +94,19 @@ describe('learningProgressMiddleware XP routing', () => {
     store.dispatch(incrementReviews());
     expect(store.getState().skillTree.skillXP.reading).toBe(30); // 3 * 10
   });
+
+  it('grammar/completeLesson dispatches unlockNextLesson to grammarSlice', () => {
+    // al-definite is order 1 — next lesson by order is noun-adjective-agreement (order 2)
+    store.dispatch(completeLesson({ lessonId: 'al-definite', exerciseScore: 100, quizScore: 100 }));
+    expect(store.getState().grammar.unlockedLessons).toContain('noun-adjective-agreement');
+  });
+
+  it('completing last lesson does not crash unlockNextLesson', () => {
+    // Dispatch completion for the highest-order lesson
+    // (formal-letter is order 42 — no lesson after it)
+    store.dispatch(completeLesson({ lessonId: 'formal-letter', exerciseScore: 100, quizScore: 100 }));
+    // Should not throw, unlockedLessons should not have undefined added
+    const unlocked = store.getState().grammar.unlockedLessons;
+    expect(unlocked).not.toContain(undefined);
+  });
 });
