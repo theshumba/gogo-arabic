@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, Suspense, lazy } from 'react';
 import { useSelector } from 'react-redux';
 import { SKILL_TREES, SKILL_TREE_ORDER } from '../../data/skillTrees.js';
 import { selectTreeProgress } from '../../store/slices/skillTreeSlice.js';
-import SkillTreeView from './SkillTreeView.jsx';
 import styles from './SkillTreeMenu.module.css';
+
+const SkillTreeView = lazy(() => import('./SkillTreeView.jsx'));
 
 /**
  * SkillTreeMenu — Tab-based menu showing all 6 Arabic learning skill trees.
@@ -70,7 +71,19 @@ export default function SkillTreeMenu({ onBack }) {
           </span>
         </div>
 
-        <SkillTreeView treeId={activeTreeId} />
+        <Suspense fallback={
+          <div style={{
+            fontFamily: 'var(--font-pixel)',
+            fontSize: '8px',
+            color: 'var(--color-light-gray)',
+            padding: '24px',
+            textAlign: 'center'
+          }}>
+            Loading skill tree...
+          </div>
+        }>
+          <SkillTreeView treeId={activeTreeId} />
+        </Suspense>
       </div>
     </div>
   );
