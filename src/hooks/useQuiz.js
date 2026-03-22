@@ -12,6 +12,7 @@ import { shuffle } from '../utils/shuffle.js';
 import vocabulary from '../data/vocabularyAll.js';
 import { QUIZ_TYPE_REGISTRY, selectQuizTypeForPlayer } from '../data/quizTypes.js';
 import { selectCefrLevel } from '../store/slices/cefrProgressSlice.js';
+import { VERB_PARADIGMS } from '../components/Quiz/GrammarFill.jsx';
 
 export function isFsrsDue(card) {
   if (!card || !card.due) return true;
@@ -166,6 +167,23 @@ export function useQuiz() {
       return shuffle(allWords);
     }
 
+    // GrammarFill: conjugation fill-in-blank from embedded VERB_PARADIGMS
+    if (type === 'GrammarFill') {
+      const idx = word.id ? word.id.charCodeAt(0) % VERB_PARADIGMS.length : 0;
+      const paradigm = VERB_PARADIGMS[idx];
+      const paradigmContext = {
+        verb: paradigm.verb,
+        root: paradigm.root,
+        meaning: paradigm.meaning,
+        paradigm: paradigm.paradigm,
+        pronoun: paradigm.pronoun,
+      };
+      return shuffle([
+        { label: paradigm.correctForm, value: paradigm.correctForm, correct: true, paradigmContext },
+        ...paradigm.distractors.map((f) => ({ label: f, value: f, correct: false, paradigmContext })),
+      ]);
+    }
+
     return [];
   }
 
@@ -271,6 +289,10 @@ export function useQuiz() {
       } catch {
         correct = false;
       }
+    } else if (quizState.quizType === 'GrammarFill') {
+      // Grade against the correct conjugated form in choices, NOT word.arabic
+      const correctForm = quizState.choices.find((c) => c.correct)?.value || '';
+      correct = normalize(userAnswer) === normalize(correctForm);
     } else {
       correct = normalize(userAnswer) === normalize(word.arabic);
     }
@@ -315,6 +337,8 @@ export function useQuiz() {
       correctAnswer = word.root || word.rootLetters || word.arabic.slice(0, 3);
     } else if (quizState.quizType === 'sentence-build') {
       correctAnswer = word.exampleSentence?.arabic || word.arabic;
+    } else if (quizState.quizType === 'GrammarFill') {
+      correctAnswer = quizState.choices.find((c) => c.correct)?.value || word.arabic;
     } else {
       correctAnswer = word.arabic;
     }

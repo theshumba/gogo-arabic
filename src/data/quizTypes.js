@@ -26,8 +26,8 @@ export const QUIZ_TYPE_REGISTRY = {
   'transliterate':   { label: 'Transliterate',       cluster: 'reading',    minLevel: 3,   cefrMin: 'A1' },
   'conjugation':     { label: 'Conjugation',         cluster: 'grammar',    minLevel: 4,   cefrMin: 'A1' },
   'picture-word':    { label: 'Picture Word',        cluster: 'vocabulary', minLevel: 1,   cefrMin: null },
-  // ── Phase 60 types — gated at minLevel: 999 until renderers ship ──
-  'GrammarFill':     { label: 'Grammar Fill',        cluster: 'grammar',    minLevel: 999, cefrMin: 'A1' },
+  // ── Phase 60 types — GrammarFill renderer shipped; other types gated at minLevel: 999 ──
+  'GrammarFill':     { label: 'Grammar Fill',        cluster: 'grammar',    minLevel: 4,   cefrMin: 'A1' },
   'ClozePassage':    { label: 'Cloze Passage',       cluster: 'grammar',    minLevel: 999, cefrMin: 'A2' },
   'WordOrder':       { label: 'Word Order',          cluster: 'grammar',    minLevel: 999, cefrMin: 'A1' },
   'DialectIdentify': { label: 'Dialect Identify',    cluster: 'listening',  minLevel: 999, cefrMin: 'B1' },

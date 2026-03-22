@@ -18,12 +18,15 @@ describe('QUIZ_TYPE_REGISTRY', () => {
     });
   });
 
-  it('Phase 60 types have minLevel: 999 (not yet active)', () => {
-    const phase60 = ['GrammarFill', 'ClozePassage', 'WordOrder', 'DialectIdentify', 'RootExpand', 'CulturalContext'];
-    phase60.forEach(t => {
+  it('remaining Phase 60 stubs have minLevel: 999 (not yet active)', () => {
+    // GrammarFill renderer shipped in Phase 60-01 — its minLevel was lowered to 4
+    const phase60Stubs = ['ClozePassage', 'WordOrder', 'DialectIdentify', 'RootExpand', 'CulturalContext'];
+    phase60Stubs.forEach(t => {
       expect(QUIZ_TYPE_REGISTRY[t]).toBeDefined();
       expect(QUIZ_TYPE_REGISTRY[t].minLevel).toBe(999);
     });
+    // GrammarFill is now active
+    expect(QUIZ_TYPE_REGISTRY['GrammarFill'].minLevel).toBeLessThan(999);
   });
 
   it('every entry has label, cluster, minLevel, and cefrMin fields', () => {
@@ -93,13 +96,14 @@ describe('selectQuizTypeForPlayer', () => {
     expect(typesWithCefrMin.length).toBeGreaterThan(0);
   });
 
-  it('never returns Phase 60 types (minLevel 999)', () => {
-    const phase60 = ['GrammarFill', 'ClozePassage', 'WordOrder', 'DialectIdentify', 'RootExpand', 'CulturalContext'];
+  it('never returns remaining Phase 60 stubs (minLevel 999)', () => {
+    // GrammarFill renderer shipped — only the 5 remaining stubs are still gated
+    const phase60Stubs = ['ClozePassage', 'WordOrder', 'DialectIdentify', 'RootExpand', 'CulturalContext'];
     const results = Array.from({ length: 200 }, () =>
       selectQuizTypeForPlayer({}, 50, 'B2')
     );
     results.forEach(t => {
-      expect(phase60).not.toContain(t);
+      expect(phase60Stubs).not.toContain(t);
     });
   });
 
