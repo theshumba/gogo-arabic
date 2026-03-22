@@ -223,7 +223,7 @@ Plans:
   4. SkillTreeView displays XP progress bars per tree and shows the next 1-2 unlockable nodes highlighted; locked nodes beyond the visible frontier are collapsed
 
 Plans:
-- [ ] 57-01: skillTrees.js expanded to 30 nodes per tree + initializeSkillTree(existingPlayerState) + learningProgressMiddleware XP routing (SKILL-01, SKILL-02)
+- [x] 57-01: skillTrees.js expanded to 30 nodes per tree + initializeSkillTree(existingPlayerState) + learningProgressMiddleware XP routing (SKILL-01, SKILL-02)
 - [ ] 57-02: Skill tree node reward types: unlock_spell, unlock_dialogue, unlock_zone, unlock_npc_branch + ActionSetExecutor skill_tree_level condition (SKILL-03)
 - [ ] 57-03: SkillTreeView.jsx — one tree at a time, progressive disclosure, XP bars, next-node highlights, lazy-loaded (SKILL-04)
 
@@ -386,7 +386,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 53. Faction Reputation Engine | v11.0 | 3/3 | Complete | 2026-03-20 |
 | 54. World Life Systems | v11.0 | 4/4 | Complete | 2026-03-20 |
 | 55. Mini-Games and Content Polish | v11.0 | 5/5 | Complete | 2026-03-21 |
-| 56. Bug Fixes & Redux Foundation | v12.0 | 1/2 | In progress | - |
+| 56. Bug Fixes & Redux Foundation | v12.0 | 1/2 | Complete    | 2026-03-22 |
 | 57. Skill Tree Infrastructure | v12.0 | 0/3 | Not started | - |
 | 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 0/2 | Not started | - |
 | 59. Adaptive Difficulty Engine | v12.0 | 0/2 | Not started | - |
