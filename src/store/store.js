@@ -33,6 +33,8 @@ import poetryReducer from './slices/poetrySlice.js';
 import journalReducer from './slices/journalSlice.js';
 import codexReducer from './slices/codexSlice.js';
 import endgameReducer from './slices/endgameSlice.js';
+import placementReducer from './slices/placementSlice.js';
+import cefrProgressReducer from './slices/cefrProgressSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -46,6 +48,7 @@ import { worldStateMiddleware } from './middleware/worldStateMiddleware.js';
 import { factionMiddleware } from './middleware/factionMiddleware.js';
 import { gossipMiddleware } from './middleware/gossipMiddleware.js';
 import { poetryRewardsMiddleware } from './middleware/poetryRewardsMiddleware.js';
+import { learningProgressMiddleware } from './middleware/learningProgressMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -70,6 +73,7 @@ import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
  * - Version 8 (Phase 50): worldState moved to IndexedDB
  * - Version 9 (Phase 53): faction moved to IndexedDB
  * - Version 10 (Phase 55): poetry added to IndexedDB
+ * - Version 11 (Phase 56): placementSlice + cefrProgressSlice added to localStorage; grammar slug migration
  *
  * Storage backends:
  * - localStorage (root): player, quests, alphabet, settings, npc, achievements, dailyGoals, grammar, narrative, economy
@@ -177,6 +181,8 @@ const persistConfig = {
     'journal',
     'codex',
     'endgame',
+    'placement',
+    'cefrProgress',
   ],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
@@ -213,6 +219,8 @@ const rootReducer = combineReducers({
   journal: journalReducer,
   codex: codexReducer,
   endgame: endgameReducer,
+  placement: placementReducer,
+  cefrProgress: cefrProgressReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -225,7 +233,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware),
 });
 
 export const persistor = persistStore(store);
