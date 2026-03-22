@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Phase 59 Plan 01 complete — adaptive session tracking + FSRS-due override + tiered distractor scaling + 17 unit tests (QUIZ-02 shipped)
-last_updated: "2026-03-22T20:42:17Z"
+stopped_at: Phase 59 Plan 02 complete — QUIZ_TYPE_REGISTRY + selectQuizTypeForPlayer + quizTypes.test.js + useQuiz.js wired (QUIZ-03 shipped)
+last_updated: "2026-03-22T20:49:11Z"
 progress:
   total_phases: 9
   completed_phases: 3
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 ## Current Position
 
-Phase: 59 (adaptive-difficulty-engine) — IN PROGRESS
-Plan: 2 of 2 (Plan 01 COMPLETE — 59-01-SUMMARY.md)
+Phase: 59 (adaptive-difficulty-engine) — COMPLETE
+Plan: 2 of 2 (Plan 02 COMPLETE — 59-02-SUMMARY.md)
 
 ### Shipped Milestones
 
@@ -52,8 +52,13 @@ Plan: 2 of 2 (Plan 01 COMPLETE — 59-01-SUMMARY.md)
 - quizState now has clusterAccuracy{}, fsrsDueOverride, distractorTier — all reset on close() (59-01)
 - pickDistractors easy tier guarantees count-1 cross-category words via explicit partition (not pool shuffle) (59-01)
 - getRetrievability(card, now) exported from fsrs.js — returns 0-1 float via scheduler.get_retrievability(card, now, false) (59-01)
-- CLUSTER_MAP in useQuiz.js maps 12 quiz types to 5 clusters: vocabulary/grammar/reading/roots/listening (59-01)
 - 17 adaptive tests in src/hooks/__tests__/useQuiz.adaptive.test.js — all passing (59-01)
+- QUIZ_TYPE_REGISTRY in src/data/quizTypes.js — 18 types (12 active + 6 Phase 60 stubs at minLevel 999) (59-02)
+- selectQuizTypeForPlayer pure function: 70% grammar bias when grammar cluster < 70% after 3+ questions (59-02)
+- CLUSTER_MAP removed from useQuiz.js — replaced by QUIZ_TYPE_REGISTRY[type]?.cluster lookup (59-02)
+- lockedType in quizState: null = adaptive routing, non-null = caller-locked type preserved through session (59-02)
+- QuizOverlay QUIZ_TYPE_LABELS derived from QUIZ_TYPE_REGISTRY — single source of truth for type names (59-02)
+- 16 quiz type tests in src/data/__tests__/quizTypes.test.js — all passing; full suite 1257 tests green (59-02)
 - grammar.js has 43 lessons (fixed from 47 — structural bug removed 4 duplicate/misplaced lessons)
 - grammar.js had structural bug: 40 lessons were in grammarCategories, not grammarLessons — FIXED (58-01)
 - 20 A1-A2 lessons now fully populated: 12+ exercises, 4+ types, 4+ quiz questions each (58-01)
@@ -85,7 +90,7 @@ Plan: 2 of 2 (Plan 01 COMPLETE — 59-01-SUMMARY.md)
 |----------|---------|
 | Compute distractorTier at loadQuestion call time (not from quizState) | React state batching would cause stale tier if read from quizState inside loadQuestion |
 | Easy tier uses explicit partition (not pool shuffle) | pool shuffle allows all-same-category result; partition guarantees count-1 cross-category |
-| CLUSTER_MAP in useQuiz.js until quizTypes.js exists | Avoids missing-module import before 59-02 creates quizTypes.js |
+| CLUSTER_MAP replaced by QUIZ_TYPE_REGISTRY[type]?.cluster | QUIZ_TYPE_REGISTRY is canonical; CLUSTER_MAP removed in 59-02 |
 | clusterAccuracy resets on close() | Session-ephemeral data; cross-session persistence out of scope per REQUIREMENTS.md |
 | GRAM-01/GRAM-03 assigned to Phase 62 | Success criterion (50 lessons, CEFR gates) only fully TRUE after B1-B2 content ships |
 | GRAM-02/GRAM-04 assigned to Phase 58 | 12 exercise types + XP wiring verifiable with A1-A2 lessons alone — SHIPPED |
@@ -120,6 +125,6 @@ Plan: 2 of 2 (Plan 01 COMPLETE — 59-01-SUMMARY.md)
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 59 Plan 01 complete — adaptive session tracking + FSRS-due override + tiered pickDistractors + 17 unit tests (QUIZ-02 shipped)
-Resume file: .planning/phases/59-adaptive-difficulty-engine/59-01-SUMMARY.md
-Next plan: Phase 59 Plan 02 — QUIZ_TYPE_REGISTRY + selectQuizTypeForPlayer + quizTypes.test.js
+Stopped at: Phase 59 Plan 02 complete — QUIZ_TYPE_REGISTRY + selectQuizTypeForPlayer format routing + 16 unit tests (QUIZ-03 shipped). Phase 59 COMPLETE.
+Resume file: .planning/phases/59-adaptive-difficulty-engine/59-02-SUMMARY.md
+Next plan: Phase 60 — New quiz types (GrammarFill, ClozePassage, WordOrder, DialectIdentify, RootExpand, CulturalContext)

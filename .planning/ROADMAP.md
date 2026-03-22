@@ -250,7 +250,7 @@ Plans:
 
 Plans:
 - [x] 59-01: Rolling session accuracy tracker in useQuiz.js + per-content-cluster difficulty tracking + FSRS-due override flag (QUIZ-02) — 2026-03-22
-- [ ] 59-02: QUIZ_TYPE_REGISTRY in quizTypes.js with 18 types, minLevel/cefrMin gates + format-selection logic routing grammar-weak players to grammar quiz types (QUIZ-03)
+- [x] 59-02: QUIZ_TYPE_REGISTRY in quizTypes.js with 18 types, minLevel/cefrMin gates + format-selection logic routing grammar-weak players to grammar quiz types (QUIZ-03) — 2026-03-22
 
 #### Phase 60: Quiz Expansion (Core 3 Types)
 **Goal**: Three new quiz types are playable and gated by CEFR level, giving players fundamentally different practice modes compared to the existing 12 types
@@ -389,7 +389,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 56. Bug Fixes & Redux Foundation | v12.0 | 1/2 | Complete    | 2026-03-22 |
 | 57. Skill Tree Infrastructure | v12.0 | 0/3 | Complete    | 2026-03-22 |
 | 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 2/2 | Complete    | 2026-03-22 |
-| 59. Adaptive Difficulty Engine | v12.0 | 0/2 | Not started | - |
+| 59. Adaptive Difficulty Engine | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 60. Quiz Expansion (Core 3 Types) | v12.0 | 0/3 | Not started | - |
 | 61. CEFR Placement Test | v12.0 | 0/3 | Not started | - |
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Not started | - |
@@ -400,4 +400,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-22 — Phase 58 COMPLETE (GRAM-02 + GRAM-04: 20 A1-A2 lessons, 12 exercise types, lesson unlock wiring, GrammarModule gating, migration 12)*
+*Last updated: 2026-03-22 — Phase 59 COMPLETE (QUIZ-02 + QUIZ-03: adaptive difficulty engine — rolling session accuracy, per-cluster tracking, FSRS-due override, QUIZ_TYPE_REGISTRY 18 types, selectQuizTypeForPlayer grammar-weak routing)*
