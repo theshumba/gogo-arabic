@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
-status: unknown
-stopped_at: Phase 57 Plan 03 complete — SkillTreeView UI polish + lazy-loading (SKILL-04 shipped)
-last_updated: "2026-03-22T17:39:37.910Z"
+status: in_progress
+stopped_at: Phase 58 Plan 02 complete — grammar lesson unlock wiring + GrammarModule gating + migration 12 (GRAM-04 shipped)
+last_updated: "2026-03-22T18:23:00Z"
 progress:
   total_phases: 9
-  completed_phases: 2
-  total_plans: 7
-  completed_plans: 5
+  completed_phases: 3
+  total_plans: 9
+  completed_plans: 7
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 58 — grammar-a1-a2-lesson-wiring
+**Current focus:** Phase 58 COMPLETE — ready for Phase 59 (adaptive difficulty engine)
 
 ## Current Position
 
-Phase: 58 (grammar-a1-a2-lesson-wiring) — IN PROGRESS
-Plan: 2 of 2 (58-01 complete)
+Phase: 58 (grammar-a1-a2-lesson-wiring) — COMPLETE
+Plan: 2 of 2 (58-02 complete)
 
 ### Shipped Milestones
 
@@ -54,7 +54,11 @@ Plan: 2 of 2 (58-01 complete)
 - 9 new exercise types in ExerciseStage.jsx: conjugation-drill, sentence-transformation, word-order, error-identification, multiple-select, true-false, cloze, classify, build-sentence (58-01)
 - grammar.js was 47 lessons (not 50 as documented) — now 43 after structural fix
 - grammar_lessons achievement never fires — ACTION_TO_ACHIEVEMENT_TYPES missing 'grammar/completeLesson' mapping in achievementMiddleware
-- CURRENT_VERSION is 11 (set in Phase 56 for placementSlice + cefrProgressSlice)
+- CURRENT_VERSION is 12 (set in Phase 58-02 for grammar.unlockedLessons init)
+- grammarSlice has unlockedLessons: ['al-definite'] initial state + unlockNextLesson reducer (58-02)
+- learningProgressMiddleware now dispatches unlockNextLesson after grammar/completeLesson (58-02)
+- GrammarModule LessonCard shows Locked/New/Completed badges; locked lessons non-clickable (58-02)
+- Migration 12 initializes unlockedLessons for existing players from completedLessons (58-02)
 - Two new Redux slices added: placementSlice + cefrProgressSlice (both write-once-per-session, no live CEFR regression)
 - learningProgressMiddleware now POPULATED (Phase 57-01) — 6 XP routing rules active
 - recharts v3.8.0 is the ONE new npm install — React 19 peer dep confirmed; lazy-load in charts-vendor chunk
@@ -74,7 +78,9 @@ Plan: 2 of 2 (58-01 complete)
 | Decision | Context |
 |----------|---------|
 | GRAM-01/GRAM-03 assigned to Phase 62 | Success criterion (50 lessons, CEFR gates) only fully TRUE after B1-B2 content ships |
-| GRAM-02/GRAM-04 assigned to Phase 58 | 12 exercise types + XP wiring verifiable with A1-A2 lessons alone |
+| GRAM-02/GRAM-04 assigned to Phase 58 | 12 exercise types + XP wiring verifiable with A1-A2 lessons alone — SHIPPED |
+| order-based unlock in unlockNextLesson | Sorts all grammarLessons by order field — works regardless of category |
+| migration 12 conservative unlock | al-definite + all completed + one ahead of highest; middleware handles future unlocks |
 | Phase 59 (adaptive) before Phase 60 (quiz types) | New quiz types must inherit adaptive behavior from day one |
 | Phase 61 depends on both Phase 58 and 59 | Grammar content for CAT questions + adaptive engine for item selection |
 | Phase 63 last before display layer | All achievement event sources must exist before conditions are authored |
@@ -104,6 +110,6 @@ Plan: 2 of 2 (58-01 complete)
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 58 Plan 01 complete — grammar.js A1-A2 expansion + ExerciseStage 12 renderers (GRAM-02 data layer shipped)
-Resume file: .planning/phases/58-grammar-a1-a2-lesson-wiring/58-01-SUMMARY.md
-Next plan: Phase 58 Plan 02 — grammarSlice unlock + GrammarModule gating
+Stopped at: Phase 58 Plan 02 complete — grammarSlice unlock + GrammarModule gating + migration 12 (GRAM-04 shipped, Phase 58 COMPLETE)
+Resume file: .planning/phases/58-grammar-a1-a2-lesson-wiring/58-02-SUMMARY.md
+Next plan: Phase 59 — adaptive difficulty engine

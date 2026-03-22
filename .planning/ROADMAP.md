@@ -237,7 +237,7 @@ Plans:
 
 Plans:
 - [x] 58-01: 20 A1-A2 grammar lessons in grammar.js with 12 exercise types + grammarChecker vitest + ExerciseStage 12 renderers (GRAM-02) — 2026-03-22
-- [ ] 58-02: learningProgressMiddleware grammar completion → Grammar skill tree XP + auto-unlock next lesson + lesson sequence gating in GrammarOverlay (GRAM-04)
+- [x] 58-02: learningProgressMiddleware grammar completion → Grammar skill tree XP + auto-unlock next lesson + lesson sequence gating in GrammarModule + migration 12 (GRAM-04) — 2026-03-22
 
 #### Phase 59: Adaptive Difficulty Engine
 **Goal**: Quiz sessions target a 70-85% success rate for every player and adapt question format to player weaknesses — in place before any new quiz types ship
@@ -388,7 +388,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 55. Mini-Games and Content Polish | v11.0 | 5/5 | Complete | 2026-03-21 |
 | 56. Bug Fixes & Redux Foundation | v12.0 | 1/2 | Complete    | 2026-03-22 |
 | 57. Skill Tree Infrastructure | v12.0 | 0/3 | Complete    | 2026-03-22 |
-| 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 0/2 | Not started | - |
+| 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 59. Adaptive Difficulty Engine | v12.0 | 0/2 | Not started | - |
 | 60. Quiz Expansion (Core 3 Types) | v12.0 | 0/3 | Not started | - |
 | 61. CEFR Placement Test | v12.0 | 0/3 | Not started | - |
@@ -400,4 +400,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-22 — Phase 58 Plan 01 complete (GRAM-02 data layer: 20 A1-A2 lessons + 12 exercise type renderers)*
+*Last updated: 2026-03-22 — Phase 58 COMPLETE (GRAM-02 + GRAM-04: 20 A1-A2 lessons, 12 exercise types, lesson unlock wiring, GrammarModule gating, migration 12)*
