@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Phase 57 Plan 01 complete — 6 skill trees expanded to 30 nodes, learningProgressMiddleware populated, initializeSkillTree created and wired
-last_updated: "2026-03-22T13:38:00Z"
+stopped_at: Phase 57 Plan 02 complete — skill tree reward dispatch wired, skill_tree_level condition added to ActionSetExecutor, skillTreeUnlocked in actionContext
+last_updated: "2026-03-22T13:50:00Z"
 progress:
   total_phases: 9
   completed_phases: 1
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -24,9 +24,9 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 ## Current Position
 
 Phase: 57 (skill-tree-infrastructure) — IN PROGRESS
-Plan: 2 of 3 (57-01 complete)
+Plan: 3 of 3 (57-02 complete — 57-03 remaining)
 
-Progress: ██░░░░░░░░ (3/5 plans complete across v12.0)
+Progress: ███░░░░░░░ (4/5 plans complete across v12.0)
 
 ### Shipped Milestones
 
@@ -82,6 +82,9 @@ Progress: ██░░░░░░░░ (3/5 plans complete across v12.0)
 | bulkUnlockNodes bypasses XP deduction | Used exclusively by initializeSkillTree — avoids XP math complications during bootstrap |
 | initializeSkillTree gated on skillXP > 0 OR unlockedNodes.length > 0 | Dual guard prevents double-init across both fresh and returning player paths |
 | unlock_spell/dialogue/zone/npc_branch placed at C2 nodes | Terminal-tier rewards for SKILL-03 upstream content dispatch |
+| unlock_zone/dialogue/npc_branch use distinct setFlag key prefixes | zone_access_/dialogue_/npc_branch_ prevent namespace collisions in worldState.flags |
+| unlock_spell dispatches discoverRoot with element: 'earth' | Element is cosmetic/not skill-tree-gating-critical; 'earth' is a valid ROOT_ELEMENTS value |
+| skillTreeUnlocked exposed as full unlockedNodes map in actionContext | Avoids per-tree selector calls at context-build time; ActionSetExecutor reads [treeId].length |
 
 ### Blockers/Concerns
 
@@ -96,6 +99,6 @@ Progress: ██░░░░░░░░ (3/5 plans complete across v12.0)
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 57 Plan 01 complete — skill trees expanded, XP routing live, initializeSkillTree wired
-Resume file: .planning/phases/57-skill-tree-infrastructure/57-01-SUMMARY.md
-Next plan: Phase 57 Plan 02 — /gsd:execute-phase (57-02)
+Stopped at: Phase 57 Plan 02 complete — reward dispatch wired, skill_tree_level condition added, skillTreeUnlocked in actionContext
+Resume file: .planning/phases/57-skill-tree-infrastructure/57-02-SUMMARY.md
+Next plan: Phase 57 Plan 03 — /gsd:execute-phase (57-03)
