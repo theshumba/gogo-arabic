@@ -153,7 +153,19 @@ export default function GrammarLesson({ lessonId, onBack }) {
           lessonId: lesson.id,
           score: Math.round((exerciseScore / lesson.exercises.length) * 100),
         }));
-        setStage('quiz');
+        if (lesson.quiz.length === 0) {
+          // No quiz questions — skip quiz stage and complete lesson
+          const exerciseScorePercent = Math.round((exerciseScore / lesson.exercises.length) * 100);
+          dispatch(completeLesson({
+            lessonId: lesson.id,
+            exerciseScore: exerciseScorePercent,
+            quizScore: 100,
+          }));
+          dispatch(addXP(exerciseScore === lesson.exercises.length ? XP_REWARDS.PERFECT_LESSON : XP_REWARDS.LESSON_COMPLETE));
+          setStage('complete');
+        } else {
+          setStage('quiz');
+        }
       }
     } else if (stage === 'quiz') {
       if (currentQuizIndex < lesson.quiz.length - 1) {
