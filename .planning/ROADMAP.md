@@ -249,7 +249,7 @@ Plans:
   3. A player consistently answering correctly (above 85%) sees distractor difficulty increase — wrong answers become more plausible Arabic words
 
 Plans:
-- [ ] 59-01: Rolling session accuracy tracker in useQuiz.js + per-content-cluster difficulty tracking + FSRS-due override flag (QUIZ-02)
+- [x] 59-01: Rolling session accuracy tracker in useQuiz.js + per-content-cluster difficulty tracking + FSRS-due override flag (QUIZ-02) — 2026-03-22
 - [ ] 59-02: QUIZ_TYPE_REGISTRY in quizTypes.js with 18 types, minLevel/cefrMin gates + format-selection logic routing grammar-weak players to grammar quiz types (QUIZ-03)
 
 #### Phase 60: Quiz Expansion (Core 3 Types)

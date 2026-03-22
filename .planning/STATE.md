@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Phase 58 Plan 02 complete — grammar lesson unlock wiring + GrammarModule gating + migration 12 (GRAM-04 shipped)
-last_updated: "2026-03-22T18:23:00Z"
+stopped_at: Phase 59 Plan 01 complete — adaptive session tracking + FSRS-due override + tiered distractor scaling + 17 unit tests (QUIZ-02 shipped)
+last_updated: "2026-03-22T20:42:17Z"
 progress:
   total_phases: 9
   completed_phases: 3
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 58 COMPLETE — ready for Phase 59 (adaptive difficulty engine)
+**Current focus:** Phase 59 — adaptive-difficulty-engine
 
 ## Current Position
 
-Phase: 58 (grammar-a1-a2-lesson-wiring) — COMPLETE
-Plan: 2 of 2 (58-02 complete)
+Phase: 59 (adaptive-difficulty-engine) — IN PROGRESS
+Plan: 2 of 2 (Plan 01 COMPLETE — 59-01-SUMMARY.md)
 
 ### Shipped Milestones
 
@@ -48,6 +48,12 @@ Plan: 2 of 2 (58-02 complete)
 
 ### Key v12.0 Context
 
+- isFsrsDue/getDistractorTier/pickDistractors exported as pure functions from useQuiz.js (59-01) — testable without React
+- quizState now has clusterAccuracy{}, fsrsDueOverride, distractorTier — all reset on close() (59-01)
+- pickDistractors easy tier guarantees count-1 cross-category words via explicit partition (not pool shuffle) (59-01)
+- getRetrievability(card, now) exported from fsrs.js — returns 0-1 float via scheduler.get_retrievability(card, now, false) (59-01)
+- CLUSTER_MAP in useQuiz.js maps 12 quiz types to 5 clusters: vocabulary/grammar/reading/roots/listening (59-01)
+- 17 adaptive tests in src/hooks/__tests__/useQuiz.adaptive.test.js — all passing (59-01)
 - grammar.js has 43 lessons (fixed from 47 — structural bug removed 4 duplicate/misplaced lessons)
 - grammar.js had structural bug: 40 lessons were in grammarCategories, not grammarLessons — FIXED (58-01)
 - 20 A1-A2 lessons now fully populated: 12+ exercises, 4+ types, 4+ quiz questions each (58-01)
@@ -77,6 +83,10 @@ Plan: 2 of 2 (58-02 complete)
 
 | Decision | Context |
 |----------|---------|
+| Compute distractorTier at loadQuestion call time (not from quizState) | React state batching would cause stale tier if read from quizState inside loadQuestion |
+| Easy tier uses explicit partition (not pool shuffle) | pool shuffle allows all-same-category result; partition guarantees count-1 cross-category |
+| CLUSTER_MAP in useQuiz.js until quizTypes.js exists | Avoids missing-module import before 59-02 creates quizTypes.js |
+| clusterAccuracy resets on close() | Session-ephemeral data; cross-session persistence out of scope per REQUIREMENTS.md |
 | GRAM-01/GRAM-03 assigned to Phase 62 | Success criterion (50 lessons, CEFR gates) only fully TRUE after B1-B2 content ships |
 | GRAM-02/GRAM-04 assigned to Phase 58 | 12 exercise types + XP wiring verifiable with A1-A2 lessons alone — SHIPPED |
 | order-based unlock in unlockNextLesson | Sorts all grammarLessons by order field — works regardless of category |
@@ -110,6 +120,6 @@ Plan: 2 of 2 (58-02 complete)
 ## Session Continuity
 
 Last session: 2026-03-22
-Stopped at: Phase 58 Plan 02 complete — grammarSlice unlock + GrammarModule gating + migration 12 (GRAM-04 shipped, Phase 58 COMPLETE)
-Resume file: .planning/phases/58-grammar-a1-a2-lesson-wiring/58-02-SUMMARY.md
-Next plan: Phase 59 — adaptive difficulty engine
+Stopped at: Phase 59 Plan 01 complete — adaptive session tracking + FSRS-due override + tiered pickDistractors + 17 unit tests (QUIZ-02 shipped)
+Resume file: .planning/phases/59-adaptive-difficulty-engine/59-01-SUMMARY.md
+Next plan: Phase 59 Plan 02 — QUIZ_TYPE_REGISTRY + selectQuizTypeForPlayer + quizTypes.test.js
