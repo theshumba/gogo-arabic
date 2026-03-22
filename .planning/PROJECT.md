@@ -170,4 +170,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-22 after Phase 59 (Adaptive Difficulty Engine) complete — rolling accuracy tracker, 3-tier distractor scaling, FSRS-due override, QUIZ_TYPE_REGISTRY (18 types), selectQuizTypeForPlayer grammar-weak routing, mid-session format adaptation*
+*Last updated: 2026-03-22 after Phase 60 (Quiz Expansion — Core 3 Types) complete — GrammarFill (conjugation fill-in-blank, A2+), WordOrder (tile-click sentence arrangement, B1+), ClozePassage (passage-fill, A2+), registry activated with 15 active + 3 deferred types*
