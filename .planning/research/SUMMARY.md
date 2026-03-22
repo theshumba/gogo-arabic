@@ -1,184 +1,224 @@
 # Project Research Summary
 
-**Project:** Gogo Arabic — v11.0 Deep Systems & Content Engine
-**Domain:** Arabic Learning RPG (React 19 + Phaser 3 + Redux Toolkit + Express 5 + MongoDB)
-**Researched:** 2026-03-19
-**Confidence:** HIGH (stack verified against live codebase; patterns confirmed from 17 existing slices and 196K LOC precedent)
+**Project:** Gogo Arabic — v12.0 Learning Systems
+**Domain:** Arabic Learning RPG — CEFR-aligned skill progression, adaptive quizzing, grammar expansion, placement testing, achievement systems
+**Researched:** 2026-03-22
+**Confidence:** HIGH
 
 ## Executive Summary
 
-Gogo Arabic v11.0 adds 13 new systems to a 196K+ LOC production codebase. The existing stack handles the vast majority of these additions without new libraries — three new Redux slices, two middleware, and three new Phaser systems cover the core game-state and world-life requirements. The only genuinely new npm dependency required is `inkjs` (v2.4.0, for narrative scripting), alongside a dev-only bundle analysis tool. Every other proposed dependency — XState, Fabric.js, AceBase, React Query — either conflicts with existing architecture, adds bundle cost without net benefit, or is fully replaceable by patterns already proven in the codebase. The key insight from research is that the codebase's existing patterns (Redux slices, EventBus, ActionSetExecutor, IndexedDB hybrid persist) are sufficient infrastructure for all 13 systems.
+Gogo Arabic v12.0 extends a mature 196K+ LOC codebase with seven interconnected learning systems: 6 skill trees with unlockable node progression, grammar expansion from 7 to 50 lessons, quiz expansion from 6 to 18 types, an adaptive difficulty engine, a CEFR diagnostic placement test, achievement expansion from 44 to 250+, and CEFR progress reports with social sharing. The foundational infrastructure — Redux Toolkit (31 slices), ts-fsrs (5,029 words with CEFR tags), FSRS scheduling, quiz rendering, grammar lesson system, and achievement middleware — already exists and is proven at scale. The dominant build pattern is data expansion and logic extension on existing systems, not new architecture. Only one new npm package is required (`recharts` v3.8.0 for assessment dashboard charts), and two new Redux slices are needed (`placementSlice` and `cefrProgressSlice`).
 
-The dependency graph for v11.0 has a clear critical path. The `worldStateSlice` (500+ flags) is the root dependency: inkjs integration, faction reputation, NPC gossip, and learning path all write to it. This forces a foundation-first build order. Bundle optimization must also run first — adding inkjs (120KB), calligraphy, poetry, and 5,000+ vocabulary words on top of the current 862KB bundle without a pre-phase optimization pass would produce an unshippable product. Content gap resolution (573 missing NPC dialogue lines) should be tackled early so subsequent systems have dialogue to integrate with.
+The recommended build order is dependency-driven: fix existing bugs first (grammar achievement mapping missing, lesson count is 47 not 50), then skill tree infrastructure (all other features surface through or are gated by trees), then grammar expansion at A1-A2, then adaptive difficulty engine, then quiz expansion, then placement test, then B1-B2 grammar, then achievement expansion, and finally CEFR reports and social sharing. This order ensures adaptive difficulty is in place before new quiz types launch and grammar content exists before the placement test uses it. The pre-existing grammar_lessons achievement bug must be fixed in Wave 1 before any new achievement work begins.
 
-The primary risks are architectural, not feature-level. inkjs introduces a bidirectional state sync with Redux that can produce race conditions if timing rules are violated. The DialogueEngine.js replacement must use an adapter pattern (fallback to legacy JSON) rather than big-bang migration across all 23 NPCs. Bundle regressions after the optimization phase are a documented risk — every subsequent phase plan must include a build size check. Faction gating introduces soft-lock risk if main quest progression is ever tied to faction scores; faction gates must be restricted to bonus content only.
+The primary risks are data integrity and UX quality. Save data migration is non-negotiable: any new persisted Redux slice without a migration function crashes existing players on first load. Skill trees must auto-unlock nodes for content existing players have already mastered, not gate it retroactively. The adaptive difficulty engine must treat FSRS-due cards as always eligible (format-only adaptation, never a scheduling override). The placement test must default to placing players one level below raw score to avoid the documented 62% over-placement problem. Achievement expansion must be tiered and quality-gated — shipping all 250 at once dilutes motivational value. These five risks appear across all four research files as the most critical implementation constraints.
+
+---
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing stack (React 19 + Phaser 3 + Redux Toolkit + Vite 7) is sufficient for all v11.0 systems. Install `inkjs@^2.4.0` (narrative scripting engine, zero dependencies, browser-compatible ESM) and `rollup-plugin-visualizer@^5.12.0` (dev-only, bundle treemap analysis). All other systems use existing primitives: plain Redux slices for world state and faction reputation, Phaser 3 Graphics API for calligraphy letter tracing, and the existing FSRS + quiz infrastructure for poetry battles.
-
-**Critical installation finding:** `inkjs` and `acebase` are described as installed in the milestone context but are NOT present in `node_modules` or `package.json`. `inkjs` must be installed before any dialogue-related phase. AceBase is deferred — its 200-300KB bundle cost conflicts with the 862KB → 500KB optimization target, and its role (live object sync) is fully covered by the existing IndexedDB hybrid persistence plus `worldStateSlice`.
+The v12.0 stack is the existing stack plus one new package. All seven feature systems are buildable with the already-installed React 19 + Redux Toolkit + ts-fsrs + Phaser 3 + Framer Motion + inkjs combination. No structural changes are needed.
 
 **Core technologies:**
-- `inkjs` v2.4.0: narrative dialogue scripting — replaces unmaintainable hardcoded JSON NPC trees with declarative `.ink` files; bridges to Redux via `variablesState` and `BindExternalFunction`
-- `rollup-plugin-visualizer` v5.12.0: bundle diagnosis — required to identify which modules account for the 862KB before optimization can proceed intelligently
-- Redux Toolkit `createSlice`: world state machine, faction reputation, poetry battles — 17 existing slices prove the pattern scales to 500+ variables without external state machine libraries
-- Phaser 3 Graphics API: calligraphy mini-game stroke capture and scoring — avoids second canvas renderer conflict that Fabric.js or Atrament would create
-- IndexedDB hybrid persist (existing, redux-persist): persistence for all 3 new slices — proven in production for 5 slices since v6.0
+- `recharts` v3.8.0 — radar charts for skill distribution, line charts for CEFR progression in assessment dashboard. Only confirmed new install. React 19 peer dependency explicitly confirmed via npm registry.
+- `html-to-image` v1.11.13 — conditional; only if social share card is in scope. Preferred over unmaintained `html2canvas` for correct RTL Arabic text handling via SVG foreignObject.
+- `@reduxjs/toolkit` v2.11.2 — two new slices (`placementSlice`, `cefrProgressSlice`) and one new middleware (`learningProgressMiddleware`) follow the established 31-slice, 5-middleware pattern.
+- `ts-fsrs` v5.2.3 — FSRS card state and CEFR tag data are the primary signals for adaptive difficulty. No API changes needed.
+- `vite.config.js` — add `charts-vendor` and `share-vendor` manual chunk entries to keep initial bundle unaffected by recharts (~180KB) and html-to-image (~40KB).
 
-**What NOT to add:** XState (60KB, FSM modeling unneeded for flat flag store), Fabric.js/Atrament (second canvas renderer), AceBase (200-300KB, third persistence layer, single maintainer), React Query/SWR (overkill with existing `createAsyncThunk` patterns), react-konva (React-canvas bridge unnecessary inside Phaser context).
+**What NOT to install:** react-flow (overkill for linear tier list nodes), dnd-kit (SentenceBuilder already exists), NLP libraries (custom `GrammarChecker.js` with lookup tables is sufficient for finite A1-B2 rules), TensorFlow (FSRS stability scores are enough for adaptive difficulty), Recharts v2.x (React 19 incompatible — v3.8.0 only), XState (placement test is 20-30 linear questions, not a complex state machine).
 
 ### Expected Features
 
-**Must have (table stakes) — v11.0 ships these:**
-- World state machine (500+ Redux flags/counters) — every other v11.0 feature depends on it
-- Bundle optimization (862KB → 500KB) — current initial load is unresponsive on mobile; must resolve before adding more systems
-- 573 missing NPC dialogue lines — content gaps make existing NPCs feel broken; earliest possible fix
-- inkjs dialogue migration — 80+ lines of hardcoded JSON per NPC is unmaintainable; pilot 5 NPCs, adapter fallback to legacy JSON
-- Learning path system (Scholar/Traveler/Historian) — v4.0 UI exists, wire FSRS queue reordering logic
-- Faction reputation engine (6 factions, 0-100, threshold gating) — core differentiator, vocabulary-domain differentiation
-- Vocabulary expansion (1,220 → 5,000+) — prerequisite for meaningful learning path differentiation and poetry battles
+**Must have (table stakes):**
+- Skill trees (6 trees: Reading, Writing, Listening, Conversation, Grammar, Culture) with node unlock progression, prerequisite validation, and CEFR-gated tiers. Players who chose Scholar/Traveler/Historian path expect that choice to manifest as visible, branching specialization. Without trees, the paths are cosmetic labels.
+- Grammar expansion to 50 lessons covering A1-B2 with 12 exercise types per lesson. 7 lessons for a system claiming A1-B2 coverage is sparse; intermediate players have vocabulary they cannot use grammatically.
+- Adaptive difficulty engine across all 18 quiz types. Word Duel battles already have adaptive difficulty (v1.0 feature); not extending this to all quiz types creates inconsistent experience.
+- CEFR diagnostic placement test (15-20 questions, CAT algorithm, 5-8 minutes). Without it, new players start at A1 regardless of prior knowledge. Research confirms 62% of learners self-place a full level too high.
+- Achievement expansion (44 to 250+). With 5,029 vocabulary words, 52 quests, 50 grammar lessons, and 6 skill trees, 44 achievements is sparse. Achievement-earners are 30% more likely to complete language courses.
 
-**Should have (differentiators) — complete v11.0:**
-- Calligraphy mini-game (28 letters, Phaser stroke capture, Frechet distance scoring) — unique among Arabic learning apps, pedagogically proven
-- Arabic poetry battles (fill-in-blank, vs NPC poet, classical Arabic) — unique in language gaming; plugs into existing Word Duel infrastructure
-- NPC gossip system (gossip tokens from EventBus, ink dialogue surfacing) — world-life differentiator; requires inkjs + state machine
-- Environmental storytelling (20 inscriptions/scrolls as ink interactions) — contextual reading practice; low content overhead per object
-- Progressive tashkeel refinement (ambiguity tagging + context-sensitive fading upgrade) — builds on proven v2.0 mechanic
-- Dynamic market simulation (supply/demand pricing, faction modifier) — world-life differentiator; no language app does agent-based NPC pricing
+**Should have (differentiators):**
+- Skill tree nodes that unlock RPG abilities (new spells, dialogue options, boss finishers) — not just content gates. This bridges language progress with gameplay feeling different.
+- Learning path specialization in tree shape: Scholar sees Grammar tree expanded, Traveler sees Conversation expanded, Historian sees Culture expanded.
+- CEFR Progress Reports delivered as in-world "Scholar's Scroll" via Amira's inkjs dialogue. Same data, emotionally resonant delivery reusing existing ink integration.
+- Social "I learned X Arabic words" shareable card — Duolingo's Year in Review virality model, implemented client-side with SVG-only design.
 
-**Defer to v12.0:**
-- AceBase realtime sync — current IndexedDB hybrid works; AceBase adds bundle cost and single-maintainer risk without solving a documented user pain
-- Vocabulary-gated zones (enhanced UI with gap count) — current gates work; enhancement is polish, not blocking
+**Defer to v13.0:**
+- Audio-dependent quiz types (listening comprehension, dictation) — only if TTS infrastructure exists; do not block milestone.
+- Three lower-priority quiz type components (DialectIdentify, RootExpand, CulturalContext) — depend on B2/C1 nodes most players won't reach in MVP.
+- Skill tree respec via learning path change.
+- CEFR writing assessment with open-ended Arabic composition grading — requires NLP infrastructure.
+
+**Anti-features (do not build):**
+- Free-form skill point allocation — breaks pedagogical sequencing; gate nodes by CEFR level achieved, not arbitrary point spend.
+- LLM-generated quiz questions — Arabic grammar accuracy unreliable; all questions from 5,029-word vetted vocabulary.
+- Voice recognition quiz type — explicitly out of scope; Arabic phoneme accuracy issues (emphatics, pharyngeals, uvulars).
+- Time-spent-only achievements — decouples reward from learning; all achievements require demonstrated mastery.
+- Competitive leaderboards for achievements — negative effects on educational completion for non-top-performers.
 
 ### Architecture Approach
 
-Three new Redux slices (`worldStateSlice`, `factionSlice`, `poetrySlice`) plus two middleware (`factionMiddleware`, `worldStateMiddleware`) handle all game-state requirements. Three new Phaser systems (`InkDialogueEngine`, `CalligraphyScene`, `GossipManager`) extend the existing scene hierarchy. The inkjs integration follows a strict bidirectional sync protocol: Redux state injected into `story.variablesState` before dialogue, ink variable mutations dispatched back to Redux after dialogue ends — never mid-dialogue. The DialogueEngine.js replacement uses an adapter pattern: check for `.ink.json` first, fall back to legacy JSON, enabling incremental NPC migration without breaking existing content. Six existing files require modification: `DialogueEngine.js`, `ActionSetExecutor.js`, `NPCManager.js`, `InteractableManager.js`, `BootScene.js`, `vite.config.js`, `vocabularyAll.js`, `EconomyFlow.js`.
+The architecture is extension-first: 2 new Redux slices, 1 new middleware, 3 new data files, and 6 new React components added to an already-functional system. The major integration pattern is action-triggered middleware (same as battleRewardsMiddleware and factionMiddleware) routing cross-system XP and CEFR advancement. Two critical existing systems need targeted fixes before feature work: the grammar_lessons achievement bug (action mapping missing from `achievementMiddleware`) and grammar lesson ID migration from numeric indices to string slugs.
 
 **Major components:**
-1. `InkDialogueEngine` — wraps inkjs Story, exposes `advance()` / `getChoices()` / `jumpToKnot()`, bridges Redux via `variablesState` and `BindExternalFunction`; adapter fallback to legacy JSON
-2. `worldStateSlice` + `factionSlice` — flat key-value stores for 500+ world flags and 6 faction scores respectively; IndexedDB-persisted; strict `{zone}_{action}_{target}` naming convention enforced via `WORLD_STATE_KEYS` constants file
-3. `GossipManager` — gossip token creation from EventBus events, propagation to NPCs with relationship >= 25, 3-day expiry, ink dialogue surfacing
-4. `CalligraphyScene` — separate lazy-loaded Phaser scene with pointer-path capture, Frechet distance scoring against reference Bezier paths, 3-star feedback
-5. `PricingAgent` — pure JavaScript supply/demand model per shop (not a library); price = base x (maxSupply/currentSupply) x factionModifier; price floors 50%, ceilings 200%
+1. `placementSlice` + `PlacementTestOverlay.jsx` — diagnostic test state machine, reuses existing quiz type components, writes to cefrProgressSlice and skillTreeSlice on completion via batch dispatch in middleware.
+2. `cefrProgressSlice` + `CefrProgressReport.jsx` — canonical write-once-per-session CEFR level with historical snapshots; feeds progress report and social card. Level stored as snapshots, never live-computed, preventing backwards regression.
+3. `learningProgressMiddleware` — cross-system routing: grammar completion → Grammar skill XP, skill node unlock → player XP reward, placement completion → batch grants + CEFR level set. Kept separate from `achievementMiddleware` to avoid ballooning that file's switch/case table.
+4. `QUIZ_TYPE_REGISTRY` in `quizTypes.js` — 18 quiz type metadata with `minLevel`/`cefrMin` gates; higher quiz types unlock as player CEFR advances.
+5. Extended data files — `grammar.js` (47 → 50 lessons), `skillTrees.js` (~10-12 nodes per tree → 30 per tree), `achievements.js` (+206 entries in existing 20-category schema).
+
+**Key data flows:**
+- FSRS card stability drives adaptive quiz difficulty. FSRS-due cards are always eligible; adaptive engine controls question format and distractor difficulty only.
+- Placement test result fans out via `react-redux batch()` in `learningProgressMiddleware` to avoid 20 cascading React re-renders.
+- CEFR level is write-once-per-session, stored as snapshots, preventing the "level went backwards" trust problem in progress reports.
+- `achievementMiddleware` re-entrancy guard already exists — all 206 new achievements must route through it, checking `grantedAt` before firing.
 
 ### Critical Pitfalls
 
-1. **inkjs big-bang migration** — migrating all 23 NPCs at once breaks everything. Prevention: adapter pattern with `.ink.json` check + legacy JSON fallback; pilot 5 NPCs first, batch-migrate after verification.
-2. **Bundle regression after optimization** — adding inkjs (120KB) + calligraphy + poetry + 5K words post-optimization recovers all lost savings. Prevention: bundle optimization is Phase 1; every subsequent phase plan must include `npm run build` size check; inkjs, CalligraphyScene, poetry all lazy-loaded.
-3. **World state naming chaos** — 500+ flags with inconsistent names become unmaintainable. Prevention: `{zone}_{action}_{target}` convention enforced from day one; `WORLD_STATE_KEYS` constants file; all reads via typed selectors.
-4. **Faction gating soft-locks** — faction choice locks player out of main quest items. Prevention: faction gates affect bonus content only; main storyline completable at faction score 0; test every main quest with all factions at 0.
-5. **inkjs-Redux sync race conditions** — `story.variablesState` and Redux get out of sync during dialogue segments. Prevention: sync direction is always Redux to ink (before dialogue) then ink to Redux (after dialogue ends); never read Redux mid-dialogue from ink; batch dispatch after each segment.
-6. **BootScene lazy loading stutters** — zone-based asset loading causes missing textures on first zone entry. Prevention: shared assets (player, UI, common NPCs) remain in initial load; zone transition loading screen handles deferred loads; preload adjacent zones during gameplay.
-7. **Untested battle code (~2.6K LOC)** — poetry battles built on untested combat code makes bugs invisible. Prevention: battle code tests (BattleStateMachine, GrammarComboDetector, StatusEffectBar) are a prerequisite Wave 1 for the poetry battles phase.
+1. **Save data breaks without migration** — Every new persisted Redux slice must bump `persistConfig.version` and include a migration function seeding default state. Test against a real v11.0 save snapshot before shipping. Consequences if missed: white-screen crash or silent data loss for all existing players.
+2. **Skill trees retroactively locking already-mastered content** — On first initialization, run `initializeSkillTree(existingPlayerState)` to auto-unlock nodes the player already satisfies via FSRS mastery, quest completion, and CEFR level. Trees must reflect mastery, not gate it.
+3. **Adaptive difficulty overriding FSRS scheduling silently** — FSRS-due cards are always eligible regardless of adaptive difficulty band. Without this rule, FSRS retention rates degrade silently as the adaptive engine filters out due cards. Add `fsrs_override: true` flag to quiz session items from the FSRS due queue.
+4. **Placement test over-placing players** — Default placement one level below raw score. Include at least one productive question type (not only multiple-choice recognition). Always offer "Start Lower" escape hatch. Cap initial placement at B1. Recognition tests systematically overestimate ability; 62% over-placement documented in European Language Council research.
+5. **Achievement dilution from shipping all 250 at once** — Tier the system (Bronze/Silver/Gold/Legendary). Ship 80-100 meaningful achievements at launch, add the rest in content patches. Apply the clarity test: does this achievement teach a mechanic, reward a distinct milestone, or celebrate mastery? If not, cut it.
+6. **Grammar lesson ID references breaking at scale** — Existing numeric IDs (lesson_0 through lesson_6) in quest triggers, ink dialogue, and FSRS sync will collide when ordering changes. Migrate to string slug IDs before authoring any new lesson.
+7. **Social share card CORS failure in production** — Design the card using only inline SVG, CSS gradients, and text — no external image dependencies. Canvas is tainted by any cross-origin image. Test specifically in production build with assets at real CDN URLs.
+
+---
 
 ## Implications for Roadmap
 
-Based on research, the dependency graph forces a 6-phase build order. The critical path runs through world state, then inkjs, then faction, then world life systems, then mini-games. Phases N+0 and N+1 are blockers for everything downstream.
+Based on combined research, the dependency graph drives a clear 9-phase build sequence. The critical constraint: adaptive difficulty engine and skill tree infrastructure must be early because grammar, quiz expansion, and achievements all depend on them. Two pre-existing bugs must be fixed before any new feature work begins.
 
-### Phase N+0: Infrastructure Baseline
-**Rationale:** World state machine is the root dependency for inkjs, factions, gossip, and learning path. Bundle optimization must precede all feature additions to prevent regression. Neither can be deferred.
-**Delivers:** `worldStateSlice` (500+ flags, IndexedDB-persisted, `WORLD_STATE_KEYS` constants), `factionSlice` (6 factions), `worldStateMiddleware`, bundle optimization (Vite manualChunks + BootScene lazy loading + `rollup-plugin-visualizer`), initial bundle under 500KB.
-**Addresses:** World state machine, bundle optimization (both P1 table stakes)
-**Avoids:** World state naming chaos (constants file); bundle regression (optimization first); zone stutter (shared vs zone-specific asset split defined here)
-**Stack note:** Install `inkjs@^2.4.0` and `rollup-plugin-visualizer@^5.12.0` — both are NOT in package.json despite milestone context claiming otherwise.
+### Phase 1: Bug Fixes and Migration Foundation
+**Rationale:** Two pre-existing issues block downstream work. The grammar_lessons achievement mapping is missing from `achievementMiddleware` — grammar achievements have never fired. Grammar lesson count is 47, not 50 as documented. These must be fixed before any new feature is authored. Migration foundation prevents save data crashes for all subsequent phases.
+**Delivers:** `grammar/completeLesson` wired in `achievementMiddleware.ACTION_TO_ACHIEVEMENT_TYPES`; grammar lesson slug ID migration (lesson_0 → lesson_verb_present etc.); `placementSlice` + `cefrProgressSlice` registered in store.js with `persistConfig.version` bump and migration function; `learningProgressMiddleware` scaffolded.
+**Avoids:** Pitfalls 1, 6, 12 (save data breaks, broken lesson references, double-grants on hydration).
 
-### Phase N+1: Dialogue Foundation
-**Rationale:** inkjs needs the state machine (Phase N+0). Dialogue content (573 lines) should be filled while migrating the engine so writers work in the new system from the start. Learning path wires into FSRS queue reordering — minimal new infrastructure, just logic.
-**Delivers:** `InkDialogueEngine` with adapter fallback; 5-NPC pilot migration to `.ink.json`; 573 missing NPC dialogue lines filled; learning path FSRS queue reordering wired (v4.0 UI already exists); incremental batch migration plan for remaining 18 NPCs.
-**Addresses:** inkjs migration (P1), 573 missing dialogue (P1), learning path system (P1)
-**Avoids:** inkjs big-bang migration risk (adapter pattern + pilot); inkjs-Redux sync race conditions (sync timing protocol)
+### Phase 2: Skill Tree Infrastructure
+**Rationale:** All other v12.0 features surface through or are gated by skill trees. Grammar lessons unlock via tree nodes; quiz difficulty ceiling comes from tree level; achievements require tree completion events; placement test results feed tree unlock state. Must come before grammar expansion, quiz expansion, or placement test.
+**Delivers:** Skill tree nodes expanded from ~10-12 to 30 per tree; `initializeSkillTree(existingPlayerState)` for existing players; SkillTreeView with progressive disclosure UI (one tree at a time, collapsed locked branches, next 1-2 unlockable nodes highlighted); learning path branch differentiation (Scholar/Traveler/Historian-specific nodes per tree).
+**Avoids:** Pitfalls 2 and 9 (retroactive content locking for existing players; visual overwhelm from 6 trees simultaneously).
 
-### Phase N+2: Vocabulary Expansion
-**Rationale:** 1,220 to 5,000+ words is a prerequisite for learning path differentiation to feel meaningful and for poetry battles to have sufficient word candidates. Running this phase before factions allows faction-specific word tagging to be done in one pass.
-**Delivers:** 5,000+ words with domain tags (Scholar/Traveler/Historian affinity), CEFR tags, root families, and ambiguity flags; build-time dedup + validation script; vocabulary chunk stays below 150KB.
-**Addresses:** Vocabulary expansion (P1), progressive tashkeel ambiguity tags
-**Avoids:** Vocabulary duplication/broken root links (validation script); vocabulary chunk size regression
+### Phase 3: Grammar Expansion A1-A2
+**Rationale:** Grammar tree (Phase 2) provides the gating structure; now populate its first tier. A1-A2 first (lower content risk, validates lesson schema) before B1-B2. Grammar content is required for the placement test's grammar section (Phase 6).
+**Delivers:** 20 new lessons (bringing A1-A2 total to ~27 lessons), 12 exercise types per lesson including conjugation drill, fill-in-blank, sentence transformation; `GrammarChecker.js` utility (rule-based lookup, no NLP library); `vocabulary_prerequisites` field per lesson validated against 5,029-word dataset at build time.
+**Avoids:** Pitfall 11 (grammar vocabulary disconnected from player's known words).
 
-### Phase N+3: Faction Reputation Engine
-**Rationale:** Faction system requires world state (N+0) and inkjs (N+1) — faction-gated dialogue branches are authored in ink. Dynamic market requires faction scores as a modifier, so factions must precede market.
-**Delivers:** `factionSlice` wired to `ActionSetExecutor` (new `factionRequired` requirement type); `factionMiddleware`; 6 factions with 0-100 scale, tier thresholds, and content gating at 25/50/75/100; Merchant + Scholar factions launch first; faction-gated dialogue in ink.
-**Addresses:** Faction reputation engine (P1 differentiator)
-**Avoids:** Faction gating soft-locks (bonus-content-only gating rule; main quest faction-0 test)
+### Phase 4: Adaptive Difficulty Engine
+**Rationale:** Must be in place before quiz expansion ships — otherwise all 12 new quiz types launch at fixed difficulty, creating poor UX from day one. Also required by the placement test CAT item selection algorithm.
+**Delivers:** Rolling accuracy tracker in `useQuiz.js` (local state, session-only, not Redux-persisted); `QUIZ_TYPE_REGISTRY` with `minLevel`/`cefrMin` gates; adaptive tier (1-5) feeding existing `wordSelection.js selectWordsByDifficulty`; per-content-cluster difficulty tracking (not a single global average). Priority hierarchy: FSRS-due cards always eligible; adaptive engine controls format only.
+**Avoids:** Pitfall 3 (adaptive difficulty overriding FSRS scheduling), Pitfall 10 (convergence to a single difficulty plateau).
 
-### Phase N+4: World Life Systems
-**Rationale:** Dynamic market requires factions (N+3). NPC gossip requires inkjs (N+1) and state machine (N+0). Environmental storytelling requires inkjs and existing interactive objects. All three are world-life differentiators that compound each other — grouping them delivers a cohesive "world feels alive" milestone.
-**Delivers:** `PricingAgent` supply/demand model in `EconomyFlow.js` with faction modifier and price caps; `GossipManager` with EventBus integration and 3-day token expiry; 20 environmental inscriptions/scrolls as ink interactions across 8 zones; progressive tashkeel refinement upgrade (context-sensitive fading using ambiguity tags from N+2).
-**Addresses:** Dynamic market, NPC gossip, environmental storytelling, progressive tashkeel refinement (all P2 differentiators)
-**Avoids:** Market exploitation (price floors/ceilings + slow supply regen); gossip token spam (max 2 tokens/NPC, `heard` flag); tashkeel ambiguity edge cases (ambiguity tags from N+2)
+### Phase 5: Quiz Expansion (Core 3 New Types)
+**Rationale:** Adaptive engine (Phase 4) is in place. Start with the three buildable new types (GrammarFill, WordOrder, ClozePassage). Three deferred components (DialectIdentify, RootExpand, CulturalContext) depend on B2/C1 tree nodes most players won't reach in MVP — defer to Phase 7 or v13.0.
+**Delivers:** `GrammarFill.jsx`, `WordOrder.jsx` (extends existing SentenceBuilder), `ClozePassage.jsx`; `quizTypes.js` registry with all 18 types defined including deferred types; CEFR-gated unlock behavior wired so higher quiz types appear as player advances.
+**Uses:** Existing `QuizOverlay.jsx` switch pattern, existing `SentenceBuilder.jsx` drag-and-drop.
 
-### Phase N+5: Mini-Games and Content Polish
-**Rationale:** Calligraphy is independent of all other systems but grouping it with poetry battles creates a coherent "deep learning moments" milestone. Poetry battles require vocabulary expansion (N+2) and battle code test coverage as a prerequisite. Vocabulary-gated zone enhancement is pure polish at this stage.
-**Delivers:** `CalligraphyScene` (lazy-loaded Phaser scene, 28 isolated letter forms, Frechet distance scoring, 3-star feedback); Arabic poetry battles (10 curated classical public-domain poems, fill-in-blank, NPC poet opponent, plugs into Word Duel infrastructure); vocab-gated zone enhancement (gap count display + FSRS queue surfacing); battle code test coverage (BattleStateMachine, GrammarComboDetector, StatusEffectBar).
-**Addresses:** Calligraphy mini-game, Arabic poetry battles, vocab-gated zones enhancement (all P2/P3)
-**Avoids:** Calligraphy letter form complexity (isolated forms only, 28 patterns not 112); poetry copyright (public domain classical only); untested battle code (tests before poetry phase builds on combat system)
+### Phase 6: CEFR Placement Test
+**Rationale:** Adaptive engine (Phase 4) provides CAT item selection. Grammar content (Phase 3) provides grammar section questions. Skill tree (Phase 2) is ready to receive placement result and unlock the appropriate tier.
+**Delivers:** `PlacementTestOverlay.jsx` (reuses existing quiz type components); `placementTest.js` (20-30 calibrated questions spanning Pre-A1 through B1 across all 6 tree domains); `placementEngine.js` (30-line IRT binary search); self-select prior knowledge option ("I've studied Arabic before" skips to A2 start); early-exit at 10 consecutive B1 correct; "Start Lower" escape hatch on results screen; cap at B1 maximum.
+**Avoids:** Pitfalls 4 and 13 (over-placement causing first-session churn; advanced learner forced through A1 questions).
+
+### Phase 7: Grammar Expansion B1-B2
+**Rationale:** A1-A2 lessons (Phase 3) are live and the lesson schema is validated in production. B1-B2 extends the same pattern with 30 more lessons. Kept separate to reduce content risk per phase.
+**Delivers:** 30 new B1-B2 lessons (total: 50 lessons), completing `selectGrammarProgress` to 100%. "New content added" toast for existing players whose displayed percentage will drop from ~94% to ~56% on first load after expansion.
+
+### Phase 8: Achievement Expansion
+**Rationale:** Must be late — achievements trigger on all prior systems. All event sources (skill tree, grammar, quiz, placement) must exist before achievement conditions can be authored accurately.
+**Delivers:** 206 new achievement entries in existing 20-category schema; new `isAchievementMet()` requirement types for `skill_tree_nodes`, `skill_tree_complete`, `quiz_type_streak`, `cefr_level_reached`, `placement_complete`; `quizTypeStats` field in `achievementSlice.stats`; tiered system (Bronze/Silver/Gold/Legendary). Ship 80-100 at launch; remainder in content patches.
+**Avoids:** Pitfalls 5 and 12 (achievement dilution from all 250 at once; double-grants — all new achievements route through existing `achievementMiddleware` with `grantedAt` check).
+
+### Phase 9: CEFR Progress Reports and Social Sharing
+**Rationale:** Requires all upstream data: placement baseline, grammar completion data, FSRS aggregation by CEFR tier, skill tree strength data. Purely a reading/display layer — no writes back to upstream state.
+**Delivers:** `CefrProgressReport.jsx` with recharts `RadarChart` (skill distribution) + `LineChart` (CEFR over time), both lazy-loaded in `charts-vendor` chunk; Scholar's Scroll ink dialogue for CEFR milestone moments (reuses Amira companion + existing inkjs v11.0); `SocialShareCard.jsx` (SVG-only, no external image dependencies; Web Share API with clipboard copy fallback for desktop).
+**Uses:** `recharts` v3.8.0 (the one new npm install); `html-to-image` v1.11.13 (conditional — only if character images needed on card).
+**Avoids:** Pitfall 7 (CORS canvas failure — SVG-only card design), Pitfall 8 (CEFR level going backwards — write-once-per-session snapshot model).
 
 ### Phase Ordering Rationale
 
-- World state machine precedes everything because inkjs, faction, gossip, and learning path all write to it
-- Bundle optimization precedes feature additions to prevent the regression trap (optimize then add then regress)
-- Dialogue content (573 lines) is filled during the inkjs migration phase so writers work in the new system immediately, not in the old JSON system
-- Vocabulary expansion (N+2) precedes factions (N+3) so faction-specific word tagging can be done once with the full vocabulary available
-- World life systems (N+4) are grouped together because they reference each other (market uses faction scores, gossip uses ink, inscriptions use ink) and together deliver one clear experiential milestone
-- Mini-games are last because they are self-contained and do not unblock other systems; delaying them costs nothing architecturally
+- Phase 1 fixes two active bugs that would cause silent failures downstream and lays the Redux migration foundation that every new slice depends on.
+- Phase 2 is required before Phases 3, 5, and 6 because skill trees provide the gating structure for grammar lessons, quiz type unlocks, and placement test result mapping.
+- Phases 3 and 4 have no mutual dependency and could be built in parallel if capacity allows, but Phase 3 content is needed by Phase 6.
+- Phase 4 (adaptive difficulty) must precede Phase 5 (quiz expansion) to avoid new quiz types launching at fixed difficulty.
+- Phase 6 (placement test) requires both Phase 3 (grammar questions) and Phase 4 (CAT item selection).
+- Phase 7 extends Phase 3's proven pattern with no architectural risk; can be pulled earlier if grammar content team has capacity.
+- Phase 8 waits for all trigger sources to exist — achievement conditions reference all prior systems.
+- Phase 9 is the display/sharing layer — purely reads upstream state, no write dependencies on any other phase.
 
 ### Research Flags
 
-Phases likely needing `/gsd:research-phase` during planning:
-- **Phase N+1 (inkjs migration):** ink scripting language syntax for Arabic content authors, `BindExternalFunction` bridge patterns, ink save state serialization for narrativeSlice — official ink docs and inkjs GitHub are primary sources but the Redux integration pattern needs validation against the existing DialogueEngine.js structure
-- **Phase N+2 (vocabulary expansion):** Arabic corpus sources for 5,000+ words, CEFR frequency lists for Arabic, root family validation tooling — content pipeline architecture needs planning before phase starts
-- **Phase N+5 (calligraphy):** Frechet distance algorithm implementation for 2D stroke paths, Arabic letter Bezier reference paths, positional form detection via js-arabic-reshaper — specific implementation choices need validation
+Phases likely needing deeper research during planning:
+- **Phase 6 (Placement Test):** CAT algorithm scoring formula and CEFR boundary calibration. The IRT binary search is simple, but the question bank calibration — which specific words represent each CEFR band accurately for a game context — requires careful content decisions. Scoring algorithm must be fully specified before the question bank is authored.
+- **Phase 8 (Achievement Expansion):** Achievement condition definition for 206 entries is significant content work. Need clarity on which events are already instrumented in EventBus (74 constants) versus which need new constants, and the exact `isAchievementMet()` requirement type cases for the new types.
 
 Phases with standard patterns (skip research-phase):
-- **Phase N+0 (infrastructure):** Vite manualChunks and Redux slice patterns are well-documented and already proven in 17 existing slices
-- **Phase N+3 (faction engine):** Faction reputation 0-100 scale with threshold gating is a standard RPG pattern; `ActionSetExecutor` extension is straightforward
-- **Phase N+4 (world life):** Supply/demand pricing model and EventBus gossip token pattern are both simple and well-understood; no novel algorithms
+- **Phase 1 (Bug Fixes):** 4-line code fix + Redux persist migration. Both are well-documented standard patterns, already proven in this codebase.
+- **Phase 2 (Skill Trees):** Infrastructure already exists. Data expansion and node count increase, not new architecture.
+- **Phase 3 and 7 (Grammar Expansion):** `grammar.js` schema is established at 47 lessons. Content authoring at scale with no architectural unknowns.
+- **Phase 4 (Adaptive Difficulty):** FSRS signals are the correct inputs. Algorithm is pure JS priority weighting, well-understood.
+- **Phase 5 (Quiz Expansion):** `QuizOverlay` switch pattern scales linearly; SentenceBuilder extends cleanly.
+- **Phase 9 (Reports/Social):** recharts is established; ink dialogue integration is proven from v11.0.
+
+---
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Installation status verified by inspecting `node_modules` and `package.json` directly; all version compatibility confirmed against existing lockfile; 17 existing Redux slices prove pattern scales |
-| Features | MEDIUM-HIGH | Core system design (world state, factions, inkjs) from high-confidence sources; gossip/poetry/calligraphy patterns from game design literature and research papers (MEDIUM for secondary sources) |
-| Architecture | HIGH | Build order derived from strict dependency graph analysis; adapter pattern and sync timing rules are defensive but evidence-based; existing codebase architecture (ActionSetExecutor, EventBus, IndexedDB persist) gives HIGH confidence on integration points |
-| Pitfalls | HIGH | Most pitfalls are codebase-specific risks identified from direct inspection (untested battle code, bundle regression, naming chaos) rather than inferred from general patterns; prevention strategies map to existing infrastructure |
+| Stack | HIGH | package.json + node_modules verified; recharts v3.8.0 peerDependencies confirmed via npm registry; all other systems confirmed buildable on existing packages without new libraries |
+| Features | MEDIUM-HIGH | CEFR Arabic grammar topics from authoritative sources; CAT/IRT patterns from peer-reviewed research; skill tree design from game design literature; exercise-type count recommendations reasoned from domain knowledge, not empirically verified |
+| Architecture | HIGH | All source files directly inspected; slice inventory verified; existing bug (grammar_lessons never fire) confirmed via ACTION_TO_ACHIEVEMENT_TYPES inspection; grammar.js lesson count confirmed at 47; quiz types confirmed at 12 existing (not 18) |
+| Pitfalls | HIGH | Save data migration and Redux persist patterns from official docs; html2canvas CORS from confirmed open GitHub issues (open since 2018); placement test over-placement from peer-reviewed European Language Council study; achievement dilution from game design research with documented examples |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **AceBase deferral:** Research recommends deferring AceBase to v12.0 at MEDIUM confidence — if the team experiences auto-save bugs or cross-tab sync issues during v11.0, AceBase should be reconsidered at the relevant phase planning session
-- **inkjs EXTERNAL function performance:** The `BindExternalFunction` bridge calls synchronous Redux selectors from within ink story execution — validate that there is no detectable frame stutter when a dialogue triggers 5+ EXTERNAL calls in sequence
-- **Vocabulary corpus sources:** Research identified that 5,000+ words are required but did not identify the specific corpus or pipeline for generating them with correct root families, CEFR tags, and ambiguity flags — this is a Phase N+2 planning prerequisite
-- **Arabic letter Bezier reference paths:** The calligraphy mini-game requires reference stroke paths for 28 isolated letter forms — sourcing or constructing these paths is a Phase N+5 planning task with no existing codebase foundation
+- **Grammar lesson vocabulary prerequisites build-time validation:** The lesson template must include a `vocabulary_prerequisites` field validated against the 5,029-word dataset. The validation tooling does not yet exist and must be built in Phase 3 Wave 1.
+- **Social card CORS testing in production:** `html-to-image` is recommended over `html2canvas` for RTL handling, but production CORS behavior with Kenmi assets at `public/assets/kenmi/` must be verified. SVG-only card design (no images) is the safest path and recommended.
+- **Audio infrastructure for listening/dictation quiz types:** These two types are deferred pending TTS infrastructure. If TTS is confirmed during Phase 5 planning, the quiz type count changes.
+- **`unlock_content` node reward type:** Several existing skill tree nodes have `rewards: { type: 'unlock_content', value: 'beginner_passages' }` with no wired content. Phase 2 will track the unlock in state; the actual content (story_library, news_feed) is out of scope for v12.0.
+- **ts-fsrs patch upgrade:** v5.3.1 is available (v5.2.3 installed). Change log not reviewed. Assess during Phase 4 when FSRS signals are wired into adaptive difficulty.
+
+---
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- `package.json` + `node_modules/` (frontend + server) — direct inspection confirming inkjs and acebase NOT installed (2026-03-19)
-- `vite.config.js` — existing manualChunks strategy analyzed
-- `/src/store/` — 17 existing Redux slices confirming pattern scalability
-- `/src/game/` — DialogueEngine.js, ActionSetExecutor.js, EventBus constants (74 events)
-- [Phaser 3 Graphics Docs](https://docs.phaser.io/phaser/concepts/gameobjects/graphics) — strokePath, pointer events for calligraphy tracing
+- `package.json` + `node_modules/` — All installed versions verified 2026-03-22
+- `src/store/slices/` — 31 slice files inspected; achievementSlice, skillTreeSlice, grammarSlice, vocabularySlice architecture verified
+- `src/components/Quiz/QuizOverlay.jsx` — 12 quiz types confirmed (not 18)
+- `src/data/grammar.js` — 47 lessons confirmed (not 50 as documented)
+- `src/data/achievements.js` — 2,633 lines, 20 categories confirmed
+- `src/data/skillTrees.js` — 6 trees, ~10-12 nodes each confirmed
+- `vite.config.js` — manualChunks strategy verified; skill-data, grammar-data chunks confirmed
+- `npm info recharts` — v3.8.0 peerDependencies `react: "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"` confirmed
+- html2canvas CORS Issue #1544 — GitHub (confirmed open, unresolved since 2018)
+- Redux Persist Migration Guide — ExpertBeacon
+- IRT adaptive language learning — IEEE Xplore peer-reviewed paper
+- Spaced retrieval practice — retrievalpractice.org research PDF
+- FSRS Algorithm Overview — DeepWiki
 
 ### Secondary (MEDIUM confidence)
-- [inkjs GitHub (inkle)](https://github.com/inkle/inkjs) — v2.4.0 API, `Story.Continue()`, `variablesState`, `BindExternalFunction`
-- [inkjs GitHub (y-lohse fork)](https://github.com/y-lohse/inkjs) — release history, v2.4.0 Feb 2025
-- [AceBase GitHub](https://github.com/appy-one/acebase) — v1.29.5 Oct 2024, live proxy pattern
-- [rollup-plugin-visualizer GitHub](https://github.com/btd/rollup-plugin-visualizer) — Vite 7 / Rollup 4 compatibility
-- [Vite bundle optimization (mykolaaleksandrov.dev)](https://www.mykolaaleksandrov.dev/posts/2025/11/taming-large-chunks-vite-react/) — manualChunks strategy
-- [Arabic diacritics pedagogy (ACL 2024)](https://aclanthology.org/2024.acl-long.792.pdf) — progressive diacritics inversely correlated with proficiency
-- [Heaven's Vault narrative design (GDC postmortem)](https://www.gamedeveloper.com/design/designing-investigate-conversations) — ink writer/engineer boundary patterns
-- [Try Calligraphy serious game scoring](https://ejurnal.seminar-id.com/index.php/tin/article/download/8744/4273/) — Arabic calligraphy 3-star scoring model
-- [NPC gossip emergent behavior (2024 research)](https://arxiv.org/html/2510.25820v1) — structured gossip tokens over LLM gossip
-- [Agent-based economy design (GDeveloper)](https://www.gamedeveloper.com/production/i-designed-economies-for-150m-games-here-s-my-ultimate-handbook) — single-player supply/demand preferred over RL agents
+- Arabic CEFR grammar framework — arabiclang.online (authoritative Arabic CEFR framework)
+- Arabic vocabulary counts per CEFR level — earabiclearning.com
+- Duolingo skill tree design — duolingo.fandom.com (official community wiki)
+- Computerized Adaptive Testing — assess.com
+- Duolingo Year in Review — blog.duolingo.com (official Duolingo blog)
+- CEFR placement tests + 62% over-placement finding — yourfuturecareer.org
+- Achievement dilution research — gamedeveloper.com, trophy.so
+- Meaningful skill tree design — gdkeys.com
+- Overjustification effect in game achievements — gamedeveloper.com
+- Adaptive learning technology 2025 — flowsparks.com
+- Grammar lesson exercise design — eslbase.com
+- html-to-image vs html2canvas RTL comparison — community-verified
 
-### Tertiary (LOW confidence — needs validation during phase planning)
-- [React + Redux + ink integration (Medium)](https://medium.com/journocoders/create-a-news-game-with-ink-react-and-redux-part-ii-playing-your-game-on-the-web-5216e33043df) — Redux bridge pattern; needs validation against inkjs v2.4.0 API
-- [inkjs JavaScript series (videlais.com)](https://videlais.com/2019/05/27/javascript-ink-part-3-getting-and-setting-variables/) — variable bridge patterns; article is from 2019, verify against v2.4.0
+### Tertiary (LOW confidence — validate during implementation)
+- ts-fsrs v5.2.3 → v5.3.1 upgrade impact — change log not reviewed; assess during Phase 4
+- html-to-image v1.11.13 React 19 compatibility — community reports, not official docs
 
 ---
-*Research completed: 2026-03-19*
+*Research completed: 2026-03-22*
 *Ready for roadmap: yes*

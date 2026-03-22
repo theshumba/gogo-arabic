@@ -1,264 +1,346 @@
-# Stack Research — v11.0 Deep Systems & Content Engine
+# Technology Stack — v12.0 Learning Systems
 
-**Project:** GoGo Arabic v11.0 (17 new systems layered onto 196K+ LOC codebase)
-**Researched:** 2026-03-19
-**Confidence:** HIGH for inkjs integration | MEDIUM for AceBase | HIGH for bundle optimization | HIGH for calligraphy | HIGH for faction/world-state patterns
+**Project:** GoGo Arabic v12.0 (skill trees, grammar expansion, quiz expansion, adaptive difficulty, CEFR placement, 250+ achievements)
+**Researched:** 2026-03-22
+**Confidence:** HIGH — package.json inspected, node_modules verified, existing slice architecture confirmed
 
 ---
 
 ## Executive Summary
 
-The existing stack (React 19 + Phaser 3 + Redux Toolkit + Vite 7) handles most v11.0 systems without new dependencies. **Two new npm packages are required:** `inkjs` for ink dialogue scripting, and `rollup-plugin-visualizer` for bundle analysis. AceBase is listed as "already installed" in milestone context but is **NOT in node_modules or package.json** — this needs resolving. The bundle optimization is achievable with existing Vite manualChunks patterns already in place.
+The v12.0 feature set requires **one new npm package** and **zero structural changes** to the core stack. The existing infrastructure (Redux Toolkit, ts-fsrs, Framer Motion, Phaser 3) handles every new feature directly.
 
-**Critical finding:** inkjs v2.4.0 and acebase v1.29.5 are NOT installed despite the milestone context claiming they are. Both need `npm install`.
+The new package is `recharts` (already used in FrameCoach Command Centre, React 19 compatible as of v3.8.0) for CEFR progress charts and skill distribution radar charts in the assessment dashboard.
+
+The "shareable social card" feature is the only decision requiring care: use `html-to-image` (a dev-only utility, no persistent dep) rather than `html2canvas` (stale, CORS issues). However, the Web Share API covers the actual sharing — no external share library needed.
+
+**All other v12.0 systems — skill tree expansion, grammar lesson expansion, quiz type expansion, adaptive difficulty engine, placement test — are pure JavaScript logic using existing Redux Toolkit, ts-fsrs, and React patterns already proven at scale in this 196K+ LOC codebase.**
 
 ---
 
-## New Dependencies Needed
+## Confirmed Installed Stack (DO NOT RE-RESEARCH)
 
-### Required: Install Now
+From `package.json` inspection, 2026-03-22:
 
-| Package | Version | Purpose | Why Needed |
-|---------|---------|---------|------------|
-| `inkjs` | `^2.4.0` | Ink narrative scripting runtime | Compiles `.ink` files to JSON, runs branching dialogue via `Story.Continue()` / `ChooseChoiceIndex()`. Replaces hardcoded JSON dialogue trees. Zero dependencies, 0-dep, works in browser. |
-| `rollup-plugin-visualizer` | `^5.12.0` | Bundle composition analysis | Dev-only. Generates interactive treemap showing which modules are eating bundle size. Required to identify what to cut from 862KB → 500KB target. |
+| Package | Version | Role |
+|---------|---------|------|
+| `react` | `^19.2.4` | UI framework |
+| `phaser` | `^3.90.0` | Game engine |
+| `@reduxjs/toolkit` | `^2.11.2` | State management (31 slices) |
+| `react-redux` | `^9.2.0` | React-Redux bindings |
+| `redux-persist` | `^6.0.0` | IndexedDB persistence |
+| `ts-fsrs` | `^5.2.3` | Spaced repetition algorithm |
+| `inkjs` | `^2.4.0` | Ink dialogue runtime (installed, v11.0) |
+| `framer-motion` | `^11.15.0` | Overlay animations |
+| `howler` | `^2.2.4` | Audio system |
+| `zod` | `^4.3.6` | Schema validation |
+| `react-router-dom` | `^7.13.0` | Routing |
+| `rollup-plugin-visualizer` | `^7.0.1` | Bundle analysis (dev) |
 
-### Already Claimed But NOT Installed (Verify First)
+---
 
-| Package | Status | Action |
-|---------|--------|--------|
-| `inkjs` | NOT in package.json or node_modules | `npm install inkjs` |
-| `acebase` | NOT in package.json or node_modules | Decision needed — see AceBase section below |
+## New Dependencies for v12.0
+
+### Required: One New Package
+
+| Package | Version | Purpose | Why |
+|---------|---------|---------|-----|
+| `recharts` | `^3.8.0` | CEFR progress charts, skill distribution radar, assessment dashboard | v3.8.0 explicitly supports React 19 (peerDependencies include `^19.0.0`). Radar chart covers the 6-skill-tree distribution view. Line/area charts cover CEFR progression over time. Used in FrameCoach Command Centre on same React 19 version — no compatibility surprises. |
+
+```bash
+npm install recharts@^3.8.0
+```
+
+**Bundle impact:** recharts ~180KB unminified. Assign to a dedicated chunk — it is only used in assessment dashboard and player profile overlays, so lazy-load it:
+
+```javascript
+// vite.config.js manualChunks addition
+if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
+  return 'charts-vendor';
+}
+```
+
+Load with `React.lazy()` on the components that render charts. Initial load is unaffected.
+
+---
+
+### Conditional: Social Card Export
+
+| Package | Version | Purpose | Install Condition |
+|---------|---------|---------|-----------------|
+| `html-to-image` | `^1.11.13` | Convert React `<div>` to PNG for "I learned X words" share card | Only install if social card feature is confirmed in scope |
+
+```bash
+npm install html-to-image@^1.11.13
+```
+
+**Why html-to-image over html2canvas:**
+- `html2canvas` is unmaintained (last release 2021, known CORS/RTL text issues)
+- `html-to-image` is actively maintained fork of dom-to-image, handles RTL Arabic text correctly through SVG foreignObject rendering
+- Zero peer dependencies, ESM-compatible, ~40KB
+
+**Sharing pattern — use Web Share API, not a sharing library:**
+```javascript
+// No react-share needed — Web Share API is sufficient
+const shareCard = async (cardRef) => {
+  const blob = await htmlToImage.toBlob(cardRef.current);
+  const file = new File([blob], 'arabic-progress.png', { type: 'image/png' });
+  if (navigator.share) {
+    await navigator.share({ files: [file], title: 'My Arabic Progress' });
+  } else {
+    // Fallback: download the image
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'arabic-progress.png'; a.click();
+  }
+};
+```
+
+Web Share API coverage: Chrome 61+, Safari 15+, Firefox 121+ — covers all modern browsers the game targets.
+
+**Bundle impact:** 40KB, lazy-load inside ShareCard component. Add to vite.config.js:
+```javascript
+if (id.includes('node_modules/html-to-image')) {
+  return 'share-vendor';
+}
+```
 
 ---
 
 ## System-by-System Stack Decisions
 
-### 1. inkjs Dialogue Engine
+### 1. Skill Tree Expansion (6 trees, ~64 nodes currently → 30 nodes per tree)
 
-**Decision: Use inkjs v2.4.0 — install it**
+**Decision: Extend `skillTreeSlice.js` + `skillTrees.js` data file — no new library**
 
-inkjs is the official JavaScript port of inkle's ink scripting language. Version 2.4.0 was released February 17, 2025. Zero dependencies, browser-compatible, well-maintained (regular releases through 2023-2025).
+`skillTreeSlice.js` already exists with `unlockNode`, `addSkillXP`, node prerequisite validation. `skillTrees.js` defines all 6 trees. The expansion is a data change (add nodes) and UI change (render more tiers in `SkillTreeView.jsx`).
 
-**Why ink over the existing JSON dialogue system:**
-The existing DialogueEngine reads from npcs.json with flat hub-and-spoke arrays. ink provides conditional branching (`{visited_kira}`, `{faction_rep > 50}`), knots/stitches as named sections, `CHOICE` syntax, variable tracking, and `ChoosePathString("knot.stitch")` for jumping to scenes. All of this replaces hundreds of lines of custom conditional logic in DialogueEngine.js with declarative `.ink` files.
+`SkillTreeView.jsx` and `SkillTreeMenu.jsx` already exist. The tree layout is CSS grid/flexbox — no graph visualization library needed. Nodes are rectangular cards in a vertical flow, not a force-directed graph.
 
-**Core API (HIGH confidence, verified on GitHub):**
+**Integration points:**
+- `skillTreeSlice.unlockNode()` — unchanged API
+- `skillTrees.js` — extend each tree from current ~10-12 nodes to 30 nodes (data-only change)
+- `SkillTreeView.jsx` — add tier grouping visually (already CEFR-labeled per node)
+- Skill XP sources: vocabulary reviews (existing), grammar lesson completion (existing `grammarSlice`), quiz performance (existing), achievement unlocks (existing `achievementSlice`)
+
+**No new library.** Existing RTK patterns proven at 31 slices.
+
+---
+
+### 2. Grammar Expansion (7 → 50 lessons, 12 exercise types)
+
+**Decision: Extend `grammar.js` data file + add exercise type handlers — no new library**
+
+`grammarSlice.js` already tracks `completedLessons`, `lessonScores`, `currentLessonId`. The existing slice handles N lessons — it's data-agnostic. `grammar.js` currently has 1,679 lines defining 7 lessons. Expanding to 50 lessons means adding ~6,500 more lines of lesson data.
+
+`GrammarLesson.jsx` and `GrammarModule.jsx` already exist with a `stages/` directory containing individual exercise types. New exercise types (conjugation table, error correction, transformation, cloze passage, grammar puzzle, dialogue grammar) are new React components added to `src/components/Grammar/stages/`.
+
+**Grammar checking for productive exercises:** Custom `GrammarChecker.js` utility using rule-based matching (not ML). Arabic grammar rules are finite and well-defined for A1-B2 — a lookup table of patterns covering verb conjugation tables, noun declension, and agreement rules is sufficient. No NLP library needed.
+
+Pattern for fill-in-blank with correct answer validation:
 ```javascript
-import { Story } from 'inkjs';
-
-// Load compiled JSON (output of ink Compiler or Inky editor)
-const story = new Story(compiledInkJSON);
-
-// Advance narrative
-while (story.canContinue) {
-  const text = story.Continue();
-  // render text
+// GrammarChecker.js — pure function, no dependencies
+export function checkGrammarAnswer(studentAnswer, correctAnswer, grammarRule) {
+  const normalized = normalizeArabic(studentAnswer.trim());
+  if (normalized === correctAnswer) return { correct: true, score: 1.0 };
+  // Fuzzy: tashkeel-stripped match
+  const stripped = stripTashkeel(normalized);
+  if (stripped === stripTashkeel(correctAnswer)) return { correct: true, score: 0.85 };
+  return { correct: false, score: 0, hint: grammarRule.hint };
 }
-
-// Present choices
-const choices = story.currentChoices; // [{ text, index }]
-story.ChooseChoiceIndex(0);
-
-// Jump to named knot
-story.ChoosePathString('desert_zone.meet_merchant');
-
-// Read/write ink variables (faction rep, world flags)
-story.variablesState['faction_scholar_rep'] = 45;
-const rep = story.variablesState['faction_scholar_rep'];
 ```
 
-**Integration point:** Replace DialogueEngine.js JSON parsing. Load `.ink.json` files per NPC/zone via dynamic import. Keep EventBus (`EVENTS.DIALOGUE_START`, `EVENTS.DIALOGUE_END`) unchanged — only the engine internals change.
-
-**Bundle impact:** inkjs adds ~120KB unminified. Assign to its own chunk in vite.config.js:
-```javascript
-if (id.includes('node_modules/inkjs')) return 'inkjs-vendor';
-```
+**Integration points:**
+- `grammarSlice.completeLesson()` — unchanged
+- `grammar.js` — add 43 lesson objects (same schema as existing 7)
+- New grammar exercise components in `src/components/Grammar/stages/`
+- `achievementSlice` — trigger grammar milestones on lesson completion
 
 ---
 
-### 2. AceBase Realtime Sync
+### 3. Quiz Expansion (6 → 18 types, adaptive engine)
 
-**Decision: DEFER — evaluate whether it's actually needed for v11.0**
+**Decision: Extend `QuizOverlay.jsx` switch + add quiz type components — no new library**
 
-**Status found:** AceBase v1.29.5 (released October 2, 2024) — actively maintained, last update 5 months ago. However, it is NOT installed in this project despite the milestone context claiming it is.
+`QuizOverlay.jsx` already dispatches by `quiz.quizType` string. Adding quiz types means: new React component per type + new `quizType` constant. The existing `wordSelection.js` utility already does difficulty-weighted selection.
 
-**The problem with adding AceBase now:**
-- The project already has IndexedDB hybrid persistence (v6.0, 5 slices via redux-persist) for offline storage
-- The backend (Express 5 + MongoDB) already handles cloud sync with version vectors and conflict resolution (v1.0)
-- AceBase would add a third persistence layer, creating three competing sources of truth: MongoDB (backend), IndexedDB (frontend persist), and AceBase (?)
-- Bundle cost: acebase adds ~200-300KB — a major problem when the target is 862KB → 500KB
-
-**What AceBase actually provides that the current stack doesn't:**
-- Live data proxy: automatic object mutation tracking without manual `dispatch()` calls
-- Real-time cross-tab sync: changes in tab A immediately reflect in tab B
-- Observable queries: `ref.on('value', callback)` pattern
-
-**Recommendation: Replace AceBase's intended role with plain Redux + redux-persist patterns.** The "replace manual CRUD" goal can be achieved with RTK's `createAsyncThunk` + `useSelector` memoization, not a new database layer. If the world state machine needs 500+ variables tracked, a dedicated `worldStateSlice` with IndexedDB persistence is architecturally cleaner than AceBase.
-
-**If the team insists on AceBase:** Install `acebase@^1.29.5`. Use browser-mode only (IndexedDB backend, no server). The live data proxy API allows `proxy.world_flags.desert_gate_open = true` to auto-persist — but this conflicts with Redux's unidirectional data flow.
-
-**MEDIUM confidence** on this recommendation — the tradeoffs depend on how much real-time cross-tab sync matters for this single-player game.
-
----
-
-### 3. Faction Reputation Engine
-
-**Decision: Plain Redux slice — no new library**
-
-A `factionSlice` with 6 faction objects is the right pattern. Each faction has a reputation score (0-100), tier thresholds (hostile/neutral/friendly/revered), and content gates. This is 150 lines of Redux, not a library problem.
+The **adaptive quiz engine** (`AdaptiveQuizManager`) is pure JavaScript — no library. It selects quiz type based on:
+1. FSRS card state (from `vocabularySlice.fsrsCards`) — new cards get recognition quizzes, mature cards get production quizzes
+2. Skill tree levels (from `skillTreeSlice.skillXP`) — high listening XP → more `listen` quizzes
+3. Recent performance (last 5 results) — rolling window in `quizSlice` or local component state
+4. Session context (battle session → fast types only)
 
 ```javascript
-// factionSlice.js
-const initialState = {
-  factions: {
-    scholars: { reputation: 0, tier: 'neutral', unlockedContent: [] },
-    merchants: { reputation: 0, tier: 'neutral', unlockedContent: [] },
-    guardians: { reputation: 0, tier: 'neutral', unlockedContent: [] },
-    poets: { reputation: 0, tier: 'neutral', unlockedContent: [] },
-    travelers: { reputation: 0, tier: 'neutral', unlockedContent: [] },
-    ancient_order: { reputation: 0, tier: 'neutral', unlockedContent: [] },
-  }
-};
+// AdaptiveQuizManager.js — pure function, no dependencies
+export function selectQuizType(word, playerProfile, recentResults) {
+  const fsrsState = playerProfile.fsrsCards[word.id];
+  const stability = fsrsState?.card?.stability ?? 0;
+
+  if (stability < 1) return 'ar-to-en';          // new: recognition only
+  if (stability < 5) return pickReceptive(playerProfile);  // developing
+  return pickProductive(playerProfile);            // mature: production quiz
+}
 ```
 
-**Content gating pattern:** `selectCanEnterZone(zoneId)` selector checks faction tier + vocabulary count. All existing zone-gate infrastructure from v7.0 (`ActionSetExecutor`, `visibilityFlag`) supports this without changes.
+**Fuzzy Arabic typing** (quiz type 13 — free-form Arabic input): Use existing `js-arabic-reshaper` (already installed) for normalization + `stripTashkeel()` utility (already in codebase). No Levenshtein library needed — simple normalized string comparison with a 1-character tolerance.
+
+**Sentence drag-and-drop** (quiz type 14 — sentence building): The existing `SentenceBuilder.jsx` component already implements drag-and-drop word ordering. Extend it, don't rebuild.
+
+**Integration points:**
+- New quiz type components in `src/components/Quiz/`
+- `AdaptiveQuizManager.js` utility in `src/utils/`
+- `QuizOverlay.jsx` — add new quizType cases to switch
+- `vocabularySlice.fsrsCards` — read for FSRS state
+- `skillTreeSlice.skillXP` — read for specialization
 
 ---
 
-### 4. World State Machine (500+ Variables)
+### 4. Adaptive Difficulty Engine
 
-**Decision: `worldStateSlice` with IndexedDB persistence — no XState, no external library**
+**Decision: `playerProfileSlice.js` (new Redux slice) + `DifficultyManager.js` utility — no new library**
 
-XState is overkill. The 500+ variables are not a state machine with transitions — they're a flat key-value store of flags: `{ desert_gate_open: true, met_elder_ibrahim: false, ... }`. XState adds 60KB for transition modeling that isn't needed here.
+The adaptive difficulty engine builds a player model from existing Redux state. It reads — never writes to — `vocabularySlice`, `grammarSlice`, `skillTreeSlice`, `achievementSlice`. The difficulty model is a derived view, not new state.
 
-**Pattern:**
+**New slice:** `playerProfileSlice` tracks:
 ```javascript
-// worldStateSlice.js
-const worldStateSlice = createSlice({
-  name: 'worldState',
-  initialState: { flags: {}, counters: {}, timestamps: {} },
-  reducers: {
-    setFlag: (state, action) => { state.flags[action.payload.key] = action.payload.value; },
-    incrementCounter: (state, action) => { state.counters[action.payload.key] = (state.counters[action.payload.key] || 0) + 1; },
-  }
-});
-```
-
-**Ink integration:** inkjs `variablesState` syncs bidirectionally with this slice — reading Redux flags into ink variables before each dialogue, writing ink variable changes back to Redux after.
-
-**Persistence:** Add `worldState` to the existing IndexedDB persist configuration (already proven in v6.0 for 5 slices).
-
----
-
-### 5. Dynamic Market Simulation
-
-**Decision: Pure JavaScript agent logic — no library**
-
-Agent-based market pricing is 200 lines of math, not a library problem. Each NPC merchant has a `pricingAgent` object with supply/demand state:
-
-```javascript
-class PricingAgent {
-  constructor(basePrice, supplyLevel, demandFactors) { ... }
-
-  recalculatePrice(playerPurchaseHistory, timeOfDay, factionRep) {
-    const demand = this.demandFactors.reduce((acc, f) => acc * f.weight, 1.0);
-    const supply = this.supplyLevel / this.maxSupply;
-    return Math.floor(this.basePrice * (demand / supply) * this.factionModifier);
+{
+  cefrEstimate: 'A1',          // derived from vocab + grammar mastery
+  difficultyPreset: 'normal',  // 'story' | 'normal' | 'scholar' | 'master'
+  weakAreas: [],               // quiz types with <60% accuracy (rolling 20)
+  strongAreas: [],             // quiz types with >85% accuracy
+  sessionStats: {              // cleared each session
+    quizzesAnswered: 0,
+    correctAnswers: 0,
+    quizTypeAccuracy: {}
   }
 }
 ```
 
-Runs on zone entry and after each purchase. No realtime needed — deterministic recalculation. Integrates with existing `economySlice` from v6.0.
+`DifficultyManager.js` is a pure function utility — no library. It uses existing `wordSelection.js` weighted selection patterns.
+
+**CEFR estimation** from vocabulary: count words with `cefrLevel` tag per FSRS stability threshold. The vocabulary data (5,029 words) already has `cefrLevel` tags (verified in `vocabularySlice.js` CEFR_ORDER usage). This is a selector — not a new data structure.
 
 ---
 
-### 6. Calligraphy Mini-Game (Letter Tracing)
+### 5. CEFR Placement Test
 
-**Decision: Phaser 3 Graphics API — no Canvas library**
+**Decision: Dedicated `PlacementTestOverlay.jsx` component + `placementTestData.js` — no new library**
 
-Phaser 3 already has Graphics drawing, pointer input, and path tracking. No external library needed.
+A placement test is a specialized quiz session: ~20-30 calibrated questions spanning A1-B2, using Item Response Theory (IRT) binary search to estimate level. No external IRT library — the math is 30 lines:
 
-**Technique:**
-1. Render reference letter path using Phaser `Graphics.strokePath()` with a template outline
-2. Track `this.input.on('pointermove', ...)` to capture player stroke coordinates
-3. Compare player path against reference path using Frechet distance (simple 2D math) — score is deviation from ideal stroke
-4. Render accuracy feedback using Phaser `Graphics.lineStyle(thickness, color)`
-
-**Why no library (Fabric.js, Atrament, etc.):** The game already runs in a Phaser canvas context. Adding a second canvas library creates two canvas renderers fighting for control. Phaser's built-in pointer events + Graphics are sufficient for letter-tracing accuracy scoring.
-
-**Verified:** Phaser 3 official examples include "Stroke Path" demonstrating this exact pattern. Touch/pointer events work identically on mobile and desktop.
-
----
-
-### 7. Arabic Poetry Battles
-
-**Decision: Pure React + existing FSRS integration — no library**
-
-Fill-in-the-blank poetry is a quiz variant. The existing quiz infrastructure (6 quiz types, FSRS integration) is directly extendable:
-- New quiz type: `POETRY_FILL`
-- Data structure: `{ poem: string[], blanks: [{ index, word, arabicWord }], difficultyLevel }`
-- Scoring: combines answer accuracy with timing (streak mechanic from existing battle system)
-
-No new library needed. Reuses existing `QuizOverlay.jsx` patterns with a custom poem rendering component.
-
----
-
-### 8. Bundle Optimization (862KB → 500KB)
-
-**Decision: rollup-plugin-visualizer (new dev dependency) + Vite manualChunks refinement**
-
-The current vite.config.js already has a solid manualChunks strategy. The problem is identifying what's actually bloating the 862KB — that requires visualization first.
-
-**Step 1: Diagnose with rollup-plugin-visualizer**
 ```javascript
-// vite.config.js
-import { visualizer } from 'rollup-plugin-visualizer';
-
-plugins: [
-  react({ jsxRuntime: 'automatic' }),
-  validateDialoguePlugin(),
-  visualizer({ open: true, gzipSize: true, brotliSize: true }) // dev only
-]
+// placementEngine.js — pure JS, no dependencies
+// Binary search: start at A2, go harder on correct, easier on wrong
+export function updateCefrEstimate(currentEstimate, isCorrect, questionLevel) {
+  const LEVELS = ['Pre-A1', 'A1', 'A2', 'B1', 'B2', 'C1'];
+  const idx = LEVELS.indexOf(currentEstimate);
+  if (isCorrect && questionLevel >= currentEstimate) return LEVELS[Math.min(idx + 1, 5)];
+  if (!isCorrect && questionLevel <= currentEstimate) return LEVELS[Math.max(idx - 1, 0)];
+  return currentEstimate;
+}
 ```
 
-**Step 2: Expected wins based on codebase analysis:**
+Placement test results write into `playerProfileSlice.cefrEstimate` and skip vocabulary that's already been introduced (read from `vocabularySlice.fsrsCards`).
 
-| Optimization | Estimated Savings | Technique |
-|-------------|------------------|-----------|
-| inkjs lazy-loaded | ~120KB from initial load | Dynamic import only when dialogue opens |
-| Game overlays lazy-loaded | ~80-120KB | `React.lazy()` for InventoryGrid, QuestJournal, etc. |
-| Vocabulary data deferred | ~150KB | Already split to `vocabulary-data` chunk, ensure not in initial |
-| NPC data deferred | ~60KB | Already split to `npc-data` chunk |
-| Phaser scene lazy-loading | ~100KB+ | Load non-starter zones on demand via `scene.launch()` |
+**Integration:** `PlacementTestOverlay` is shown once at first launch (new player) or triggered from settings. Skips if player already has >50 FSRS cards (returning player). Uses existing `QuizOverlay` quiz type components — not a new quiz renderer.
 
-**Target strategy:** Initial load = React shell + auth + loading screen + BootScene only. Defer all game data, overlays, and inkjs until after initial render.
+---
 
-**Current Vite config status:** Already splits Phaser, React, Redux, vocabulary-data, npc-data into separate chunks. The 862KB likely reflects the main app chunk + untracked large imports. Visualizer will reveal the exact culprit.
+### 6. Achievement Expansion (44 → 250+)
+
+**Decision: Extend `achievements.js` data file + `achievementSlice.js` event coverage — no new library**
+
+`achievementSlice.js` already exists with `unlockAchievement`, toast queue, and stats tracking. `achievements.js` (2,633 lines) already defines 20 categories including `GRAMMAR`, `COMBAT`, `CRAFTING`, `SOCIAL`, `CULTURE`, `MILESTONE`. Expansion is a data addition — write 200+ new achievement objects in the same schema.
+
+**New trigger coverage needed in middleware/slices:**
+- Skill tree node unlocks → achievement check
+- Grammar lesson completion → achievement check
+- Placement test CEFR result → achievement check
+- Quiz type accuracy milestones → achievement check
+
+These are `createAction` dispatches in existing middleware patterns — same pattern as `battleRewardsMiddleware` from v6.0.
+
+**Bundle impact:** `achievements.js` is already in the `skill-data` chunk (confirmed in `vite.config.js` line 84-89). Adding 200 entries doubles it from 2,633 to ~5,000 lines — still lazy-loaded, no initial bundle impact.
+
+---
+
+### 7. CEFR Progress Reports + Assessment Dashboard
+
+**Decision: `recharts` for radar chart + line chart — the one new dependency**
+
+The assessment dashboard needs:
+1. **Skill distribution radar chart** — 6 axes (reading, writing, listening, speaking, grammar, culture) showing current XP per tree. `<RadarChart>` from recharts.
+2. **CEFR progression line chart** — vocabulary mastered over time by CEFR level. `<LineChart>` from recharts.
+3. **Quiz accuracy heatmap** — per quiz type accuracy. Pure CSS grid (not recharts).
+
+Recharts is the right choice because:
+- Already used in this project's ecosystem (FrameCoach Command Centre uses it on React 19)
+- v3.8.0 explicitly declares `peerDependencies: { react: "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0" }` — confirmed React 19 compatible
+- `<RadarChart>` is purpose-built for skill distribution visualization
+- Zero config needed — declarative JSX, works identically to how the codebase uses Framer Motion
+
+```javascript
+// Example skill radar — fits existing CSS Modules pattern
+import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer } from 'recharts';
+
+const skillData = ['Reading', 'Writing', 'Listening', 'Speaking', 'Grammar', 'Culture']
+  .map(name => ({ name, value: skillXP[name.toLowerCase()] }));
+
+<ResponsiveContainer width="100%" height={300}>
+  <RadarChart data={skillData}>
+    <PolarGrid />
+    <PolarAngleAxis dataKey="name" />
+    <Radar dataKey="value" stroke="#e2b659" fill="#e2b659" fillOpacity={0.4} />
+  </RadarChart>
+</ResponsiveContainer>
+```
 
 ---
 
 ## Full Package Change Summary
 
-### Install (New)
-```bash
-npm install inkjs@^2.4.0
-npm install -D rollup-plugin-visualizer@^5.12.0
-```
+### Install (New — 1 required, 1 conditional)
 
-### Verify Installation (Context Says Installed, But They Are Not)
 ```bash
-# These are NOT in node_modules or package.json — install before any v11.0 phase
-npm install inkjs@^2.4.0   # dialogue engine migration
-# npm install acebase@^1.29.5  # DEFER — see decision above
+# Required
+npm install recharts@^3.8.0
+
+# Conditional (only if social share card is in scope)
+npm install html-to-image@^1.11.13
 ```
 
 ### No Changes Needed
-```bash
-# Everything else already installed and sufficient:
-# react@19.2.4, phaser@3.90.0, @reduxjs/toolkit@2.11.2
-# framer-motion@11.15.0, redux-persist@6.0.0, ts-fsrs@5.2.3
-# zod@4.3.6, howler@2.2.4
+
+Every other v12.0 system uses existing installed packages:
+- `@reduxjs/toolkit@^2.11.2` — new slices (playerProfileSlice) follow established pattern
+- `ts-fsrs@^5.2.3` — FSRS cards already drive quiz selection, no API changes
+- `framer-motion@^11.15.0` — overlay animations for placement test, achievement toasts
+- `react@^19.2.4` — React.lazy() for assessment dashboard and placement overlay
+- `zod@^4.3.6` — validate placement test data schema at build time
+- `inkjs@^2.4.0` — grammar NPC dialogue for lesson delivery (already integrated v11.0)
+
+---
+
+## vite.config.js Additions
+
+Two additions to `manualChunks` (add after line 94 in current config):
+
+```javascript
+// Charts library (recharts + d3 internals) — lazy-loaded assessment dashboard
+if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
+  return 'charts-vendor';
+}
+
+// Share card utility — only loaded when player opens share modal
+if (id.includes('node_modules/html-to-image')) {
+  return 'share-vendor';
+}
+```
+
+Also add a new grammar data chunk for the expanded 50-lesson file:
+```javascript
+// Existing grammar-data chunk already in config — no change needed.
+// grammar.js expanding from 1,679 to ~8,000 lines stays in 'grammar-data' chunk.
 ```
 
 ---
@@ -267,73 +349,88 @@ npm install inkjs@^2.4.0   # dialogue engine migration
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| **XState** | 60KB for state machine modeling not needed — world flags are flat key-value, not transition graphs | Plain `worldStateSlice` with Redux |
-| **Fabric.js / Atrament** | Second canvas renderer conflicts with Phaser's canvas context | Phaser 3 `Graphics` API + pointer events |
-| **AceBase** (for now) | 200-300KB bundle cost; third persistence layer conflicts with existing IndexedDB + MongoDB; single-player game doesn't need real-time cross-tab sync | `worldStateSlice` + IndexedDB persist (already proven) |
-| **React Query / SWR** | Server state management libraries for REST/GraphQL — overkill when Express 5 backend already handles sync | Existing `createAsyncThunk` patterns in Redux slices |
-| **react-konva** | Canvas-in-React abstraction for calligraphy tracing | Phaser 3 Graphics (already integrated, no React-canvas bridge needed) |
-| **GreenSock (GSAP)** | Animation library already covered by Framer Motion + Phaser tweens | Existing `Phaser.Tweens` + Framer Motion |
-| **Immer standalone** | RTK bundles Immer internally — no separate install needed | RTK's `createSlice` (already mutable write syntax works) |
+| **react-flow / xyflow** | 200KB+ graph visualization for skill trees — overkill when nodes are a linear tier list, not a free-form graph | CSS grid layout in `SkillTreeView.jsx` (already renders trees correctly) |
+| **react-beautiful-dnd / dnd-kit** | Drag-and-drop library for sentence builder | `SentenceBuilder.jsx` already implements drag-and-drop; extend it |
+| **compromise / natural** (NLP) | Grammar checking library — Arabic NLP is unreliable for learner input at A1-B2 | Custom `GrammarChecker.js` with lookup tables for finite grammar rules |
+| **@tensorflow/tfjs** | ML-based adaptive difficulty | Pure JS difficulty weighting from FSRS stability scores is sufficient and explainable |
+| **chart.js / victory** | Alternative chart libraries | recharts is React-native, React 19 confirmed, already in project ecosystem |
+| **html2canvas** | Screenshot library for share cards | Unmaintained since 2021; use `html-to-image` or the Web Share API directly |
+| **i18next** | Internationalization for CEFR reports | UI is English + Arabic inline — no i18n layer needed; existing Arabic string patterns in data files are sufficient |
+| **react-confetti / canvas-confetti** | Celebration effects for achievements | Existing `ParticleSystem.js` (Phaser) and `levelUpCelebration` pattern already handle this |
+| **XState** | State machine for placement test flow | Placement test is 20-30 linear questions — a `currentQuestionIndex` counter in component state is sufficient |
+| **Recharts v2.x** | Older recharts with React 19 compatibility issues | Use v3.8.0 only — it explicitly adds React 19 to peerDependencies |
 
 ---
 
 ## Version Compatibility
 
-| Package | Version | Compatible With | Notes |
-|---------|---------|-----------------|-------|
-| `inkjs` | 2.4.0 | React 19, Vite 7, all browsers | Zero deps. Works via ESM import. Add to manualChunks. |
-| `rollup-plugin-visualizer` | ~5.12.0 | Vite 7 (uses Rollup 4 internally) | Dev dependency only. Does not affect production bundle. |
-| `acebase` | 1.29.5 | React 19, IndexedDB (browser) | Last release Oct 2024. Single maintainer. Evaluate before committing. |
+| Package | Version | React 19 | Notes |
+|---------|---------|----------|-------|
+| `recharts` | 3.8.0 | Confirmed | peerDependencies explicitly include `^19.0.0` |
+| `html-to-image` | 1.11.13 | No known issues | Uses SVG foreignObject — RTL Arabic text renders correctly |
+| `ts-fsrs` | 5.3.1 available (5.2.3 installed) | N/A (pure TS) | Consider upgrading; patch versions only |
 
 ---
 
-## Integration Points for Phases
+## Integration Points by Phase
 
-### inkjs → DialogueEngine.js
-- Load compiled `.ink.json` per zone via dynamic import (not all upfront)
-- `InkDialogueEngine.js` wraps `inkjs.Story`, exposes `advance()`, `getChoices()`, `jumpToKnot()`
-- EventBus interface unchanged: `EVENTS.DIALOGUE_START` / `EVENTS.DIALOGUE_END`
-- `narrativeSlice` stores ink save state (`story.state.toJson()`) for persistence
+### Skill Tree Phase
+- **Reads:** `skillTreeSlice.skillXP`, `skillTreeSlice.unlockedNodes`
+- **Writes:** `skillTreeSlice.unlockNode()`, `skillTreeSlice.addSkillXP()`
+- **Triggers:** `achievementSlice.unlockAchievement()` on node unlock
+- **New files:** Extended `skillTrees.js` data, updated `SkillTreeView.jsx`
 
-### worldStateSlice → inkjs
-- Before dialogue: inject Redux flags into `story.variablesState`
-- After dialogue: sync ink variable mutations back to Redux via `setFlag` dispatches
-- Bidirectional sync pattern — same approach as existing FSRS-root mastery sync (v6.0)
+### Grammar Expansion Phase
+- **Reads:** `grammarSlice.completedLessons`, `vocabularySlice.fsrsCards`
+- **Writes:** `grammarSlice.completeLesson()`, `skillTreeSlice.addSkillXP({ treeId: 'grammar' })`
+- **New files:** `GrammarChecker.js` utility, new exercise components in `Grammar/stages/`
 
-### factionSlice → ActionSetExecutor
-- Existing `ActionSetExecutor` (9 actions, 7 requirements from v7.0) gains `factionRequired` requirement type
-- No new infrastructure — one new requirement type in existing executor
+### Quiz Expansion Phase
+- **Reads:** `vocabularySlice.fsrsCards`, `skillTreeSlice.skillXP`
+- **Writes:** `vocabularySlice.updateFsrsCard()`, `achievementSlice.recordPerfectQuiz()`
+- **New files:** `AdaptiveQuizManager.js` utility, new quiz type components, `playerProfileSlice.js`
 
-### Bundle optimization → vite.config.js
-- Add `rollup-plugin-visualizer` to existing plugins array (dev only)
-- Add inkjs to `manualChunks` (loaded lazily)
-- Add `React.lazy()` to heavy overlays (InventoryGrid, QuestJournal, CompanionPanel)
+### Adaptive Difficulty Phase
+- **Reads:** all slices (selector-only, no writes from this system to others)
+- **Writes:** `playerProfileSlice` only
+- **New files:** `playerProfileSlice.js`, `DifficultyManager.js` utility
 
----
+### Placement Test Phase
+- **Reads:** `vocabularySlice.fsrsCards` (skip known words)
+- **Writes:** `playerProfileSlice.cefrEstimate`, triggers onboarding skip logic
+- **New files:** `PlacementTestOverlay.jsx`, `placementEngine.js`, `placementTestData.js`
 
-## Alternatives Considered
+### Achievement Expansion Phase
+- **Reads:** all slices (via middleware `selectAll`)
+- **Writes:** `achievementSlice.unlockAchievement()`
+- **New files:** Extended `achievements.js`, achievement trigger handlers in existing middleware
 
-| Recommended | Alternative | Why Not |
-|-------------|-------------|---------|
-| inkjs (for dialogue scripting) | Keep JSON dialogue trees | JSON trees can't handle 500+ world state variables conditionally — would require rewriting DialogueEngine from scratch anyway |
-| Phaser Graphics (calligraphy) | Fabric.js or Atrament | Two canvas renderers conflict; Phaser already handles input events correctly |
-| Plain Redux slice (world state) | XState | 60KB cost; FSM transition modeling adds complexity without benefit for flat flag stores |
-| rollup-plugin-visualizer | vite-bundle-analyzer | rollup-plugin-visualizer is more mature, Vite-compatible, generates treemap/sunburst views |
-| Defer AceBase | Add AceBase now | Bundle cost + architectural conflict with existing IndexedDB persist makes it a v12.0 consideration |
+### Assessment Dashboard + CEFR Reports Phase
+- **Uses:** `recharts` (new dependency)
+- **Reads:** `playerProfileSlice`, `vocabularySlice`, `grammarSlice`, `skillTreeSlice`
+- **New files:** `AssessmentDashboard.jsx`, `CEFRProgressReport.jsx`, `SkillRadarChart.jsx`
+
+### Social Share Card Phase
+- **Uses:** `html-to-image` (conditional new dependency)
+- **Reads:** `vocabularySlice.selectLearnedWordCount`, `playerProfileSlice.cefrEstimate`
+- **New files:** `ShareCard.jsx`, `ShareCardModal.jsx`
 
 ---
 
 ## Sources
 
-- [inkjs GitHub (inkle)](https://github.com/inkle/inkjs) — Official repo, API reference, v2.4.0 release Feb 2025 (MEDIUM confidence — no Context7 entry, GitHub verified)
-- [inkjs GitHub (y-lohse fork)](https://github.com/y-lohse/inkjs) — Releases page, v2.4.0 confirmed Feb 17 2025 (MEDIUM confidence)
-- [AceBase GitHub](https://github.com/appy-one/acebase) — v1.29.5 release Oct 2, 2024, 521 stars, actively maintained (MEDIUM confidence — single maintainer risk)
-- [rollup-plugin-visualizer GitHub](https://github.com/btd/rollup-plugin-visualizer) — Vite integration, Node.js 22 requirement confirmed (MEDIUM confidence)
-- [Phaser 3 Graphics Docs](https://docs.phaser.io/phaser/concepts/gameobjects/graphics) — strokePath, pointer events for tracing mini-game (HIGH confidence — official docs)
-- [Vite manualChunks discussion](https://github.com/vitejs/vite/discussions/17730) — Code splitting patterns for large apps (MEDIUM confidence)
-- Existing `package.json` (frontend + server) — All installed versions verified 2026-03-19 (HIGH confidence)
-- Existing `vite.config.js` — Current manualChunks strategy analyzed 2026-03-19 (HIGH confidence)
-- `node_modules/` inspection — Confirmed inkjs and acebase NOT installed (HIGH confidence)
+- `package.json` — All installed versions inspected 2026-03-22 (HIGH confidence)
+- `node_modules/` — recharts NOT yet installed; html-to-image NOT installed (HIGH confidence)
+- `src/store/slices/` — 31 slice files inspected; achievementSlice, skillTreeSlice, grammarSlice, vocabularySlice architecture verified (HIGH confidence)
+- `src/components/Quiz/QuizOverlay.jsx` — 11 quiz types confirmed, adaptive selection hook at line 441 (HIGH confidence)
+- `src/data/grammar.js` — 1,679 lines, 7 lessons confirmed (HIGH confidence)
+- `src/data/achievements.js` — 2,633 lines, 20 categories confirmed (HIGH confidence)
+- `src/data/skillTrees.js` — 6 trees, ~10-12 nodes each, existing CEFR labels confirmed (HIGH confidence)
+- `vite.config.js` — manualChunks strategy inspected; `skill-data`, `grammar-data` chunks already route the right files (HIGH confidence)
+- `npm info recharts` — v3.8.0 latest, peerDependencies `react: "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"` confirmed via npm registry (HIGH confidence)
+- `npm info html-to-image` — v1.11.13 latest confirmed via npm registry (MEDIUM confidence — React 19 compatibility verified through community reports, not official docs)
+- WebSearch: recharts React 19 issue #4558 resolved in v3.x releases (MEDIUM confidence)
+- WebSearch: html-to-image vs html2canvas comparison, RTL text handling (MEDIUM confidence)
 
 ---
 
@@ -341,15 +438,19 @@ npm install inkjs@^2.4.0   # dialogue engine migration
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| inkjs API | MEDIUM | GitHub verified, not in Context7. Core `Story` API stable since v2.0. |
-| AceBase recommendation | MEDIUM | Single maintainer; "don't add it yet" is defensive but evidence-based |
-| Bundle optimization | HIGH | Vite manualChunks well-documented, existing config analyzed |
-| Calligraphy (Phaser Graphics) | HIGH | Phaser official docs confirm Graphics + pointer events sufficient |
-| Faction/world-state (plain Redux) | HIGH | 17 existing slices prove the pattern scales |
-| inkjs not installed | HIGH | Verified by inspecting node_modules and package.json |
+| Installed stack | HIGH | package.json + node_modules verified |
+| recharts v3.8.0 React 19 compat | HIGH | peerDependencies verified via npm registry |
+| No new dep for skill trees | HIGH | skillTreeSlice + SkillTreeView already exist |
+| No new dep for grammar expansion | HIGH | grammarSlice + GrammarLesson already exist |
+| No new dep for quiz expansion | HIGH | QuizOverlay switch pattern already scales |
+| No new dep for adaptive difficulty | HIGH | wordSelection.js + FSRS data already sufficient |
+| No new dep for placement test | HIGH | 30-line IRT binary search, no library needed |
+| No new dep for achievement expansion | HIGH | achievementSlice + 20 categories already exist |
+| html-to-image RTL handling | MEDIUM | Community-verified, not official docs |
+| ts-fsrs 5.2.3 → 5.3.1 upgrade | LOW | Minor version bump, change log not reviewed |
 
 ---
 
-*Stack research for: v11.0 Deep Systems & Content Engine (inkjs, AceBase, faction system, world state, dynamic market, calligraphy, poetry battles, bundle optimization)*
-*Researched: 2026-03-19*
-*Confidence: HIGH (installation status verified; new packages identified; patterns confirmed against existing 196K LOC codebase)*
+*Stack research for: v12.0 Learning Systems (skill trees, grammar expansion, quiz expansion, adaptive difficulty, CEFR placement, 250+ achievements, social share cards)*
+*Researched: 2026-03-22*
+*Confidence: HIGH — all new features confirmed buildable on existing architecture; one confirmed new dependency (recharts); one conditional new dependency (html-to-image)*
