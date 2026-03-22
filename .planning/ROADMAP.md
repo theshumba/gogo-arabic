@@ -236,7 +236,7 @@ Plans:
   2. Completing a grammar lesson immediately awards Grammar skill tree XP visible in SkillTreeView and auto-unlocks the next lesson in sequence
 
 Plans:
-- [ ] 58-01: 20 new A1-A2 grammar lessons in grammar.js with 12 exercise types + GrammarChecker.js + vocabulary_prerequisites build-time validation (GRAM-02)
+- [x] 58-01: 20 A1-A2 grammar lessons in grammar.js with 12 exercise types + grammarChecker vitest + ExerciseStage 12 renderers (GRAM-02) — 2026-03-22
 - [ ] 58-02: learningProgressMiddleware grammar completion → Grammar skill tree XP + auto-unlock next lesson + lesson sequence gating in GrammarOverlay (GRAM-04)
 
 #### Phase 59: Adaptive Difficulty Engine
@@ -387,7 +387,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 54. World Life Systems | v11.0 | 4/4 | Complete | 2026-03-20 |
 | 55. Mini-Games and Content Polish | v11.0 | 5/5 | Complete | 2026-03-21 |
 | 56. Bug Fixes & Redux Foundation | v12.0 | 1/2 | Complete    | 2026-03-22 |
-| 57. Skill Tree Infrastructure | v12.0 | 0/3 | Not started | - |
+| 57. Skill Tree Infrastructure | v12.0 | 0/3 | Complete    | 2026-03-22 |
 | 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 0/2 | Not started | - |
 | 59. Adaptive Difficulty Engine | v12.0 | 0/2 | Not started | - |
 | 60. Quiz Expansion (Core 3 Types) | v12.0 | 0/3 | Not started | - |
@@ -400,4 +400,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-22 — Phase 56 Plan 01 complete (FIX-01 + FIX-02)*
+*Last updated: 2026-03-22 — Phase 58 Plan 01 complete (GRAM-02 data layer: 20 A1-A2 lessons + 12 exercise type renderers)*
