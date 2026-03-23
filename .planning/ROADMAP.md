@@ -277,7 +277,7 @@ Plans:
   2. After placement test completion, skill tree nodes and grammar lessons appropriate to the assigned CEFR level are pre-unlocked — a player placed at A2 can immediately access A2 grammar lessons
   3. A player can navigate to Settings and retake the placement test with a warning explaining that retaking resets CEFR tracking history
 
-**Plans:** 3 plans in 2 waves
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 61-01-PLAN.md — placementTest.js 30-item CAT bank (Pre-A1 to B1) + placementEngine.js pure functions (IRT selection, scoring, level assignment, unlock derivation) + tests (CEFR-01) — COMPLETE 2026-03-23
@@ -293,9 +293,11 @@ Plans:
   2. A player who reaches Grammar tree level 3 sees B1 grammar lessons unlock automatically; reaching level 5 unlocks B2 — attempting to open a locked lesson shows "Requires Grammar Tree Level X" with current level shown
   3. A "New content added" notification appears on first load after this phase ships for existing players whose grammar completion percentage has changed
 
+**Plans:** 2/2 plans complete — Phase 62 COMPLETE 2026-03-23
+
 Plans:
-- [ ] 62-01: 30 new B1-B2 grammar lessons in grammar.js completing the 50-lesson curriculum (GRAM-01)
-- [ ] 62-02: Skill tree gate enforcement in GrammarOverlay — B1 lessons locked until Grammar tree level 3, B2 until level 5 + "new content" toast for existing players (GRAM-03)
+- [x] 62-01-PLAN.md — 30 new B1-B2 grammar lessons in grammar.js completing the 50-lesson curriculum (GRAM-01) — COMPLETE 2026-03-23
+- [x] 62-02-PLAN.md — CEFR_GRAMMAR_GATES (B1:3, B2:5) in grammarSlice + selectLessonsByCategory CEFR annotations + GrammarModule 'Requires Grammar Tree Level X' badge + new-content toast (GRAM-03) — COMPLETE 2026-03-23
 
 #### Phase 63: Achievement Expansion
 **Goal**: The achievement system recognizes mastery across every learning activity — 250+ achievements in 4 tiers give players concrete milestones to pursue and a dedicated panel lets them track progress by category
@@ -396,9 +398,9 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 59. Adaptive Difficulty Engine | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 60. Quiz Expansion (Core 3 Types) | v12.0 | 2/2 | Complete    | 2026-03-22 |
-| 61. CEFR Placement Test | v12.0 | 0/3 | Planned | - |
+| 61. CEFR Placement Test | v12.0 | 0/3 | Complete    | 2026-03-23 |
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Not started | - |
-| 63. Achievement Expansion | v12.0 | 3/3 | Complete   | 2026-03-23 |
+| 63. Achievement Expansion | v12.0 | 3/3 | Complete    | 2026-03-23 |
 | 64. CEFR Reports + Social Sharing | v12.0 | 0/3 | Not started | - |
 
 **Cumulative:** 56 phases shipped, 139+ plans complete, 11 milestones shipped

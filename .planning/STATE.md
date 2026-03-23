@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Completed 62-01-PLAN.md — 50 grammar lessons (B1/B2 expansion + 7 new B2)
-last_updated: "2026-03-23T04:57:12Z"
+stopped_at: Completed 62-02-PLAN.md — CEFR gating for B1/B2 grammar lessons
+last_updated: "2026-03-23T05:02:42Z"
 progress:
   total_phases: 9
-  completed_phases: 8
-  total_plans: 18
-  completed_plans: 18
+  completed_phases: 9
+  total_plans: 19
+  completed_plans: 19
 ---
 
 # Project State
@@ -19,13 +19,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 62 complete — Grammar B1-B2 CEFR Gating
+**Current focus:** Phase 62 complete — Grammar B1-B2 CEFR Gating (both plans shipped)
 
 ## Current Position
 
 Phase: 62 (complete)
-Plan: 62-01 complete — B1-B2 Grammar Lesson Expansion
-Status: Phase complete
+Plan: 62-02 complete — Skill Tree Gating for B1/B2 Grammar
+Status: Phase complete — GRAM-03 requirement satisfied
 
 ### Shipped Milestones
 
@@ -89,6 +89,13 @@ Status: Phase complete
 - grammar.js had 43 lessons after Phase 58 structural fix; 7 new B2 lessons added in Phase 62 to reach 50
 - All 50 lessons: 12+ exercises, 4+ distinct types, 4+ quiz questions — CEFR A1-B2 covered (62-01)
 - grammarChecker.test.js now validates all 50 lessons (was A1/A2 only); 23 tests pass (62-01)
+- CEFR_GRAMMAR_GATES in grammarSlice.js: A1/A2=0, B1=3, B2=5 — skill tree node count gate (62-02)
+- selectLessonsByCategory annotates isCefrLocked, cefrGateLevel, currentTreeLevel on each lesson (62-02)
+- isUnlocked = unlockedLessons.includes(id) && cefrUnlocked — CEFR gate fully enforced at selector level (62-02)
+- GrammarModule LessonCard shows 'Requires Grammar Tree Level X' badge (brown #8B4513) for CEFR-locked lessons (62-02)
+- GrammarModule new-content toast: fires when localStorage gogo_grammar_lesson_count increases (62-02)
+- grammarSlice.test.js: 55 tests (was 47; 8 new CEFR gating tests added) (62-02)
+- GRAM-03 requirement: B1/B2 CEFR gating — SATISFIED (Phase 62 complete)
 - grammar.js was 47 lessons (not 50 as documented) — now 43 after structural fix
 - grammar.js had structural bug: 40 lessons were in grammarCategories, not grammarLessons — FIXED (58-01)
 - 20 A1-A2 lessons now fully populated: 12+ exercises, 4+ types, 4+ quiz questions each (58-01)
@@ -163,6 +170,10 @@ Status: Phase complete
 - [Phase 62]: Grammar expanded to 50 lessons (13 B1 + 17 B2) — GRAM-01 requirement now satisfied
 - [Phase 62]: All 50 lessons pass grammarChecker.test.js data integrity suite (23 tests)
 - [Phase 62]: conjugation-drill 'future' paradigm not needed — jussive/subjunctive drills use 'present' or 'past'
+- [Phase 62-02]: CEFR gate enforced at selectLessonsByCategory level — unlockNextLesson remains reducer-only, no skillTree access needed
+- [Phase 62-02]: CEFR_GRAMMAR_GATES: A1=0, A2=0, B1=3, B2=5 — gates represent Grammar skill tree unlocked node count
+- [Phase 62-02]: Brown #8B4513 for CEFR-locked badge distinguishes skill-tree gate from regular content lock (#666)
+- [Phase 62-02]: localStorage key 'gogo_grammar_lesson_count' stores lesson count; storedCount>0 guard prevents first-load toast
 
 ### Blockers/Concerns
 
@@ -176,7 +187,7 @@ Status: Phase complete
 
 ## Session Continuity
 
-Last session: 2026-03-23T04:57:12Z
-Stopped at: Completed 62-01-PLAN.md — 50 grammar lessons (B1/B2 expansion + 7 new B2 lessons)
+Last session: 2026-03-23T05:02:42Z
+Stopped at: Completed 62-02-PLAN.md — CEFR gating for B1/B2 grammar (selectLessonsByCategory + GrammarModule UI)
 Resume file: None
 Next plan: Phase 64 (check ROADMAP.md for next priority)
