@@ -9,6 +9,7 @@ import { ACHIEVEMENTS } from '../../data/achievements.js';
 import vocabularyData from '../../data/vocabularyAll.js';
 import { unlockAchievement, recordPerfectQuiz } from '../slices/achievementSlice.js';
 import { addXP } from '../slices/playerSlice.js';
+import { SKILL_TREES } from '../../data/skillTrees.js';
 
 // Helper to check if an achievement requirement is met
 function isAchievementMet(achievement, state) {
@@ -92,6 +93,35 @@ function isAchievementMet(achievement, state) {
       return completedCount >= req.threshold;
     }
 
+    case 'skill_tree_nodes': {
+      const allNodes = Object.values(state.skillTree?.unlockedNodes || {}).flat();
+      return allNodes.length >= req.threshold;
+    }
+
+    case 'skill_tree_complete': {
+      if (!req.treeId) return false;
+      const treeNodes = state.skillTree?.unlockedNodes?.[req.treeId] ?? [];
+      const totalNodes = SKILL_TREES[req.treeId]?.nodes?.length ?? Infinity;
+      return treeNodes.length >= totalNodes;
+    }
+
+    case 'quiz_type_streak': {
+      const qStats = achievements.stats.quizTypeStats ?? {};
+      const typeStats = qStats[req.quizType] ?? { perfectStreak: 0 };
+      return typeStats.perfectStreak >= req.threshold;
+    }
+
+    case 'cefr_level_reached': {
+      const LEVEL_ORDER = { A1: 1, A2: 2, B1: 3, B2: 4 };
+      const currentLevel = LEVEL_ORDER[state.cefrProgress?.currentLevel] ?? 0;
+      const requiredLevel = LEVEL_ORDER[req.level] ?? 1;
+      return currentLevel >= requiredLevel;
+    }
+
+    case 'placement_complete': {
+      return state.placement?.hasCompleted === true;
+    }
+
     default:
       return false;
   }
@@ -113,6 +143,11 @@ const ACTION_TO_ACHIEVEMENT_TYPES = {
   'player/spendDirhams': ['dirhams_spent'],
   'player/addDirhams': ['dirhams_held'],
   'grammar/completeLesson': ['grammar_lessons'],
+  'skillTree/unlockNode':              ['skill_tree_nodes', 'skill_tree_complete'],
+  'skillTree/bulkUnlockNodes':         ['skill_tree_nodes', 'skill_tree_complete'],
+  'achievements/recordQuizTypeResult': ['quiz_type_streak'],
+  'cefrProgress/setCefrLevel':         ['cefr_level_reached'],
+  'placement/recordPlacementResult':   ['placement_complete'],
 };
 
 // Re-entrancy guard: prevents infinite dispatch cascade when addXP triggers
