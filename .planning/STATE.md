@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
-status: in_progress
-stopped_at: Phase 60 Plan 02 complete — WordOrder + ClozePassage components + registry update + 10 component tests + SentenceBuilder bug fix. QUIZ-01 fully satisfied (15 active + 3 deferred = 18 quiz types).
-last_updated: "2026-03-22T23:32:26Z"
+status: unknown
+stopped_at: Phase 61 Plan 01 complete — 30-item placement bank + 7 pure engine functions + 58 unit tests. CEFR-01 satisfied.
+last_updated: "2026-03-23T03:55:00Z"
 progress:
   total_phases: 9
   completed_phases: 5
-  total_plans: 12
+  total_plans: 15
   completed_plans: 12
 ---
 
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 60 — COMPLETE. Next: Phase 61 (Grammar CAT) or Phase 63 (Achievement Expansion)
+**Current focus:** Phase 61 — cefr-placement-test
 
 ## Current Position
 
-Phase: 60 (quiz-expansion-core-3-types) — COMPLETE
-Plan: 2 of 2 — COMPLETE
+Phase: 61 (cefr-placement-test) — EXECUTING
+Plan: 2 of 3
 
 ### Shipped Milestones
 
@@ -70,6 +70,15 @@ Plan: 2 of 2 — COMPLETE
 - QUIZ_TYPE_REGISTRY Phase 60 complete: GrammarFill (minLevel:4 cefrMin:A2), ClozePassage (minLevel:4 cefrMin:A2), WordOrder (minLevel:5 cefrMin:B1) all active
 - QUIZ_TYPE_REGISTRY deferred: DialectIdentify/RootExpand/CulturalContext at minLevel:999 cefrMin:B2
 - 22 quiz type tests in quizTypes.test.js (was 16 — 6 new CEFR routing tests added); 1278 total tests passing (60-02)
+- PLACEMENT_ITEMS: 30 calibrated CAT items spanning Pre-A1..B1 across 6 domains (61-01)
+- PLACEMENT_LEVELS = ['Pre-A1', 'A1', 'A2', 'B1'] — B1 is the placement cap (61-01)
+- placementEngine.js: 7 pure functions — selectNextItem (IRT, 20-item cap), computeRawScore, assignCefrLevel (conservative one-level-lower, B1 cap), dropOneTier (A1=floor), shouldEarlyExit (10 consecutive correct), deriveGrammarUnlocks, deriveSkillTreeUnlocks (61-01)
+- PLACEMENT_CEFR_ORDER = {Pre-A1:0, A1:1, A2:2, B1:3} defined locally — does NOT touch CEFR_ORDER in quizTypes.js (61-01)
+- assignCefrLevel(30,30) = {rawLevel:'B1', assignedLevel:'A2', storedLevel:'A2'} — confirmed (61-01)
+- dropOneTier floor: A1→A1 (and Pre-A1→Pre-A1); idx<=1 check (61-01)
+- deriveGrammarUnlocks returns contiguous lessons from order 1 up to assigned CEFR level — avoids unlock chain gaps (61-01)
+- deriveSkillTreeUnlocks sorts nodes by xpCost asc per tree; grammar_01/02 at A1, grammar_03 at A2 (61-01)
+- 1336 total tests passing (was 1278) — 58 new placement tests (61-01)
 - grammar.js has 43 lessons (fixed from 47 — structural bug removed 4 duplicate/misplaced lessons)
 - grammar.js had structural bug: 40 lessons were in grammarCategories, not grammarLessons — FIXED (58-01)
 - 20 A1-A2 lessons now fully populated: 12+ exercises, 4+ types, 4+ quiz questions each (58-01)
@@ -127,6 +136,8 @@ Plan: 2 of 2 — COMPLETE
 | unlock_spell dispatches discoverRoot with element: 'earth' | Element is cosmetic/not skill-tree-gating-critical; 'earth' is a valid ROOT_ELEMENTS value |
 | skillTreeUnlocked exposed as full unlockedNodes map in actionContext | Avoids per-tree selector calls at context-build time; ActionSetExecutor reads [treeId].length |
 | frontierNodeIds limited to slice(0,2) | Plan specifies 1-2 reachable nodes; keeps UI focused on immediate goals |
+| dropOneTier A1 as floor (idx <= 1) | storedLevel maps Pre-A1→A1; user can never be placed below A1 in practice |
+| PLACEMENT_CEFR_ORDER local 4-level map | CEFR_ORDER in quizTypes.js has no Pre-A1; modifying it would break 22 existing tests |
 
 ### Blockers/Concerns
 
@@ -140,7 +151,7 @@ Plan: 2 of 2 — COMPLETE
 
 ## Session Continuity
 
-Last session: 2026-03-22
-Stopped at: Phase 60 Plan 02 complete — WordOrder + ClozePassage + registry update + SentenceBuilder fix + 10 new tests. Phase 60 COMPLETE. QUIZ-01 fully satisfied.
-Resume file: .planning/phases/60-quiz-expansion-core-3-types/60-02-SUMMARY.md
-Next plan: Phase 61 (Grammar CAT) or Phase 63 (Achievement Expansion)
+Last session: 2026-03-23
+Stopped at: Phase 61 Plan 01 complete — 30-item placement bank + 7 pure engine functions + 58 unit tests. CEFR-01 satisfied.
+Resume file: .planning/phases/61-cefr-placement-test/61-01-SUMMARY.md
+Next plan: Phase 61 Plan 02 — PlacementTestOverlay component

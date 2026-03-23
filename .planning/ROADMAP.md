@@ -280,7 +280,7 @@ Plans:
 **Plans:** 3 plans in 2 waves
 
 Plans:
-- [ ] 61-01-PLAN.md — placementTest.js 30-item CAT bank (Pre-A1 to B1) + placementEngine.js pure functions (IRT selection, scoring, level assignment, unlock derivation) + tests (CEFR-01)
+- [x] 61-01-PLAN.md — placementTest.js 30-item CAT bank (Pre-A1 to B1) + placementEngine.js pure functions (IRT selection, scoring, level assignment, unlock derivation) + tests (CEFR-01) — COMPLETE 2026-03-23
 - [ ] 61-02-PLAN.md — PlacementTestOverlay.jsx (intro/testing/result phases, self-contained state machine, 20-question cap, early-exit) + MainMenu integration + component tests (CEFR-01)
 - [ ] 61-03-PLAN.md — bulkUnlockLessons + resetCefrProgress reducers + fan-out dispatch (grammar + skill tree pre-unlock) + Settings retake UI + slice tests (CEFR-02, CEFR-04)
 
@@ -405,4 +405,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-23 — Phase 61 PLANNED (3 plans in 2 waves: item bank + engine, overlay + MainMenu, fan-out dispatch + Settings retake)*
+*Last updated: 2026-03-23 — Phase 61 Plan 01 COMPLETE (item bank + engine + 58 tests); Plans 02-03 pending*
