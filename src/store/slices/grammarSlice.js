@@ -1,6 +1,16 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { grammarLessons } from '../../data/grammar.js';
 
+// Skill tree node count required to access each CEFR level's grammar lessons
+const CEFR_GRAMMAR_GATES = {
+  'A1': 0, // always accessible
+  'A2': 0, // always accessible
+  'B1': 3, // Grammar tree level 3 (3+ unlocked nodes)
+  'B2': 5, // Grammar tree level 5 (5+ unlocked nodes)
+};
+
+export { CEFR_GRAMMAR_GATES };
+
 const initialState = {
   completedLessons: [], // array of lesson IDs
   unlockedLessons: ['al-definite'], // First lesson always unlocked
@@ -161,10 +171,15 @@ export const selectIsLessonCompleted = (lessonId) => (state) => {
   return state.grammar.completedLessons.includes(lessonId);
 };
 
-// Get lessons by category with completion status
+// Get lessons by category with completion status and CEFR gating
 export const selectLessonsByCategory = createSelector(
-  [selectCompletedLessons, selectLessonScores, selectUnlockedLessons],
-  (completedLessons, lessonScores, unlockedLessons) => {
+  [
+    selectCompletedLessons,
+    selectLessonScores,
+    selectUnlockedLessons,
+    (state) => state.skillTree?.unlockedNodes?.grammar?.length ?? 0,
+  ],
+  (completedLessons, lessonScores, unlockedLessons, grammarTreeLevel) => {
     const lessonsByCategory = {};
 
     grammarLessons.forEach((lesson) => {
@@ -172,10 +187,16 @@ export const selectLessonsByCategory = createSelector(
         lessonsByCategory[lesson.category] = [];
       }
 
+      const cefrGate = CEFR_GRAMMAR_GATES[lesson.cefrLevel] ?? 0;
+      const cefrUnlocked = grammarTreeLevel >= cefrGate;
+
       lessonsByCategory[lesson.category].push({
         ...lesson,
         isCompleted: completedLessons.includes(lesson.id),
-        isUnlocked: unlockedLessons.includes(lesson.id),
+        isUnlocked: unlockedLessons.includes(lesson.id) && cefrUnlocked,
+        isCefrLocked: !cefrUnlocked,
+        cefrGateLevel: cefrGate,
+        currentTreeLevel: grammarTreeLevel,
         score: lessonScores[lesson.id] || null,
       });
     });

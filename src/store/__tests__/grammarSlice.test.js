@@ -17,6 +17,7 @@ import grammarReducer, {
   selectUnlockedLessons,
   selectIsLessonUnlocked,
   selectLessonsByCategory,
+  CEFR_GRAMMAR_GATES,
 } from '../slices/grammarSlice.js';
 import cefrProgressReducer, { setCefrLevel, resetCefrProgress } from '../slices/cefrProgressSlice.js';
 
@@ -27,10 +28,13 @@ vi.mock('../../data/grammar.js', () => ({
     { id: 'lesson2', category: 'nouns', order: 2, cefrLevel: 'A1' },
     { id: 'lesson3', category: 'verbs', order: 3, cefrLevel: 'A2' },
     { id: 'lesson4', category: 'verbs', order: 4, cefrLevel: 'A2' },
+    { id: 'lesson5', category: 'advanced', order: 5, cefrLevel: 'B1' },
+    { id: 'lesson6', category: 'advanced', order: 6, cefrLevel: 'B2' },
   ],
   grammarCategories: [
     { id: 'nouns', name: 'Nouns' },
     { id: 'verbs', name: 'Verbs' },
+    { id: 'advanced', name: 'Advanced' },
   ],
 }));
 
@@ -329,12 +333,12 @@ describe('grammarSlice', () => {
     it('should handle completing the last lesson gracefully', () => {
       const startState = {
         ...initialState,
-        unlockedLessons: ['lesson1', 'lesson2', 'lesson3', 'lesson4'],
-        completedLessons: ['lesson1', 'lesson2', 'lesson3', 'lesson4'],
+        unlockedLessons: ['lesson1', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6'],
+        completedLessons: ['lesson1', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6'],
       };
-      const state = grammarReducer(startState, unlockNextLesson({ completedLessonId: 'lesson4' }));
+      const state = grammarReducer(startState, unlockNextLesson({ completedLessonId: 'lesson6' }));
       // No crash, no new lesson added
-      expect(state.unlockedLessons).toHaveLength(4);
+      expect(state.unlockedLessons).toHaveLength(6);
     });
 
     it('should handle unknown lesson ID gracefully', () => {
@@ -393,9 +397,9 @@ describe('grammarSlice', () => {
     });
 
     it('selectGrammarProgress should calculate percentage', () => {
-      // Mock has 2 completed out of 4 total lessons = 50%
+      // Mock has 2 completed out of 6 total lessons = 33%
       const progress = selectGrammarProgress(mockState);
-      expect(progress).toBe(50);
+      expect(progress).toBe(33);
     });
 
     it('selectLessonScore should return score for specific lesson', () => {
@@ -439,6 +443,138 @@ describe('grammarSlice', () => {
       const lesson3 = verbLessons.find(l => l.id === 'lesson3');
       expect(lesson3).toBeDefined();
       expect(lesson3.isUnlocked).toBe(false);
+    });
+  });
+
+  describe('CEFR gating via selectLessonsByCategory', () => {
+    it('CEFR_GRAMMAR_GATES has B1:3 and B2:5', () => {
+      expect(CEFR_GRAMMAR_GATES['B1']).toBe(3);
+      expect(CEFR_GRAMMAR_GATES['B2']).toBe(5);
+      expect(CEFR_GRAMMAR_GATES['A1']).toBe(0);
+      expect(CEFR_GRAMMAR_GATES['A2']).toBe(0);
+    });
+
+    it('B1 lesson is CEFR-locked when grammar tree has fewer than 3 nodes', () => {
+      const state = {
+        grammar: {
+          completedLessons: [],
+          unlockedLessons: ['lesson1', 'lesson5'],
+          lessonScores: {},
+          currentLessonId: null,
+        },
+        skillTree: { unlockedNodes: { grammar: ['grammar_01', 'grammar_02'] } },
+      };
+      const lessonsByCategory = selectLessonsByCategory(state);
+      const b1Lesson = lessonsByCategory['advanced'].find(l => l.id === 'lesson5');
+      expect(b1Lesson.isCefrLocked).toBe(true);
+      expect(b1Lesson.isUnlocked).toBe(false);
+      expect(b1Lesson.cefrGateLevel).toBe(3);
+      expect(b1Lesson.currentTreeLevel).toBe(2);
+    });
+
+    it('B1 lesson is accessible when grammar tree has 3+ nodes', () => {
+      const state = {
+        grammar: {
+          completedLessons: [],
+          unlockedLessons: ['lesson5'],
+          lessonScores: {},
+          currentLessonId: null,
+        },
+        skillTree: { unlockedNodes: { grammar: ['grammar_01', 'grammar_02', 'grammar_03'] } },
+      };
+      const lessonsByCategory = selectLessonsByCategory(state);
+      const b1Lesson = lessonsByCategory['advanced'].find(l => l.id === 'lesson5');
+      expect(b1Lesson.isCefrLocked).toBe(false);
+      expect(b1Lesson.isUnlocked).toBe(true);
+      expect(b1Lesson.cefrGateLevel).toBe(3);
+      expect(b1Lesson.currentTreeLevel).toBe(3);
+    });
+
+    it('B2 lesson is CEFR-locked when grammar tree has fewer than 5 nodes', () => {
+      const state = {
+        grammar: {
+          completedLessons: [],
+          unlockedLessons: ['lesson6'],
+          lessonScores: {},
+          currentLessonId: null,
+        },
+        skillTree: { unlockedNodes: { grammar: ['grammar_01', 'grammar_02', 'grammar_03', 'grammar_04'] } },
+      };
+      const lessonsByCategory = selectLessonsByCategory(state);
+      const b2Lesson = lessonsByCategory['advanced'].find(l => l.id === 'lesson6');
+      expect(b2Lesson.isCefrLocked).toBe(true);
+      expect(b2Lesson.isUnlocked).toBe(false);
+      expect(b2Lesson.cefrGateLevel).toBe(5);
+      expect(b2Lesson.currentTreeLevel).toBe(4);
+    });
+
+    it('B2 lesson is accessible when grammar tree has 5+ nodes', () => {
+      const state = {
+        grammar: {
+          completedLessons: [],
+          unlockedLessons: ['lesson6'],
+          lessonScores: {},
+          currentLessonId: null,
+        },
+        skillTree: { unlockedNodes: { grammar: ['g1', 'g2', 'g3', 'g4', 'g5'] } },
+      };
+      const lessonsByCategory = selectLessonsByCategory(state);
+      const b2Lesson = lessonsByCategory['advanced'].find(l => l.id === 'lesson6');
+      expect(b2Lesson.isCefrLocked).toBe(false);
+      expect(b2Lesson.isUnlocked).toBe(true);
+      expect(b2Lesson.cefrGateLevel).toBe(5);
+      expect(b2Lesson.currentTreeLevel).toBe(5);
+    });
+
+    it('A1/A2 lessons are never CEFR-locked (gate=0)', () => {
+      const state = {
+        grammar: {
+          completedLessons: [],
+          unlockedLessons: ['lesson1', 'lesson3'],
+          lessonScores: {},
+          currentLessonId: null,
+        },
+        skillTree: { unlockedNodes: { grammar: [] } },
+      };
+      const lessonsByCategory = selectLessonsByCategory(state);
+      const a1Lesson = lessonsByCategory['nouns'].find(l => l.id === 'lesson1');
+      const a2Lesson = lessonsByCategory['verbs'].find(l => l.id === 'lesson3');
+      expect(a1Lesson.isCefrLocked).toBe(false);
+      expect(a2Lesson.isCefrLocked).toBe(false);
+    });
+
+    it('isUnlocked is false when lesson is in unlockedLessons but isCefrLocked is true', () => {
+      const state = {
+        grammar: {
+          completedLessons: [],
+          unlockedLessons: ['lesson5'], // B1 lesson is in unlockedLessons array
+          lessonScores: {},
+          currentLessonId: null,
+        },
+        skillTree: { unlockedNodes: { grammar: [] } }, // but tree level is 0 (< 3)
+      };
+      const lessonsByCategory = selectLessonsByCategory(state);
+      const b1Lesson = lessonsByCategory['advanced'].find(l => l.id === 'lesson5');
+      expect(b1Lesson.isCefrLocked).toBe(true);
+      // isUnlocked must be false even though lesson5 is in unlockedLessons
+      expect(b1Lesson.isUnlocked).toBe(false);
+    });
+
+    it('gracefully returns tree level 0 when skillTree state is absent', () => {
+      const state = {
+        grammar: {
+          completedLessons: [],
+          unlockedLessons: ['lesson1'],
+          lessonScores: {},
+          currentLessonId: null,
+        },
+        // no skillTree key
+      };
+      const lessonsByCategory = selectLessonsByCategory(state);
+      const a1Lesson = lessonsByCategory['nouns'].find(l => l.id === 'lesson1');
+      // A1 always accessible (gate=0), so even with tree level 0, not CEFR-locked
+      expect(a1Lesson.isCefrLocked).toBe(false);
+      expect(a1Lesson.currentTreeLevel).toBe(0);
     });
   });
 
