@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: unknown
-stopped_at: Phase 61 Plan 03 complete — fan-out dispatch + Settings retake UI + 11 tests. 1400 tests passing.
-last_updated: "2026-03-23T03:47:23Z"
+stopped_at: Completed 63-03-PLAN.md — tier badges + expanded tabs + lazy AchievementPanel
+last_updated: "2026-03-23T03:50:51.463Z"
 progress:
   total_phases: 9
-  completed_phases: 5
+  completed_phases: 7
   total_plans: 17
-  completed_plans: 16
+  completed_plans: 17
 ---
 
 # Project State
@@ -152,6 +152,8 @@ Plan: 3 of 3 (all plans done)
 - [Phase 63]: quizTypeStats initialized as {} in stats — per-type entries created lazily on first dispatch
 - [Phase 63]: recordQuizTypeResult dispatch in useQuiz.js fires for ALL quiz completions (perfect: false resets streak)
 - [Phase 63]: SKILL_TREES imported into middleware for skill_tree_complete node count — avoids hardcoding 30
+- [Phase 63]: Suspense fallback=null for AchievementPanel — panel has its own overlay backdrop, no spinner needed
+- [Phase 63]: cardInfo div wraps cardRarity and tierBadge for horizontal rarity/tier row in AchievementCard
 
 ### Blockers/Concerns
 
@@ -165,7 +167,7 @@ Plan: 3 of 3 (all plans done)
 
 ## Session Continuity
 
-Last session: 2026-03-23
-Stopped at: Phase 61 Plan 03 complete — fan-out dispatch + Settings retake UI + 11 tests. 1400 tests passing.
-Resume file: .planning/phases/61-cefr-placement-test/61-03-SUMMARY.md
+Last session: 2026-03-23T03:50:51.456Z
+Stopped at: Completed 63-03-PLAN.md — tier badges + expanded tabs + lazy AchievementPanel
+Resume file: None
 Next plan: Phase 62 (Grammar B1-B2 Content) or Phase 63 (Achievement Expansion) — check ROADMAP.md for priority

@@ -39,10 +39,10 @@
 
 ### Achievements
 
-- [ ] **ACH-01**: Achievement system expanded from 44 to 250+ achievements across 15 categories
-- [ ] **ACH-02**: Achievements use 4-tier system (Bronze/Silver/Gold/Legendary) with increasing difficulty thresholds
+- [x] **ACH-01**: Achievement system expanded from 44 to 250+ achievements across 15 categories
+- [x] **ACH-02**: Achievements use 4-tier system (Bronze/Silver/Gold/Legendary) with increasing difficulty thresholds
 - [ ] **ACH-03**: Shareable social card ("I learned X Arabic words in Gogo Arabic") generated as PNG for sharing
-- [ ] **ACH-04**: Achievement progress visible in a dedicated Achievements panel with category filtering and tier display
+- [x] **ACH-04**: Achievement progress visible in a dedicated Achievements panel with category filtering and tier display
 
 ## v13.0 Requirements (Deferred)
 
@@ -87,9 +87,9 @@
 | CEFR-04 | Phase 61 | Pending |
 | GRAM-01 | Phase 62 | Pending |
 | GRAM-03 | Phase 62 | Pending |
-| ACH-01 | Phase 63 | Pending |
-| ACH-02 | Phase 63 | Pending |
-| ACH-04 | Phase 63 | Pending |
+| ACH-01 | Phase 63 | Complete |
+| ACH-02 | Phase 63 | Complete |
+| ACH-04 | Phase 63 | Complete |
 | CEFR-03 | Phase 64 | Pending |
 | ACH-03 | Phase 64 | Pending |
 

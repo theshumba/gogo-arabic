@@ -306,12 +306,12 @@ Plans:
   2. Every achievement has a tier label (Bronze, Silver, Gold, or Legendary) and the Achievements panel displays the tier badge visually
   3. Achievement progress is visible before completion — a player can filter by category and see how close they are to each unearned achievement
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 63-01-PLAN.md — TIER/TIER_COLORS/RARITY_TO_TIER constants + tier field on all 252 entries + ~12 new v12.0 achievements + 3 new categories (SKILL_TREE, QUIZ, CEFR) + data integrity tests (ACH-01, ACH-02)
 - [x] 63-02-PLAN.md — 5 new isAchievementMet() cases + 5 ACTION_TO_ACHIEVEMENT_TYPES entries + quizTypeStats in achievementSlice + selectAchievementProgress expansion + tests (ACH-01)
-- [ ] 63-03-PLAN.md — AchievementPanel tier badge display + 24 category tabs + lazy-load in HUD.jsx (ACH-04)
+- [x] 63-03-PLAN.md — AchievementPanel tier badge display + 24 category tabs + lazy-load in HUD.jsx (ACH-04)
 
 #### Phase 64: CEFR Reports + Social Sharing
 **Goal**: Players can see their CEFR level progress over time as a visual report and share their Arabic learning milestone as a social card — the report never shows CEFR going backwards and the share card works without external image dependencies
@@ -398,7 +398,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 60. Quiz Expansion (Core 3 Types) | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 61. CEFR Placement Test | v12.0 | 0/3 | Planned | - |
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Not started | - |
-| 63. Achievement Expansion | v12.0 | 2/3 | In Progress|  |
+| 63. Achievement Expansion | v12.0 | 3/3 | Complete   | 2026-03-23 |
 | 64. CEFR Reports + Social Sharing | v12.0 | 0/3 | Not started | - |
 
 **Cumulative:** 56 phases shipped, 139+ plans complete, 11 milestones shipped
