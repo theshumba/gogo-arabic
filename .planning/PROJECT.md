@@ -68,18 +68,27 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 ### Active
 
-## Current Milestone: v12.0 Learning Systems
+## Shipped: v12.0 Learning Systems (2026-03-23)
 
-**Goal:** Build the teaching systems that make Gogo Arabic a structured Arabic course inside an RPG — 6 skill trees, 50 grammar lessons, 18 quiz types, adaptive difficulty, diagnostic placement, and 250+ achievements that reward mastery.
+**Delivered:** 9 phases (56-64), 22 plans. Teaching infrastructure: skill trees, grammar curriculum, quiz expansion, adaptive difficulty, placement test, achievements, CEFR reports, social sharing.
+
+## Current Milestone: v13.0 Systems Polish & Immersion
+
+**Goal:** Deepen the "learn by playing" experience — optimize performance, wire disconnected systems together, embed Arabic practice into exploration, and add the 3 remaining quiz types. No new UI frameworks or major features — pure under-the-hood improvements that make existing systems work better together.
 
 **Target features:**
-- 6 skill trees (Reading, Writing, Listening, Conversation, Grammar, Culture) with unlockable node progression
-- Grammar expansion from 7 to 50 lessons covering A1-B2 with 12 exercise types per lesson
-- Quiz expansion from 6 to 18 quiz types with adaptive difficulty engine
-- Diagnostic placement test to start players at their correct CEFR level
-- CEFR progress reports showing level advancement over time
-- ✓ Achievement expansion from 44 to 250+ achievements across all categories (Phase 63)
-- Shareable "I learned X Arabic words" social cards
+- Bundle optimization (split GameLayout 1.2MB, vocabulary-data 1.7MB, npc-data 577KB)
+- Quiz → daily goals wiring (completions feed into daily progress tracking)
+- Zone-entry micro-reviews (FSRS spaced repetition triggered during exploration)
+- Progressive tashkeel fading (vowel marks fade with mastery — FSRS-driven)
+- 3 remaining quiz types (DialectIdentify, RootExpand, CulturalContext at B2)
+- In-dialogue comprehension checks (NPCs quiz mid-conversation)
+- Welcome back experience (returning player summary + suggested next activity)
+- Environmental Arabic labels (floating text above world objects)
+- NPC quest indicators (!/? above heads in Phaser)
+- Anonymous quiz statistics ("72% get this right")
+- Integration tests for battle, grammar, quest flows
+- CSS Modules migration for remaining inline-styled components
 
 **Previous milestone:** v11.0 Deep Systems & Content Engine (Phases 50-55, shipped 2026-03-21)
 

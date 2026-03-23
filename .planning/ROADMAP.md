@@ -14,6 +14,7 @@
 - ✅ **v10.0 Onboarding & First 5 Minutes** — Phases 47-49 (shipped 2026-03-19, Phases 48-49 absorbed into v11.0)
 - ✅ **v11.0 Deep Systems & Content Engine** — Phases 50-55 (shipped 2026-03-21) → [archive](milestones/v11.0-ROADMAP.md)
 - ✅ **v12.0 Learning Systems** — Phases 56-64 (shipped 2026-03-23) → [archive](milestones/v12.0-ROADMAP.md)
+- 🚧 **v13.0 Systems Polish & Immersion** — Phases 65-71 (in progress)
 
 ## Phases
 
@@ -334,10 +335,106 @@ Plans:
 
 ---
 
+### v13.0 Systems Polish & Immersion (Phases 65-71)
+
+#### Phase 65: Bundle Optimization
+**Goal**: Reduce the three largest chunks (GameLayout 1.2MB, vocabulary-data 1.7MB, npc-data 577KB) to under 500KB each through dynamic imports and data splitting
+**Depends on**: None (independent infrastructure work)
+**Requirements**: PERF-01, PERF-02, PERF-03
+**Success Criteria** (what must be TRUE):
+  1. GameLayout chunk is under 500KB — overlay components (QuizOverlay, GrammarModule, SkillTreeMenu, etc.) are dynamically imported within GameLayout
+  2. vocabulary-data chunk is under 500KB — vocabulary loads per-zone or uses a binary/compressed format with on-demand parsing
+  3. npc-data chunk is under 300KB — NPC dialogue loads lazily per zone, not all upfront
+
+Plans:
+- [ ] 65-01: GameLayout dynamic imports for overlay components + Suspense boundaries (PERF-01)
+- [ ] 65-02: Vocabulary data zone-splitting or binary format + on-demand loader (PERF-02)
+- [ ] 65-03: NPC dialogue lazy loading per zone + dialogue cache (PERF-03)
+
+#### Phase 66: CSS Modules Migration
+**Goal**: All remaining inline-styled components migrated to CSS Modules for consistent styling and better DevTools debugging
+**Depends on**: None (independent cleanup)
+**Requirements**: PERF-04
+**Success Criteria** (what must be TRUE):
+  1. Zero components use inline `style={{}}` objects for layout/theming — all use CSS Modules or the existing `theme.js` constants only for dynamic values
+  2. `grep -r "style={{" src/components/ | wc -l` returns fewer than 20 matches (dynamic-only remaining)
+
+Plans:
+- [ ] 66-01: Migrate Menu, Settings, HUD components to CSS Modules (PERF-04)
+- [ ] 66-02: Migrate Quiz, Grammar, Skills components to CSS Modules (PERF-04)
+
+#### Phase 67: Systems Wiring
+**Goal**: Connect disconnected systems — quiz completions feed daily goals, zone entries trigger micro-reviews, tashkeel fades with mastery, and NPC quest markers appear in-world
+**Depends on**: Phase 65 (bundle optimization ensures lazy-loaded components don't break)
+**Requirements**: WIRE-01, WIRE-02, WIRE-03, WIRE-04
+**Success Criteria** (what must be TRUE):
+  1. Completing a quiz session increments the daily goals "Reviews" counter — visible on the Daily Dashboard
+  2. Entering a new zone triggers a 2-3 word FSRS micro-review overlay if due cards exist for that zone's vocabulary
+  3. Arabic text in quiz options and dialogue shows full tashkeel for words with FSRS stability < 7 days and no tashkeel for stability > 30 days
+  4. NPCs with available quests show a floating "!" marker; NPCs with completable quests show "?" — visible in the Phaser game world
+
+Plans:
+- [ ] 67-01: Quiz completion → daily goals middleware wiring + zone-entry micro-review overlay (WIRE-01, WIRE-02)
+- [ ] 67-02: Progressive tashkeel fading based on FSRS stability per word (WIRE-03)
+- [ ] 67-03: NPC quest indicator sprites (!/?) via NPCManager in Phaser (WIRE-04)
+
+#### Phase 68: Quiz Expansion — Final 3 Types
+**Goal**: The three deferred B2 quiz types are playable, completing the 18-type system
+**Depends on**: Phase 67 (systems wiring ensures new types integrate with daily goals and adaptive engine)
+**Requirements**: QUIZ-04, QUIZ-05, QUIZ-06
+**Success Criteria** (what must be TRUE):
+  1. DialectIdentify quiz shows a phrase and 4 dialect options (MSA, Egyptian, Levantine, Gulf) — B2 players encounter it in adaptive rotation
+  2. RootExpand quiz shows a trilateral root and player selects all derived words from options — uses existing root magic data
+  3. CulturalContext quiz matches Arabic expressions to cultural situations — at least 20 curated items
+  4. All 18 QUIZ_TYPE_REGISTRY entries have real minLevel values (no more minLevel:999 stubs)
+
+Plans:
+- [ ] 68-01: DialectIdentify.jsx + 20 dialect items + useQuiz/QuizOverlay wiring (QUIZ-04)
+- [ ] 68-02: RootExpand.jsx sourced from rootMagic data + CulturalContext.jsx + registry activation (QUIZ-05, QUIZ-06)
+
+#### Phase 69: Immersion — Dialogue & Welcome Back
+**Goal**: NPCs quiz players mid-conversation and returning players get a personalized welcome back screen
+**Depends on**: Phase 67 (FSRS wiring provides the "due cards" data for welcome back)
+**Requirements**: IMM-01, IMM-02
+**Success Criteria** (what must be TRUE):
+  1. At least 10 NPCs across 4 zones have comprehension check dialogue nodes — after a teaching moment, the NPC asks "What did I just say?" with 3 options
+  2. A player returning after 4+ hours sees a Welcome Back overlay showing: words learned last session, FSRS due count, streak status, and a suggested next activity button
+
+Plans:
+- [ ] 69-01: In-dialogue comprehension checks via ink conditional nodes + answer evaluation (IMM-01)
+- [ ] 69-02: WelcomeBackOverlay.jsx with session summary + FSRS due count + activity routing (IMM-02)
+
+#### Phase 70: Immersion — Environmental Arabic & Quiz Stats
+**Goal**: The game world teaches Arabic passively through floating labels, and quiz questions show community statistics
+**Depends on**: Phase 67 (tashkeel fading applies to environmental labels too)
+**Requirements**: IMM-03, IMM-04
+**Success Criteria** (what must be TRUE):
+  1. At least 30 world objects across 4 zones display floating Arabic labels (tree = شجرة) that fade based on FSRS mastery — new players see transliteration too
+  2. Quiz questions show "X% of players answered correctly" based on localStorage-accumulated statistics — at least 50 quiz items have stats after 5 play sessions
+
+Plans:
+- [ ] 70-01: FloatingArabicLabel Phaser objects on interactables + FSRS-driven visibility (IMM-03)
+- [ ] 70-02: QuizStatAccumulator localStorage service + "X% got this right" display in quiz UI (IMM-04)
+
+#### Phase 71: Integration Testing
+**Goal**: The three most complex untested systems have integration test suites — battle, grammar overlay, and quest flows
+**Depends on**: None (can run anytime, but benefits from stable Phase 65-70 code)
+**Requirements**: TEST-01, TEST-02, TEST-03
+**Success Criteria** (what must be TRUE):
+  1. Battle system has 15+ integration tests covering: start battle → player turn → enemy turn → spell cast → victory → reward dispatch
+  2. Grammar overlay has 10+ integration tests covering: open lesson → exercises → quiz → completeLesson dispatch → XP award → next lesson unlock
+  3. Quest system has 10+ integration tests covering: accept quest → track objectives → complete → reward → next quest unlock
+
+Plans:
+- [ ] 71-01: Battle system integration tests (TEST-01)
+- [ ] 71-02: Grammar overlay + quest system integration tests (TEST-02, TEST-03)
+
+---
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
+Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 71
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -405,9 +502,16 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Complete    | 2026-03-23 |
 | 63. Achievement Expansion | v12.0 | 3/3 | Complete    | 2026-03-23 |
 | 64. CEFR Reports + Social Sharing | v12.0 | 3/3 | Complete    | 2026-03-23 |
+| 65. Bundle Optimization | v13.0 | 0/3 | Not started | - |
+| 66. CSS Modules Migration | v13.0 | 0/2 | Not started | - |
+| 67. Systems Wiring | v13.0 | 0/3 | Not started | - |
+| 68. Quiz Expansion — Final 3 Types | v13.0 | 0/2 | Not started | - |
+| 69. Immersion — Dialogue & Welcome Back | v13.0 | 0/2 | Not started | - |
+| 70. Immersion — Environmental Arabic & Quiz Stats | v13.0 | 0/2 | Not started | - |
+| 71. Integration Testing | v13.0 | 0/2 | Not started | - |
 
-**Cumulative:** 56 phases shipped, 139+ plans complete, 11 milestones shipped
+**Cumulative:** 64 phases shipped, 185+ plans complete, 12 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-23 — Phase 64 plans created (3 plans in 2 waves: CEFR report + ink dialogue + social share)*
+*Last updated: 2026-03-23 — v12.0 complete, v13.0 roadmap created (7 phases, 18 requirements, 16 plans estimated)*
