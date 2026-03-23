@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
-status: unknown
-stopped_at: Completed 63-03-PLAN.md — tier badges + expanded tabs + lazy AchievementPanel
-last_updated: "2026-03-23T03:50:51.463Z"
+status: in_progress
+stopped_at: Completed 62-01-PLAN.md — 50 grammar lessons (B1/B2 expansion + 7 new B2)
+last_updated: "2026-03-23T04:57:12Z"
 progress:
   total_phases: 9
-  completed_phases: 7
-  total_plans: 17
-  completed_plans: 17
+  completed_phases: 8
+  total_plans: 18
+  completed_plans: 18
 ---
 
 # Project State
@@ -19,12 +19,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 63 — Achievement Expansion
+**Current focus:** Phase 62 complete — Grammar B1-B2 CEFR Gating
 
 ## Current Position
 
-Phase: 61 (cefr-placement-test) — COMPLETE
-Plan: 3 of 3 (all plans done)
+Phase: 62 (complete)
+Plan: 62-01 complete — B1-B2 Grammar Lesson Expansion
+Status: Phase complete
 
 ### Shipped Milestones
 
@@ -84,7 +85,11 @@ Plan: 3 of 3 (all plans done)
 - handlePlacementComplete dispatches recordPlacementResult + setCefrLevel; grammar/skill-tree fan-out deferred to 61-03 (61-02)
 - feedbackTimerRef clears on unmount to prevent setState on unmounted component (61-02)
 - 1336 total tests passing (was 1278) — 58 new placement tests (61-01)
-- grammar.js has 43 lessons (fixed from 47 — structural bug removed 4 duplicate/misplaced lessons)
+- grammar.js now has 50 lessons: 20 A1/A2 (Phase 58) + 13 B1 + 17 B2 (Phase 62) — all fully populated (62-01)
+- grammar.js had 43 lessons after Phase 58 structural fix; 7 new B2 lessons added in Phase 62 to reach 50
+- All 50 lessons: 12+ exercises, 4+ distinct types, 4+ quiz questions — CEFR A1-B2 covered (62-01)
+- grammarChecker.test.js now validates all 50 lessons (was A1/A2 only); 23 tests pass (62-01)
+- grammar.js was 47 lessons (not 50 as documented) — now 43 after structural fix
 - grammar.js had structural bug: 40 lessons were in grammarCategories, not grammarLessons — FIXED (58-01)
 - 20 A1-A2 lessons now fully populated: 12+ exercises, 4+ types, 4+ quiz questions each (58-01)
 - 9 new exercise types in ExerciseStage.jsx: conjugation-drill, sentence-transformation, word-order, error-identification, multiple-select, true-false, cloze, classify, build-sentence (58-01)
@@ -155,6 +160,10 @@ Plan: 3 of 3 (all plans done)
 - [Phase 63]: Suspense fallback=null for AchievementPanel — panel has its own overlay backdrop, no spinner needed
 - [Phase 63]: cardInfo div wraps cardRarity and tierBadge for horizontal rarity/tier row in AchievementCard
 
+- [Phase 62]: Grammar expanded to 50 lessons (13 B1 + 17 B2) — GRAM-01 requirement now satisfied
+- [Phase 62]: All 50 lessons pass grammarChecker.test.js data integrity suite (23 tests)
+- [Phase 62]: conjugation-drill 'future' paradigm not needed — jussive/subjunctive drills use 'present' or 'past'
+
 ### Blockers/Concerns
 
 - None
@@ -167,7 +176,7 @@ Plan: 3 of 3 (all plans done)
 
 ## Session Continuity
 
-Last session: 2026-03-23T03:50:51.456Z
-Stopped at: Completed 63-03-PLAN.md — tier badges + expanded tabs + lazy AchievementPanel
+Last session: 2026-03-23T04:57:12Z
+Stopped at: Completed 62-01-PLAN.md — 50 grammar lessons (B1/B2 expansion + 7 new B2 lessons)
 Resume file: None
-Next plan: Phase 62 (Grammar B1-B2 Content) or Phase 63 (Achievement Expansion) — check ROADMAP.md for priority
+Next plan: Phase 64 (check ROADMAP.md for next priority)
