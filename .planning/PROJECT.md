@@ -78,7 +78,7 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - Quiz expansion from 6 to 18 quiz types with adaptive difficulty engine
 - Diagnostic placement test to start players at their correct CEFR level
 - CEFR progress reports showing level advancement over time
-- Achievement expansion from 44 to 250+ achievements across all categories
+- ✓ Achievement expansion from 44 to 250+ achievements across all categories (Phase 63)
 - Shareable "I learned X Arabic words" social cards
 
 **Previous milestone:** v11.0 Deep Systems & Content Engine (Phases 50-55, shipped 2026-03-21)
@@ -127,6 +127,8 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 **v3.0 partial (2026-02-09):** 2 phases. Testing foundation (548 tests), architecture cleanup. Backend hardening deferred.
 
 **v2.0 shipped (2026-02-08):** 9 phases, 14 plans. Quest guidance, feature discoverability, daily dashboard, world map, player profile, outfits.
+
+**Phase 63 complete (2026-03-23):** Achievement expansion — 263 achievements across 23 categories with Bronze/Silver/Gold/Legendary tiers, 5 new isAchievementMet requirement types, AchievementPanel with 24 category tabs + tier badges + lazy-loading. 45 achievement tests passing.
 
 **Codebase:** ~196K LOC (JS/JSX/CSS/JSON frontend). React 19 + Phaser 3 + Redux Toolkit (17 slices, 6 middleware) + Express 5 + MongoDB.
 
