@@ -262,7 +262,7 @@ Plans:
   3. A player at A2+ can complete a ClozePassage quiz — reading a short Arabic paragraph with blanks and selecting correct missing words from FSRS-sourced options
   4. All 18 quiz type definitions exist in QUIZ_TYPE_REGISTRY including the three deferred types (DialectIdentify, RootExpand, CulturalContext) marked cefrMin: 'B2'
 
-**Plans:** 2 plans in 2 waves
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 60-01-PLAN.md — GrammarFill.jsx component + verb paradigm data + useQuiz/QuizOverlay wiring + tests (QUIZ-01)
@@ -277,10 +277,12 @@ Plans:
   2. After placement test completion, skill tree nodes and grammar lessons appropriate to the assigned CEFR level are pre-unlocked — a player placed at A2 can immediately access A2 grammar lessons
   3. A player can navigate to Settings and retake the placement test with a warning explaining that retaking resets CEFR tracking history
 
+**Plans:** 3 plans in 2 waves
+
 Plans:
-- [ ] 61-01: placementTest.js — 20-30 calibrated CAT questions spanning Pre-A1 through B1 across all 6 tree domains + placementEngine.js IRT binary search (CEFR-01)
-- [ ] 61-02: PlacementTestOverlay.jsx — reuses existing quiz type components, one-level-lower default, "Start Lower" escape hatch, B1 cap, early-exit at 10 consecutive correct (CEFR-01)
-- [ ] 61-03: Placement result fan-out via react-redux batch() — pre-unlock skill tree nodes + grammar lessons + write CEFR level to cefrProgressSlice + settings retake UI (CEFR-02, CEFR-04)
+- [ ] 61-01-PLAN.md — placementTest.js 30-item CAT bank (Pre-A1 to B1) + placementEngine.js pure functions (IRT selection, scoring, level assignment, unlock derivation) + tests (CEFR-01)
+- [ ] 61-02-PLAN.md — PlacementTestOverlay.jsx (intro/testing/result phases, self-contained state machine, 20-question cap, early-exit) + MainMenu integration + component tests (CEFR-01)
+- [ ] 61-03-PLAN.md — bulkUnlockLessons + resetCefrProgress reducers + fan-out dispatch (grammar + skill tree pre-unlock) + Settings retake UI + slice tests (CEFR-02, CEFR-04)
 
 #### Phase 62: Grammar B1-B2 + CEFR Gating
 **Goal**: The grammar curriculum is complete at 50 lessons covering A1 through B2, with B1 and B2 lessons gated behind skill tree progression thresholds
@@ -392,7 +394,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 58. Grammar A1-A2 + Lesson Wiring | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 59. Adaptive Difficulty Engine | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 60. Quiz Expansion (Core 3 Types) | v12.0 | 2/2 | Complete    | 2026-03-22 |
-| 61. CEFR Placement Test | v12.0 | 0/3 | Not started | - |
+| 61. CEFR Placement Test | v12.0 | 0/3 | Planned | - |
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Not started | - |
 | 63. Achievement Expansion | v12.0 | 0/3 | Not started | - |
 | 64. CEFR Reports + Social Sharing | v12.0 | 0/3 | Not started | - |
@@ -401,4 +403,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-22 — Phase 60 COMPLETE (QUIZ-01: 15 active quiz types + 3 deferred stubs — GrammarFill/WordOrder/ClozePassage renderers shipped, SentenceBuilder tile bug fixed, 1278 tests passing)*
+*Last updated: 2026-03-23 — Phase 61 PLANNED (3 plans in 2 waves: item bank + engine, overlay + MainMenu, fan-out dispatch + Settings retake)*
