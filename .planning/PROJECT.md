@@ -170,4 +170,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-22 after Phase 60 (Quiz Expansion — Core 3 Types) complete — GrammarFill (conjugation fill-in-blank, A2+), WordOrder (tile-click sentence arrangement, B1+), ClozePassage (passage-fill, A2+), registry activated with 15 active + 3 deferred types*
+*Last updated: 2026-03-23 after Phase 61 (CEFR Placement Test) complete — 30-item CAT bank, placementEngine (7 pure functions), PlacementTestOverlay (3-phase state machine), conservative assignment (one below raw, B1 cap), Start Lower escape, fan-out pre-unlock (grammar + skill trees), Settings retake with warning*
