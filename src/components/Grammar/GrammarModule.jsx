@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { COLORS, FONTS, pixelBtnDark } from '../../styles/theme.js';
@@ -6,11 +6,31 @@ import { grammarCategories } from '../../data/grammar.js';
 import { selectLessonsByCategory, selectGrammarProgress } from '../../store/slices/grammarSlice.js';
 import GrammarLesson from './GrammarLesson.jsx';
 
+const GRAMMAR_COUNT_KEY = 'gogo_grammar_lesson_count';
+
 export default function GrammarModule({ onBack }) {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedLessonId, setSelectedLessonId] = useState(null);
+  const [newContentToast, setNewContentToast] = useState(null);
   const lessonsByCategory = useSelector(selectLessonsByCategory);
   const overallProgress = useSelector(selectGrammarProgress);
+
+  // "New content added" toast for existing players
+  useEffect(() => {
+    const grammarLessons = Object.values(lessonsByCategory).flat();
+    const currentCount = grammarLessons.length;
+    const storedCount = parseInt(localStorage.getItem(GRAMMAR_COUNT_KEY) || '0', 10);
+
+    if (storedCount > 0 && currentCount > storedCount) {
+      const added = currentCount - storedCount;
+      setNewContentToast(`${added} new grammar lesson${added > 1 ? 's' : ''} added!`);
+      const timer = setTimeout(() => setNewContentToast(null), 4000);
+      localStorage.setItem(GRAMMAR_COUNT_KEY, String(currentCount));
+      return () => clearTimeout(timer);
+    }
+
+    localStorage.setItem(GRAMMAR_COUNT_KEY, String(currentCount));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // If a lesson is selected, show the lesson component
   if (selectedLessonId) {
@@ -125,6 +145,27 @@ export default function GrammarModule({ onBack }) {
       </div>
 
       <div style={bodyStyle}>
+        {/* New content toast */}
+        {newContentToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            style={{
+              background: COLORS.xpGold,
+              color: COLORS.brown,
+              fontFamily: FONTS.pixel,
+              fontSize: '12px',
+              padding: '12px 24px',
+              textAlign: 'center',
+              marginBottom: '20px',
+              border: `3px solid ${COLORS.brown}`,
+            }}
+          >
+            {newContentToast}
+          </motion.div>
+        )}
+
         {/* Overall Progress */}
         <div style={progressBarStyle}>
           <div style={{ ...progressFillStyle, width: `${overallProgress}%` }} />
@@ -185,7 +226,7 @@ function LessonCard({ lesson, onClick }) {
 
   const cardStyle = {
     background: lesson.isUnlocked ? COLORS.white : '#e8e8e8',
-    border: `4px solid ${lesson.isCompleted ? COLORS.green : lesson.isUnlocked ? COLORS.brown : '#999'}`,
+    border: `4px solid ${lesson.isCompleted ? COLORS.green : lesson.isUnlocked ? COLORS.brown : lesson.isCefrLocked ? '#8B4513' : '#999'}`,
     padding: '20px',
     cursor: lesson.isUnlocked ? 'pointer' : 'not-allowed',
     transition: 'transform 0.1s, box-shadow 0.1s',
@@ -195,6 +236,22 @@ function LessonCard({ lesson, onClick }) {
     boxShadow: isHovered && lesson.isUnlocked ? `0 4px 8px ${COLORS.darkBrown}` : 'none',
   };
 
+  const badgeText = lesson.isCompleted
+    ? 'Completed'
+    : lesson.isCefrLocked
+    ? `Requires Grammar Tree Level ${lesson.cefrGateLevel}`
+    : lesson.isUnlocked
+    ? 'New'
+    : 'Locked';
+
+  const badgeColor = lesson.isCompleted
+    ? COLORS.green
+    : lesson.isCefrLocked
+    ? '#8B4513' // brown for skill tree gate
+    : lesson.isUnlocked
+    ? COLORS.gray
+    : '#666';
+
   const statusBadgeStyle = {
     position: 'absolute',
     top: '10px',
@@ -202,9 +259,11 @@ function LessonCard({ lesson, onClick }) {
     fontFamily: FONTS.pixel,
     fontSize: '10px',
     color: COLORS.white,
-    background: lesson.isCompleted ? COLORS.green : lesson.isUnlocked ? COLORS.gray : '#666',
+    background: badgeColor,
     padding: '4px 8px',
     borderRadius: '2px',
+    maxWidth: '160px',
+    textAlign: 'right',
   };
 
   const titleStyle = {
@@ -253,7 +312,13 @@ function LessonCard({ lesson, onClick }) {
       onMouseLeave={() => setIsHovered(false)}
       whileTap={lesson.isUnlocked ? { scale: 0.98 } : undefined}
     >
-      <div style={statusBadgeStyle}>{lesson.isCompleted ? 'Completed' : lesson.isUnlocked ? 'New' : 'Locked'}</div>
+      <div style={statusBadgeStyle}>{badgeText}</div>
+
+      {lesson.isCefrLocked && (
+        <div style={{ fontFamily: FONTS.pixel, fontSize: '9px', color: '#8B4513', marginTop: '28px', marginBottom: '4px' }}>
+          Your level: {lesson.currentTreeLevel}
+        </div>
+      )}
 
       <div style={titleStyle}>{lesson.title}</div>
       <div style={titleArabicStyle}>{lesson.titleArabic}</div>
