@@ -17,18 +17,18 @@ created: 2026-03-23
 
 | Property | Value |
 |----------|-------|
-| **Framework** | jest 29.x |
-| **Config file** | jest.config.cjs |
-| **Quick run command** | `npx jest --testPathPattern=achievement --bail` |
-| **Full suite command** | `npx jest` |
+| **Framework** | vitest |
+| **Config file** | vitest.config.js |
+| **Quick run command** | `npx vitest run --testPathPattern=achievement --bail` |
+| **Full suite command** | `npx vitest run` |
 | **Estimated runtime** | ~45 seconds |
 
 ---
 
 ## Sampling Rate
 
-- **After every task commit:** Run `npx jest --testPathPattern=achievement --bail`
-- **After every plan wave:** Run `npx jest`
+- **After every task commit:** Run `npx vitest run --testPathPattern=achievement --bail`
+- **After every plan wave:** Run `npx vitest run`
 - **Before `/gsd:verify-work`:** Full suite must be green
 - **Max feedback latency:** 45 seconds
 
@@ -38,9 +38,11 @@ created: 2026-03-23
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 63-01-01 | 01 | 1 | ACH-01, ACH-02 | unit | `npx jest --testPathPattern=achievements` | ✅ | ⬜ pending |
-| 63-02-01 | 02 | 1 | ACH-01 | unit | `npx jest --testPathPattern=achievementMiddleware` | ✅ | ⬜ pending |
-| 63-03-01 | 03 | 2 | ACH-04 | unit | `npx jest --testPathPattern=AchievementPanel` | ✅ | ⬜ pending |
+| 63-01-01 | 01 | 1 | ACH-01, ACH-02 | unit | `npx vitest run --testPathPattern=achievements` | ✅ | ⬜ pending |
+| 63-02-01 | 02 | 1 | ACH-01 | unit | `npx vitest run --testPathPattern=achievementSlice` | ✅ | ⬜ pending |
+| 63-02-02 | 02 | 1 | ACH-01 | unit | `npx vitest run --testPathPattern=achievementMiddleware` | ✅ | ⬜ pending |
+| 63-02-03 | 02 | 1 | ACH-01 | grep | `grep -c "recordQuizTypeResult" src/hooks/useQuiz.js` | ✅ | ⬜ pending |
+| 63-03-01 | 03 | 2 | ACH-04 | unit | `npx vitest run --testPathPattern=AchievementPanel` | ✅ | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
