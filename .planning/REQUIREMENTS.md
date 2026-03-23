@@ -34,14 +34,14 @@
 
 - [ ] **CEFR-01**: Diagnostic placement test (15-20 CAT questions) assigns starting CEFR level on first play — defaults one level lower than raw score
 - [ ] **CEFR-02**: Placement test result pre-unlocks appropriate skill tree nodes and grammar lessons
-- [ ] **CEFR-03**: CEFR progress report shows level advancement over time with radar chart visualization (recharts)
+- [x] **CEFR-03**: CEFR progress report shows level advancement over time with radar chart visualization (recharts)
 - [ ] **CEFR-04**: Player can retake placement test from settings with warning that it resets CEFR tracking
 
 ### Achievements
 
 - [x] **ACH-01**: Achievement system expanded from 44 to 250+ achievements across 15 categories
 - [x] **ACH-02**: Achievements use 4-tier system (Bronze/Silver/Gold/Legendary) with increasing difficulty thresholds
-- [ ] **ACH-03**: Shareable social card ("I learned X Arabic words in Gogo Arabic") generated as PNG for sharing
+- [x] **ACH-03**: Shareable social card ("I learned X Arabic words in Gogo Arabic") via SVG card + Web Share API / clipboard fallback (SVG-only, no external image dependencies)
 - [x] **ACH-04**: Achievement progress visible in a dedicated Achievements panel with category filtering and tier display
 
 ## v13.0 Requirements (Deferred)

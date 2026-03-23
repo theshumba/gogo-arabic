@@ -325,7 +325,7 @@ Plans:
   3. A player can generate a shareable card showing their Arabic learning milestone and either share via Web Share API or copy to clipboard — the card is generated without any external image requests and works in production
 
 
-**Plans:** 3/3 plans executed
+**Plans:** 2/3 plans complete
 
 Plans:
 - [x] 64-01: recharts install (v3.8.0) + CefrProgressReport.jsx — RadarChart + LineChart, lazy-loaded in charts-vendor chunk; write-once-per-session CEFR snapshot in cefrProgressSlice (CEFR-03)
@@ -404,7 +404,7 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 61. CEFR Placement Test | v12.0 | 0/3 | Complete    | 2026-03-23 |
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Complete    | 2026-03-23 |
 | 63. Achievement Expansion | v12.0 | 3/3 | Complete    | 2026-03-23 |
-| 64. CEFR Reports + Social Sharing | v12.0 | 3/3 | Complete | 2026-03-23 |
+| 64. CEFR Reports + Social Sharing | v12.0 | 3/3 | Complete    | 2026-03-23 |
 
 **Cumulative:** 56 phases shipped, 139+ plans complete, 11 milestones shipped
 
