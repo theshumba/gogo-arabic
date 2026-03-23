@@ -26,6 +26,9 @@ export const ACHIEVEMENT_CATEGORIES = {
   CULTURE: 'culture',
   HIDDEN: 'hidden',
   MILESTONE: 'milestone',
+  SKILL_TREE: 'skill_tree',
+  QUIZ: 'quiz',
+  CEFR: 'cefr',
 };
 
 export const RARITY = {
@@ -44,6 +47,28 @@ export const RARITY_COLORS = {
   legendary: '#FFD700',
 };
 
+export const TIER = {
+  BRONZE: 'Bronze',
+  SILVER: 'Silver',
+  GOLD: 'Gold',
+  LEGENDARY: 'Legendary',
+};
+
+export const TIER_COLORS = {
+  Bronze: '#cd7f32',
+  Silver: '#c0c0c0',
+  Gold: '#FFD700',
+  Legendary: '#a855f7',
+};
+
+export const RARITY_TO_TIER = {
+  common: TIER.BRONZE,
+  uncommon: TIER.BRONZE,
+  rare: TIER.SILVER,
+  epic: TIER.GOLD,
+  legendary: TIER.LEGENDARY,
+};
+
 export const ACHIEVEMENTS = [
   // ========== VOCABULARY ==========
   {
@@ -55,6 +80,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_learned', threshold: 1 },
     xpReward: 25,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'word_collector_10',
@@ -65,6 +91,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_learned', threshold: 10 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'word_collector_50',
@@ -75,6 +102,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_learned', threshold: 50 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'word_collector_100',
@@ -85,6 +113,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_learned', threshold: 100 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'word_collector_250',
@@ -95,6 +124,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_learned', threshold: 250 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'word_collector_500',
@@ -105,6 +135,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_learned', threshold: 500 },
     xpReward: 1000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'word_collector_1000',
@@ -115,6 +146,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_learned', threshold: 1000 },
     xpReward: 2500,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'category_greetings',
@@ -125,6 +157,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'category_complete', category: 'greetings' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'category_numbers',
@@ -135,6 +168,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'category_complete', category: 'numbers' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'category_food',
@@ -145,6 +179,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'category_complete', category: 'food' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
 
   // ========== ALPHABET ==========
@@ -157,6 +192,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'letters_learned', threshold: 1 },
     xpReward: 25,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'half_alphabet',
@@ -167,6 +203,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'letters_learned', threshold: 14 },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'full_alphabet',
@@ -177,6 +214,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'letters_learned', threshold: 28 },
     xpReward: 500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
 
   // ========== QUESTS ==========
@@ -189,6 +227,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'quests_completed', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'quest_hunter_5',
@@ -199,6 +238,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'quests_completed', threshold: 5 },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'quest_hunter_10',
@@ -209,6 +249,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'quests_completed', threshold: 10 },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'quest_hunter_25',
@@ -219,6 +260,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'quests_completed', threshold: 25 },
     xpReward: 750,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
 
   // ========== STREAKS ==========
@@ -231,6 +273,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'streak', threshold: 3 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'streak_7',
@@ -241,6 +284,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'streak', threshold: 7 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'streak_30',
@@ -251,6 +295,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'streak', threshold: 30 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'streak_100',
@@ -261,6 +306,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'streak', threshold: 100 },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
 
   // ========== XP/LEVEL ==========
@@ -273,6 +319,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'level', threshold: 5 },
     xpReward: 100,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'level_10',
@@ -283,6 +330,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'level', threshold: 10 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'level_25',
@@ -293,6 +341,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'level', threshold: 25 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'level_50',
@@ -303,6 +352,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'level', threshold: 50 },
     xpReward: 1500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'xp_100',
@@ -313,6 +363,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'xp_total', threshold: 100 },
     xpReward: 25,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'xp_500',
@@ -323,6 +374,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'xp_total', threshold: 500 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'xp_1000',
@@ -333,6 +385,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'xp_total', threshold: 1000 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'xp_5000',
@@ -343,6 +396,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'xp_total', threshold: 5000 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'xp_10000',
@@ -353,6 +407,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'xp_total', threshold: 10000 },
     xpReward: 1000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
 
   // ========== EXPLORATION ==========
@@ -365,6 +420,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'zones_unlocked', threshold: 3 },
     xpReward: 100,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'explorer_5',
@@ -375,6 +431,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'zones_unlocked', threshold: 5 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'explorer_8',
@@ -385,6 +442,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'zones_unlocked', threshold: 8 },
     xpReward: 500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'treasure_hunter_10',
@@ -395,6 +453,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'chests_opened', threshold: 10 },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'bookworm',
@@ -405,6 +464,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'books_read', threshold: 10 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
 
   // ========== REVIEW ==========
@@ -417,6 +477,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'reviews_completed', threshold: 1 },
     xpReward: 25,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'review_streak_5',
@@ -427,6 +488,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'review_streak', threshold: 5 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'perfect_session',
@@ -437,6 +499,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'perfect_quiz' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
 
   // ========== ECONOMY ==========
@@ -449,6 +512,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'shop_purchases', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'big_spender',
@@ -459,6 +523,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'dirhams_spent', threshold: 500 },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'wealthy',
@@ -469,6 +534,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'dirhams_held', threshold: 1000 },
     xpReward: 200,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
 
   // ========== SPECIAL ==========
@@ -481,6 +547,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'study_time_after', hour: 22 },
     xpReward: 50,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'early_bird',
@@ -491,6 +558,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'study_time_before', hour: 7 },
     xpReward: 50,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'completionist',
@@ -501,6 +569,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_achievements' },
     xpReward: 5000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
 
   // ========== VOCABULARY — EXPANDED ==========
@@ -513,6 +582,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_learned', threshold: 25 },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'word_collector_2000',
@@ -523,6 +593,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_learned', threshold: 2000 },
     xpReward: 5000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'category_family',
@@ -533,6 +604,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'category_complete', category: 'family' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'category_colors',
@@ -543,6 +615,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'category_complete', category: 'colors' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'category_travel',
@@ -553,6 +626,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'category_complete', category: 'travel' },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'category_religion',
@@ -563,6 +637,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'category_complete', category: 'religion' },
     xpReward: 150,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
 
   // ========== ALPHABET — EXPANDED ==========
@@ -575,6 +650,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'letters_learned', threshold: 5 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'alphabet_sun_letters',
@@ -585,6 +661,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'sun_letters_learned', threshold: 14 },
     xpReward: 200,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'alphabet_moon_letters',
@@ -595,6 +672,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'moon_letters_learned', threshold: 14 },
     xpReward: 200,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'alphabet_diacritics',
@@ -605,6 +683,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'diacritics_mastered' },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'alphabet_perfect',
@@ -615,6 +694,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'alphabet_quiz_perfect' },
     xpReward: 500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
 
   // ========== STREAKS — EXPANDED ==========
@@ -627,6 +707,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'streak', threshold: 14 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'streak_60',
@@ -637,6 +718,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'streak', threshold: 60 },
     xpReward: 1000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'streak_365',
@@ -647,6 +729,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'streak', threshold: 365 },
     xpReward: 10000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
 
   // ========== XP/LEVEL — EXPANDED ==========
@@ -659,6 +742,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'level', threshold: 75 },
     xpReward: 3000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'level_100',
@@ -669,6 +753,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'level', threshold: 100 },
     xpReward: 10000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'xp_25000',
@@ -679,6 +764,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'xp_total', threshold: 25000 },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
 
   // ========== EXPLORATION — EXPANDED ==========
@@ -691,6 +777,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'chests_opened', threshold: 25 },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'treasure_hunter_50',
@@ -701,6 +788,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'chests_opened', threshold: 50 },
     xpReward: 600,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'hidden_passage',
@@ -711,6 +799,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'hidden_passages_found', threshold: 1 },
     xpReward: 150,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'cartographer',
@@ -721,6 +810,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'zones_fully_explored', threshold: 8 },
     xpReward: 1000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
 
   // ========== REVIEW — EXPANDED ==========
@@ -733,6 +823,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'reviews_completed', threshold: 100 },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'review_streak_30',
@@ -743,6 +834,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'review_streak', threshold: 30 },
     xpReward: 750,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'perfect_sessions_10',
@@ -753,6 +845,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'perfect_quizzes', threshold: 10 },
     xpReward: 500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'speed_learner',
@@ -763,6 +856,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'speed_quiz', threshold: 20 },
     xpReward: 200,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
 
   // ========== ECONOMY — EXPANDED ==========
@@ -775,6 +869,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'shop_purchases', threshold: 10 },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'high_roller',
@@ -785,6 +880,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'dirhams_spent', threshold: 5000 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'tycoon',
@@ -795,6 +891,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'dirhams_held', threshold: 5000 },
     xpReward: 500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'merchant',
@@ -805,6 +902,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'items_sold', threshold: 10 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
 
   // ========== SPECIAL — EXPANDED ==========
@@ -817,6 +915,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'study_during_ramadan' },
     xpReward: 200,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'friday_blessing',
@@ -827,6 +926,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'study_on_friday' },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'polyglot_dreams',
@@ -837,6 +937,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'total_study_minutes', threshold: 300 },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'marathon_learner',
@@ -847,6 +948,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'total_study_minutes', threshold: 3000 },
     xpReward: 2000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
 
   // ========== GRAMMAR MASTERY ==========
@@ -859,6 +961,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'grammar_lessons', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'grammar_5',
@@ -869,6 +972,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'grammar_lessons', threshold: 5 },
     xpReward: 150,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'grammar_10',
@@ -879,6 +983,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'grammar_lessons', threshold: 10 },
     xpReward: 300,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'grammar_25',
@@ -889,6 +994,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'grammar_lessons', threshold: 25 },
     xpReward: 600,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'grammar_50',
@@ -899,6 +1005,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'grammar_lessons', threshold: 50 },
     xpReward: 1500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'grammar_cefr_a1',
@@ -909,6 +1016,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cefr_level', level: 'A1' },
     xpReward: 300,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'grammar_cefr_a2',
@@ -919,6 +1027,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cefr_level', level: 'A2' },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'grammar_cefr_b1',
@@ -929,6 +1038,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cefr_level', level: 'B1' },
     xpReward: 800,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'grammar_cefr_b2',
@@ -939,6 +1049,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cefr_level', level: 'B2' },
     xpReward: 1500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'grammar_cefr_c1',
@@ -949,6 +1060,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cefr_level', level: 'C1' },
     xpReward: 3000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'grammar_perfect_streak_5',
@@ -959,6 +1071,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'grammar_perfect_streak', threshold: 5 },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'grammar_perfect_streak_10',
@@ -969,6 +1082,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'grammar_perfect_streak', threshold: 10 },
     xpReward: 1000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'grammar_verb_forms',
@@ -979,6 +1093,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'verb_forms_mastered' },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'grammar_cases',
@@ -989,6 +1104,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'grammatical_cases_mastered' },
     xpReward: 600,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'grammar_dual',
@@ -999,6 +1115,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'dual_form_mastered' },
     xpReward: 250,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'grammar_broken_plural',
@@ -1009,6 +1126,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'broken_plurals_mastered', threshold: 20 },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'grammar_sentence_types',
@@ -1019,6 +1137,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'sentence_types_mastered' },
     xpReward: 300,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'grammar_all_tenses',
@@ -1029,6 +1148,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_tenses_mastered' },
     xpReward: 500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'grammar_idafa',
@@ -1039,6 +1159,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'idafa_mastered' },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'grammar_cefr_c2',
@@ -1049,6 +1170,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cefr_level', level: 'C2' },
     xpReward: 5000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
 
   // ========== COMBAT ==========
@@ -1061,6 +1183,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'battles_won', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'combat_10_wins',
@@ -1071,6 +1194,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'battles_won', threshold: 10 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'combat_50_wins',
@@ -1081,6 +1205,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'battles_won', threshold: 50 },
     xpReward: 600,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'combat_100_wins',
@@ -1091,6 +1216,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'battles_won', threshold: 100 },
     xpReward: 1500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'combat_no_damage',
@@ -1101,6 +1227,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'win_no_damage' },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'combat_no_damage_10',
@@ -1111,6 +1238,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'win_no_damage_count', threshold: 10 },
     xpReward: 800,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'combat_boss_desert',
@@ -1121,6 +1249,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'boss_defeated', boss: 'desert_guardian' },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'combat_boss_oasis',
@@ -1131,6 +1260,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'boss_defeated', boss: 'oasis_sphinx' },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'combat_boss_medina',
@@ -1141,6 +1271,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'boss_defeated', boss: 'medina_shadow' },
     xpReward: 600,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'combat_boss_palace',
@@ -1151,6 +1282,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'boss_defeated', boss: 'palace_lord' },
     xpReward: 800,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'combat_element_fire',
@@ -1161,6 +1293,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'element_used', element: 'fire' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'combat_element_water',
@@ -1171,6 +1304,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'element_used', element: 'water' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'combat_element_earth',
@@ -1181,6 +1315,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'element_used', element: 'earth' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'combat_element_wind',
@@ -1191,6 +1326,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'element_used', element: 'wind' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'combat_all_elements',
@@ -1201,6 +1337,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_elements_used' },
     xpReward: 500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'combat_win_streak_5',
@@ -1211,6 +1348,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'battle_win_streak', threshold: 5 },
     xpReward: 250,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'combat_win_streak_10',
@@ -1221,6 +1359,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'battle_win_streak', threshold: 10 },
     xpReward: 600,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'combat_critical_hit',
@@ -1231,6 +1370,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'critical_hits', threshold: 1 },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'combat_critical_hits_100',
@@ -1241,6 +1381,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'critical_hits', threshold: 100 },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'combat_last_stand',
@@ -1251,6 +1392,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'win_low_hp' },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
 
   // ========== CRAFTING ==========
@@ -1263,6 +1405,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'items_crafted', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'craft_10',
@@ -1273,6 +1416,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'items_crafted', threshold: 10 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'craft_50',
@@ -1283,6 +1427,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'items_crafted', threshold: 50 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'craft_100',
@@ -1293,6 +1438,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'items_crafted', threshold: 100 },
     xpReward: 1200,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'craft_legendary',
@@ -1303,6 +1449,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'legendary_item_crafted' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'craft_profession_scribe',
@@ -1313,6 +1460,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'profession_mastered', profession: 'scribe' },
     xpReward: 600,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'craft_profession_alchemist',
@@ -1323,6 +1471,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'profession_mastered', profession: 'alchemist' },
     xpReward: 600,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'craft_profession_armorer',
@@ -1333,6 +1482,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'profession_mastered', profession: 'armorer' },
     xpReward: 600,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'craft_profession_enchanter',
@@ -1343,6 +1493,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'profession_mastered', profession: 'enchanter' },
     xpReward: 700,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'craft_all_professions',
@@ -1353,6 +1504,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_professions_mastered' },
     xpReward: 3000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'craft_rare_material',
@@ -1363,6 +1515,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'rare_material_used' },
     xpReward: 200,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'craft_first_weapon',
@@ -1373,6 +1526,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'weapons_crafted', threshold: 1 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'craft_first_potion',
@@ -1383,6 +1537,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'potions_crafted', threshold: 1 },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'craft_upgrade',
@@ -1393,6 +1548,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'max_tier_upgrade' },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'craft_enchant_scroll',
@@ -1403,6 +1559,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'scroll_crafted' },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
 
   // ========== SOCIAL ==========
@@ -1415,6 +1572,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'npcs_talked', threshold: 1 },
     xpReward: 25,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'social_npc_5',
@@ -1425,6 +1583,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'npcs_talked', threshold: 5 },
     xpReward: 100,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'social_npc_10',
@@ -1435,6 +1594,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'npcs_talked', threshold: 10 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'social_npc_all',
@@ -1445,6 +1605,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_npcs_talked' },
     xpReward: 1000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'social_max_relationship',
@@ -1455,6 +1616,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'max_npc_relationship' },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'social_companion_quest',
@@ -1465,6 +1627,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'companion_quests', threshold: 1 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'social_all_companion_quests',
@@ -1475,6 +1638,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_companion_quests' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'social_gift_npc',
@@ -1485,6 +1649,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'npc_gifts', threshold: 1 },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'social_gift_npc_10',
@@ -1495,6 +1660,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'unique_npc_gifts', threshold: 10 },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'social_merchant_friend',
@@ -1505,6 +1671,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'npc_max_relationship', npc: 'merchant' },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'social_scholar_friend',
@@ -1515,6 +1682,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'npc_max_relationship', npc: 'scholar' },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'social_faction_scholar',
@@ -1525,6 +1693,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'faction_alignment', faction: 'scholar' },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'social_faction_traveler',
@@ -1535,6 +1704,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'faction_alignment', faction: 'traveler' },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'social_faction_historian',
@@ -1545,6 +1715,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'faction_alignment', faction: 'historian' },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'social_all_factions',
@@ -1555,6 +1726,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_factions_friendly' },
     xpReward: 1500,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
 
   // ========== COLLECTING ==========
@@ -1567,6 +1739,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'inscriptions_found', threshold: 1 },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'collect_inscriptions_10',
@@ -1577,6 +1750,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'inscriptions_found', threshold: 10 },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'collect_all_inscriptions',
@@ -1587,6 +1761,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_inscriptions_found' },
     xpReward: 1500,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'collect_first_manuscript',
@@ -1597,6 +1772,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'manuscript_pages', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'collect_manuscripts_25',
@@ -1607,6 +1783,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'manuscript_pages', threshold: 25 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'collect_all_manuscripts',
@@ -1617,6 +1794,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_manuscript_pages' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'collect_full_equipment',
@@ -1627,6 +1805,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_equipment_slots_filled' },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'collect_rare_item',
@@ -1637,6 +1816,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'rare_items_owned', threshold: 1 },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'collect_epic_item',
@@ -1647,6 +1827,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'epic_items_owned', threshold: 1 },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'collect_legendary_item',
@@ -1657,6 +1838,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'legendary_items_owned', threshold: 1 },
     xpReward: 1000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'collect_5_legendary',
@@ -1667,6 +1849,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'legendary_items_owned', threshold: 5 },
     xpReward: 3000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'collect_bestiaryentry',
@@ -1677,6 +1860,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'bestiary_entries', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'collect_bestiary_complete',
@@ -1687,6 +1871,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'bestiary_complete' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'collect_cosmetics',
@@ -1697,6 +1882,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cosmetics_owned', threshold: 10 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'collect_all_maps',
@@ -1707,6 +1893,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_maps_collected' },
     xpReward: 600,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
 
   // ========== DAILY ==========
@@ -1719,6 +1906,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'total_days_played', threshold: 1 },
     xpReward: 25,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'daily_7_days',
@@ -1729,6 +1917,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'total_days_played', threshold: 7 },
     xpReward: 100,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'daily_30_days',
@@ -1739,6 +1928,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'total_days_played', threshold: 30 },
     xpReward: 400,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'daily_100_days',
@@ -1749,6 +1939,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'total_days_played', threshold: 100 },
     xpReward: 1000,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'daily_365_days',
@@ -1759,6 +1950,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'total_days_played', threshold: 365 },
     xpReward: 5000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'daily_goal_first',
@@ -1769,6 +1961,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'daily_goals_completed', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'daily_goal_10',
@@ -1779,6 +1972,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'daily_goals_completed', threshold: 10 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'daily_goal_50',
@@ -1789,6 +1983,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'daily_goals_completed', threshold: 50 },
     xpReward: 750,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'daily_goal_100',
@@ -1799,6 +1994,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'daily_goals_completed', threshold: 100 },
     xpReward: 1500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'daily_perfect_week',
@@ -1809,6 +2005,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'perfect_week_days', threshold: 7 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'daily_perfect_month',
@@ -1819,6 +2016,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'perfect_week_days', threshold: 30 },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'daily_login_bonus',
@@ -1829,6 +2027,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'login_bonuses_claimed', threshold: 10 },
     xpReward: 150,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'daily_marathon_session',
@@ -1839,6 +2038,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'single_day_minutes', threshold: 120 },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'daily_multi_session',
@@ -1849,6 +2049,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'sessions_in_one_day', threshold: 3 },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'daily_comeback',
@@ -1859,6 +2060,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'return_after_days', threshold: 7 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
 
   // ========== LEARNING PATH ==========
@@ -1871,6 +2073,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_chosen' },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'path_scholar_milestone1',
@@ -1881,6 +2084,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_milestone', path: 'scholar', milestone: 1 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'path_scholar_milestone2',
@@ -1891,6 +2095,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_milestone', path: 'scholar', milestone: 2 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'path_scholar_complete',
@@ -1901,6 +2106,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_complete', path: 'scholar' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'path_traveler_milestone1',
@@ -1911,6 +2117,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_milestone', path: 'traveler', milestone: 1 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'path_traveler_milestone2',
@@ -1921,6 +2128,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_milestone', path: 'traveler', milestone: 2 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'path_traveler_complete',
@@ -1931,6 +2139,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_complete', path: 'traveler' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'path_historian_milestone1',
@@ -1941,6 +2150,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_milestone', path: 'historian', milestone: 1 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'path_historian_milestone2',
@@ -1951,6 +2161,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_milestone', path: 'historian', milestone: 2 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'path_historian_complete',
@@ -1961,6 +2172,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_complete', path: 'historian' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'path_switch',
@@ -1971,6 +2183,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_switched' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'path_two_complete',
@@ -1981,6 +2194,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'paths_completed', threshold: 2 },
     xpReward: 5000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'path_all_complete',
@@ -1991,6 +2205,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'paths_completed', threshold: 3 },
     xpReward: 10000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'path_scholar_bonus',
@@ -2001,6 +2216,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_bonus_chapter', path: 'scholar' },
     xpReward: 800,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'path_traveler_bonus',
@@ -2011,6 +2227,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'path_bonus_chapter', path: 'traveler' },
     xpReward: 800,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
 
   // ========== ROOT MAGIC ==========
@@ -2023,6 +2240,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'roots_discovered', threshold: 1 },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'root_10',
@@ -2033,6 +2251,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'roots_discovered', threshold: 10 },
     xpReward: 250,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'root_25',
@@ -2043,6 +2262,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'roots_discovered', threshold: 25 },
     xpReward: 600,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'root_50',
@@ -2053,6 +2273,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'roots_discovered', threshold: 50 },
     xpReward: 1500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'root_form_v',
@@ -2063,6 +2284,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'verb_form_unlocked', form: 'V' },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'root_form_x',
@@ -2073,6 +2295,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'verb_form_unlocked', form: 'X' },
     xpReward: 800,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'root_all_forms',
@@ -2083,6 +2306,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_verb_forms_unlocked' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'root_spell_100',
@@ -2093,6 +2317,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'spells_cast', threshold: 100 },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'root_spell_500',
@@ -2103,6 +2328,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'spells_cast', threshold: 500 },
     xpReward: 1500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'root_element_fire',
@@ -2113,6 +2339,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'root_element_mastered', element: 'fire' },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'root_element_water',
@@ -2123,6 +2350,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'root_element_mastered', element: 'water' },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'root_element_earth',
@@ -2133,6 +2361,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'root_element_mastered', element: 'earth' },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'root_element_wind',
@@ -2143,6 +2372,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'root_element_mastered', element: 'wind' },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'root_all_elements',
@@ -2153,6 +2383,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_root_elements_mastered' },
     xpReward: 3000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'root_family_20',
@@ -2163,6 +2394,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'words_from_one_root', threshold: 20 },
     xpReward: 600,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
 
   // ========== CULTURE ==========
@@ -2175,6 +2407,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cultural_notes_read', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'culture_notes_10',
@@ -2185,6 +2418,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cultural_notes_read', threshold: 10 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'culture_all_notes',
@@ -2195,6 +2429,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_cultural_notes_read' },
     xpReward: 1500,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'culture_first_zone',
@@ -2205,6 +2440,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'historical_zones_visited', threshold: 1 },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'culture_zones_5',
@@ -2215,6 +2451,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'historical_zones_visited', threshold: 5 },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'culture_all_zones',
@@ -2225,6 +2462,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_historical_zones_visited' },
     xpReward: 1000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'culture_loanword_5',
@@ -2235,6 +2473,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'loanwords_learned', threshold: 5 },
     xpReward: 100,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'culture_loanword_25',
@@ -2245,6 +2484,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'loanwords_learned', threshold: 25 },
     xpReward: 400,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'culture_all_loanwords',
@@ -2255,6 +2495,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_loanwords_learned' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'culture_calligraphy',
@@ -2265,6 +2506,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'calligraphy_viewed', threshold: 5 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'culture_proverb',
@@ -2275,6 +2517,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'proverbs_collected', threshold: 1 },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'culture_proverbs_10',
@@ -2285,6 +2528,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'proverbs_collected', threshold: 10 },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'culture_music',
@@ -2295,6 +2539,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'music_tracks_heard', threshold: 1 },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'culture_story',
@@ -2305,6 +2550,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'stories_completed', threshold: 1 },
     xpReward: 150,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'culture_all_stories',
@@ -2315,6 +2561,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_stories_completed' },
     xpReward: 3000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
 
   // ========== HIDDEN ==========
@@ -2327,6 +2574,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'npc_at_night', npc: 'wanderer' },
     xpReward: 300,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'hidden_easter_egg',
@@ -2337,6 +2585,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'easter_egg_found', egg: 'dev_egg' },
     xpReward: 500,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'hidden_konami',
@@ -2347,6 +2596,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'konami_code_entered' },
     xpReward: 200,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'hidden_book_hidden',
@@ -2357,6 +2607,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'hidden_bookshelf_found' },
     xpReward: 250,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'hidden_100_deaths',
@@ -2367,6 +2618,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'battle_losses', threshold: 100 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'hidden_touch_cat',
@@ -2377,6 +2629,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'cat_interactions', threshold: 3 },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'hidden_bismillah',
@@ -2387,6 +2640,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'secret_phrase_typed', phrase: 'bismillah' },
     xpReward: 150,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'hidden_look_up',
@@ -2397,6 +2651,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'sky_interactions', threshold: 10 },
     xpReward: 75,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'hidden_market_dance',
@@ -2407,6 +2662,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'market_celebration_triggered' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'hidden_read_credits',
@@ -2417,6 +2673,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'credits_read' },
     xpReward: 100,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'hidden_no_skip',
@@ -2427,6 +2684,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'no_cutscenes_skipped' },
     xpReward: 200,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'hidden_fountain',
@@ -2437,6 +2695,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'fountain_coin_thrown' },
     xpReward: 50,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'hidden_camel',
@@ -2447,6 +2706,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'camel_interactions', threshold: 5 },
     xpReward: 75,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'hidden_dev_room',
@@ -2457,6 +2717,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'dev_room_found' },
     xpReward: 1000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'hidden_salah_time',
@@ -2467,6 +2728,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'played_at_prayer_time' },
     xpReward: 150,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
 
   // ========== MILESTONE ==========
@@ -2479,6 +2741,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'tutorial_complete' },
     xpReward: 100,
     rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'milestone_v1_content',
@@ -2489,6 +2752,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'version_content_complete', version: 'v1' },
     xpReward: 1000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'milestone_v2_content',
@@ -2499,6 +2763,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'version_content_complete', version: 'v2' },
     xpReward: 2000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'milestone_v3_content',
@@ -2509,6 +2774,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'version_content_complete', version: 'v3' },
     xpReward: 3000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'milestone_first_chapter',
@@ -2519,6 +2785,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'chapter_complete', chapter: 1 },
     xpReward: 300,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'milestone_chapter_5',
@@ -2529,6 +2796,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'chapter_complete', chapter: 5 },
     xpReward: 800,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'milestone_chapter_10',
@@ -2539,6 +2807,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'chapter_complete', chapter: 10 },
     xpReward: 2000,
     rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
   {
     id: 'milestone_final_chapter',
@@ -2549,6 +2818,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'final_chapter_complete' },
     xpReward: 5000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'milestone_first_boss',
@@ -2559,6 +2829,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'story_boss_defeated', threshold: 1 },
     xpReward: 500,
     rarity: RARITY.RARE,
+    tier: TIER.SILVER,
   },
   {
     id: 'milestone_all_bosses',
@@ -2569,6 +2840,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_story_bosses_defeated' },
     xpReward: 5000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'milestone_first_companion',
@@ -2579,6 +2851,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'companions_recruited', threshold: 1 },
     xpReward: 200,
     rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
   },
   {
     id: 'milestone_all_companions',
@@ -2589,6 +2862,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'all_companions_recruited' },
     xpReward: 2000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'milestone_world_save',
@@ -2599,6 +2873,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'main_quest_complete' },
     xpReward: 10000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'milestone_100_percent',
@@ -2609,6 +2884,7 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'game_completion_percent', threshold: 100 },
     xpReward: 10000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
   },
   {
     id: 'milestone_new_game_plus',
@@ -2619,6 +2895,134 @@ export const ACHIEVEMENTS = [
     requirement: { type: 'new_game_plus_started' },
     xpReward: 3000,
     rarity: RARITY.LEGENDARY,
+    tier: TIER.LEGENDARY,
+  },
+
+  // ========== SKILL TREE (v12.0) ==========
+  {
+    id: 'skill_tree_first_node',
+    name: 'First Skill Unlocked',
+    description: 'Unlock your first skill tree node',
+    category: ACHIEVEMENT_CATEGORIES.SKILL_TREE,
+    icon: '🌱',
+    requirement: { type: 'skill_tree_nodes', threshold: 1 },
+    xpReward: 50,
+    rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
+  },
+  {
+    id: 'skill_tree_10_nodes',
+    name: 'Branching Out',
+    description: 'Unlock 10 skill tree nodes',
+    category: ACHIEVEMENT_CATEGORIES.SKILL_TREE,
+    icon: '🌿',
+    requirement: { type: 'skill_tree_nodes', threshold: 10 },
+    xpReward: 200,
+    rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
+  },
+  {
+    id: 'skill_tree_50_nodes',
+    name: 'Deep Roots',
+    description: 'Unlock 50 skill tree nodes',
+    category: ACHIEVEMENT_CATEGORIES.SKILL_TREE,
+    icon: '🌳',
+    requirement: { type: 'skill_tree_nodes', threshold: 50 },
+    xpReward: 500,
+    rarity: RARITY.RARE,
+    tier: TIER.SILVER,
+  },
+  {
+    id: 'skill_tree_reading_complete',
+    name: 'Reading Master',
+    description: 'Complete the Reading skill tree',
+    category: ACHIEVEMENT_CATEGORIES.SKILL_TREE,
+    icon: '📖',
+    requirement: { type: 'skill_tree_complete', treeId: 'reading' },
+    xpReward: 1000,
+    rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
+  },
+
+  // ========== QUIZ (v12.0) ==========
+  {
+    id: 'quiz_streak_3',
+    name: 'Hat Trick',
+    description: 'Get 3 perfect quizzes in a row with one quiz type',
+    category: ACHIEVEMENT_CATEGORIES.QUIZ,
+    icon: '🎯',
+    requirement: { type: 'quiz_type_streak', quizType: 'ar-to-en', threshold: 3 },
+    xpReward: 100,
+    rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
+  },
+  {
+    id: 'quiz_streak_5',
+    name: 'Quiz Ace',
+    description: 'Get 5 perfect quizzes in a row with one quiz type',
+    category: ACHIEVEMENT_CATEGORIES.QUIZ,
+    icon: '🏆',
+    requirement: { type: 'quiz_type_streak', quizType: 'ar-to-en', threshold: 5 },
+    xpReward: 300,
+    rarity: RARITY.RARE,
+    tier: TIER.SILVER,
+  },
+  {
+    id: 'quiz_streak_10',
+    name: 'Unstoppable',
+    description: 'Get 10 perfect quizzes in a row with one quiz type',
+    category: ACHIEVEMENT_CATEGORIES.QUIZ,
+    icon: '💪',
+    requirement: { type: 'quiz_type_streak', quizType: 'ar-to-en', threshold: 10 },
+    xpReward: 750,
+    rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
+  },
+
+  // ========== CEFR (v12.0) ==========
+  {
+    id: 'cefr_placement_done',
+    name: 'Placed!',
+    description: 'Complete the CEFR placement test',
+    category: ACHIEVEMENT_CATEGORIES.CEFR,
+    icon: '📋',
+    requirement: { type: 'placement_complete' },
+    xpReward: 100,
+    rarity: RARITY.COMMON,
+    tier: TIER.BRONZE,
+  },
+  {
+    id: 'cefr_reached_a2',
+    name: 'A2 Level',
+    description: 'Reach CEFR A2 level',
+    category: ACHIEVEMENT_CATEGORIES.CEFR,
+    icon: '📊',
+    requirement: { type: 'cefr_level_reached', level: 'A2' },
+    xpReward: 300,
+    rarity: RARITY.UNCOMMON,
+    tier: TIER.BRONZE,
+  },
+  {
+    id: 'cefr_reached_b1',
+    name: 'B1 Breakthrough',
+    description: 'Reach CEFR B1 level',
+    category: ACHIEVEMENT_CATEGORIES.CEFR,
+    icon: '🎖️',
+    requirement: { type: 'cefr_level_reached', level: 'B1' },
+    xpReward: 750,
+    rarity: RARITY.RARE,
+    tier: TIER.SILVER,
+  },
+  {
+    id: 'cefr_reached_b2',
+    name: 'B2 Vantage',
+    description: 'Reach CEFR B2 level',
+    category: ACHIEVEMENT_CATEGORIES.CEFR,
+    icon: '🏅',
+    requirement: { type: 'cefr_level_reached', level: 'B2' },
+    xpReward: 1500,
+    rarity: RARITY.EPIC,
+    tier: TIER.GOLD,
   },
 ];
 
