@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, memo, useEffect } from 'react';
+import { useState, useCallback, useMemo, memo, useEffect, lazy, Suspense } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { openDialogue, openInventory } from '../../store/slices/uiSlice.js';
@@ -12,7 +12,7 @@ import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import styles from './HUD.module.css';
 import questsData from '../../data/quests.json';
-import AchievementPanel from '../Achievements/AchievementPanel.jsx';
+const AchievementPanel = lazy(() => import('../Achievements/AchievementPanel.jsx'));
 import DailyGoalsPanel from '../Goals/DailyGoalsPanel.jsx';
 import QuestTracker from './QuestTracker.jsx';
 import NextObjectiveIndicator from './NextObjectiveIndicator.jsx';
@@ -312,7 +312,9 @@ function HUD({ onMenu }) {
 
       {/* Achievement Panel Overlay */}
       {achievementPanelOpen && (
-        <AchievementPanel onClose={closeAchievements} />
+        <Suspense fallback={null}>
+          <AchievementPanel onClose={closeAchievements} />
+        </Suspense>
       )}
 
       {/* Daily Goals Panel Overlay */}
