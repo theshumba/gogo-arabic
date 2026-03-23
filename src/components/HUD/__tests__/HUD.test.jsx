@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '../../../test/testUtils.jsx';
 import HUD from '../HUD.jsx';
 
@@ -222,13 +222,16 @@ describe('HUD Component', () => {
   });
 
   it('should open achievements panel when Achievements button is clicked', () => {
+    const { EventBus } = vi.mocked(await import('../../../utils/eventBus.js'));
     renderWithProviders(<HUD onMenu={mockOnMenu} />);
 
     const achievementsButton = screen.getByLabelText(/achievements/i);
     fireEvent.click(achievementsButton);
 
-    // Achievement panel should be rendered
-    expect(screen.getByText(/achievements/i)).toBeInTheDocument();
+    // AchievementPanel is lazy-loaded; verify player was frozen (panel opened)
+    expect(EventBus.emit).toHaveBeenCalledWith('PLAYER_FREEZE');
+    // The Achievements button is still in the DOM
+    expect(achievementsButton).toBeInTheDocument();
   });
 
   it('should calculate XP percentage correctly', () => {

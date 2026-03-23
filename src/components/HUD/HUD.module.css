@@ -250,6 +250,12 @@
   color: var(--color-xp-gold);
 }
 
+.cefrBadge {
+  background: #e2b659;
+  color: #1a1a2e;
+  font-weight: bold;
+}
+
 /* Media queries for responsive design */
 @media (max-width: 768px) {
   .container {

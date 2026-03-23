@@ -8,11 +8,13 @@ import { selectActiveQuestCount } from '../../store/slices/questSlice.js';
 import { selectReviewQueueCount, selectLearnedWordCount } from '../../store/slices/vocabularySlice.js';
 import { selectCompletedGoalsCount, selectTotalGoalsCount } from '../../store/slices/dailyGoalsSlice.js';
 import { selectInventoryCount } from '../../store/slices/inventorySlice.js';
+import { selectCefrLevel } from '../../store/slices/cefrProgressSlice.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import styles from './HUD.module.css';
 import questsData from '../../data/quests.json';
 const AchievementPanel = lazy(() => import('../Achievements/AchievementPanel.jsx'));
+const CefrProgressReport = lazy(() => import('../CEFR/CefrProgressReport.jsx'));
 import DailyGoalsPanel from '../Goals/DailyGoalsPanel.jsx';
 import QuestTracker from './QuestTracker.jsx';
 import NextObjectiveIndicator from './NextObjectiveIndicator.jsx';
@@ -22,6 +24,7 @@ function HUD({ onMenu }) {
   const dispatch = useDispatch();
   const [achievementPanelOpen, setAchievementPanelOpen] = useState(false);
   const [dailyGoalsPanelOpen, setDailyGoalsPanelOpen] = useState(false);
+  const [cefrReportOpen, setCefrReportOpen] = useState(false);
   const [stamina, setStamina] = useState(100);
   const [maxStamina, setMaxStamina] = useState(100);
   const [showStamina, setShowStamina] = useState(false);
@@ -34,6 +37,7 @@ function HUD({ onMenu }) {
   const completedGoalsCount = useSelector(selectCompletedGoalsCount);
   const totalGoalsCount = useSelector(selectTotalGoalsCount);
   const inventoryCount = useSelector(selectInventoryCount);
+  const cefrLevel = useSelector(selectCefrLevel);
   const completedGroups = useSelector((s) => s.alphabet.completedGroups || []);
   const wordsLearned = useSelector(selectLearnedWordCount);
   const completedQuestCount = useSelector((s) => {
@@ -112,6 +116,16 @@ function HUD({ onMenu }) {
 
   const closeDailyGoals = useCallback(() => {
     setDailyGoalsPanelOpen(false);
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+  }, []);
+
+  const openCefrReport = useCallback(() => {
+    setCefrReportOpen(true);
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+  }, []);
+
+  const closeCefrReport = useCallback(() => {
+    setCefrReportOpen(false);
     EventBus.emit(EVENTS.PLAYER_UNFREEZE);
   }, []);
 
@@ -263,6 +277,21 @@ function HUD({ onMenu }) {
             )}
           </motion.button>
 
+          {/* CEFR Progress Report button — only shown after placement test */}
+          {cefrLevel && (
+            <motion.button
+              className={styles.btn}
+              onClick={openCefrReport}
+              aria-label={`CEFR Progress Report. Current level: ${cefrLevel}`}
+              {...buttonProps}
+            >
+              CEFR
+              <span className={`${styles.badge} ${styles.cefrBadge}`} aria-hidden="true">
+                {cefrLevel}
+              </span>
+            </motion.button>
+          )}
+
           {/* Achievements button */}
           <motion.button
             className={styles.btn}
@@ -320,6 +349,13 @@ function HUD({ onMenu }) {
       {/* Daily Goals Panel Overlay */}
       {dailyGoalsPanelOpen && (
         <DailyGoalsPanel onClose={closeDailyGoals} />
+      )}
+
+      {/* CEFR Progress Report Overlay */}
+      {cefrReportOpen && (
+        <Suspense fallback={null}>
+          <CefrProgressReport onClose={closeCefrReport} />
+        </Suspense>
       )}
     </>
   );
