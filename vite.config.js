@@ -132,6 +132,12 @@ export default defineConfig({
             if (id.includes('node_modules/scheduler')) {
               return 'react-vendor';
             }
+            // recharts + d3 sub-packages (~200KB)
+            if (id.includes('node_modules/recharts') ||
+                id.includes('node_modules/victory-vendor') ||
+                id.includes('node_modules/d3-')) {
+              return 'charts-vendor';
+            }
             // All other node_modules
             return 'misc-vendor';
           }
