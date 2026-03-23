@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: unknown
-stopped_at: Phase 61 Plan 02 complete — PlacementTestOverlay component + MainMenu integration + 22 tests. 1358 tests passing.
-last_updated: "2026-03-23T03:46:00Z"
+stopped_at: Phase 63 Plan 02 complete — 5 new achievement requirement types + quizTypeStats + useQuiz.js wiring
+last_updated: "2026-03-23T03:46:22.350Z"
 progress:
   total_phases: 9
   completed_phases: 5
   total_plans: 17
-  completed_plans: 13
+  completed_plans: 15
 ---
 
 # Project State
@@ -144,6 +144,12 @@ Plan: 3 of 3
 | dropOneTier A1 as floor (idx <= 1) | storedLevel maps Pre-A1→A1; user can never be placed below A1 in practice |
 | PLACEMENT_CEFR_ORDER local 4-level map | CEFR_ORDER in quizTypes.js has no Pre-A1; modifying it would break 22 existing tests |
 
+- [Phase 63]: tier field computed from RARITY_TO_TIER at data-definition time (not runtime)
+- [Phase 63]: RARITY_TO_TIER: common/uncommon->Bronze, rare->Silver, epic->Gold, legendary->Legendary
+- [Phase 63]: quizTypeStats initialized as {} in stats — per-type entries created lazily on first dispatch
+- [Phase 63]: recordQuizTypeResult dispatch in useQuiz.js fires for ALL quiz completions (perfect: false resets streak)
+- [Phase 63]: SKILL_TREES imported into middleware for skill_tree_complete node count — avoids hardcoding 30
+
 ### Blockers/Concerns
 
 - None
@@ -156,7 +162,7 @@ Plan: 3 of 3
 
 ## Session Continuity
 
-Last session: 2026-03-23
-Stopped at: Phase 61 Plan 02 complete — PlacementTestOverlay (3-phase overlay) + MainMenu integration + 22 tests. 1358 tests passing.
-Resume file: .planning/phases/61-cefr-placement-test/61-02-SUMMARY.md
+Last session: 2026-03-23T03:46:22.348Z
+Stopped at: Phase 63 Plan 02 complete — 5 new achievement requirement types + quizTypeStats + useQuiz.js wiring
+Resume file: None
 Next plan: Phase 61 Plan 03 — Settings retake + grammar/skill-tree fan-out dispatch
