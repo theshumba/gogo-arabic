@@ -282,7 +282,7 @@ Plans:
 Plans:
 - [x] 61-01-PLAN.md — placementTest.js 30-item CAT bank (Pre-A1 to B1) + placementEngine.js pure functions (IRT selection, scoring, level assignment, unlock derivation) + tests (CEFR-01) — COMPLETE 2026-03-23
 - [x] 61-02-PLAN.md — PlacementTestOverlay.jsx (intro/testing/result phases, self-contained state machine, 20-question cap, early-exit) + MainMenu integration + component tests (CEFR-01) — COMPLETE 2026-03-23
-- [ ] 61-03-PLAN.md — bulkUnlockLessons + resetCefrProgress reducers + fan-out dispatch (grammar + skill tree pre-unlock) + Settings retake UI + slice tests (CEFR-02, CEFR-04)
+- [x] 61-03-PLAN.md — bulkUnlockLessons + resetCefrProgress reducers + fan-out dispatch (grammar + skill tree pre-unlock) + Settings retake UI + slice tests (CEFR-02, CEFR-04) — COMPLETE 2026-03-23
 
 #### Phase 62: Grammar B1-B2 + CEFR Gating
 **Goal**: The grammar curriculum is complete at 50 lessons covering A1 through B2, with B1 and B2 lessons gated behind skill tree progression thresholds

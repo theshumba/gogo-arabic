@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: unknown
-stopped_at: Phase 63 Plan 02 complete — 5 new achievement requirement types + quizTypeStats + useQuiz.js wiring
-last_updated: "2026-03-23T03:46:22.350Z"
+stopped_at: Phase 61 Plan 03 complete — fan-out dispatch + Settings retake UI + 11 tests. 1400 tests passing.
+last_updated: "2026-03-23T03:47:23Z"
 progress:
   total_phases: 9
   completed_phases: 5
   total_plans: 17
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 ## Current Position
 
-Phase: 61 (cefr-placement-test) — EXECUTING
-Plan: 3 of 3
+Phase: 61 (cefr-placement-test) — COMPLETE
+Plan: 3 of 3 (all plans done)
 
 ### Shipped Milestones
 
@@ -143,6 +143,9 @@ Plan: 3 of 3
 | frontierNodeIds limited to slice(0,2) | Plan specifies 1-2 reachable nodes; keeps UI focused on immediate goals |
 | dropOneTier A1 as floor (idx <= 1) | storedLevel maps Pre-A1→A1; user can never be placed below A1 in practice |
 | PLACEMENT_CEFR_ORDER local 4-level map | CEFR_ORDER in quizTypes.js has no Pre-A1; modifying it would break 22 existing tests |
+| bulkUnlockLessons mirrors bulkUnlockNodes | idempotent, no XP deduction, no middleware side effects — placement pre-unlock pattern (61-03) |
+| handleRetakeSkip records A1 fallback | player who starts retake but skips overlay gets A1 not null placement state (61-03) |
+| No batch() import in fan-out dispatch | React 18 auto-batches sequential dispatch() calls in event handlers (61-03) |
 
 - [Phase 63]: tier field computed from RARITY_TO_TIER at data-definition time (not runtime)
 - [Phase 63]: RARITY_TO_TIER: common/uncommon->Bronze, rare->Silver, epic->Gold, legendary->Legendary
@@ -162,7 +165,7 @@ Plan: 3 of 3
 
 ## Session Continuity
 
-Last session: 2026-03-23T03:46:22.348Z
-Stopped at: Phase 63 Plan 02 complete — 5 new achievement requirement types + quizTypeStats + useQuiz.js wiring
-Resume file: None
-Next plan: Phase 61 Plan 03 — Settings retake + grammar/skill-tree fan-out dispatch
+Last session: 2026-03-23
+Stopped at: Phase 61 Plan 03 complete — fan-out dispatch + Settings retake UI + 11 tests. 1400 tests passing.
+Resume file: .planning/phases/61-cefr-placement-test/61-03-SUMMARY.md
+Next plan: Phase 62 (Grammar B1-B2 Content) or Phase 63 (Achievement Expansion) — check ROADMAP.md for priority
