@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFsrsCard, updateFsrsCard } from '../store/slices/vocabularySlice.js';
 import { addXP, incrementWordsLearned } from '../store/slices/playerSlice.js';
-import { incrementReviews, recordPerfectQuiz } from '../store/slices/achievementSlice.js';
+import { incrementReviews, recordPerfectQuiz, recordQuizTypeResult } from '../store/slices/achievementSlice.js';
 import { closeQuiz } from '../store/slices/uiSlice.js';
 import { createNewCard, reviewCard, Rating } from '../services/fsrs.js';
 import { EventBus } from '../utils/eventBus.js';
@@ -374,10 +374,15 @@ export function useQuiz() {
     const words = quizState.sessionWords;
     const nextIdx = questionIndex + 1;
     if (nextIdx >= words.length) {
-      if (quizState.sessionScore === quizState.sessionTotal && quizState.sessionTotal > 0) {
+      const wasPerfect = quizState.sessionScore === quizState.sessionTotal && quizState.sessionTotal > 0;
+      if (wasPerfect) {
         dispatch(addXP(XP_REWARDS.PERFECT_QUIZ));
         // Track perfect quiz for achievement progress
         dispatch(recordPerfectQuiz());
+      }
+      // Track per-quiz-type streak for quiz_type_streak achievements
+      if (quizState.quizType) {
+        dispatch(recordQuizTypeResult({ quizType: quizState.quizType, perfect: wasPerfect }));
       }
       return true;
     }
