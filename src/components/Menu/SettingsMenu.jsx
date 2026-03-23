@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   setMasterVolume,
@@ -9,12 +10,52 @@ import {
   toggleDiacritics,
   setKeyboardMode,
 } from '../../store/slices/settingsSlice.js';
+import { selectPlacement, resetPlacement, recordPlacementResult } from '../../store/slices/placementSlice.js';
+import { resetCefrProgress, setCefrLevel } from '../../store/slices/cefrProgressSlice.js';
+import { bulkUnlockLessons } from '../../store/slices/grammarSlice.js';
+import { bulkUnlockNodes } from '../../store/slices/skillTreeSlice.js';
+import { deriveGrammarUnlocks, deriveSkillTreeUnlocks } from '../../services/placementEngine.js';
+import PlacementTestOverlay from '../Placement/PlacementTestOverlay.jsx';
 import AccessibilityPanel from '../Settings/AccessibilityPanel.jsx';
 import styles from './SettingsMenu.module.css';
 
 export default function SettingsMenu({ onBack }) {
   const settings = useSelector((s) => s.settings);
+  const placement = useSelector(selectPlacement);
   const dispatch = useDispatch();
+  const [showRetakeTest, setShowRetakeTest] = useState(false);
+
+  const handleRetake = () => {
+    if (window.confirm('Retaking the placement test will reset your CEFR tracking history. Your grammar and skill tree progress will NOT be affected. Continue?')) {
+      dispatch(resetPlacement());
+      dispatch(resetCefrProgress());
+      setShowRetakeTest(true);
+    }
+  };
+
+  const handleRetakeComplete = (assignedLevel, rawScore, storedLevel) => {
+    dispatch(recordPlacementResult({ assignedLevel, rawScore }));
+    dispatch(setCefrLevel({ level: storedLevel, source: 'placement_retake' }));
+
+    // Re-derive and apply unlocks for new level
+    const grammarIds = deriveGrammarUnlocks(assignedLevel);
+    if (grammarIds.length > 0) {
+      dispatch(bulkUnlockLessons(grammarIds));
+    }
+    const treeUnlocks = deriveSkillTreeUnlocks(assignedLevel);
+    for (const [treeId, nodeIds] of Object.entries(treeUnlocks)) {
+      dispatch(bulkUnlockNodes({ treeId, nodeIds }));
+    }
+
+    setShowRetakeTest(false);
+  };
+
+  const handleRetakeSkip = () => {
+    // If they cancel mid-retake, record A1 as fallback
+    dispatch(recordPlacementResult({ assignedLevel: 'A1', rawScore: 0 }));
+    dispatch(setCefrLevel({ level: 'A1', source: 'placement_retake_skip' }));
+    setShowRetakeTest(false);
+  };
 
   // Dynamic background image (fullScreenBg function pattern)
   const containerStyle = {
@@ -120,6 +161,48 @@ export default function SettingsMenu({ onBack }) {
           <div className={styles.sectionHeading}>Accessibility</div>
           <AccessibilityPanel />
         </div>
+
+        {/* CEFR Placement Section */}
+        <div className={styles.settingsSection}>
+          <div className={styles.sectionHeading}>CEFR Placement</div>
+
+          {placement.hasCompleted ? (
+            <>
+              <div className={styles.settingRow}>
+                <span className={styles.label}>Current Level</span>
+                <span className={styles.levelBadge}>{placement.assignedLevel}</span>
+              </div>
+              {placement.completedAt && (
+                <div className={styles.settingRow}>
+                  <span className={styles.label}>Placed On</span>
+                  <span className={styles.labelValue}>{placement.completedAt.slice(0, 10)}</span>
+                </div>
+              )}
+              <div className={styles.settingRow}>
+                <button
+                  className={styles.retakeBtn}
+                  onClick={handleRetake}
+                >
+                  Retake Placement Test
+                </button>
+              </div>
+              <div className={styles.retakeWarning}>
+                Retaking resets your CEFR tracking history.
+              </div>
+            </>
+          ) : (
+            <div className={styles.settingRow}>
+              <span className={styles.label}>Not yet taken</span>
+            </div>
+          )}
+        </div>
+
+        {showRetakeTest && (
+          <PlacementTestOverlay
+            onComplete={handleRetakeComplete}
+            onSkip={handleRetakeSkip}
+          />
+        )}
 
         <button className={styles.backBtn} onClick={onBack}>Back to Menu</button>
       </div>

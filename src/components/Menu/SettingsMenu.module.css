@@ -181,3 +181,43 @@
   transition: transform 0.05s;
   margin-top: 24px;
 }
+
+.levelBadge {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #e2b659;
+  background: rgba(226, 182, 89, 0.15);
+  padding: 4px 12px;
+  border: 2px solid #e2b659;
+  border-radius: 4px;
+}
+
+.labelValue {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #c4a35a;
+}
+
+.retakeBtn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 10px 20px;
+  background: rgba(180, 60, 60, 0.2);
+  color: #e06060;
+  border: 2px solid #e06060;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.retakeBtn:hover {
+  background: rgba(180, 60, 60, 0.35);
+}
+
+.retakeWarning {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #888;
+  margin-top: 4px;
+  padding: 0 4px;
+}

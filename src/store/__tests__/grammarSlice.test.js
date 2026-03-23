@@ -7,6 +7,7 @@ import grammarReducer, {
   clearCurrentLesson,
   resetGrammarProgress,
   unlockNextLesson,
+  bulkUnlockLessons,
   selectCompletedLessons,
   selectLessonScores,
   selectCurrentLessonId,
@@ -17,14 +18,15 @@ import grammarReducer, {
   selectIsLessonUnlocked,
   selectLessonsByCategory,
 } from '../slices/grammarSlice.js';
+import cefrProgressReducer, { setCefrLevel, resetCefrProgress } from '../slices/cefrProgressSlice.js';
 
 // Mock the grammar lessons data
 vi.mock('../../data/grammar.js', () => ({
   grammarLessons: [
-    { id: 'lesson1', category: 'nouns', order: 1 },
-    { id: 'lesson2', category: 'nouns', order: 2 },
-    { id: 'lesson3', category: 'verbs', order: 3 },
-    { id: 'lesson4', category: 'verbs', order: 4 },
+    { id: 'lesson1', category: 'nouns', order: 1, cefrLevel: 'A1' },
+    { id: 'lesson2', category: 'nouns', order: 2, cefrLevel: 'A1' },
+    { id: 'lesson3', category: 'verbs', order: 3, cefrLevel: 'A2' },
+    { id: 'lesson4', category: 'verbs', order: 4, cefrLevel: 'A2' },
   ],
   grammarCategories: [
     { id: 'nouns', name: 'Nouns' },
@@ -455,5 +457,145 @@ describe('grammarSlice', () => {
       const mockState = { grammar: { ...initialState, unlockedLessons: ['lesson1'] } };
       expect(selectIsLessonUnlocked('lesson3')(mockState)).toBe(false);
     });
+  });
+
+  describe('bulkUnlockLessons', () => {
+    it('adds new lesson IDs to unlockedLessons', () => {
+      // Start with only 'al-definite' unlocked (initial state)
+      const state = grammarReducer(
+        initialState,
+        bulkUnlockLessons(['noun-adjective-agreement', 'personal-pronouns'])
+      );
+      expect(state.unlockedLessons).toContain('al-definite');
+      expect(state.unlockedLessons).toContain('noun-adjective-agreement');
+      expect(state.unlockedLessons).toContain('personal-pronouns');
+      expect(state.unlockedLessons).toHaveLength(3);
+    });
+
+    it('is idempotent — dispatching same IDs twice produces no duplicates', () => {
+      let state = grammarReducer(
+        initialState,
+        bulkUnlockLessons(['lesson1', 'lesson2'])
+      );
+      state = grammarReducer(state, bulkUnlockLessons(['lesson1', 'lesson2']));
+      expect(state.unlockedLessons.filter((id) => id === 'lesson1')).toHaveLength(1);
+      expect(state.unlockedLessons.filter((id) => id === 'lesson2')).toHaveLength(1);
+    });
+
+    it('does not remove existing unlocked lessons', () => {
+      const startState = { ...initialState, unlockedLessons: ['al-definite'] };
+      const state = grammarReducer(
+        startState,
+        bulkUnlockLessons(['lesson1', 'lesson2'])
+      );
+      expect(state.unlockedLessons).toContain('al-definite');
+      expect(state.unlockedLessons).toContain('lesson1');
+      expect(state.unlockedLessons).toContain('lesson2');
+    });
+
+    it('with empty array is a no-op — state unchanged', () => {
+      const state = grammarReducer(initialState, bulkUnlockLessons([]));
+      expect(state.unlockedLessons).toEqual(['al-definite']);
+    });
+
+    it('only adds IDs not already present when there is partial overlap', () => {
+      const startState = { ...initialState, unlockedLessons: ['al-definite', 'lesson1'] };
+      const state = grammarReducer(
+        startState,
+        bulkUnlockLessons(['lesson1', 'lesson2', 'lesson3'])
+      );
+      expect(state.unlockedLessons.filter((id) => id === 'lesson1')).toHaveLength(1);
+      expect(state.unlockedLessons).toContain('lesson2');
+      expect(state.unlockedLessons).toContain('lesson3');
+    });
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// cefrProgressSlice — resetCefrProgress tests
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('cefrProgressSlice - resetCefrProgress', () => {
+  it('returns to initial state when called on a populated state', () => {
+    let state = cefrProgressReducer(undefined, { type: 'unknown' });
+    state = cefrProgressReducer(state, setCefrLevel({ level: 'A2', source: 'placement' }));
+    expect(state.currentLevel).toBe('A2');
+
+    const reset = cefrProgressReducer(state, resetCefrProgress());
+    expect(reset.currentLevel).toBeNull();
+    expect(reset.levelHistory).toEqual([]);
+    expect(reset.lastAssessedAt).toBeNull();
+  });
+
+  it('after setCefrLevel the levelHistory has an entry; after resetCefrProgress it is empty', () => {
+    let state = cefrProgressReducer(undefined, { type: 'unknown' });
+    state = cefrProgressReducer(state, setCefrLevel({ level: 'A1', source: 'placement' }));
+    state = cefrProgressReducer(state, setCefrLevel({ level: 'A2', source: 'placement' }));
+    expect(state.levelHistory.length).toBeGreaterThan(0);
+
+    const reset = cefrProgressReducer(state, resetCefrProgress());
+    expect(reset.levelHistory).toHaveLength(0);
+  });
+
+  it('is idempotent — calling reset twice returns initial state both times', () => {
+    let state = cefrProgressReducer(undefined, setCefrLevel({ level: 'B1', source: 'test' }));
+    const reset1 = cefrProgressReducer(state, resetCefrProgress());
+    const reset2 = cefrProgressReducer(reset1, resetCefrProgress());
+    expect(reset2.currentLevel).toBeNull();
+    expect(reset2.levelHistory).toEqual([]);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Fan-out integration tests (using mocked grammar.js — 4 lessons with cefrLevel)
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('fan-out integration: bulkUnlockLessons via mocked grammar', () => {
+  // Mocked grammar.js (from vi.mock above):
+  //   lesson1: cefrLevel A1, order 1
+  //   lesson2: cefrLevel A1, order 2
+  //   lesson3: cefrLevel A2, order 3
+  //   lesson4: cefrLevel A2, order 4
+
+  it('A1 placement: bulkUnlockLessons unlocks all A1 lessons', () => {
+    // Simulate what deriveGrammarUnlocks('A1') would return for mock data
+    const a1Ids = ['lesson1', 'lesson2'];
+    const state = grammarReducer(
+      { completedLessons: [], unlockedLessons: ['al-definite'], lessonScores: {}, currentLessonId: null },
+      bulkUnlockLessons(a1Ids)
+    );
+    expect(state.unlockedLessons).toContain('lesson1');
+    expect(state.unlockedLessons).toContain('lesson2');
+    expect(state.unlockedLessons).not.toContain('lesson3');
+    expect(state.unlockedLessons).not.toContain('lesson4');
+  });
+
+  it('A2 placement: bulkUnlockLessons unlocks A1 + A2 lessons', () => {
+    // Simulate what deriveGrammarUnlocks('A2') would return for mock data
+    const a2Ids = ['lesson1', 'lesson2', 'lesson3', 'lesson4'];
+    const state = grammarReducer(
+      { completedLessons: [], unlockedLessons: ['al-definite'], lessonScores: {}, currentLessonId: null },
+      bulkUnlockLessons(a2Ids)
+    );
+    expect(state.unlockedLessons).toContain('lesson1');
+    expect(state.unlockedLessons).toContain('lesson2');
+    expect(state.unlockedLessons).toContain('lesson3');
+    expect(state.unlockedLessons).toContain('lesson4');
+  });
+
+  it('bulkUnlockLessons + resetCefrProgress are independent — resetting CEFR does not affect grammar unlocks', () => {
+    const grammarState = grammarReducer(
+      { completedLessons: [], unlockedLessons: ['al-definite'], lessonScores: {}, currentLessonId: null },
+      bulkUnlockLessons(['lesson1', 'lesson2'])
+    );
+    // Reset CEFR (simulates retake)
+    let cefrState = cefrProgressReducer(undefined, setCefrLevel({ level: 'A1', source: 'placement' }));
+    cefrState = cefrProgressReducer(cefrState, resetCefrProgress());
+
+    // Grammar state still has the unlocked lessons
+    expect(grammarState.unlockedLessons).toContain('lesson1');
+    expect(grammarState.unlockedLessons).toContain('lesson2');
+    // CEFR reset to initial
+    expect(cefrState.currentLevel).toBeNull();
   });
 });
