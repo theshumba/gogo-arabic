@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: unknown
-stopped_at: Phase 61 Plan 01 complete — 30-item placement bank + 7 pure engine functions + 58 unit tests. CEFR-01 satisfied.
-last_updated: "2026-03-23T03:55:00Z"
+stopped_at: Phase 61 Plan 02 complete — PlacementTestOverlay component + MainMenu integration + 22 tests. 1358 tests passing.
+last_updated: "2026-03-23T03:46:00Z"
 progress:
   total_phases: 9
   completed_phases: 5
-  total_plans: 15
-  completed_plans: 12
+  total_plans: 17
+  completed_plans: 13
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 61 — cefr-placement-test
+**Current focus:** Phase 63 — Achievement Expansion
 
 ## Current Position
 
 Phase: 61 (cefr-placement-test) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ### Shipped Milestones
 
@@ -78,6 +78,11 @@ Plan: 2 of 3
 - dropOneTier floor: A1→A1 (and Pre-A1→Pre-A1); idx<=1 check (61-01)
 - deriveGrammarUnlocks returns contiguous lessons from order 1 up to assigned CEFR level — avoids unlock chain gaps (61-01)
 - deriveSkillTreeUnlocks sorts nodes by xpCost asc per tree; grammar_01/02 at A1, grammar_03 at A2 (61-01)
+- 1358 total tests passing (was 1336) — 22 new PlacementTestOverlay integration tests (61-02)
+- PlacementTestOverlay.jsx: 3-phase overlay (intro/testing/result), own state machine, does NOT call useQuiz (61-02)
+- MainMenu auto-shows PlacementTestOverlay when hasCharacter && !hasCompletedPlacement via useEffect (61-02)
+- handlePlacementComplete dispatches recordPlacementResult + setCefrLevel; grammar/skill-tree fan-out deferred to 61-03 (61-02)
+- feedbackTimerRef clears on unmount to prevent setState on unmounted component (61-02)
 - 1336 total tests passing (was 1278) — 58 new placement tests (61-01)
 - grammar.js has 43 lessons (fixed from 47 — structural bug removed 4 duplicate/misplaced lessons)
 - grammar.js had structural bug: 40 lessons were in grammarCategories, not grammarLessons — FIXED (58-01)
@@ -152,6 +157,6 @@ Plan: 2 of 3
 ## Session Continuity
 
 Last session: 2026-03-23
-Stopped at: Phase 61 Plan 01 complete — 30-item placement bank + 7 pure engine functions + 58 unit tests. CEFR-01 satisfied.
-Resume file: .planning/phases/61-cefr-placement-test/61-01-SUMMARY.md
-Next plan: Phase 61 Plan 02 — PlacementTestOverlay component
+Stopped at: Phase 61 Plan 02 complete — PlacementTestOverlay (3-phase overlay) + MainMenu integration + 22 tests. 1358 tests passing.
+Resume file: .planning/phases/61-cefr-placement-test/61-02-SUMMARY.md
+Next plan: Phase 61 Plan 03 — Settings retake + grammar/skill-tree fan-out dispatch
