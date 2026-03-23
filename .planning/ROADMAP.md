@@ -293,7 +293,7 @@ Plans:
   2. A player who reaches Grammar tree level 3 sees B1 grammar lessons unlock automatically; reaching level 5 unlocks B2 — attempting to open a locked lesson shows "Requires Grammar Tree Level X" with current level shown
   3. A "New content added" notification appears on first load after this phase ships for existing players whose grammar completion percentage has changed
 
-**Plans:** 2/2 plans complete — Phase 62 COMPLETE 2026-03-23
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 62-01-PLAN.md — 30 new B1-B2 grammar lessons in grammar.js completing the 50-lesson curriculum (GRAM-01) — COMPLETE 2026-03-23
@@ -324,10 +324,13 @@ Plans:
   2. The CEFR level shown in the progress report never goes backwards — only upward level changes are recorded; write-once-per-session snapshot model
   3. A player can generate a shareable card showing their Arabic learning milestone and either share via Web Share API or copy to clipboard — the card is generated without any external image requests and works in production
 
+
+**Plans:** 3/3 plans executed
+
 Plans:
-- [ ] 64-01: recharts install (v3.8.0) + CefrProgressReport.jsx — RadarChart + LineChart, lazy-loaded in charts-vendor chunk; write-once-per-session CEFR snapshot in cefrProgressSlice (CEFR-03)
-- [ ] 64-02: Scholar's Scroll ink dialogue — Amira delivers CEFR milestone moments reusing inkjs v11.0 + Amira companion (CEFR-03)
-- [ ] 64-03: SocialShareCard.jsx — SVG-only design, Web Share API + clipboard fallback; html-to-image v1.11.13 conditional install (ACH-03)
+- [x] 64-01: recharts install (v3.8.0) + CefrProgressReport.jsx — RadarChart + LineChart, lazy-loaded in charts-vendor chunk; write-once-per-session CEFR snapshot in cefrProgressSlice (CEFR-03)
+- [x] 64-02: Scholar's Scroll ink dialogue — Amira delivers CEFR milestone moments reusing inkjs v11.0 + Amira companion (CEFR-03)
+- [x] 64-03: SocialShareCard.jsx — SVG-only design, Web Share API + clipboard fallback, no html-to-image needed (ACH-03)
 
 ---
 
@@ -399,12 +402,12 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 64
 | 59. Adaptive Difficulty Engine | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 60. Quiz Expansion (Core 3 Types) | v12.0 | 2/2 | Complete    | 2026-03-22 |
 | 61. CEFR Placement Test | v12.0 | 0/3 | Complete    | 2026-03-23 |
-| 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Not started | - |
+| 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Complete    | 2026-03-23 |
 | 63. Achievement Expansion | v12.0 | 3/3 | Complete    | 2026-03-23 |
-| 64. CEFR Reports + Social Sharing | v12.0 | 0/3 | Not started | - |
+| 64. CEFR Reports + Social Sharing | v12.0 | 3/3 | Complete | 2026-03-23 |
 
 **Cumulative:** 56 phases shipped, 139+ plans complete, 11 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-23 — Phase 61 Plan 01 COMPLETE (item bank + engine + 58 tests); Plans 02-03 pending*
+*Last updated: 2026-03-23 — Phase 64 plans created (3 plans in 2 waves: CEFR report + ink dialogue + social share)*

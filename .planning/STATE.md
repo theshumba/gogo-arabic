@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v12.0
 milestone_name: Learning Systems
 status: in_progress
-stopped_at: Completed 62-02-PLAN.md — CEFR gating for B1/B2 grammar lessons
-last_updated: "2026-03-23T05:02:42Z"
+stopped_at: Completed 64-03-PLAN.md — SVG social share card wired into CefrProgressReport
+last_updated: "2026-03-23T18:05:00Z"
 progress:
   total_phases: 9
   completed_phases: 9
-  total_plans: 19
-  completed_plans: 19
+  total_plans: 22
+  completed_plans: 22
 ---
 
 # Project State
@@ -19,13 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 62 complete — Grammar B1-B2 CEFR Gating (both plans shipped)
+**Current focus:** Phase 64 — cefr-reports-social-sharing COMPLETE
 
 ## Current Position
 
-Phase: 62 (complete)
-Plan: 62-02 complete — Skill Tree Gating for B1/B2 Grammar
-Status: Phase complete — GRAM-03 requirement satisfied
+Phase: 64 (cefr-reports-social-sharing) — COMPLETE
+Plan: 3 of 3 (all plans complete)
 
 ### Shipped Milestones
 
@@ -167,6 +166,14 @@ Status: Phase complete — GRAM-03 requirement satisfied
 - [Phase 63]: Suspense fallback=null for AchievementPanel — panel has its own overlay backdrop, no spinner needed
 - [Phase 63]: cardInfo div wraps cardRarity and tierBadge for horizontal rarity/tier row in AchievementCard
 
+- [Phase 64-01]: recharts v3.8.0 in charts-vendor chunk — React 19 peer dep confirmed; RadarChart + LineChart in CefrProgressReport
+- [Phase 64-01]: recordCefrSnapshot write-once-per-day guard + forward-only CEFR rank guard — no regression possible
+- [Phase 64-02]: CEFR_MILESTONE_REACHED event (not INK_DIALOGUE_START) — middleware cannot create async InkDialogueEngine; DialogueOverlay handles async load + re-emit
+- [Phase 64-02]: setFlag ink external binding in InkDialogueEngine — ink scripts call ~ setFlag("key") to dispatch worldStateSlice
+- [Phase 64-03]: SocialShareCard non-lazy in CefrProgressReport — parent already lazy-loaded; SVG-only avoids html-to-image dependency
+- [Phase 64-03]: handleShare tries navigator.share first, silent fall-through on cancel to clipboard.writeText
+- [Phase 64-03]: z-index 1100 for SocialShareCard backdrop — sits above CefrProgressReport at z-index 1000
+
 - [Phase 62]: Grammar expanded to 50 lessons (13 B1 + 17 B2) — GRAM-01 requirement now satisfied
 - [Phase 62]: All 50 lessons pass grammarChecker.test.js data integrity suite (23 tests)
 - [Phase 62]: conjugation-drill 'future' paradigm not needed — jussive/subjunctive drills use 'present' or 'past'
@@ -187,7 +194,7 @@ Status: Phase complete — GRAM-03 requirement satisfied
 
 ## Session Continuity
 
-Last session: 2026-03-23T05:02:42Z
-Stopped at: Completed 62-02-PLAN.md — CEFR gating for B1/B2 grammar (selectLessonsByCategory + GrammarModule UI)
+Last session: 2026-03-23T18:05:00Z
+Stopped at: Completed 64-03-PLAN.md — SVG social share card (SocialShareCard.jsx) wired into CefrProgressReport
 Resume file: None
-Next plan: Phase 64 (check ROADMAP.md for next priority)
+Next plan: Phase 64 complete — v12.0 Learning Systems milestone complete. Check ROADMAP.md for next phase.
