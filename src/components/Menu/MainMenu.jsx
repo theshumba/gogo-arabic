@@ -4,6 +4,9 @@ import { getDueCards } from '../../services/fsrs.js';
 import { audioManager } from '../../services/audio.js';
 import { selectHasCompletedPlacement, recordPlacementResult } from '../../store/slices/placementSlice.js';
 import { setCefrLevel } from '../../store/slices/cefrProgressSlice.js';
+import { bulkUnlockLessons } from '../../store/slices/grammarSlice.js';
+import { bulkUnlockNodes } from '../../store/slices/skillTreeSlice.js';
+import { deriveGrammarUnlocks, deriveSkillTreeUnlocks } from '../../services/placementEngine.js';
 import PlacementTestOverlay from '../Placement/PlacementTestOverlay.jsx';
 import styles from './MainMenu.module.css';
 
@@ -37,9 +40,24 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
   const hasCharacter = player.name !== '';
 
   const handlePlacementComplete = (assignedLevel, rawScore, storedLevel) => {
+    // 1. Record placement result
     dispatch(recordPlacementResult({ assignedLevel, rawScore }));
+
+    // 2. Set CEFR level
     dispatch(setCefrLevel({ level: storedLevel, source: 'placement' }));
-    // Grammar + skill tree fan-out handled in Plan 61-03
+
+    // 3. Pre-unlock grammar lessons up to assigned CEFR level
+    const grammarIds = deriveGrammarUnlocks(assignedLevel);
+    if (grammarIds.length > 0) {
+      dispatch(bulkUnlockLessons(grammarIds));
+    }
+
+    // 4. Pre-unlock skill tree nodes up to assigned CEFR level
+    const treeUnlocks = deriveSkillTreeUnlocks(assignedLevel);
+    for (const [treeId, nodeIds] of Object.entries(treeUnlocks)) {
+      dispatch(bulkUnlockNodes({ treeId, nodeIds }));
+    }
+
     setShowPlacement(false);
   };
 
@@ -47,6 +65,19 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
     // Skip = start at beginner (A1 default)
     dispatch(recordPlacementResult({ assignedLevel: 'A1', rawScore: 0 }));
     dispatch(setCefrLevel({ level: 'A1', source: 'placement_skip' }));
+
+    // Pre-unlock A1 grammar lessons for skippers too
+    const grammarIds = deriveGrammarUnlocks('A1');
+    if (grammarIds.length > 0) {
+      dispatch(bulkUnlockLessons(grammarIds));
+    }
+
+    // Pre-unlock A1 skill tree nodes
+    const treeUnlocks = deriveSkillTreeUnlocks('A1');
+    for (const [treeId, nodeIds] of Object.entries(treeUnlocks)) {
+      dispatch(bulkUnlockNodes({ treeId, nodeIds }));
+    }
+
     setShowPlacement(false);
   };
 

@@ -106,6 +106,17 @@ const grammarSlice = createSlice({
         state.unlockedLessons.push(nextLesson.id);
       }
     },
+
+    bulkUnlockLessons(state, action) {
+      // payload: string[] of lessonIds
+      // Mirrors bulkUnlockNodes pattern: no XP deduction, no middleware side effects, idempotent
+      const lessonIds = action.payload;
+      lessonIds.forEach((id) => {
+        if (!state.unlockedLessons.includes(id)) {
+          state.unlockedLessons.push(id);
+        }
+      });
+    },
   },
 });
 
@@ -117,6 +128,7 @@ export const {
   clearCurrentLesson,
   resetGrammarProgress,
   unlockNextLesson,
+  bulkUnlockLessons,
 } = grammarSlice.actions;
 
 // ========== SELECTORS ==========

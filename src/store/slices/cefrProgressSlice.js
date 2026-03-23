@@ -28,10 +28,13 @@ const cefrProgressSlice = createSlice({
         state.lastAssessedAt = new Date().toISOString();
       }
     },
+    resetCefrProgress() {
+      return initialState;
+    },
   },
 });
 
-export const { setCefrLevel, initCefrLevel } = cefrProgressSlice.actions;
+export const { setCefrLevel, initCefrLevel, resetCefrProgress } = cefrProgressSlice.actions;
 export const selectCefrLevel = (state) => state.cefrProgress.currentLevel;
 export const selectCefrHistory = (state) => state.cefrProgress.levelHistory;
 export default cefrProgressSlice.reducer;
