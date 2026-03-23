@@ -172,4 +172,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-23 after Phase 61 (CEFR Placement Test) complete — 30-item CAT bank, placementEngine (7 pure functions), PlacementTestOverlay (3-phase state machine), conservative assignment (one below raw, B1 cap), Start Lower escape, fan-out pre-unlock (grammar + skill trees), Settings retake with warning*
+*Last updated: 2026-03-23 after Phase 62 (Grammar B1-B2 + CEFR Gating) complete — 50 grammar lessons (A1-B2), all B1/B2 stubs expanded to 12+ exercises, 7 new B2 lessons, skill tree gating (B1=level 3, B2=level 5), "Requires Grammar Tree Level X" UI, new content toast*
