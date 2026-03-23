@@ -475,4 +475,11 @@ export const EVENTS = Object.freeze({
   POETRY_BATTLE_END: 'react:poetry:battle-end',
   /** React → React: player submitted answer for current blank */
   POETRY_ANSWER_SUBMITTED: 'react:poetry:answer-submitted',
+
+  // ────────────────────────────────────────────────
+  // CEFR — CEFR level milestone events (Phase 64)
+  // ────────────────────────────────────────────────
+
+  /** Redux middleware → React: player reached a new CEFR level, trigger Amira milestone dialogue */
+  CEFR_MILESTONE_REACHED: 'react:cefr:milestone-reached',
 });

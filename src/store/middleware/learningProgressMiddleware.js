@@ -31,6 +31,8 @@ import { SKILL_TREES } from '../../data/skillTrees.js';
 import { discoverRoot } from '../slices/magicSlice.js';
 import { setFlag } from '../slices/worldStateSlice.js';
 import { unlockNextLesson } from '../slices/grammarSlice.js';
+import { EventBus } from '../../utils/eventBus.js';
+import { EVENTS } from '../../utils/eventBusTypes.js';
 
 export const learningProgressMiddleware = (store) => (next) => (action) => {
   const result = next(action);
@@ -58,6 +60,21 @@ export const learningProgressMiddleware = (store) => (next) => (action) => {
         store.dispatch(addSkillXP({ treeId: 'culture', amount: 30 }));
       }
       break;
+    case 'cefrProgress/setCefrLevel': {
+      // Emit milestone event once per CEFR level — guarded by worldState flag
+      const level = action.payload?.level;
+      if (level) {
+        const flags = store.getState().worldState?.flags || {};
+        const milestoneKey = `cefr_milestone_${level.toLowerCase()}_shown`;
+        if (!flags[milestoneKey]) {
+          EventBus.emit(EVENTS.CEFR_MILESTONE_REACHED, {
+            npcId: 'guide-amira-cefr',
+            context: { cefr_level: level },
+          });
+        }
+      }
+      break;
+    }
     case 'skillTree/unlockNode': {
       const { treeId, nodeId } = action.payload;
       const tree = SKILL_TREES[treeId];

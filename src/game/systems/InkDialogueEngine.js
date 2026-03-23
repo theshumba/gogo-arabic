@@ -68,6 +68,29 @@ export class InkDialogueEngine {
   }
 
   /**
+   * Load a compiled ink story and optionally set context variables before the first Continue().
+   * Used for CEFR milestone dialogue (guide-amira-cefr) and any other scripted event where
+   * the caller needs to inject state variables beyond what syncStateIn provides.
+   *
+   * CEFR-03: guide-amira-cefr.ink uses VAR cefr_level to route to the correct milestone knot.
+   *
+   * @param {string} npcId - e.g. 'guide-amira-cefr'
+   * @param {Object} [context={}] - Key/value pairs injected into ink variablesState after load
+   */
+  async loadForNpcWithContext(npcId, context = {}) {
+    await this.loadForNpc(npcId);
+    if (this._inkLoaded && context && this._story) {
+      for (const [key, value] of Object.entries(context)) {
+        try {
+          this._story.variablesState[key] = value;
+        } catch {
+          // Variable not declared in this story — skip silently
+        }
+      }
+    }
+  }
+
+  /**
    * Load the path-choice ink story for Guide Amira.
    * Fires after the first word is learned (ONBOARDING_FIRST_WORD_LEARNED),
    * presenting Scholar / Traveler / Historian choices through in-world dialogue.
@@ -137,6 +160,13 @@ export class InkDialogueEngine {
     } catch {
       // Variable not declared in this story — skip
     }
+
+    // Sync current CEFR level (cefrProgress slice) — used by guide-amira-cefr.ink
+    try {
+      this._story.variablesState['cefr_level'] = state.cefrProgress?.currentLevel || '';
+    } catch {
+      // Variable not declared in this story — skip
+    }
   }
 
   /**
@@ -185,6 +215,11 @@ export class InkDialogueEngine {
     // Change NPC relationship by a delta amount
     this._story.BindExternalFunction('changeRelationship', (npcId, amount) => {
       store.dispatch(incrementNpcRelationship({ npcId, amount }));
+    });
+
+    // Write a world state flag to Redux (called from ink scripts: ~ setFlag("key"))
+    this._story.BindExternalFunction('setFlag', (key) => {
+      store.dispatch(setFlag({ key, value: true }));
     });
 
     // Read a world state flag from Redux (for ink conditionals)

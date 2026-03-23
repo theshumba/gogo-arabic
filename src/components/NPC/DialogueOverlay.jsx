@@ -8,6 +8,7 @@ import { selectInventoryItems, removeItem } from '../../store/slices/inventorySl
 import { GIFTS, GIFTS_BY_ID } from '../../data/gifts.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
+import { InkDialogueEngine } from '../../game/systems/InkDialogueEngine.js';
 import { useDialogue } from '../../hooks/useDialogue.js';
 import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { getEnhancedDialogueChoices } from '../../utils/culturalDialogueHelper.js';
@@ -106,6 +107,25 @@ export default function DialogueOverlay() {
     EventBus.on(EVENTS.INK_DIALOGUE_START, handleInkStart);
     return () => EventBus.off(EVENTS.INK_DIALOGUE_START, handleInkStart);
   }, []);
+
+  // ── CEFR milestone dialogue (CEFR-03) ──────────────────────────
+  // When learningProgressMiddleware emits CEFR_MILESTONE_REACHED, load the
+  // guide-amira-cefr ink story with cefr_level context and start ink dialogue.
+  useEffect(() => {
+    const handleCefrMilestone = async ({ npcId: milestoneNpcId, context }) => {
+      const engine = new InkDialogueEngine(null, null);
+      await engine.loadForNpcWithContext(milestoneNpcId, context);
+      if (!engine.isInkLoaded) return; // Compiled ink file missing — skip silently
+      EventBus.emit(EVENTS.INK_DIALOGUE_START, {
+        engine,
+        npcData: { id: milestoneNpcId, name: 'Guide Amira — أميرة' },
+      });
+    };
+
+    EventBus.on(EVENTS.CEFR_MILESTONE_REACHED, handleCefrMilestone);
+    return () => EventBus.off(EVENTS.CEFR_MILESTONE_REACHED, handleCefrMilestone);
+  }, []);
+  // ────────────────────────────────────────────────────────────────
 
   const _closeInkDialogue = (engine) => {
     // Flush ink variable mutations to Redux worldState (sets ONBOARDING_PATH_CHOSEN, etc.)
