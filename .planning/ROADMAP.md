@@ -13,7 +13,7 @@
 - ✅ **v9.0 Content Depth** — Phases 44-46 (shipped 2026-03-18)
 - ✅ **v10.0 Onboarding & First 5 Minutes** — Phases 47-49 (shipped 2026-03-19, Phases 48-49 absorbed into v11.0)
 - ✅ **v11.0 Deep Systems & Content Engine** — Phases 50-55 (shipped 2026-03-21) → [archive](milestones/v11.0-ROADMAP.md)
-- 🚧 **v12.0 Learning Systems** — Phases 56-64 (in progress) → [details](milestones/v12.0-ROADMAP.md)
+- ✅ **v12.0 Learning Systems** — Phases 56-64 (shipped 2026-03-23) → [archive](milestones/v12.0-ROADMAP.md)
 
 ## Phases
 
