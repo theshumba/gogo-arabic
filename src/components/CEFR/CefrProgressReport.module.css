@@ -103,6 +103,36 @@
   font-size: 0.95rem;
 }
 
+/* Share Progress button row */
+.shareRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #3a373b;
+}
+
+.shareBtn {
+  background: #e2b659;
+  color: #1a1a2e;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.15s;
+}
+
+.shareBtn:hover {
+  background: #d4a843;
+}
+
+.shareBtn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
 /* Responsive — smaller screens */
 @media (max-width: 480px) {
   .panel {

@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import {
@@ -23,6 +23,7 @@ import {
 import { selectSkillXP } from '../../store/slices/skillTreeSlice.js';
 import { CEFR_ORDER } from '../../data/quizTypes.js';
 import { SKILL_TREES, SKILL_TREE_ORDER } from '../../data/skillTrees.js';
+import SocialShareCard from './SocialShareCard.jsx';
 import styles from './CefrProgressReport.module.css';
 
 /**
@@ -38,6 +39,7 @@ import styles from './CefrProgressReport.module.css';
  */
 function CefrProgressReport({ onClose }) {
   const dispatch = useDispatch();
+  const [shareOpen, setShareOpen] = useState(false);
   const currentLevel = useSelector(selectCefrLevel);
   const levelHistory = useSelector(selectCefrHistory);
 
@@ -220,9 +222,24 @@ function CefrProgressReport({ onClose }) {
                 </ResponsiveContainer>
               </div>
             )}
+            {/* Share Progress button */}
+            <div className={styles.shareRow}>
+              <button
+                className={styles.shareBtn}
+                onClick={() => setShareOpen(true)}
+                type="button"
+                aria-label="Share your Arabic learning progress"
+              >
+                Share Progress
+              </button>
+            </div>
           </>
         )}
       </motion.div>
+
+      {shareOpen && (
+        <SocialShareCard onClose={() => setShareOpen(false)} />
+      )}
     </div>
   );
 }
