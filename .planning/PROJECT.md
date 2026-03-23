@@ -172,4 +172,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-23 after Phase 62 (Grammar B1-B2 + CEFR Gating) complete — 50 grammar lessons (A1-B2), all B1/B2 stubs expanded to 12+ exercises, 7 new B2 lessons, skill tree gating (B1=level 3, B2=level 5), "Requires Grammar Tree Level X" UI, new content toast*
+*Last updated: 2026-03-23 after Phase 64 (CEFR Reports + Social Sharing) complete — v12.0 MILESTONE COMPLETE. recharts RadarChart + LineChart, forward-only CEFR snapshots, Amira milestone ink dialogue, SVG social share card + Web Share API. All 9 phases (56-64) shipped.*
