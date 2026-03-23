@@ -1,18 +1,31 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { getDueCards } from '../../services/fsrs.js';
 import { audioManager } from '../../services/audio.js';
+import { selectHasCompletedPlacement, recordPlacementResult } from '../../store/slices/placementSlice.js';
+import { setCefrLevel } from '../../store/slices/cefrProgressSlice.js';
+import PlacementTestOverlay from '../Placement/PlacementTestOverlay.jsx';
 import styles from './MainMenu.module.css';
 
 export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings, onCharacterCreation, onGrammar }) {
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
   const player = useSelector((s) => s.player);
+  const hasCompletedPlacement = useSelector(selectHasCompletedPlacement);
+  const dispatch = useDispatch();
+  const [showPlacement, setShowPlacement] = useState(false);
 
   // Start menu BGM when component mounts
   useEffect(() => {
     audioManager.playBGM('menu');
     // Don't stop BGM on unmount -- let the next screen's BGM crossfade naturally
   }, []);
+
+  // Auto-show placement test for players who have a character but haven't been placed
+  useEffect(() => {
+    if (hasCharacter && !hasCompletedPlacement) {
+      setShowPlacement(true);
+    }
+  }, [hasCharacter, hasCompletedPlacement]); // eslint-disable-line react-hooks/exhaustive-deps
 
   let dueCount = 0;
   try {
@@ -22,6 +35,20 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
   }
 
   const hasCharacter = player.name !== '';
+
+  const handlePlacementComplete = (assignedLevel, rawScore, storedLevel) => {
+    dispatch(recordPlacementResult({ assignedLevel, rawScore }));
+    dispatch(setCefrLevel({ level: storedLevel, source: 'placement' }));
+    // Grammar + skill tree fan-out handled in Plan 61-03
+    setShowPlacement(false);
+  };
+
+  const handlePlacementSkip = () => {
+    // Skip = start at beginner (A1 default)
+    dispatch(recordPlacementResult({ assignedLevel: 'A1', rawScore: 0 }));
+    dispatch(setCefrLevel({ level: 'A1', source: 'placement_skip' }));
+    setShowPlacement(false);
+  };
 
   return (
     <div className={styles.container} role="main">
@@ -80,6 +107,13 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
           Settings
         </button>
       </nav>
+
+      {showPlacement && (
+        <PlacementTestOverlay
+          onComplete={handlePlacementComplete}
+          onSkip={handlePlacementSkip}
+        />
+      )}
     </div>
   );
 }
