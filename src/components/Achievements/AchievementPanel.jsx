@@ -12,6 +12,7 @@ import {
   ACHIEVEMENT_CATEGORIES,
   getAchievementsByCategory,
   RARITY_COLORS,
+  TIER_COLORS,
 } from '../../data/achievements.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './AchievementPanel.module.css';
@@ -39,8 +40,16 @@ const AchievementCard = memo(function AchievementCard({ achievement, isUnlocked,
           <div className={styles.cardName} style={{ color: rarityColor }}>
             {isUnlocked ? achievement.name : '???'}
           </div>
-          <div className={styles.cardRarity}>
-            {achievement.rarity}
+          <div className={styles.cardInfo}>
+            <span className={styles.cardRarity}>
+              {achievement.rarity}
+            </span>
+            <span
+              className={styles.tierBadge}
+              style={{ color: TIER_COLORS[achievement.tier] || '#c0c0c0' }}
+            >
+              {achievement.tier || 'Bronze'}
+            </span>
           </div>
         </div>
       </div>
@@ -104,6 +113,20 @@ function AchievementPanel({ onClose }) {
     { id: ACHIEVEMENT_CATEGORIES.REVIEW, label: 'Review' },
     { id: ACHIEVEMENT_CATEGORIES.ECONOMY, label: 'Economy' },
     { id: ACHIEVEMENT_CATEGORIES.SPECIAL, label: 'Special' },
+    { id: ACHIEVEMENT_CATEGORIES.GRAMMAR, label: 'Grammar' },
+    { id: ACHIEVEMENT_CATEGORIES.COMBAT, label: 'Combat' },
+    { id: ACHIEVEMENT_CATEGORIES.CRAFTING, label: 'Crafting' },
+    { id: ACHIEVEMENT_CATEGORIES.SOCIAL, label: 'Social' },
+    { id: ACHIEVEMENT_CATEGORIES.COLLECTING, label: 'Collecting' },
+    { id: ACHIEVEMENT_CATEGORIES.DAILY, label: 'Daily' },
+    { id: ACHIEVEMENT_CATEGORIES.LEARNING_PATH, label: 'Learning' },
+    { id: ACHIEVEMENT_CATEGORIES.ROOT_MAGIC, label: 'Root Magic' },
+    { id: ACHIEVEMENT_CATEGORIES.CULTURE, label: 'Culture' },
+    { id: ACHIEVEMENT_CATEGORIES.SKILL_TREE, label: 'Skill Tree' },
+    { id: ACHIEVEMENT_CATEGORIES.QUIZ, label: 'Quiz' },
+    { id: ACHIEVEMENT_CATEGORIES.CEFR, label: 'CEFR' },
+    { id: ACHIEVEMENT_CATEGORIES.HIDDEN, label: 'Hidden' },
+    { id: ACHIEVEMENT_CATEGORIES.MILESTONE, label: 'Milestone' },
   ], []);
 
   const filteredAchievements = useMemo(

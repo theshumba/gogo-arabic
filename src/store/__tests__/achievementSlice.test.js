@@ -55,6 +55,7 @@ describe('achievementSlice', () => {
           perfectQuizzes: 0,
           shopPurchases: 0,
           dirhamsSpent: 0,
+          quizTypeStats: {},
         },
       });
     });

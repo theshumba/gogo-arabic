@@ -167,7 +167,22 @@
   font-family: var(--font-pixel);
   font-size: 8px;
   text-transform: uppercase;
+}
+
+.cardInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
   margin-bottom: 6px;
+}
+
+.tierBadge {
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .cardFooter {
