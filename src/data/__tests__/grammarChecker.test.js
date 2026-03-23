@@ -2,11 +2,12 @@
  * grammarChecker.test.js
  *
  * Data integrity validation for grammar.js
- * Tests that all A1-A2 grammar lessons meet GRAM-02 requirements:
- * - 12+ exercises per lesson
- * - 4+ distinct exercise types per lesson
- * - 4+ quiz questions per lesson
- * - 20+ total A1-A2 lessons
+ * Tests that all A1-B2 grammar lessons meet GRAM-01/GRAM-02 requirements:
+ * - 50 total lessons
+ * - 12+ exercises per lesson (all CEFR levels)
+ * - 4+ distinct exercise types per lesson (all CEFR levels)
+ * - 4+ quiz questions per lesson (all CEFR levels)
+ * - 20+ A1-A2 lessons, 13+ B1 lessons, 17+ B2 lessons
  * - All exercise schemas are valid
  */
 
@@ -17,6 +18,8 @@ const a1a2Lessons = grammarLessons.filter(
   (l) => l.cefrLevel === 'A1' || l.cefrLevel === 'A2',
 );
 
+const allLessons = grammarLessons;
+
 describe('grammar.js data integrity', () => {
   // ─── Structural checks ────────────────────────────────────────────────────
 
@@ -25,8 +28,19 @@ describe('grammar.js data integrity', () => {
     expect(grammarLessons.length).toBeGreaterThan(0);
   });
 
+  it('contains exactly 50 lessons', () => {
+    expect(grammarLessons).toHaveLength(50);
+  });
+
   it('total A1-A2 lessons is at least 20', () => {
     expect(a1a2Lessons.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it('has at least 13 B1 and at least 17 B2 lessons', () => {
+    const b1 = grammarLessons.filter(l => l.cefrLevel === 'B1');
+    const b2 = grammarLessons.filter(l => l.cefrLevel === 'B2');
+    expect(b1.length).toBeGreaterThanOrEqual(13);
+    expect(b2.length).toBeGreaterThanOrEqual(17);
   });
 
   it('no duplicate lesson IDs', () => {
@@ -41,7 +55,7 @@ describe('grammar.js data integrity', () => {
     expect(unique.size).toBe(orders.length);
   });
 
-  // ─── Per-lesson exercise count ─────────────────────────────────────────────
+  // ─── Per-lesson exercise count (ALL CEFR levels) ───────────────────────────
 
   it('each A1-A2 lesson has at least 12 exercises', () => {
     for (const lesson of a1a2Lessons) {
@@ -62,10 +76,32 @@ describe('grammar.js data integrity', () => {
     }
   });
 
+  it('each B1-B2 lesson has at least 12 exercises', () => {
+    const b1b2 = grammarLessons.filter(l => l.cefrLevel === 'B1' || l.cefrLevel === 'B2');
+    for (const lesson of b1b2) {
+      expect(lesson.exercises.length, `${lesson.id} exercises count`).toBeGreaterThanOrEqual(12);
+    }
+  });
+
+  it('each B1-B2 lesson has at least 4 distinct exercise types', () => {
+    const b1b2 = grammarLessons.filter(l => l.cefrLevel === 'B1' || l.cefrLevel === 'B2');
+    for (const lesson of b1b2) {
+      const types = new Set(lesson.exercises.map((e) => e.type));
+      expect(types.size, `${lesson.id} distinct types`).toBeGreaterThanOrEqual(4);
+    }
+  });
+
+  it('each B1-B2 lesson has at least 4 quiz questions', () => {
+    const b1b2 = grammarLessons.filter(l => l.cefrLevel === 'B1' || l.cefrLevel === 'B2');
+    for (const lesson of b1b2) {
+      expect(lesson.quiz.length, `${lesson.id} quiz count`).toBeGreaterThanOrEqual(4);
+    }
+  });
+
   // ─── conjugation-drill schema ──────────────────────────────────────────────
 
   it('conjugation-drill exercises have required fields', () => {
-    const drills = grammarLessons
+    const drills = allLessons
       .flatMap((l) => l.exercises)
       .filter((e) => e.type === 'conjugation-drill');
     expect(drills.length).toBeGreaterThan(0);
@@ -80,7 +116,7 @@ describe('grammar.js data integrity', () => {
   // ─── sentence-transformation schema ───────────────────────────────────────
 
   it('sentence-transformation exercises have required fields', () => {
-    const items = grammarLessons
+    const items = allLessons
       .flatMap((l) => l.exercises)
       .filter((e) => e.type === 'sentence-transformation');
     expect(items.length).toBeGreaterThan(0);
@@ -93,7 +129,7 @@ describe('grammar.js data integrity', () => {
   // ─── word-order schema ────────────────────────────────────────────────────
 
   it('word-order exercises have required fields', () => {
-    const items = grammarLessons
+    const items = allLessons
       .flatMap((l) => l.exercises)
       .filter((e) => e.type === 'word-order');
     expect(items.length).toBeGreaterThan(0);
@@ -107,7 +143,7 @@ describe('grammar.js data integrity', () => {
   // ─── error-identification schema ──────────────────────────────────────────
 
   it('error-identification exercises have required fields', () => {
-    const items = grammarLessons
+    const items = allLessons
       .flatMap((l) => l.exercises)
       .filter((e) => e.type === 'error-identification');
     expect(items.length).toBeGreaterThan(0);
@@ -124,7 +160,7 @@ describe('grammar.js data integrity', () => {
   // ─── multiple-select schema ───────────────────────────────────────────────
 
   it('multiple-select exercises have required fields', () => {
-    const items = grammarLessons
+    const items = allLessons
       .flatMap((l) => l.exercises)
       .filter((e) => e.type === 'multiple-select');
     expect(items.length).toBeGreaterThan(0);
@@ -138,7 +174,7 @@ describe('grammar.js data integrity', () => {
   // ─── true-false schema ────────────────────────────────────────────────────
 
   it('true-false exercises have required fields', () => {
-    const items = grammarLessons
+    const items = allLessons
       .flatMap((l) => l.exercises)
       .filter((e) => e.type === 'true-false');
     expect(items.length).toBeGreaterThan(0);
@@ -151,7 +187,7 @@ describe('grammar.js data integrity', () => {
   // ─── cloze schema ─────────────────────────────────────────────────────────
 
   it('cloze exercises have required fields', () => {
-    const items = grammarLessons
+    const items = allLessons
       .flatMap((l) => l.exercises)
       .filter((e) => e.type === 'cloze');
     expect(items.length).toBeGreaterThan(0);
@@ -169,7 +205,7 @@ describe('grammar.js data integrity', () => {
   // ─── classify schema ──────────────────────────────────────────────────────
 
   it('classify exercises have required fields', () => {
-    const items = grammarLessons
+    const items = allLessons
       .flatMap((l) => l.exercises)
       .filter((e) => e.type === 'classify');
     expect(items.length).toBeGreaterThan(0);
@@ -187,7 +223,7 @@ describe('grammar.js data integrity', () => {
   // ─── build-sentence schema ────────────────────────────────────────────────
 
   it('build-sentence exercises have required fields', () => {
-    const items = grammarLessons
+    const items = allLessons
       .flatMap((l) => l.exercises)
       .filter((e) => e.type === 'build-sentence');
     expect(items.length).toBeGreaterThan(0);
@@ -218,6 +254,25 @@ describe('grammar.js data integrity', () => {
     ];
     for (const t of requiredTypes) {
       expect(allTypes.has(t), `exercise type '${t}' must appear`).toBe(true);
+    }
+  });
+
+  it('all 9 exercise types also appear in B1-B2 lessons', () => {
+    const b1b2 = grammarLessons.filter(l => l.cefrLevel === 'B1' || l.cefrLevel === 'B2');
+    const allTypes = new Set(b1b2.flatMap((l) => l.exercises.map((e) => e.type)));
+    const requiredTypes = [
+      'conjugation-drill',
+      'sentence-transformation',
+      'word-order',
+      'error-identification',
+      'multiple-select',
+      'true-false',
+      'cloze',
+      'classify',
+      'build-sentence',
+    ];
+    for (const t of requiredTypes) {
+      expect(allTypes.has(t), `exercise type '${t}' must appear in B1-B2`).toBe(true);
     }
   });
 });
