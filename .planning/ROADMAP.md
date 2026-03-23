@@ -306,10 +306,12 @@ Plans:
   2. Every achievement has a tier label (Bronze, Silver, Gold, or Legendary) and the Achievements panel displays the tier badge visually
   3. Achievement progress is visible before completion — a player can filter by category and see how close they are to each unearned achievement
 
+**Plans:** 3 plans in 2 waves
+
 Plans:
-- [ ] 63-01: achievements.js expanded with 206 new entries in existing 20-category schema + Bronze/Silver/Gold/Legendary tier field on all achievements (ACH-01, ACH-02)
-- [ ] 63-02: New isAchievementMet() requirement types: skill_tree_nodes, skill_tree_complete, quiz_type_streak, cefr_level_reached, placement_complete + quizTypeStats in achievementSlice.stats (ACH-01)
-- [ ] 63-03: AchievementsPanel.jsx — category filter tabs, tier badge display, progress bars on incomplete achievements, lazy-loaded (ACH-04)
+- [ ] 63-01-PLAN.md — TIER/TIER_COLORS/RARITY_TO_TIER constants + tier field on all 252 entries + ~12 new v12.0 achievements + 3 new categories (SKILL_TREE, QUIZ, CEFR) + data integrity tests (ACH-01, ACH-02)
+- [ ] 63-02-PLAN.md — 5 new isAchievementMet() cases + 5 ACTION_TO_ACHIEVEMENT_TYPES entries + quizTypeStats in achievementSlice + selectAchievementProgress expansion + tests (ACH-01)
+- [ ] 63-03-PLAN.md — AchievementPanel tier badge display + 24 category tabs + lazy-load in HUD.jsx (ACH-04)
 
 #### Phase 64: CEFR Reports + Social Sharing
 **Goal**: Players can see their CEFR level progress over time as a visual report and share their Arabic learning milestone as a social card — the report never shows CEFR going backwards and the share card works without external image dependencies
