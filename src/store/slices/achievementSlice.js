@@ -12,6 +12,7 @@ const initialState = {
     perfectQuizzes: 0,
     shopPurchases: 0,
     dirhamsSpent: 0,
+    quizTypeStats: {}, // { [quizType]: { perfectStreak, totalPerfect } }
   },
 };
 
@@ -63,6 +64,19 @@ const achievementSlice = createSlice({
       state.stats.shopPurchases += 1;
       state.stats.dirhamsSpent += amount;
     },
+
+    recordQuizTypeResult(state, action) {
+      const { quizType, perfect } = action.payload;
+      if (!state.stats.quizTypeStats[quizType]) {
+        state.stats.quizTypeStats[quizType] = { perfectStreak: 0, totalPerfect: 0 };
+      }
+      if (perfect) {
+        state.stats.quizTypeStats[quizType].perfectStreak += 1;
+        state.stats.quizTypeStats[quizType].totalPerfect += 1;
+      } else {
+        state.stats.quizTypeStats[quizType].perfectStreak = 0;
+      }
+    },
   },
 });
 
@@ -73,6 +87,7 @@ export const {
   incrementReviews,
   recordPerfectQuiz,
   recordShopPurchase,
+  recordQuizTypeResult,
 } = achievementSlice.actions;
 
 // ========== SELECTORS ==========
@@ -83,8 +98,17 @@ export const selectAchievementStats = (state) => state.achievements.stats;
 
 // Get achievement progress for display (e.g., "47/50 words")
 export const selectAchievementProgress = createSelector(
-  [(state) => state.player, (state) => state.vocabulary, (state) => state.quests, (state) => state.alphabet, (state) => state.achievements],
-  (player, vocabulary, quests, alphabet, achievements) => {
+  [
+    (state) => state.player,
+    (state) => state.vocabulary,
+    (state) => state.quests,
+    (state) => state.alphabet,
+    (state) => state.achievements,
+    (state) => state.skillTree,
+    (state) => state.cefrProgress,
+    (state) => state.placement,
+  ],
+  (player, vocabulary, quests, alphabet, achievements, skillTree, cefrProgress, placement) => {
     const progress = {};
 
     ACHIEVEMENTS.forEach((achievement) => {
@@ -157,6 +181,37 @@ export const selectAchievementProgress = createSelector(
           const totalAchievements = ACHIEVEMENTS.length - 1; // Exclude completionist itself
           current = Object.keys(achievements.unlockedAchievements).length;
           target = totalAchievements;
+          break;
+        }
+        case 'skill_tree_nodes': {
+          const allNodes = Object.values(skillTree?.unlockedNodes || {}).flat();
+          current = allNodes.length;
+          break;
+        }
+        case 'skill_tree_complete': {
+          current = skillTree?.unlockedNodes?.[req.treeId]?.length ?? 0;
+          target = 30; // 30 nodes per tree (Phase 57-01)
+          break;
+        }
+        case 'quiz_type_streak': {
+          const qStats = achievements.stats.quizTypeStats ?? {};
+          current = qStats[req.quizType]?.perfectStreak ?? 0;
+          break;
+        }
+        case 'cefr_level_reached': {
+          const LEVEL_ORDER = { A1: 1, A2: 2, B1: 3, B2: 4 };
+          current = LEVEL_ORDER[cefrProgress?.currentLevel] ?? 0;
+          target = LEVEL_ORDER[req.level] ?? 1;
+          break;
+        }
+        case 'placement_complete': {
+          current = placement?.hasCompleted ? 1 : 0;
+          target = 1;
+          break;
+        }
+        case 'grammar_lessons': {
+          // grammar slice not in selector inputs — use 0 for now; middleware handles the real check
+          current = 0;
           break;
         }
         default:
