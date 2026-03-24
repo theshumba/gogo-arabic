@@ -35,6 +35,7 @@ import weatherReducer from '../store/slices/weatherSlice.js';
 import worldStateReducer from '../store/slices/worldStateSlice.js';
 import cefrProgressReducer from '../store/slices/cefrProgressSlice.js';
 import analyticsReducer from '../store/slices/analyticsSlice.js';
+import placementReducer from '../store/slices/placementSlice.js';
 
 /**
  * Creates a test store with optional preloaded state.
@@ -75,6 +76,7 @@ export function createTestStore(preloadedState = {}) {
     worldState: worldStateReducer,
     cefrProgress: cefrProgressReducer,
     analytics: analyticsReducer,
+    placement: placementReducer,
   });
 
   return configureStore({

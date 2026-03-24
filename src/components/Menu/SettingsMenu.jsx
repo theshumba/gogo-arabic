@@ -17,6 +17,7 @@ import { bulkUnlockNodes } from '../../store/slices/skillTreeSlice.js';
 import { deriveGrammarUnlocks, deriveSkillTreeUnlocks } from '../../services/placementEngine.js';
 import PlacementTestOverlay from '../Placement/PlacementTestOverlay.jsx';
 import AccessibilityPanel from '../Settings/AccessibilityPanel.jsx';
+import ExportProgress from '../Settings/ExportProgress.jsx';
 import styles from './SettingsMenu.module.css';
 
 export default function SettingsMenu({ onBack }) {
@@ -24,6 +25,7 @@ export default function SettingsMenu({ onBack }) {
   const placement = useSelector(selectPlacement);
   const dispatch = useDispatch();
   const [showRetakeTest, setShowRetakeTest] = useState(false);
+  const [showExport, setShowExport] = useState(false);
 
   const handleRetake = () => {
     if (window.confirm('Retaking the placement test will reset your CEFR tracking history. Your grammar and skill tree progress will NOT be affected. Continue?')) {
@@ -197,11 +199,32 @@ export default function SettingsMenu({ onBack }) {
           )}
         </div>
 
+        {/* Data Export Section */}
+        <div className={styles.settingsSection}>
+          <div className={styles.sectionHeading}>Data</div>
+          <div className={styles.settingRow}>
+            <span className={styles.label}>Export My Progress</span>
+            <button
+              className={styles.retakeBtn}
+              onClick={() => setShowExport(true)}
+              aria-label="Export my learning progress as JSON or CSV"
+            >
+              Export
+            </button>
+          </div>
+        </div>
+
         {showRetakeTest && (
           <PlacementTestOverlay
             onComplete={handleRetakeComplete}
             onSkip={handleRetakeSkip}
           />
+        )}
+
+        {showExport && (
+          <div className={styles.overlayBackdrop}>
+            <ExportProgress onBack={() => setShowExport(false)} />
+          </div>
         )}
 
         <button className={styles.backBtn} onClick={onBack}>Back to Menu</button>
