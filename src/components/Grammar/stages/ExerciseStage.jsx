@@ -1,29 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { COLORS, pixelBtnDark, pixelBtnGold } from '../../../styles/theme.js';
 import styles from './GrammarStages.module.css';
-
-/* Choice buttons still use pixelBtnDark as a base since they mix dynamic
-   correct/wrong/selected colours that depend on runtime state.
-   Static overrides (margin, minWidth) live in the CSS module. */
-
-const choiceBase = {
-  ...pixelBtnDark,
-  margin: '10px',
-  minWidth: '200px',
-};
-
-const choiceCorrect = {
-  ...choiceBase,
-  background: COLORS.green,
-  color: COLORS.white,
-};
-
-const choiceWrong = {
-  ...choiceBase,
-  background: COLORS.red,
-  color: COLORS.white,
-};
 
 export default function ExerciseStage({
   lesson, currentIndex, score, answers, matchedPairs, selectedMatchIndex,
@@ -47,7 +24,7 @@ export default function ExerciseStage({
       transition={{ duration: 0.3 }}
     >
       <div className={styles.header}>
-        <button onClick={onQuit} style={pixelBtnDark}>Quit</button>
+        <button onClick={onQuit} className={styles.pixelBtnDark}>Quit</button>
         <div className={styles.title}>
           Exercise {currentIndex + 1} / {lesson.exercises.length}
         </div>
@@ -64,13 +41,13 @@ export default function ExerciseStage({
             </div>
             <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceBase;
+                let cls = styles.choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrect;
-                  else if (option === answers[currentIndex]) style = choiceWrong;
+                  if (option === exercise.answer) cls = styles.choiceCorrect;
+                  else if (option === answers[currentIndex]) cls = styles.choiceWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={style} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} className={cls} disabled={showFeedback}>
                     {idx + 1}. {option}
                   </button>
                 );
@@ -86,16 +63,16 @@ export default function ExerciseStage({
             </div>
             <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceBase;
+                let cls = styles.choiceArabic;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrect;
-                  else if (option === answers[currentIndex]) style = choiceWrong;
+                  if (option === exercise.answer) cls = styles.choiceArabicCorrect;
+                  else if (option === answers[currentIndex]) cls = styles.choiceArabicWrong;
                 }
                 return (
                   <button
                     key={idx}
                     onClick={() => onAnswerSelect(option)}
-                    style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }}
+                    className={cls}
                     disabled={showFeedback}
                   >
                     {idx + 1}. {formatArabic(option)}
@@ -116,17 +93,13 @@ export default function ExerciseStage({
                 <button
                   key={`${idx}-0`}
                   onClick={() => onMatchSelect(idx * 2, pair[0])}
-                  style={{
-                    ...choiceBase,
-                    fontFamily: "'Noto Kufi Arabic', sans-serif",
-                    fontSize: '16px',
-                    background: matchedPairs[idx * 2]
-                      ? COLORS.green
+                  className={
+                    matchedPairs[idx * 2]
+                      ? styles.matchBtnArabicMatched
                       : selectedMatchIndex === idx * 2
-                      ? COLORS.cyan
-                      : COLORS.gray,
-                    color: COLORS.white,
-                  }}
+                      ? styles.matchBtnArabicSelected
+                      : styles.matchBtnArabic
+                  }
                   disabled={matchedPairs[idx * 2]}
                 >
                   {formatArabic(pair[0])}
@@ -134,15 +107,13 @@ export default function ExerciseStage({
                 <button
                   key={`${idx}-1`}
                   onClick={() => onMatchSelect(idx * 2 + 1, pair[1])}
-                  style={{
-                    ...choiceBase,
-                    background: matchedPairs[idx * 2 + 1]
-                      ? COLORS.green
+                  className={
+                    matchedPairs[idx * 2 + 1]
+                      ? styles.matchBtnEnglishMatched
                       : selectedMatchIndex === idx * 2 + 1
-                      ? COLORS.cyan
-                      : COLORS.gray,
-                    color: COLORS.white,
-                  }}
+                      ? styles.matchBtnEnglishSelected
+                      : styles.matchBtnEnglish
+                  }
                   disabled={matchedPairs[idx * 2 + 1]}
                 >
                   {pair[1]}
@@ -168,13 +139,13 @@ export default function ExerciseStage({
             </div>
             <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceBase;
+                let cls = styles.choiceArabicLarge;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrect;
-                  else if (option === answers[currentIndex]) style = choiceWrong;
+                  if (option === exercise.answer) cls = styles.choiceArabicLargeCorrect;
+                  else if (option === answers[currentIndex]) cls = styles.choiceArabicLargeWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '18px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} className={cls} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
@@ -196,13 +167,13 @@ export default function ExerciseStage({
             )}
             <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceBase;
+                let cls = styles.choiceArabic;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrect;
-                  else if (option === answers[currentIndex]) style = choiceWrong;
+                  if (option === exercise.answer) cls = styles.choiceArabicCorrect;
+                  else if (option === answers[currentIndex]) cls = styles.choiceArabicWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} className={cls} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
@@ -219,13 +190,13 @@ export default function ExerciseStage({
             </div>
             <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceBase;
+                let cls = styles.choiceArabic;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrect;
-                  else if (option === answers[currentIndex]) style = choiceWrong;
+                  if (option === exercise.answer) cls = styles.choiceArabicCorrect;
+                  else if (option === answers[currentIndex]) cls = styles.choiceArabicWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} className={cls} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
@@ -245,13 +216,13 @@ export default function ExerciseStage({
             </div>
             <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceBase;
+                let cls = styles.choiceArabic;
                 if (showFeedback) {
-                  if (option === exercise.error) style = choiceCorrect;
-                  else if (option === answers[currentIndex]) style = choiceWrong;
+                  if (option === exercise.error) cls = styles.choiceArabicCorrect;
+                  else if (option === answers[currentIndex]) cls = styles.choiceArabicWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} className={cls} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
@@ -275,10 +246,10 @@ export default function ExerciseStage({
               {exercise.options.map((option, idx) => {
                 const isSelected = multiSelected.includes(option);
                 const isCorrect = exercise.correctAnswers.includes(option);
-                let style = isSelected ? { ...choiceBase, background: COLORS.cyan, color: COLORS.white } : choiceBase;
+                let cls = isSelected ? styles.choiceSelected : styles.choiceBase;
                 if (showFeedback) {
-                  if (isCorrect) style = choiceCorrect;
-                  else if (isSelected) style = choiceWrong;
+                  if (isCorrect) cls = styles.choiceCorrect;
+                  else if (isSelected) cls = styles.choiceWrong;
                 }
                 return (
                   <button
@@ -290,7 +261,7 @@ export default function ExerciseStage({
                         : [...multiSelected, option];
                       setMultiSelected(next);
                     }}
-                    style={style}
+                    className={cls}
                     disabled={showFeedback}
                   >
                     {idx + 1}. {formatArabic(option)}
@@ -306,7 +277,7 @@ export default function ExerciseStage({
                     onAnswerSelect(joined);
                     setMultiSelected([]);
                   }}
-                  style={{ ...pixelBtnGold, marginTop: '20px' }}
+                  className={styles.pixelBtnGoldMt}
                 >
                   Check ({multiSelected.length} selected)
                 </button>
@@ -318,18 +289,18 @@ export default function ExerciseStage({
         {/* ── true-false ────────────────────────────────────────────────── */}
         {exercise.type === 'true-false' && (
           <>
-            <div className={styles.arabicSentence} style={{ fontSize: '14px', marginBottom: '30px' }}>
+            <div className={styles.arabicSentenceSmall}>
               {formatArabic(exercise.statement)}
             </div>
             <div className={styles.choicesWrap}>
               {['true', 'false'].map((option, idx) => {
-                let style = choiceBase;
+                let cls = styles.choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrect;
-                  else if (option === answers[currentIndex]) style = choiceWrong;
+                  if (option === exercise.answer) cls = styles.choiceCorrect;
+                  else if (option === answers[currentIndex]) cls = styles.choiceWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={style} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} className={cls} disabled={showFeedback}>
                     {idx + 1}. {option === 'true' ? 'True ✓' : 'False ✗'}
                   </button>
                 );
@@ -355,10 +326,10 @@ export default function ExerciseStage({
                 <div className={styles.choicesWrap}>
                   {exercise.blanks[clozeIndex].options.map((option, idx) => {
                     const isLastBlank = clozeIndex === exercise.blanks.length - 1;
-                    let style = choiceBase;
+                    let cls = styles.choiceArabicLarge;
                     if (showFeedback && isLastBlank) {
-                      if (option === exercise.blanks[clozeIndex].answer) style = choiceCorrect;
-                      else if (option === answers[currentIndex]) style = choiceWrong;
+                      if (option === exercise.blanks[clozeIndex].answer) cls = styles.choiceArabicLargeCorrect;
+                      else if (option === answers[currentIndex]) cls = styles.choiceArabicLargeWrong;
                     }
                     return (
                       <button
@@ -373,7 +344,7 @@ export default function ExerciseStage({
                             setClozeIndex(0);
                           }
                         }}
-                        style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '18px' }}
+                        className={cls}
                         disabled={showFeedback}
                       >
                         {idx + 1}. {formatArabic(option)}
@@ -402,10 +373,10 @@ export default function ExerciseStage({
               {exercise.categories.map((cat, idx) => {
                 const correctCat = exercise.items[classifyIndex].category;
                 const isLastItem = classifyIndex === exercise.items.length - 1;
-                let style = choiceBase;
+                let cls = styles.choiceBase;
                 if (showFeedback && isLastItem) {
-                  if (cat === correctCat) style = choiceCorrect;
-                  else if (cat === answers[currentIndex]) style = choiceWrong;
+                  if (cat === correctCat) cls = styles.choiceCorrect;
+                  else if (cat === answers[currentIndex]) cls = styles.choiceWrong;
                 }
                 return (
                   <button
@@ -420,7 +391,7 @@ export default function ExerciseStage({
                         setClassifyIndex(0);
                       }
                     }}
-                    style={style}
+                    className={cls}
                     disabled={showFeedback}
                   >
                     {idx + 1}. {cat}
@@ -439,13 +410,13 @@ export default function ExerciseStage({
             </div>
             <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceBase;
+                let cls = styles.choiceArabic;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrect;
-                  else if (option === answers[currentIndex]) style = choiceWrong;
+                  if (option === exercise.answer) cls = styles.choiceArabicCorrect;
+                  else if (option === answers[currentIndex]) cls = styles.choiceArabicWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} className={cls} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
@@ -457,7 +428,7 @@ export default function ExerciseStage({
         {showFeedback && (
           <>
             <div className={feedbackClass}>{feedbackMessage}</div>
-            <button onClick={onNext} style={{ ...pixelBtnGold, marginTop: '20px' }}>Next</button>
+            <button onClick={onNext} className={styles.pixelBtnGoldMt}>Next</button>
           </>
         )}
       </div>

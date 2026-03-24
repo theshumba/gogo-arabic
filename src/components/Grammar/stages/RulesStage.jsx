@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { pixelBtnDark, pixelBtnGold } from '../../../styles/theme.js';
 import styles from './GrammarStages.module.css';
 
 export default function RulesStage({ lesson, onBack, onNext }) {
@@ -11,7 +10,7 @@ export default function RulesStage({ lesson, onBack, onNext }) {
       transition={{ duration: 0.3 }}
     >
       <div className={styles.header}>
-        <button onClick={onBack} style={pixelBtnDark}>Back</button>
+        <button onClick={onBack} className={styles.pixelBtnDark}>Back</button>
         <div className={styles.title}>Key Rules</div>
         <div className={styles.spacer} />
       </div>
@@ -30,7 +29,7 @@ export default function RulesStage({ lesson, onBack, onNext }) {
           </div>
         ))}
 
-        <button onClick={onNext} style={{ ...pixelBtnGold, marginTop: '20px' }}>Start Exercises</button>
+        <button onClick={onNext} className={styles.pixelBtnGoldMt}>Start Exercises</button>
       </div>
     </motion.div>
   );

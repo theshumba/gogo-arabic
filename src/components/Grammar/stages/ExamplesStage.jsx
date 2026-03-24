@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { pixelBtnDark, pixelBtnGold } from '../../../styles/theme.js';
 import styles from './GrammarStages.module.css';
 
 export default function ExamplesStage({ lesson, formatArabic, onBack, onNext }) {
@@ -11,7 +10,7 @@ export default function ExamplesStage({ lesson, formatArabic, onBack, onNext }) 
       transition={{ duration: 0.3 }}
     >
       <div className={styles.header}>
-        <button onClick={onBack} style={pixelBtnDark}>Back</button>
+        <button onClick={onBack} className={styles.pixelBtnDark}>Back</button>
         <div className={styles.title}>Examples</div>
         <div className={styles.spacer} />
       </div>
@@ -36,7 +35,7 @@ export default function ExamplesStage({ lesson, formatArabic, onBack, onNext }) 
           </div>
         ))}
 
-        <button onClick={onNext} style={{ ...pixelBtnGold, marginTop: '20px' }}>Continue to Rules</button>
+        <button onClick={onNext} className={styles.pixelBtnGoldMt}>Continue to Rules</button>
       </div>
     </motion.div>
   );

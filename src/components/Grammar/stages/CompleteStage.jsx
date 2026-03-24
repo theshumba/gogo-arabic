@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { pixelBtnGold } from '../../../styles/theme.js';
 import styles from './GrammarStages.module.css';
 
 const XP_REWARDS = {
@@ -43,7 +42,7 @@ export default function CompleteStage({ lesson, exerciseScore, quizScore, onBack
           +{isPerfect ? XP_REWARDS.PERFECT_LESSON : XP_REWARDS.LESSON_COMPLETE} XP
         </div>
 
-        <button onClick={onBack} style={{ ...pixelBtnGold, fontSize: '14px' }}>
+        <button onClick={onBack} className={styles.pixelBtnGoldSmall}>
           Back to Grammar
         </button>
       </div>

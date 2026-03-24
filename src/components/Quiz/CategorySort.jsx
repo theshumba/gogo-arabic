@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
-import { COLORS } from '../../styles/theme.js';
 import styles from './CategorySort.module.css';
 
 /**
@@ -75,11 +74,7 @@ export default function CategorySort({ word, options, onAnswer, feedback }) {
         {[catA, catB].map((cat) => (
           <div
             key={cat}
-            className={styles.column}
-            style={{
-              borderColor: pendingWord ? COLORS.cyan : COLORS.dark,
-              cursor: pendingWord ? 'pointer' : 'default',
-            }}
+            className={`${styles.column} ${pendingWord ? styles.columnActive : ''}`}
             onClick={() => pendingWord && handleBucketClick(cat)}
             role="group"
             aria-label={`Category: ${cat} — ${buckets[cat].length} words placed`}
@@ -113,11 +108,7 @@ export default function CategorySort({ word, options, onAnswer, feedback }) {
           {remaining.map((item) => (
             <button
               key={item.idx}
-              className={styles.bankTile}
-              style={{
-                borderColor: pendingWord?.idx === item.idx ? COLORS.cyan : COLORS.dark,
-                outline: pendingWord?.idx === item.idx ? `2px solid ${COLORS.cyan}` : 'none',
-              }}
+              className={`${styles.bankTile} ${pendingWord?.idx === item.idx ? styles.bankTileSelected : ''}`}
               onClick={() => handleBankClick(item)}
               disabled={!!feedback}
               aria-label={`Word: ${item.label}${pendingWord?.idx === item.idx ? ' (selected — choose a category)' : ' — click to select'}`}

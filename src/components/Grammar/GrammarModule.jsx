@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { COLORS, pixelBtnDark } from '../../styles/theme.js';
 import { grammarCategories } from '../../data/grammar.js';
 import { selectLessonsByCategory, selectGrammarProgress } from '../../store/slices/grammarSlice.js';
 import GrammarLesson from './GrammarLesson.jsx';
@@ -41,7 +40,7 @@ export default function GrammarModule({ onBack }) {
   return (
     <motion.div className={styles.container} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
       <div className={styles.header}>
-        <button onClick={onBack} style={pixelBtnDark}>Back</button>
+        <button onClick={onBack} className={styles.pixelBtnDark}>Back</button>
         <div className={styles.title}>Grammar Lessons</div>
         <div className={styles.spacer} />
       </div>
@@ -56,9 +55,9 @@ export default function GrammarModule({ onBack }) {
           <div className={styles.progressText}>Overall Progress: {overallProgress}%</div>
         </div>
         <div className={styles.categoryTabs}>
-          <button onClick={() => setSelectedCategory('all')} style={{ ...pixelBtnDark, background: selectedCategory === 'all' ? COLORS.xpGold : COLORS.gray, color: selectedCategory === 'all' ? COLORS.brown : COLORS.white, padding: '12px 20px', fontSize: '11px' }}>All Lessons</button>
+          <button onClick={() => setSelectedCategory('all')} className={selectedCategory === 'all' ? styles.categoryTabActive : styles.categoryTab}>All Lessons</button>
           {grammarCategories.map((category) => (
-            <button key={category.id} onClick={() => setSelectedCategory(category.id)} style={{ ...pixelBtnDark, background: selectedCategory === category.id ? COLORS.xpGold : COLORS.gray, color: selectedCategory === category.id ? COLORS.brown : COLORS.white, padding: '12px 20px', fontSize: '11px' }}>{category.name}</button>
+            <button key={category.id} onClick={() => setSelectedCategory(category.id)} className={selectedCategory === category.id ? styles.categoryTabActive : styles.categoryTab}>{category.name}</button>
           ))}
         </div>
         {filteredLessons.length === 0 ? (
@@ -77,16 +76,30 @@ export default function GrammarModule({ onBack }) {
 
 function LessonCard({ lesson, onClick }) {
   const badgeText = lesson.isCompleted ? 'Completed' : lesson.isCefrLocked ? `Requires Grammar Tree Level ${lesson.cefrGateLevel}` : lesson.isUnlocked ? 'New' : 'Locked';
-  const badgeColor = lesson.isCompleted ? COLORS.green : lesson.isCefrLocked ? '#8B4513' : lesson.isUnlocked ? COLORS.gray : '#666';
+
+  const cardClass = lesson.isCompleted
+    ? styles.lessonCardCompleted
+    : lesson.isCefrLocked
+    ? styles.lessonCardCefrLocked
+    : lesson.isUnlocked
+    ? styles.lessonCardUnlocked
+    : styles.lessonCardLocked;
+
+  const badgeClass = lesson.isCompleted
+    ? styles.statusBadgeCompleted
+    : lesson.isCefrLocked
+    ? styles.statusBadgeCefrLocked
+    : lesson.isUnlocked
+    ? styles.statusBadgeNew
+    : styles.statusBadgeLocked;
 
   return (
     <motion.div
-      className={styles.lessonCard}
-      style={{ background: lesson.isUnlocked ? COLORS.white : '#e8e8e8', border: `4px solid ${lesson.isCompleted ? COLORS.green : lesson.isUnlocked ? COLORS.brown : lesson.isCefrLocked ? '#8B4513' : '#999'}`, cursor: lesson.isUnlocked ? 'pointer' : 'not-allowed', opacity: lesson.isUnlocked ? 1 : 0.5 }}
+      className={cardClass}
       onClick={lesson.isUnlocked ? onClick : undefined}
       whileTap={lesson.isUnlocked ? { scale: 0.98 } : undefined}
     >
-      <div className={styles.statusBadge} style={{ background: badgeColor }}>{badgeText}</div>
+      <div className={badgeClass}>{badgeText}</div>
       {lesson.isCefrLocked && <div className={styles.cefrNote}>Your level: {lesson.currentTreeLevel}</div>}
       <div className={styles.cardTitle}>{lesson.title}</div>
       <div className={styles.cardTitleArabic}>{lesson.titleArabic}</div>

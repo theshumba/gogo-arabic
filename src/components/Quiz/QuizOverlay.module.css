@@ -237,6 +237,10 @@
   }
 }
 
+.headerSpacer {
+  width: 50px;
+}
+
 .communityStat {
   color: #888;
   font-size: 0.75rem;

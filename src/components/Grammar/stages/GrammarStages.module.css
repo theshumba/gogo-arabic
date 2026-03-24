@@ -290,3 +290,170 @@
 .notFoundBack {
   margin-left: 20px;
 }
+
+/* ── Pixel button styles (migrated from inline pixelBtnDark/pixelBtnGold) ── */
+.pixelBtnDark {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  image-rendering: pixelated;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  background: var(--color-gray);
+  color: var(--color-white);
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.3),
+    inset 4px 4px 0px 0px rgba(255, 255, 255, 0.1),
+    0 4px 0 0 #1a191b;
+  transition: transform 0.05s;
+}
+
+.pixelBtnGold {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  image-rendering: pixelated;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  background: var(--color-xp-gold);
+  color: var(--color-brown);
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.2),
+    inset 4px 4px 0px 0px rgba(255, 255, 255, 0.3),
+    0 4px 0 0 #a0842a;
+  transition: transform 0.05s;
+}
+
+.pixelBtnGoldMt {
+  composes: pixelBtnGold;
+  margin-top: 20px;
+}
+
+.pixelBtnGoldSmall {
+  composes: pixelBtnGold;
+  font-size: 14px;
+}
+
+/* ── Choice button styles (migrated from inline choiceBase/Correct/Wrong) ── */
+.choiceBase {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  image-rendering: pixelated;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  background: var(--color-gray);
+  color: var(--color-white);
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.3),
+    inset 4px 4px 0px 0px rgba(255, 255, 255, 0.1),
+    0 4px 0 0 #1a191b;
+  transition: transform 0.05s;
+  margin: 10px;
+  min-width: 200px;
+}
+
+.choiceCorrect {
+  composes: choiceBase;
+  background: var(--color-green);
+  color: var(--color-white);
+}
+
+.choiceWrong {
+  composes: choiceBase;
+  background: var(--color-red);
+  color: var(--color-white);
+}
+
+.choiceSelected {
+  composes: choiceBase;
+  background: var(--color-cyan);
+  color: var(--color-white);
+}
+
+.choiceArabic {
+  composes: choiceBase;
+  font-family: var(--font-arabic-display);
+  font-size: 16px;
+}
+
+.choiceArabicCorrect {
+  composes: choiceArabic;
+  background: var(--color-green);
+  color: var(--color-white);
+}
+
+.choiceArabicWrong {
+  composes: choiceArabic;
+  background: var(--color-red);
+  color: var(--color-white);
+}
+
+.choiceArabicLarge {
+  composes: choiceBase;
+  font-family: var(--font-arabic-display);
+  font-size: 18px;
+}
+
+.choiceArabicLargeCorrect {
+  composes: choiceArabicLarge;
+  background: var(--color-green);
+  color: var(--color-white);
+}
+
+.choiceArabicLargeWrong {
+  composes: choiceArabicLarge;
+  background: var(--color-red);
+  color: var(--color-white);
+}
+
+/* ── Match exercise dynamic styles ── */
+.matchBtnArabic {
+  composes: choiceBase;
+  font-family: var(--font-arabic-display);
+  font-size: 16px;
+}
+
+.matchBtnArabicMatched {
+  composes: matchBtnArabic;
+  background: var(--color-green);
+  color: var(--color-white);
+}
+
+.matchBtnArabicSelected {
+  composes: matchBtnArabic;
+  background: var(--color-cyan);
+  color: var(--color-white);
+}
+
+.matchBtnEnglish {
+  composes: choiceBase;
+}
+
+.matchBtnEnglishMatched {
+  composes: matchBtnEnglish;
+  background: var(--color-green);
+  color: var(--color-white);
+}
+
+.matchBtnEnglishSelected {
+  composes: matchBtnEnglish;
+  background: var(--color-cyan);
+  color: var(--color-white);
+}
+
+/* ── True-false arabic sentence variant ── */
+.arabicSentenceSmall {
+  composes: arabicSentence;
+  font-size: 14px;
+  margin-bottom: 30px;
+}

@@ -4,7 +4,6 @@ import { completeLesson, recordExerciseProgress, recordQuizProgress } from '../.
 import { addXP } from '../../store/slices/playerSlice.js';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { grammarLessons } from '../../data/grammar.js';
-import { pixelBtnDark } from '../../styles/theme.js';
 import ExplanationStage from './stages/ExplanationStage.jsx';
 import ExamplesStage from './stages/ExamplesStage.jsx';
 import RulesStage from './stages/RulesStage.jsx';
@@ -57,7 +56,7 @@ export default function GrammarLesson({ lessonId, onBack }) {
     return (
       <div className={styles.notFound}>
         <div>Lesson not found</div>
-        <button onClick={onBack} style={pixelBtnDark} className={styles.notFoundBack}>Back</button>
+        <button onClick={onBack} className={`${styles.pixelBtnDark} ${styles.notFoundBack}`}>Back</button>
       </div>
     );
   }

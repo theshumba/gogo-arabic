@@ -248,7 +248,7 @@ export default function QuizOverlay() {
           <div className={styles.header}>
             <button className={styles.quitBtn} onClick={handleQuit} aria-label="Quit quiz">Quit</button>
             <span aria-label={`Quiz type: ${QUIZ_TYPE_LABELS['match']}`}>{QUIZ_TYPE_LABELS['match']}</span>
-            <div style={{ width: '50px' }} />
+            <div className={styles.headerSpacer} />
           </div>
           <MatchPairs
             words={matchWords}

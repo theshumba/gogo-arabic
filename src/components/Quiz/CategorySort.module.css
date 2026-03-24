@@ -115,3 +115,13 @@
 .submitBtn:hover {
   background: var(--color-xp-gold);
 }
+
+.columnActive {
+  border-color: var(--color-cyan);
+  cursor: pointer;
+}
+
+.bankTileSelected {
+  border-color: var(--color-cyan);
+  outline: 2px solid var(--color-cyan);
+}

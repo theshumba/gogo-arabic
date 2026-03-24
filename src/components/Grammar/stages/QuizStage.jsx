@@ -1,24 +1,5 @@
 import { motion } from 'framer-motion';
-import { COLORS, pixelBtnDark, pixelBtnGold } from '../../../styles/theme.js';
 import styles from './GrammarStages.module.css';
-
-const choiceBase = {
-  ...pixelBtnDark,
-  margin: '10px',
-  minWidth: '200px',
-};
-
-const choiceCorrect = {
-  ...choiceBase,
-  background: COLORS.green,
-  color: COLORS.white,
-};
-
-const choiceWrong = {
-  ...choiceBase,
-  background: COLORS.red,
-  color: COLORS.white,
-};
 
 export default function QuizStage({
   lesson, currentIndex, score, answers,
@@ -37,7 +18,7 @@ export default function QuizStage({
       transition={{ duration: 0.3 }}
     >
       <div className={styles.header}>
-        <button onClick={onQuit} style={pixelBtnDark}>Quit</button>
+        <button onClick={onQuit} className={styles.pixelBtnDark}>Quit</button>
         <div className={styles.title}>
           Quiz {currentIndex + 1} / {lesson.quiz.length}
         </div>
@@ -53,13 +34,13 @@ export default function QuizStage({
 
         <div className={styles.choicesWrap}>
           {quizItem.options.map((option, idx) => {
-            let style = choiceBase;
+            let cls = styles.choiceBase;
             if (showFeedback) {
-              if (idx === quizItem.correct) style = choiceCorrect;
-              else if (option === answers[currentIndex]) style = choiceWrong;
+              if (idx === quizItem.correct) cls = styles.choiceCorrect;
+              else if (option === answers[currentIndex]) cls = styles.choiceWrong;
             }
             return (
-              <button key={idx} onClick={() => onAnswerSelect(option)} style={style} disabled={showFeedback}>
+              <button key={idx} onClick={() => onAnswerSelect(option)} className={cls} disabled={showFeedback}>
                 {idx + 1}. {option}
               </button>
             );
@@ -74,7 +55,7 @@ export default function QuizStage({
                 <div className={styles.quizExplanation}>{quizItem.explanation}</div>
               )}
             </div>
-            <button onClick={onNext} style={{ ...pixelBtnGold, marginTop: '20px' }}>
+            <button onClick={onNext} className={styles.pixelBtnGoldMt}>
               {currentIndex < lesson.quiz.length - 1 ? 'Next' : 'Finish'}
             </button>
           </>
