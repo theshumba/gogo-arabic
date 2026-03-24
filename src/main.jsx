@@ -10,6 +10,7 @@ import { updateStreak } from './store/slices/playerSlice.js';
 import { checkDailyReset } from './store/slices/dailyGoalsSlice.js';
 import { initializeSkillTree } from './data/initializeSkillTree.js';
 import { registerSW } from './services/swRegistration.js';
+import { initOfflineSync } from './store/middleware/offlineFsrsMiddleware.js';
 import questsData from './data/quests.json';
 import ErrorBoundaryClass from './components/ErrorBoundary/RouteErrorBoundary.jsx';
 import LoadingScreen from './components/UI/LoadingScreen.jsx';
@@ -61,3 +62,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(<AppRoot />);
 registerSW(() => {
   if (setUpdateAvailable) setUpdateAvailable(true);
 });
+
+// Initialize offline FSRS sync — replays queued reviews when back online
+initOfflineSync(store);
