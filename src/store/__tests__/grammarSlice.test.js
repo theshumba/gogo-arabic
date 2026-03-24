@@ -651,6 +651,93 @@ describe('grammarSlice', () => {
       expect(state.unlockedLessons).toContain('lesson3');
     });
   });
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Phase 73: Grammar FSRS card tests
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  describe('addGrammarFsrsCard', () => {
+    it('should add a new FSRS card for a lesson', () => {
+      const card = { due: '2026-03-24T00:00:00Z', stability: 0, difficulty: 0, reps: 0, lapses: 0, state: 'New' };
+      const state = grammarReducer(initialState, addGrammarFsrsCard({ lessonId: 'lesson1', card }));
+      expect(state.fsrsCards['lesson1']).toBeDefined();
+      expect(state.fsrsCards['lesson1'].card).toEqual(card);
+      expect(state.fsrsCards['lesson1'].log).toBeNull();
+    });
+
+    it('should not overwrite an existing card', () => {
+      const card1 = { due: '2026-03-24T00:00:00Z', reps: 0, state: 'New' };
+      const card2 = { due: '2026-03-25T00:00:00Z', reps: 1, state: 'Learning' };
+      let state = grammarReducer(initialState, addGrammarFsrsCard({ lessonId: 'lesson1', card: card1 }));
+      state = grammarReducer(state, addGrammarFsrsCard({ lessonId: 'lesson1', card: card2 }));
+      expect(state.fsrsCards['lesson1'].card.reps).toBe(0); // original card preserved
+    });
+  });
+
+  describe('updateGrammarFsrsCard', () => {
+    it('should update an existing FSRS card', () => {
+      const card1 = { due: '2026-03-24T00:00:00Z', reps: 0, state: 'New' };
+      const card2 = { due: '2026-03-25T00:00:00Z', reps: 1, state: 'Learning' };
+      const log = { rating: 3 };
+      let state = grammarReducer(initialState, addGrammarFsrsCard({ lessonId: 'lesson1', card: card1 }));
+      state = grammarReducer(state, updateGrammarFsrsCard({ lessonId: 'lesson1', card: card2, log }));
+      expect(state.fsrsCards['lesson1'].card.reps).toBe(1);
+      expect(state.fsrsCards['lesson1'].log.rating).toBe(3);
+    });
+
+    it('should create card entry if it does not exist', () => {
+      const card = { due: '2026-03-24T00:00:00Z', reps: 2, state: 'Review' };
+      const state = grammarReducer(initialState, updateGrammarFsrsCard({ lessonId: 'lesson1', card, log: null }));
+      expect(state.fsrsCards['lesson1'].card.reps).toBe(2);
+    });
+  });
+
+  describe('resetGrammarProgress clears FSRS cards', () => {
+    it('should clear fsrsCards on reset', () => {
+      const card = { due: '2026-03-24T00:00:00Z', reps: 0, state: 'New' };
+      let state = grammarReducer(initialState, addGrammarFsrsCard({ lessonId: 'lesson1', card }));
+      state = grammarReducer(state, resetGrammarProgress());
+      expect(state.fsrsCards).toEqual({});
+    });
+  });
+
+  describe('grammar FSRS selectors', () => {
+    it('selectGrammarFsrsCards returns fsrsCards', () => {
+      const mockState = { grammar: { ...initialState, fsrsCards: { lesson1: { card: { due: '2026-03-24' }, log: null } } } };
+      expect(selectGrammarFsrsCards(mockState)).toEqual({ lesson1: { card: { due: '2026-03-24' }, log: null } });
+    });
+
+    it('selectGrammarDueLessons returns lessons with past due dates', () => {
+      const pastDue = new Date(Date.now() - 86400000).toISOString(); // yesterday
+      const futureDue = new Date(Date.now() + 86400000).toISOString(); // tomorrow
+      const mockState = {
+        grammar: {
+          ...initialState,
+          fsrsCards: {
+            lesson1: { card: { due: pastDue }, log: null },
+            lesson2: { card: { due: futureDue }, log: null },
+          },
+        },
+      };
+      const due = selectGrammarDueLessons(mockState);
+      expect(due).toContain('lesson1');
+      expect(due).not.toContain('lesson2');
+    });
+
+    it('selectGrammarDueCount returns correct count', () => {
+      const pastDue = new Date(Date.now() - 86400000).toISOString();
+      const mockState = {
+        grammar: {
+          ...initialState,
+          fsrsCards: {
+            lesson1: { card: { due: pastDue }, log: null },
+            lesson2: { card: { due: pastDue }, log: null },
+          },
+        },
+      };
+      expect(selectGrammarDueCount(mockState)).toBe(2);
+    });
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
