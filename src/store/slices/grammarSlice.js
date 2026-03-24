@@ -16,6 +16,8 @@ const initialState = {
   unlockedLessons: ['al-definite'], // First lesson always unlocked
   lessonScores: {}, // { lessonId: { exerciseScore, quizScore, attempts, lastAttempt } }
   currentLessonId: null,
+  // Phase 73: FSRS scheduling for grammar review
+  fsrsCards: {}, // { lessonId: { card: FSRS card object, log: last review log } }
 };
 
 const grammarSlice = createSlice({
@@ -101,6 +103,7 @@ const grammarSlice = createSlice({
       state.unlockedLessons = ['al-definite'];
       state.lessonScores = {};
       state.currentLessonId = null;
+      state.fsrsCards = {};
     },
 
     unlockNextLesson(state, action) {
@@ -127,6 +130,26 @@ const grammarSlice = createSlice({
         }
       });
     },
+
+    // Phase 73: Grammar FSRS actions
+    addGrammarFsrsCard(state, action) {
+      // payload: { lessonId, card }
+      const { lessonId, card } = action.payload;
+      if (!state.fsrsCards[lessonId]) {
+        state.fsrsCards[lessonId] = { card, log: null };
+      }
+    },
+
+    updateGrammarFsrsCard(state, action) {
+      // payload: { lessonId, card, log }
+      const { lessonId, card, log } = action.payload;
+      if (state.fsrsCards[lessonId]) {
+        state.fsrsCards[lessonId].card = card;
+        state.fsrsCards[lessonId].log = log;
+      } else {
+        state.fsrsCards[lessonId] = { card, log };
+      }
+    },
   },
 });
 
@@ -139,6 +162,8 @@ export const {
   resetGrammarProgress,
   unlockNextLesson,
   bulkUnlockLessons,
+  addGrammarFsrsCard,
+  updateGrammarFsrsCard,
 } = grammarSlice.actions;
 
 // ========== SELECTORS ==========
@@ -208,6 +233,27 @@ export const selectLessonsByCategory = createSelector(
 
     return lessonsByCategory;
   }
+);
+
+// Phase 73: FSRS selectors for grammar
+export const selectGrammarFsrsCards = (state) => state.grammar.fsrsCards;
+
+export const selectGrammarDueLessons = createSelector(
+  [selectGrammarFsrsCards],
+  (fsrsCards) => {
+    const now = new Date();
+    return Object.entries(fsrsCards)
+      .filter(([, data]) => {
+        if (!data.card || !data.card.due) return true;
+        return new Date(data.card.due) <= now;
+      })
+      .map(([lessonId]) => lessonId);
+  }
+);
+
+export const selectGrammarDueCount = createSelector(
+  [selectGrammarDueLessons],
+  (dueLessons) => dueLessons.length
 );
 
 export default grammarSlice.reducer;
