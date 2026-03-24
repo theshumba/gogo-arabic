@@ -15,10 +15,11 @@ import styles from './HUD.module.css';
 import questsData from '../../data/quests.json';
 const AchievementPanel = lazy(() => import('../Achievements/AchievementPanel.jsx'));
 const CefrProgressReport = lazy(() => import('../CEFR/CefrProgressReport.jsx'));
-import DailyGoalsPanel from '../Goals/DailyGoalsPanel.jsx';
+const DailyGoalsPanel = lazy(() => import('../Goals/DailyGoalsPanel.jsx'));
 import QuestTracker from './QuestTracker.jsx';
 import NextObjectiveIndicator from './NextObjectiveIndicator.jsx';
 import ClockHUD from './ClockHUD.jsx';
+import OfflineIndicator from './OfflineIndicator.jsx';
 
 function HUD({ onMenu }) {
   const dispatch = useDispatch();
@@ -204,6 +205,9 @@ function HUD({ onMenu }) {
         {/* Right: Buttons */}
         <div className={styles.right}>
 
+          {/* Offline indicator */}
+          <OfflineIndicator />
+
           {/* Clock HUD */}
           <ClockHUD />
 
@@ -348,7 +352,9 @@ function HUD({ onMenu }) {
 
       {/* Daily Goals Panel Overlay */}
       {dailyGoalsPanelOpen && (
-        <DailyGoalsPanel onClose={closeDailyGoals} />
+        <Suspense fallback={null}>
+          <DailyGoalsPanel onClose={closeDailyGoals} />
+        </Suspense>
       )}
 
       {/* CEFR Progress Report Overlay */}
