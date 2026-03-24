@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v13.0
 milestone_name: Systems Polish & Immersion
-status: ready_to_plan
-stopped_at: v13.0 roadmap created — Phase 65 ready to plan
-last_updated: "2026-03-23"
+status: in_progress
+stopped_at: Phases 65, 66, 68 complete — Phase 67 next
+last_updated: "2026-03-24"
 progress:
   total_phases: 7
-  completed_phases: 0
+  completed_phases: 3
   total_plans: 16
-  completed_plans: 0
+  completed_plans: 8
 ---
 
 # Project State
@@ -19,16 +19,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Players naturally learn Arabic through guided exploration and interaction in an engaging RPG world — never wondering "what should I do next?" or "how do I practice?"
-**Current focus:** Phase 65 — bundle-optimization
+**Current focus:** Phase 67 — systems-wiring
 
 ## Current Position
 
-Phase: 65 of 71 (Bundle Optimization)
+Phase: 67 of 71 (Systems Wiring)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-03-23 — v13.0 roadmap created, 18 requirements mapped across 7 phases
+Last activity: 2026-03-24 — Phases 65 (bundle optimization), 66 (CSS Modules), 68 (quiz final 3 types) complete
 
-Progress: [░░░░░░░░░] 0% (v13.0)
+Progress: [████░░░░░] 43% (v13.0) — 3/7 phases complete
 
 ### Shipped Milestones
 
@@ -47,7 +47,7 @@ Progress: [░░░░░░░░░] 0% (v13.0)
 | v11.0 Deep Systems | 50-55 | 25 | 2026-03-21 |
 | v12.0 Learning Systems | 56-64 | 22 | 2026-03-23 |
 
-**Cumulative:** 64 phases, 185+ plans, 12 milestones
+**Cumulative:** 67 phases, 193+ plans, 12 milestones
 
 ## Accumulated Context
 
@@ -58,7 +58,7 @@ Progress: [░░░░░░░░░] 0% (v13.0)
 - pickDistractors easy tier guarantees count-1 cross-category words via explicit partition (not pool shuffle) (59-01)
 - getRetrievability(card, now) exported from fsrs.js — returns 0-1 float via scheduler.get_retrievability(card, now, false) (59-01)
 - 17 adaptive tests in src/hooks/__tests__/useQuiz.adaptive.test.js — all passing (59-01)
-- QUIZ_TYPE_REGISTRY in src/data/quizTypes.js — 18 types (12 active + 6 Phase 60 stubs at minLevel 999) (59-02)
+- QUIZ_TYPE_REGISTRY in src/data/quizTypes.js — 18 types all active (Phase 68 activated final 3: DialectIdentify, RootExpand, CulturalContext at minLevel:8 cefrMin:B2) (59-02, 68)
 - selectQuizTypeForPlayer pure function: 70% grammar bias when grammar cluster < 70% after 3+ questions (59-02)
 - CLUSTER_MAP removed from useQuiz.js — replaced by QUIZ_TYPE_REGISTRY[type]?.cluster lookup (59-02)
 - lockedType in quizState: null = adaptive routing, non-null = caller-locked type preserved through session (59-02)
@@ -73,7 +73,8 @@ Progress: [░░░░░░░░░] 0% (v13.0)
 - ClozePassage.jsx shipped (60-02): passage-with-blank fill, "Read the passage and fill in the blank:", fallback when no exampleSentence, minLevel:4 cefrMin:A2
 - SentenceBuilder.jsx latent bug fixed (60-02): tile options are objects {label,value,correct,tile} — extract .label for display, .value for answer
 - QUIZ_TYPE_REGISTRY Phase 60 complete: GrammarFill (minLevel:4 cefrMin:A2), ClozePassage (minLevel:4 cefrMin:A2), WordOrder (minLevel:5 cefrMin:B1) all active
-- QUIZ_TYPE_REGISTRY deferred: DialectIdentify/RootExpand/CulturalContext at minLevel:999 cefrMin:B2
+- [Phase 68]: DialectIdentify (28 items, 4 dialects), RootExpand (20 roots, multi-select), CulturalContext (26 items) — all at minLevel:8 cefrMin:B2
+- [Phase 66]: 42 new CSS module files + 3 extended — all inline styles migrated except dynamic values (computed widths, data-driven colors, framer-motion, RTL)
 - 22 quiz type tests in quizTypes.test.js (was 16 — 6 new CEFR routing tests added); 1278 total tests passing (60-02)
 - PLACEMENT_ITEMS: 30 calibrated CAT items spanning Pre-A1..B1 across 6 domains (61-01)
 - PLACEMENT_LEVELS = ['Pre-A1', 'A1', 'A2', 'B1'] — B1 is the placement cap (61-01)
@@ -199,7 +200,7 @@ Progress: [░░░░░░░░░] 0% (v13.0)
 
 ## Session Continuity
 
-Last session: 2026-03-23
-Stopped at: Roadmap created for v13.0 — 7 phases (65-71), 18 requirements mapped, 16 plans estimated
-Resume file: None — ready to plan Phase 65
-Next plan: `/gsd:plan-phase 65`
+Last session: 2026-03-24
+Stopped at: Phases 65, 66, 68 complete — Phase 67 (Systems Wiring) ready to plan
+Resume file: None — ready to plan Phase 67
+Next plan: `/gsd:plan-phase 67`

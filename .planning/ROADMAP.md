@@ -360,9 +360,9 @@ Plans:
   2. `grep -r "style={{" src/components/ | wc -l` returns fewer than 20 matches (dynamic-only remaining)
 
 Plans:
-- [ ] 66-01: Migrate Grammar (8 files, 139 occurrences) + Quiz (16 files, 122 occurrences) to CSS Modules (PERF-04)
-- [ ] 66-02: Migrate Battle (6 files, 84) + Magic (3 files, 46) + Companions (5 files, 78) to CSS Modules (PERF-04)
-- [ ] 66-03: Migrate remaining 30 components (Reading, Alphabet, MiniGames, Review, ErrorBoundary, etc.) to CSS Modules (PERF-04)
+- [x] 66-01: Migrate Grammar (8 files) + Quiz (14 files) to CSS Modules — 16 new .module.css files (PERF-04) — 2026-03-24
+- [x] 66-02: Migrate Battle (6 files) + Magic (3 files) + Companions (5 files) to CSS Modules — 14 new .module.css files (PERF-04) — 2026-03-24
+- [x] 66-03: Migrate remaining 12 components (Reading, Alphabet, MiniGames, Review, ErrorBoundary, Faction, etc.) to CSS Modules — 12 new + 3 extended .module.css files (PERF-04) — 2026-03-24
 
 #### Phase 67: Systems Wiring
 **Goal**: Connect disconnected systems — quiz completions feed daily goals, zone entries trigger micro-reviews, tashkeel fades with mastery, and NPC quest markers appear in-world
@@ -390,8 +390,8 @@ Plans:
   4. All 18 QUIZ_TYPE_REGISTRY entries have real minLevel values (no more minLevel:999 stubs)
 
 Plans:
-- [ ] 68-01: DialectIdentify.jsx + 20 dialect items + useQuiz/QuizOverlay wiring (QUIZ-04)
-- [ ] 68-02: RootExpand.jsx sourced from rootMagic data + CulturalContext.jsx + registry activation (QUIZ-05, QUIZ-06)
+- [x] 68-01: DialectIdentify.jsx + 28 dialect items (Egyptian/Levantine/Gulf/MSA) + useQuiz/QuizOverlay wiring (QUIZ-04) — 2026-03-24
+- [x] 68-02: RootExpand.jsx (20 roots, multi-select) + CulturalContext.jsx (26 items) + all 3 registry entries activated at minLevel:8 (QUIZ-05, QUIZ-06) — 2026-03-24
 
 #### Phase 69: Immersion — Dialogue & Welcome Back
 **Goal**: NPCs quiz players mid-conversation and returning players get a personalized welcome back screen
@@ -504,15 +504,15 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 71
 | 63. Achievement Expansion | v12.0 | 3/3 | Complete    | 2026-03-23 |
 | 64. CEFR Reports + Social Sharing | v12.0 | 3/3 | Complete    | 2026-03-23 |
 | 65. Bundle Optimization | v13.0 | 3/3 | Complete | 65-01, 65-02, 65-03 |
-| 66. CSS Modules Migration | v13.0 | 0/3 | Planned | 66-01, 66-02, 66-03 |
+| 66. CSS Modules Migration | v13.0 | 3/3 | Complete | 2026-03-24 |
 | 67. Systems Wiring | v13.0 | 0/3 | Not started | - |
-| 68. Quiz Expansion — Final 3 Types | v13.0 | 0/2 | Not started | - |
+| 68. Quiz Expansion — Final 3 Types | v13.0 | 2/2 | Complete | 2026-03-24 |
 | 69. Immersion — Dialogue & Welcome Back | v13.0 | 0/2 | Not started | - |
 | 70. Immersion — Environmental Arabic & Quiz Stats | v13.0 | 0/2 | Not started | - |
 | 71. Integration Testing | v13.0 | 0/2 | Not started | - |
 
-**Cumulative:** 64 phases shipped, 185+ plans complete, 12 milestones shipped
+**Cumulative:** 66 phases shipped, 190+ plans complete, 12 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-23 — v12.0 complete, v13.0 roadmap created (7 phases, 18 requirements, 16 plans estimated)*
+*Last updated: 2026-03-24 — v13.0 phases 65, 66, 68 complete; phases 67, 69-71 remaining*
