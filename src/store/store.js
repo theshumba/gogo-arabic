@@ -35,6 +35,7 @@ import codexReducer from './slices/codexSlice.js';
 import endgameReducer from './slices/endgameSlice.js';
 import placementReducer from './slices/placementSlice.js';
 import cefrProgressReducer from './slices/cefrProgressSlice.js';
+import analyticsReducer from './slices/analyticsSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -185,6 +186,7 @@ const persistConfig = {
     'endgame',
     'placement',
     'cefrProgress',
+    'analytics',
   ],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
@@ -223,6 +225,7 @@ const rootReducer = combineReducers({
   endgame: endgameReducer,
   placement: placementReducer,
   cefrProgress: cefrProgressReducer,
+  analytics: analyticsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
