@@ -12,11 +12,18 @@ const reduceMotion =
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const TIER_STYLES = {
-  normal: { color: '#FFFFFF', glow: 'none', sizeClass: 'comboNumberNormal' },
-  critical: { color: '#FFD700', glow: '0 0 10px rgba(255, 215, 0, 0.5)', sizeClass: 'comboNumberCritical' },
-  epic: { color: '#FF6600', glow: '0 0 15px rgba(255, 102, 0, 0.6)', sizeClass: 'comboNumberEpic' },
-  legendary: { color: '#FF0000', glow: '0 0 20px rgba(255, 0, 0, 0.7)', sizeClass: 'comboNumberLegendary' },
+const TIER_CLASSES = {
+  normal: 'tierNormal',
+  critical: 'tierCritical',
+  epic: 'tierEpic',
+  legendary: 'tierLegendary',
+};
+
+const TIER_SIZE_CLASSES = {
+  normal: 'comboNumberNormal',
+  critical: 'comboNumberCritical',
+  epic: 'comboNumberEpic',
+  legendary: 'comboNumberLegendary',
 };
 
 function getTier(streak) {
@@ -30,7 +37,8 @@ export default function ComboCounter({ streak }) {
   if (streak < 2) return null;
 
   const tier = getTier(streak);
-  const tierStyle = TIER_STYLES[tier];
+  const tierClass = TIER_CLASSES[tier];
+  const sizeClass = TIER_SIZE_CLASSES[tier];
 
   return (
     <AnimatePresence mode="wait">
@@ -44,27 +52,21 @@ export default function ComboCounter({ streak }) {
             ? { duration: 0.1 }
             : { type: 'spring', stiffness: 300, damping: 15 }
         }
-        className={styles.comboWrapper}
+        className={`${styles.comboWrapper} ${styles[tierClass]}`}
       >
         <div
-          className={`${styles.comboNumber} ${styles[tierStyle.sizeClass]}`}
-          style={{
-            color: tierStyle.color,
-            textShadow: tierStyle.glow,
-          }}
+          className={`${styles.comboNumber} ${styles[sizeClass]}`}
         >
           {streak}
         </div>
         <div
           className={styles.comboArabicLabel}
-          style={{ color: tierStyle.color }}
           lang="ar"
         >
           سلسلة
         </div>
         <div
           className={styles.comboEnglishLabel}
-          style={{ color: tierStyle.color }}
         >
           COMBO
         </div>

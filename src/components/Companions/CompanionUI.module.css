@@ -117,12 +117,14 @@
   overflow-y: auto;
   border-width: 3px;
   border-style: solid;
+  border-color: var(--companion-color);
 }
 
 .detailName {
   font-size: 14px;
   font-family: var(--font-pixel);
   margin-bottom: 8px;
+  color: var(--companion-color);
 }
 
 .detailTitleText {
@@ -188,6 +190,7 @@
   font-size: 10px;
   font-family: var(--font-pixel);
   cursor: pointer;
+  background: var(--companion-accent);
 }
 
 .giftBtn:hover {
@@ -231,12 +234,14 @@
   overflow-y: auto;
   border-width: 3px;
   border-style: solid;
+  border-color: var(--companion-color);
 }
 
 .giftTitle {
   font-size: 12px;
   font-family: var(--font-pixel);
   margin-bottom: 16px;
+  color: var(--companion-color);
 }
 
 .giftGrid {

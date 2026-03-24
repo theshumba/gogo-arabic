@@ -299,18 +299,18 @@ export default function DialogueOverlay() {
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         />
         <motion.div
+          className={styles.inkMotionWrap}
           variants={dialogueBoxVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          style={{ width: '100%' }}
         >
           <div className={styles.dialogueBox}>
             <div className={styles.content}>
               {inkNpc && (
-                <div className={styles.npcHeader} style={{ marginBottom: 8 }}>
-                  <span style={{ color: '#D4A843', fontWeight: 'bold', fontSize: 14 }}>
+                <div className={`${styles.npcHeader} ${styles.inkNpcHeader}`}>
+                  <span className={styles.inkNpcName}>
                     {inkNpc.name || 'Guide Amira'}
                   </span>
                 </div>
@@ -318,7 +318,7 @@ export default function DialogueOverlay() {
               <p
                 dir="rtl"
                 lang="ar"
-                style={{ fontSize: 18, lineHeight: 1.8, color: '#fff', marginBottom: 12, minHeight: 48 }}
+                className={styles.inkLine}
               >
                 {currentInkLine}
               </p>
@@ -343,26 +343,14 @@ export default function DialogueOverlay() {
               )}
 
               {showingChoices ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+                <div className={styles.inkChoicesWrap}>
                   {inkDialogueState.choices.map((choice, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleInkChoice(idx)}
                       dir="rtl"
                       lang="ar"
-                      style={{
-                        background: 'rgba(212, 168, 67, 0.12)',
-                        border: '1px solid #D4A843',
-                        borderRadius: 6,
-                        color: '#D4A843',
-                        padding: '10px 16px',
-                        fontSize: 15,
-                        cursor: 'pointer',
-                        textAlign: 'right',
-                        transition: 'background 0.15s',
-                      }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(212, 168, 67, 0.25)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(212, 168, 67, 0.12)'; }}
+                      className={styles.inkChoiceBtn}
                     >
                       {choice.text}
                     </button>
@@ -370,14 +358,14 @@ export default function DialogueOverlay() {
                 </div>
               ) : (
                 !atLastLine && (
-                  <div style={{ color: '#888', fontSize: 12, textAlign: 'center', marginTop: 8 }}>
+                  <div className={styles.inkContinueHint}>
                     Press Space or click to continue
                   </div>
                 )
               )}
 
               {atLastLine && inkDialogueState.choices.length === 0 && (
-                <div style={{ color: '#888', fontSize: 12, textAlign: 'center', marginTop: 8 }}>
+                <div className={styles.inkContinueHint}>
                   Press Space or click to continue
                 </div>
               )}
@@ -432,12 +420,12 @@ export default function DialogueOverlay() {
           transition={transition}
         />
         <motion.div
+          className={styles.inkMotionWrap}
           variants={dialogueBoxVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           transition={transition}
-          style={{ width: '100%' }}
         >
           <ConversationHistory
             npc={npc}
@@ -473,12 +461,12 @@ export default function DialogueOverlay() {
           transition={transition}
         />
         <motion.div
+          className={styles.inkMotionWrap}
           variants={dialogueBoxVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           transition={transition}
-          style={{ width: '100%' }}
         >
           <TopicSelectionMenu
             topics={availableTopics}
@@ -529,12 +517,12 @@ export default function DialogueOverlay() {
           transition={transition}
         />
         <motion.div
+          className={styles.inkMotionWrap}
           variants={dialogueBoxVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           transition={transition}
-          style={{ width: '100%' }}
         >
           <CulturalDialogueMenu
             npc={npc}
@@ -582,15 +570,15 @@ export default function DialogueOverlay() {
           transition={transition}
         />
         <motion.div
+          className={styles.inkMotionWrap}
           variants={dialogueBoxVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           transition={transition}
-          style={{ width: '100%' }}
         >
           {isHubAndSpoke && (
-            <div className={styles.dialogueBox} style={{ minHeight: 'auto', paddingBottom: 0, borderTop: 'none' }}>
+            <div className={`${styles.dialogueBox} ${styles.hubChoiceDialogueBox}`}>
               <div className={styles.content}>
                 <div className={styles.npcHeader}>
                   {npc.personality?.mood && (
@@ -635,12 +623,12 @@ export default function DialogueOverlay() {
         transition={transition}
       />
       <motion.div
+        className={styles.inkMotionWrap}
         variants={dialogueBoxVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
         transition={transition}
-        style={{ width: '100%' }}
       >
         <DialogueBox
           npc={npc}
@@ -654,18 +642,10 @@ export default function DialogueOverlay() {
 
         {/* Gift button — always available during dialogue */}
         {!showGiftPanel && (
-          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '4px 8px' }}>
+          <div className={styles.giftBtnWrap}>
             <button
               onClick={(e) => { e.stopPropagation(); setShowGiftPanel(true); }}
-              style={{
-                background: 'transparent',
-                border: '1px solid #D4A843',
-                color: '#D4A843',
-                borderRadius: 4,
-                padding: '4px 12px',
-                fontSize: 12,
-                cursor: 'pointer',
-              }}
+              className={styles.giftBtn}
               aria-label="Give a gift to this NPC"
             >
               Gift
@@ -676,22 +656,14 @@ export default function DialogueOverlay() {
         {/* Gift panel */}
         {showGiftPanel && (
           <div
-            style={{
-              background: '#1a1a2e',
-              border: '1px solid #D4A843',
-              borderRadius: 8,
-              padding: 12,
-              margin: '4px 0',
-              maxHeight: 200,
-              overflowY: 'auto',
-            }}
+            className={styles.giftPanel}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ color: '#D4A843', fontWeight: 'bold', marginBottom: 8, fontSize: 14 }}>
+            <div className={styles.giftPanelTitle}>
               Choose a Gift
             </div>
             {giftableItems.length === 0 && (
-              <div style={{ color: '#888', fontSize: 12 }}>No giftable items in your inventory.</div>
+              <div className={styles.giftPanelEmpty}>No giftable items in your inventory.</div>
             )}
             {giftableItems.map((item) => {
               const gift = GIFTS_BY_ID[item.itemId];
@@ -699,38 +671,19 @@ export default function DialogueOverlay() {
                 <button
                   key={item.itemId}
                   onClick={(e) => { e.stopPropagation(); handleGiveGift(item); }}
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    textAlign: 'left',
-                    background: 'transparent',
-                    border: '1px solid #333',
-                    borderRadius: 4,
-                    color: '#fff',
-                    padding: '6px 8px',
-                    marginBottom: 4,
-                    cursor: 'pointer',
-                    fontSize: 13,
-                  }}
+                  className={styles.giftItemBtn}
                 >
                   {gift?.name || item.name || item.itemId}
                   {gift?.nameArabic && (
-                    <span style={{ color: '#888', marginLeft: 8, fontSize: 11 }}>{gift.nameArabic}</span>
+                    <span className={styles.giftItemArabic}>{gift.nameArabic}</span>
                   )}
-                  <span style={{ color: '#555', marginLeft: 8, fontSize: 11 }}>x{item.quantity}</span>
+                  <span className={styles.giftItemQty}>x{item.quantity}</span>
                 </button>
               );
             })}
             <button
               onClick={(e) => { e.stopPropagation(); setShowGiftPanel(false); }}
-              style={{
-                color: '#888',
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                marginTop: 4,
-                fontSize: 12,
-              }}
+              className={styles.giftCancelBtn}
             >
               Cancel
             </button>

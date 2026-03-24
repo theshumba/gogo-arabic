@@ -219,7 +219,7 @@ export default function WordDuel({ bossId, onClose }) {
           {battle.quizType === 'en-to-ar' && (
             <>
               <p className={styles.prompt}>Select the Arabic translation:</p>
-              <div className={styles.prompt} style={{ fontSize: '16px', margin: '8px 0' }}>
+              <div className={`${styles.prompt} ${styles.promptEnglishWord}`}>
                 {battle.currentWord.english}
               </div>
             </>
@@ -233,13 +233,7 @@ export default function WordDuel({ bossId, onClose }) {
                   const audio = new Audio(`/audio/${battle.currentWord.audioRef || 'placeholder'}.mp3`);
                   audio.play().catch(() => console.warn('Audio not available'));
                 }}
-                style={{
-                  fontSize: '48px',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  margin: '8px auto',
-                }}
+                className={styles.audioBtn}
                 title="Click to play audio"
               >
                 🔊
@@ -250,7 +244,7 @@ export default function WordDuel({ bossId, onClose }) {
           {battle.quizType === 'en-to-type-ar' && (
             <>
               <p className={styles.prompt}>Type the Arabic translation:</p>
-              <div className={styles.prompt} style={{ fontSize: '16px', margin: '8px 0' }}>
+              <div className={`${styles.prompt} ${styles.promptEnglishWord}`}>
                 {battle.currentWord.english}
               </div>
               <input

@@ -26,6 +26,11 @@
 
 .spellSlotWrapper {
   transition: transform 0.3s ease;
+  transform: scale(1);
+}
+
+.spellSlotFlash {
+  transform: scale(1.1);
 }
 
 /* SpellSlot styles */
@@ -57,11 +62,15 @@
   opacity: 0.5;
   cursor: not-allowed;
   background-color: #333;
+  border-color: var(--element-color);
+  color: #666;
 }
 
 .spellSlotActive {
   cursor: pointer;
   background-color: #1a1a1a;
+  border-color: var(--element-color);
+  color: var(--element-color);
 }
 
 .spellSlotActive:hover {
@@ -105,6 +114,7 @@
 
 .mpBarFill {
   height: 100%;
+  background: linear-gradient(90deg, var(--mp-color), var(--mp-color, #32CD32));
 }
 
 .mpBarText {
@@ -132,6 +142,8 @@
   white-space: nowrap;
   border-width: 2px;
   border-style: solid;
+  border-color: var(--element-color);
+  color: var(--element-color);
 }
 
 .affinityArabic {

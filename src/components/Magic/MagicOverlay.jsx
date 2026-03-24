@@ -42,8 +42,7 @@ function SpellSlot({ spell, slot, playerMP, onClick, onRightClick }) {
         onRightClick();
       }}
       style={{
-        borderColor: elementColor,
-        color: disabled ? '#666' : elementColor,
+        '--element-color': elementColor,
       }}
       disabled={disabled}
     >
@@ -72,7 +71,7 @@ function MPBar({ current, max }) {
         transition={{ duration: 0.3, ease: 'easeOut' }}
         className={styles.mpBarFill}
         style={{
-          background: `linear-gradient(90deg, ${color}, ${color}dd)`,
+          '--mp-color': color,
         }}
       />
       <div className={styles.mpBarText}>
@@ -91,7 +90,7 @@ function AffinityIndicator({ affinity }) {
   return (
     <div
       className={styles.affinityIndicator}
-      style={{ borderColor: color, color }}
+      style={{ '--element-color': color }}
       title={`Primary: ${elementInfo.label} (2x power)`}
     >
       <span className={styles.affinityArabic}>{elementInfo.arabic}</span>
@@ -159,10 +158,7 @@ export default function MagicOverlay() {
             {equippedSpells.map((spell, index) => (
               <div
                 key={index}
-                className={styles.spellSlotWrapper}
-                style={{
-                  transform: flashSlot === index ? 'scale(1.1)' : 'scale(1)',
-                }}
+                className={`${styles.spellSlotWrapper} ${flashSlot === index ? styles.spellSlotFlash : ''}`}
               >
                 <SpellSlot
                   spell={spell}

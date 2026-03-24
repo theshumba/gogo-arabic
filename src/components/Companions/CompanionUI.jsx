@@ -231,12 +231,11 @@ export default function CompanionUI({ onClose }) {
                   exit={{ scale: 0.9 }}
                   onClick={(e) => e.stopPropagation()}
                   className={styles.detailPanel}
-                  style={{ borderColor: selectedCompanionDef.colorPalette.primary }}
+                  style={{ '--companion-color': selectedCompanionDef.colorPalette.primary }}
                 >
                   {/* Companion name and title */}
                   <h2
                     className={styles.detailName}
-                    style={{ color: selectedCompanionDef.colorPalette.primary }}
                   >
                     {selectedCompanionDef.name} - {selectedCompanionDef.nameArabic}
                   </h2>
@@ -293,7 +292,7 @@ export default function CompanionUI({ onClose }) {
                       <button
                         className={styles.giftBtn}
                         onClick={() => setShowGiftMenu(true)}
-                        style={{ background: selectedCompanionDef.colorPalette.accent }}
+                        style={{ '--companion-accent': selectedCompanionDef.colorPalette.accent }}
                       >
                         🎁 Give Gift
                       </button>
@@ -327,11 +326,10 @@ export default function CompanionUI({ onClose }) {
                   exit={{ scale: 0.9 }}
                   onClick={(e) => e.stopPropagation()}
                   className={styles.giftPanel}
-                  style={{ borderColor: selectedCompanionDef.colorPalette.primary }}
+                  style={{ '--companion-color': selectedCompanionDef.colorPalette.primary }}
                 >
                   <h3
                     className={styles.giftTitle}
-                    style={{ color: selectedCompanionDef.colorPalette.primary }}
                   >
                     Select Gift for {selectedCompanionDef.name}
                   </h3>

@@ -101,6 +101,14 @@
   color: var(--color-dark);
 }
 
+.statValueVictory {
+  color: var(--color-green);
+}
+
+.statValueDefeat {
+  color: var(--color-red);
+}
+
 .rewards {
   margin-top: 16px;
   padding: 16px;

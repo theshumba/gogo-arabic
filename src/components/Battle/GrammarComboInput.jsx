@@ -441,7 +441,7 @@ export default function GrammarComboInput({ comboType, template, onSubmit, onCan
             className={styles.timerFill}
             style={{
               width: `${timerPercent}%`,
-              background: timerColor,
+              '--timer-color': timerColor,
             }}
           />
         </div>
@@ -462,7 +462,7 @@ export default function GrammarComboInput({ comboType, template, onSubmit, onCan
         )}
 
         {/* Cancel button */}
-        <div className={styles.buttonRow} style={{ marginTop: '8px' }}>
+        <div className={`${styles.buttonRow} ${styles.buttonRowCancel}`}>
           <button className={styles.cancelBtn} onClick={onCancel}>
             ESC
           </button>

@@ -70,13 +70,14 @@ export default function PartyPanel() {
               <div
                 className={styles.companionAvatar}
                 style={{
-                  background: `linear-gradient(135deg, ${companionDef.colorPalette.primary}66, ${companionDef.colorPalette.secondary}66)`,
+                  '--companion-primary': companionDef.colorPalette.primary,
+                  '--companion-secondary': companionDef.colorPalette.secondary,
                 }}
               >
                 {slot === 'battle' ? '⚔️' : '🧭'}
               </div>
               <div className={styles.companionInfo}>
-                <div className={styles.companionNameText} style={{ color: companionDef.colorPalette.primary }}>
+                <div className={styles.companionNameText}>
                   {companionDef.name}
                 </div>
                 <div className={styles.companionTitleText}>
@@ -163,9 +164,9 @@ export default function PartyPanel() {
                       whileHover={{ scale: 1.05 }}
                       onClick={() => handleSelectCompanion(companion.id)}
                       className={styles.selectionBtn}
-                      style={{ borderColor: companionDef.colorPalette.primary }}
+                      style={{ '--companion-color': companionDef.colorPalette.primary }}
                     >
-                      <div className={styles.selectionBtnName} style={{ color: companionDef.colorPalette.primary }}>
+                      <div className={styles.selectionBtnName}>
                         {companionDef.name}
                       </div>
                       <div className={styles.selectionBtnTitle}>

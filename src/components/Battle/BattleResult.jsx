@@ -89,8 +89,7 @@ export default function BattleResult({ bossId, victory, onClose, onReview }) {
           <div className={styles.statRow}>
             <span className={styles.statLabel}>Result:</span>
             <span
-              className={styles.statValue}
-              style={{ color: victory ? 'var(--color-green)' : 'var(--color-red)' }}
+              className={`${styles.statValue} ${victory ? styles.statValueVictory : styles.statValueDefeat}`}
             >
               {victory ? 'VICTORY' : 'DEFEAT'}
             </span>

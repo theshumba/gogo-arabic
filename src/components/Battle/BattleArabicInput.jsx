@@ -135,7 +135,7 @@ export default function BattleArabicInput({ prompt, onSubmit, mode = 'attack' })
           className={styles.timerBarFill}
           style={{
             width: `${timerPercent}%`,
-            background: timerColor,
+            '--timer-color': timerColor,
           }}
         />
       </div>

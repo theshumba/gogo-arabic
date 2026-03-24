@@ -29,7 +29,7 @@ export default function RelationshipBar({ value, maxValue = 100, tier, showLabel
       {/* Progress bar container */}
       <div
         className={`${styles.barContainer} ${size === 'small' ? styles.barContainerSmall : styles.barContainerNormal}`}
-        style={{ borderColor: color }}
+        style={{ '--rel-color': color }}
       >
         {/* Filled portion */}
         <motion.div
@@ -37,9 +37,6 @@ export default function RelationshipBar({ value, maxValue = 100, tier, showLabel
           animate={{ width: `${percentage}%` }}
           transition={{ type: 'spring', stiffness: 100, damping: 15 }}
           className={styles.barFill}
-          style={{
-            background: `linear-gradient(90deg, ${color}dd, ${color})`,
-          }}
         />
 
         {/* Value text overlay */}
@@ -54,7 +51,6 @@ export default function RelationshipBar({ value, maxValue = 100, tier, showLabel
       {showLabel && (
         <div
           className={`${styles.tierLabel} ${size === 'small' ? styles.tierLabelSmall : styles.tierLabelNormal}`}
-          style={{ color }}
         >
           {tierData.label} / {tierData.labelArabic}
         </div>

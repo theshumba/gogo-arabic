@@ -92,29 +92,23 @@ export default function CompanionCommentBubble() {
         transition={{ type: 'spring', stiffness: 120, damping: 15 }}
         onClick={handleDismiss}
         className={styles.bubble}
-        style={{ borderColor: currentComment.companionColor }}
+        style={{ '--companion-color': currentComment.companionColor }}
       >
         {/* Speech bubble tail */}
         <div
           className={styles.bubbleTail}
-          style={{ borderTopColor: currentComment.companionColor }}
         />
 
         {/* Companion name */}
         <div
           className={styles.companionName}
-          style={{ color: currentComment.companionColor }}
         >
           {currentComment.companionName}
         </div>
 
         {/* Primary text */}
         <div
-          className={styles.primaryText}
-          style={{
-            marginBottom: currentComment.secondary ? '4px' : 0,
-            direction: isArabic ? 'rtl' : 'ltr',
-          }}
+          className={`${styles.primaryText} ${currentComment.secondary ? styles.primaryTextWithSecondary : ''} ${isArabic ? styles.rtl : styles.ltr}`}
         >
           {currentComment.primary}
         </div>
@@ -122,8 +116,7 @@ export default function CompanionCommentBubble() {
         {/* Secondary text */}
         {currentComment.secondary && (
           <div
-            className={styles.secondaryText}
-            style={{ direction: isArabic ? 'ltr' : 'rtl' }}
+            className={`${styles.secondaryText} ${isArabic ? styles.ltr : styles.rtl}`}
           >
             {currentComment.secondary}
           </div>
@@ -140,7 +133,6 @@ export default function CompanionCommentBubble() {
         {queue.length > 0 && (
           <div
             className={styles.queueBadge}
-            style={{ background: currentComment.companionColor }}
           >
             {queue.length}
           </div>

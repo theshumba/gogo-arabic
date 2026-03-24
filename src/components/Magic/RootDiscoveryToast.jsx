@@ -119,19 +119,15 @@ export default function RootDiscoveryToast() {
       >
         <div
           className={styles.toastCard}
-          style={{
-            border: `2px solid ${elementColor}`,
-            borderLeft: `8px solid ${elementColor}`,
-            boxShadow: `0 0 20px ${elementColor}44`,
-          }}
+          style={{ '--element-color': elementColor }}
         >
-          <div className={styles.toastTitle} style={{ color: elementColor }}>
+          <div className={styles.toastTitle}>
             {title}
           </div>
           <div className={styles.toastSubtitle}>
             {subtitle}
           </div>
-          <div className={styles.toastElement} style={{ color: elementColor }}>
+          <div className={styles.toastElement}>
             {elementInfo.arabic}
           </div>
         </div>

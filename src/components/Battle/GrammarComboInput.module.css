@@ -46,6 +46,7 @@
 .timerFill {
   height: 100%;
   transition: width 100ms linear;
+  background: var(--timer-color);
 }
 
 /* ── Noun + Adjective mode ── */
@@ -191,6 +192,10 @@
   display: flex;
   gap: 8px;
   margin-top: 4px;
+}
+
+.buttonRowCancel {
+  margin-top: 8px;
 }
 
 .submitBtn {

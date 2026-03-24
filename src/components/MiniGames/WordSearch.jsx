@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
 import { generateWordSearch, checkSelection, getSelectionCells } from '../../utils/wordSearchGenerator.js';
 import styles from './WordSearch.module.css';
 
@@ -208,7 +207,7 @@ export default function WordSearch({ onBack }) {
                   <button
                     key={diff}
                     onClick={() => setDifficulty(diff)}
-                    style={pixelBtnGold}
+                    className={styles.pixelBtnGold}
                   >
                     {diff.toUpperCase()}
                     <div className={styles.buttonSubtext}>
@@ -229,7 +228,7 @@ export default function WordSearch({ onBack }) {
                   <button
                     key={cat}
                     onClick={() => setCategory(cat)}
-                    style={pixelBtnDark}
+                    className={styles.pixelBtnDark}
                   >
                     {cat}
                   </button>
@@ -242,14 +241,14 @@ export default function WordSearch({ onBack }) {
           {difficulty && category && (
             <button
               onClick={handleStartGame}
-              style={pixelBtnGold}
+              className={styles.pixelBtnGold}
             >
               Start Game
             </button>
           )}
         </div>
 
-        <button onClick={onBack} style={pixelBtnDark}>
+        <button onClick={onBack} className={styles.pixelBtnDark}>
           Back to Mini-Games
         </button>
       </div>
@@ -342,10 +341,10 @@ export default function WordSearch({ onBack }) {
               Time: {formatTime(elapsedTime)}
             </p>
             <div className={styles.celebrationActions}>
-              <button onClick={handleStartGame} style={pixelBtnGold}>
+              <button onClick={handleStartGame} className={styles.pixelBtnGold}>
                 Play Again
               </button>
-              <button onClick={handleReset} style={pixelBtnDark}>
+              <button onClick={handleReset} className={styles.pixelBtnDark}>
                 New Settings
               </button>
             </div>
@@ -355,7 +354,7 @@ export default function WordSearch({ onBack }) {
 
       {/* Controls */}
       <div className={styles.controls}>
-        <button onClick={handleReset} style={pixelBtnDark}>
+        <button onClick={handleReset} className={styles.pixelBtnDark}>
           New Game
         </button>
       </div>

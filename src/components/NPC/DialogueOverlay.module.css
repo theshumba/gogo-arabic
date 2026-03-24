@@ -916,3 +916,143 @@
   justify-content: space-between;
   align-items: center;
 }
+
+/* ──────────────────────────────────────────────── */
+/* Ink Dialogue (PATH-01 / PATH-02)                */
+/* ──────────────────────────────────────────────── */
+
+.inkMotionWrap {
+  width: 100%;
+}
+
+.inkNpcHeader {
+  margin-bottom: 8px;
+}
+
+.inkNpcName {
+  color: #D4A843;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.inkLine {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #fff;
+  margin-bottom: 12px;
+  min-height: 48px;
+}
+
+.inkChoicesWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.inkChoiceBtn {
+  background: rgba(212, 168, 67, 0.12);
+  border: 1px solid #D4A843;
+  border-radius: 6px;
+  color: #D4A843;
+  padding: 10px 16px;
+  font-size: 15px;
+  cursor: pointer;
+  text-align: right;
+  transition: background 0.15s;
+}
+
+.inkChoiceBtn:hover {
+  background: rgba(212, 168, 67, 0.25);
+}
+
+.inkContinueHint {
+  color: #888;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Hub-and-spoke choice line header (no border-top, compact) */
+.hubChoiceDialogueBox {
+  min-height: auto;
+  padding-bottom: 0;
+  border-top: none;
+}
+
+/* ──────────────────────────────────────────────── */
+/* Gift Panel                                       */
+/* ──────────────────────────────────────────────── */
+
+.giftBtnWrap {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 8px;
+}
+
+.giftBtn {
+  background: transparent;
+  border: 1px solid #D4A843;
+  color: #D4A843;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.giftPanel {
+  background: #1a1a2e;
+  border: 1px solid #D4A843;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 4px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.giftPanelTitle {
+  color: #D4A843;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.giftPanelEmpty {
+  color: #888;
+  font-size: 12px;
+}
+
+.giftItemBtn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #fff;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.giftItemArabic {
+  color: #888;
+  margin-left: 8px;
+  font-size: 11px;
+}
+
+.giftItemQty {
+  color: #555;
+  margin-left: 8px;
+  font-size: 11px;
+}
+
+.giftCancelBtn {
+  color: #888;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-top: 4px;
+  font-size: 12px;
+}

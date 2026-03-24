@@ -25,6 +25,7 @@
 .timerBarFill {
   height: 100%;
   transition: width 100ms linear;
+  background: var(--timer-color);
 }
 
 .fleeHeader {

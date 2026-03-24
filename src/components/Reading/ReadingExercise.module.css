@@ -42,3 +42,66 @@
 .correctAnswerHint { font-size: 9px; color: var(--color-dark-gold); margin-top: 4px; }
 .resultsActions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .errorText { text-align: center; font-size: 12px; color: var(--color-red); margin-bottom: 20px; }
+
+/* Pixel-art button styles (migrated from theme.js inline styles) */
+.pixelBtnGold {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  image-rendering: pixelated;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  background: var(--color-xp-gold);
+  color: var(--color-brown);
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.2),
+    inset 4px 4px 0px 0px rgba(255, 255, 255, 0.3),
+    0 4px 0 0 #a0842a;
+  transition: transform 0.05s;
+}
+
+.pixelBtnDark {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  image-rendering: pixelated;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  background: var(--color-gray);
+  color: var(--color-white);
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.3),
+    inset 4px 4px 0px 0px rgba(255, 255, 255, 0.1),
+    0 4px 0 0 #1a191b;
+  transition: transform 0.05s;
+}
+
+.submitBtn {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  image-rendering: pixelated;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  background: var(--color-xp-gold);
+  color: var(--color-brown);
+  box-shadow:
+    inset -4px -4px 0px 0px rgba(0, 0, 0, 0.2),
+    inset 4px 4px 0px 0px rgba(255, 255, 255, 0.3),
+    0 4px 0 0 #a0842a;
+  transition: transform 0.05s;
+}
+
+.submitBtnDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

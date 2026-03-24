@@ -13,6 +13,7 @@
   position: relative;
   border-width: 1px;
   border-style: solid;
+  border-color: var(--rel-color);
 }
 
 .barContainerNormal {
@@ -28,6 +29,7 @@
 .barFill {
   height: 100%;
   border-radius: 3px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--rel-color) 87%, transparent), var(--rel-color));
 }
 
 .valueText {
@@ -45,6 +47,7 @@
 .tierLabel {
   font-family: var(--font-pixel);
   text-align: center;
+  color: var(--rel-color);
 }
 
 .tierLabelNormal {

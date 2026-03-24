@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import { pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { PASSAGES, getPassagesByDifficulty } from '../../data/readingPassages.js';
 import styles from './ReadingExercise.module.css';
@@ -112,7 +111,7 @@ export default function ReadingExercise({ onBack }) {
               <button
                 key={level}
                 onClick={() => setDifficulty(level)}
-                style={pixelBtnGold}
+                className={styles.pixelBtnGold}
               >
                 Level {level} ({count} passages)
               </button>
@@ -120,13 +119,13 @@ export default function ReadingExercise({ onBack }) {
           })}
           <button
             onClick={() => setDifficulty('all')}
-            style={pixelBtnDark}
+            className={styles.pixelBtnDark}
           >
             All Levels ({PASSAGES.length} passages)
           </button>
         </div>
 
-        <button onClick={onBack} style={pixelBtnDark}>
+        <button onClick={onBack} className={styles.pixelBtnDark}>
           Back to Mini-Games
         </button>
       </div>
@@ -137,7 +136,7 @@ export default function ReadingExercise({ onBack }) {
     return (
       <div className={styles.container}>
         <p className={styles.errorText}>No passages available for this difficulty.</p>
-        <button onClick={() => setDifficulty(null)} style={pixelBtnGold}>
+        <button onClick={() => setDifficulty(null)} className={styles.pixelBtnGold}>
           Back
         </button>
       </div>
@@ -186,7 +185,7 @@ export default function ReadingExercise({ onBack }) {
 
           <div className={styles.resultsActions}>
             {currentPassageIndex < passages.length - 1 && (
-              <button onClick={handleNextPassage} style={pixelBtnGold}>
+              <button onClick={handleNextPassage} className={styles.pixelBtnGold}>
                 Next Passage
               </button>
             )}
@@ -197,11 +196,11 @@ export default function ReadingExercise({ onBack }) {
                 setAnswers([]);
                 setShowResults(false);
               }}
-              style={pixelBtnDark}
+              className={styles.pixelBtnDark}
             >
               Retry
             </button>
-            <button onClick={() => setDifficulty(null)} style={pixelBtnDark}>
+            <button onClick={() => setDifficulty(null)} className={styles.pixelBtnDark}>
               Back to Levels
             </button>
           </div>
@@ -233,10 +232,10 @@ export default function ReadingExercise({ onBack }) {
 
         {/* Toggle buttons */}
         <div className={styles.toggleButtons}>
-          <button onClick={() => setShowTranslation(!showTranslation)} style={pixelBtnDark}>
+          <button onClick={() => setShowTranslation(!showTranslation)} className={styles.pixelBtnDark}>
             {showTranslation ? 'Hide' : 'Show'} Translation (T)
           </button>
-          <button onClick={() => setShowTransliteration(!showTransliteration)} style={pixelBtnDark}>
+          <button onClick={() => setShowTransliteration(!showTransliteration)} className={styles.pixelBtnDark}>
             {showTransliteration ? 'Hide' : 'Show'} Transliteration
           </button>
         </div>
@@ -265,7 +264,7 @@ export default function ReadingExercise({ onBack }) {
             <button
               key={idx}
               onClick={() => setSelectedAnswer(idx)}
-              style={pixelBtnGold}
+              className={styles.pixelBtnGold}
             >
               <span className={styles.optionNumber}>{idx + 1}.</span> {option}
             </button>
@@ -276,11 +275,7 @@ export default function ReadingExercise({ onBack }) {
         <button
           onClick={handleSubmitAnswer}
           disabled={selectedAnswer === null}
-          style={{
-            ...pixelBtnGold,
-            opacity: selectedAnswer === null ? 0.5 : 1,
-            cursor: selectedAnswer === null ? 'not-allowed' : 'pointer',
-          }}
+          className={`${styles.submitBtn} ${selectedAnswer === null ? styles.submitBtnDisabled : ''}`}
         >
           Submit Answer (Enter)
         </button>

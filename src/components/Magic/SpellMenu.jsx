@@ -49,10 +49,10 @@ function SpellCard({ spell, mastery, isEquipped, isLocked, onClick }) {
       disabled={isLocked}
       whileHover={!isLocked ? { scale: 1.05 } : {}}
       whileTap={!isLocked ? { scale: 0.95 } : {}}
-      className={`${styles.spellCard} ${isLocked ? styles.spellCardLocked : styles.spellCardUnlocked}`}
+      className={`${styles.spellCard} ${isLocked ? styles.spellCardLocked : styles.spellCardUnlocked} ${isEquipped ? styles.spellCardEquipped : ''}`}
       style={{
-        backgroundColor: isLocked ? '#1a1a1a' : `${elementColor}1a`,
-        borderColor: isEquipped ? '#FFD700' : elementColor,
+        '--element-color': elementColor,
+        '--element-color-bg': isLocked ? '#1a1a1a' : `${elementColor}1a`,
       }}
     >
       {isEquipped && (
@@ -61,7 +61,7 @@ function SpellCard({ spell, mastery, isEquipped, isLocked, onClick }) {
         </div>
       )}
 
-      <div className={styles.spellRootId} style={{ color: elementColor }}>
+      <div className={styles.spellRootId}>
         {spell.rootId}
       </div>
 
@@ -75,7 +75,7 @@ function SpellCard({ spell, mastery, isEquipped, isLocked, onClick }) {
 
       {!isLocked && (
         <>
-          <div className={styles.spellLevel} style={{ color: elementColor }}>
+          <div className={styles.spellLevel}>
             Lvl {level}
           </div>
 
@@ -84,7 +84,6 @@ function SpellCard({ spell, mastery, isEquipped, isLocked, onClick }) {
               className={styles.xpBarFill}
               style={{
                 width: `${xpProgress * 100}%`,
-                backgroundColor: elementColor,
               }}
             />
           </div>
@@ -113,15 +112,14 @@ function HotbarSlot({ index, spell, onClick }) {
       onClick={onClick}
       className={`${styles.hotbarSlotBtn} ${spell ? styles.hotbarSlotFilled : styles.hotbarSlotEmpty}`}
       style={{
-        borderColor: elementColor,
-        color: spell ? elementColor : '#666',
+        '--element-color': elementColor,
       }}
     >
       <div className={styles.hotbarSlotIndex}>
         {index + 1}
       </div>
       {spell ? (
-        <div className={styles.hotbarSlotRoot} style={{ color: elementColor }}>
+        <div className={styles.hotbarSlotRoot}>
           {spell.rootId.split('-')[0]}
         </div>
       ) : (
@@ -245,11 +243,9 @@ export default function SpellMenu() {
               <button
                 key={element}
                 onClick={() => setSelectedFilter(element)}
-                className={styles.filterTabElement}
+                className={`${styles.filterTabElement} ${selectedFilter === element ? styles.filterTabElementActive : styles.filterTabElementInactive}`}
                 style={{
-                  color: selectedFilter === element ? '#000' : color,
-                  backgroundColor: selectedFilter === element ? color : '#333',
-                  border: `2px solid ${color}`,
+                  '--element-color': color,
                 }}
               >
                 {elementInfo.arabic} ({count})
