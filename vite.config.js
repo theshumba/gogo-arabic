@@ -53,16 +53,28 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Large vocabulary data file (~932KB JSON)
+          // Core A1-A2 vocabulary (~700KB) — loaded eagerly
           if (id.includes('src/data/vocabulary-final.json') ||
             id.includes('src/data/vocabularyAll.js') ||
-            id.includes('src/data/vocabularyExpanded.js')) {
-            return 'vocabulary-data';
+            id.includes('src/data/vocabularyByLevel.js') ||
+            id.includes('src/data/vocabulary.json')) {
+            return 'vocab-core';
           }
-          // Large NPC data file (~220KB JSON)
-          if (id.includes('src/data/npcs.json')) {
+          // Extended B1-B2 vocabulary (~1,000KB) — loaded lazily
+          if (id.includes('src/data/vocabularyExpanded.js')) {
+            return 'vocab-extended';
+          }
+          // NPC metadata (lightweight, ~48KB — always loaded)
+          if (id.includes('src/data/npcs-meta.json')) {
+            return 'npc-meta';
+          }
+          // NPC dialogue loader + story arcs + profession teaching
+          if (id.includes('src/data/npcDialogueLoader.js') ||
+            id.includes('src/data/npcStoryArcs.js') ||
+            id.includes('src/data/npcProfessionTeaching.js')) {
             return 'npc-data';
           }
+          // NPC dialogue files are lazy-loaded per zone — let Vite auto-split
           // Quest data
           if (id.includes('src/data/quests.json')) {
             return 'quest-data';

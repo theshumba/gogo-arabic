@@ -69,7 +69,7 @@ Each task was committed atomically:
 1. **Task 1: Add tier badge + expand category tabs + CSS classes** - `a9db44e` (feat)
 2. **Task 2: Convert AchievementPanel to lazy-loaded in HUD.jsx** - `3574706` (feat)
 
-**Plan metadata:** (docs commit follows)
+**Plan metadata:** `2d832c3` (docs: complete plan)
 
 ## Files Created/Modified
 - `src/components/Achievements/AchievementPanel.jsx` - TIER_COLORS import, cardInfo div wrapping rarity+tier badge, tabs expanded from 10 to 24
@@ -109,6 +109,16 @@ None — all category tabs resolve against ACHIEVEMENT_CATEGORIES constants, tie
 - AchievementPanel lazy-loaded, reducing HUD.jsx chunk
 - All 71 achievement tests passing
 - Ready for Phase 64 or remaining Phase 63 plans
+
+## Self-Check: PASSED
+
+- FOUND: src/components/Achievements/AchievementPanel.jsx
+- FOUND: src/components/Achievements/AchievementPanel.module.css
+- FOUND: src/components/HUD/HUD.jsx
+- FOUND: .planning/phases/63-achievement-expansion/63-03-SUMMARY.md
+- FOUND commit: a9db44e (feat 63-03: tier badges + expanded tabs)
+- FOUND commit: 3574706 (feat 63-03: lazy AchievementPanel)
+- FOUND commit: 2d832c3 (docs 63-03: complete plan)
 
 ---
 *Phase: 63-achievement-expansion*

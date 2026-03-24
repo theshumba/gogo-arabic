@@ -17,6 +17,7 @@ import { setWeeklyChallenge } from '../store/slices/endgameSlice.js';
 import { FACTIONS } from '../data/factions.js';
 import { WEEKLY_CHALLENGES } from '../data/weeklyRotation.js';
 import questsData from '../data/quests.json';
+import { loadZoneDialogue } from '../data/npcDialogueLoader.js';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
 import { audioManager } from '../services/audio.js';
@@ -39,6 +40,9 @@ export function useZoneEvents(phaserRef, playSFX) {
   useEffect(() => {
     const handleZoneChange = ({ zone }) => {
       dispatch(setCurrentZone(zone));
+
+      // Preload NPC dialogue for this zone (fire-and-forget)
+      loadZoneDialogue(zone);
 
       // Play zone-specific BGM — use night ambient if currently night phase
       const timePhase = selectTimePhase(store.getState());

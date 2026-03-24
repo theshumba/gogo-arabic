@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { COMPANIONS } from '../../data/companions.js';
+import styles from './CompanionCommentBubble.module.css';
 
 export default function CompanionCommentBubble() {
   const [currentComment, setCurrentComment] = useState(null);
@@ -90,54 +91,29 @@ export default function CompanionCommentBubble() {
         exit={{ opacity: 0, y: -20, scale: 0.8 }}
         transition={{ type: 'spring', stiffness: 120, damping: 15 }}
         onClick={handleDismiss}
-        style={{
-          position: 'fixed',
-          bottom: '120px',
-          left: '20px',
-          maxWidth: '350px',
-          background: '#1a1a2e',
-          border: `2px solid ${currentComment.companionColor}`,
-          borderRadius: '12px',
-          padding: '12px 16px',
-          zIndex: 1000,
-          cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
-        }}
+        className={styles.bubble}
+        style={{ borderColor: currentComment.companionColor }}
       >
         {/* Speech bubble tail */}
         <div
-          style={{
-            position: 'absolute',
-            bottom: '-10px',
-            left: '20px',
-            width: 0,
-            height: 0,
-            borderLeft: '10px solid transparent',
-            borderRight: '10px solid transparent',
-            borderTop: `10px solid ${currentComment.companionColor}`,
-          }}
+          className={styles.bubbleTail}
+          style={{ borderTopColor: currentComment.companionColor }}
         />
 
         {/* Companion name */}
         <div
-          style={{
-            fontSize: '8px',
-            color: currentComment.companionColor,
-            fontFamily: "'Press Start 2P', monospace",
-            marginBottom: '6px',
-          }}
+          className={styles.companionName}
+          style={{ color: currentComment.companionColor }}
         >
           {currentComment.companionName}
         </div>
 
         {/* Primary text */}
         <div
+          className={styles.primaryText}
           style={{
-            fontSize: '12px',
-            color: '#f4fefa',
             marginBottom: currentComment.secondary ? '4px' : 0,
             direction: isArabic ? 'rtl' : 'ltr',
-            lineHeight: '1.4',
           }}
         >
           {currentComment.primary}
@@ -146,12 +122,8 @@ export default function CompanionCommentBubble() {
         {/* Secondary text */}
         {currentComment.secondary && (
           <div
-            style={{
-              fontSize: '10px',
-              color: '#a0a0a0',
-              direction: isArabic ? 'ltr' : 'rtl',
-              lineHeight: '1.3',
-            }}
+            className={styles.secondaryText}
+            style={{ direction: isArabic ? 'ltr' : 'rtl' }}
           >
             {currentComment.secondary}
           </div>
@@ -159,14 +131,7 @@ export default function CompanionCommentBubble() {
 
         {/* Transliteration */}
         {currentComment.showTransliteration && currentComment.transliteration && (
-          <div
-            style={{
-              fontSize: '9px',
-              color: '#666',
-              fontStyle: 'italic',
-              marginTop: '4px',
-            }}
-          >
+          <div className={styles.transliteration}>
             {currentComment.transliteration}
           </div>
         )}
@@ -174,21 +139,8 @@ export default function CompanionCommentBubble() {
         {/* Queue indicator */}
         {queue.length > 0 && (
           <div
-            style={{
-              position: 'absolute',
-              top: '8px',
-              right: '8px',
-              background: currentComment.companionColor,
-              color: '#fff',
-              borderRadius: '50%',
-              width: '16px',
-              height: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '8px',
-              fontFamily: "'Press Start 2P', monospace",
-            }}
+            className={styles.queueBadge}
+            style={{ background: currentComment.companionColor }}
           >
             {queue.length}
           </div>

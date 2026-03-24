@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { ELEMENT_INFO } from '../../data/rootMagic.js';
+import styles from './RootDiscoveryToast.module.css';
 
 const TOAST_DURATION = 3000;
 
@@ -114,57 +115,23 @@ export default function RootDiscoveryToast() {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -100, opacity: 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        style={{
-          position: 'fixed',
-          top: '80px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 600,
-          pointerEvents: 'none',
-        }}
+        className={styles.toastPositioner}
       >
         <div
+          className={styles.toastCard}
           style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
             border: `2px solid ${elementColor}`,
             borderLeft: `8px solid ${elementColor}`,
-            borderRadius: '8px',
-            padding: '16px 24px',
-            minWidth: '300px',
             boxShadow: `0 0 20px ${elementColor}44`,
           }}
         >
-          <div
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '12px',
-              color: elementColor,
-              marginBottom: '8px',
-              textTransform: 'uppercase',
-            }}
-          >
+          <div className={styles.toastTitle} style={{ color: elementColor }}>
             {title}
           </div>
-          <div
-            style={{
-              fontFamily: 'Amiri, serif',
-              fontSize: '20px',
-              color: '#fff',
-              direction: 'rtl',
-              textAlign: 'center',
-            }}
-          >
+          <div className={styles.toastSubtitle}>
             {subtitle}
           </div>
-          <div
-            style={{
-              fontFamily: 'Amiri, serif',
-              fontSize: '16px',
-              color: elementColor,
-              marginTop: '4px',
-              textAlign: 'center',
-            }}
-          >
+          <div className={styles.toastElement} style={{ color: elementColor }}>
             {elementInfo.arabic}
           </div>
         </div>

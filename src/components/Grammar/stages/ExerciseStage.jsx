@@ -1,10 +1,29 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import {
-  containerStyle, headerStyle, titleStyle, bodyStyle, textStyle, btnStyle,
-  choiceStyle, choiceCorrectStyle, choiceWrongStyle, getFeedbackStyle,
-  pixelBtnDark, FONTS, COLORS,
-} from '../grammarStyles.js';
+import { COLORS, pixelBtnDark, pixelBtnGold } from '../../../styles/theme.js';
+import styles from './GrammarStages.module.css';
+
+/* Choice buttons still use pixelBtnDark as a base since they mix dynamic
+   correct/wrong/selected colours that depend on runtime state.
+   Static overrides (margin, minWidth) live in the CSS module. */
+
+const choiceBase = {
+  ...pixelBtnDark,
+  margin: '10px',
+  minWidth: '200px',
+};
+
+const choiceCorrect = {
+  ...choiceBase,
+  background: COLORS.green,
+  color: COLORS.white,
+};
+
+const choiceWrong = {
+  ...choiceBase,
+  background: COLORS.red,
+  color: COLORS.white,
+};
 
 export default function ExerciseStage({
   lesson, currentIndex, score, answers, matchedPairs, selectedMatchIndex,
@@ -18,35 +37,37 @@ export default function ExerciseStage({
   const [clozeIndex, setClozeIndex] = useState(0);
   const [classifyIndex, setClassifyIndex] = useState(0);
 
+  const feedbackClass = feedbackMessage.includes('Correct') ? styles.feedbackCorrect : styles.feedbackWrong;
+
   return (
     <motion.div
-      style={containerStyle}
+      className={styles.container}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <div style={headerStyle}>
+      <div className={styles.header}>
         <button onClick={onQuit} style={pixelBtnDark}>Quit</button>
-        <div style={titleStyle}>
+        <div className={styles.title}>
           Exercise {currentIndex + 1} / {lesson.exercises.length}
         </div>
-        <div style={{ fontFamily: FONTS.pixel, fontSize: '12px', color: COLORS.xpGold }}>
+        <div className={styles.scoreDisplay}>
           Score: {score}/{lesson.exercises.length}
         </div>
       </div>
 
-      <div style={bodyStyle}>
+      <div className={styles.body}>
         {exercise.type === 'fill-blank' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '30px' }}>
+            <div className={styles.promptCenter}>
               {exercise.prompt}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceStyle;
+                let style = choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrectStyle;
-                  else if (option === answers[currentIndex]) style = choiceWrongStyle;
+                  if (option === exercise.answer) style = choiceCorrect;
+                  else if (option === answers[currentIndex]) style = choiceWrong;
                 }
                 return (
                   <button key={idx} onClick={() => onAnswerSelect(option)} style={style} disabled={showFeedback}>
@@ -60,21 +81,21 @@ export default function ExerciseStage({
 
         {exercise.type === 'translate' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '30px' }}>
+            <div className={styles.promptCenter}>
               Translate: {exercise.prompt}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceStyle;
+                let style = choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrectStyle;
-                  else if (option === answers[currentIndex]) style = choiceWrongStyle;
+                  if (option === exercise.answer) style = choiceCorrect;
+                  else if (option === answers[currentIndex]) style = choiceWrong;
                 }
                 return (
                   <button
                     key={idx}
                     onClick={() => onAnswerSelect(option)}
-                    style={{ ...style, fontFamily: FONTS.arabicDisplay, fontSize: '16px' }}
+                    style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }}
                     disabled={showFeedback}
                   >
                     {idx + 1}. {formatArabic(option)}
@@ -87,17 +108,17 @@ export default function ExerciseStage({
 
         {exercise.type === 'match' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '30px' }}>
+            <div className={styles.promptCenter}>
               {exercise.prompt}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px' }}>
+            <div className={styles.choicesWrapGap}>
               {exercise.pairs.flatMap((pair, idx) => [
                 <button
                   key={`${idx}-0`}
                   onClick={() => onMatchSelect(idx * 2, pair[0])}
                   style={{
-                    ...choiceStyle,
-                    fontFamily: FONTS.arabicDisplay,
+                    ...choiceBase,
+                    fontFamily: "'Noto Kufi Arabic', sans-serif",
                     fontSize: '16px',
                     background: matchedPairs[idx * 2]
                       ? COLORS.green
@@ -114,7 +135,7 @@ export default function ExerciseStage({
                   key={`${idx}-1`}
                   onClick={() => onMatchSelect(idx * 2 + 1, pair[1])}
                   style={{
-                    ...choiceStyle,
+                    ...choiceBase,
                     background: matchedPairs[idx * 2 + 1]
                       ? COLORS.green
                       : selectedMatchIndex === idx * 2 + 1
@@ -134,26 +155,26 @@ export default function ExerciseStage({
         {/* ── conjugation-drill ─────────────────────────────────────────── */}
         {exercise.type === 'conjugation-drill' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '10px' }}>
-              Conjugate: <span style={{ fontFamily: FONTS.arabicDisplay, fontSize: '20px' }}>{formatArabic(exercise.verb)}</span>
+            <div className={styles.promptCenterSmall}>
+              Conjugate: <span className={styles.verbLabel}>{formatArabic(exercise.verb)}</span>
               {exercise.root && (
-                <span style={{ color: COLORS.brown, marginLeft: '8px' }}>
+                <span className={styles.rootNote}>
                   (root: {formatArabic(exercise.root)})
                 </span>
               )}
             </div>
-            <div style={{ ...textStyle, textAlign: 'center', marginBottom: '20px' }}>
+            <div className={`${styles.text} ${styles.paradigmNote}`}>
               Pronoun: <strong>{formatArabic(exercise.pronoun)}</strong> &mdash; Paradigm: {exercise.paradigm}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceStyle;
+                let style = choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrectStyle;
-                  else if (option === answers[currentIndex]) style = choiceWrongStyle;
+                  if (option === exercise.answer) style = choiceCorrect;
+                  else if (option === answers[currentIndex]) style = choiceWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: FONTS.arabicDisplay, fontSize: '18px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '18px' }} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
@@ -165,23 +186,23 @@ export default function ExerciseStage({
         {/* ── sentence-transformation ───────────────────────────────────── */}
         {exercise.type === 'sentence-transformation' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '10px' }}>
+            <div className={styles.promptCenterSmall}>
               {exercise.prompt}
             </div>
             {exercise.hint && (
-              <div style={{ ...textStyle, fontSize: '11px', fontStyle: 'italic', textAlign: 'center', color: COLORS.brown, marginBottom: '20px' }}>
+              <div className={styles.hintText}>
                 Hint: {exercise.hint}
               </div>
             )}
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceStyle;
+                let style = choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrectStyle;
-                  else if (option === answers[currentIndex]) style = choiceWrongStyle;
+                  if (option === exercise.answer) style = choiceCorrect;
+                  else if (option === answers[currentIndex]) style = choiceWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: FONTS.arabicDisplay, fontSize: '16px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
@@ -193,18 +214,18 @@ export default function ExerciseStage({
         {/* ── word-order ────────────────────────────────────────────────── */}
         {exercise.type === 'word-order' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '20px' }}>
+            <div className={styles.promptCenter}>
               {exercise.prompt}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceStyle;
+                let style = choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrectStyle;
-                  else if (option === answers[currentIndex]) style = choiceWrongStyle;
+                  if (option === exercise.answer) style = choiceCorrect;
+                  else if (option === answers[currentIndex]) style = choiceWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: FONTS.arabicDisplay, fontSize: '16px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
@@ -216,28 +237,28 @@ export default function ExerciseStage({
         {/* ── error-identification ──────────────────────────────────────── */}
         {exercise.type === 'error-identification' && (
           <>
-            <div style={{ ...textStyle, fontSize: '12px', textAlign: 'center', marginBottom: '8px', color: COLORS.brown }}>
+            <div className={styles.errorLabel}>
               Find the error:
             </div>
-            <div style={{ ...textStyle, fontSize: '18px', textAlign: 'center', fontFamily: FONTS.arabicDisplay, marginBottom: '20px' }}>
+            <div className={styles.arabicSentence}>
               {formatArabic(exercise.sentence)}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceStyle;
+                let style = choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.error) style = choiceCorrectStyle;
-                  else if (option === answers[currentIndex]) style = choiceWrongStyle;
+                  if (option === exercise.error) style = choiceCorrect;
+                  else if (option === answers[currentIndex]) style = choiceWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: FONTS.arabicDisplay, fontSize: '16px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
               })}
             </div>
             {showFeedback && feedbackMessage.includes('Correct') && (
-              <div style={{ ...textStyle, textAlign: 'center', marginTop: '10px' }}>
+              <div className={styles.correctionNote}>
                 Correction: <strong>{formatArabic(exercise.correction)}</strong>
               </div>
             )}
@@ -247,17 +268,17 @@ export default function ExerciseStage({
         {/* ── multiple-select ───────────────────────────────────────────── */}
         {exercise.type === 'multiple-select' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '20px' }}>
+            <div className={styles.promptCenter}>
               {exercise.prompt}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
                 const isSelected = multiSelected.includes(option);
                 const isCorrect = exercise.correctAnswers.includes(option);
-                let style = isSelected ? { ...choiceStyle, background: COLORS.cyan, color: COLORS.white } : choiceStyle;
+                let style = isSelected ? { ...choiceBase, background: COLORS.cyan, color: COLORS.white } : choiceBase;
                 if (showFeedback) {
-                  if (isCorrect) style = choiceCorrectStyle;
-                  else if (isSelected) style = choiceWrongStyle;
+                  if (isCorrect) style = choiceCorrect;
+                  else if (isSelected) style = choiceWrong;
                 }
                 return (
                   <button
@@ -278,14 +299,14 @@ export default function ExerciseStage({
               })}
             </div>
             {!showFeedback && (
-              <div style={{ textAlign: 'center', marginTop: '20px' }}>
+              <div className={styles.multiSelectSubmit}>
                 <button
                   onClick={() => {
                     const joined = exercise.correctAnswers.slice().sort().join(',');
                     onAnswerSelect(joined);
                     setMultiSelected([]);
                   }}
-                  style={btnStyle}
+                  style={{ ...pixelBtnGold, marginTop: '20px' }}
                 >
                   Check ({multiSelected.length} selected)
                 </button>
@@ -297,15 +318,15 @@ export default function ExerciseStage({
         {/* ── true-false ────────────────────────────────────────────────── */}
         {exercise.type === 'true-false' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '30px', fontFamily: FONTS.arabicDisplay }}>
+            <div className={styles.arabicSentence} style={{ fontSize: '14px', marginBottom: '30px' }}>
               {formatArabic(exercise.statement)}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {['true', 'false'].map((option, idx) => {
-                let style = choiceStyle;
+                let style = choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrectStyle;
-                  else if (option === answers[currentIndex]) style = choiceWrongStyle;
+                  if (option === exercise.answer) style = choiceCorrect;
+                  else if (option === answers[currentIndex]) style = choiceWrong;
                 }
                 return (
                   <button key={idx} onClick={() => onAnswerSelect(option)} style={style} disabled={showFeedback}>
@@ -320,24 +341,24 @@ export default function ExerciseStage({
         {/* ── cloze ─────────────────────────────────────────────────────── */}
         {exercise.type === 'cloze' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '20px' }}>
+            <div className={styles.promptCenter}>
               Fill in the blanks:
             </div>
-            <div style={{ ...textStyle, fontSize: '18px', textAlign: 'center', fontFamily: FONTS.arabicDisplay, marginBottom: '20px' }}>
+            <div className={styles.arabicSentenceLarge}>
               {formatArabic(exercise.text)}
             </div>
             {exercise.blanks[clozeIndex] && (
               <>
-                <div style={{ ...textStyle, textAlign: 'center', marginBottom: '10px', color: COLORS.brown }}>
+                <div className={styles.classifyCounter}>
                   Blank {clozeIndex + 1} of {exercise.blanks.length}
                 </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <div className={styles.choicesWrap}>
                   {exercise.blanks[clozeIndex].options.map((option, idx) => {
                     const isLastBlank = clozeIndex === exercise.blanks.length - 1;
-                    let style = choiceStyle;
+                    let style = choiceBase;
                     if (showFeedback && isLastBlank) {
-                      if (option === exercise.blanks[clozeIndex].answer) style = choiceCorrectStyle;
-                      else if (option === answers[currentIndex]) style = choiceWrongStyle;
+                      if (option === exercise.blanks[clozeIndex].answer) style = choiceCorrect;
+                      else if (option === answers[currentIndex]) style = choiceWrong;
                     }
                     return (
                       <button
@@ -352,7 +373,7 @@ export default function ExerciseStage({
                             setClozeIndex(0);
                           }
                         }}
-                        style={{ ...style, fontFamily: FONTS.arabicDisplay, fontSize: '18px' }}
+                        style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '18px' }}
                         disabled={showFeedback}
                       >
                         {idx + 1}. {formatArabic(option)}
@@ -368,23 +389,23 @@ export default function ExerciseStage({
         {/* ── classify ──────────────────────────────────────────────────── */}
         {exercise.type === 'classify' && exercise.items[classifyIndex] && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '20px' }}>
+            <div className={styles.promptCenter}>
               {exercise.prompt}
             </div>
-            <div style={{ ...textStyle, fontSize: '20px', textAlign: 'center', fontFamily: FONTS.arabicDisplay, marginBottom: '10px' }}>
+            <div className={styles.arabicSentenceLarge}>
               {formatArabic(exercise.items[classifyIndex].text)}
             </div>
-            <div style={{ ...textStyle, textAlign: 'center', marginBottom: '20px', color: COLORS.brown }}>
+            <div className={styles.classifyCounter}>
               Item {classifyIndex + 1} of {exercise.items.length}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {exercise.categories.map((cat, idx) => {
                 const correctCat = exercise.items[classifyIndex].category;
                 const isLastItem = classifyIndex === exercise.items.length - 1;
-                let style = choiceStyle;
+                let style = choiceBase;
                 if (showFeedback && isLastItem) {
-                  if (cat === correctCat) style = choiceCorrectStyle;
-                  else if (cat === answers[currentIndex]) style = choiceWrongStyle;
+                  if (cat === correctCat) style = choiceCorrect;
+                  else if (cat === answers[currentIndex]) style = choiceWrong;
                 }
                 return (
                   <button
@@ -413,18 +434,18 @@ export default function ExerciseStage({
         {/* ── build-sentence ────────────────────────────────────────────── */}
         {exercise.type === 'build-sentence' && (
           <>
-            <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '20px' }}>
+            <div className={styles.promptCenter}>
               {exercise.prompt}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className={styles.choicesWrap}>
               {exercise.options.map((option, idx) => {
-                let style = choiceStyle;
+                let style = choiceBase;
                 if (showFeedback) {
-                  if (option === exercise.answer) style = choiceCorrectStyle;
-                  else if (option === answers[currentIndex]) style = choiceWrongStyle;
+                  if (option === exercise.answer) style = choiceCorrect;
+                  else if (option === answers[currentIndex]) style = choiceWrong;
                 }
                 return (
-                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: FONTS.arabicDisplay, fontSize: '16px' }} disabled={showFeedback}>
+                  <button key={idx} onClick={() => onAnswerSelect(option)} style={{ ...style, fontFamily: "'Noto Kufi Arabic', sans-serif", fontSize: '16px' }} disabled={showFeedback}>
                     {idx + 1}. {formatArabic(option)}
                   </button>
                 );
@@ -435,8 +456,8 @@ export default function ExerciseStage({
 
         {showFeedback && (
           <>
-            <div style={getFeedbackStyle(feedbackMessage)}>{feedbackMessage}</div>
-            <button onClick={onNext} style={btnStyle}>Next</button>
+            <div className={feedbackClass}>{feedbackMessage}</div>
+            <button onClick={onNext} style={{ ...pixelBtnGold, marginTop: '20px' }}>Next</button>
           </>
         )}
       </div>

@@ -8,11 +8,15 @@ import dailyGoalsReducer, {
   endSession,
   updateSessionTime,
   completeAllGoals,
+  markWelcomeBackShown,
+  resetWelcomeBackShown,
   selectDailyGoals,
   selectAllGoalsCompleted,
   selectCompletedGoalsCount,
   selectTotalGoalsCount,
   selectOverallProgress,
+  selectLastSessionSummary,
+  selectWelcomeBackShown,
 } from '../slices/dailyGoalsSlice.js';
 
 // Mock daily goals data
@@ -378,6 +382,129 @@ describe('dailyGoalsSlice', () => {
       };
       const progress = selectOverallProgress(emptyState);
       expect(progress).toBe(0);
+    });
+
+    it('selectLastSessionSummary should return correct shape', () => {
+      const state = {
+        dailyGoals: {
+          lastSessionWordsLearned: 5,
+          lastSessionReviewsDone: 8,
+          lastSessionEndTime: '2026-02-09T12:00:00.000Z',
+        },
+      };
+      const summary = selectLastSessionSummary(state);
+      expect(summary).toEqual({
+        wordsLearned: 5,
+        reviewsDone: 8,
+        endTime: '2026-02-09T12:00:00.000Z',
+      });
+    });
+
+    it('selectLastSessionSummary should return defaults for missing state', () => {
+      const state = { dailyGoals: {} };
+      const summary = selectLastSessionSummary(state);
+      expect(summary).toEqual({
+        wordsLearned: 0,
+        reviewsDone: 0,
+        endTime: null,
+      });
+    });
+
+    it('selectWelcomeBackShown should return false by default', () => {
+      const state = { dailyGoals: {} };
+      expect(selectWelcomeBackShown(state)).toBe(false);
+    });
+
+    it('selectWelcomeBackShown should return true when set', () => {
+      const state = { dailyGoals: { welcomeBackShown: true } };
+      expect(selectWelcomeBackShown(state)).toBe(true);
+    });
+  });
+
+  describe('Welcome Back (Phase 69)', () => {
+    it('endSession should snapshot wordsLearned and reviewsDone', () => {
+      const startTime = Date.now();
+      const startState = {
+        ...initialState,
+        sessionStartTime: startTime,
+        goals: {
+          ...initialState.goals,
+          wordsLearned: { target: 5, current: 3 },
+          reviewsDone: { target: 10, current: 7 },
+        },
+      };
+
+      vi.advanceTimersByTime(2 * 60 * 1000);
+      const state = dailyGoalsReducer(startState, endSession());
+
+      expect(state.lastSessionWordsLearned).toBe(3);
+      expect(state.lastSessionReviewsDone).toBe(7);
+    });
+
+    it('endSession should set lastSessionEndTime', () => {
+      const startTime = Date.now();
+      const startState = {
+        ...initialState,
+        sessionStartTime: startTime,
+      };
+
+      vi.advanceTimersByTime(1 * 60 * 1000);
+      const state = dailyGoalsReducer(startState, endSession());
+
+      expect(state.lastSessionEndTime).toBeTruthy();
+      expect(typeof state.lastSessionEndTime).toBe('string');
+      // Should be a valid ISO date string
+      expect(() => new Date(state.lastSessionEndTime)).not.toThrow();
+    });
+
+    it('markWelcomeBackShown should set flag to true', () => {
+      const state = dailyGoalsReducer(initialState, markWelcomeBackShown());
+      expect(state.welcomeBackShown).toBe(true);
+    });
+
+    it('resetWelcomeBackShown should set flag to false', () => {
+      const startState = { ...initialState, welcomeBackShown: true };
+      const state = dailyGoalsReducer(startState, resetWelcomeBackShown());
+      expect(state.welcomeBackShown).toBe(false);
+    });
+
+    it('daily reset (checkDailyReset) should clear welcomeBackShown', () => {
+      const yesterday = '2026-02-08';
+      const startState = {
+        ...initialState,
+        date: yesterday,
+        welcomeBackShown: true,
+      };
+
+      const state = dailyGoalsReducer(startState, checkDailyReset());
+      expect(state.welcomeBackShown).toBe(false);
+    });
+
+    it('daily reset (resetDailyGoals) should clear welcomeBackShown', () => {
+      const startState = {
+        ...initialState,
+        date: '2026-02-08',
+        welcomeBackShown: true,
+      };
+
+      const state = dailyGoalsReducer(startState, resetDailyGoals());
+      expect(state.welcomeBackShown).toBe(false);
+    });
+
+    it('initial state should have welcomeBackShown as false', () => {
+      expect(initialState.welcomeBackShown).toBe(false);
+    });
+
+    it('initial state should have lastSessionWordsLearned as 0', () => {
+      expect(initialState.lastSessionWordsLearned).toBe(0);
+    });
+
+    it('initial state should have lastSessionReviewsDone as 0', () => {
+      expect(initialState.lastSessionReviewsDone).toBe(0);
+    });
+
+    it('initial state should have lastSessionEndTime as null', () => {
+      expect(initialState.lastSessionEndTime).toBeNull();
     });
   });
 });

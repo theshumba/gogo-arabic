@@ -12,9 +12,10 @@
  * exists in a higher-priority source, the duplicate from the lower-priority
  * source is excluded.
  *
- * Entries from vocabulary-final.json that lack an English translation (mostly
- * Quranic-only vocabulary) are excluded because the quiz and review systems
- * require an English field for all question types.
+ * CEFR-split loading (Phase 65-02):
+ *   - A1-A2 words load eagerly (vocabulary.json + vocabulary-final A1-A2)
+ *   - B1-B2 words load lazily from vocabularyExpanded.js on first access
+ *   - The default export starts with A1-A2, then expands when B1-B2 loads
  *
  * Every exported entry is guaranteed to have at minimum:
  *   id, arabic, english, category, difficulty
@@ -24,18 +25,11 @@
  * to reorder new card queues per player learning path (PATH-03).
  */
 
-import curatedWords from './vocabulary.json';
-import finalWords from './vocabulary-final.json';
-import expandedWords from './vocabularyExpanded.js';
+import { getAllVocabularySync, loadExtendedVocabulary } from './vocabularyByLevel.js';
 
 // ============================================================
 // DOMAIN AFFINITY MAPPING — category → learning path IDs
 // ============================================================
-// Scholar domain — reading, writing, formal language, sciences
-// Traveler domain — daily life, greetings, social, practical
-// Historian domain — history, culture, geography, architecture
-// ============================================================
-
 const CATEGORY_AFFINITY = {
   // Scholar domain
   grammar: ['scholar'],
@@ -153,76 +147,48 @@ const CATEGORY_AFFINITY = {
   library_sciences: ['scholar'],
 };
 
-// Build a Set of IDs already present in the curated dataset
-const curatedIds = new Set(curatedWords.map((w) => w.id));
+/**
+ * Post-process vocabulary: assign domainAffinity and infer CEFR levels.
+ */
+function enrichVocabulary(words) {
+  for (const word of words) {
+    // Assign domain affinity
+    word.domainAffinity = CATEGORY_AFFINITY[word.category] || [];
 
-// Filter vocabulary-final entries: must have a non-null English translation
-// and must not duplicate an ID already in the curated set.
-const additionalWords = finalWords
-  .filter((w) => w.english != null && w.english !== '' && !curatedIds.has(w.id))
-  .map((w) => ({
-    // Normalize to the schema the app expects
-    id: w.id,
-    arabic: w.arabic,
-    english: w.english,
-    transliteration: w.transliteration || null,
-    category: w.category || 'general',
-    difficulty: w.difficulty || 1,
-    // Preserve optional fields when present
-    audioRef: w.audioRef || null,
-    npcSource: w.npcSource || null,
-    exampleSentence: w.exampleSentence || null,
-    // Carry forward vocabulary-final-specific fields that other systems may use
-    source: w.source || null,
-    quranRef: w.quranRef || null,
-    rootLetters: w.rootLetters || null,
-    partOfSpeech: w.partOfSpeech || null,
-    zone: w.zone || null,
-    frequency: w.frequency ?? null,
-  }));
+    // Normalize fields for vocabulary-final entries
+    if (!word.transliteration) word.transliteration = word.transliteration || null;
+    if (!word.category) word.category = 'general';
+    if (!word.difficulty) word.difficulty = 1;
+    if (!word.audioRef) word.audioRef = word.audioRef || null;
+    if (!word.npcSource) word.npcSource = word.npcSource || null;
+    if (!word.exampleSentence) word.exampleSentence = word.exampleSentence || null;
 
-// Build a Set of all IDs from curated + additional to deduplicate expanded words
-const allExistingIds = new Set([
-  ...curatedWords.map((w) => w.id),
-  ...additionalWords.map((w) => w.id),
-]);
-
-// Filter expanded words: exclude any ID already present in higher-priority sources
-const newExpandedWords = expandedWords.filter((w) => !allExistingIds.has(w.id));
-
-// Merge: curated first (richest metadata), then additional, then expanded
-const merged = [...curatedWords, ...additionalWords, ...newExpandedWords];
-
-// Secondary dedup: remove entries with duplicate Arabic text (keep first occurrence = highest priority source)
-const seenArabic = new Set();
-const vocabulary = [];
-for (const word of merged) {
-  if (seenArabic.has(word.arabic)) continue;
-  seenArabic.add(word.arabic);
-  vocabulary.push(word);
-}
-
-// Post-process: assign domainAffinity to every word based on its category.
-// Words matching a learning path's domain appear first in selectNewCardsByPath.
-for (const word of vocabulary) {
-  word.domainAffinity = CATEGORY_AFFINITY[word.category] || [];
-}
-
-// Infer CEFR level for legacy words (vocabulary.json / vocabulary-final.json) that lack cefrLevel.
-// Uses frequency bands matching vocabularyExpanded.js conventions, with difficulty fallback.
-for (const word of vocabulary) {
-  if (!word.cefrLevel) {
-    if (word.frequency >= 4000) word.cefrLevel = 'A1';
-    else if (word.frequency >= 2000) word.cefrLevel = 'A2';
-    else if (word.frequency >= 500) word.cefrLevel = 'B1';
-    else if (word.frequency != null) word.cefrLevel = 'B2';
-    else if (word.difficulty === 1) word.cefrLevel = 'A1';
-    else if (word.difficulty === 2) word.cefrLevel = 'A2';
-    else if (word.difficulty === 3) word.cefrLevel = 'B1';
-    else if (word.difficulty === 4) word.cefrLevel = 'B2';
-    else word.cefrLevel = 'A2'; // safe fallback for words with no frequency or difficulty
+    // Infer CEFR level for legacy words lacking cefrLevel
+    if (!word.cefrLevel) {
+      if (word.frequency >= 4000) word.cefrLevel = 'A1';
+      else if (word.frequency >= 2000) word.cefrLevel = 'A2';
+      else if (word.frequency >= 500) word.cefrLevel = 'B1';
+      else if (word.frequency != null) word.cefrLevel = 'B2';
+      else if (word.difficulty === 1) word.cefrLevel = 'A1';
+      else if (word.difficulty === 2) word.cefrLevel = 'A2';
+      else if (word.difficulty === 3) word.cefrLevel = 'B1';
+      else if (word.difficulty === 4) word.cefrLevel = 'B2';
+      else word.cefrLevel = 'A2'; // safe fallback
+    }
   }
+  return words;
 }
+
+// Get initial vocabulary (A1-A2 eagerly loaded)
+const vocabulary = enrichVocabulary(getAllVocabularySync());
+
+// Trigger background load of B1-B2 words — the array reference stays the same,
+// but getAllVocabularySync() will return the expanded set after load completes.
+// Components that re-render (e.g., on Redux state change) will pick up new words.
+loadExtendedVocabulary().then(() => {
+  const full = getAllVocabularySync();
+  enrichVocabulary(full);
+}).catch(() => {});
 
 // Dev-mode affinity summary (stripped by bundler in production via dead-code elimination)
 if (import.meta.env.DEV) {
@@ -238,3 +204,4 @@ if (import.meta.env.DEV) {
 }
 
 export default vocabulary;
+export { loadExtendedVocabulary };

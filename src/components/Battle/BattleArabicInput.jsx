@@ -12,6 +12,7 @@ import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { audioManager } from '../../services/audio.js';
+import styles from './BattleArabicInput.module.css';
 
 const reduceMotion =
   typeof window !== 'undefined' &&
@@ -123,56 +124,25 @@ export default function BattleArabicInput({ prompt, onSubmit, mode = 'attack' })
 
   return (
     <motion.div
-      className="battle-input-overlay"
+      className={styles.inputOverlay}
       initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: reduceMotion ? 0.1 : 0.15 }}
-      style={{
-        position: 'absolute',
-        bottom: '100px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        direction: 'rtl',
-        zIndex: 1001,
-        background: 'rgba(26, 26, 46, 0.95)',
-        border: '2px solid rgba(226, 182, 89, 0.6)',
-        padding: '20px',
-        minWidth: '320px',
-        maxWidth: '440px',
-      }}
     >
       {/* Timer bar */}
-      <div
-        style={{
-          width: '100%',
-          height: '6px',
-          background: 'rgba(255,255,255,0.1)',
-          marginBottom: '16px',
-          overflow: 'hidden',
-        }}
-      >
+      <div className={styles.timerBarTrack}>
         <div
+          className={styles.timerBarFill}
           style={{
             width: `${timerPercent}%`,
-            height: '100%',
             background: timerColor,
-            transition: 'width 100ms linear',
           }}
         />
       </div>
 
       {/* Flee mode header */}
       {mode === 'flee' && (
-        <p
-          style={{
-            fontFamily: "'Amiri', serif",
-            fontSize: '16px',
-            color: '#CC4444',
-            textAlign: 'center',
-            marginBottom: '10px',
-          }}
-          lang="ar"
-        >
+        <p className={styles.fleeHeader} lang="ar">
           {'!أجب للهروب — Answer to Flee'}
         </p>
       )}
@@ -180,33 +150,15 @@ export default function BattleArabicInput({ prompt, onSubmit, mode = 'attack' })
       {/* Choice mode */}
       {prompt.difficulty === 'choice' && (
         <div>
-          <p
-            style={{
-              fontFamily: "'Amiri', serif",
-              fontSize: '24px',
-              color: '#f5f0e8',
-              textAlign: 'center',
-              marginBottom: '16px',
-            }}
-            lang="ar"
-          >
+          <p className={styles.choiceArabicPrompt} lang="ar">
             {formatArabic(prompt.word?.arabic || '')}
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div className={styles.choiceList}>
             {(prompt.choices || []).map((choice, idx) => (
               <button
                 key={idx}
+                className={styles.choiceButton}
                 onClick={() => handleSubmit(choice.value)}
-                style={{
-                  padding: '10px 16px',
-                  background: 'rgba(255,255,255,0.08)',
-                  border: '1px solid rgba(226, 182, 89, 0.4)',
-                  color: '#f5f0e8',
-                  fontFamily: "'Press Start 2P', monospace",
-                  fontSize: '10px',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                }}
               >
                 {choice.label}
               </button>
@@ -218,20 +170,13 @@ export default function BattleArabicInput({ prompt, onSubmit, mode = 'attack' })
       {/* Type mode */}
       {prompt.difficulty === 'type' && (
         <div>
-          <p
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '12px',
-              color: '#f5f0e8',
-              textAlign: 'center',
-              marginBottom: '12px',
-            }}
-          >
+          <p className={styles.typePrompt}>
             {prompt.word?.english || ''}
           </p>
           <input
             ref={inputRef}
             type="text"
+            className={styles.typeInput}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -240,32 +185,10 @@ export default function BattleArabicInput({ prompt, onSubmit, mode = 'attack' })
             placeholder="...اكتب بالعربية"
             dir="rtl"
             autoComplete="off"
-            style={{
-              width: '100%',
-              padding: '10px 14px',
-              fontFamily: "'Amiri', serif",
-              fontSize: '20px',
-              color: '#f5f0e8',
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(226, 182, 89, 0.5)',
-              outline: 'none',
-              direction: 'rtl',
-              marginBottom: '10px',
-              boxSizing: 'border-box',
-            }}
           />
           <button
+            className={styles.typeSubmitBtn}
             onClick={() => handleSubmit()}
-            style={{
-              width: '100%',
-              padding: '10px',
-              background: 'rgba(226, 182, 89, 0.8)',
-              border: 'none',
-              color: '#1A1A2E',
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '11px',
-              cursor: 'pointer',
-            }}
           >
             Submit
           </button>

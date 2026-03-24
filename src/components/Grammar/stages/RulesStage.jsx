@@ -1,35 +1,36 @@
 import { motion } from 'framer-motion';
-import { containerStyle, headerStyle, titleStyle, bodyStyle, sectionTitleStyle, exampleBoxStyle, btnStyle, pixelBtnDark, FONTS, COLORS } from '../grammarStyles.js';
+import { pixelBtnDark, pixelBtnGold } from '../../../styles/theme.js';
+import styles from './GrammarStages.module.css';
 
 export default function RulesStage({ lesson, onBack, onNext }) {
   return (
     <motion.div
-      style={containerStyle}
+      className={styles.container}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <div style={headerStyle}>
+      <div className={styles.header}>
         <button onClick={onBack} style={pixelBtnDark}>Back</button>
-        <div style={titleStyle}>Key Rules</div>
-        <div style={{ width: '80px' }} />
+        <div className={styles.title}>Key Rules</div>
+        <div className={styles.spacer} />
       </div>
 
-      <div style={bodyStyle}>
-        <div style={sectionTitleStyle}>Remember these rules:</div>
+      <div className={styles.body}>
+        <div className={styles.sectionTitle}>Remember these rules:</div>
 
         {lesson.rules.map((rule, idx) => (
-          <div key={idx} style={exampleBoxStyle}>
-            <div style={{ fontFamily: FONTS.pixel, fontSize: '12px', color: COLORS.brown, marginBottom: '10px', fontWeight: 'bold' }}>
+          <div key={idx} className={styles.exampleBox}>
+            <div className={styles.ruleText}>
               {rule.rule}
             </div>
-            <div style={{ fontFamily: FONTS.pixel, fontSize: '11px', color: COLORS.dark }}>
+            <div className={styles.ruleExample}>
               Example: {rule.example}
             </div>
           </div>
         ))}
 
-        <button onClick={onNext} style={btnStyle}>Start Exercises</button>
+        <button onClick={onNext} style={{ ...pixelBtnGold, marginTop: '20px' }}>Start Exercises</button>
       </div>
     </motion.div>
   );

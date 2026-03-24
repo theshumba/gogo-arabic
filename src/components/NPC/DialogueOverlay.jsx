@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { closeDialogue, showNotification } from '../../store/slices/uiSlice.js';
-import { selectNpcRelationship } from '../../store/slices/narrativeSlice.js';
+import { selectNpcRelationship, incrementNpcRelationship } from '../../store/slices/narrativeSlice.js';
 import { giveNpcGift } from '../../store/slices/npcSlice.js';
 import { selectInventoryItems, removeItem } from '../../store/slices/inventorySlice.js';
 import { GIFTS, GIFTS_BY_ID } from '../../data/gifts.js';
@@ -22,6 +22,7 @@ import CulturalDialogueMenu from './CulturalDialogueMenu.jsx';
 import TopicSelectionMenu from './TopicSelectionMenu.jsx';
 import ConversationHistory from './ConversationHistory.jsx';
 import RelationshipIndicator from './RelationshipIndicator.jsx';
+import ComprehensionCheck from './ComprehensionCheck.jsx';
 import styles from './DialogueOverlay.module.css';
 
 /* ---- animation variants ---- */
@@ -88,6 +89,7 @@ export default function DialogueOverlay() {
   // inkDialogueState: { lines: string[], choices: Choice[], engine, npcData } | null
   const [inkDialogueState, setInkDialogueState] = useState(null);
   const [inkLineIndex, setInkLineIndex] = useState(0);
+  const [comprehensionCheck, setComprehensionCheck] = useState(null);
   const inkEngineRef = useRef(null);
 
   useEffect(() => {
@@ -95,12 +97,24 @@ export default function DialogueOverlay() {
       inkEngineRef.current = engine;
       engine.syncStateIn();
       const lines = [];
+      const lineTags = [];
       while (engine.canContinue()) {
         lines.push(engine.continue().trim());
+        lineTags.push([...(engine._story?.currentTags || [])]);
       }
       const choices = engine.currentChoices();
-      setInkDialogueState({ lines: lines.filter(Boolean), choices, npcData: inkNpcData });
+      // Build a tag map that survives Boolean filtering (maps filtered index -> original tags)
+      const filtered = [];
+      const filteredTags = [];
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i]) {
+          filtered.push(lines[i]);
+          filteredTags.push(lineTags[i]);
+        }
+      }
+      setInkDialogueState({ lines: filtered, choices, npcData: inkNpcData, lineTags: filteredTags });
       setInkLineIndex(0);
+      setComprehensionCheck(null);
       EventBus.emit(EVENTS.PLAYER_FREEZE);
     };
 
@@ -144,25 +158,45 @@ export default function DialogueOverlay() {
     if (!engine) return;
     engine.chooseChoiceIndex(choiceIndex);
     const lines = [];
+    const lineTags = [];
     while (engine.canContinue()) {
       lines.push(engine.continue().trim());
+      lineTags.push([...(engine._story?.currentTags || [])]);
     }
     const choices = engine.currentChoices();
-    if (lines.filter(Boolean).length === 0 && choices.length === 0) {
-      // Ink story complete — syncStateOut dispatches setLearningPath + ONBOARDING_PATH_CHOSEN
+    // Build filtered arrays that preserve tag alignment
+    const filtered = [];
+    const filteredTags = [];
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i]) {
+        filtered.push(lines[i]);
+        filteredTags.push(lineTags[i]);
+      }
+    }
+    if (filtered.length === 0 && choices.length === 0) {
       _closeInkDialogue(engine);
     } else {
-      setInkDialogueState((prev) => ({ ...prev, lines: lines.filter(Boolean), choices }));
+      setInkDialogueState((prev) => ({ ...prev, lines: filtered, choices, lineTags: filteredTags }));
       setInkLineIndex(0);
+      setComprehensionCheck(null);
     }
   };
 
   const advanceInkLine = () => {
     const engine = inkEngineRef.current;
     if (!engine || !inkDialogueState) return;
+    if (comprehensionCheck) return; // Blocked by active check
     const nextIdx = inkLineIndex + 1;
     if (nextIdx < inkDialogueState.lines.length) {
       setInkLineIndex(nextIdx);
+      // Check if next line has comprehension_check tag
+      const tags = inkDialogueState.lineTags?.[nextIdx] || [];
+      if (tags.includes('comprehension_check')) {
+        const checkData = engine.getComprehensionData();
+        if (checkData) {
+          setComprehensionCheck(checkData);
+        }
+      }
     } else if (inkDialogueState.choices.length > 0) {
       // All lines shown — keep at last line so choices are visible
     } else {
@@ -251,11 +285,11 @@ export default function DialogueOverlay() {
       <div ref={focusTrapRef} className={styles.overlay} role="dialog" aria-label="Dialogue with Guide Amira">
         <motion.div
           className={styles.backdrop}
-          onClick={!showingChoices ? advanceInkLine : undefined}
-          role={!showingChoices ? 'button' : undefined}
-          tabIndex={!showingChoices ? 0 : undefined}
-          aria-label={!showingChoices ? 'Continue dialogue' : undefined}
-          onKeyDown={!showingChoices ? (e) => {
+          onClick={!showingChoices && !comprehensionCheck ? advanceInkLine : undefined}
+          role={!showingChoices && !comprehensionCheck ? 'button' : undefined}
+          tabIndex={!showingChoices && !comprehensionCheck ? 0 : undefined}
+          aria-label={!showingChoices && !comprehensionCheck ? 'Continue dialogue' : undefined}
+          onKeyDown={!showingChoices && !comprehensionCheck ? (e) => {
             if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); advanceInkLine(); }
           } : undefined}
           variants={backdropVariants}
@@ -288,6 +322,25 @@ export default function DialogueOverlay() {
               >
                 {currentInkLine}
               </p>
+
+              {comprehensionCheck && (
+                <ComprehensionCheck
+                  question={comprehensionCheck.question}
+                  options={comprehensionCheck.options}
+                  correctIndex={comprehensionCheck.correctIndex}
+                  onComplete={(wasCorrect) => {
+                    if (wasCorrect && inkDialogueState.npcData?.id) {
+                      dispatch(incrementNpcRelationship({
+                        npcId: inkDialogueState.npcData.id,
+                        amount: 2,
+                      }));
+                    }
+                    setComprehensionCheck(null);
+                    // Auto-advance past the check line
+                    advanceInkLine();
+                  }}
+                />
+              )}
 
               {showingChoices ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>

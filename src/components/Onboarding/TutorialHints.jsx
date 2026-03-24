@@ -21,29 +21,8 @@ export function WelcomeSplash({ onDone }) {
   }, [onDone]);
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 9999,
-        pointerEvents: 'none',
-        animation: 'fadeOut 1s ease-in 2s forwards',
-      }}
-    >
-      <div
-        style={{
-          background: 'rgba(0,0,0,0.7)',
-          color: '#fff',
-          padding: '24px 48px',
-          borderRadius: '12px',
-          fontFamily: 'var(--font-primary, sans-serif)',
-          fontSize: '1.5rem',
-          textAlign: 'center',
-        }}
-      >
+    <div className={styles.splashOverlay}>
+      <div className={styles.splashPanel}>
         Welcome to Gogo Arabic
       </div>
     </div>

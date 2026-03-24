@@ -129,14 +129,14 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PERF-01 | Phase 65 | Pending |
-| PERF-02 | Phase 65 | Pending |
-| PERF-03 | Phase 65 | Pending |
+| PERF-01 | Phase 65 | Complete |
+| PERF-02 | Phase 65 | Complete |
+| PERF-03 | Phase 65 | Complete |
 | PERF-04 | Phase 66 | Pending |
-| WIRE-01 | Phase 67 | Pending |
-| WIRE-02 | Phase 67 | Pending |
-| WIRE-03 | Phase 67 | Pending |
-| WIRE-04 | Phase 67 | Pending |
+| WIRE-01 | Phase 67 | Complete |
+| WIRE-02 | Phase 67 | Complete |
+| WIRE-03 | Phase 67 | Complete |
+| WIRE-04 | Phase 67 | Complete |
 | QUIZ-04 | Phase 68 | Pending |
 | QUIZ-05 | Phase 68 | Pending |
 | QUIZ-06 | Phase 68 | Pending |

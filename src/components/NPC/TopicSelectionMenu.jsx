@@ -83,7 +83,7 @@ export default function TopicSelectionMenu({
             );
           })}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className={styles.bottomRow}>
           <button
             className={styles.historyBtn}
             onClick={onShowHistory}

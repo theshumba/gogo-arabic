@@ -5,128 +5,7 @@ import { shuffle } from '../../utils/shuffle.js';
 import SentenceBuilder from './SentenceBuilder.jsx';
 import ProgressBar from '../Quiz/ProgressBar.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
-import { COLORS, FONTS, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
-
-const styles = {
-  container: {
-    width: '100%',
-    height: '100%',
-    background: COLORS.dark,
-    color: COLORS.white,
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
-    fontFamily: FONTS.pixel,
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 16px',
-    borderBottom: `4px solid ${COLORS.gray}`,
-    background: COLORS.dark,
-  },
-  backBtn: {
-    ...pixelBtnDark,
-    padding: '5px 12px',
-    fontSize: '8px',
-  },
-  headerTitle: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.beige,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  headerProgress: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.lightGray,
-  },
-  body: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px',
-    overflowY: 'auto',
-  },
-  progressContainer: {
-    width: '100%',
-    maxWidth: '600px',
-    marginBottom: '16px',
-  },
-  scoreText: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.lightGray,
-    marginBottom: '16px',
-  },
-  filterRow: {
-    display: 'flex',
-    gap: '8px',
-    marginBottom: '20px',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  filterBtn: {
-    ...pixelBtnDark,
-    padding: '6px 12px',
-    fontSize: '7px',
-  },
-  filterBtnActive: {
-    ...pixelBtnGold,
-    padding: '6px 12px',
-    fontSize: '7px',
-  },
-  startBtn: {
-    ...pixelBtnGold,
-    padding: '12px 32px',
-    fontSize: '10px',
-  },
-  nextBtn: {
-    ...pixelBtnGold,
-    padding: '10px 24px',
-    fontSize: '9px',
-    marginTop: '16px',
-  },
-  summaryContainer: {
-    textAlign: 'center',
-  },
-  summaryScore: {
-    fontFamily: FONTS.pixel,
-    fontSize: '32px',
-    color: COLORS.xpGold,
-    margin: '16px 0',
-  },
-  summaryMsg: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.lightGray,
-    marginBottom: '20px',
-  },
-  noWordsMsg: {
-    fontFamily: FONTS.pixel,
-    fontSize: '12px',
-    color: COLORS.beige,
-    marginBottom: '12px',
-  },
-  noWordsSub: {
-    fontFamily: FONTS.pixel,
-    fontSize: '8px',
-    color: COLORS.lightGray,
-    marginBottom: '20px',
-    maxWidth: '400px',
-    lineHeight: '1.6',
-  },
-  difficultyLabel: {
-    fontFamily: FONTS.pixel,
-    fontSize: '8px',
-    color: COLORS.lightGray,
-    marginBottom: '8px',
-  },
-};
+import styles from './SentencePractice.module.css';
 
 const CATEGORIES = ['all', 'adjectives', 'greetings', 'numbers', 'food', 'colors', 'family', 'directions', 'time', 'verbs'];
 const DIFFICULTIES = [1, 2, 3, 4, 5];
@@ -144,7 +23,6 @@ function SentencePractice({ onBack }) {
   const [currentQuizData, setCurrentQuizData] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
 
-  // Memoize filtered words to avoid recalculating on every render
   const availableWords = useMemo(() => {
     return vocabulary.filter(w =>
       w.exampleSentence &&
@@ -157,8 +35,6 @@ function SentencePractice({ onBack }) {
 
   const startPractice = useCallback(() => {
     if (availableWords.length === 0) return;
-
-    // Take up to 10 random words
     const words = shuffle(availableWords).slice(0, 10);
     setPracticeWords(words);
     setCurrentIndex(0);
@@ -167,15 +43,12 @@ function SentencePractice({ onBack }) {
     setStarted(true);
     setDone(false);
     setIsAnswered(false);
-
-    // Prepare first quiz
     const quizData = prepareSentenceQuiz(words[0], vocabulary);
     setCurrentQuizData(quizData);
   }, [availableWords]);
 
   const handleComplete = useCallback((result) => {
     if (isAnswered) return;
-
     setIsAnswered(true);
     setTotal(prev => prev + 1);
     if (result.correct) {
@@ -185,15 +58,12 @@ function SentencePractice({ onBack }) {
 
   const handleNext = useCallback(() => {
     const nextIndex = currentIndex + 1;
-
     if (nextIndex >= practiceWords.length) {
       setDone(true);
       return;
     }
-
     setCurrentIndex(nextIndex);
     setIsAnswered(false);
-
     const nextWord = practiceWords[nextIndex];
     const quizData = prepareSentenceQuiz(nextWord, vocabulary);
     setCurrentQuizData(quizData);
@@ -212,20 +82,20 @@ function SentencePractice({ onBack }) {
   // Setup screen
   if (!started && !done) {
     return (
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <button style={styles.backBtn} onClick={onBack}>Back</button>
-          <div style={styles.headerTitle}>Sentence Practice</div>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <button className={styles.backBtn} onClick={onBack}>Back</button>
+          <div className={styles.headerTitle}>Sentence Practice</div>
           <div />
         </div>
 
-        <div style={styles.body}>
-          <div style={styles.difficultyLabel}>Filter by Category:</div>
-          <div style={styles.filterRow}>
+        <div className={styles.body}>
+          <div className={styles.difficultyLabel}>Filter by Category:</div>
+          <div className={styles.filterRow}>
             {CATEGORIES.map(cat => (
               <button
                 key={cat}
-                style={selectedCategory === cat ? styles.filterBtnActive : styles.filterBtn}
+                className={selectedCategory === cat ? styles.filterBtnActive : styles.filterBtn}
                 onClick={() => setSelectedCategory(cat)}
               >
                 {cat}
@@ -233,10 +103,10 @@ function SentencePractice({ onBack }) {
             ))}
           </div>
 
-          <div style={styles.difficultyLabel}>Filter by Difficulty:</div>
-          <div style={styles.filterRow}>
+          <div className={styles.difficultyLabel}>Filter by Difficulty:</div>
+          <div className={styles.filterRow}>
             <button
-              style={selectedDifficulty === null ? styles.filterBtnActive : styles.filterBtn}
+              className={selectedDifficulty === null ? styles.filterBtnActive : styles.filterBtn}
               onClick={() => setSelectedDifficulty(null)}
             >
               All
@@ -244,7 +114,7 @@ function SentencePractice({ onBack }) {
             {DIFFICULTIES.map(diff => (
               <button
                 key={diff}
-                style={selectedDifficulty === diff ? styles.filterBtnActive : styles.filterBtn}
+                className={selectedDifficulty === diff ? styles.filterBtnActive : styles.filterBtn}
                 onClick={() => setSelectedDifficulty(diff)}
               >
                 Level {diff}
@@ -254,17 +124,17 @@ function SentencePractice({ onBack }) {
 
           {availableWords.length > 0 ? (
             <>
-              <div style={styles.noWordsSub}>
+              <div className={styles.noWordsSub}>
                 {availableWords.length} sentence{availableWords.length !== 1 ? 's' : ''} available
               </div>
-              <button style={styles.startBtn} onClick={startPractice}>
+              <button className={styles.startBtn} onClick={startPractice}>
                 Start Practice
               </button>
             </>
           ) : (
             <>
-              <div style={styles.noWordsMsg}>No sentences available</div>
-              <div style={styles.noWordsSub}>
+              <div className={styles.noWordsMsg}>No sentences available</div>
+              <div className={styles.noWordsSub}>
                 Try selecting a different category or difficulty level.
                 Not all words have example sentences.
               </div>
@@ -279,24 +149,24 @@ function SentencePractice({ onBack }) {
   if (done) {
     const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
     return (
-      <div style={styles.container}>
-        <div style={styles.header}>
+      <div className={styles.container}>
+        <div className={styles.header}>
           <div />
-          <div style={styles.headerTitle}>Practice Complete</div>
+          <div className={styles.headerTitle}>Practice Complete</div>
           <div />
         </div>
 
-        <div style={styles.body}>
-          <div style={styles.summaryContainer}>
-            <div style={styles.summaryScore}>{score}/{total}</div>
-            <div style={styles.summaryMsg}>
+        <div className={styles.body}>
+          <div className={styles.summaryContainer}>
+            <div className={styles.summaryScore}>{score}/{total}</div>
+            <div className={styles.summaryMsg}>
               {percentage === 100 ? 'Perfect score!' : percentage >= 80 ? 'Great work!' : 'Keep practicing!'}
             </div>
-            <button style={styles.startBtn} onClick={handleRetry}>
+            <button className={styles.startBtn} onClick={handleRetry}>
               Practice Again
             </button>
-            <div style={{ marginTop: '12px' }}>
-              <button style={styles.backBtn} onClick={onBack}>
+            <div className={styles.backBtnMargin}>
+              <button className={styles.backBtn} onClick={onBack}>
                 Back to Menu
               </button>
             </div>
@@ -308,21 +178,21 @@ function SentencePractice({ onBack }) {
 
   // Practice in progress
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <button style={styles.backBtn} onClick={onBack}>Quit</button>
-        <div style={styles.headerTitle}>Sentence Practice</div>
-        <div style={styles.headerProgress}>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <button className={styles.backBtn} onClick={onBack}>Quit</button>
+        <div className={styles.headerTitle}>Sentence Practice</div>
+        <div className={styles.headerProgress}>
           {currentIndex + 1}/{practiceWords.length}
         </div>
       </div>
 
-      <div style={styles.body}>
-        <div style={styles.progressContainer}>
+      <div className={styles.body}>
+        <div className={styles.progressContainer}>
           <ProgressBar current={currentIndex + 1} total={practiceWords.length} />
         </div>
 
-        <div style={styles.scoreText}>{score}/{total} correct</div>
+        <div className={styles.scoreText}>{score}/{total} correct</div>
 
         {currentQuizData && (
           <SentenceBuilder
@@ -333,7 +203,7 @@ function SentencePractice({ onBack }) {
         )}
 
         {isAnswered && (
-          <button style={styles.nextBtn} onClick={handleNext}>
+          <button className={styles.nextBtn} onClick={handleNext}>
             {currentIndex + 1 >= practiceWords.length ? 'View Results' : 'Next Sentence'}
           </button>
         )}
@@ -342,5 +212,4 @@ function SentencePractice({ onBack }) {
   );
 }
 
-// Memoize component
 export default memo(SentencePractice);

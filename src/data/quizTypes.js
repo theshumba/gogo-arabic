@@ -2,7 +2,7 @@
  * QUIZ_TYPE_REGISTRY — Central registry of all quiz types with gating metadata.
  * Phase 59: 12 existing + 6 Phase 60 stubs.
  * Phase 60: GrammarFill (minLevel:4), ClozePassage (minLevel:4), WordOrder (minLevel:5) renderers shipped.
- * Deferred: DialectIdentify, RootExpand, CulturalContext (minLevel:999, cefrMin:B2).
+ * Phase 68: DialectIdentify (minLevel:8), RootExpand (minLevel:8), CulturalContext (minLevel:8) — all 18 types active.
  *
  * Fields:
  *   label    — Human-readable name (used by QuizOverlay header)
@@ -27,13 +27,13 @@ export const QUIZ_TYPE_REGISTRY = {
   'transliterate':   { label: 'Transliterate',       cluster: 'reading',    minLevel: 3,   cefrMin: 'A1' },
   'conjugation':     { label: 'Conjugation',         cluster: 'grammar',    minLevel: 4,   cefrMin: 'A1' },
   'picture-word':    { label: 'Picture Word',        cluster: 'vocabulary', minLevel: 1,   cefrMin: null },
-  // ── Phase 60 types — GrammarFill, ClozePassage, WordOrder renderers shipped; deferred types at minLevel: 999 ──
+  // ── Phase 60 types (GrammarFill, ClozePassage, WordOrder) + Phase 68 types (DialectIdentify, RootExpand, CulturalContext) ──
   'GrammarFill':     { label: 'Grammar Fill',        cluster: 'grammar',    minLevel: 4,   cefrMin: 'A2' },
   'ClozePassage':    { label: 'Cloze Passage',       cluster: 'grammar',    minLevel: 4,   cefrMin: 'A2' },
   'WordOrder':       { label: 'Word Order',          cluster: 'grammar',    minLevel: 5,   cefrMin: 'B1' },
-  'DialectIdentify': { label: 'Dialect Identify',    cluster: 'listening',  minLevel: 999, cefrMin: 'B2' },
-  'RootExpand':      { label: 'Root Expand',         cluster: 'roots',      minLevel: 999, cefrMin: 'B2' },
-  'CulturalContext': { label: 'Cultural Context',    cluster: 'reading',    minLevel: 999, cefrMin: 'B2' },
+  'DialectIdentify': { label: 'Dialect Identify',    cluster: 'listening',  minLevel: 8,   cefrMin: 'B2' },
+  'RootExpand':      { label: 'Root Expand',         cluster: 'roots',      minLevel: 8,   cefrMin: 'B2' },
+  'CulturalContext': { label: 'Cultural Context',    cluster: 'reading',    minLevel: 8,   cefrMin: 'B2' },
 };
 
 /**

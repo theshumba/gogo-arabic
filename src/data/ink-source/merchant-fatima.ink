@@ -2,10 +2,12 @@ EXTERNAL changeRelationship(npcId, amount)
 EXTERNAL setLearningPath(path)
 EXTERNAL startQuest(questId)
 EXTERNAL getFlag(key)
+EXTERNAL setFlag(key)
 EXTERNAL getLearningPath()
 EXTERNAL getGossipToken(npcId)
 EXTERNAL markGossipHeard(npcId)
 EXTERNAL getGossipGrammarNote(npcId)
+EXTERNAL setComprehensionCheck(question, optionA, optionB, optionC, correctIndex)
 
 VAR global_first_purchase_made = false
 VAR gossip_line = ""
@@ -58,6 +60,18 @@ VAR gossip_grammar = ""
   كلمة سوق — market — من أقدم الكلمات العربية.
   وكلمة تاجر — merchant — من الجذر ت-ج-ر.
   -> END
+* {not getFlag("comprehension_fatima_bikam_done")} [اختبريني عن الأسعار]
+  -> comprehension_check_bikam
 * [وداعاً]
   مع السلامة! ارجع قريباً.
   -> END
+
+=== comprehension_check_bikam ===
+في السوق تحتاج هذه العبارة: بِكَم هٰذا؟ — "how much is this?"
+بِكَم = how much، هٰذا = this.
+~ setComprehensionCheck("كيف تسأل how much is this؟", "بِكَم هٰذا؟", "ما هٰذا؟", "أين هٰذا؟", 0)
+هيا، اسألني عن السعر! #comprehension_check
+تاجر ممتاز! الآن تستطيع المساومة في أي سوق.
+~ changeRelationship("merchant-fatima", 3)
+~ setFlag("comprehension_fatima_bikam_done")
+-> END

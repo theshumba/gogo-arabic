@@ -1,165 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react';
-import { COLORS, FONTS } from '../../styles/theme.js';
 import { validateSentence } from '../../utils/sentenceParser.js';
-
-const styles = {
-  container: {
-    width: '100%',
-    maxWidth: '600px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px',
-  },
-  englishPrompt: {
-    fontFamily: FONTS.pixel,
-    fontSize: '14px',
-    color: COLORS.beige,
-    textAlign: 'center',
-    marginBottom: '8px',
-    lineHeight: '1.6',
-  },
-  targetWordHint: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.lightGray,
-    textAlign: 'center',
-    marginBottom: '12px',
-  },
-  targetWordHighlight: {
-    color: COLORS.xpGold,
-    fontWeight: 'bold',
-  },
-  answerArea: {
-    minHeight: '80px',
-    background: COLORS.dark,
-    border: `4px solid ${COLORS.gray}`,
-    padding: '12px',
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '8px',
-    alignItems: 'center',
-    justifyContent: 'center',
-    direction: 'rtl',
-    borderRadius: '0px',
-    boxShadow: `
-      inset -4px -4px 0px 0px rgba(0,0,0,0.4),
-      inset 4px 4px 0px 0px rgba(255,255,255,0.05)
-    `,
-  },
-  answerAreaCorrect: {
-    borderColor: COLORS.green,
-    background: '#1a2e1a',
-    animation: 'pulse 0.5s ease-in-out',
-  },
-  answerAreaWrong: {
-    borderColor: COLORS.red,
-    background: '#2e1a1a',
-    animation: 'shake 0.5s ease-in-out',
-  },
-  emptyHint: {
-    fontFamily: FONTS.pixel,
-    fontSize: '8px',
-    color: COLORS.lightGray,
-    fontStyle: 'italic',
-  },
-  wordTile: {
-    fontFamily: FONTS.arabic,
-    fontSize: '24px',
-    padding: '8px 16px',
-    background: COLORS.beige,
-    border: `4px solid ${COLORS.dark}`,
-    color: COLORS.dark,
-    cursor: 'pointer',
-    borderRadius: '0px',
-    transition: 'all 0.1s',
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.1),
-      inset 3px 3px 0px 0px rgba(255,255,255,0.5),
-      0 4px 0 0 ${COLORS.brown}
-    `,
-    userSelect: 'none',
-    direction: 'rtl',
-  },
-  wordTileHover: {
-    transform: 'translateY(-2px)',
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.1),
-      inset 3px 3px 0px 0px rgba(255,255,255,0.5),
-      0 6px 0 0 ${COLORS.brown}
-    `,
-  },
-  wordTileInAnswer: {
-    background: COLORS.xpGold,
-    borderColor: COLORS.brown,
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.15),
-      inset 3px 3px 0px 0px rgba(255,255,255,0.4),
-      0 4px 0 0 #a0842a
-    `,
-  },
-  wordTileDisabled: {
-    opacity: 0.4,
-    cursor: 'not-allowed',
-  },
-  divider: {
-    height: '2px',
-    background: COLORS.gray,
-    margin: '8px 0',
-  },
-  tilesArea: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '8px',
-    justifyContent: 'center',
-    direction: 'rtl',
-  },
-  feedbackArea: {
-    textAlign: 'center',
-    marginTop: '12px',
-  },
-  transliterationText: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.lightGray,
-    fontStyle: 'italic',
-    marginTop: '8px',
-  },
-  correctSentence: {
-    fontFamily: FONTS.arabic,
-    fontSize: '28px',
-    direction: 'rtl',
-    color: COLORS.green,
-    marginTop: '12px',
-    lineHeight: '1.6',
-  },
-  instructionsText: {
-    fontFamily: FONTS.pixel,
-    fontSize: '7px',
-    color: COLORS.lightGray,
-    textAlign: 'center',
-    marginTop: '8px',
-  },
-};
-
-// CSS keyframes for animations (injected once)
-const injectAnimations = () => {
-  if (typeof document === 'undefined' || document.getElementById('sentence-builder-animations')) return;
-
-  const styleSheet = document.createElement('style');
-  styleSheet.id = 'sentence-builder-animations';
-  styleSheet.textContent = `
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-    }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-8px); }
-      75% { transform: translateX(8px); }
-    }
-  `;
-  document.head.appendChild(styleSheet);
-};
+import styles from './SentenceBuilder.module.css';
 
 function SentenceBuilder({
   quizData,
@@ -171,10 +12,6 @@ function SentenceBuilder({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [attempts, setAttempts] = useState(0);
-
-  useEffect(() => {
-    injectAnimations();
-  }, []);
 
   useEffect(() => {
     if (quizData && quizData.allWords) {
@@ -190,11 +27,9 @@ function SentenceBuilder({
     if (disabled || isSubmitted) return;
 
     if (isInAnswer) {
-      // Remove from answer, add back to available
       setUserAnswer(prev => prev.filter(w => w !== word));
       setAvailableWords(prev => [...prev, word]);
     } else {
-      // Add to answer, remove from available
       setUserAnswer(prev => [...prev, word]);
       setAvailableWords(prev => prev.filter(w => w !== word));
     }
@@ -253,59 +88,40 @@ function SentenceBuilder({
 
   if (!quizData) {
     return (
-      <div style={styles.container}>
-        <div style={styles.englishPrompt}>No sentence data available</div>
+      <div className={styles.container}>
+        <div className={styles.englishPrompt}>No sentence data available</div>
       </div>
     );
   }
 
   return (
-    <div style={styles.container}>
+    <div className={styles.container}>
       {/* English prompt */}
-      <div style={styles.englishPrompt}>
+      <div className={styles.englishPrompt}>
         {quizData.englishSentence}
       </div>
 
       {/* Target word hint */}
-      <div style={styles.targetWordHint}>
+      <div className={styles.targetWordHint}>
         Build the Arabic sentence using:{' '}
-        <span style={styles.targetWordHighlight}>
+        <span className={styles.targetWordHighlight}>
           {quizData.targetWordEnglish}
         </span>
       </div>
 
       {/* Answer area */}
       <div
-        style={{
-          ...styles.answerArea,
-          ...(isSubmitted && isCorrect ? styles.answerAreaCorrect : {}),
-          ...(isSubmitted && !isCorrect ? styles.answerAreaWrong : {}),
-        }}
+        className={`${styles.answerArea} ${isSubmitted && isCorrect ? styles.answerAreaCorrect : ''} ${isSubmitted && !isCorrect ? styles.answerAreaWrong : ''}`}
       >
         {userAnswer.length === 0 ? (
-          <div style={styles.emptyHint}>Tap words below to build the sentence</div>
+          <div className={styles.emptyHint}>Tap words below to build the sentence</div>
         ) : (
           userAnswer.map((word, index) => (
             <button
               key={`answer-${index}`}
-              style={{
-                ...styles.wordTile,
-                ...styles.wordTileInAnswer,
-                ...(isSubmitted ? styles.wordTileDisabled : {}),
-              }}
+              className={`${styles.wordTile} ${styles.wordTileInAnswer} ${isSubmitted ? styles.wordTileDisabled : ''}`}
               onClick={() => handleTileClick(word, true)}
               disabled={isSubmitted}
-              onMouseEnter={(e) => {
-                if (!isSubmitted) {
-                  Object.assign(e.target.style, styles.wordTileHover);
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isSubmitted) {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = styles.wordTileInAnswer.boxShadow;
-                }
-              }}
             >
               {word}
             </button>
@@ -314,30 +130,16 @@ function SentenceBuilder({
       </div>
 
       {/* Divider */}
-      <div style={styles.divider} />
+      <div className={styles.divider} />
 
       {/* Available word tiles */}
-      <div style={styles.tilesArea}>
+      <div className={styles.tilesArea}>
         {availableWords.map((word, index) => (
           <button
             key={`tile-${index}`}
-            style={{
-              ...styles.wordTile,
-              ...(isSubmitted ? styles.wordTileDisabled : {}),
-            }}
+            className={`${styles.wordTile} ${isSubmitted ? styles.wordTileDisabled : ''}`}
             onClick={() => handleTileClick(word, false)}
             disabled={isSubmitted}
-            onMouseEnter={(e) => {
-              if (!isSubmitted) {
-                Object.assign(e.target.style, styles.wordTileHover);
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isSubmitted) {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = styles.wordTile.boxShadow;
-              }
-            }}
           >
             {word}
           </button>
@@ -346,25 +148,25 @@ function SentenceBuilder({
 
       {/* Feedback area */}
       {isSubmitted && (
-        <div style={styles.feedbackArea}>
+        <div className={styles.feedbackArea}>
           {isCorrect ? (
             <>
-              <div style={styles.correctSentence}>
+              <div className={styles.correctSentence}>
                 {quizData.correctWords.join(' ')}
               </div>
               {quizData.transliteration && (
-                <div style={styles.transliterationText}>
+                <div className={styles.transliterationText}>
                   {quizData.transliteration}
                 </div>
               )}
             </>
           ) : (
             <>
-              <div style={styles.correctSentence}>
+              <div className={styles.correctSentence}>
                 Correct: {quizData.correctWords.join(' ')}
               </div>
               {quizData.transliteration && (
-                <div style={styles.transliterationText}>
+                <div className={styles.transliterationText}>
                   {quizData.transliteration}
                 </div>
               )}
@@ -375,7 +177,7 @@ function SentenceBuilder({
 
       {/* Instructions */}
       {!isSubmitted && (
-        <div style={styles.instructionsText}>
+        <div className={styles.instructionsText}>
           Keyboard: 1-9 to select tiles | Backspace to undo | Enter to submit
         </div>
       )}

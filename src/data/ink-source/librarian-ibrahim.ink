@@ -2,10 +2,12 @@ EXTERNAL changeRelationship(npcId, amount)
 EXTERNAL setLearningPath(path)
 EXTERNAL startQuest(questId)
 EXTERNAL getFlag(key)
+EXTERNAL setFlag(key)
 EXTERNAL getLearningPath()
 EXTERNAL getGossipToken(npcId)
 EXTERNAL markGossipHeard(npcId)
 EXTERNAL getGossipGrammarNote(npcId)
+EXTERNAL setComprehensionCheck(question, optionA, optionB, optionC, correctIndex)
 
 VAR quest_act_1_complete = false
 VAR gossip_line = ""
@@ -57,6 +59,18 @@ VAR gossip_grammar = ""
 * [عن المكتبة]
   هذه المكتبة نموذج لبيت الحكمة الأصلي.
   -> END
+* {not getFlag("comprehension_ibrahim_rtl_done")} [اختبرني عن القراءة]
+  -> comprehension_check_rtl
 * [شكراً]
   العفو. المعرفة حق للجميع.
   -> END
+
+=== comprehension_check_rtl ===
+العربية تُقرأ من اليمين إلى اليسار — right to left.
+هذا عكس الإنجليزية والفرنسية.
+~ setComprehensionCheck("كيف تُقرأ العربية؟", "من اليمين إلى اليسار", "من اليسار إلى اليمين", "من الأعلى إلى الأسفل", 0)
+في أي اتجاه نقرأ؟ #comprehension_check
+ممتاز! الآن أنت تعرف اتجاه القراءة الصحيح.
+~ changeRelationship("librarian-ibrahim", 3)
+~ setFlag("comprehension_ibrahim_rtl_done")
+-> END

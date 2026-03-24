@@ -19,6 +19,7 @@ import {
 } from '../../store/slices/magicSlice.js';
 import { ELEMENT_INFO } from '../../data/rootMagic.js';
 import { SPELLS } from '../../data/spellData.js';
+import styles from './SpellMenu.module.css';
 
 const ELEMENT_ORDER = [
   'fire',
@@ -48,127 +49,54 @@ function SpellCard({ spell, mastery, isEquipped, isLocked, onClick }) {
       disabled={isLocked}
       whileHover={!isLocked ? { scale: 1.05 } : {}}
       whileTap={!isLocked ? { scale: 0.95 } : {}}
+      className={`${styles.spellCard} ${isLocked ? styles.spellCardLocked : styles.spellCardUnlocked}`}
       style={{
-        backgroundColor: isLocked
-          ? '#1a1a1a'
-          : `${elementColor}1a`,
-        border: `2px solid ${isEquipped ? '#FFD700' : elementColor}`,
-        borderRadius: '8px',
-        padding: '12px',
-        cursor: isLocked ? 'not-allowed' : 'pointer',
-        opacity: isLocked ? 0.5 : 1,
-        position: 'relative',
-        textAlign: 'center',
-        minWidth: '140px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px',
+        backgroundColor: isLocked ? '#1a1a1a' : `${elementColor}1a`,
+        borderColor: isEquipped ? '#FFD700' : elementColor,
       }}
     >
       {isEquipped && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '4px',
-            right: '4px',
-            fontSize: '8px',
-            fontFamily: "'Press Start 2P', monospace",
-            color: '#FFD700',
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            padding: '2px 4px',
-            borderRadius: '2px',
-          }}
-        >
+        <div className={styles.equippedBadge}>
           EQUIPPED
         </div>
       )}
 
-      <div
-        style={{
-          fontSize: '24px',
-          fontFamily: 'Amiri, serif',
-          fontWeight: 'bold',
-          color: elementColor,
-          direction: 'rtl',
-        }}
-      >
+      <div className={styles.spellRootId} style={{ color: elementColor }}>
         {spell.rootId}
       </div>
 
-      <div
-        style={{
-          fontSize: '10px',
-          fontFamily: "'Press Start 2P', monospace",
-          color: '#fff',
-        }}
-      >
+      <div className={styles.spellName}>
         {spell.name}
       </div>
 
-      <div
-        style={{
-          fontSize: '9px',
-          fontFamily: 'Amiri, serif',
-          color: '#aaa',
-        }}
-      >
+      <div className={styles.spellNameArabic}>
         {spell.nameArabic}
       </div>
 
       {!isLocked && (
         <>
-          <div
-            style={{
-              fontSize: '8px',
-              fontFamily: "'Press Start 2P', monospace",
-              color: elementColor,
-              marginTop: '4px',
-            }}
-          >
+          <div className={styles.spellLevel} style={{ color: elementColor }}>
             Lvl {level}
           </div>
 
-          <div
-            style={{
-              width: '100%',
-              height: '4px',
-              backgroundColor: '#222',
-              borderRadius: '2px',
-              overflow: 'hidden',
-            }}
-          >
+          <div className={styles.xpBarTrack}>
             <div
+              className={styles.xpBarFill}
               style={{
                 width: `${xpProgress * 100}%`,
-                height: '100%',
                 backgroundColor: elementColor,
-                transition: 'width 0.3s ease',
               }}
             />
           </div>
         </>
       )}
 
-      <div
-        style={{
-          fontSize: '8px',
-          fontFamily: "'Press Start 2P', monospace",
-          color: '#888',
-          marginTop: '4px',
-        }}
-      >
+      <div className={styles.spellFormInfo}>
         Form {spell.form} • {spell.mpCost} MP
       </div>
 
       {isLocked && (
-        <div
-          style={{
-            fontSize: '8px',
-            fontFamily: "'Press Start 2P', monospace",
-            color: '#ff4444',
-            marginTop: '4px',
-          }}
-        >
+        <div className={styles.spellLockInfo}>
           Requires Form {spell.form}
         </div>
       )}
@@ -183,51 +111,21 @@ function HotbarSlot({ index, spell, onClick }) {
   return (
     <button
       onClick={onClick}
+      className={`${styles.hotbarSlotBtn} ${spell ? styles.hotbarSlotFilled : styles.hotbarSlotEmpty}`}
       style={{
-        width: '48px',
-        height: '48px',
-        border: `2px solid ${elementColor}`,
-        backgroundColor: spell ? '#1a1a1a' : '#222',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
+        borderColor: elementColor,
+        color: spell ? elementColor : '#666',
       }}
     >
-      <div
-        style={{
-          position: 'absolute',
-          top: '2px',
-          left: '2px',
-          fontSize: '8px',
-          fontFamily: "'Press Start 2P', monospace",
-          color: '#666',
-        }}
-      >
+      <div className={styles.hotbarSlotIndex}>
         {index + 1}
       </div>
       {spell ? (
-        <div
-          style={{
-            fontSize: '12px',
-            fontFamily: 'Amiri, serif',
-            color: elementColor,
-            direction: 'rtl',
-          }}
-        >
+        <div className={styles.hotbarSlotRoot} style={{ color: elementColor }}>
           {spell.rootId.split('-')[0]}
         </div>
       ) : (
-        <div
-          style={{
-            fontSize: '8px',
-            fontFamily: "'Press Start 2P', monospace",
-            color: '#666',
-          }}
-        >
+        <div className={styles.hotbarSlotEmptyLabel}>
           Empty
         </div>
       )}
@@ -318,73 +216,23 @@ export default function SpellMenu() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.9)',
-          zIndex: 500,
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '20px',
-          overflowY: 'auto',
-        }}
+        className={styles.overlay}
       >
         {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '20px',
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '16px',
-              color: '#fff',
-            }}
-          >
+        <div className={styles.header}>
+          <h2 className={styles.headerTitle}>
             Spells
           </h2>
-          <button
-            onClick={handleClose}
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '14px',
-              color: '#fff',
-              backgroundColor: '#444',
-              border: 'none',
-              padding: '8px 16px',
-              cursor: 'pointer',
-              borderRadius: '4px',
-            }}
-          >
+          <button className={styles.closeBtn} onClick={handleClose}>
             X
           </button>
         </div>
 
         {/* Element filter tabs */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '8px',
-            marginBottom: '20px',
-            flexWrap: 'wrap',
-          }}
-        >
+        <div className={styles.filterTabs}>
           <button
             onClick={() => setSelectedFilter('all')}
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '10px',
-              color: selectedFilter === 'all' ? '#000' : '#fff',
-              backgroundColor: selectedFilter === 'all' ? '#fff' : '#333',
-              border: selectedFilter === 'all' ? '2px solid #FFD700' : '2px solid #666',
-              padding: '6px 12px',
-              cursor: 'pointer',
-              borderRadius: '4px',
-            }}
+            className={`${styles.filterTabAll} ${selectedFilter === 'all' ? styles.filterTabAllActive : styles.filterTabAllInactive}`}
           >
             All ({discoveredSpells.length})
           </button>
@@ -397,15 +245,11 @@ export default function SpellMenu() {
               <button
                 key={element}
                 onClick={() => setSelectedFilter(element)}
+                className={styles.filterTabElement}
                 style={{
-                  fontFamily: 'Amiri, serif',
-                  fontSize: '12px',
                   color: selectedFilter === element ? '#000' : color,
                   backgroundColor: selectedFilter === element ? color : '#333',
                   border: `2px solid ${color}`,
-                  padding: '6px 12px',
-                  cursor: 'pointer',
-                  borderRadius: '4px',
                 }}
               >
                 {elementInfo.arabic} ({count})
@@ -415,15 +259,7 @@ export default function SpellMenu() {
         </div>
 
         {/* Spell grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-            gap: '12px',
-            marginBottom: '20px',
-            flex: 1,
-          }}
-        >
+        <div className={styles.spellGrid}>
           {filteredSpells.map((spell) => {
             const mastery = rootMastery[spell.rootId];
             const isLocked = !mastery?.formsUnlocked?.includes(spell.form);
@@ -445,40 +281,17 @@ export default function SpellMenu() {
         </div>
 
         {/* Hotbar assignment area */}
-        <div
-          style={{
-            borderTop: '2px solid #666',
-            paddingTop: '16px',
-          }}
-        >
-          <div
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: '10px',
-              color: '#888',
-              marginBottom: '8px',
-              textAlign: 'center',
-            }}
-          >
+        <div className={styles.hotbarArea}>
+          <div className={styles.hotbarLabel}>
             {selectedSlot !== null
               ? `Select a spell to assign to slot ${selectedSlot + 1}`
               : 'Hotbar (click to unequip, or select then click spell)'}
           </div>
-          <div
-            style={{
-              display: 'flex',
-              gap: '8px',
-              justifyContent: 'center',
-            }}
-          >
+          <div className={styles.hotbarSlots}>
             {equippedSpells.map((spell, index) => (
               <div
                 key={index}
-                style={{
-                  border: selectedSlot === index ? '2px solid #FFD700' : '2px solid transparent',
-                  borderRadius: '6px',
-                  padding: '2px',
-                }}
+                className={`${styles.hotbarSlotWrapper} ${selectedSlot === index ? styles.hotbarSlotWrapperSelected : styles.hotbarSlotWrapperDefault}`}
               >
                 <HotbarSlot index={index} spell={spell} onClick={() => handleSlotClick(index)} />
               </div>

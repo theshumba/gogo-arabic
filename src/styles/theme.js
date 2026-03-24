@@ -3,6 +3,59 @@
  * Palette inspired by SimpleLuke/japanese-learning-RPG + monster-quest
  */
 
+/**
+ * High-contrast palette — WCAG AAA-compliant alternatives.
+ * Pure black/white backgrounds with maximum-contrast accents.
+ * Used when settings.highContrast is true.
+ */
+export const HIGH_CONTRAST_COLORS = {
+  // Warm backgrounds → pure black/white
+  beige: '#ffffff',
+  brown: '#000000',
+  darkBrown: '#000000',
+  brown2: '#000000',
+  burgundy: '#cc0000',
+  pastelRed: '#cc0000',
+  oliveGreen: '#008800',
+  darkGold: '#aa6600',
+  creamyBeige: '#ffffff',
+
+  // Monster-quest palette → high contrast
+  white: '#ffffff',
+  pureWhite: '#ffffff',
+  dark: '#000000',
+  light: '#ffffff',
+  gray: '#333333',
+  gold: '#ffcc00',
+  lightGray: '#666666',
+  black: '#000000',
+
+  // Accent colors → boosted saturation
+  cyan: '#00ccff',
+  cyanHover: '#00aadd',
+  fire: '#ff8800',
+  water: '#0088ff',
+  plant: '#00aa66',
+  red: '#ff0000',
+  blue: '#0088ff',
+  green: '#00cc00',
+
+  // Game-specific
+  xpGold: '#ffcc00',
+  panel: '#000000',
+  panelBorder: 'rgba(255,255,255,0.6)',
+  overlay: 'rgba(0,0,0,0.95)',
+};
+
+/**
+ * Returns the appropriate COLORS object based on high-contrast setting.
+ * @param {boolean} highContrast
+ * @returns {typeof COLORS}
+ */
+export function getThemeColors(highContrast) {
+  return highContrast ? HIGH_CONTRAST_COLORS : COLORS;
+}
+
 export const COLORS = {
   // Warm backgrounds (from SimpleLuke)
   beige: '#f5f3da',

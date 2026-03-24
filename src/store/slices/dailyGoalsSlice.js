@@ -16,6 +16,10 @@ const initialState = {
   allCompleted: false,
   sessionStartTime: null, // Track session time for minutes played
   totalSessionMinutes: 0, // Accumulated minutes for current session
+  lastSessionWordsLearned: 0,
+  lastSessionReviewsDone: 0,
+  lastSessionEndTime: null,
+  welcomeBackShown: false,
 };
 
 const dailyGoalsSlice = createSlice({
@@ -37,6 +41,7 @@ const dailyGoalsSlice = createSlice({
         state.date = today;
         state.allCompleted = false;
         state.totalSessionMinutes = 0;
+        state.welcomeBackShown = false;
       }
 
       // Update the goal
@@ -62,6 +67,7 @@ const dailyGoalsSlice = createSlice({
         state.date = today;
         state.allCompleted = false;
         state.totalSessionMinutes = 0;
+        state.welcomeBackShown = false;
       }
 
       state.goals[goalType].current = current;
@@ -75,6 +81,7 @@ const dailyGoalsSlice = createSlice({
       state.goals = resetGoals();
       state.allCompleted = false;
       state.totalSessionMinutes = 0;
+      state.welcomeBackShown = false;
     },
 
     // Check and auto-reset if date has changed
@@ -85,6 +92,7 @@ const dailyGoalsSlice = createSlice({
         state.goals = resetGoals();
         state.allCompleted = false;
         state.totalSessionMinutes = 0;
+        state.welcomeBackShown = false;
       }
     },
 
@@ -95,6 +103,11 @@ const dailyGoalsSlice = createSlice({
 
     endSession(state) {
       if (state.sessionStartTime) {
+        // Snapshot current session stats before clearing
+        state.lastSessionWordsLearned = state.goals?.wordsLearned?.current ?? 0;
+        state.lastSessionReviewsDone = state.goals?.reviewsDone?.current ?? 0;
+        state.lastSessionEndTime = new Date().toISOString();
+
         const sessionDuration = Date.now() - state.sessionStartTime;
         const sessionMinutes = Math.floor(sessionDuration / 60000);
         state.totalSessionMinutes += sessionMinutes;
@@ -114,6 +127,7 @@ const dailyGoalsSlice = createSlice({
           state.date = today;
           state.allCompleted = false;
           state.totalSessionMinutes = 0;
+          state.welcomeBackShown = false;
         }
 
         state.goals.minutesPlayed.current = totalMinutes;
@@ -128,6 +142,14 @@ const dailyGoalsSlice = createSlice({
       });
       state.allCompleted = true;
     },
+
+    markWelcomeBackShown(state) {
+      state.welcomeBackShown = true;
+    },
+
+    resetWelcomeBackShown(state) {
+      state.welcomeBackShown = false;
+    },
   },
 });
 
@@ -140,6 +162,8 @@ export const {
   endSession,
   updateSessionTime,
   completeAllGoals,
+  markWelcomeBackShown,
+  resetWelcomeBackShown,
 } = dailyGoalsSlice.actions;
 
 // ========== SELECTORS ==========
@@ -187,5 +211,13 @@ export const selectOverallProgress = createSelector(
     return Math.round((completed / total) * 100);
   }
 );
+
+export const selectLastSessionSummary = (state) => ({
+  wordsLearned: state.dailyGoals?.lastSessionWordsLearned ?? 0,
+  reviewsDone: state.dailyGoals?.lastSessionReviewsDone ?? 0,
+  endTime: state.dailyGoals?.lastSessionEndTime ?? null,
+});
+
+export const selectWelcomeBackShown = (state) => state.dailyGoals?.welcomeBackShown ?? false;
 
 export default dailyGoalsSlice.reducer;

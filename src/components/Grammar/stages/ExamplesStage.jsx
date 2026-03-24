@@ -1,41 +1,42 @@
 import { motion } from 'framer-motion';
-import { containerStyle, headerStyle, titleStyle, bodyStyle, sectionTitleStyle, exampleBoxStyle, btnStyle, pixelBtnDark, FONTS, COLORS } from '../grammarStyles.js';
+import { pixelBtnDark, pixelBtnGold } from '../../../styles/theme.js';
+import styles from './GrammarStages.module.css';
 
 export default function ExamplesStage({ lesson, formatArabic, onBack, onNext }) {
   return (
     <motion.div
-      style={containerStyle}
+      className={styles.container}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <div style={headerStyle}>
+      <div className={styles.header}>
         <button onClick={onBack} style={pixelBtnDark}>Back</button>
-        <div style={titleStyle}>Examples</div>
-        <div style={{ width: '80px' }} />
+        <div className={styles.title}>Examples</div>
+        <div className={styles.spacer} />
       </div>
 
-      <div style={bodyStyle}>
-        <div style={sectionTitleStyle}>Study these examples:</div>
+      <div className={styles.body}>
+        <div className={styles.sectionTitle}>Study these examples:</div>
 
         {lesson.examples.map((example, idx) => (
-          <div key={idx} style={exampleBoxStyle}>
-            <div style={{ fontFamily: FONTS.arabicDisplay, fontSize: '24px', color: COLORS.brown, marginBottom: '10px' }}>
+          <div key={idx} className={styles.exampleBox}>
+            <div className={styles.exampleArabic}>
               {formatArabic(example.arabic)}
             </div>
-            <div style={{ fontFamily: FONTS.pixel, fontSize: '12px', color: COLORS.dark, marginBottom: '5px' }}>
+            <div className={styles.exampleEnglish}>
               {example.english}
             </div>
-            <div style={{ fontFamily: FONTS.pixel, fontSize: '10px', color: COLORS.gray, marginBottom: '5px' }}>
+            <div className={styles.exampleTranslit}>
               {example.transliteration}
             </div>
-            <div style={{ fontFamily: FONTS.pixel, fontSize: '10px', color: COLORS.darkGold }}>
+            <div className={styles.exampleBreakdown}>
               {example.breakdown}
             </div>
           </div>
         ))}
 
-        <button onClick={onNext} style={btnStyle}>Continue to Rules</button>
+        <button onClick={onNext} style={{ ...pixelBtnGold, marginTop: '20px' }}>Continue to Rules</button>
       </div>
     </motion.div>
   );

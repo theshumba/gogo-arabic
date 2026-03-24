@@ -237,7 +237,7 @@ export default function RootExplorer({ onBack }) {
             {roots.length === 0 ? (
               <div className={styles.noResults}>
                 <p>No roots found</p>
-                <p style={{ fontSize: '10px', marginTop: '8px' }}>
+                <p className={styles.noResultsHint}>
                   Try a different search or category
                 </p>
               </div>
@@ -310,17 +310,8 @@ export default function RootExplorer({ onBack }) {
                         {/* CEFR badge for vocabulary words */}
                         {cefrLevel && (
                           <span
-                            style={{
-                              display: 'inline-block',
-                              padding: '1px 6px',
-                              borderRadius: '3px',
-                              fontSize: '8px',
-                              fontWeight: 'bold',
-                              marginTop: '4px',
-                              letterSpacing: '1px',
-                              background: CEFR_COLORS[cefrLevel] || '#888',
-                              color: '#fff',
-                            }}
+                            className={styles.cefrBadge}
+                            style={{ background: CEFR_COLORS[cefrLevel] || '#888' }}
                           >
                             {cefrLevel}
                           </span>
@@ -384,7 +375,7 @@ export default function RootExplorer({ onBack }) {
           <div className={styles.wordsContainer}>
             {clusterWords.map((word) => (
               <div key={word.id} className={styles.clusterWordRow}>
-                <div className={styles.wordArabic} style={{ fontSize: '18px' }}>
+                <div className={`${styles.wordArabic} ${styles.clusterWordArabic}`}>
                   {formatArabic(word.arabic)}
                 </div>
                 <div className={styles.wordEnglish}>{word.english}</div>
@@ -393,17 +384,8 @@ export default function RootExplorer({ onBack }) {
                 )}
                 {word.cefrLevel && (
                   <span
-                    style={{
-                      display: 'inline-block',
-                      padding: '1px 6px',
-                      borderRadius: '3px',
-                      fontSize: '8px',
-                      fontWeight: 'bold',
-                      marginTop: '2px',
-                      letterSpacing: '1px',
-                      background: CEFR_COLORS[word.cefrLevel] || '#888',
-                      color: '#fff',
-                    }}
+                    className={styles.cefrBadgeSmall}
+                    style={{ background: CEFR_COLORS[word.cefrLevel] || '#888' }}
                   >
                     {word.cefrLevel}
                   </span>

@@ -80,3 +80,52 @@
   --z-error: 9999;
   --z-onboarding: 10000;
 }
+
+/* ── High Contrast Mode ── */
+/* Applied via data-high-contrast attribute on <html> */
+[data-high-contrast="true"] {
+  --color-beige: #ffffff;
+  --color-brown: #000000;
+  --color-dark-brown: #000000;
+  --color-brown2: #000000;
+  --color-burgundy: #cc0000;
+  --color-pastel-red: #cc0000;
+  --color-olive-green: #008800;
+  --color-dark-gold: #aa6600;
+  --color-creamy-beige: #ffffff;
+
+  --color-white: #ffffff;
+  --color-pure-white: #ffffff;
+  --color-dark: #000000;
+  --color-light: #ffffff;
+  --color-gray: #333333;
+  --color-gold: #ffcc00;
+  --color-light-gray: #666666;
+  --color-black: #000000;
+
+  --color-cyan: #00ccff;
+  --color-cyan-hover: #00aadd;
+  --color-fire: #ff8800;
+  --color-water: #0088ff;
+  --color-plant: #00aa66;
+  --color-red: #ff0000;
+  --color-blue: #0088ff;
+  --color-green: #00cc00;
+
+  --color-xp-gold: #ffcc00;
+  --color-panel: #000000;
+  --color-panel-border: rgba(255, 255, 255, 0.6);
+  --color-overlay: rgba(0, 0, 0, 0.95);
+
+  --focus-ring: 3px solid #ffcc00;
+  --focus-ring-offset: 3px;
+  --focus-ring-inset: 0 0 0 4px #ffcc00;
+}
+
+/* ── Dyslexia-Friendly Font Mode ── */
+/* Applied via data-dyslexia-font attribute on <html> */
+[data-dyslexia-font="true"] {
+  --font-pixel: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+  --font-ui: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+  --font-pixeloid: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+}

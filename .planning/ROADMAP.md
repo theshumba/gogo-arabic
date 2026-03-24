@@ -347,9 +347,9 @@ Plans:
   3. npc-data chunk is under 300KB — NPC dialogue loads lazily per zone, not all upfront
 
 Plans:
-- [ ] 65-01: GameLayout dynamic imports for overlay components + Suspense boundaries (PERF-01)
-- [ ] 65-02: Vocabulary data zone-splitting or binary format + on-demand loader (PERF-02)
-- [ ] 65-03: NPC dialogue lazy loading per zone + dialogue cache (PERF-03)
+- [x] 65-01: GameLayout chunk splitting — 12 overlays lazy, PauseMenu extracted, CSS 68→12.9 KB (PERF-01)
+- [x] 65-02: Vocabulary data CEFR split — vocab-core 788KB + vocab-extended 917KB lazy (PERF-02)
+- [x] 65-03: NPC dialogue lazy loading — npc-meta 48.7KB + 17 zone dialogue files lazy (PERF-03)
 
 #### Phase 66: CSS Modules Migration
 **Goal**: All remaining inline-styled components migrated to CSS Modules for consistent styling and better DevTools debugging
@@ -360,8 +360,9 @@ Plans:
   2. `grep -r "style={{" src/components/ | wc -l` returns fewer than 20 matches (dynamic-only remaining)
 
 Plans:
-- [ ] 66-01: Migrate Menu, Settings, HUD components to CSS Modules (PERF-04)
-- [ ] 66-02: Migrate Quiz, Grammar, Skills components to CSS Modules (PERF-04)
+- [ ] 66-01: Migrate Grammar (8 files, 139 occurrences) + Quiz (16 files, 122 occurrences) to CSS Modules (PERF-04)
+- [ ] 66-02: Migrate Battle (6 files, 84) + Magic (3 files, 46) + Companions (5 files, 78) to CSS Modules (PERF-04)
+- [ ] 66-03: Migrate remaining 30 components (Reading, Alphabet, MiniGames, Review, ErrorBoundary, etc.) to CSS Modules (PERF-04)
 
 #### Phase 67: Systems Wiring
 **Goal**: Connect disconnected systems — quiz completions feed daily goals, zone entries trigger micro-reviews, tashkeel fades with mastery, and NPC quest markers appear in-world
@@ -502,8 +503,8 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 71
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Complete    | 2026-03-23 |
 | 63. Achievement Expansion | v12.0 | 3/3 | Complete    | 2026-03-23 |
 | 64. CEFR Reports + Social Sharing | v12.0 | 3/3 | Complete    | 2026-03-23 |
-| 65. Bundle Optimization | v13.0 | 0/3 | Not started | - |
-| 66. CSS Modules Migration | v13.0 | 0/2 | Not started | - |
+| 65. Bundle Optimization | v13.0 | 3/3 | Complete | 65-01, 65-02, 65-03 |
+| 66. CSS Modules Migration | v13.0 | 0/3 | Planned | 66-01, 66-02, 66-03 |
 | 67. Systems Wiring | v13.0 | 0/3 | Not started | - |
 | 68. Quiz Expansion — Final 3 Types | v13.0 | 0/2 | Not started | - |
 | 69. Immersion — Dialogue & Welcome Back | v13.0 | 0/2 | Not started | - |

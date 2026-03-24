@@ -16,6 +16,7 @@ import {
 } from '../../store/slices/companionSlice.js';
 import { COMPANIONS } from '../../data/companions.js';
 import RelationshipBar from './RelationshipBar.jsx';
+import styles from './PartyPanel.module.css';
 
 export default function PartyPanel() {
   const dispatch = useDispatch();
@@ -55,56 +56,30 @@ export default function PartyPanel() {
     const companionDef = companionId ? COMPANIONS[companionId] : null;
 
     return (
-      <div
-        style={{
-          width: '280px',
-          background: '#1a1a2e',
-          border: '2px solid #4A90D9',
-          borderRadius: '8px',
-          padding: '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-        }}
-      >
+      <div className={styles.slotCard}>
         {/* Slot header */}
-        <div
-          style={{
-            fontSize: '10px',
-            fontFamily: "'Press Start 2P', monospace",
-            color: '#4A90D9',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
-          <span style={{ fontSize: '16px' }}>{icon}</span>
+        <div className={styles.slotHeader}>
+          <span className={styles.slotHeaderIcon}>{icon}</span>
           {label}
         </div>
 
         {/* Companion details or empty state */}
         {companion && companionDef ? (
           <>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className={styles.companionRow}>
               <div
+                className={styles.companionAvatar}
                 style={{
-                  width: '40px',
-                  height: '40px',
                   background: `linear-gradient(135deg, ${companionDef.colorPalette.primary}66, ${companionDef.colorPalette.secondary}66)`,
-                  borderRadius: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '20px',
                 }}
               >
                 {slot === 'battle' ? '⚔️' : '🧭'}
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '11px', color: companionDef.colorPalette.primary }}>
+              <div className={styles.companionInfo}>
+                <div className={styles.companionNameText} style={{ color: companionDef.colorPalette.primary }}>
                   {companionDef.name}
                 </div>
-                <div style={{ fontSize: '8px', color: '#a0a0a0' }}>
+                <div className={styles.companionTitleText}>
                   {companionDef.title}
                 </div>
               </div>
@@ -117,60 +92,18 @@ export default function PartyPanel() {
               size="small"
             />
 
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                onClick={() => handleChangeSlot(slot)}
-                style={{
-                  flex: 1,
-                  background: '#4A90D9',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '6px 12px',
-                  fontSize: '8px',
-                  fontFamily: "'Press Start 2P', monospace",
-                  cursor: 'pointer',
-                }}
-              >
+            <div className={styles.slotActions}>
+              <button className={styles.changeBtn} onClick={() => handleChangeSlot(slot)}>
                 Change
               </button>
-              <button
-                onClick={() => handleRemove(slot)}
-                style={{
-                  flex: 1,
-                  background: '#E74C3C',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '6px 12px',
-                  fontSize: '8px',
-                  fontFamily: "'Press Start 2P', monospace",
-                  cursor: 'pointer',
-                }}
-              >
+              <button className={styles.removeBtn} onClick={() => handleRemove(slot)}>
                 Remove
               </button>
             </div>
           </>
         ) : (
-          <button
-            onClick={() => handleChangeSlot(slot)}
-            style={{
-              background: '#2C3E50',
-              color: '#a0a0a0',
-              border: '2px dashed #4A90D9',
-              borderRadius: '4px',
-              padding: '24px',
-              fontSize: '10px',
-              fontFamily: "'Press Start 2P', monospace",
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <span style={{ fontSize: '24px' }}>➕</span>
+          <button className={styles.emptySlotBtn} onClick={() => handleChangeSlot(slot)}>
+            <span className={styles.emptySlotIcon}>➕</span>
             Assign Companion
           </button>
         )}
@@ -181,7 +114,7 @@ export default function PartyPanel() {
   return (
     <div>
       {/* Active party slots */}
-      <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+      <div className={styles.partySlots}>
         {renderSlot('battle', 'Battle Companion', '⚔️')}
         {renderSlot('exploration', 'Exploration Companion', '🧭')}
       </div>
@@ -193,20 +126,7 @@ export default function PartyPanel() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            style={{
-              position: 'fixed',
-              top: '20px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              background: '#E74C3C',
-              color: '#fff',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              fontSize: '10px',
-              fontFamily: "'Press Start 2P', monospace",
-              zIndex: 10000,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-            }}
+            className={styles.warningToast}
           >
             Companion is already in the other slot!
           </motion.div>
@@ -221,50 +141,20 @@ export default function PartyPanel() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectingSlot(null)}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0, 0, 0, 0.8)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 9999,
-            }}
+            className={styles.selectionBackdrop}
           >
             <motion.div
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
               onClick={(e) => e.stopPropagation()}
-              style={{
-                background: '#1a1a2e',
-                border: '3px solid #4A90D9',
-                borderRadius: '12px',
-                padding: '24px',
-                maxWidth: '600px',
-                maxHeight: '80vh',
-                overflowY: 'auto',
-              }}
+              className={styles.selectionPanel}
             >
-              <h2
-                style={{
-                  fontSize: '12px',
-                  fontFamily: "'Press Start 2P', monospace",
-                  color: '#4A90D9',
-                  marginBottom: '16px',
-                  textAlign: 'center',
-                }}
-              >
+              <h2 className={styles.selectionTitle}>
                 Select Companion for {selectingSlot === 'battle' ? 'Battle' : 'Exploration'}
               </h2>
 
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(2, 1fr)',
-                  gap: '12px',
-                }}
-              >
+              <div className={styles.selectionGrid}>
                 {recruitedCompanions.map((companion) => {
                   const companionDef = COMPANIONS[companion.id];
                   return (
@@ -272,19 +162,13 @@ export default function PartyPanel() {
                       key={companion.id}
                       whileHover={{ scale: 1.05 }}
                       onClick={() => handleSelectCompanion(companion.id)}
-                      style={{
-                        background: '#2C3E50',
-                        border: `2px solid ${companionDef.colorPalette.primary}`,
-                        borderRadius: '8px',
-                        padding: '12px',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                      }}
+                      className={styles.selectionBtn}
+                      style={{ borderColor: companionDef.colorPalette.primary }}
                     >
-                      <div style={{ fontSize: '11px', color: companionDef.colorPalette.primary }}>
+                      <div className={styles.selectionBtnName} style={{ color: companionDef.colorPalette.primary }}>
                         {companionDef.name}
                       </div>
-                      <div style={{ fontSize: '8px', color: '#a0a0a0', marginTop: '4px' }}>
+                      <div className={styles.selectionBtnTitle}>
                         {companionDef.title}
                       </div>
                     </motion.button>
@@ -293,19 +177,8 @@ export default function PartyPanel() {
               </div>
 
               <button
+                className={styles.cancelBtn}
                 onClick={() => setSelectingSlot(null)}
-                style={{
-                  width: '100%',
-                  marginTop: '16px',
-                  background: '#E74C3C',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  fontSize: '10px',
-                  fontFamily: "'Press Start 2P', monospace",
-                  cursor: 'pointer',
-                }}
               >
                 Cancel
               </button>

@@ -8,6 +8,8 @@ import grammarReducer, {
   resetGrammarProgress,
   unlockNextLesson,
   bulkUnlockLessons,
+  addGrammarFsrsCard,
+  updateGrammarFsrsCard,
   selectCompletedLessons,
   selectLessonScores,
   selectCurrentLessonId,
@@ -17,6 +19,9 @@ import grammarReducer, {
   selectUnlockedLessons,
   selectIsLessonUnlocked,
   selectLessonsByCategory,
+  selectGrammarFsrsCards,
+  selectGrammarDueLessons,
+  selectGrammarDueCount,
   CEFR_GRAMMAR_GATES,
 } from '../slices/grammarSlice.js';
 import cefrProgressReducer, { setCefrLevel, resetCefrProgress } from '../slices/cefrProgressSlice.js';
@@ -52,6 +57,7 @@ describe('grammarSlice', () => {
         unlockedLessons: ['al-definite'],
         lessonScores: {},
         currentLessonId: null,
+        fsrsCards: {},
       });
     });
 

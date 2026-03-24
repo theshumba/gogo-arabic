@@ -13,6 +13,7 @@ import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { selectEquippedSpells, selectAffinity } from '../../store/slices/magicSlice.js';
 import { ELEMENT_INFO } from '../../data/rootMagic.js';
+import styles from './MagicOverlay.module.css';
 
 function SpellSlot({ spell, slot, playerMP, onClick, onRightClick }) {
   const isEmpty = !spell;
@@ -24,21 +25,7 @@ function SpellSlot({ spell, slot, playerMP, onClick, onRightClick }) {
   if (isEmpty) {
     return (
       <button
-        className="spell-slot"
-        style={{
-          width: '64px',
-          height: '64px',
-          border: '2px solid #444',
-          backgroundColor: '#222',
-          color: '#666',
-          fontSize: '10px',
-          fontFamily: "'Press Start 2P', monospace",
-          cursor: 'not-allowed',
-          borderRadius: '4px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className={`${styles.spellSlotBtn} ${styles.spellSlotEmpty}`}
         disabled
       >
         Empty
@@ -48,63 +35,25 @@ function SpellSlot({ spell, slot, playerMP, onClick, onRightClick }) {
 
   return (
     <button
-      className="spell-slot"
+      className={`${styles.spellSlotBtn} ${disabled ? styles.spellSlotDisabled : styles.spellSlotActive}`}
       onClick={() => !disabled && onClick(slot)}
       onContextMenu={(e) => {
         e.preventDefault();
         onRightClick();
       }}
       style={{
-        width: '64px',
-        height: '64px',
-        border: `2px solid ${elementColor}`,
-        backgroundColor: disabled ? '#333' : '#1a1a1a',
+        borderColor: elementColor,
         color: disabled ? '#666' : elementColor,
-        fontSize: '16px',
-        fontFamily: 'Amiri, serif',
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        borderRadius: '4px',
-        position: 'relative',
-        opacity: disabled ? 0.5 : 1,
-        transition: 'all 0.2s ease',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '4px',
       }}
       disabled={disabled}
     >
-      <div
-        style={{
-          fontSize: '18px',
-          fontWeight: 'bold',
-          direction: 'rtl',
-        }}
-      >
+      <div className={styles.spellSlotRootText}>
         {spell.rootId}
       </div>
-      <div
-        style={{
-          fontSize: '8px',
-          fontFamily: "'Press Start 2P', monospace",
-          marginTop: '2px',
-        }}
-      >
+      <div className={styles.spellSlotElementLabel}>
         {elementInfo?.label}
       </div>
-      <div
-        style={{
-          position: 'absolute',
-          top: '2px',
-          right: '2px',
-          fontSize: '8px',
-          fontFamily: "'Press Start 2P', monospace",
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          padding: '2px 4px',
-          borderRadius: '2px',
-        }}
-      >
+      <div className={styles.spellSlotMpCost}>
         {spell.mpCost}
       </div>
     </button>
@@ -116,39 +65,17 @@ function MPBar({ current, max }) {
   const color = percentage > 50 ? '#32CD32' : percentage > 20 ? '#FFD700' : '#FF4500';
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '20px',
-        backgroundColor: '#222',
-        border: '2px solid #444',
-        borderRadius: '4px',
-        overflow: 'hidden',
-        position: 'relative',
-        marginTop: '8px',
-      }}
-    >
+    <div className={styles.mpBarContainer}>
       <motion.div
         initial={{ width: 0 }}
         animate={{ width: `${percentage}%` }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
+        className={styles.mpBarFill}
         style={{
-          height: '100%',
           background: `linear-gradient(90deg, ${color}, ${color}dd)`,
         }}
       />
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          fontSize: '10px',
-          fontFamily: "'Press Start 2P', monospace",
-          color: '#fff',
-          textShadow: '0 0 4px rgba(0, 0, 0, 0.8)',
-        }}
-      >
+      <div className={styles.mpBarText}>
         {current}/{max} MP
       </div>
     </div>
@@ -163,23 +90,11 @@ function AffinityIndicator({ affinity }) {
 
   return (
     <div
-      style={{
-        position: 'absolute',
-        top: '-40px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        border: `2px solid ${color}`,
-        borderRadius: '4px',
-        padding: '4px 8px',
-        fontSize: '10px',
-        fontFamily: "'Press Start 2P', monospace",
-        color,
-        whiteSpace: 'nowrap',
-      }}
+      className={styles.affinityIndicator}
+      style={{ borderColor: color, color }}
       title={`Primary: ${elementInfo.label} (2x power)`}
     >
-      <span style={{ fontFamily: 'Amiri, serif', fontSize: '14px' }}>{elementInfo.arabic}</span>
+      <span className={styles.affinityArabic}>{elementInfo.arabic}</span>
       {' '}
       <span>2x</span>
     </div>
@@ -235,40 +150,18 @@ export default function MagicOverlay() {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        style={{
-          position: 'absolute',
-          bottom: '80px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 260,
-          pointerEvents: 'auto',
-        }}
+        className={styles.overlayPositioner}
       >
-        <div
-          style={{
-            position: 'relative',
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            border: '2px solid #666',
-            borderRadius: '8px',
-            padding: '12px',
-            minWidth: '420px',
-          }}
-        >
+        <div className={styles.hotbarPanel}>
           <AffinityIndicator affinity={affinity} />
 
-          <div
-            style={{
-              display: 'flex',
-              gap: '8px',
-              justifyContent: 'center',
-            }}
-          >
+          <div className={styles.spellSlotRow}>
             {equippedSpells.map((spell, index) => (
               <div
                 key={index}
+                className={styles.spellSlotWrapper}
                 style={{
                   transform: flashSlot === index ? 'scale(1.1)' : 'scale(1)',
-                  transition: 'transform 0.3s ease',
                 }}
               >
                 <SpellSlot
@@ -289,15 +182,7 @@ export default function MagicOverlay() {
             <MPBar current={playerMP} max={playerMaxMP} />
           </motion.div>
 
-          <div
-            style={{
-              marginTop: '8px',
-              fontSize: '8px',
-              fontFamily: "'Press Start 2P', monospace",
-              color: '#888',
-              textAlign: 'center',
-            }}
-          >
+          <div className={styles.footerHint}>
             Right-click for spell menu
           </div>
         </div>

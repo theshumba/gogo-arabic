@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import styles from './PageTransition.module.css';
 
 /**
  * PageTransition wrapper for route transitions
@@ -53,7 +54,7 @@ export default function PageTransition({ children }) {
       animate="animate"
       exit="exit"
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      style={{ width: '100%', height: '100%' }}
+      className={styles.wrapper}
     >
       {children}
     </motion.div>

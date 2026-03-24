@@ -2,10 +2,12 @@ EXTERNAL changeRelationship(npcId, amount)
 EXTERNAL setLearningPath(path)
 EXTERNAL startQuest(questId)
 EXTERNAL getFlag(key)
+EXTERNAL setFlag(key)
 EXTERNAL getLearningPath()
 EXTERNAL getGossipToken(npcId)
 EXTERNAL markGossipHeard(npcId)
 EXTERNAL getGossipGrammarNote(npcId)
+EXTERNAL setComprehensionCheck(question, optionA, optionB, optionC, correctIndex)
 
 VAR onboarding_complete = false
 VAR onboarding_first_word_learned = false
@@ -57,6 +59,17 @@ VAR gossip_grammar = ""
 * [أخبريني عن هذا المكان]
   هذا المكان يحتوي على كنوز المعرفة العربية.
   -> END
+* {not getFlag("comprehension_guide_amira_done")} [اختبريني!]
+  -> comprehension_check_greeting
 * [وداعاً]
   مع السلامة! سأكون هنا عندما تحتاجني.
   -> END
+
+=== comprehension_check_greeting ===
+السَّلامُ عَلَيْكُم — تعني "peace be upon you"
+~ setComprehensionCheck("كيف نقول peace be upon you؟", "السَّلامُ عَلَيْكُم", "مَرحَبا", "شُكراً", 0)
+ماذا قُلتُ للتَّوّ؟ #comprehension_check
+أَحسَنتَ! أنتَ طالِب مُمتاز.
+~ changeRelationship("guide-amira", 3)
+~ setFlag("comprehension_guide_amira_done")
+-> END

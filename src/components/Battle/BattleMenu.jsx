@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { audioManager } from '../../services/audio.js';
+import styles from './BattleMenu.module.css';
 
 const MENU_ACTIONS = [
   { id: 'attack', label: 'Attack', arabic: 'هجوم', key: '1' },
@@ -58,56 +59,24 @@ export default function BattleMenu({ visible, availableActions, onAction }) {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="battle-menu"
+          className={styles.menuContainer}
           initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: reduceMotion ? 0.1 : 0.2 }}
-          style={{
-            position: 'absolute',
-            bottom: '20px',
-            right: '20px',
-            direction: 'rtl',
-            zIndex: 1000,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px',
-          }}
         >
           {MENU_ACTIONS.filter((a) => availableActions.includes(a.id)).map((action) => (
             <button
               key={action.id}
+              className={styles.actionButton}
               onClick={() => handleAction(action.id)}
               aria-label={`${action.label} (${action.key})`}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '10px 18px',
-                background: 'rgba(26, 26, 46, 0.92)',
-                border: '2px solid rgba(226, 182, 89, 0.6)',
-                color: '#f5f0e8',
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: '11px',
-                cursor: 'pointer',
-                direction: 'rtl',
-                minWidth: '180px',
-              }}
             >
-              <span style={{ fontFamily: "'Amiri', serif", fontSize: '16px' }} lang="ar">
+              <span className={styles.arabicLabel} lang="ar">
                 {action.arabic}
               </span>
-              <span style={{ fontSize: '10px', opacity: 0.7 }}>{action.label}</span>
-              <kbd
-                style={{
-                  marginRight: 'auto',
-                  fontSize: '9px',
-                  opacity: 0.5,
-                  background: 'rgba(255,255,255,0.1)',
-                  padding: '2px 6px',
-                  borderRadius: '2px',
-                }}
-              >
+              <span className={styles.englishLabel}>{action.label}</span>
+              <kbd className={styles.shortcutKey}>
                 {action.key}
               </kbd>
             </button>

@@ -237,6 +237,14 @@
   }
 }
 
+.communityStat {
+  color: #888;
+  font-size: 0.75rem;
+  text-align: center;
+  margin: 4px 0 12px;
+  font-style: italic;
+}
+
 /* Empty state when no words available */
 .emptyState {
   text-align: center;

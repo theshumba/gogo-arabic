@@ -76,9 +76,9 @@ describe('GrammarFill', () => {
       />
     );
 
-    // The correct button should have a green background style
+    // The correct button should have the correct CSS Module class
     const correctButton = screen.getByText('أكتب');
-    expect(correctButton.style.background).toMatch(/rgba\(46,\s*204,\s*113/);
+    expect(correctButton.className).toMatch(/choiceCorrect/);
   });
 
   it('shows red highlight on wrong selected choice when feedback.correct is false', () => {
@@ -92,13 +92,13 @@ describe('GrammarFill', () => {
       />
     );
 
-    // The selected wrong button should have a red background style
+    // The selected wrong button should have the wrong CSS Module class
     const wrongButton = screen.getByText('يكتب');
-    expect(wrongButton.style.background).toMatch(/rgba\(240,\s*49,\s*49/);
+    expect(wrongButton.className).toMatch(/choiceWrong/);
 
-    // The correct answer button should have green
+    // The correct answer button should have the correct CSS Module class
     const correctButton = screen.getByText('أكتب');
-    expect(correctButton.style.background).toMatch(/rgba\(46,\s*204,\s*113/);
+    expect(correctButton.className).toMatch(/choiceCorrect/);
   });
 
   it('disables all buttons when feedback is present', () => {

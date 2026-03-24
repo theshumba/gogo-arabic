@@ -1,9 +1,24 @@
 import { motion } from 'framer-motion';
-import {
-  containerStyle, headerStyle, titleStyle, bodyStyle, textStyle, btnStyle,
-  choiceStyle, choiceCorrectStyle, choiceWrongStyle, getFeedbackStyle,
-  pixelBtnDark, FONTS, COLORS,
-} from '../grammarStyles.js';
+import { COLORS, pixelBtnDark, pixelBtnGold } from '../../../styles/theme.js';
+import styles from './GrammarStages.module.css';
+
+const choiceBase = {
+  ...pixelBtnDark,
+  margin: '10px',
+  minWidth: '200px',
+};
+
+const choiceCorrect = {
+  ...choiceBase,
+  background: COLORS.green,
+  color: COLORS.white,
+};
+
+const choiceWrong = {
+  ...choiceBase,
+  background: COLORS.red,
+  color: COLORS.white,
+};
 
 export default function QuizStage({
   lesson, currentIndex, score, answers,
@@ -12,34 +27,36 @@ export default function QuizStage({
 }) {
   const quizItem = lesson.quiz[currentIndex];
 
+  const feedbackClass = feedbackMessage.includes('Correct') ? styles.feedbackCorrect : styles.feedbackWrong;
+
   return (
     <motion.div
-      style={containerStyle}
+      className={styles.container}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <div style={headerStyle}>
+      <div className={styles.header}>
         <button onClick={onQuit} style={pixelBtnDark}>Quit</button>
-        <div style={titleStyle}>
+        <div className={styles.title}>
           Quiz {currentIndex + 1} / {lesson.quiz.length}
         </div>
-        <div style={{ fontFamily: FONTS.pixel, fontSize: '12px', color: COLORS.xpGold }}>
+        <div className={styles.scoreDisplay}>
           Score: {score}/{lesson.quiz.length}
         </div>
       </div>
 
-      <div style={bodyStyle}>
-        <div style={{ ...textStyle, fontSize: '14px', textAlign: 'center', marginBottom: '30px' }}>
+      <div className={styles.body}>
+        <div className={styles.promptCenter}>
           {quizItem.question}
         </div>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className={styles.choicesWrap}>
           {quizItem.options.map((option, idx) => {
-            let style = choiceStyle;
+            let style = choiceBase;
             if (showFeedback) {
-              if (idx === quizItem.correct) style = choiceCorrectStyle;
-              else if (option === answers[currentIndex]) style = choiceWrongStyle;
+              if (idx === quizItem.correct) style = choiceCorrect;
+              else if (option === answers[currentIndex]) style = choiceWrong;
             }
             return (
               <button key={idx} onClick={() => onAnswerSelect(option)} style={style} disabled={showFeedback}>
@@ -51,13 +68,13 @@ export default function QuizStage({
 
         {showFeedback && (
           <>
-            <div style={getFeedbackStyle(feedbackMessage)}>
+            <div className={feedbackClass}>
               {feedbackMessage}
               {quizItem.explanation && (
-                <div style={{ marginTop: '10px', fontSize: '11px' }}>{quizItem.explanation}</div>
+                <div className={styles.quizExplanation}>{quizItem.explanation}</div>
               )}
             </div>
-            <button onClick={onNext} style={btnStyle}>
+            <button onClick={onNext} style={{ ...pixelBtnGold, marginTop: '20px' }}>
               {currentIndex < lesson.quiz.length - 1 ? 'Next' : 'Finish'}
             </button>
           </>

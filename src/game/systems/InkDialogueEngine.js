@@ -35,6 +35,7 @@ export class InkDialogueEngine {
     this._story = null;
     this._inkLoaded = false;
     this._currentNpcId = null;
+    this._comprehensionData = null;
   }
 
   /**
@@ -282,6 +283,15 @@ export class InkDialogueEngine {
       }
     });
 
+    // IMM-01: Comprehension check data — set by ink before #comprehension_check tagged line
+    this._story.BindExternalFunction('setComprehensionCheck', (question, optionA, optionB, optionC, correctIndex) => {
+      this._comprehensionData = {
+        question,
+        options: [optionA, optionB, optionC],
+        correctIndex,
+      };
+    });
+
     // GOSP-05: Get grammar note for the current gossip token
     this._story.BindExternalFunction('getGossipGrammarNote', (npcId) => {
       const state = store.getState();
@@ -339,6 +349,7 @@ export class InkDialogueEngine {
     this._inkLoaded = false;
     this._story = null;
     this._currentNpcId = null;
+    this._comprehensionData = null;
   }
 
   /**
@@ -352,5 +363,16 @@ export class InkDialogueEngine {
       lines.push(this.continue());
     }
     return { lines, choices: this.currentChoices() };
+  }
+
+  /**
+   * IMM-01: Retrieve and consume the comprehension check data set by ink's setComprehensionCheck().
+   * Returns null if no check was set. Consuming clears the data so each check fires once.
+   * @returns {{ question: string, options: string[], correctIndex: number } | null}
+   */
+  getComprehensionData() {
+    const data = this._comprehensionData;
+    this._comprehensionData = null;
+    return data;
   }
 }

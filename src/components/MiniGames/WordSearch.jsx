@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { COLORS, FONTS, pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
+import { pixelBtnGold, pixelBtnDark } from '../../styles/theme.js';
 import { generateWordSearch, checkSelection, getSelectionCells } from '../../utils/wordSearchGenerator.js';
+import styles from './WordSearch.module.css';
 
 /**
  * WordSearch Component
@@ -187,35 +188,30 @@ export default function WordSearch({ onBack }) {
   // Setup screen
   if (!puzzle) {
     return (
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <h1 style={styles.title}>Word Search</h1>
-          <h2 style={styles.titleArabic}>البحث عن الكلمات</h2>
-          <p style={styles.subtitle}>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Word Search</h1>
+          <h2 className={styles.titleArabic}>البحث عن الكلمات</h2>
+          <p className={styles.subtitle}>
             Find hidden Arabic words in the grid. Words can be horizontal (right-to-left) or vertical.
           </p>
         </div>
 
-        <div style={styles.setupPanel}>
+        <div className={styles.setupPanel}>
           {/* Difficulty selection */}
-          <div style={styles.setupSection}>
-            <h3 style={styles.setupLabel}>Select Difficulty:</h3>
-            <div style={styles.buttonGroup}>
+          <div className={styles.setupSection}>
+            <h3 className={styles.setupLabel}>Select Difficulty:</h3>
+            <div className={styles.buttonGroup}>
               {['easy', 'medium', 'hard'].map((diff) => {
                 const settings = getDifficultySettings(diff);
                 return (
                   <button
                     key={diff}
                     onClick={() => setDifficulty(diff)}
-                    style={{
-                      ...pixelBtnGold,
-                      ...(difficulty === diff ? styles.selectedButton : {}),
-                      margin: '4px',
-                      minWidth: '140px',
-                    }}
+                    style={pixelBtnGold}
                   >
                     {diff.toUpperCase()}
-                    <div style={styles.buttonSubtext}>
+                    <div className={styles.buttonSubtext}>
                       {settings.gridSize}x{settings.gridSize}, {settings.wordCount} words
                     </div>
                   </button>
@@ -226,19 +222,14 @@ export default function WordSearch({ onBack }) {
 
           {/* Category selection */}
           {difficulty && (
-            <div style={styles.setupSection}>
-              <h3 style={styles.setupLabel}>Select Category:</h3>
-              <div style={styles.buttonGroup}>
+            <div className={styles.setupSection}>
+              <h3 className={styles.setupLabel}>Select Category:</h3>
+              <div className={styles.buttonGroup}>
                 {categories.slice(0, 10).map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setCategory(cat)}
-                    style={{
-                      ...pixelBtnDark,
-                      ...(category === cat ? styles.selectedButton : {}),
-                      margin: '4px',
-                      fontSize: '10px',
-                    }}
+                    style={pixelBtnDark}
                   >
                     {cat}
                   </button>
@@ -251,18 +242,14 @@ export default function WordSearch({ onBack }) {
           {difficulty && category && (
             <button
               onClick={handleStartGame}
-              style={{
-                ...pixelBtnGold,
-                marginTop: '20px',
-                fontSize: '14px',
-              }}
+              style={pixelBtnGold}
             >
               Start Game
             </button>
           )}
         </div>
 
-        <button onClick={onBack} style={{ ...pixelBtnDark, marginTop: '20px' }}>
+        <button onClick={onBack} style={pixelBtnDark}>
           Back to Mini-Games
         </button>
       </div>
@@ -273,29 +260,27 @@ export default function WordSearch({ onBack }) {
   const currentSelection = selecting && selection ? getSelectionCells(selection) : [];
 
   return (
-    <div style={styles.container}>
+    <div className={styles.container}>
       {/* Game header */}
-      <div style={styles.gameHeader}>
-        <div style={styles.gameInfo}>
-          <div style={styles.stat}>
-            <span style={styles.statLabel}>Time:</span> {formatTime(elapsedTime)}
+      <div className={styles.gameHeader}>
+        <div className={styles.gameInfo}>
+          <div className={styles.stat}>
+            <span className={styles.statLabel}>Time:</span> {formatTime(elapsedTime)}
           </div>
-          <div style={styles.stat}>
-            <span style={styles.statLabel}>Found:</span> {foundWords.size} / {puzzle.wordPositions.length}
+          <div className={styles.stat}>
+            <span className={styles.statLabel}>Found:</span> {foundWords.size} / {puzzle.wordPositions.length}
           </div>
-          <div style={styles.stat}>
-            <span style={styles.statLabel}>Difficulty:</span> {difficulty}
+          <div className={styles.stat}>
+            <span className={styles.statLabel}>Difficulty:</span> {difficulty}
           </div>
         </div>
       </div>
 
-      <div style={styles.gameContainer}>
+      <div className={styles.gameContainer}>
         {/* Grid */}
         <div
-          style={{
-            ...styles.gridContainer,
-            gridTemplateColumns: `repeat(${puzzle.grid.length}, 1fr)`,
-          }}
+          className={styles.gridContainer}
+          style={{ gridTemplateColumns: `repeat(${puzzle.grid.length}, 1fr)` }}
           onMouseLeave={() => {
             setSelecting(false);
             setSelection(null);
@@ -312,11 +297,7 @@ export default function WordSearch({ onBack }) {
               return (
                 <div
                   key={cellKey}
-                  style={{
-                    ...styles.gridCell,
-                    ...(isHighlighted ? styles.foundCell : {}),
-                    ...(isCurrentSelection ? styles.selectingCell : {}),
-                  }}
+                  className={`${styles.gridCell} ${isHighlighted ? styles.foundCell : ''} ${isCurrentSelection ? styles.selectingCell : ''}`}
                   onMouseDown={() => handleCellMouseDown(rowIdx, colIdx)}
                   onMouseEnter={() => handleCellMouseEnter(rowIdx, colIdx)}
                   onMouseUp={handleCellMouseUp}
@@ -329,23 +310,20 @@ export default function WordSearch({ onBack }) {
         </div>
 
         {/* Word list */}
-        <div style={styles.wordList}>
-          <h3 style={styles.wordListTitle}>Words to Find:</h3>
+        <div className={styles.wordList}>
+          <h3 className={styles.wordListTitle}>Words to Find:</h3>
           {puzzle.wordPositions.map((pos, idx) => {
             const isFound = foundWords.has(pos.word);
             return (
               <div
                 key={idx}
-                style={{
-                  ...styles.wordItem,
-                  ...(isFound ? styles.foundWordItem : {}),
-                }}
+                className={`${styles.wordItem} ${isFound ? styles.foundWordItem : ''}`}
               >
-                <div style={styles.wordArabic}>
+                <div className={styles.wordArabic}>
                   {isFound && '✓ '}
                   {pos.originalArabic}
                 </div>
-                <div style={styles.wordEnglish}>{pos.english}</div>
+                <div className={styles.wordEnglish}>{pos.english}</div>
               </div>
             );
           })}
@@ -354,16 +332,16 @@ export default function WordSearch({ onBack }) {
 
       {/* Celebration overlay */}
       {showCelebration && (
-        <div style={styles.celebrationOverlay}>
-          <div style={styles.celebrationPanel}>
-            <h2 style={styles.celebrationTitle}>🎉 Congratulations! 🎉</h2>
-            <p style={styles.celebrationText}>
+        <div className={styles.celebrationOverlay}>
+          <div className={styles.celebrationPanel}>
+            <h2 className={styles.celebrationTitle}>🎉 Congratulations! 🎉</h2>
+            <p className={styles.celebrationText}>
               You found all {puzzle.wordPositions.length} words!
             </p>
-            <p style={styles.celebrationTime}>
+            <p className={styles.celebrationTime}>
               Time: {formatTime(elapsedTime)}
             </p>
-            <div style={styles.celebrationActions}>
+            <div className={styles.celebrationActions}>
               <button onClick={handleStartGame} style={pixelBtnGold}>
                 Play Again
               </button>
@@ -376,7 +354,7 @@ export default function WordSearch({ onBack }) {
       )}
 
       {/* Controls */}
-      <div style={styles.controls}>
+      <div className={styles.controls}>
         <button onClick={handleReset} style={pixelBtnDark}>
           New Game
         </button>
@@ -385,195 +363,4 @@ export default function WordSearch({ onBack }) {
   );
 }
 
-const styles = {
-  container: {
-    width: '100vw',
-    height: '100vh',
-    background: COLORS.beige,
-    overflow: 'auto',
-    padding: '20px',
-    boxSizing: 'border-box',
-    fontFamily: FONTS.pixel,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '30px',
-  },
-  title: {
-    fontFamily: FONTS.pixel,
-    fontSize: '20px',
-    color: COLORS.brown,
-    margin: '0 0 10px 0',
-  },
-  titleArabic: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '28px',
-    color: COLORS.darkGold,
-    margin: '0 0 10px 0',
-    direction: 'rtl',
-  },
-  subtitle: {
-    fontSize: '10px',
-    color: COLORS.brown,
-    maxWidth: '600px',
-    margin: '0 auto',
-  },
-  setupPanel: {
-    background: COLORS.white,
-    border: `4px solid ${COLORS.brown}`,
-    padding: '30px',
-    maxWidth: '700px',
-    textAlign: 'center',
-  },
-  setupSection: {
-    marginBottom: '30px',
-  },
-  setupLabel: {
-    fontSize: '14px',
-    marginBottom: '12px',
-    color: COLORS.brown,
-  },
-  buttonGroup: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: '8px',
-  },
-  buttonSubtext: {
-    fontSize: '7px',
-    marginTop: '4px',
-    opacity: 0.8,
-  },
-  selectedButton: {
-    transform: 'translateY(2px)',
-    opacity: 0.9,
-  },
-  gameHeader: {
-    width: '100%',
-    maxWidth: '1000px',
-    marginBottom: '20px',
-  },
-  gameInfo: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    background: COLORS.white,
-    border: `3px solid ${COLORS.brown}`,
-    padding: '12px',
-  },
-  stat: {
-    fontSize: '11px',
-    color: COLORS.brown,
-  },
-  statLabel: {
-    fontWeight: 'bold',
-  },
-  gameContainer: {
-    display: 'flex',
-    gap: '20px',
-    maxWidth: '1000px',
-    alignItems: 'flex-start',
-  },
-  gridContainer: {
-    display: 'grid',
-    gap: '2px',
-    background: COLORS.brown,
-    border: `4px solid ${COLORS.brown}`,
-    padding: '2px',
-    userSelect: 'none',
-  },
-  gridCell: {
-    background: COLORS.white,
-    aspectRatio: '1',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '20px',
-    color: COLORS.brown,
-    cursor: 'pointer',
-    minWidth: '30px',
-    minHeight: '30px',
-    transition: 'background 0.1s',
-  },
-  selectingCell: {
-    background: COLORS.cyan,
-  },
-  foundCell: {
-    background: COLORS.green,
-    color: COLORS.white,
-  },
-  wordList: {
-    background: COLORS.white,
-    border: `4px solid ${COLORS.brown}`,
-    padding: '16px',
-    minWidth: '200px',
-    maxWidth: '300px',
-  },
-  wordListTitle: {
-    fontSize: '12px',
-    color: COLORS.brown,
-    marginBottom: '12px',
-    textAlign: 'center',
-  },
-  wordItem: {
-    padding: '8px',
-    marginBottom: '8px',
-    background: COLORS.beige,
-    border: `2px solid ${COLORS.brown}`,
-  },
-  foundWordItem: {
-    background: COLORS.green,
-    color: COLORS.white,
-  },
-  wordArabic: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '16px',
-    direction: 'rtl',
-    marginBottom: '4px',
-  },
-  wordEnglish: {
-    fontSize: '9px',
-  },
-  celebrationOverlay: {
-    position: 'fixed',
-    inset: 0,
-    background: 'rgba(0, 0, 0, 0.8)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-  },
-  celebrationPanel: {
-    background: COLORS.white,
-    border: `6px solid ${COLORS.xpGold}`,
-    padding: '40px',
-    textAlign: 'center',
-    maxWidth: '500px',
-  },
-  celebrationTitle: {
-    fontSize: '20px',
-    color: COLORS.xpGold,
-    marginBottom: '16px',
-  },
-  celebrationText: {
-    fontSize: '14px',
-    color: COLORS.brown,
-    marginBottom: '12px',
-  },
-  celebrationTime: {
-    fontSize: '16px',
-    color: COLORS.darkGold,
-    marginBottom: '24px',
-  },
-  celebrationActions: {
-    display: 'flex',
-    gap: '12px',
-    justifyContent: 'center',
-  },
-  controls: {
-    marginTop: '20px',
-  },
-};
+/* Inline styles object removed — now using WordSearch.module.css */

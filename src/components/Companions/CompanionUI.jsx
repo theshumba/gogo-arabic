@@ -23,6 +23,7 @@ import { EVENTS } from '../../utils/eventBusTypes.js';
 import CompanionCard from './CompanionCard.jsx';
 import PartyPanel from './PartyPanel.jsx';
 import RelationshipBar from './RelationshipBar.jsx';
+import styles from './CompanionUI.module.css';
 
 export default function CompanionUI({ onClose }) {
   const dispatch = useDispatch();
@@ -101,9 +102,6 @@ export default function CompanionUI({ onClose }) {
       if (itemData.slot === 'accessory1' || itemData.slot === 'accessory2') {
         giftCategory = 'gems';
       }
-      // For Phase 30, we'll use a simple heuristic
-      // In Phase 31 (crafting), we'll have proper gift items
-      // For now, accessories = gems, everything else = crafts
       else {
         giftCategory = 'crafts';
       }
@@ -142,15 +140,7 @@ export default function CompanionUI({ onClose }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0, 0, 0, 0.85)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className={styles.backdrop}
       >
         <motion.div
           initial={{ x: '100%' }}
@@ -158,73 +148,30 @@ export default function CompanionUI({ onClose }) {
           exit={{ x: '100%' }}
           transition={{ type: 'spring', stiffness: 120, damping: 20 }}
           onClick={(e) => e.stopPropagation()}
-          style={{
-            width: '90%',
-            maxWidth: '1200px',
-            height: '90vh',
-            background: '#1a1a2e',
-            border: '3px solid #4A90D9',
-            borderRadius: '12px',
-            padding: '24px',
-            overflowY: 'auto',
-            position: 'relative',
-          }}
+          className={styles.mainPanel}
         >
           {/* Header */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '24px',
-            }}
-          >
+          <div className={styles.header}>
             <div>
-              <h1
-                style={{
-                  fontSize: '16px',
-                  fontFamily: "'Press Start 2P', monospace",
-                  color: '#4A90D9',
-                  marginBottom: '8px',
-                }}
-              >
+              <h1 className={styles.headerTitle}>
                 Companions / الرفاق
               </h1>
-              <div style={{ fontSize: '10px', color: '#a0a0a0' }}>
+              <div className={styles.headerSubtitle}>
                 Recruited: {recruitedCompanions.length}/12
               </div>
             </div>
-            <button
-              onClick={onClose}
-              style={{
-                background: '#E74C3C',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '12px 16px',
-                fontSize: '12px',
-                fontFamily: "'Press Start 2P', monospace",
-                cursor: 'pointer',
-              }}
-            >
+            <button className={styles.closeBtn} onClick={onClose}>
               ✕
             </button>
           </div>
 
           {/* Party Panel */}
-          <div style={{ marginBottom: '24px' }}>
+          <div className={styles.partySection}>
             <PartyPanel />
           </div>
 
           {/* Filter tabs */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '8px',
-              marginBottom: '16px',
-              flexWrap: 'wrap',
-            }}
-          >
+          <div className={styles.filterTabs}>
             {[
               { key: 'all', label: 'All' },
               { key: 'recruited', label: 'Recruited' },
@@ -241,16 +188,7 @@ export default function CompanionUI({ onClose }) {
               <button
                 key={tab.key}
                 onClick={() => setFilterTab(tab.key)}
-                style={{
-                  background: filterTab === tab.key ? '#4A90D9' : '#2C3E50',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '8px 12px',
-                  fontSize: '8px',
-                  fontFamily: "'Press Start 2P', monospace",
-                  cursor: 'pointer',
-                }}
+                className={`${styles.filterTab} ${filterTab === tab.key ? styles.filterTabActive : styles.filterTabInactive}`}
               >
                 {tab.label}
               </button>
@@ -258,13 +196,7 @@ export default function CompanionUI({ onClose }) {
           </div>
 
           {/* Companion grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              gap: '16px',
-            }}
-          >
+          <div className={styles.companionGrid}>
             {filteredCompanions.map((companion) => {
               const isActive = {
                 battle: activeParty.battle === companion.id,
@@ -291,86 +223,39 @@ export default function CompanionUI({ onClose }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedCompanionId(null)}
-                style={{
-                  position: 'fixed',
-                  inset: 0,
-                  background: 'rgba(0, 0, 0, 0.9)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 1001,
-                }}
+                className={styles.detailBackdrop}
               >
                 <motion.div
                   initial={{ scale: 0.9 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0.9 }}
                   onClick={(e) => e.stopPropagation()}
-                  style={{
-                    width: '600px',
-                    maxHeight: '80vh',
-                    background: '#1a1a2e',
-                    border: `3px solid ${selectedCompanionDef.colorPalette.primary}`,
-                    borderRadius: '12px',
-                    padding: '24px',
-                    overflowY: 'auto',
-                  }}
+                  className={styles.detailPanel}
+                  style={{ borderColor: selectedCompanionDef.colorPalette.primary }}
                 >
                   {/* Companion name and title */}
                   <h2
-                    style={{
-                      fontSize: '14px',
-                      fontFamily: "'Press Start 2P', monospace",
-                      color: selectedCompanionDef.colorPalette.primary,
-                      marginBottom: '8px',
-                    }}
+                    className={styles.detailName}
+                    style={{ color: selectedCompanionDef.colorPalette.primary }}
                   >
                     {selectedCompanionDef.name} - {selectedCompanionDef.nameArabic}
                   </h2>
-                  <div
-                    style={{
-                      fontSize: '10px',
-                      color: '#a0a0a0',
-                      marginBottom: '16px',
-                    }}
-                  >
+                  <div className={styles.detailTitleText}>
                     {selectedCompanionDef.title} / {selectedCompanionDef.titleArabic}
                   </div>
 
                   {/* Description */}
-                  <p
-                    style={{
-                      fontSize: '10px',
-                      color: '#ccc',
-                      lineHeight: '1.6',
-                      marginBottom: '16px',
-                    }}
-                  >
+                  <p className={styles.detailDescription}>
                     {selectedCompanionDef.description}
                   </p>
 
                   {/* Stats */}
                   {selectedCompanion.recruited && (
-                    <div
-                      style={{
-                        background: '#2C3E50',
-                        borderRadius: '8px',
-                        padding: '12px',
-                        marginBottom: '16px',
-                      }}
-                    >
-                      <div style={{ fontSize: '10px', color: '#4A90D9', marginBottom: '8px' }}>
+                    <div className={styles.statsPanel}>
+                      <div className={styles.statsLabel}>
                         Base Stats
                       </div>
-                      <div
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(2, 1fr)',
-                          gap: '8px',
-                          fontSize: '9px',
-                          color: '#ccc',
-                        }}
-                      >
+                      <div className={styles.statsGrid}>
                         <div>HP: {selectedCompanionDef.baseStats.hp}</div>
                         <div>MP: {selectedCompanionDef.baseStats.mp}</div>
                         <div>Damage: {selectedCompanionDef.baseStats.damage}</div>
@@ -381,23 +266,14 @@ export default function CompanionUI({ onClose }) {
 
                   {/* Relationship bar */}
                   {selectedCompanion.recruited && (
-                    <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+                    <div className={styles.relationshipSection}>
                       <RelationshipBar value={selectedCompanion.relationship} maxValue={100} />
                     </div>
                   )}
 
                   {/* Recruitment requirement (if not recruited) */}
                   {!selectedCompanion.recruited && (
-                    <div
-                      style={{
-                        background: '#E74C3C',
-                        borderRadius: '8px',
-                        padding: '12px',
-                        marginBottom: '16px',
-                        fontSize: '10px',
-                        color: '#fff',
-                      }}
-                    >
+                    <div className={styles.recruitRequirement}>
                       <strong>How to recruit:</strong> Find them in{' '}
                       {selectedCompanionDef.zone.replace(/_/g, ' ')}
                       {selectedCompanionDef.recruitCondition.type === 'quest' &&
@@ -413,20 +289,11 @@ export default function CompanionUI({ onClose }) {
 
                   {/* Actions (if recruited) */}
                   {selectedCompanion.recruited && (
-                    <div style={{ display: 'flex', gap: '8px' }}>
+                    <div className={styles.actionRow}>
                       <button
+                        className={styles.giftBtn}
                         onClick={() => setShowGiftMenu(true)}
-                        style={{
-                          flex: 1,
-                          background: selectedCompanionDef.colorPalette.accent,
-                          color: '#1a1a2e',
-                          border: 'none',
-                          borderRadius: '4px',
-                          padding: '12px',
-                          fontSize: '10px',
-                          fontFamily: "'Press Start 2P', monospace",
-                          cursor: 'pointer',
-                        }}
+                        style={{ background: selectedCompanionDef.colorPalette.accent }}
                       >
                         🎁 Give Gift
                       </button>
@@ -434,19 +301,8 @@ export default function CompanionUI({ onClose }) {
                   )}
 
                   <button
+                    className={styles.closeBtnFull}
                     onClick={() => setSelectedCompanionId(null)}
-                    style={{
-                      width: '100%',
-                      marginTop: '16px',
-                      background: '#E74C3C',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '4px',
-                      padding: '12px',
-                      fontSize: '10px',
-                      fontFamily: "'Press Start 2P', monospace",
-                      cursor: 'pointer',
-                    }}
                   >
                     Close
                   </button>
@@ -463,52 +319,27 @@ export default function CompanionUI({ onClose }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setShowGiftMenu(false)}
-                style={{
-                  position: 'fixed',
-                  inset: 0,
-                  background: 'rgba(0, 0, 0, 0.95)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 1002,
-                }}
+                className={styles.giftBackdrop}
               >
                 <motion.div
                   initial={{ scale: 0.9 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0.9 }}
                   onClick={(e) => e.stopPropagation()}
-                  style={{
-                    width: '500px',
-                    maxHeight: '80vh',
-                    background: '#1a1a2e',
-                    border: `3px solid ${selectedCompanionDef.colorPalette.primary}`,
-                    borderRadius: '12px',
-                    padding: '24px',
-                    overflowY: 'auto',
-                  }}
+                  className={styles.giftPanel}
+                  style={{ borderColor: selectedCompanionDef.colorPalette.primary }}
                 >
                   <h3
-                    style={{
-                      fontSize: '12px',
-                      fontFamily: "'Press Start 2P', monospace",
-                      color: selectedCompanionDef.colorPalette.primary,
-                      marginBottom: '16px',
-                    }}
+                    className={styles.giftTitle}
+                    style={{ color: selectedCompanionDef.colorPalette.primary }}
                   >
                     Select Gift for {selectedCompanionDef.name}
                   </h3>
 
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(3, 1fr)',
-                      gap: '12px',
-                    }}
-                  >
+                  <div className={styles.giftGrid}>
                     {inventoryItems
                       .filter((item) => item.quantity > 0)
-                      .slice(0, 20) // Show max 20 items
+                      .slice(0, 20)
                       .map((item) => {
                         const itemData = EQUIPMENT_DATA[item.itemId];
                         if (!itemData) return null;
@@ -518,19 +349,12 @@ export default function CompanionUI({ onClose }) {
                             key={item.itemId}
                             whileHover={{ scale: 1.05 }}
                             onClick={() => handleGiveGift(item.itemId)}
-                            style={{
-                              background: '#2C3E50',
-                              border: '2px solid #4A90D9',
-                              borderRadius: '8px',
-                              padding: '12px',
-                              cursor: 'pointer',
-                              textAlign: 'center',
-                            }}
+                            className={styles.giftItemBtn}
                           >
-                            <div style={{ fontSize: '9px', color: '#4A90D9' }}>
+                            <div className={styles.giftItemName}>
                               {itemData.name}
                             </div>
-                            <div style={{ fontSize: '7px', color: '#a0a0a0', marginTop: '4px' }}>
+                            <div className={styles.giftItemQty}>
                               x{item.quantity}
                             </div>
                           </motion.button>
@@ -539,19 +363,8 @@ export default function CompanionUI({ onClose }) {
                   </div>
 
                   <button
+                    className={styles.cancelBtn}
                     onClick={() => setShowGiftMenu(false)}
-                    style={{
-                      width: '100%',
-                      marginTop: '16px',
-                      background: '#E74C3C',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '4px',
-                      padding: '12px',
-                      fontSize: '10px',
-                      fontFamily: "'Press Start 2P', monospace",
-                      cursor: 'pointer',
-                    }}
                   >
                     Cancel
                   </button>

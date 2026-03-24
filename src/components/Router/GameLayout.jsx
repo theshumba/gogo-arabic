@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, lazy, Suspense } from 'react';
+import React, { useRef, useEffect, useState, useCallback, lazy, Suspense } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -10,25 +10,29 @@ import { useAudio } from '../../hooks/useAudio.js';
 import { useEventBusListeners } from '../../hooks/useEventBusListeners.js';
 import { useSessionTracking } from '../../hooks/useSessionTracking.js';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts.js';
+import { useTutorialTrigger } from '../../hooks/useTutorialTrigger.js';
+import { WORLD_STATE_KEYS } from '../../data/worldStateKeys.js';
 
+// STATIC — always visible on game screen
 import { PhaserGame } from '../../game/PhaserGame.jsx';
-
 import HUD from '../HUD/HUD.jsx';
 import MiniMap from '../HUD/MiniMap.jsx';
 import NotificationToast from '../HUD/NotificationToast.jsx';
-import DialogueOverlay from '../NPC/DialogueOverlay.jsx';
-import QuizOverlay from '../Quiz/QuizOverlay.jsx';
-import QuestLog from '../Quest/QuestLog.jsx';
-import SignOverlay from '../World/SignOverlay.jsx';
-import ObjectInteractionOverlay from '../World/ObjectInteractionOverlay.jsx';
-import TutorialHints, { WelcomeSplash } from '../Onboarding/TutorialHints.jsx';
-import CinematicIntro from '../Onboarding/CinematicIntro.jsx';
-import PathChoice from '../Onboarding/PathChoice.jsx';
-import { useTutorialTrigger } from '../../hooks/useTutorialTrigger.js';
-import { WORLD_STATE_KEYS } from '../../data/worldStateKeys.js';
-import LevelUpModal from '../UI/LevelUpModal.jsx';
-import StreakRewardToast from '../Goals/StreakRewardToast.jsx';
-import AchievementToast from '../Achievements/AchievementToast.jsx';
+
+// LAZY — conditionally rendered overlays
+const DialogueOverlay = lazy(() => import('../NPC/DialogueOverlay.jsx'));
+const QuizOverlay = lazy(() => import('../Quiz/QuizOverlay.jsx'));
+const QuestLog = lazy(() => import('../Quest/QuestLog.jsx'));
+const SignOverlay = lazy(() => import('../World/SignOverlay.jsx'));
+const ObjectInteractionOverlay = lazy(() => import('../World/ObjectInteractionOverlay.jsx'));
+const TutorialHints = lazy(() => import('../Onboarding/TutorialHints.jsx'));
+const WelcomeSplash = lazy(() => import('../Onboarding/TutorialHints.jsx').then(m => ({ default: m.WelcomeSplash })));
+const CinematicIntro = lazy(() => import('../Onboarding/CinematicIntro.jsx'));
+const PathChoice = lazy(() => import('../Onboarding/PathChoice.jsx'));
+const LevelUpModal = lazy(() => import('../UI/LevelUpModal.jsx'));
+const StreakRewardToast = lazy(() => import('../Goals/StreakRewardToast.jsx'));
+const AchievementToast = lazy(() => import('../Achievements/AchievementToast.jsx'));
+const PauseMenu = lazy(() => import('./PauseMenu.jsx'));
 const BattleOverlay = lazy(() => import('../Battle/BattleOverlay.jsx'));
 const MagicOverlay = lazy(() => import('../Magic/MagicOverlay.jsx'));
 const SpellMenu = lazy(() => import('../Magic/SpellMenu.jsx'));
@@ -41,151 +45,9 @@ const QuestJournal = lazy(() => import('../Quest/QuestJournal.jsx'));
 const Wardrobe = lazy(() => import('../Wardrobe/Wardrobe.jsx'));
 const FactionPanel = lazy(() => import('../Faction/FactionPanel.jsx'));
 const PoetryBattleOverlay = lazy(() => import('../Poetry/PoetryBattleOverlay.jsx'));
-import { startPoetryBattle } from '../../store/slices/poetrySlice.js';
-import { getPoemById, getPoemBlanks } from '../../data/poems.js';
-import { store } from '../../store/store.js';
+const WelcomeBackOverlay = lazy(() => import('../WelcomeBack/WelcomeBackOverlay.jsx'));
+
 import styles from './GameLayout.module.css';
-
-function ActivitiesMenu({ onBack, onNavigate, onOpenPathSwitch }) {
-  const activities = [
-    {
-      id: 'learning-path',
-      icon: '\u0645\u0633\u0627\u0631',
-      label: 'Learning Path',
-      description: 'Change your learning path',
-      // No route — handled via onOpenPathSwitch for settings mode PathChoice
-      route: null,
-    },
-    {
-      id: 'grammar',
-      icon: 'قواعد',
-      label: 'Grammar',
-      description: 'Learn Arabic grammar rules',
-      route: '/grammar',
-    },
-    {
-      id: 'roots',
-      icon: 'جذور',
-      label: 'Word Roots',
-      description: 'Explore Arabic root patterns',
-      route: '/roots',
-    },
-    {
-      id: 'reading',
-      icon: 'قراءة',
-      label: 'Reading',
-      description: 'Practice reading Arabic passages',
-      route: '/mini-games/reading',
-    },
-    {
-      id: 'minigames',
-      icon: 'ألعاب',
-      label: 'Mini-Games',
-      description: 'Fun vocabulary practice games',
-      route: '/mini-games',
-    },
-  ];
-
-  return (
-    <div className={styles.pauseMenuOverlay}>
-      <div className={styles.pauseMenuTitle}>Activities</div>
-      <div className={styles.activitiesMenu}>
-        <div className={styles.activitiesGrid}>
-          {activities.map((activity) => (
-            <button
-              key={activity.id}
-              className={styles.activityCard}
-              onClick={() => {
-                if (activity.id === 'learning-path' && onOpenPathSwitch) {
-                  onOpenPathSwitch();
-                } else if (activity.route) {
-                  onNavigate(activity.route);
-                }
-              }}
-              aria-label={`${activity.label} - ${activity.description}`}
-            >
-              <div className={styles.activityCardArabic} lang="ar" aria-hidden="true">
-                {activity.icon}
-              </div>
-              <div className={styles.activityCardLabel}>{activity.label}</div>
-              <div className={styles.activityCardDesc}>{activity.description}</div>
-            </button>
-          ))}
-        </div>
-        <button onClick={onBack} className={styles.activitiesBackBtn}>
-          Back
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function PauseMenu({ onResume, onMainMenu, onNavigate, onOpenWardrobe, onOpenPathSwitch, onOpenFactionPanel }) {
-  const [showActivities, setShowActivities] = React.useState(false);
-
-  // ESC key handler for pause menu
-  React.useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onResume();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onResume]);
-
-  if (showActivities) {
-    return (
-      <ActivitiesMenu
-        onBack={() => setShowActivities(false)}
-        onNavigate={onNavigate}
-        onOpenPathSwitch={() => {
-          setShowActivities(false);
-          if (onOpenPathSwitch) onOpenPathSwitch();
-        }}
-      />
-    );
-  }
-
-  return (
-    <div className={styles.pauseMenuOverlay}>
-      <div className={styles.pauseMenuTitle}>Paused</div>
-      <div className={styles.pauseMenuButtons}>
-        <button onClick={() => { audioManager.playSFX('click'); onResume(); }} className={styles.pauseMenuBtnResume}>
-          Resume
-        </button>
-        <button onClick={() => { audioManager.playSFX('click'); setShowActivities(true); }} className={styles.pauseMenuBtnActivities}>
-          Activities
-        </button>
-        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/stats'); }} className={styles.pauseMenuBtnActivities}>
-          Profile
-        </button>
-        <button onClick={() => { audioManager.playSFX('click'); onOpenWardrobe(); }} className={styles.pauseMenuBtnActivities}>
-          Wardrobe
-        </button>
-        <button onClick={() => { audioManager.playSFX('click'); if (onOpenFactionPanel) onOpenFactionPanel(); }} className={styles.pauseMenuBtnActivities}>
-          Factions
-        </button>
-        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/skill-tree'); }} className={styles.pauseMenuBtnActivities}>
-          Skill Trees
-        </button>
-        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/codex'); }} className={styles.pauseMenuBtnActivities}>
-          Codex
-        </button>
-        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/save-load'); }} className={styles.pauseMenuBtnActivities}>
-          Save / Load
-        </button>
-        <button onClick={() => { audioManager.playSFX('click'); onNavigate('/completion'); }} className={styles.pauseMenuBtnActivities}>
-          Completion
-        </button>
-        <button onClick={() => { audioManager.playSFX('click'); onMainMenu(); }} className={styles.pauseMenuBtnMenu}>
-          Main Menu
-        </button>
-      </div>
-    </div>
-  );
-}
 
 /**
  * Layout component for /game/* routes
@@ -236,6 +98,11 @@ export default function GameLayout() {
   const [showFactionPanel, setShowFactionPanel] = React.useState(false);
   const [zoneLoading, setZoneLoading] = React.useState(false);
 
+  // Welcome Back overlay state (Phase 69)
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
+  const welcomeBackShown = useSelector(selectWelcomeBackShown);
+  const lastPlayedDate = useSelector((state) => state.player?.lastPlayedDate);
+
   // Poetry battle state — set on POETRY_BATTLE_START, cleared on POETRY_BATTLE_END
   const [poetryBattleData, setPoetryBattleData] = useState(null);
 
@@ -250,17 +117,50 @@ export default function GameLayout() {
     };
   }, []);
 
+  // Welcome Back overlay — show for returning players (4+ hours since last session)
+  useEffect(() => {
+    if (welcomeBackShown) return;
+    if (!lastPlayedDate) return;
+    const lastPlayed = new Date(lastPlayedDate);
+    const hoursSince = (Date.now() - lastPlayed.getTime()) / (1000 * 60 * 60);
+    if (hoursSince >= 4) {
+      setShowWelcomeBack(true);
+      EventBus.emit(EVENTS.PLAYER_FREEZE);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleWelcomeBackDismiss = useCallback(() => {
+    setShowWelcomeBack(false);
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+  }, []);
+
+  const handleWelcomeBackNavigate = useCallback((activity) => {
+    setShowWelcomeBack(false);
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+    if (activity === 'review') {
+      EventBus.emit(EVENTS.REVIEW_SESSION_OPEN);
+    } else if (activity === 'alphabet') {
+      EventBus.emit(EVENTS.ALPHABET_OPEN);
+    }
+    // 'explore' = just close, player is already in world
+  }, []);
+
   // Poetry battle EventBus listeners
   useEffect(() => {
-    const handlePoetryStart = (data) => {
+    const handlePoetryStart = async (data) => {
       // data: { poetId, poemId, npcAccuracy }
+      // Dynamic import to keep poems + poetrySlice out of GameLayout chunk
+      const [{ getPoemById, getPoemBlanks }, { startPoetryBattle }] = await Promise.all([
+        import('../../data/poems.js'),
+        import('../../store/slices/poetrySlice.js'),
+      ]);
       const poem = getPoemById(data.poemId);
       if (!poem) {
         console.error('[GameLayout] Poem not found:', data.poemId);
         return;
       }
       const blanks = getPoemBlanks(poem);
-      store.dispatch(startPoetryBattle({
+      dispatch(startPoetryBattle({
         poemId: data.poemId,
         poetId: data.poetId,
         blanks,
@@ -352,9 +252,6 @@ export default function GameLayout() {
   }, [anyOverlayOpen, journalOpen, dispatch]);
 
   // Freeze player when React overlays open (recipe book, crafting, inventory)
-  // These overlays steal keyboard focus from the Phaser canvas, so movement
-  // stops even without an explicit PLAYER_FREEZE. This ensures the game state
-  // is consistent with the input state.
   useEffect(() => {
     if (recipeBookOpen || craftingMiniGameActive || inventoryOpen) {
       EventBus.emit(EVENTS.PLAYER_FREEZE);
@@ -382,21 +279,7 @@ export default function GameLayout() {
       <PhaserGame ref={phaserRef} />
 
       {/* Zone loading indicator -- shown during zone transition asset loading */}
-      {zoneLoading && (
-        <div style={{
-          position: 'fixed',
-          bottom: '20px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          color: '#D4A843',
-          fontFamily: "'Press Start 2P', monospace",
-          fontSize: '12px',
-          zIndex: 9999,
-          pointerEvents: 'none',
-        }}>
-          Loading zone...
-        </div>
-      )}
+      {zoneLoading && <div className={styles.zoneLoading}>Loading zone...</div>}
 
       {/* HUD overlay bar */}
       <HUD onMenu={() => { audioManager.playSFX('click'); dispatch(toggleMenu()); }} />
@@ -408,68 +291,81 @@ export default function GameLayout() {
       <NotificationToast />
 
       {/* Achievement toast */}
-      <AchievementToast />
+      <Suspense fallback={null}><AchievementToast /></Suspense>
 
       {/* Streak reward toast */}
-      <StreakRewardToast />
+      <Suspense fallback={null}><StreakRewardToast /></Suspense>
 
       {/* Level up modal */}
-      <LevelUpModal />
-
-      {/* Phase 47: CinematicIntro replaced by Phaser-native sequence in CinematicIntroSequencer.js */}
+      <Suspense fallback={null}><LevelUpModal /></Suspense>
 
       {/* Learning path choice — Scholar/Traveler/Historian (settings fallback only) */}
-      {/* The ink dialogue path (PATH-01/PATH-02) never sets tutorialPhase='path_choice'.  */}
-      {/* The ONBOARDING_PATH_CHOSEN guard prevents double-display in any edge case.       */}
-      {tutorialPhase === 'path_choice' && !pathAlreadyChosen && <PathChoice />}
+      {tutorialPhase === 'path_choice' && !pathAlreadyChosen && (
+        <Suspense fallback={null}><PathChoice /></Suspense>
+      )}
 
       {/* PATH-05: Settings-mode path switch (triggered from Activities menu) */}
       {showPathSwitch && (
-        <PathChoice mode="settings" onClose={() => setShowPathSwitch(false)} />
+        <Suspense fallback={null}>
+          <PathChoice mode="settings" onClose={() => setShowPathSwitch(false)} />
+        </Suspense>
       )}
 
       {/* Tutorial hints (non-blocking arrows/prompts) */}
-      {/* PATH-07: skipped for returning players via onboardingSkip dual-check */}
-      {!onboardingSkip && tutorialPhase !== 'cinematic_intro' && tutorialPhase !== 'path_choice' && <TutorialHints />}
+      {!onboardingSkip && tutorialPhase !== 'cinematic_intro' && tutorialPhase !== 'path_choice' && (
+        <Suspense fallback={null}><TutorialHints /></Suspense>
+      )}
 
       {/* Welcome splash — auto-fades after 3 seconds */}
-      {showWelcome && <WelcomeSplash onDone={() => setShowWelcome(false)} />}
+      {showWelcome && (
+        <Suspense fallback={null}><WelcomeSplash onDone={() => setShowWelcome(false)} /></Suspense>
+      )}
 
       {/* Conditional overlays */}
-      {dialogueOpen && dialogueConfig?.type === 'quest-log' && <QuestLog />}
-      {dialogueOpen && dialogueConfig?.type === 'shop' && (
-        <Suspense fallback={null}>
-          <ShopOverlay />
-        </Suspense>
+      {dialogueOpen && dialogueConfig?.type === 'quest-log' && (
+        <Suspense fallback={null}><QuestLog /></Suspense>
       )}
-      {dialogueOpen && dialogueConfig?.type !== 'quest-log' && dialogueConfig?.type !== 'shop' && <DialogueOverlay />}
-      {quizOpen && <QuizOverlay />}
-      {signOpen && <SignOverlay />}
-      {objectInspectOpen && <ObjectInteractionOverlay />}
+      {dialogueOpen && dialogueConfig?.type === 'shop' && (
+        <Suspense fallback={null}><ShopOverlay /></Suspense>
+      )}
+      {dialogueOpen && dialogueConfig?.type !== 'quest-log' && dialogueConfig?.type !== 'shop' && (
+        <Suspense fallback={null}><DialogueOverlay /></Suspense>
+      )}
+      {quizOpen && (
+        <Suspense fallback={null}><QuizOverlay /></Suspense>
+      )}
+      {signOpen && (
+        <Suspense fallback={null}><SignOverlay /></Suspense>
+      )}
+      {objectInspectOpen && (
+        <Suspense fallback={null}><ObjectInteractionOverlay /></Suspense>
+      )}
       {menuOpen && (
-        <PauseMenu
-          onResume={() => dispatch(toggleMenu())}
-          onMainMenu={() => {
-            dispatch(toggleMenu());
-            navigate('/');
-          }}
-          onNavigate={(path) => {
-            dispatch(toggleMenu());
-            navigate(path);
-          }}
-          onOpenWardrobe={() => {
-            dispatch(toggleMenu());
-            setShowWardrobe(true);
-          }}
-          onOpenPathSwitch={() => {
-            dispatch(toggleMenu());
-            setShowPathSwitch(true);
-          }}
-          onOpenFactionPanel={() => {
-            dispatch(toggleMenu());
-            setShowFactionPanel(true);
-          }}
-        />
+        <Suspense fallback={null}>
+          <PauseMenu
+            onResume={() => dispatch(toggleMenu())}
+            onMainMenu={() => {
+              dispatch(toggleMenu());
+              navigate('/');
+            }}
+            onNavigate={(path) => {
+              dispatch(toggleMenu());
+              navigate(path);
+            }}
+            onOpenWardrobe={() => {
+              dispatch(toggleMenu());
+              setShowWardrobe(true);
+            }}
+            onOpenPathSwitch={() => {
+              dispatch(toggleMenu());
+              setShowPathSwitch(true);
+            }}
+            onOpenFactionPanel={() => {
+              dispatch(toggleMenu());
+              setShowFactionPanel(true);
+            }}
+          />
+        </Suspense>
       )}
 
       {/* Quest Journal overlay (v7.0) */}
@@ -530,6 +426,16 @@ export default function GameLayout() {
       {poetryBattleData && (
         <Suspense fallback={null}>
           <PoetryBattleOverlay npcAccuracy={poetryBattleData.npcAccuracy ?? 0.7} />
+        </Suspense>
+      )}
+
+      {/* Welcome Back overlay (Phase 69) — shown for returning players */}
+      {showWelcomeBack && (
+        <Suspense fallback={null}>
+          <WelcomeBackOverlay
+            onDismiss={handleWelcomeBackDismiss}
+            onNavigate={handleWelcomeBackNavigate}
+          />
         </Suspense>
       )}
 

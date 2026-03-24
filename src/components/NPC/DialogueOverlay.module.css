@@ -909,3 +909,10 @@
     animation: none;
   }
 }
+
+/* TopicSelectionMenu bottom row */
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

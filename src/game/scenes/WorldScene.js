@@ -31,6 +31,7 @@ import { CinematicIntroSequencer } from '../systems/CinematicIntroSequencer.js';
 import { StepTriggerSystem } from '../systems/StepTriggerSystem.js';
 import { ExitTriggerChecker } from '../systems/ExitTriggerChecker.js';
 import { ZoneToast } from '../systems/ZoneToast.js';
+import { FloatingArabicLabelManager } from '../systems/FloatingArabicLabelManager.js';
 
 
 // ============================================================
@@ -68,6 +69,7 @@ export class WorldScene extends Phaser.Scene {
     this.dialogueBox = null;
     this.introSequencer = null;
     this.stepTriggerSystem = null;
+    this.floatingLabelManager = null;
 
     this._suppressZoneToast = true;
     this.interactKey = null;
@@ -219,6 +221,9 @@ export class WorldScene extends Phaser.Scene {
       mapH: this.currentMapH,
     });
 
+    // IMM-03: Update floating Arabic labels (FSRS-based visibility)
+    if (this.floatingLabelManager) this.floatingLabelManager.update(time);
+
     // DOM overlays, time, weather
     if (this.domOverlay) this.domOverlay.update();
     if (this.timeSystem) this.timeSystem.update(time, delta);
@@ -284,6 +289,7 @@ export class WorldScene extends Phaser.Scene {
 
     if (this.usingTiledMap) { this.tiledMapLoader.destroy(); } else { this.mapLoader.destroy(); }
     this.usingTiledMap = false;
+    if (this.floatingLabelManager) { this.floatingLabelManager.destroy(); this.floatingLabelManager = null; }
     if (this.npcManager) this.npcManager.destroy();
     if (this.interactableManager) this.interactableManager.destroy();
     if (this.playerController) this.playerController.destroy();
@@ -326,6 +332,10 @@ export class WorldScene extends Phaser.Scene {
     this.equipmentManager = new EquipmentManager(this, player);
     this.npcManager.create(zone.npcs, player, wallGroup, this.domOverlay);
     this.interactableManager.create(zone.interactables, objectSprites);
+
+    // IMM-03: Floating Arabic labels above world objects
+    this.floatingLabelManager = new FloatingArabicLabelManager(this);
+    this.floatingLabelManager.create(zoneName, this.interactableManager);
 
     if (zone.gatheringSpots) {
       this.gatheringSpotManager = new GatheringSpotManager(this);

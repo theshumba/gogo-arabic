@@ -242,3 +242,35 @@
   padding: 10px 14px;
   margin-bottom: 8px;
 }
+
+/* CEFR level badge */
+.cefrBadge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 8px;
+  font-weight: bold;
+  margin-top: 4px;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.cefrBadgeSmall {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 8px;
+  font-weight: bold;
+  margin-top: 2px;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.noResultsHint {
+  font-size: 10px;
+  margin-top: 8px;
+}
+
+.clusterWordArabic {
+  font-size: 18px;
+}

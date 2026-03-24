@@ -13,6 +13,10 @@ import vocabulary from '../data/vocabularyAll.js';
 import { QUIZ_TYPE_REGISTRY, selectQuizTypeForPlayer } from '../data/quizTypes.js';
 import { selectCefrLevel } from '../store/slices/cefrProgressSlice.js';
 import { VERB_PARADIGMS } from '../components/Quiz/GrammarFill.jsx';
+import { recordAnswer as recordQuizStat, endSession as endQuizStatSession } from '../services/quizStatAccumulator.js';
+import { DIALECT_ITEMS, DIALECT_OPTIONS } from '../data/dialectItems.js';
+import { ROOT_EXPANSIONS } from '../data/rootExpansions.js';
+import { CULTURAL_ITEMS } from '../data/culturalItems.js';
 
 export function isFsrsDue(card) {
   if (!card || !card.due) return true;
@@ -199,6 +203,70 @@ export function useQuiz() {
       ]);
     }
 
+    // DialectIdentify: pick a random dialect item and show 4 dialect options
+    if (type === 'DialectIdentify') {
+      const idx = word.id ? word.id.charCodeAt(0) % DIALECT_ITEMS.length : Math.floor(Math.random() * DIALECT_ITEMS.length);
+      const item = DIALECT_ITEMS[idx];
+      // Attach dialect item data to the word so the component can display phrase/transliteration
+      word.dialectItem = item;
+      return shuffle(
+        DIALECT_OPTIONS.map((dialect) => ({
+          label: dialect,
+          value: dialect,
+          correct: dialect === item.dialect,
+        }))
+      );
+    }
+
+    // RootExpand: pick a root expansion and build 6 multi-select options (derived + distractors)
+    if (type === 'RootExpand') {
+      const idx = word.id ? word.id.charCodeAt(0) % ROOT_EXPANSIONS.length : Math.floor(Math.random() * ROOT_EXPANSIONS.length);
+      const expansion = ROOT_EXPANSIONS[idx];
+      // Pick 3-4 derived words and 2-3 distractors to total ~6 options
+      const derivedPool = shuffle(expansion.derived);
+      const distractorPool = shuffle(expansion.distractors);
+      const derivedCount = Math.min(4, derivedPool.length);
+      const distractorCount = Math.min(6 - derivedCount, distractorPool.length);
+      const selectedDerived = derivedPool.slice(0, derivedCount);
+      const selectedDistractors = distractorPool.slice(0, distractorCount);
+      // Attach root expansion data to word for the component
+      word.rootExpansion = {
+        root: expansion.root,
+        rootDisplay: expansion.rootDisplay,
+        meaning: expansion.meaning,
+        correctCount: selectedDerived.length,
+      };
+      return shuffle([
+        ...selectedDerived.map((w) => ({
+          label: w.arabic,
+          value: w.arabic,
+          correct: true,
+          english: w.english,
+        })),
+        ...selectedDistractors.map((w) => ({
+          label: w.arabic,
+          value: w.arabic,
+          correct: false,
+          english: w.english,
+        })),
+      ]);
+    }
+
+    // CulturalContext: pick a cultural item and show 4 situation options
+    if (type === 'CulturalContext') {
+      const idx = word.id ? word.id.charCodeAt(0) % CULTURAL_ITEMS.length : Math.floor(Math.random() * CULTURAL_ITEMS.length);
+      const item = CULTURAL_ITEMS[idx];
+      // Attach cultural item data to word for the component
+      word.culturalItem = item;
+      return shuffle(
+        item.options.map((option) => ({
+          label: option,
+          value: option,
+          correct: option === item.correctContext,
+        }))
+      );
+    }
+
     return [];
   }
 
@@ -314,6 +382,27 @@ export function useQuiz() {
       correct = normalize(userAnswer) === normalize(expectedSentence);
     } else if (quizState.quizType === 'ClozePassage') {
       correct = normalize(userAnswer) === normalize(word.arabic);
+    } else if (quizState.quizType === 'DialectIdentify') {
+      // Grade against the dialect item's correct dialect
+      const dialectItem = word.dialectItem;
+      correct = dialectItem ? userAnswer === dialectItem.dialect : false;
+    } else if (quizState.quizType === 'RootExpand') {
+      // Multi-select: userAnswer is JSON array of selected values
+      try {
+        const selectedValues = JSON.parse(userAnswer);
+        const correctValues = quizState.choices.filter((c) => c.correct).map((c) => c.value);
+        // Both sets must match exactly (same size, same members)
+        const selectedSet = new Set(selectedValues);
+        const correctSet = new Set(correctValues);
+        correct = selectedSet.size === correctSet.size &&
+          [...correctSet].every((v) => selectedSet.has(v));
+      } catch {
+        correct = false;
+      }
+    } else if (quizState.quizType === 'CulturalContext') {
+      // Grade against the cultural item's correct context
+      const culturalItem = word.culturalItem;
+      correct = culturalItem ? userAnswer === culturalItem.correctContext : false;
     } else {
       correct = normalize(userAnswer) === normalize(word.arabic);
     }
@@ -342,6 +431,11 @@ export function useQuiz() {
     const result = reviewCard(currentCard, rating);
     dispatch(updateFsrsCard({ wordId: word.id, card: result.card, log: result.log }));
 
+    // IMM-04: Record quiz stat for community percentage
+    if (word?.id) {
+      recordQuizStat(word.id, quizState.quizType, correct);
+    }
+
     // Track review for achievement progress
     dispatch(incrementReviews());
 
@@ -364,6 +458,12 @@ export function useQuiz() {
       correctAnswer = word.exampleSentence?.arabic || word.arabic;
     } else if (quizState.quizType === 'ClozePassage') {
       correctAnswer = word.arabic;
+    } else if (quizState.quizType === 'DialectIdentify') {
+      correctAnswer = word.dialectItem?.dialect || '';
+    } else if (quizState.quizType === 'RootExpand') {
+      correctAnswer = quizState.choices.filter((c) => c.correct).map((c) => c.label).join(', ');
+    } else if (quizState.quizType === 'CulturalContext') {
+      correctAnswer = word.culturalItem?.correctContext || '';
     } else {
       correctAnswer = word.arabic;
     }
@@ -392,6 +492,7 @@ export function useQuiz() {
   }, [questionIndex, quizState, dispatch, playerLevel, cefrLevel]);
 
   const close = useCallback(() => {
+    endQuizStatSession();
     setQuizState({
       active: false,
       quizType: null,

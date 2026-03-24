@@ -23,6 +23,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
+import styles from './BattleOverlay.module.css';
 
 import BattleMenu from './BattleMenu.jsx';
 import BattleArabicInput from './BattleArabicInput.jsx';
@@ -294,10 +295,7 @@ export default function BattleOverlay() {
   };
 
   return (
-    <div
-      className="battle-overlay-container"
-      style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 250 }}
-    >
+    <div className={styles.container}>
       {/* Phase 32: Status effect bars */}
       {playerEffects && playerEffects.length > 0 && (
         <StatusEffectBar effects={playerEffects} target="player" />
@@ -315,7 +313,7 @@ export default function BattleOverlay() {
       />
 
       {/* Battle menu — visible during ACTION_SELECT */}
-      <div style={{ pointerEvents: 'auto' }}>
+      <div className={styles.pointerEventsAuto}>
         <BattleMenu
           visible={phase === 'ACTION_SELECT'}
           availableActions={availableActions}
@@ -324,7 +322,7 @@ export default function BattleOverlay() {
       </div>
 
       {/* Arabic input — visible during INPUT_PHASE */}
-      <div style={{ pointerEvents: 'auto' }}>
+      <div className={styles.pointerEventsAuto}>
         <BattleArabicInput
           prompt={phase === 'INPUT_PHASE' ? prompt : null}
           onSubmit={() => setPhase('resolving')}
@@ -333,7 +331,7 @@ export default function BattleOverlay() {
 
       {/* Phase 32: Flee challenge — BattleArabicInput in flee mode */}
       {fleeChallengeData && (
-        <div style={{ pointerEvents: 'auto' }}>
+        <div className={styles.pointerEventsAuto}>
           <BattleArabicInput
             mode="flee"
             prompt={{
@@ -350,7 +348,7 @@ export default function BattleOverlay() {
 
       {/* Phase 32: Grammar combo input — visible during GRAMMAR_COMBO phase */}
       {showGrammarCombo && grammarComboData && (
-        <div style={{ pointerEvents: 'auto' }}>
+        <div className={styles.pointerEventsAuto}>
           <GrammarComboInput
             comboType={grammarComboData.comboType || grammarComboData.type}
             template={grammarComboData.template}
@@ -361,7 +359,7 @@ export default function BattleOverlay() {
       )}
 
       {/* Phase 32: Battle item menu — visible during ITEM_USE phase */}
-      <div style={{ pointerEvents: 'auto' }}>
+      <div className={styles.pointerEventsAuto}>
         <BattleItemMenu
           visible={showItemMenu}
           onUseItem={handleItemUse}
@@ -370,7 +368,7 @@ export default function BattleOverlay() {
       </div>
 
       {/* Phase 32: Target selector — visible during TARGET_SELECT phase */}
-      <div style={{ pointerEvents: 'auto' }}>
+      <div className={styles.pointerEventsAuto}>
         <TargetSelector
           visible={showTargetSelector}
           enemies={targetSelectorData?.enemies || enemies || []}
@@ -393,46 +391,19 @@ export default function BattleOverlay() {
 
       {/* Enemy action intent */}
       {phase === 'ENEMY_TURN' && enemyAction && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            fontFamily: "'Press Start 2P', monospace",
-            fontSize: '12px',
-            color: '#FF6666',
-            textShadow: '0 0 8px rgba(255, 102, 102, 0.5)',
-            pointerEvents: 'none',
-            textAlign: 'center',
-            direction: 'rtl',
-          }}
-        >
+        <div className={styles.enemyIntent}>
           <p>{enemyAction.intent}</p>
         </div>
       )}
 
       {/* Companion turn indicator */}
       {isCompanionTurn && (
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '200px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'rgba(26, 26, 46, 0.95)',
-            border: '2px solid #4A90D9',
-            borderRadius: '8px',
-            padding: '12px 20px',
-            textAlign: 'center',
-            pointerEvents: 'none',
-          }}
-        >
-          <div style={{ fontFamily: "'Press Start 2P', monospace", fontSize: '10px', color: '#4A90D9', marginBottom: '6px' }}>
+        <div className={styles.companionTurn}>
+          <div className={styles.companionTurnLabel}>
             Companion&apos;s Turn
           </div>
           {companionAction && (
-            <div style={{ fontSize: '11px', color: '#f4fefa' }}>
+            <div className={styles.companionActionText}>
               {companionAction.action === 'heal' && '💚 Healing...'}
               {companionAction.action === 'attack' && '⚔️ Attacking...'}
               {companionAction.action === 'defend' && '🛡️ Defending...'}
@@ -446,48 +417,32 @@ export default function BattleOverlay() {
 
       {/* Companion HP/MP bars (if battle companion active) */}
       {activeParty?.battle && battleState?.companionHP !== undefined && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            background: 'rgba(26, 26, 46, 0.9)',
-            border: '2px solid #4A90D9',
-            borderRadius: '8px',
-            padding: '12px',
-            minWidth: '150px',
-            pointerEvents: 'none',
-          }}
-        >
-          <div style={{ fontSize: '8px', color: '#4A90D9', fontFamily: "'Press Start 2P', monospace", marginBottom: '6px' }}>
+        <div className={styles.companionHPPanel}>
+          <div className={styles.companionName}>
             {allCompanions && allCompanions[activeParty.battle] ?
               (allCompanions[activeParty.battle].name || 'Companion') :
               'Companion'}
           </div>
           {/* HP Bar */}
-          <div style={{ marginBottom: '4px' }}>
-            <div style={{ fontSize: '7px', color: '#2ECC71', marginBottom: '2px' }}>HP</div>
-            <div style={{ width: '120px', height: '8px', background: '#333', borderRadius: '4px', overflow: 'hidden' }}>
+          <div className={styles.barSection}>
+            <div className={`${styles.barLabel} ${styles.barLabelHP}`}>HP</div>
+            <div className={styles.barTrack}>
               <div
+                className={styles.barFillHP}
                 style={{
                   width: `${Math.max(0, Math.min(100, ((battleState.companionHP || 0) / (battleState.companionMaxHP || 1)) * 100))}%`,
-                  height: '100%',
-                  background: '#4CAF50',
-                  transition: 'width 0.3s ease',
                 }}
               />
             </div>
           </div>
           {/* MP Bar */}
           <div>
-            <div style={{ fontSize: '7px', color: '#2196F3', marginBottom: '2px' }}>MP</div>
-            <div style={{ width: '120px', height: '6px', background: '#333', borderRadius: '3px', overflow: 'hidden' }}>
+            <div className={`${styles.barLabel} ${styles.barLabelMP}`}>MP</div>
+            <div className={styles.barTrackSmall}>
               <div
+                className={styles.barFillMP}
                 style={{
                   width: `${Math.max(0, Math.min(100, ((battleState.companionMP || 0) / (battleState.companionMaxMP || 1)) * 100))}%`,
-                  height: '100%',
-                  background: '#2196F3',
-                  transition: 'width 0.3s ease',
                 }}
               />
             </div>
@@ -497,7 +452,7 @@ export default function BattleOverlay() {
 
       {/* Battle result overlay */}
       {phase === 'result' && battleResult && !showPostReview && (
-        <div style={{ pointerEvents: 'auto' }}>
+        <div className={styles.pointerEventsAuto}>
           <BattleResult
             victory={battleResult.victory}
             bossId={battleResult.bossId}
@@ -509,7 +464,7 @@ export default function BattleOverlay() {
 
       {/* Phase 32: Post-battle review overlay */}
       {showPostReview && (
-        <div style={{ pointerEvents: 'auto' }}>
+        <div className={styles.pointerEventsAuto}>
           <PostBattleReview
             battleData={reviewBattleData}
             onClose={() => {

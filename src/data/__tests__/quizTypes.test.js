@@ -27,10 +27,10 @@ describe('QUIZ_TYPE_REGISTRY', () => {
     expect(QUIZ_TYPE_REGISTRY['ClozePassage'].cefrMin).toBe('A2');
   });
 
-  it('deferred types (DialectIdentify, RootExpand, CulturalContext) remain at minLevel:999 and cefrMin:B2', () => {
-    const deferred = ['DialectIdentify', 'RootExpand', 'CulturalContext'];
-    deferred.forEach(t => {
-      expect(QUIZ_TYPE_REGISTRY[t].minLevel).toBe(999);
+  it('Phase 68 types (DialectIdentify, RootExpand, CulturalContext) have minLevel:8 and cefrMin:B2', () => {
+    const phase68Types = ['DialectIdentify', 'RootExpand', 'CulturalContext'];
+    phase68Types.forEach(t => {
+      expect(QUIZ_TYPE_REGISTRY[t].minLevel).toBe(8);
       expect(QUIZ_TYPE_REGISTRY[t].cefrMin).toBe('B2');
     });
   });
@@ -102,14 +102,14 @@ describe('selectQuizTypeForPlayer', () => {
     expect(typesWithCefrMin.length).toBeGreaterThan(0);
   });
 
-  it('never returns deferred types (minLevel 999)', () => {
-    const deferred = ['DialectIdentify', 'RootExpand', 'CulturalContext'];
-    const results = Array.from({ length: 200 }, () =>
-      selectQuizTypeForPlayer({}, 50, 'B2')
+  it('Phase 68 types appear for B2 players at level 8+', () => {
+    const phase68Types = ['DialectIdentify', 'RootExpand', 'CulturalContext'];
+    const results = Array.from({ length: 500 }, () =>
+      selectQuizTypeForPlayer({}, 10, 'B2')
     );
-    results.forEach(t => {
-      expect(deferred).not.toContain(t);
-    });
+    // At level 10 B2, at least some Phase 68 types should appear
+    const found = results.filter(t => phase68Types.includes(t));
+    expect(found.length).toBeGreaterThan(0);
   });
 
   it('GrammarFill appears in rotation for A2 player at level 4+', () => {
