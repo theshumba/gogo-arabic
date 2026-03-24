@@ -14,6 +14,9 @@ import { showNotification } from '../store/slices/uiSlice.js';
 import { adjustAlignment } from '../store/slices/factionSlice.js';
 import { addJournalEntry, JOURNAL_CATEGORIES } from '../store/slices/journalSlice.js';
 import { setWeeklyChallenge } from '../store/slices/endgameSlice.js';
+import { selectFsrsCards } from '../store/slices/vocabularySlice.js';
+import { getDueCards } from '../services/fsrs.js';
+import { shuffle } from '../utils/shuffle.js';
 import { FACTIONS } from '../data/factions.js';
 import { WEEKLY_CHALLENGES } from '../data/weeklyRotation.js';
 import questsData from '../data/quests.json';
@@ -78,6 +81,19 @@ export function useZoneEvents(phaserRef, playSFX) {
 
       // Read quests from store directly (not stale closure)
       const quests = store.getState().quests.quests;
+
+      // WIRE-02: Zone-entry micro-review — trigger 2-3 FSRS-due word reviews
+      const fsrsCards = selectFsrsCards(store.getState());
+      const dueIds = getDueCards(fsrsCards);
+      if (dueIds.length >= 2) {
+        const now = Date.now();
+        const cooldown = 5 * 60 * 1000; // 5 minutes between micro-reviews
+        if (!handleZoneChange._lastMicroReview || now - handleZoneChange._lastMicroReview > cooldown) {
+          handleZoneChange._lastMicroReview = now;
+          const reviewIds = shuffle(dueIds).slice(0, 3);
+          EventBus.emit(EVENTS.MICRO_REVIEW_TRIGGER, { wordIds: reviewIds });
+        }
+      }
 
       // Check zone exploration quests
       for (const qd of questsData) {

@@ -128,6 +128,8 @@ export const EVENTS = Object.freeze({
   QUIZ_OPEN: 'phaser:quiz:open',
   /** React → (internal): quiz overlay closed, resume BGM */
   QUIZ_CLOSED: 'react:quiz:closed',
+  /** React → React: trigger micro-review overlay with 2-3 due words on zone entry */
+  MICRO_REVIEW_TRIGGER: 'react:quiz:micro-review-trigger',
   /** React → React: navigate to /review (spaced repetition session) */
   REVIEW_SESSION_OPEN: 'react:nav:open-review',
   /** React → React: navigate to /alphabet */

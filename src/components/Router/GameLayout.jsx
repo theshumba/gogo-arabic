@@ -46,6 +46,7 @@ const Wardrobe = lazy(() => import('../Wardrobe/Wardrobe.jsx'));
 const FactionPanel = lazy(() => import('../Faction/FactionPanel.jsx'));
 const PoetryBattleOverlay = lazy(() => import('../Poetry/PoetryBattleOverlay.jsx'));
 const WelcomeBackOverlay = lazy(() => import('../WelcomeBack/WelcomeBackOverlay.jsx'));
+const MicroReviewOverlay = lazy(() => import('../Quiz/MicroReviewOverlay.jsx'));
 
 import styles from './GameLayout.module.css';
 
@@ -103,6 +104,9 @@ export default function GameLayout() {
   const welcomeBackShown = useSelector(selectWelcomeBackShown);
   const lastPlayedDate = useSelector((state) => state.player?.lastPlayedDate);
 
+  // WIRE-02: Micro-review overlay state (zone-entry quick reviews)
+  const [microReviewWordIds, setMicroReviewWordIds] = useState(null);
+
   // Poetry battle state — set on POETRY_BATTLE_START, cleared on POETRY_BATTLE_END
   const [poetryBattleData, setPoetryBattleData] = useState(null);
 
@@ -115,6 +119,23 @@ export default function GameLayout() {
       EventBus.off(EVENTS.ZONE_LOADING_START, onStart);
       EventBus.off(EVENTS.ZONE_LOADING_END, onEnd);
     };
+  }, []);
+
+  // WIRE-02: Micro-review overlay — triggered on zone entry for FSRS-due words
+  useEffect(() => {
+    const handleMicroReview = ({ wordIds }) => {
+      if (wordIds?.length >= 2) {
+        setMicroReviewWordIds(wordIds);
+        EventBus.emit(EVENTS.PLAYER_FREEZE);
+      }
+    };
+    EventBus.on(EVENTS.MICRO_REVIEW_TRIGGER, handleMicroReview);
+    return () => EventBus.off(EVENTS.MICRO_REVIEW_TRIGGER, handleMicroReview);
+  }, []);
+
+  const handleMicroReviewClose = useCallback(() => {
+    setMicroReviewWordIds(null);
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
   }, []);
 
   // Welcome Back overlay — show for returning players (4+ hours since last session)
@@ -438,6 +459,18 @@ export default function GameLayout() {
           />
         </Suspense>
       )}
+
+      {/* WIRE-02: Micro-review overlay — zone-entry quick vocab reviews */}
+      <AnimatePresence>
+        {microReviewWordIds && (
+          <Suspense fallback={null}>
+            <MicroReviewOverlay
+              wordIds={microReviewWordIds}
+              onClose={handleMicroReviewClose}
+            />
+          </Suspense>
+        )}
+      </AnimatePresence>
 
       {/* RecipeBook overlay (v6.1 crafting) */}
       <AnimatePresence>
