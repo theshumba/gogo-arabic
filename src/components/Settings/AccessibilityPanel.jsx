@@ -9,6 +9,7 @@
  *
  * Styled with dark game theme (#0A0A0A / #d4a843 gold) using a CSS module.
  */
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   selectColorBlindMode,
@@ -36,6 +37,12 @@ const FONT_SCALE_MIN  = 0.8;
 const FONT_SCALE_MAX  = 1.5;
 const FONT_SCALE_STEP = 0.1;
 
+const DYSLEXIA_KEY = 'gogo-a11y-dyslexia-font';
+
+function readDyslexia() {
+  try { return localStorage.getItem(DYSLEXIA_KEY) === 'true'; } catch { return false; }
+}
+
 export default function AccessibilityPanel({ onBack }) {
   const dispatch        = useDispatch();
   const colorBlindMode  = useSelector(selectColorBlindMode);
@@ -43,6 +50,14 @@ export default function AccessibilityPanel({ onBack }) {
   const reducedMotion   = useSelector(selectReducedMotion);
   const highContrast    = useSelector(selectHighContrast);
   const screenReader    = useSelector(selectScreenReaderMode);
+  const [dyslexiaFont, setDyslexiaFont] = useState(readDyslexia);
+
+  const toggleDyslexiaFont = () => {
+    const next = !dyslexiaFont;
+    setDyslexiaFont(next);
+    try { localStorage.setItem(DYSLEXIA_KEY, String(next)); } catch { /* quota */ }
+    document.documentElement.setAttribute('data-dyslexia-font', String(next));
+  };
 
   const palette = getColorBlindPalette(colorBlindMode);
 
@@ -128,6 +143,23 @@ export default function AccessibilityPanel({ onBack }) {
           >
             مرحباً — Hello in Arabic
           </div>
+
+          {/* ── Dyslexia-Friendly Font ── */}
+          <div className={styles.settingRow}>
+            <span className={styles.label} id="df-label">Dyslexia-Friendly Font</span>
+            <button
+              role="switch"
+              aria-checked={dyslexiaFont}
+              aria-labelledby="df-label"
+              className={dyslexiaFont ? styles.toggleOn : styles.toggleOff}
+              onClick={toggleDyslexiaFont}
+            >
+              {dyslexiaFont ? 'ON' : 'OFF'}
+            </button>
+          </div>
+          <p className={styles.hint}>
+            Switches to OpenDyslexic font for improved readability.
+          </p>
         </section>
 
         {/* ── High Contrast ── */}
