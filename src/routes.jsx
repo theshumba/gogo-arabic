@@ -43,6 +43,7 @@ const SkillTreeMenu = lazy(() => import('./components/Skills/SkillTreeMenu.jsx')
 const SaveLoadMenu  = lazy(() => import('./components/SaveLoad/SaveLoadMenu.jsx'));
 const CompletionTracker = lazy(() => import('./components/Endgame/CompletionTracker.jsx'));
 const CodexMenu     = lazy(() => import('./components/Menu/CodexMenu.jsx'));
+const AnalyticsDashboard = lazy(() => import('./components/Analytics/AnalyticsDashboard.jsx'));
 
 function DashboardRoute() {
   return (
@@ -342,6 +343,19 @@ function CodexRoute() {
   );
 }
 
+function AnalyticsRoute() {
+  const { goBack } = useGameNavigation();
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          <AnalyticsDashboard onBack={goBack} />
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
 /**
  * Route configuration using React Router v6
  * Code splitting applied to all routes except MainMenu
@@ -450,6 +464,11 @@ export const router = createBrowserRouter([
   {
     path: '/codex',
     element: <CodexRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/analytics',
+    element: <AnalyticsRoute />,
     errorElement: <RouteErrorBoundary />,
   },
   {
