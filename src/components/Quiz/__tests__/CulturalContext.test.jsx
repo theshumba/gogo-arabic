@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import CulturalContext from '../CulturalContext.jsx';
 
 vi.mock('../../../hooks/useFormatArabic.js', () => ({
-  useFormatArabic: () => (s) => s,
+  useFormatArabic: () => { const fn = (s) => s; fn.renderArabic = (s) => s; fn.getTashkeelOpacity = () => 1.0; return fn; },
 }));
 
 const mockWord = {

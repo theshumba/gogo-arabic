@@ -6,9 +6,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
-// Mock useFormatArabic to return identity function
+// Mock useFormatArabic to return identity function with renderArabic
 vi.mock('../../../hooks/useFormatArabic.js', () => ({
-  useFormatArabic: () => (s) => s,
+  useFormatArabic: () => {
+    const fn = (s) => s;
+    fn.renderArabic = (s) => s;
+    fn.getTashkeelOpacity = () => 1.0;
+    return fn;
+  },
 }));
 
 // Mock audio manager

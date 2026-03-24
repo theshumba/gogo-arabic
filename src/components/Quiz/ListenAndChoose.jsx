@@ -5,6 +5,7 @@ import styles from './ListenAndChoose.module.css';
 
 export default function ListenAndChoose({ word, choices, feedback, onAnswer }) {
   const formatArabic = useFormatArabic();
+  const { renderArabic } = formatArabic;
   const [played, setPlayed] = useState(false);
 
   const playAudio = () => {
@@ -17,7 +18,7 @@ export default function ListenAndChoose({ word, choices, feedback, onAnswer }) {
       <div className={styles.instruction} id="listen-instruction">Listen and choose the English meaning:</div>
 
       {/* Show the Arabic word as prompt (visible to help learners) */}
-      <div className={styles.prompt} aria-label={`Arabic word: ${word.transliteration || word.arabic}`}>{formatArabic(word.arabic)}</div>
+      <div className={styles.prompt} aria-label={`Arabic word: ${word.transliteration || word.arabic}`}>{renderArabic(word.arabic, word.id)}</div>
 
       <button className={styles.playBtn} onClick={playAudio} aria-label={played ? 'Play audio again' : 'Play audio pronunciation'}>
         {played ? 'Play Again' : 'Play Audio'}

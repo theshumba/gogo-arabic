@@ -1,6 +1,8 @@
+import { createElement } from 'react';
 import { useSelector } from 'react-redux';
 import { useCallback, useMemo } from 'react';
 import { stripDiacritics } from '../utils/arabicUtils.js';
+import { splitTashkeel, hasDiacritics } from '../utils/tashkeelFading.js';
 import vocabulary from '../data/vocabularyAll.js';
 
 /**
@@ -106,10 +108,51 @@ export function useFormatArabic() {
     [fsrsCards, learningPath]  // CRITICAL: learningPath in deps to avoid stale closure (Pitfall 7)
   );
 
+  /**
+   * WIRE-03: Render Arabic text with progressive tashkeel fading as a React element.
+   * Diacritics fade based on FSRS mastery for the given wordId.
+   *
+   * @param {string} text - Arabic text
+   * @param {string} wordId - Vocabulary word ID for mastery lookup
+   * @returns {React.ReactElement} - span with fading diacritics, or plain text
+   */
+  const renderArabic = useCallback(
+    (text, wordId) => {
+      if (!text) return text;
+      if (!showDiacritics) return stripDiacritics(text);
+
+      const opacity = getTashkeelOpacity(wordId);
+
+      // Full opacity — no fading needed, return plain text
+      if (opacity >= 1 || !hasDiacritics(text)) {
+        return createElement('span', { lang: 'ar', dir: 'rtl' }, text);
+      }
+
+      // Zero opacity — strip diacritics entirely
+      if (opacity <= 0) {
+        return createElement('span', { lang: 'ar', dir: 'rtl' }, stripDiacritics(text));
+      }
+
+      // Partial opacity — render each diacritic with faded opacity
+      const parts = splitTashkeel(text);
+      return createElement(
+        'span',
+        { lang: 'ar', dir: 'rtl' },
+        ...parts.map((part, i) =>
+          part.isDiacritic
+            ? createElement('span', { key: i, style: { opacity }, 'aria-hidden': 'true' }, part.char)
+            : part.char
+        )
+      );
+    },
+    [showDiacritics, getTashkeelOpacity]
+  );
+
   // For backward compatibility, return just the function when destructured as before
-  // But also expose getTashkeelOpacity for advanced usage
+  // But also expose getTashkeelOpacity and renderArabic for advanced usage
   const returnValue = formatArabic;
   returnValue.getTashkeelOpacity = getTashkeelOpacity;
+  returnValue.renderArabic = renderArabic;
 
   return returnValue;
 }

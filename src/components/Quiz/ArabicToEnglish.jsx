@@ -3,10 +3,11 @@ import styles from './ArabicToEnglish.module.css';
 
 export default function ArabicToEnglish({ word, choices, feedback, onAnswer }) {
   const formatArabic = useFormatArabic();
+  const { renderArabic } = formatArabic;
 
   return (
     <div role="group" aria-label={`Arabic to English: translate ${word.transliteration || word.arabic}`}>
-      <div className={styles.prompt} aria-label={`Arabic word: ${word.transliteration || word.arabic}`}>{formatArabic(word.arabic)}</div>
+      <div className={styles.prompt} aria-label={`Arabic word: ${word.transliteration || word.arabic}`}>{renderArabic(word.arabic, word.id)}</div>
       {word.transliteration && (
         <div className={styles.transliteration} aria-label={`Transliteration: ${word.transliteration}`}>{word.transliteration}</div>
       )}

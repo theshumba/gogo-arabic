@@ -3,6 +3,7 @@ import styles from './EnglishToArabic.module.css';
 
 export default function EnglishToArabic({ word, choices, feedback, onAnswer }) {
   const formatArabic = useFormatArabic();
+  const { renderArabic } = formatArabic;
 
   return (
     <div role="group" aria-label={`English to Arabic: translate "${word.english}"`}>
