@@ -11,6 +11,7 @@ import { checkDailyReset } from './store/slices/dailyGoalsSlice.js';
 import { initializeSkillTree } from './data/initializeSkillTree.js';
 import { registerSW } from './services/swRegistration.js';
 import { initOfflineSync } from './store/middleware/offlineFsrsMiddleware.js';
+import { useAccessibilitySync } from './hooks/useAccessibilitySync.js';
 import questsData from './data/quests.json';
 import ErrorBoundaryClass from './components/ErrorBoundary/RouteErrorBoundary.jsx';
 import LoadingScreen from './components/UI/LoadingScreen.jsx';
@@ -37,6 +38,12 @@ persistor.subscribe(() => {
 // Register service worker (production only) with update detection
 let setUpdateAvailable = null;
 
+/** Syncs accessibility data-attributes inside the Redux Provider. */
+function AccessibilityBridge() {
+  useAccessibilitySync();
+  return null;
+}
+
 function AppRoot() {
   const [updateReady, setUpdateReady] = useState(false);
   setUpdateAvailable = setUpdateReady;
@@ -44,6 +51,7 @@ function AppRoot() {
   return (
     <Provider store={store}>
       <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+        <AccessibilityBridge />
         <ErrorBoundaryClass>
           <AudioUnlockOverlay />
           <RouterProvider router={router} />

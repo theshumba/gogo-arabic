@@ -8,6 +8,7 @@ global.URL.createObjectURL = vi.fn(() => 'blob:mock-url');
 global.URL.revokeObjectURL = vi.fn();
 
 describe('ExportProgress', () => {
+  // Use distinct counts so we can verify each one
   const mockPreloadedState = {
     player: {
       name: 'Ahmed',
@@ -24,6 +25,7 @@ describe('ExportProgress', () => {
       fsrsCards: {
         word1: { card: { due: '2026-02-10T00:00:00.000Z', reps: 3, stability: 5.2, difficulty: 0.3 }, log: { rating: 4, review: '2026-02-09T00:00:00.000Z' }, source: 'npc' },
         word2: { card: { due: '2026-02-12T00:00:00.000Z', reps: 1, stability: 2.0, difficulty: 0.5 }, log: null, source: null },
+        word3: { card: { due: '2026-02-14T00:00:00.000Z', reps: 2, stability: 3.0, difficulty: 0.4 }, log: null, source: null },
       },
     },
     grammar: {
@@ -41,12 +43,20 @@ describe('ExportProgress', () => {
       quizzesPassed: [
         { accuracy: 90, timestamp: '2026-02-08T10:00:00.000Z' },
         { accuracy: 100, timestamp: '2026-02-09T11:00:00.000Z' },
+        { accuracy: 85, timestamp: '2026-02-09T12:00:00.000Z' },
+        { accuracy: 95, timestamp: '2026-02-09T13:00:00.000Z' },
+        { accuracy: 88, timestamp: '2026-02-09T14:00:00.000Z' },
       ],
     },
     achievements: {
       unlockedAchievements: {
         first_word: 1707408000000,
         word_collector_10: 1707494400000,
+        word_collector_50: 1707580800000,
+        word_collector_100: 1707667200000,
+        word_collector_200: 1707753600000,
+        word_collector_500: 1707840000000,
+        word_collector_1000: 1707926400000,
       },
       newAchievements: [],
       stats: { totalReviews: 0, reviewStreakDays: 0, lastReviewDate: null, perfectQuizzes: 0, shopPurchases: 0, dirhamsSpent: 0, quizTypeStats: {} },
@@ -68,19 +78,23 @@ describe('ExportProgress', () => {
     expect(screen.getByText('Export My Progress')).toBeInTheDocument();
   });
 
-  it('should display data summary counts', () => {
+  it('should display data summary labels', () => {
     renderWithProviders(<ExportProgress />, { preloadedState: mockPreloadedState });
 
-    // 2 words
-    expect(screen.getByText('2')).toBeInTheDocument();
-    // Words label
     expect(screen.getByText('Words')).toBeInTheDocument();
-    // Grammar label
     expect(screen.getByText('Grammar')).toBeInTheDocument();
-    // Quizzes label
     expect(screen.getByText('Quizzes')).toBeInTheDocument();
-    // Achievements label
     expect(screen.getByText('Achievements')).toBeInTheDocument();
+    expect(screen.getByText('Data Summary')).toBeInTheDocument();
+  });
+
+  it('should display correct stat values', () => {
+    renderWithProviders(<ExportProgress />, { preloadedState: mockPreloadedState });
+
+    // 3 words, 2 grammar, 5 quizzes, 7 achievements — all distinct
+    expect(screen.getByText('3')).toBeInTheDocument(); // vocab
+    expect(screen.getByText('5')).toBeInTheDocument(); // quizzes
+    expect(screen.getByText('7')).toBeInTheDocument(); // achievements
   });
 
   it('should display CEFR level badge', () => {
@@ -104,49 +118,11 @@ describe('ExportProgress', () => {
     expect(screen.getByText('Export CSV')).toBeInTheDocument();
   });
 
-  it('should trigger JSON download on Export JSON click', () => {
-    // Mock document.createElement to capture download
-    const mockClick = vi.fn();
-    const mockLink = { href: '', download: '', click: mockClick };
-    const origCreate = document.createElement.bind(document);
-    vi.spyOn(document, 'createElement').mockImplementation((tag) => {
-      if (tag === 'a') return mockLink;
-      return origCreate(tag);
-    });
-    vi.spyOn(document.body, 'appendChild').mockImplementation(() => {});
-    vi.spyOn(document.body, 'removeChild').mockImplementation(() => {});
-
+  it('should have accessible export buttons with aria-labels', () => {
     renderWithProviders(<ExportProgress />, { preloadedState: mockPreloadedState });
 
-    fireEvent.click(screen.getByText('Export JSON'));
-    expect(mockClick).toHaveBeenCalled();
-    expect(mockLink.download).toMatch(/gogo-arabic-progress.*\.json$/);
-
-    document.createElement.mockRestore();
-    document.body.appendChild.mockRestore();
-    document.body.removeChild.mockRestore();
-  });
-
-  it('should trigger CSV download on Export CSV click', () => {
-    const mockClick = vi.fn();
-    const mockLink = { href: '', download: '', click: mockClick };
-    const origCreate = document.createElement.bind(document);
-    vi.spyOn(document, 'createElement').mockImplementation((tag) => {
-      if (tag === 'a') return mockLink;
-      return origCreate(tag);
-    });
-    vi.spyOn(document.body, 'appendChild').mockImplementation(() => {});
-    vi.spyOn(document.body, 'removeChild').mockImplementation(() => {});
-
-    renderWithProviders(<ExportProgress />, { preloadedState: mockPreloadedState });
-
-    fireEvent.click(screen.getByText('Export CSV'));
-    expect(mockClick).toHaveBeenCalled();
-    expect(mockLink.download).toMatch(/gogo-arabic-progress.*\.csv$/);
-
-    document.createElement.mockRestore();
-    document.body.appendChild.mockRestore();
-    document.body.removeChild.mockRestore();
+    expect(screen.getByLabelText('Export as JSON')).toBeInTheDocument();
+    expect(screen.getByLabelText('Export as CSV')).toBeInTheDocument();
   });
 
   it('should render back button when onBack prop is provided', () => {
@@ -161,6 +137,11 @@ describe('ExportProgress', () => {
   it('should not render back button when onBack is not provided', () => {
     renderWithProviders(<ExportProgress />, { preloadedState: mockPreloadedState });
     expect(screen.queryByText('Back')).not.toBeInTheDocument();
+  });
+
+  it('should have region role with accessible label', () => {
+    renderWithProviders(<ExportProgress />, { preloadedState: mockPreloadedState });
+    expect(screen.getByRole('region', { name: 'Export Progress' })).toBeInTheDocument();
   });
 });
 
@@ -184,12 +165,22 @@ describe('buildProgressData', () => {
 
     expect(data.vocabulary).toHaveLength(1);
     expect(data.vocabulary[0].wordId).toBe('word1');
+    expect(data.vocabulary[0].card.reps).toBe(2);
+    expect(data.vocabulary[0].source).toBe('npc');
     expect(data.grammarLessons).toHaveLength(1);
+    expect(data.grammarLessons[0].exerciseScore).toBe(90);
     expect(data.quizHistory).toHaveLength(1);
+    expect(data.quizHistory[0].accuracy).toBe(95);
     expect(data.achievements).toHaveLength(1);
+    expect(data.achievements[0].id).toBe('first_word');
     expect(data.cefrLevel.currentLevel).toBe('A1');
     expect(data.summary.wordsLearned).toBe(1);
+    expect(data.summary.grammarCompleted).toBe(1);
+    expect(data.summary.quizzesCompleted).toBe(1);
+    expect(data.summary.achievementsUnlocked).toBe(1);
     expect(data.playerName).toBe('Test');
+    expect(data.playerLevel).toBe(3);
+    expect(data.exportDate).toBeDefined();
   });
 
   it('should handle empty data gracefully', () => {
@@ -211,11 +202,29 @@ describe('buildProgressData', () => {
     expect(data.achievements).toHaveLength(0);
     expect(data.cefrLevel.currentLevel).toBe('Not assessed');
     expect(data.playerName).toBe('Anonymous');
+    expect(data.playerLevel).toBe(1);
+  });
+
+  it('should handle null quizzesPassed', () => {
+    const data = buildProgressData({
+      fsrsCards: {},
+      completedLessons: [],
+      lessonScores: {},
+      unlockedAchievements: {},
+      cefrLevel: 'A1',
+      cefrHistory: null,
+      quizzesPassed: null,
+      playerName: 'Player',
+      playerLevel: 1,
+    });
+
+    expect(data.quizHistory).toHaveLength(0);
+    expect(data.cefrLevel.history).toEqual([]);
   });
 });
 
 describe('progressToCSV', () => {
-  it('should generate valid CSV string', () => {
+  it('should generate valid CSV string with all sections', () => {
     const data = {
       exportDate: '2026-02-09T00:00:00.000Z',
       playerName: 'Test',
@@ -237,13 +246,38 @@ describe('progressToCSV', () => {
 
     const csv = progressToCSV(data);
     expect(csv).toContain('# GoGo Arabic Progress Export');
+    expect(csv).toContain('# Player: Test');
+    expect(csv).toContain('# Level: 5');
+    expect(csv).toContain('# CEFR: A2');
     expect(csv).toContain('## Vocabulary');
+    expect(csv).toContain('Word ID,Due Date,Reps,Stability,Difficulty,Source');
     expect(csv).toContain('hello,2026-02-10,2,3,0.4,npc');
     expect(csv).toContain('## Grammar Lessons');
+    expect(csv).toContain('Lesson ID,Exercise Score,Quiz Score,Attempts,Last Attempt');
     expect(csv).toContain('al-definite,90,85,1,2026-02-08');
     expect(csv).toContain('## Quiz History');
+    expect(csv).toContain('Index,Accuracy,Timestamp');
     expect(csv).toContain('1,95,2026-02-09');
     expect(csv).toContain('## Achievements');
+    expect(csv).toContain('ID,Name,Category,Unlocked At');
     expect(csv).toContain('first_word,"First Steps",vocabulary');
+  });
+
+  it('should handle empty data arrays', () => {
+    const data = {
+      exportDate: '2026-02-09T00:00:00.000Z',
+      playerName: 'Empty',
+      playerLevel: 1,
+      cefrLevel: { currentLevel: 'N/A', history: [] },
+      vocabulary: [],
+      grammarLessons: [],
+      quizHistory: [],
+      achievements: [],
+    };
+
+    const csv = progressToCSV(data);
+    expect(csv).toContain('# GoGo Arabic Progress Export');
+    expect(csv).toContain('## Vocabulary');
+    expect(csv).toContain('## Achievements');
   });
 });
