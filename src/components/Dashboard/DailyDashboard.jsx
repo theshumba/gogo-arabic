@@ -8,6 +8,7 @@ import { selectDailyGoals } from '../../store/slices/dailyGoalsSlice.js';
 import { selectActiveQuest, selectCompletedQuests } from '../../store/slices/questSlice.js';
 import { selectAlphabetProgress } from '../../store/slices/alphabetSlice.js';
 import { getGoalProgress } from '../../data/dailyGoals.js';
+import LeaderboardBanner from './LeaderboardBanner.jsx';
 import styles from './DailyDashboard.module.css';
 
 /**
@@ -269,6 +270,11 @@ export default function DailyDashboard() {
             </div>
           </div>
         </motion.section>
+
+        {/* Leaderboard Banner */}
+        <motion.div variants={itemVariants}>
+          <LeaderboardBanner />
+        </motion.div>
 
         {/* Suggested Activity Section */}
         <motion.section className={styles.suggestedSection} variants={itemVariants}>
