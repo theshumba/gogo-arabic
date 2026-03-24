@@ -14,6 +14,7 @@ import { QUIZ_TYPE_REGISTRY, selectQuizTypeForPlayer } from '../data/quizTypes.j
 import { selectCefrLevel } from '../store/slices/cefrProgressSlice.js';
 import { VERB_PARADIGMS } from '../components/Quiz/GrammarFill.jsx';
 import { recordAnswer as recordQuizStat, endSession as endQuizStatSession } from '../services/quizStatAccumulator.js';
+import { recordQuizCompletion } from '../store/middleware/dailyGoalsMiddleware.js';
 import { DIALECT_ITEMS, DIALECT_OPTIONS } from '../data/dialectItems.js';
 import { ROOT_EXPANSIONS } from '../data/rootExpansions.js';
 import { CULTURAL_ITEMS } from '../data/culturalItems.js';
@@ -475,6 +476,9 @@ export function useQuiz() {
     const nextIdx = questionIndex + 1;
     if (nextIdx >= words.length) {
       const wasPerfect = quizState.sessionScore === quizState.sessionTotal && quizState.sessionTotal > 0;
+      // WIRE-01: Record quiz completion for daily goals tracking
+      const passed = quizState.sessionScore > 0;
+      recordQuizCompletion(dispatch, passed);
       if (wasPerfect) {
         dispatch(addXP(XP_REWARDS.PERFECT_QUIZ));
         // Track perfect quiz for achievement progress
