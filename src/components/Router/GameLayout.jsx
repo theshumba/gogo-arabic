@@ -12,6 +12,7 @@ import { useSessionTracking } from '../../hooks/useSessionTracking.js';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts.js';
 import { useTutorialTrigger } from '../../hooks/useTutorialTrigger.js';
 import { WORLD_STATE_KEYS } from '../../data/worldStateKeys.js';
+import { selectWelcomeBackShown } from '../../store/slices/dailyGoalsSlice.js';
 
 // STATIC — always visible on game screen
 import { PhaserGame } from '../../game/PhaserGame.jsx';
