@@ -1,94 +1,7 @@
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
-import { COLORS, FONTS } from '../../styles/theme.js';
+import styles from './ClozePassage.module.css';
 
 const BLANK_PLACEHOLDER = '______';
-
-const styles = {
-  instruction: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.brown,
-    marginBottom: '6px',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  passageBox: {
-    background: COLORS.dark,
-    border: `4px solid ${COLORS.gray}`,
-    padding: '18px 22px',
-    marginBottom: '6px',
-    direction: 'rtl',
-    textAlign: 'center',
-    imageRendering: 'pixelated',
-  },
-  passageLabel: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.light,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    marginBottom: '8px',
-  },
-  passage: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '20px',
-    color: COLORS.white,
-    direction: 'rtl',
-    lineHeight: '1.8',
-  },
-  blank: {
-    color: COLORS.gold,
-    fontFamily: FONTS.pixel,
-    fontSize: '14px',
-    letterSpacing: '2px',
-  },
-  englishHint: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.brown,
-    fontStyle: 'italic',
-    marginBottom: '16px',
-    marginTop: '4px',
-  },
-  choices: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-  choice: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '22px',
-    padding: '12px 20px',
-    border: `4px solid ${COLORS.dark}`,
-    background: COLORS.beige,
-    color: COLORS.dark,
-    direction: 'rtl',
-    cursor: 'pointer',
-    textAlign: 'center',
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.08),
-      inset 3px 3px 0px 0px rgba(255,255,255,0.4)
-    `,
-    transition: 'none',
-    imageRendering: 'pixelated',
-  },
-  choiceCorrect: {
-    background: 'rgba(46,204,113,0.2)',
-    borderColor: COLORS.green,
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.08),
-      inset 3px 3px 0px 0px rgba(46,204,113,0.3)
-    `,
-  },
-  choiceWrong: {
-    background: 'rgba(240,49,49,0.15)',
-    borderColor: COLORS.red,
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.08),
-      inset 3px 3px 0px 0px rgba(240,49,49,0.2)
-    `,
-  },
-};
 
 /**
  * Renders an Arabic passage with the target word replaced by a blank.
@@ -120,10 +33,10 @@ export default function ClozePassage({ word, options, onAnswer, feedback }) {
   const renderPassage = () => {
     if (!displayPassage) {
       return (
-        <span style={styles.passage}>
-          <span style={styles.blank}>{BLANK_PLACEHOLDER}</span>
+        <span className={styles.passage}>
+          <span className={styles.blank}>{BLANK_PLACEHOLDER}</span>
           {' '}
-          <span style={{ color: COLORS.light, fontSize: '14px', fontFamily: FONTS.pixel }}>
+          <span className={styles.fallbackHint}>
             ({word.english})
           </span>
         </span>
@@ -132,11 +45,11 @@ export default function ClozePassage({ word, options, onAnswer, feedback }) {
 
     const parts = displayPassage.split(BLANK_PLACEHOLDER);
     return (
-      <span style={styles.passage}>
+      <span className={styles.passage}>
         {parts.map((part, i) => (
           <span key={i}>
             {formatArabic(part)}
-            {i < parts.length - 1 && <span style={styles.blank}>{BLANK_PLACEHOLDER}</span>}
+            {i < parts.length - 1 && <span className={styles.blank}>{BLANK_PLACEHOLDER}</span>}
           </span>
         ))}
       </span>
@@ -144,26 +57,27 @@ export default function ClozePassage({ word, options, onAnswer, feedback }) {
   };
 
   return (
-    <div>
-      <div style={styles.instruction}>Read the passage and fill in the blank:</div>
-      <div style={styles.passageBox}>
-        <div style={styles.passageLabel}>Passage</div>
+    <div role="group" aria-label={`Cloze passage: fill in the blank for "${word.english}"`}>
+      <div className={styles.instruction} id="cloze-instruction">Read the passage and fill in the blank:</div>
+      <div className={styles.passageBox} aria-label="Arabic passage with blank">
+        <div className={styles.passageLabel}>Passage</div>
         {renderPassage()}
       </div>
-      <div style={styles.englishHint}>{englishHint}</div>
-      <div style={styles.choices}>
+      <div className={styles.englishHint} aria-label={`Hint: ${englishHint}`}>{englishHint}</div>
+      <div className={styles.choices} role="group" aria-label="Answer choices" aria-describedby="cloze-instruction">
         {options.map((c, i) => {
-          let extraStyle = {};
+          let cls = styles.choice;
           if (feedback) {
-            if (c.correct) extraStyle = styles.choiceCorrect;
-            else if (c.value === feedback.selected && !c.correct) extraStyle = styles.choiceWrong;
+            if (c.correct) cls = styles.choiceCorrect;
+            else if (c.value === feedback.selected && !c.correct) cls = styles.choiceWrong;
           }
           return (
             <button
               key={i}
-              style={{ ...styles.choice, ...extraStyle }}
+              className={cls}
               onClick={() => !feedback && onAnswer(c.value)}
               disabled={!!feedback}
+              aria-label={`Choice ${i + 1}: ${c.label}${feedback && c.correct ? ' (correct answer)' : ''}${feedback && c.value === feedback.selected && !c.correct ? ' (incorrect)' : ''}`}
             >
               {formatArabic(c.label)}
             </button>

@@ -1,88 +1,5 @@
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
-import { COLORS, FONTS } from '../../styles/theme.js';
-
-const styles = {
-  instruction: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.brown,
-    marginBottom: '6px',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  promptBox: {
-    background: COLORS.dark,
-    border: `4px solid ${COLORS.gray}`,
-    padding: '14px 18px',
-    marginBottom: '14px',
-    textAlign: 'center',
-    imageRendering: 'pixelated',
-  },
-  verbRoot: {
-    fontSize: '32px',
-    fontFamily: FONTS.arabicDisplay,
-    direction: 'rtl',
-    color: COLORS.gold,
-    marginBottom: '4px',
-  },
-  pronoun: {
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.white,
-    marginBottom: '2px',
-  },
-  pronounAr: {
-    fontSize: '18px',
-    fontFamily: FONTS.arabicDisplay,
-    direction: 'rtl',
-    color: COLORS.blue,
-    marginBottom: '2px',
-  },
-  verbMeaning: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.light,
-    fontStyle: 'italic',
-  },
-  choices: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '10px',
-  },
-  choice: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '20px',
-    padding: '14px 10px',
-    border: `4px solid ${COLORS.dark}`,
-    background: COLORS.beige,
-    color: COLORS.dark,
-    direction: 'rtl',
-    cursor: 'pointer',
-    textAlign: 'center',
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.08),
-      inset 3px 3px 0px 0px rgba(255,255,255,0.4)
-    `,
-    transition: 'none',
-    imageRendering: 'pixelated',
-  },
-  choiceCorrect: {
-    background: 'rgba(46,204,113,0.2)',
-    borderColor: COLORS.green,
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.08),
-      inset 3px 3px 0px 0px rgba(46,204,113,0.3)
-    `,
-  },
-  choiceWrong: {
-    background: 'rgba(240,49,49,0.15)',
-    borderColor: COLORS.red,
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.08),
-      inset 3px 3px 0px 0px rgba(240,49,49,0.2)
-    `,
-  },
-};
+import styles from './ConjugationPick.module.css';
 
 // Common Arabic pronouns for conjugation prompts
 const PRONOUNS = [
@@ -108,29 +25,30 @@ export default function ConjugationPick({ word, options, onAnswer, feedback }) {
     || PRONOUNS[Math.floor(Math.random() * PRONOUNS.length)];
 
   return (
-    <div>
-      <div style={styles.instruction}>Pick the correct conjugation:</div>
-      <div style={styles.promptBox}>
-        <div style={styles.verbRoot}>{formatArabic(word.arabic)}</div>
-        <div style={styles.verbMeaning}>"{word.english}"</div>
-        <div style={{ marginTop: '8px' }}>
-          <div style={styles.pronoun}>{pronounObj.en}</div>
-          <div style={styles.pronounAr}>{formatArabic(pronounObj.ar)}</div>
+    <div role="group" aria-label={`Conjugation: ${word.english} for ${pronounObj.en}`}>
+      <div className={styles.instruction} id="conj-instruction">Pick the correct conjugation:</div>
+      <div className={styles.promptBox} aria-label={`Verb: ${word.transliteration || word.arabic}, meaning "${word.english}", pronoun: ${pronounObj.en}`}>
+        <div className={styles.verbRoot}>{formatArabic(word.arabic)}</div>
+        <div className={styles.verbMeaning}>"{word.english}"</div>
+        <div className={styles.pronounRow}>
+          <div className={styles.pronoun}>{pronounObj.en}</div>
+          <div className={styles.pronounAr}>{formatArabic(pronounObj.ar)}</div>
         </div>
       </div>
-      <div style={styles.choices}>
+      <div className={styles.choices} role="group" aria-label="Conjugation choices" aria-describedby="conj-instruction">
         {options.map((c, i) => {
-          let extraStyle = {};
+          let cls = styles.choice;
           if (feedback) {
-            if (c.correct) extraStyle = styles.choiceCorrect;
-            else if (c.value === feedback.selected && !c.correct) extraStyle = styles.choiceWrong;
+            if (c.correct) cls = styles.choiceCorrect;
+            else if (c.value === feedback.selected && !c.correct) cls = styles.choiceWrong;
           }
           return (
             <button
               key={i}
-              style={{ ...styles.choice, ...extraStyle }}
+              className={cls}
               onClick={() => !feedback && onAnswer(c.value)}
               disabled={!!feedback}
+              aria-label={`Conjugation ${i + 1}: ${c.label}${feedback && c.correct ? ' (correct answer)' : ''}${feedback && c.value === feedback.selected && !c.correct ? ' (incorrect)' : ''}`}
             >
               {formatArabic(c.label)}
             </button>

@@ -1,99 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
-import { COLORS, FONTS } from '../../styles/theme.js';
-
-const styles = {
-  instruction: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.brown,
-    marginBottom: '10px',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  columnsRow: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '10px',
-    marginBottom: '12px',
-  },
-  column: {
-    border: `4px solid ${COLORS.dark}`,
-    background: COLORS.creamyBeige,
-    minHeight: '90px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-    padding: '8px',
-    imageRendering: 'pixelated',
-  },
-  columnLabel: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.brown,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    borderBottom: `2px solid ${COLORS.brown}`,
-    paddingBottom: '4px',
-    marginBottom: '4px',
-  },
-  columnTile: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '18px',
-    direction: 'rtl',
-    padding: '4px 8px',
-    border: `2px solid ${COLORS.dark}`,
-    background: COLORS.beige,
-    color: COLORS.dark,
-    cursor: 'pointer',
-    textAlign: 'center',
-    boxShadow: 'inset -2px -2px 0px 0px rgba(0,0,0,0.08)',
-    imageRendering: 'pixelated',
-  },
-  columnTileCorrect: {
-    background: 'rgba(46,204,113,0.2)',
-    borderColor: COLORS.green,
-  },
-  columnTileWrong: {
-    background: 'rgba(240,49,49,0.15)',
-    borderColor: COLORS.red,
-  },
-  tileBank: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '8px',
-    direction: 'rtl',
-    justifyContent: 'center',
-    marginBottom: '10px',
-  },
-  bankTile: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '18px',
-    direction: 'rtl',
-    padding: '8px 14px',
-    border: `3px solid ${COLORS.dark}`,
-    background: COLORS.beige,
-    color: COLORS.dark,
-    cursor: 'pointer',
-    textAlign: 'center',
-    boxShadow: 'inset -2px -2px 0px 0px rgba(0,0,0,0.1), inset 2px 2px 0px 0px rgba(255,255,255,0.4)',
-    imageRendering: 'pixelated',
-  },
-  submitBtn: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    padding: '8px 18px',
-    border: `3px solid ${COLORS.darkGold}`,
-    background: COLORS.gold,
-    color: COLORS.beige,
-    cursor: 'pointer',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    imageRendering: 'pixelated',
-    display: 'block',
-    margin: '0 auto',
-  },
-};
+import { COLORS } from '../../styles/theme.js';
+import styles from './CategorySort.module.css';
 
 /**
  * CategorySort — sort 6 words into 2 categories.
@@ -155,56 +63,41 @@ export default function CategorySort({ word, options, onAnswer, feedback }) {
 
   const allPlaced = remaining.length === 0;
 
-  const getTileStyle = (item, inBucket) => {
-    if (!feedback) return inBucket ? styles.columnTile : styles.bankTile;
-    const correct = item.category === (inBucket ? item._bucket : null);
-    // After feedback, color each tile
-    if (feedback) {
-      const isCorrect = item.category === item._bucket;
-      const base = inBucket ? styles.columnTile : styles.bankTile;
-      return {
-        ...base,
-        ...(isCorrect ? styles.columnTileCorrect : styles.columnTileWrong),
-      };
-    }
-    return inBucket ? styles.columnTile : styles.bankTile;
-  };
-
   return (
-    <div>
-      <div style={styles.instruction}>
+    <div role="group" aria-label={`Category sort: sort words into ${catA} and ${catB}`}>
+      <div className={styles.instruction} id="cs-instruction" aria-live="polite">
         {pendingWord
           ? `Place "${formatArabic(pendingWord.label)}" into a category:`
           : 'Sort the words into categories:'}
       </div>
 
-      <div style={styles.columnsRow}>
+      <div className={styles.columnsRow} role="group" aria-label="Category columns">
         {[catA, catB].map((cat) => (
           <div
             key={cat}
+            className={styles.column}
             style={{
-              ...styles.column,
               borderColor: pendingWord ? COLORS.cyan : COLORS.dark,
               cursor: pendingWord ? 'pointer' : 'default',
             }}
             onClick={() => pendingWord && handleBucketClick(cat)}
+            role="group"
+            aria-label={`Category: ${cat} — ${buckets[cat].length} words placed`}
           >
-            <div style={styles.columnLabel}>{cat}</div>
+            <div className={styles.columnLabel}>{cat}</div>
             {buckets[cat].map((item) => {
               const isCorrect = feedback ? item.category === cat : null;
+              let cls = styles.columnTile;
+              if (feedback) {
+                cls = isCorrect ? styles.columnTileCorrect : styles.columnTileWrong;
+              }
               return (
                 <button
                   key={item.idx}
-                  style={{
-                    ...styles.columnTile,
-                    ...(feedback
-                      ? isCorrect
-                        ? styles.columnTileCorrect
-                        : styles.columnTileWrong
-                      : {}),
-                  }}
+                  className={cls}
                   onClick={(e) => { e.stopPropagation(); handleBucketTileClick(cat, item); }}
                   disabled={!!feedback}
+                  aria-label={`${item.label} in ${cat}${feedback ? (isCorrect ? ' (correct)' : ' (incorrect)') : ' — click to remove'}`}
                 >
                   {formatArabic(item.label)}
                 </button>
@@ -216,17 +109,18 @@ export default function CategorySort({ word, options, onAnswer, feedback }) {
 
       {/* Word bank */}
       {remaining.length > 0 && (
-        <div style={styles.tileBank}>
+        <div className={styles.tileBank} role="group" aria-label="Words to sort">
           {remaining.map((item) => (
             <button
               key={item.idx}
+              className={styles.bankTile}
               style={{
-                ...styles.bankTile,
                 borderColor: pendingWord?.idx === item.idx ? COLORS.cyan : COLORS.dark,
                 outline: pendingWord?.idx === item.idx ? `2px solid ${COLORS.cyan}` : 'none',
               }}
               onClick={() => handleBankClick(item)}
               disabled={!!feedback}
+              aria-label={`Word: ${item.label}${pendingWord?.idx === item.idx ? ' (selected — choose a category)' : ' — click to select'}`}
             >
               {formatArabic(item.label)}
             </button>
@@ -235,7 +129,7 @@ export default function CategorySort({ word, options, onAnswer, feedback }) {
       )}
 
       {!feedback && allPlaced && (
-        <button style={styles.submitBtn} onClick={handleSubmit}>
+        <button className={styles.submitBtn} onClick={handleSubmit} aria-label="Submit category sort">
           Submit
         </button>
       )}

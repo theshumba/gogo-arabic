@@ -1,96 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
-import { COLORS, FONTS } from '../../styles/theme.js';
-
-const styles = {
-  instruction: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.brown,
-    marginBottom: '6px',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  prompt: {
-    fontFamily: FONTS.pixel,
-    fontSize: '13px',
-    margin: '10px 0 14px',
-    color: COLORS.dark,
-    lineHeight: '1.6',
-  },
-  dropZone: {
-    minHeight: '52px',
-    border: `4px solid ${COLORS.dark}`,
-    background: COLORS.creamyBeige,
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '8px',
-    padding: '10px 12px',
-    direction: 'rtl',
-    marginBottom: '12px',
-    boxShadow: 'inset 3px 3px 0px 0px rgba(0,0,0,0.08)',
-    imageRendering: 'pixelated',
-  },
-  dropZoneCorrect: {
-    borderColor: COLORS.green,
-    background: 'rgba(46,204,113,0.1)',
-  },
-  dropZoneWrong: {
-    borderColor: COLORS.red,
-    background: 'rgba(240,49,49,0.08)',
-  },
-  tile: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '18px',
-    padding: '6px 12px',
-    border: `3px solid ${COLORS.dark}`,
-    background: COLORS.beige,
-    color: COLORS.dark,
-    cursor: 'pointer',
-    direction: 'rtl',
-    boxShadow: 'inset -2px -2px 0px 0px rgba(0,0,0,0.1), inset 2px 2px 0px 0px rgba(255,255,255,0.4)',
-    imageRendering: 'pixelated',
-  },
-  tileUsed: {
-    opacity: 0.35,
-    cursor: 'not-allowed',
-  },
-  tileBank: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '8px',
-    direction: 'rtl',
-    marginBottom: '10px',
-  },
-  correctAnswer: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '18px',
-    direction: 'rtl',
-    color: COLORS.green,
-    marginTop: '6px',
-  },
-  correctLabel: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.green,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    marginTop: '4px',
-  },
-  clearBtn: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    padding: '6px 12px',
-    border: `3px solid ${COLORS.dark}`,
-    background: COLORS.beige,
-    color: COLORS.dark,
-    cursor: 'pointer',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    imageRendering: 'pixelated',
-    marginBottom: '10px',
-  },
-};
+import styles from './WordOrder.module.css';
 
 export default function WordOrder({ word, options, onAnswer, feedback }) {
   const formatArabic = useFormatArabic();
@@ -110,7 +20,9 @@ export default function WordOrder({ word, options, onAnswer, feedback }) {
   const handleTileClick = (tile, idx) => {
     if (feedback) return;
     if (usedIndices.includes(idx)) return;
-    const newPlaced = [...placed, { tile, idx }];
+    // tile may be a string or an object with .value; normalize to string
+    const tileStr = (tile && typeof tile === 'object') ? tile.value : tile;
+    const newPlaced = [...placed, { tile: tileStr, idx }];
     setPlaced(newPlaced);
     setUsedIndices((prev) => [...prev, idx]);
   };
@@ -128,24 +40,26 @@ export default function WordOrder({ word, options, onAnswer, feedback }) {
     onAnswer(sentence);
   };
 
-  let dropStyle = styles.dropZone;
+  let dropCls = styles.dropZone;
   if (feedback) {
-    dropStyle = { ...dropStyle, ...(feedback.correct ? styles.dropZoneCorrect : styles.dropZoneWrong) };
+    dropCls = feedback.correct ? styles.dropZoneCorrect : styles.dropZoneWrong;
   }
 
   return (
-    <div>
-      <div style={styles.instruction}>Arrange the words in the correct Arabic word order:</div>
-      <div style={styles.prompt}>{word.english}</div>
+    <div role="group" aria-label={`Word order: arrange "${word.english}" in Arabic`}>
+      <div className={styles.instruction} id="wo-instruction">Arrange the words in the correct Arabic word order:</div>
+      <div className={styles.prompt} aria-label={`English sentence: ${word.english}`}>{word.english}</div>
 
       {/* Drop zone — click placed tile to remove it */}
-      <div style={dropStyle}>
+      <div className={dropCls} role="list" aria-label={`Arranged words: ${placed.map((p) => p.tile).join(' ') || 'empty'}`}>
         {placed.map((p, i) => (
           <button
             key={i}
-            style={styles.tile}
+            className={styles.tile}
             onClick={() => handlePlacedClick(i)}
             disabled={!!feedback}
+            role="listitem"
+            aria-label={`Placed word ${i + 1}: ${p.tile} — click to remove`}
           >
             {formatArabic(p.tile)}
           </button>
@@ -153,45 +67,40 @@ export default function WordOrder({ word, options, onAnswer, feedback }) {
       </div>
 
       {/* Tile bank */}
-      <div style={styles.tileBank}>
+      <div className={styles.tileBank} role="group" aria-label="Available words">
         {tiles.map((tile, idx) => {
           const isUsed = usedIndices.includes(idx);
+          // tile may be a string or object with .label
+          const tileLabel = (tile && typeof tile === 'object') ? tile.label : tile;
           return (
             <button
               key={idx}
-              style={{ ...styles.tile, ...(isUsed ? styles.tileUsed : {}) }}
+              className={isUsed ? styles.tileUsed : styles.tile}
               onClick={() => handleTileClick(tile, idx)}
               disabled={!!feedback || isUsed}
+              aria-label={`Word: ${tileLabel}${isUsed ? ' (used)' : ''}`}
             >
-              {formatArabic(tile)}
+              {formatArabic(tileLabel)}
             </button>
           );
         })}
       </div>
 
       {!feedback && placed.length > 0 && (
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <button style={styles.clearBtn} onClick={() => { setPlaced([]); setUsedIndices([]); }}>
+        <div className={styles.actionRow}>
+          <button className={styles.clearBtn} onClick={() => { setPlaced([]); setUsedIndices([]); }} aria-label="Clear all placed words">
             Clear
           </button>
-          <button
-            style={{
-              ...styles.clearBtn,
-              background: COLORS.gold,
-              color: COLORS.beige,
-              borderColor: COLORS.darkGold,
-            }}
-            onClick={handleSubmit}
-          >
+          <button className={styles.submitBtn} onClick={handleSubmit} aria-label="Submit word order">
             Submit
           </button>
         </div>
       )}
 
       {feedback && !feedback.correct && (
-        <div>
-          <div style={styles.correctLabel}>Correct answer:</div>
-          <div style={styles.correctAnswer}>{formatArabic(feedback.correctAnswer)}</div>
+        <div role="alert">
+          <div className={styles.correctLabel}>Correct answer:</div>
+          <div className={styles.correctAnswer}>{formatArabic(feedback.correctAnswer)}</div>
         </div>
       )}
     </div>

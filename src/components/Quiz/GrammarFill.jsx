@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
-import { COLORS, FONTS } from '../../styles/theme.js';
+import styles from './GrammarFill.module.css';
 
 /**
  * VERB_PARADIGMS — Embedded conjugation data sourced from grammar.js conjugation-drill exercises.
@@ -152,96 +152,6 @@ export const VERB_PARADIGMS = [
   },
 ];
 
-const styles = {
-  instruction: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.brown,
-    marginBottom: '6px',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  promptBox: {
-    background: COLORS.dark,
-    border: `4px solid ${COLORS.gray}`,
-    padding: '14px 18px',
-    marginBottom: '14px',
-    textAlign: 'center',
-    imageRendering: 'pixelated',
-  },
-  verbRoot: {
-    fontSize: '32px',
-    fontFamily: FONTS.arabicDisplay,
-    direction: 'rtl',
-    color: COLORS.gold,
-    marginBottom: '4px',
-  },
-  verbMeaning: {
-    fontFamily: FONTS.pixel,
-    fontSize: '9px',
-    color: COLORS.light,
-    fontStyle: 'italic',
-    marginBottom: '6px',
-  },
-  paradigmLabel: {
-    fontFamily: FONTS.pixel,
-    fontSize: '10px',
-    color: COLORS.white,
-    marginBottom: '6px',
-    textTransform: 'lowercase',
-  },
-  pronounAr: {
-    fontSize: '18px',
-    fontFamily: FONTS.arabicDisplay,
-    direction: 'rtl',
-    color: COLORS.blue,
-    marginBottom: '2px',
-  },
-  pronoun: {
-    fontFamily: FONTS.pixel,
-    fontSize: '11px',
-    color: COLORS.white,
-  },
-  choices: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '10px',
-  },
-  choice: {
-    fontFamily: FONTS.arabicDisplay,
-    fontSize: '20px',
-    padding: '14px 10px',
-    border: `4px solid ${COLORS.dark}`,
-    background: COLORS.beige,
-    color: COLORS.dark,
-    direction: 'rtl',
-    cursor: 'pointer',
-    textAlign: 'center',
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.08),
-      inset 3px 3px 0px 0px rgba(255,255,255,0.4)
-    `,
-    transition: 'none',
-    imageRendering: 'pixelated',
-  },
-  choiceCorrect: {
-    background: 'rgba(46,204,113,0.2)',
-    borderColor: COLORS.green,
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.08),
-      inset 3px 3px 0px 0px rgba(46,204,113,0.3)
-    `,
-  },
-  choiceWrong: {
-    background: 'rgba(240,49,49,0.15)',
-    borderColor: COLORS.red,
-    boxShadow: `
-      inset -3px -3px 0px 0px rgba(0,0,0,0.08),
-      inset 3px 3px 0px 0px rgba(240,49,49,0.2)
-    `,
-  },
-};
-
 /**
  * GrammarFill — Conjugation fill-in-blank quiz.
  *
@@ -274,28 +184,29 @@ export default function GrammarFill({ word, options, onAnswer, feedback }) {
   const displayPronoun = paradigmContext?.pronoun || VERB_PARADIGMS[paradigmIndex]?.pronoun || { en: '', ar: '' };
 
   return (
-    <div>
-      <div style={styles.instruction}>Complete the conjugation:</div>
-      <div style={styles.promptBox}>
-        <div style={styles.verbRoot}>{formatArabic(displayVerb)}</div>
-        <div style={styles.verbMeaning}>"{displayMeaning}"</div>
-        <div style={styles.paradigmLabel}>{displayParadigm} tense</div>
-        <div style={styles.pronounAr}>{formatArabic(displayPronoun.ar)}</div>
-        <div style={styles.pronoun}>{displayPronoun.en}</div>
+    <div role="group" aria-label={`Grammar fill: conjugate "${displayMeaning}" in ${displayParadigm} tense for ${displayPronoun.en}`}>
+      <div className={styles.instruction} id="grammar-instruction">Complete the conjugation:</div>
+      <div className={styles.promptBox} aria-label={`Verb: ${displayVerb}, root: ${displayRoot}, meaning: "${displayMeaning}", ${displayParadigm} tense, pronoun: ${displayPronoun.en}`}>
+        <div className={styles.verbRoot}>{formatArabic(displayVerb)}</div>
+        <div className={styles.verbMeaning}>"{displayMeaning}"</div>
+        <div className={styles.paradigmLabel}>{displayParadigm} tense</div>
+        <div className={styles.pronounAr}>{formatArabic(displayPronoun.ar)}</div>
+        <div className={styles.pronoun}>{displayPronoun.en}</div>
       </div>
-      <div style={styles.choices}>
+      <div className={styles.choices} role="group" aria-label="Conjugation choices" aria-describedby="grammar-instruction">
         {options.map((c, i) => {
-          let extraStyle = {};
+          let cls = styles.choice;
           if (feedback) {
-            if (c.correct) extraStyle = styles.choiceCorrect;
-            else if (c.value === feedback.selected && !c.correct) extraStyle = styles.choiceWrong;
+            if (c.correct) cls = styles.choiceCorrect;
+            else if (c.value === feedback.selected && !c.correct) cls = styles.choiceWrong;
           }
           return (
             <button
               key={i}
-              style={{ ...styles.choice, ...extraStyle }}
+              className={cls}
               onClick={() => !feedback && onAnswer(c.value)}
               disabled={!!feedback}
+              aria-label={`Choice ${i + 1}: ${c.label}${feedback && c.correct ? ' (correct answer)' : ''}${feedback && c.value === feedback.selected && !c.correct ? ' (incorrect)' : ''}`}
             >
               {formatArabic(c.label)}
             </button>

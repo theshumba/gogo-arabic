@@ -100,12 +100,12 @@ export default function EnglishToTypeArabic({ word, feedback, onAnswer }) {
   }
 
   return (
-    <div>
-      <div style={styles.instruction}>Type the Arabic translation:</div>
-      <div style={styles.prompt}>{word.english}</div>
-      <div style={inputStyle}>{input || '\u200B'}</div>
+    <div role="group" aria-label={`Type Arabic: translate "${word.english}"`}>
+      <div style={styles.instruction} id="type-ar-instruction">Type the Arabic translation:</div>
+      <div style={styles.prompt} aria-label={`English word: ${word.english}`}>{word.english}</div>
+      <div style={inputStyle} role="textbox" aria-readonly="true" aria-label={`Your Arabic input: ${input || 'empty'}`}>{input || '\u200B'}</div>
       {feedback && !feedback.correct && (
-        <div>
+        <div role="alert">
           <div style={styles.correctLabel}>Correct answer:</div>
           <div style={styles.correctAnswer}>
             {feedback.correctAnswer}

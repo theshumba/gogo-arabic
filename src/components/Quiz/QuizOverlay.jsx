@@ -22,11 +22,15 @@ import GrammarFill from './GrammarFill.jsx';
 import WordOrder from './WordOrder.jsx';
 import ClozePassage from './ClozePassage.jsx';
 import PictureWord from './PictureWord.jsx';
+import DialectIdentify from './DialectIdentify.jsx';
+import RootExpand from './RootExpand.jsx';
+import CulturalContext from './CulturalContext.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import styles from './QuizOverlay.module.css';
 import { QUIZ_TYPE_REGISTRY } from '../../data/quizTypes.js';
+import { getStats as getQuizStats } from '../../services/quizStatAccumulator.js';
 
 const QUIZ_TYPE_LABELS = Object.fromEntries(
   Object.entries(QUIZ_TYPE_REGISTRY).map(([key, entry]) => [key, entry.label])
@@ -108,6 +112,20 @@ export default function QuizOverlay() {
         isCorrect = normalize(userAnswer) === normalize(expected);
       } else if (quiz.quizType === 'ClozePassage') {
         isCorrect = normalize(userAnswer) === normalize(word.arabic);
+      } else if (quiz.quizType === 'DialectIdentify') {
+        isCorrect = word.dialectItem ? userAnswer === word.dialectItem.dialect : false;
+      } else if (quiz.quizType === 'RootExpand') {
+        // Multi-select: compare selected set to correct set
+        try {
+          const selectedValues = JSON.parse(userAnswer);
+          const correctValues = quiz.choices.filter((c) => c.correct).map((c) => c.value);
+          const selectedSet = new Set(selectedValues);
+          const correctSet = new Set(correctValues);
+          isCorrect = selectedSet.size === correctSet.size &&
+            [...correctSet].every((v) => selectedSet.has(v));
+        } catch { isCorrect = false; }
+      } else if (quiz.quizType === 'CulturalContext') {
+        isCorrect = word.culturalItem ? userAnswer === word.culturalItem.correctContext : false;
       } else {
         isCorrect = normalize(userAnswer) === normalize(word.arabic);
       }
@@ -181,9 +199,9 @@ export default function QuizOverlay() {
           exit="hidden"
           transition={transition}
         >
-          <div className={styles.summary}>
+          <div className={styles.summary} role="alert" aria-label="Quiz results">
             <div className={styles.summaryTitle}>Quiz Complete</div>
-            <div className={styles.summaryScore}>
+            <div className={styles.summaryScore} aria-label={`Score: ${quiz.sessionScore} out of ${quiz.sessionTotal}`}>
               {quiz.sessionScore}/{quiz.sessionTotal}
             </div>
             <p className={styles.summaryMsg}>
@@ -194,6 +212,7 @@ export default function QuizOverlay() {
             <motion.button
               className={styles.closeBtn}
               onClick={handleOverlayClose}
+              aria-label="Continue — close quiz results"
               {...buttonProps}
             >
               Continue
@@ -227,8 +246,8 @@ export default function QuizOverlay() {
           transition={transition}
         >
           <div className={styles.header}>
-            <button className={styles.quitBtn} onClick={handleQuit}>Quit</button>
-            <span>{QUIZ_TYPE_LABELS['match']}</span>
+            <button className={styles.quitBtn} onClick={handleQuit} aria-label="Quit quiz">Quit</button>
+            <span aria-label={`Quiz type: ${QUIZ_TYPE_LABELS['match']}`}>{QUIZ_TYPE_LABELS['match']}</span>
             <div style={{ width: '50px' }} />
           </div>
           <MatchPairs
@@ -261,7 +280,7 @@ export default function QuizOverlay() {
           exit="hidden"
           transition={transition}
         >
-          <div className={styles.emptyState}>
+          <div className={styles.emptyState} role="alert">
             <div className={styles.emptyStateTitle}>No Words to Review</div>
             <p className={styles.emptyStateMsg}>
               Explore the world and talk to NPCs to learn new words first!
@@ -269,6 +288,7 @@ export default function QuizOverlay() {
             <motion.button
               className={styles.closeBtn}
               onClick={handleOverlayClose}
+              aria-label="Continue — close quiz"
               {...buttonProps}
             >
               Continue
@@ -307,14 +327,23 @@ export default function QuizOverlay() {
         transition={transition}
       >
         <div className={styles.header}>
-          <button className={styles.quitBtn} onClick={handleQuit}>Quit</button>
-          <span>{QUIZ_TYPE_LABELS[quiz.quizType] || quiz.quizType}</span>
-          <span className={styles.score}>
+          <button className={styles.quitBtn} onClick={handleQuit} aria-label="Quit quiz">Quit</button>
+          <span aria-label={`Quiz type: ${QUIZ_TYPE_LABELS[quiz.quizType] || quiz.quizType}`}>{QUIZ_TYPE_LABELS[quiz.quizType] || quiz.quizType}</span>
+          <span className={styles.score} aria-label={`Score: ${quiz.sessionScore} out of ${quiz.sessionTotal}`} aria-live="polite">
             {quiz.sessionScore}/{quiz.sessionTotal}
           </span>
         </div>
 
         <ProgressBar current={currentQuestion} total={totalQuestions} />
+
+        {(() => {
+          const communityStats = quiz.currentWord?.id ? getQuizStats(quiz.currentWord.id, quiz.quizType) : null;
+          return communityStats && !combinedFeedback ? (
+            <p className={styles.communityStat}>
+              {communityStats.percent}% of players got this right
+            </p>
+          ) : null;
+        })()}
 
         {quiz.quizType === 'ar-to-en' && (
           <ArabicToEnglish
@@ -441,6 +470,33 @@ export default function QuizOverlay() {
           />
         )}
 
+        {quiz.quizType === 'DialectIdentify' && (
+          <DialectIdentify
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'RootExpand' && (
+          <RootExpand
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {quiz.quizType === 'CulturalContext' && (
+          <CulturalContext
+            word={quiz.currentWord}
+            options={quiz.choices}
+            feedback={combinedFeedback}
+            onAnswer={handleAnswer}
+          />
+        )}
+
         <AnimatePresence mode="wait">
           {combinedFeedback && (
             <motion.div
@@ -453,6 +509,7 @@ export default function QuizOverlay() {
               <motion.button
                 className={`${styles.nextBtn} ${combinedFeedback.correct ? styles.nextBtnCorrect : styles.nextBtnWrong}`}
                 onClick={handleNext}
+                aria-label={combinedFeedback.correct ? 'Correct answer! Go to next question' : 'Go to next question'}
                 {...buttonProps}
               >
                 {combinedFeedback.correct ? 'Correct! Next' : 'Next'}

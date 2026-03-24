@@ -102,10 +102,10 @@ export default function Transliteration({ word, options, onAnswer, feedback }) {
   }
 
   return (
-    <div>
-      <div style={styles.instruction}>Type the transliteration (romanized):</div>
-      <div style={styles.prompt}>{formatArabic(word.arabic)}</div>
-      <div style={styles.englishHint}>{word.english}</div>
+    <div role="group" aria-label={`Transliteration: romanize ${word.transliteration || word.arabic} (${word.english})`}>
+      <div style={styles.instruction} id="translit-instruction">Type the transliteration (romanized):</div>
+      <div style={styles.prompt} aria-label={`Arabic word: ${word.transliteration || word.arabic}`}>{formatArabic(word.arabic)}</div>
+      <div style={styles.englishHint} aria-label={`Meaning: ${word.english}`}>{word.english}</div>
       <div style={styles.hint}>e.g. "kitaab", "baytu", "salaam"</div>
       <input
         style={inputStyle}
@@ -116,15 +116,17 @@ export default function Transliteration({ word, options, onAnswer, feedback }) {
         placeholder="Type transliteration..."
         disabled={!!feedback}
         autoFocus
+        aria-label="Type the romanized transliteration"
+        aria-describedby="translit-instruction"
       />
       {feedback && !feedback.correct && (
-        <div>
+        <div role="alert">
           <div style={styles.correctLabel}>Correct answer:</div>
           <div style={styles.correctAnswer}>{feedback.correctAnswer}</div>
         </div>
       )}
       {!feedback && (
-        <button style={styles.submitBtn} onClick={handleSubmit} disabled={!input.trim()}>
+        <button style={styles.submitBtn} onClick={handleSubmit} disabled={!input.trim()} aria-label="Submit transliteration">
           Submit
         </button>
       )}
