@@ -61,3 +61,26 @@ Started: 2026-04-05
   - Server tests (server/vitest.config.js) are broken pre-existing due to missing src/data/items.json — shopController.js import chain fails. Server tests not run by root `npm run test:run`
   - Quality gate `npm run test:run && npm run lint && npm run build` only covers frontend tests (3653 pass), lint (168 pre-existing errors in other files), and Vite build
 ---
+
+## 2026-04-05 - GROW-003: Battle history model and API
+- Created MongoDB model BattleLog with index on (userId, timestamp)
+- Schema: userId, opponentId, opponentName, zone, result (win/loss/flee), duration, xpEarned, goldEarned, vocabTested [], vocabCorrect [], timestamp
+- POST /api/v1/battles/log — log a battle result (201 on success)
+- GET /api/v1/battles/history?limit=50&zone=oasis — fetch history with filters, sorted newest first
+- GET /api/v1/battles/stats — aggregate stats: total wins/losses/flees, win rate, avg duration, best streak, total XP/gold
+- Zod validation on inputs, auth middleware on all routes
+- 17 integration tests covering: log win/loss/flee, validation errors, missing fields, defaults, auth required, history sorting/filtering/limit/empty/cross-user isolation, stats aggregation, best streak calculation, empty stats, cross-user stats isolation
+- Files changed:
+  - server/src/models/BattleLog.js (new)
+  - server/src/validation/battleSchemas.js (new)
+  - server/src/controllers/battleController.js (new)
+  - server/src/routes/battle.js (new)
+  - server/src/routes/__tests__/battle.test.js (new)
+  - server/src/app.js (modified — route registration)
+- **Learnings for future iterations:**
+  - Mongoose aggregate requires ObjectId cast — use `new mongoose.Types.ObjectId(userId)` for $match
+  - Best streak calculation requires a separate query sorted by timestamp — can't do it in a single aggregation easily
+  - Express 5 req.query is read-only — validated query goes to req.validatedQuery (existing pattern)
+  - Stats endpoint returns sensible zero-defaults for new users (no 404)
+  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
+---
