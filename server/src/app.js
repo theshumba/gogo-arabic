@@ -11,6 +11,7 @@ import shopRoutes from './routes/shop.js';
 import gameRoutes from './routes/game.js';
 import npcRoutes from './routes/npc.js';
 import worldRoutes from './routes/world.js';
+import battleRoutes from './routes/battle.js';
 import { globalLimiter } from './middleware/rateLimiter.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -77,6 +78,7 @@ app.use(`${API_VERSION}/shop`, shopRoutes);
 app.use(`${API_VERSION}/game`, gameRoutes);
 app.use(`${API_VERSION}/npcs`, npcRoutes);
 app.use(`${API_VERSION}/world`, worldRoutes);
+app.use(`${API_VERSION}/battles`, battleRoutes);
 
 // Backward compatibility - redirect old API routes to v1
 app.use('/api/auth', authRoutes);
@@ -87,6 +89,7 @@ app.use('/api/shop', shopRoutes);
 app.use('/api/game', gameRoutes);
 app.use('/api/npcs', npcRoutes);
 app.use('/api/world', worldRoutes);
+app.use('/api/battles', battleRoutes);
 
 // Health check endpoints
 app.get('/api/health', (_req, res) => {
