@@ -133,3 +133,27 @@ Started: 2026-04-05
   - ISO week calculation: set date to nearest Thursday, count weeks from Jan 1 of that year
   - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
 ---
+
+## 2026-04-05 - GROW-006: Analytics event ingestion API
+- Created MongoDB model AnalyticsEvent with TTL index (90 days auto-delete) and userId+timestamp index
+- Schema: userId, event (enum of 6 types), properties (Mixed), sessionId, timestamp
+- POST /api/v1/analytics/events — batch ingest up to 50 events per request (201 on success)
+- 6 valid event types: session_start, session_end, quiz_completed, battle_started, lesson_completed, feature_used
+- Custom rate limiter: 1 batch per 10s per user (separate from general apiLimiter)
+- Zod validation: events array min 1, max 50, each event validated against enum + optional fields
+- 13 integration tests covering: batch ingest, single event, all event types, defaults, custom timestamp, invalid event type, empty array, >50 events, exactly 50 events, missing events field, auth required, cross-user isolation, rate limiting, TTL index verification
+- Files changed:
+  - server/src/models/AnalyticsEvent.js (new)
+  - server/src/validation/analyticsSchemas.js (new)
+  - server/src/controllers/analyticsController.js (new)
+  - server/src/routes/analytics.js (new)
+  - server/src/routes/__tests__/analytics.test.js (new)
+  - server/src/app.js (modified — route registration)
+- **Learnings for future iterations:**
+  - Mongoose Schema.Types.Mixed is the right type for freeform properties objects
+  - TTL index: `{ expireAfterSeconds: N }` on a Date field — MongoDB handles cleanup automatically
+  - insertMany is efficient for batch ingestion — returns array of inserted docs
+  - Zod z.record(z.unknown()) validates arbitrary key-value objects for the properties field
+  - z.string().datetime() validates ISO 8601 timestamp strings
+  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
+---
