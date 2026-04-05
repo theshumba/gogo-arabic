@@ -36,7 +36,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Read worldStateSlice.js and worldStateMiddleware.js to understand the flag structure."
     },
     {

@@ -38,3 +38,26 @@ Started: 2026-04-05
   - Empty body POST with defaults works fine — Mongoose schema defaults fill in
   - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
 ---
+
+## 2026-04-05 - GROW-002: World state persistence model and API
+- Created MongoDB model WorldState with unique index on userId
+- Schema: userId, flags (Map), factionControl (Map), zoneEvents [], lastUpdated
+- POST /api/v1/world/state — save with additive merge (flags OR'd, events deduplicated by eventId)
+- GET /api/v1/world/state — load world state (returns empty defaults for new users instead of 404)
+- Zod validation on inputs, auth middleware on all routes
+- 12 integration tests covering: create new state, additive flag merge, factionControl merge, zone event deduplication, empty body defaults, invalid input rejection, auth required, load state, empty state for new user, cross-user isolation
+- Files changed:
+  - server/src/models/WorldState.js (new)
+  - server/src/validation/worldSchemas.js (new)
+  - server/src/controllers/worldController.js (new)
+  - server/src/routes/world.js (new)
+  - server/src/routes/__tests__/world.test.js (new)
+  - server/src/app.js (modified — route registration)
+- **Learnings for future iterations:**
+  - Mongoose Map type used for dynamic key-value flags/factionControl — serializes to plain object in JSON
+  - Additive merge: load existing doc, iterate client keys with Map.set(), save — preserves server-side flags
+  - Zone events deduplicated by eventId using a Set for O(1) lookup
+  - GET returns empty defaults (not 404) for new users — better for client-side hydration
+  - Server tests (server/vitest.config.js) are broken pre-existing due to missing src/data/items.json — shopController.js import chain fails. Server tests not run by root `npm run test:run`
+  - Quality gate `npm run test:run && npm run lint && npm run build` only covers frontend tests (3653 pass), lint (168 pre-existing errors in other files), and Vite build
+---
