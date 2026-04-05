@@ -157,3 +157,28 @@ Started: 2026-04-05
   - z.string().datetime() validates ISO 8601 timestamp strings
   - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
 ---
+
+## 2026-04-05 - GROW-007: Faction management API
+- Created MongoDB model FactionState with unique index on userId, Map-based factions storage
+- Schema: userId, factions Map of {reputation (0-100), tier (auto-calculated), joinedAt}
+- POST /api/v1/factions/update — update reputation for a faction, auto-calculates tier
+- GET /api/v1/factions — get all faction states for user (empty object for new users)
+- GET /api/v1/factions/:factionId/rankings — top 50 players by reputation in a faction
+- Tier auto-calculation: 0-25 Outsider, 26-50 Member, 51-75 Trusted, 76-100 Elder
+- Zod validation on inputs, auth middleware on all routes
+- 22 integration tests covering: reputation update, accumulation, clamping (0/100), negative amounts, invalid factionId, missing fields, auth required, multiple factions independently, tier boundaries (Outsider/Member/Trusted/Elder), empty state for new user, cross-user isolation, rankings sorted by reputation, rankings filtered by faction, invalid faction param, auth on rankings
+- Files changed:
+  - server/src/models/FactionState.js (new)
+  - server/src/validation/factionSchemas.js (new)
+  - server/src/controllers/factionController.js (new)
+  - server/src/routes/faction.js (new)
+  - server/src/routes/__tests__/faction.test.js (new)
+  - server/src/app.js (modified — route registration)
+- **Learnings for future iterations:**
+  - Mongoose Map type with embedded subdocument schema works well for dynamic faction entries
+  - $objectToArray in aggregation pipeline converts Mongoose Map to array for unwinding/filtering
+  - Tier auto-calculation as a static method on the model keeps it co-located and testable
+  - Rankings aggregation: $objectToArray → $unwind → $match → $sort → $limit is the pattern for Map-based ranked queries
+  - joinedAt set on first positive reputation interaction (not on creation) — captures meaningful engagement timestamp
+  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
+---
