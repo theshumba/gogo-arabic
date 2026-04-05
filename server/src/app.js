@@ -13,6 +13,7 @@ import npcRoutes from './routes/npc.js';
 import worldRoutes from './routes/world.js';
 import battleRoutes from './routes/battle.js';
 import achievementRoutes from './routes/achievement.js';
+import leaderboardRoutes from './routes/leaderboard.js';
 import { globalLimiter } from './middleware/rateLimiter.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -81,6 +82,7 @@ app.use(`${API_VERSION}/npcs`, npcRoutes);
 app.use(`${API_VERSION}/world`, worldRoutes);
 app.use(`${API_VERSION}/battles`, battleRoutes);
 app.use(`${API_VERSION}/achievements`, achievementRoutes);
+app.use(`${API_VERSION}/leaderboard`, leaderboardRoutes);
 
 // Backward compatibility - redirect old API routes to v1
 app.use('/api/auth', authRoutes);
@@ -93,6 +95,7 @@ app.use('/api/npcs', npcRoutes);
 app.use('/api/world', worldRoutes);
 app.use('/api/battles', battleRoutes);
 app.use('/api/achievements', achievementRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
 
 // Health check endpoints
 app.get('/api/health', (_req, res) => {
