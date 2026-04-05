@@ -84,3 +84,26 @@ Started: 2026-04-05
   - Stats endpoint returns sensible zero-defaults for new users (no 404)
   - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
 ---
+
+## 2026-04-05 - GROW-004: Achievement server-side validation and API
+- Created MongoDB model Achievement with unique compound index on (userId, achievementId)
+- Schema: userId, achievementId, unlockedAt, context {questId, wordCount, cefrLevel}
+- POST /api/v1/achievements/unlock — validates context (cefrLevel A1-C2, wordCount non-negative), prevents duplicate unlocks (409 Conflict), handles race conditions via unique index error code 11000
+- GET /api/v1/achievements — fetch all unlocked achievements for user, sorted newest first
+- GET /api/v1/achievements/global-stats — aggregate: totalPlayers, per-achievement unlockCount + percentage, sorted by percentage descending
+- Zod validation on inputs, auth middleware on all routes
+- 18 integration tests covering: unlock with full context, unlock with minimal data, duplicate prevention (409), cross-user unlock, invalid cefrLevel validation, missing achievementId, empty achievementId, auth required, list all achievements, sort order, empty state, cross-user isolation, global stats percentages, empty global stats, global stats sort order, global stats auth
+- Files changed:
+  - server/src/models/Achievement.js (new)
+  - server/src/validation/achievementSchemas.js (new)
+  - server/src/controllers/achievementController.js (new)
+  - server/src/routes/achievement.js (new)
+  - server/src/routes/__tests__/achievement.test.js (new)
+  - server/src/app.js (modified — route registration)
+- **Learnings for future iterations:**
+  - Duplicate prevention: check with findOne first for nice error message, but also handle MongoDB error code 11000 for race conditions
+  - Achievement.distinct('userId').then(ids => ids.length) for counting unique players — simpler than aggregation for total count
+  - $round in aggregation pipeline for clean percentage display: $round: [expr, 1] for 1 decimal place
+  - Don't import mongoose if not needed — eslint catches unused imports as warnings
+  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
+---

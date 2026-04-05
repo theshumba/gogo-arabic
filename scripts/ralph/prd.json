@@ -71,7 +71,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "Read achievementSlice.js and src/data/ for achievement definitions to understand prerequisites."
     },
     {
