@@ -107,3 +107,29 @@ Started: 2026-04-05
   - Don't import mongoose if not needed — eslint catches unused imports as warnings
   - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
 ---
+
+## 2026-04-05 - GROW-005: Leaderboard model and API with weekly snapshots
+- Created MongoDB model Leaderboard with compound unique index on (userId, category, week) and ranking index on (category, week, score)
+- Schema: userId, displayName, category (xp/wordsLearned/streak/questsCompleted), score, week (ISO week string e.g. "2026-W14"), updatedAt
+- Static method `getISOWeek(date)` computes ISO week string (Monday-based weeks)
+- POST /api/v1/leaderboard/score — upsert score using `$max` operator (only increases, never lowers)
+- GET /api/v1/leaderboard/:category?limit=50 — top players this week, sorted by score desc with rank field
+- GET /api/v1/leaderboard/my-rank/:category — user's rank + 2 above/2 below surrounding players
+- Custom rate limiter: 1 score update per 30s per user (separate from general apiLimiter)
+- Weekly isolation: entries scoped by week field, old weeks naturally archived (still queryable)
+- Zod validation on body, params, and query
+- 18 integration tests covering: create entry, upsert higher score, reject lower score, invalid category, negative score, missing displayName, auth required, rate limiting, top players ranking, limit param, empty leaderboard, week isolation, invalid category param, my-rank with surrounding, no entry rank, auth on my-rank, ISO week format, week boundaries
+- Files changed:
+  - server/src/models/Leaderboard.js (new)
+  - server/src/validation/leaderboardSchemas.js (new)
+  - server/src/controllers/leaderboardController.js (new)
+  - server/src/routes/leaderboard.js (new)
+  - server/src/routes/__tests__/leaderboard.test.js (new)
+  - server/src/app.js (modified — route registration)
+- **Learnings for future iterations:**
+  - `$max` operator in findOneAndUpdate is perfect for "only update if higher" — avoids read-then-write race conditions
+  - Custom rate limiters (not from env vars) work fine in tests because each test creates a new user with unique userId, so rate limit keys don't collide across tests
+  - my-rank route must be registered BEFORE /:category to avoid "my-rank" being parsed as a category param
+  - ISO week calculation: set date to nearest Thursday, count weeks from Jan 1 of that year
+  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
+---
