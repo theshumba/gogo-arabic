@@ -1,0 +1,453 @@
+{
+  "project": "Gogo Arabic",
+  "branchName": "ralph/growth-engine-batch-1",
+  "description": "Autonomous game growth — backend expansion, content creation, game logic wiring, new systems. All logic-only, no visual/rendering changes.",
+  "userStories": [
+    {
+      "id": "GROW-001",
+      "title": "NPC state persistence model and API",
+      "description": "Create MongoDB model for NPC state (relationship level, dialogue history, quest involvement) and Express endpoints to save/load NPC state per user. Currently NPC state is client-only and resets.",
+      "acceptanceCriteria": [
+        "server/src/models/NpcState.js — schema: userId, npcId, relationship (0-100), dialogueChoices [], questsGiven [], lastInteraction timestamp",
+        "Compound unique index on (userId, npcId)",
+        "POST /api/v1/npcs/:npcId/state — save NPC state",
+        "GET /api/v1/npcs/:npcId/state — load NPC state",
+        "GET /api/v1/npcs/states — load all NPC states for user (batch load on login)",
+        "Auth middleware on all routes",
+        "Zod validation on inputs",
+        "Tests: 10+ covering save, load, batch load, missing NPC, unauthorized access",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "Follow existing route patterns in server/src/routes/. Register routes in server.js."
+    },
+    {
+      "id": "GROW-002",
+      "title": "World state persistence model and API",
+      "description": "Create MongoDB model for persistent world state (faction control, zone events, global flags) and API endpoints. Currently worldStateSlice is client-only.",
+      "acceptanceCriteria": [
+        "server/src/models/WorldState.js — schema: userId, flags {}, factionControl {}, zoneEvents [], lastUpdated",
+        "POST /api/v1/world/state — save world state",
+        "GET /api/v1/world/state — load world state",
+        "Merge strategy: client flags OR'd with server flags (additive only)",
+        "Auth middleware required",
+        "Tests: 10+ covering save, load, merge logic, empty state",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Read worldStateSlice.js and worldStateMiddleware.js to understand the flag structure."
+    },
+    {
+      "id": "GROW-003",
+      "title": "Battle history model and API",
+      "description": "Create MongoDB model to store battle results and API endpoints. Enables battle stats, replays, and analytics.",
+      "acceptanceCriteria": [
+        "server/src/models/BattleLog.js — schema: userId, opponentId, opponentName, zone, result (win/loss/flee), duration, xpEarned, goldEarned, vocabTested [], vocabCorrect [], timestamp",
+        "POST /api/v1/battles/log — save battle result",
+        "GET /api/v1/battles/history?limit=50&zone=oasis — fetch battle history with filters",
+        "GET /api/v1/battles/stats — aggregate: total wins/losses, win rate, avg duration, best streak",
+        "Index on (userId, timestamp) for fast queries",
+        "Tests: 10+ covering log, history, stats aggregation, filtering",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Keep battle logs lightweight. Read battleSlice.js for the data shape of battle results."
+    },
+    {
+      "id": "GROW-004",
+      "title": "Achievement server-side validation and API",
+      "description": "Create MongoDB model and API for achievement unlocks with server-side verification to prevent cheating.",
+      "acceptanceCriteria": [
+        "server/src/models/Achievement.js — schema: userId, achievementId, unlockedAt, context {questId, wordCount, cefrLevel}",
+        "POST /api/v1/achievements/unlock — validate prerequisites before saving",
+        "GET /api/v1/achievements — fetch all unlocked achievements for user",
+        "GET /api/v1/achievements/global-stats — % of players with each achievement",
+        "Validation: check user's server-side state matches achievement requirements",
+        "Duplicate unlock prevention (unique index on userId + achievementId)",
+        "Tests: 10+ covering unlock, duplicate prevention, prerequisite validation, global stats",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "Read achievementSlice.js and src/data/ for achievement definitions to understand prerequisites."
+    },
+    {
+      "id": "GROW-005",
+      "title": "Leaderboard model and API with weekly snapshots",
+      "description": "Server-side leaderboards with categories (xp, wordsLearned, streak, questsCompleted) and weekly archival.",
+      "acceptanceCriteria": [
+        "server/src/models/Leaderboard.js — schema: userId, displayName, category, score, week (ISO week string), updatedAt",
+        "POST /api/v1/leaderboard/score — upsert score for category",
+        "GET /api/v1/leaderboard/:category?limit=50 — top players this week",
+        "GET /api/v1/leaderboard/my-rank/:category — user's rank + surrounding players",
+        "Weekly reset: scores archived when new week begins (Monday UTC)",
+        "Index on (category, week, score) for fast ranking",
+        "Rate limited: 1 update per 30s per user",
+        "Tests: 10+ covering upsert, ranking, weekly reset, rate limiting",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "leaderboardSlice.js already exists client-side. This adds server persistence."
+    },
+    {
+      "id": "GROW-006",
+      "title": "Analytics event ingestion API",
+      "description": "Create API endpoint to ingest player analytics events (quiz completion, session start/end, feature usage) for server-side aggregation.",
+      "acceptanceCriteria": [
+        "server/src/models/AnalyticsEvent.js — schema: userId, event, properties {}, sessionId, timestamp",
+        "POST /api/v1/analytics/events — batch ingest up to 50 events per request",
+        "Events: session_start, session_end, quiz_completed, battle_started, lesson_completed, feature_used",
+        "TTL index: auto-delete events older than 90 days",
+        "Rate limited: 1 batch per 10s per user",
+        "Zod validation on event shape",
+        "Tests: 8+ covering batch ingest, validation, TTL, rate limiting",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "analyticsSlice.js and extendedAnalyticsSlice.js exist client-side. This adds server collection."
+    },
+    {
+      "id": "GROW-007",
+      "title": "Faction management API",
+      "description": "Create API endpoints for faction allegiance, reputation, and tier progression. Syncs with client-side factionSlice.",
+      "acceptanceCriteria": [
+        "server/src/models/FactionState.js — schema: userId, factions {factionId: {reputation, tier, joinedAt}}",
+        "POST /api/v1/factions/update — update reputation for a faction",
+        "GET /api/v1/factions — get all faction states for user",
+        "GET /api/v1/factions/:factionId/rankings — top players in faction",
+        "Tier auto-calculation: 0-25 Outsider, 26-50 Member, 51-75 Trusted, 76-100 Elder",
+        "Tests: 10+ covering reputation update, tier calculation, rankings",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "Read factionSlice.js and factionMiddleware.js for faction data structure."
+    },
+    {
+      "id": "GROW-008",
+      "title": "Dynamic NPC schedule system",
+      "description": "Create a schedule data file and utility that determines where NPCs are based on time of day. NPCs move between locations on a schedule instead of being static.",
+      "acceptanceCriteria": [
+        "src/data/npcSchedules.js — schedule per NPC: [{timeStart, timeEnd, location, activity}]",
+        "Cover all 30 NPCs with 3-4 schedule blocks each (morning/afternoon/evening/night)",
+        "getNpcLocation(npcId, gameHour) utility returns current location + activity",
+        "getNpcsAtLocation(locationId, gameHour) returns all NPCs at a location",
+        "Integrates with existing TimeSystem (src/game/systems/TimeSystem.js)",
+        "Tests: 14+ covering schedule lookups, time boundaries, all NPCs covered",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Read TimeSystem.js and DayNightCycle.js to understand how game time works. DO NOT modify Phaser scenes."
+    },
+    {
+      "id": "GROW-009",
+      "title": "Expand Oasis zone NPC dialogues — 5 new conversation trees",
+      "description": "Write 5 new Ink dialogue scripts for Oasis zone NPCs with Arabic vocabulary integration, branching choices, and quest hooks.",
+      "acceptanceCriteria": [
+        "5 new .ink files in src/data/ink/ for Oasis NPCs",
+        "Each dialogue: 3+ branching paths, 10+ lines, Arabic words woven in naturally",
+        "Vocabulary tags: #vocab:word_id on lines that teach new words",
+        "Quest hooks: at least 2 dialogues offer side quest starts",
+        "Compile all .ink to .ink.json using existing compile script",
+        "Register new dialogues in the NPC dialogue mapping",
+        "Tests: verify .ink.json files parse correctly",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "Read existing .ink files in src/data/ink/ for the format. Use npm run ink:compile to compile. Keep Arabic at A1-A2 level for Oasis zone."
+    },
+    {
+      "id": "GROW-010",
+      "title": "Expand Desert zone NPC dialogues — 5 new conversation trees",
+      "description": "Write 5 new Ink dialogue scripts for Desert zone NPCs. Higher difficulty Arabic (A2-B1), deeper lore, faction-related choices.",
+      "acceptanceCriteria": [
+        "5 new .ink files in src/data/ink/ for Desert NPCs",
+        "Each dialogue: 3+ branching paths, 12+ lines, Arabic at A2-B1 level",
+        "Vocabulary tags: #vocab:word_id on lines teaching new words",
+        "Faction choices: at least 2 dialogues have choices that affect faction reputation",
+        "Lore integration: reference codex entries where relevant",
+        "Compile all .ink to .ink.json",
+        "Register new dialogues in NPC dialogue mapping",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "Desert zone is harder than Oasis. Check existing zone definitions for Desert NPCs."
+    },
+    {
+      "id": "GROW-011",
+      "title": "Dynamic quest generation service",
+      "description": "Create a service that generates simple daily/weekly quests from templates. Types: collect N vocab words from category, win N battles in zone, craft N items, talk to N NPCs.",
+      "acceptanceCriteria": [
+        "src/services/questGenerator.js exports generateDailyQuests(playerState, date)",
+        "4 quest templates: vocab collection, battle wins, crafting, NPC interaction",
+        "Deterministic: same date + player level = same quests for reproducibility",
+        "Difficulty scales with player level (more items, harder zones at higher levels)",
+        "Returns quest objects compatible with existing questSlice format",
+        "3 daily quests generated per day, 1 weekly quest per week",
+        "Tests: 16+ covering each template, difficulty scaling, determinism, edge cases",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": "Read questSlice.js and src/data/quests.json for quest object shape. Use a seeded RNG for determinism."
+    },
+    {
+      "id": "GROW-012",
+      "title": "Economy rebalancing — dynamic shop pricing middleware",
+      "description": "Create middleware that adjusts shop prices based on supply/demand. Items bought frequently cost more, items never bought get discounted. Prices reset weekly.",
+      "acceptanceCriteria": [
+        "src/store/middleware/economyMiddleware.js — listens for purchase actions",
+        "Tracks purchase counts per item in economySlice",
+        "Price multiplier: 1.0 base, +0.05 per purchase (max 2.0x), -0.1 per day unsold (min 0.5x)",
+        "Weekly reset: all multipliers return to 1.0 on Monday UTC",
+        "Selector: selectAdjustedPrice(itemId) returns current price",
+        "Selector: selectDealOfTheDay() returns most discounted item",
+        "Tests: 12+ covering price adjustment, caps, reset, deal selection",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": "Read economySlice.js and shopController.js. Don't break existing purchase flow."
+    },
+    {
+      "id": "GROW-013",
+      "title": "Seasonal event automation middleware",
+      "description": "Create middleware that automatically activates/deactivates seasonal events based on real-world date. Events: Ramadan, Eid al-Fitr, Eid al-Adha, Islamic New Year, Arabic Language Day (Dec 18).",
+      "acceptanceCriteria": [
+        "src/store/middleware/seasonalAutomationMiddleware.js",
+        "Checks current date on app start and daily at midnight UTC",
+        "Auto-dispatches activateEvent/deactivateEvent to seasonalEventSlice",
+        "5 events with date ranges (use Hijri calendar for Islamic events)",
+        "Each event has: id, name, startDate, endDate, bonuses {xpMultiplier, specialShopItems}",
+        "Event config in src/data/seasonalEventConfig.js",
+        "Tests: 12+ covering activation, deactivation, Hijri date conversion, boundary dates",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": "Read seasonalEventSlice.js and hijriCalendar.js. Use the existing Hijri calendar utility."
+    },
+    {
+      "id": "GROW-014",
+      "title": "Companion backstory data expansion",
+      "description": "Expand companion data with detailed backstories, personality traits, gift preferences, and dialogue triggers for all 12 companions.",
+      "acceptanceCriteria": [
+        "src/data/companionBackstories.js — 12 companion entries",
+        "Each: backstory (3-4 paragraphs), personality traits [], gift preferences {loved, liked, disliked}, dialogue triggers {onLevelUp, onBattleWin, onQuestComplete, onLowHealth}",
+        "Arabic cultural authenticity: backstories reference Arabic/Islamic themes naturally",
+        "Gift preferences tie to existing inventory items",
+        "Dialogue triggers return Arabic + English text",
+        "Selectors: selectCompanionBackstory(id), selectGiftReaction(companionId, itemId)",
+        "Tests: 12+ covering all companions, gift reactions, dialogue triggers",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": "Read companionSlice.js and existing companion data to see the 12 companion IDs and names."
+    },
+    {
+      "id": "GROW-015",
+      "title": "Arabic cultural trivia dataset",
+      "description": "Create a dataset of 200+ cultural trivia facts about the Arab world — history, food, music, architecture, science contributions, famous figures. Used for loading screens, quiz questions, and codex entries.",
+      "acceptanceCriteria": [
+        "src/data/culturalTrivia.js — 200+ trivia objects",
+        "Each: fact (English), factArabic (Arabic), category, cefrLevel, source region, era (ancient/medieval/modern)",
+        "Categories: history, food, science, art, music, architecture, literature, language, geography, customs",
+        "Balanced distribution: ~20 per category",
+        "Selectors: selectTriviaByCategory(cat), selectRandomTrivia(count), selectTriviaByEra(era)",
+        "Tests: 10+ covering data structure, category balance, selector correctness",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": "Ensure cultural sensitivity and accuracy. Include contributions from across the Arab world, not just one region."
+    },
+    {
+      "id": "GROW-016",
+      "title": "Quest chain system — multi-step quest linking",
+      "description": "Create a quest chain service that links individual quests into multi-step storylines. When one quest completes, the next in the chain auto-unlocks.",
+      "acceptanceCriteria": [
+        "src/data/questChains.js — define 5 quest chains (3-5 quests each)",
+        "src/services/questChainService.js — manages chain progression",
+        "getNextQuestInChain(completedQuestId) returns next quest or null",
+        "isChainComplete(chainId) checks if all quests in chain are done",
+        "getChainProgress(chainId) returns {completed, total, currentQuest}",
+        "Chain rewards: bonus XP/items on full chain completion",
+        "Integrates with questSlice actions (quest completion triggers chain check)",
+        "Tests: 14+ covering chain progression, completion, rewards, edge cases",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": "Read questSlice.js, questHelpers.js, and existing quest data for compatible formats."
+    },
+    {
+      "id": "GROW-017",
+      "title": "NPC relationship consequences system",
+      "description": "Create a service that tracks NPC relationship levels and applies gameplay consequences. High relationship: better prices, exclusive quests, battle assistance. Low relationship: refused service, hostile dialogue.",
+      "acceptanceCriteria": [
+        "src/services/npcRelationshipService.js",
+        "Relationship tiers: Hostile (<20), Cold (20-39), Neutral (40-59), Friendly (60-79), Beloved (80-100)",
+        "getShopDiscount(npcId, relationship) — 0% to 25% discount based on tier",
+        "getAvailableQuests(npcId, relationship) — filter quests by relationship requirement",
+        "getDialogueVariant(npcId, relationship) — return tier-appropriate dialogue key",
+        "getBattleAssistChance(npcId, relationship) — 0% to 15% chance NPC joins battle",
+        "Tests: 14+ covering each tier, discount calc, quest filtering, battle assist probability",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": "Read relationshipMiddleware.js and npcSlice.js for existing relationship tracking."
+    },
+    {
+      "id": "GROW-018",
+      "title": "Arabic grammar rules reference dataset",
+      "description": "Create comprehensive dataset of Arabic grammar rules organized by CEFR level. Each rule: explanation, examples, common mistakes, practice sentence templates.",
+      "acceptanceCriteria": [
+        "src/data/grammarRules.js — 60+ grammar rules",
+        "Each: id, title, titleArabic, cefrLevel, explanation, examples [{arabic, english, breakdown}], commonMistakes [], practiceTemplates []",
+        "CEFR distribution: 15 A1, 15 A2, 15 B1, 10 B2, 5 C1",
+        "Categories: nouns, verbs, particles, sentence structure, morphology, idafa, verb forms",
+        "Selectors: selectRulesByLevel(cefr), selectRulesByCategory(cat), selectRuleById(id)",
+        "Tests: 10+ covering data completeness, CEFR distribution, selector correctness",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": "Read grammarSlice.js and existing grammar data. Focus on Modern Standard Arabic."
+    },
+    {
+      "id": "GROW-019",
+      "title": "Daily login rewards system",
+      "description": "Create middleware and data for a daily login reward streak. Consecutive days give escalating rewards. Missing a day resets to day 1.",
+      "acceptanceCriteria": [
+        "src/data/loginRewards.js — 30-day reward cycle that repeats",
+        "Rewards: gold, XP, items, rare items on days 7/14/21/30",
+        "src/store/middleware/loginRewardMiddleware.js — checks on app start",
+        "Tracks: lastLoginDate, currentStreak, totalLogins in playerSlice or dedicated slice",
+        "If same day: no reward. If consecutive day: increment streak + grant reward. If gap: reset streak to 1",
+        "Selector: selectTodayReward(), selectCurrentStreak(), selectNextMilestone()",
+        "Tests: 14+ covering consecutive, gap, same-day, milestone rewards, cycle repeat",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": "Read playerSlice.js for existing login tracking. Use UTC dates for consistency."
+    },
+    {
+      "id": "GROW-020",
+      "title": "Expand lore codex — 50 new entries",
+      "description": "Add 50 new lore codex entries covering Arabic history, mythology, scientific golden age, famous scholars, and in-game world lore.",
+      "acceptanceCriteria": [
+        "50 new entries added to existing lore data file",
+        "Categories: history (10), mythology (10), science (10), scholars (10), world-lore (10)",
+        "Each entry: id, title, titleArabic, category, content (2-3 paragraphs), cefrLevel, relatedVocab [wordIds], unlockCondition",
+        "Unlock conditions: zone discovery, quest completion, NPC dialogue, or battle victory",
+        "Entries reference existing game zones and NPCs where possible",
+        "Tests: 8+ covering entry structure, category balance, ID uniqueness",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": "Read loreSlice.js and existing codex data in src/data/ to match the format exactly."
+    },
+    {
+      "id": "GROW-021",
+      "title": "Battle AI behavior patterns expansion",
+      "description": "Expand EnemyAI with 5 new behavior patterns: Berserker (all-attack), Turtle (defensive), Trickster (status effects), Scholar (vocab-based attacks scale with player weakness), Healer (self-heal priority).",
+      "acceptanceCriteria": [
+        "5 new AI patterns added to EnemyAI system",
+        "Berserker: always attacks, +20% damage, -20% defense",
+        "Turtle: blocks 60% of turns, counterattacks after block",
+        "Trickster: applies random status effect every 3 turns",
+        "Scholar: targets player's weakest vocabulary category for attacks",
+        "Healer: self-heals when below 40% HP, otherwise attacks",
+        "Each pattern has clear decision tree logic",
+        "Tests: 12+ covering each pattern's decision-making in various game states",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": "Read src/game/systems/EnemyAI.js for existing AI patterns. Add new patterns without breaking existing ones."
+    },
+    {
+      "id": "GROW-022",
+      "title": "Vocabulary themed collections dataset",
+      "description": "Organize existing 5000+ vocabulary into themed collections: food (150), travel (100), family (80), business (100), nature (100), body (60), emotions (80), home (70), school (90), religion (70).",
+      "acceptanceCriteria": [
+        "src/data/vocabCollections.js — 10 themed collections",
+        "Each collection: id, name, nameArabic, description, cefrRange, wordIds []",
+        "Words sourced from existing vocabulary data (reference by ID)",
+        "Total: 900+ words categorized across collections",
+        "Selectors: selectCollection(id), selectCollectionsByLevel(cefr), selectWordCountByCollection()",
+        "Completion tracking: selectCollectionProgress(collectionId, masteredWords)",
+        "Tests: 10+ covering collection structure, word references valid, progress calculation",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": "Read existing vocabulary data to find word IDs. Cross-reference with CEFR levels."
+    },
+    {
+      "id": "GROW-023",
+      "title": "Mini-game difficulty scaling service",
+      "description": "Create a service that scales mini-game parameters (word search grid size, crossword complexity, memory match pairs) based on player level and CEFR progress.",
+      "acceptanceCriteria": [
+        "src/services/miniGameScaler.js",
+        "getWordSearchParams(cefrLevel, playerLevel) — grid size 8x8 to 15x15, word count 5-15",
+        "getCrosswordParams(cefrLevel, playerLevel) — clue count 5-20, grid complexity",
+        "getMemoryMatchParams(cefrLevel, playerLevel) — pair count 4-12, time limit",
+        "getNumberChallengeParams(cefrLevel, playerLevel) — digit count, operation complexity",
+        "All params clamped to sensible ranges",
+        "Tests: 14+ covering each mini-game type, level boundaries, clamping",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": "Read miniGameSlice.js and mini-game data files for current parameter shapes."
+    },
+    {
+      "id": "GROW-024",
+      "title": "Player settings sync API",
+      "description": "Create API endpoint to persist player settings (audio, difficulty, accessibility, language preferences) server-side so they sync across devices.",
+      "acceptanceCriteria": [
+        "POST /api/v1/user/settings — save settings object",
+        "GET /api/v1/user/settings — load settings",
+        "Settings stored as subdocument in User model",
+        "Merge strategy: client settings override server (last-write-wins)",
+        "Settings shape matches settingsSlice state structure",
+        "Zod validation: reject unknown fields, validate ranges",
+        "Tests: 8+ covering save, load, merge, validation, empty state",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": "Read settingsSlice.js for the exact settings shape. Add to existing user routes."
+    },
+    {
+      "id": "GROW-025",
+      "title": "Health check and status API endpoint",
+      "description": "Create a /health endpoint that returns server status, uptime, database connectivity, and version info. Essential for monitoring and deployment.",
+      "acceptanceCriteria": [
+        "GET /health — public (no auth), returns JSON",
+        "Response: {status: 'ok', uptime: seconds, version: from package.json, database: 'connected'|'disconnected', timestamp}",
+        "Database check: ping MongoDB, return 'disconnected' if fails",
+        "Response time under 100ms (no heavy queries)",
+        "GET /health/detailed — auth required, adds memory usage, request count",
+        "Tests: 6+ covering healthy state, DB down state, detailed endpoint auth",
+        "npm run test:run && npm run lint && npm run build passes"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": "Simple endpoint. Register before auth middleware so /health is always accessible."
+    }
+  ]
+}

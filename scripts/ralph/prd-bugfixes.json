@@ -1,0 +1,158 @@
+{
+  "project": "Gogo Arabic",
+  "branchName": "ralph/bugfixes-cleanup-batch-1",
+  "description": "Bug fixes and code cleanup — ESM crashes, off-by-one bugs, dead code, and validation gaps",
+  "userStories": [
+    {
+      "id": "FIX-001",
+      "title": "Fix ESM process imports in all tool scripts",
+      "description": "tools/content-stats.js, tools/validate-npcs.js, tools/validate-quests.js, and tools/validate-vocabulary.js use process.exit() but are ES modules without importing process. This causes runtime crashes. Add 'import process from \"node:process\"' to each file.",
+      "acceptanceCriteria": [
+        "Add import process from 'node:process' to tools/content-stats.js",
+        "Add import process from 'node:process' to tools/validate-npcs.js",
+        "Add import process from 'node:process' to tools/validate-quests.js",
+        "Add import process from 'node:process' to tools/validate-vocabulary.js",
+        "Remove unused require() call in tools/validate-npcs.js if present",
+        "Remove unused createRequire import in tools/validate-vocabulary.js if present",
+        "npm run lint passes with no errors in these files",
+        "npm run build passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "CRITICAL — these scripts crash at runtime. Check each file's import section before modifying."
+    },
+    {
+      "id": "FIX-002",
+      "title": "Fix inventory capacity off-by-one bug",
+      "description": "In src/store/slices/inventorySlice.js around line 30, the condition 'state.items.length >= 200' prevents using the 200th slot. If max capacity should be 200, change to '> 200'. If max is 199, add a comment documenting the intentional limit.",
+      "acceptanceCriteria": [
+        "Inventory allows exactly 200 items (change >= to >), OR document that 199 is intentional",
+        "Add a named constant MAX_INVENTORY_SIZE at top of file instead of magic number",
+        "Update any other references to the magic number 200 in the same file",
+        "npm run test:run passes",
+        "npm run lint passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Read the file first to understand the full context of how capacity is checked."
+    },
+    {
+      "id": "FIX-003",
+      "title": "Fix unused variable in seasonalEventSlice",
+      "description": "In src/store/slices/seasonalEventSlice.js line 55, previousEvent is assigned but never used. Either use it to track event transitions or remove it.",
+      "acceptanceCriteria": [
+        "Remove unused previousEvent variable if no transition logic is needed",
+        "OR use it to emit an event transition action if there's a clear pattern to follow",
+        "npm run lint passes with no unused-variable warning on this line",
+        "npm run test:run passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Read surrounding code to understand if transition tracking was intended."
+    },
+    {
+      "id": "FIX-004",
+      "title": "Fix unused form parameter in magicSlice",
+      "description": "In src/store/slices/magicSlice.js line 52, 'form' is destructured from action.payload in recordRootUse but never used. Either remove it from destructuring or use it.",
+      "acceptanceCriteria": [
+        "Remove 'form' from the destructuring if it serves no purpose",
+        "OR use it to track which spell forms have been used if the pattern makes sense",
+        "npm run lint passes",
+        "npm run test:run passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "Check if any action creators dispatch form data — if they do, there may be missing logic."
+    },
+    {
+      "id": "FIX-005",
+      "title": "Fix unused parseFloat calls in factionSlice",
+      "description": "In src/store/slices/factionSlice.js around lines 130-133, parseFloat() results are not assigned to anything during bonus computation. Either apply parsed values or remove the calls.",
+      "acceptanceCriteria": [
+        "parseFloat results assigned to variables and used in computation, OR calls removed",
+        "Bonus computation logic verified correct after change",
+        "npm run lint passes",
+        "npm run test:run passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Read the full bonus computation to understand what the parseFloat was intended for."
+    },
+    {
+      "id": "FIX-006",
+      "title": "Add Zod validation to userController update endpoint",
+      "description": "In server/src/controllers/userController.js line 42, req.body keys are iterated dynamically. While an 'allowed' list exists, there's no type validation per field. Add Zod schema validation.",
+      "acceptanceCriteria": [
+        "Create updateProfileSchema with Zod in the controller or a shared schemas file",
+        "Schema validates: displayName (string, 1-50 chars), avatar (string, optional), language (enum), etc.",
+        "Apply validate middleware to the route OR validate in controller before processing",
+        "Invalid field types return 400 with descriptive error",
+        "npm run test:run passes",
+        "npm run lint passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "Check existing Zod usage patterns in server/src/ before creating new schemas."
+    },
+    {
+      "id": "FIX-007",
+      "title": "Fix array mutation risk in factionSlice selectors",
+      "description": "In src/store/slices/factionSlice.js around line 20, .sort() is called on Object.entries() output during selector computation. Use spread to prevent potential mutation issues.",
+      "acceptanceCriteria": [
+        "Change Object.entries(alignment).sort(...) to [...Object.entries(alignment)].sort(...)",
+        "Verify selector still returns correct sorted results",
+        "npm run test:run passes",
+        "npm run lint passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "Small change. Object.entries returns a new array so this may be technically safe, but the spread makes intent explicit."
+    },
+    {
+      "id": "FIX-008",
+      "title": "Clean up unused imports and variables in test files and tools",
+      "description": "Remove unused imports: vi in src/utils/__tests__/shuffle.test.js, unused PASS/FAIL/WARN constants in tools/content-stats.js, unused acc parameter in content-stats reduce, stale eslint-disable in src/utils/itemStats.js.",
+      "acceptanceCriteria": [
+        "Remove unused vi import from src/utils/__tests__/shuffle.test.js",
+        "Remove or use PASS/FAIL/WARN in tools/content-stats.js",
+        "Fix unused acc parameter in tools/content-stats.js reduce callback",
+        "Remove stale eslint-disable comment in src/utils/itemStats.js line 76",
+        "npm run lint passes with fewer warnings than before",
+        "npm run test:run passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Batch of small cleanups. Read each file before modifying."
+    },
+    {
+      "id": "FIX-009",
+      "title": "Remove unused hijriCalendar constant",
+      "description": "In src/utils/hijriCalendar.js line 21, HIJRI_EPOCH_JDN is defined but never used. Either integrate it into the calendar conversion logic or remove it with a comment explaining the Islamic calendar approach used instead.",
+      "acceptanceCriteria": [
+        "HIJRI_EPOCH_JDN removed or used in actual date conversion",
+        "If removed, add brief comment explaining the conversion method used",
+        "npm run lint passes",
+        "npm run test:run passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "Read the full file to understand the calendar implementation before deciding."
+    },
+    {
+      "id": "FIX-010",
+      "title": "Wire FSRS mastery to action context",
+      "description": "In src/game/systems/actionContext.js line 30, there's a TODO: 'wire to FSRS mastery in future phase'. The vocabMastery field is a placeholder. Wire it to read from the FSRS/vocabulary slice to provide real mastery data.",
+      "acceptanceCriteria": [
+        "actionContext.vocabMastery reads from the vocabulary or FSRS slice state",
+        "Returns a mastery score (0-1) based on the player's overall vocabulary performance",
+        "Fallback to 0 if no review data exists",
+        "Remove the TODO comment",
+        "npm run test:run passes",
+        "npm run lint passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "Check how actionContext gets access to Redux state — may need store.getState() or a selector."
+    }
+  ]
+}

@@ -3,6 +3,7 @@
  * Phase 59: 12 existing + 6 Phase 60 stubs.
  * Phase 60: GrammarFill (minLevel:4), ClozePassage (minLevel:4), WordOrder (minLevel:5) renderers shipped.
  * Phase 68: DialectIdentify (minLevel:8), RootExpand (minLevel:8), CulturalContext (minLevel:8) — all 18 types active.
+ * Phase 80: ListeningComprehension (minLevel:3, A2, requiresTts), Dictation (minLevel:5, B1, requiresTts) — 20 types total.
  *
  * Fields:
  *   label    — Human-readable name (used by QuizOverlay header)
@@ -34,6 +35,9 @@ export const QUIZ_TYPE_REGISTRY = {
   'DialectIdentify': { label: 'Dialect Identify',    cluster: 'listening',  minLevel: 8,   cefrMin: 'B2' },
   'RootExpand':      { label: 'Root Expand',         cluster: 'roots',      minLevel: 8,   cefrMin: 'B2' },
   'CulturalContext': { label: 'Cultural Context',    cluster: 'reading',    minLevel: 8,   cefrMin: 'B2' },
+  // ── Phase 80 audio types (requires Web Speech API TTS) ──
+  'listening-comprehension': { label: 'Listening Comprehension', cluster: 'listening', minLevel: 3, cefrMin: 'A2', requiresTts: true },
+  'dictation':               { label: 'Dictation',              cluster: 'listening', minLevel: 5, cefrMin: 'B1', requiresTts: true },
 };
 
 /**
@@ -62,9 +66,10 @@ function isCefrEligible(typeEntry, cefrLevel) {
  * @returns {string} Quiz type key from QUIZ_TYPE_REGISTRY
  */
 export function selectQuizTypeForPlayer(clusterAccuracy, playerLevel, cefrLevel) {
-  // Filter to eligible types by level + CEFR
+  // Filter to eligible types by level + CEFR + TTS availability
   const eligible = Object.entries(QUIZ_TYPE_REGISTRY).filter(([, entry]) => {
     if (playerLevel < entry.minLevel) return false;
+    if (entry.requiresTts && typeof window !== 'undefined' && !window.speechSynthesis) return false;
     return isCefrEligible(entry, cefrLevel);
   });
 

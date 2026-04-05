@@ -48,6 +48,22 @@ const FactionPanel = lazy(() => import('../Faction/FactionPanel.jsx'));
 const PoetryBattleOverlay = lazy(() => import('../Poetry/PoetryBattleOverlay.jsx'));
 const WelcomeBackOverlay = lazy(() => import('../WelcomeBack/WelcomeBackOverlay.jsx'));
 const MicroReviewOverlay = lazy(() => import('../Quiz/MicroReviewOverlay.jsx'));
+const EventBanner = lazy(() => import('../Events/EventBanner.jsx'));
+const EventOverlay = lazy(() => import('../Events/EventOverlay.jsx'));
+const GiftOverlay = lazy(() => import('../NPC/GiftOverlay.jsx'));
+const RelationshipMilestone = lazy(() => import('../NPC/RelationshipMilestone.jsx'));
+const LoreCodex = lazy(() => import('../Lore/LoreCodex.jsx'));
+const DailyChallengeOverlay = lazy(() => import('../DailyChallenge/DailyChallengeOverlay.jsx'));
+const ReadingPassageOverlay = lazy(() => import('../Reading/ReadingPassageOverlay.jsx'));
+const WritingPracticeOverlay = lazy(() => import('../Writing/WritingPracticeOverlay.jsx'));
+const ConversationPracticeOverlay = lazy(() => import('../Conversation/ConversationPracticeOverlay.jsx'));
+const MiniGameHub = lazy(() => import('../MiniGames/MiniGameHub.jsx'));
+const SeasonalEventOverlay = lazy(() => import('../Seasonal/SeasonalEventOverlay.jsx'));
+const SeasonalEventBanner = lazy(() => import('../Seasonal/SeasonalEventBanner.jsx'));
+const BreakSuggestion = lazy(() => import('../UI/BreakSuggestion.jsx'));
+const DifficultyDashboard = lazy(() => import('../UI/DifficultyDashboard.jsx'));
+const ProgressReport = lazy(() => import('../Progress/ProgressReport.jsx'));
+const FeatureUnlockToast = lazy(() => import('../UI/FeatureUnlockToast.jsx'));
 
 import styles from './GameLayout.module.css';
 

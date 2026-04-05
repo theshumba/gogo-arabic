@@ -91,5 +91,5 @@ export const PANEL_PRESETS = Object.freeze({
   parchment: { texture: 'panel-parchment',       cornerSize: 6 },
   red:       { texture: 'panel-red',             cornerSize: 6 },
   tooltip:   { texture: 'panel-tooltip',         cornerSize: 4 },
-  kenmi:     { texture: 'kenmi-ui-frames-sheet', cornerSize: 6 },
+  kenmi:     { texture: 'kenmi-ui-ui-ui-frames', cornerSize: 6 },
 });

@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { QUIZ_TYPE_REGISTRY, selectQuizTypeForPlayer, CEFR_ORDER } from '../quizTypes.js';
 
 describe('QUIZ_TYPE_REGISTRY', () => {
-  it('exports exactly 18 quiz types', () => {
-    expect(Object.keys(QUIZ_TYPE_REGISTRY)).toHaveLength(18);
+  it('exports exactly 20 quiz types', () => {
+    expect(Object.keys(QUIZ_TYPE_REGISTRY)).toHaveLength(20);
   });
 
   it('all existing 12 types are present with real minLevel values', () => {

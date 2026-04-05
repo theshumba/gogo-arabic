@@ -1,0 +1,175 @@
+{
+  "project": "Gogo Arabic",
+  "branchName": "ralph/test-coverage-batch-1",
+  "description": "Server + Redux test coverage — fill critical gaps across auth, controllers, slices, and middleware",
+  "userStories": [
+    {
+      "id": "TEST-001",
+      "title": "Server auth middleware tests",
+      "description": "Add tests for server/src/middleware/auth.js — covers authenticate() and optionalAuth() functions. Test valid JWT, expired JWT, missing token, cookie-based vs header-based auth, and req.userId assignment.",
+      "acceptanceCriteria": [
+        "Test file at server/src/middleware/__tests__/auth.test.js",
+        "Tests: valid JWT sets req.userId, expired JWT returns 401, missing token returns 401, optionalAuth passes without token, cookie auth preferred over header",
+        "8+ test cases covering all branches",
+        "npm run test:run passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "Mock jsonwebtoken. Auth file is 64 lines, straightforward middleware."
+    },
+    {
+      "id": "TEST-002",
+      "title": "Server CSRF middleware tests",
+      "description": "Add tests for server/src/middleware/csrf.js — covers generateCsrfToken() and validateCsrfToken(). Test token generation, validation success, validation failure, timing-safe comparison, and GET/HEAD bypass.",
+      "acceptanceCriteria": [
+        "Test file at server/src/middleware/__tests__/csrf.test.js",
+        "Tests: token generated and set in cookie, valid token passes, invalid token returns 403, GET requests skip validation, timing-safe comparison used",
+        "8+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Mock crypto. CSRF file is 80 lines."
+    },
+    {
+      "id": "TEST-003",
+      "title": "Server error handler middleware tests",
+      "description": "Add tests for server/src/middleware/errorHandler.js — covers errorHandler() and notFoundHandler(). Test error conversion to AppError, different status codes, dev vs prod stack trace exposure, and 404 handling.",
+      "acceptanceCriteria": [
+        "Test file at server/src/middleware/__tests__/errorHandler.test.js",
+        "Tests: generic error becomes 500, AppError preserves status, stack trace shown in dev, stack trace hidden in prod, notFoundHandler returns 404",
+        "8+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Error handler is 65 lines. Mock req/res/next."
+    },
+    {
+      "id": "TEST-004",
+      "title": "Server request validation middleware tests",
+      "description": "Add tests for server/src/middleware/validate.js — Zod schema validation factory. Test body validation pass, body validation fail with error details, query param validation, and params validation.",
+      "acceptanceCriteria": [
+        "Test file at server/src/middleware/__tests__/validate.test.js",
+        "Tests: valid body passes, invalid body returns 400 with Zod errors, query validation works, params validation works, multiple field errors aggregated",
+        "8+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "Validate.js is 34 lines. Use real Zod schemas in tests."
+    },
+    {
+      "id": "TEST-005",
+      "title": "Server game controller tests",
+      "description": "Add tests for server/src/controllers/gameController.js — covers saveGame() and loadGame(). Test save with version conflict detection, successful save, load existing state, load empty state, and syncVersion bumping.",
+      "acceptanceCriteria": [
+        "Test file at server/src/controllers/__tests__/gameController.test.js",
+        "Tests: save creates game state, save detects version conflict, save bumps syncVersion, load returns existing state, load returns empty for new user",
+        "10+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Game controller is 256 lines. Mock User model."
+    },
+    {
+      "id": "TEST-006",
+      "title": "Server auth controller tests",
+      "description": "Add tests for server/src/controllers/authController.js — covers register(), login(), logout(). Test successful registration, duplicate email, login with correct/wrong password, JWT cookie setting, and logout cookie clearing.",
+      "acceptanceCriteria": [
+        "Test file at server/src/controllers/__tests__/authController.test.js",
+        "Tests: register creates user + sets cookies, duplicate email returns 409, login success sets JWT cookie, login wrong password returns 401, logout clears cookies",
+        "10+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "Auth controller is 187 lines. Mock User model and bcrypt."
+    },
+    {
+      "id": "TEST-007",
+      "title": "Server shop controller tests",
+      "description": "Add tests for server/src/controllers/shopController.js — covers purchaseItem(). Test successful purchase, insufficient currency, item not found, inventory full, and currency deduction math.",
+      "acceptanceCriteria": [
+        "Test file at server/src/controllers/__tests__/shopController.test.js",
+        "Tests: purchase deducts currency + adds item, insufficient gold returns 400, invalid item returns 404, currency math is correct after purchase",
+        "8+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "Shop controller is 72 lines. Mock User model."
+    },
+    {
+      "id": "TEST-008",
+      "title": "craftingSlice tests",
+      "description": "Add tests for src/store/slices/craftingSlice.js (347 lines). Test recipe unlock, ingredient management, crafting action outcomes, and crafting effects. This is the largest untested slice.",
+      "acceptanceCriteria": [
+        "Test file at src/store/slices/__tests__/craftingSlice.test.js",
+        "Tests: initial state correct, recipe unlocked, ingredient added/removed, crafting succeeds with valid ingredients, crafting fails with missing ingredients, crafting effects applied",
+        "12+ test cases covering all reducers and selectors",
+        "npm run test:run passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Pure Redux slice — highly testable. Read existing slice test patterns in __tests__/ first."
+    },
+    {
+      "id": "TEST-009",
+      "title": "inventorySlice tests",
+      "description": "Add tests for src/store/slices/inventorySlice.js (318 lines). Test equipment slots, item add/remove, affixes, enchantments, item locking, and capacity checks.",
+      "acceptanceCriteria": [
+        "Test file at src/store/slices/__tests__/inventorySlice.test.js",
+        "Tests: initial state, add item, remove item, equip to slot, unequip, inventory capacity check, item locking, enchantment validation",
+        "12+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "318 lines. Watch for the capacity check at items.length >= 200."
+    },
+    {
+      "id": "TEST-010",
+      "title": "journalSlice tests",
+      "description": "Add tests for src/store/slices/journalSlice.js (344 lines). Test journal entry creation, quest notes, discovery tracking, pagination, and search/filtering.",
+      "acceptanceCriteria": [
+        "Test file at src/store/slices/__tests__/journalSlice.test.js",
+        "Tests: initial state, add entry, add quest note, track discovery, entries sorted by date, search filters correctly",
+        "10+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "344 lines. Pure Redux state."
+    },
+    {
+      "id": "TEST-011",
+      "title": "factionMiddleware tests",
+      "description": "Add tests for src/store/middleware/factionMiddleware.js (206 lines). Test auto faction score adjustment on quest completion, purchases, dialogue, tier threshold crossing, and vocabulary rewards.",
+      "acceptanceCriteria": [
+        "Test file at src/store/middleware/__tests__/factionMiddleware.test.js",
+        "Tests: quest completion adjusts faction score, purchase adjusts score, tier threshold crossed dispatches event, vocabulary reward granted at tier up, score clamped to valid range",
+        "10+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": "Largest middleware at 206 lines. Follow existing middleware test patterns."
+    },
+    {
+      "id": "TEST-012",
+      "title": "magicSlice tests",
+      "description": "Add tests for src/store/slices/magicSlice.js (274 lines). Test root magic spells, element types, spell learning, spell validation, and element logic.",
+      "acceptanceCriteria": [
+        "Test file at src/store/slices/__tests__/magicSlice.test.js",
+        "Tests: initial state, learn spell, spell already learned, element type assignment, root use recorded, spell validation passes/fails",
+        "10+ test cases",
+        "npm run test:run passes"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": "274 lines. Note: 'form' destructured but unused in recordRootUse — don't fix, just test what exists."
+    }
+  ]
+}

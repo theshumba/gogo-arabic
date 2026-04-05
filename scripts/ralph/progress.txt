@@ -1,0 +1,40 @@
+# Ralph Progress Log — Gogo Arabic
+Started: 2026-04-05
+
+## Codebase Patterns
+- Redux slices in src/slices/ — 35+ slices, follow existing createSlice patterns
+- Middleware in src/middleware/ — 19 middleware, each in its own file
+- Tests co-located or in __tests__/ directories, using Vitest
+- Phaser scenes in src/phaser/ — DO NOT modify visual/world rendering
+- Loading screen is sacred — never touch koi fish / Gogo Arabic / Yala Arabic screen
+- Art assets at public/assets/kenmi/ — 969 PNGs from Kenmi Cute Fantasy bundle
+- Quality gate: npm run test:run && npm run lint && npm run build
+- Server patterns: routes in server/src/routes/, models in server/src/models/, controllers in server/src/controllers/, validation schemas in server/src/validation/
+- Route registration in server/src/app.js — both versioned (/api/v1/) and backward compat (/api/) paths
+- Tests use MongoMemoryServer, createTestUser() from server/test/helpers.js, supertest for HTTP
+- Auth: set Authorization header with Bearer token, middleware sets req.userId
+- Validate middleware: validate(schema) for body, validate(schema, 'params') for params, validate(schema, 'query') for query
+- Pre-existing lint errors (168) are in other files — always verify your new files have zero lint issues
+---
+
+## 2026-04-05 - GROW-001: NPC state persistence model and API
+- Created MongoDB model NpcState with compound unique index on (userId, npcId)
+- Schema: userId, npcId, relationship (0-100), dialogueChoices [], questsGiven [], lastInteraction timestamp
+- POST /api/v1/npcs/:npcId/state — save/upsert NPC state
+- GET /api/v1/npcs/:npcId/state — load single NPC state
+- GET /api/v1/npcs/states — batch load all NPC states for user
+- Zod validation on inputs, auth middleware on all routes
+- 15 integration tests covering save, load, batch load, upsert, missing NPC, unauthorized access, cross-user isolation, validation
+- Files changed:
+  - server/src/models/NpcState.js (new)
+  - server/src/validation/npcSchemas.js (new)
+  - server/src/controllers/npcController.js (new)
+  - server/src/routes/npc.js (new)
+  - server/src/routes/__tests__/npc.test.js (new)
+  - server/src/app.js (modified — route registration)
+- **Learnings for future iterations:**
+  - Batch load endpoint (/states) must be registered BEFORE parameterized routes (/:npcId) to avoid conflicts
+  - findOneAndUpdate with upsert:true + new:true is the pattern for save-or-create
+  - Empty body POST with defaults works fine — Mongoose schema defaults fill in
+  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
+---

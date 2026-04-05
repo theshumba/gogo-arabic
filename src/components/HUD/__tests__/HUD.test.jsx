@@ -221,15 +221,15 @@ describe('HUD Component', () => {
     expect(state.ui.dialogueConfig.type).toBe('quest-log');
   });
 
-  it('should open achievements panel when Achievements button is clicked', () => {
-    const { EventBus } = vi.mocked(await import('../../../utils/eventBus.js'));
+  it('should open achievements panel when Achievements button is clicked', async () => {
+    const { EventBus } = await import('../../../utils/eventBus.js');
     renderWithProviders(<HUD onMenu={mockOnMenu} />);
 
     const achievementsButton = screen.getByLabelText(/achievements/i);
     fireEvent.click(achievementsButton);
 
     // AchievementPanel is lazy-loaded; verify player was frozen (panel opened)
-    expect(EventBus.emit).toHaveBeenCalledWith('PLAYER_FREEZE');
+    expect(EventBus.emit).toHaveBeenCalledWith('react:player:freeze');
     // The Achievements button is still in the DOM
     expect(achievementsButton).toBeInTheDocument();
   });

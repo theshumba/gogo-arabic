@@ -36,6 +36,21 @@ import endgameReducer from './slices/endgameSlice.js';
 import placementReducer from './slices/placementSlice.js';
 import cefrProgressReducer from './slices/cefrProgressSlice.js';
 import analyticsReducer from './slices/analyticsSlice.js';
+import eventReducer from './slices/eventSlice.js';
+import loreReducer from './slices/loreSlice.js';
+import dailyChallengeReducer from './slices/dailyChallengeSlice.js';
+import readingReducer from './slices/readingSlice.js';
+import writingReducer from './slices/writingSlice.js';
+import conversationReducer from './slices/conversationSlice.js';
+import miniGameReducer from './slices/miniGameSlice.js';
+import seasonalEventReducer from './slices/seasonalEventSlice.js';
+import difficultyReducer from './slices/difficultySlice.js';
+import leaderboardReducer from './slices/leaderboardSlice.js';
+import onboardingReducer from './slices/onboardingSlice.js';
+import extendedAnalyticsReducer from './slices/extendedAnalyticsSlice.js';
+import phoneticsReducer from './slices/phoneticsSlice.js';
+import idiomReducer from './slices/idiomSlice.js';
+import linguisticCombatReducer from './slices/linguisticCombatSlice.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
 import { storageQuotaMiddleware } from './middleware/storageQuotaMiddleware.js';
@@ -52,6 +67,10 @@ import { poetryRewardsMiddleware } from './middleware/poetryRewardsMiddleware.js
 import { learningProgressMiddleware } from './middleware/learningProgressMiddleware.js';
 import { offlineFsrsMiddleware } from './middleware/offlineFsrsMiddleware.js';
 import { grammarFsrsMiddleware } from './middleware/grammarFsrsMiddleware.js';
+import { divergentExperienceMiddleware } from './middleware/divergentExperienceMiddleware.js';
+import relationshipMiddleware from './middleware/relationshipMiddleware.js';
+import loreMiddleware from './middleware/loreMiddleware.js';
+import { difficultyMiddleware } from './middleware/difficultyMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -187,6 +206,21 @@ const persistConfig = {
     'placement',
     'cefrProgress',
     'analytics',
+    'event',
+    'lore',
+    'dailyChallenge',
+    'reading',
+    'writing',
+    'conversation',
+    'miniGame',
+    'seasonalEvent',
+    'difficulty',
+    'leaderboard',
+    'onboarding2',
+    'extendedAnalytics',
+    'phonetics',
+    'idiom',
+    'linguisticCombat',
   ],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
@@ -226,6 +260,21 @@ const rootReducer = combineReducers({
   placement: placementReducer,
   cefrProgress: cefrProgressReducer,
   analytics: analyticsReducer,
+  event: eventReducer,
+  lore: loreReducer,
+  dailyChallenge: dailyChallengeReducer,
+  reading: readingReducer,
+  writing: writingReducer,
+  conversation: conversationReducer,
+  miniGame: miniGameReducer,
+  seasonalEvent: seasonalEventReducer,
+  difficulty: difficultyReducer,
+  leaderboard: leaderboardReducer,
+  onboarding2: onboardingReducer,
+  extendedAnalytics: extendedAnalyticsReducer,
+  phonetics: phoneticsReducer,
+  idiom: idiomReducer,
+  linguisticCombat: linguisticCombatReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -238,7 +287,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware),
 });
 
 export const persistor = persistStore(store);

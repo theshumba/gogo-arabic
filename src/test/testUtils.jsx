@@ -36,6 +36,7 @@ import worldStateReducer from '../store/slices/worldStateSlice.js';
 import cefrProgressReducer from '../store/slices/cefrProgressSlice.js';
 import analyticsReducer from '../store/slices/analyticsSlice.js';
 import placementReducer from '../store/slices/placementSlice.js';
+import phoneticsReducer from '../store/slices/phoneticsSlice.js';
 
 /**
  * Creates a test store with optional preloaded state.
@@ -77,6 +78,7 @@ export function createTestStore(preloadedState = {}) {
     cefrProgress: cefrProgressReducer,
     analytics: analyticsReducer,
     placement: placementReducer,
+    phonetics: phoneticsReducer,
   });
 
   return configureStore({
