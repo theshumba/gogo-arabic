@@ -5,6 +5,12 @@ const initialState = {
   hagglingHistory: [],     // [{ shopId, itemId, offered, accepted, timestamp }] — last 50
   priceModifiers: {},      // { shopId: multiplier } — reputation-based price adjustments
   supplyLevels: {},        // { [shopId]: { [itemId]: { current: number, max: number } } }
+  dynamicPricing: {
+    purchaseCounts: {},    // { itemId: count } — since last weekly reset
+    priceMultipliers: {},  // { itemId: multiplier } — current price multiplier (1.0 base)
+    lastWeekKey: null,     // ISO week string e.g. "2026-W14" — for weekly reset detection
+    lastDayKey: null,      // ISO date string e.g. "2026-04-06" — for daily decay detection
+  },
 };
 
 const economySlice = createSlice({
@@ -104,6 +110,60 @@ const economySlice = createSlice({
         entry.current = Math.min(entry.max, entry.current + restore);
       }
     },
+
+    // ── Dynamic pricing ───────────────────────────────────────────────────────
+
+    /**
+     * recordDynamicPurchase — increment purchase count + raise multiplier by 0.05 (max 2.0).
+     * payload: { itemId: string }
+     */
+    recordDynamicPurchase(state, action) {
+      const { itemId } = action.payload;
+      const dp = state.dynamicPricing;
+      if (dp.priceMultipliers[itemId] === undefined) {
+        dp.priceMultipliers[itemId] = 1.0;
+      }
+      if (dp.purchaseCounts[itemId] === undefined) {
+        dp.purchaseCounts[itemId] = 0;
+      }
+      dp.purchaseCounts[itemId] += 1;
+      dp.priceMultipliers[itemId] = Math.min(2.0, dp.priceMultipliers[itemId] + 0.05);
+    },
+
+    /**
+     * applyDailyDecay — reduce all tracked multipliers by 0.1 (min 0.5) and advance day key.
+     * payload: { dayKey: string }
+     */
+    applyDailyDecay(state, action) {
+      const { dayKey } = action.payload;
+      state.dynamicPricing.lastDayKey = dayKey;
+      const multipliers = state.dynamicPricing.priceMultipliers;
+      for (const itemId of Object.keys(multipliers)) {
+        multipliers[itemId] = Math.max(0.5, multipliers[itemId] - 0.1);
+      }
+    },
+
+    /**
+     * resetWeeklyPricing — reset all multipliers to 1.0 and clear purchase counts.
+     * Called on Monday UTC (new ISO week). Also used to initialise on first purchase ever.
+     * payload: { weekKey: string }
+     */
+    resetWeeklyPricing(state, action) {
+      const { weekKey } = action.payload;
+      state.dynamicPricing.lastWeekKey = weekKey;
+      state.dynamicPricing.lastDayKey = null;
+      state.dynamicPricing.purchaseCounts = {};
+      state.dynamicPricing.priceMultipliers = {};
+    },
+
+    /**
+     * setDynamicPricingDay — record the current day key without applying decay.
+     * Used to initialise tracking at the start of a fresh week.
+     * payload: { dayKey: string }
+     */
+    setDynamicPricingDay(state, action) {
+      state.dynamicPricing.lastDayKey = action.payload.dayKey;
+    },
   },
 });
 
@@ -116,6 +176,10 @@ export const {
   initSupply,
   decreaseSupply,
   restoreSupply,
+  recordDynamicPurchase,
+  applyDailyDecay,
+  resetWeeklyPricing,
+  setDynamicPricingDay,
 } = economySlice.actions;
 
 // ────────────────────────────────────────────────
@@ -130,5 +194,31 @@ export const selectPriceModifier = (shopId) => (state) => state.economy.priceMod
 
 /** ECON-01: Select supply levels for a specific shop. */
 export const selectSupplyLevels = (shopId) => (state) => state.economy.supplyLevels[shopId] || {};
+
+// ── Dynamic pricing selectors ─────────────────────────────────────────────
+
+/** Returns current price multiplier for an item (defaults to 1.0). */
+export const selectPriceMultiplier = (itemId) => (state) =>
+  state.economy.dynamicPricing.priceMultipliers[itemId] ?? 1.0;
+
+/**
+ * selectAdjustedPrice(itemId, basePrice) — apply dynamic multiplier to a base price.
+ * Returns Math.round(basePrice * multiplier).
+ */
+export const selectAdjustedPrice = (itemId, basePrice) => (state) => {
+  const multiplier = state.economy.dynamicPricing.priceMultipliers[itemId] ?? 1.0;
+  return Math.round(basePrice * multiplier);
+};
+
+/**
+ * selectDealOfTheDay() — returns the itemId with the lowest current multiplier,
+ * or null if no items are tracked.
+ */
+export const selectDealOfTheDay = () => (state) => {
+  const multipliers = state.economy.dynamicPricing.priceMultipliers;
+  const entries = Object.entries(multipliers);
+  if (entries.length === 0) return null;
+  return entries.reduce((min, cur) => (cur[1] < min[1] ? cur : min))[0];
+};
 
 export default economySlice.reducer;
