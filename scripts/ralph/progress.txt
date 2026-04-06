@@ -284,3 +284,25 @@ Started: 2026-04-05
   - Templates can be tested for full coverage by iterating 30 different dates and checking all 4 types appear
   - Test count: 3795 all pass, 0 lint errors on new files, build succeeds
 ---
+
+## 2026-04-06 - GROW-012: Economy rebalancing — dynamic shop pricing middleware
+- Added `dynamicPricing` state to economySlice: purchaseCounts, priceMultipliers, lastWeekKey, lastDayKey
+- 4 new reducers: recordDynamicPurchase (+0.05, max 2.0), applyDailyDecay (-0.1, min 0.5), resetWeeklyPricing (clear all → 1.0), setDynamicPricingDay (init day key without decay)
+- Created economyMiddleware.js — intercepts economy/recordPurchase, applies weekly reset, daily decay, then increments multiplier
+- Weekly reset: fires when ISO week key changes (Monday UTC); first-ever purchase initialises week key via same reset path
+- Daily decay: lazy — applied on next purchase event when calendar day changes; first purchase of week only initialises day key (no decay)
+- Selectors: selectPriceMultiplier(itemId), selectAdjustedPrice(itemId, basePrice), selectDealOfTheDay()
+- 22 tests covering: date helpers, pass-through, no itemId, +0.05 increment, 2.0x cap, purchase counts, daily decay on day change, 0.5x floor, no decay same day, weekly reset, week init, all selectors, multiple items, deal selection
+- Key fix: test for floor used days Apr 7-13 crossing into new week (reset!) — corrected to Apr 7-12 (6 days in same ISO week)
+- Files changed:
+  - src/store/slices/economySlice.js (modified — dynamicPricing state, 4 new actions, 3 new selectors)
+  - src/store/middleware/economyMiddleware.js (new)
+  - src/store/middleware/__tests__/economyMiddleware.test.js (new)
+  - src/store/store.js (modified — import + register economyMiddleware)
+- **Learnings for future iterations:**
+  - ISO week boundary is Monday UTC — a test spanning Sun→Mon crosses weeks and triggers weekly reset
+  - `grep "error" | wc -l` over-counts lint errors because "no-undef" annotation text contains "error" — use the ESLint summary line `✖ N problems (M errors, ...)` for accurate count
+  - Re-entrancy guard pattern (`_isProcessing` flag) is the standard for middlewares that dispatch back to the same slice
+  - getWeekKey/getDayKey exported as named exports make them independently unit-testable
+  - Test count: 3817 all pass, 0 lint errors on new files (168 pre-existing), build succeeds
+---
