@@ -232,3 +232,34 @@ Started: 2026-04-05
   - bindNoopExternals helper pattern: iterate known external names with try/catch to skip undeclared ones
   - Test count: 3717 all pass, 0 lint errors on new files, build succeeds
 ---
+
+## 2026-04-06 - GROW-010: Expand Desert zone NPC dialogues — 5 new conversation trees
+- Created 5 new Ink dialogue scripts for Desert zone NPCs (trader-hassan, wanderer-ali, weaver-zahra, carpet-seller-jamal, poet-desert)
+- Each dialogue: 3 intro choices, hub with 4-5 options, comprehension check, Arabic at A2-B1 level
+- Arabic vocabulary at higher complexity: multi-clause sentences, lore references (silk road, mu'allaqat poetry, Islamic geometric art, weaving traditions)
+- #vocab:word_id tags on teaching lines in all 5 dialogues
+- Quest hooks in 4 dialogues: trader-hassan→silk_road_investigation, wanderer-ali→desert_paths, weaver-zahra→artisan_patterns, poet-desert→ancient_verses
+- Faction choices in 2 dialogues: trader-hassan and carpet-seller-jamal both offer merchants guild (setFlag("merchants_guild_supported"))
+- wanderer-ali offers travelers brotherhood (setFlag("travelers_brotherhood_joined")), poet-desert offers artists guild (setFlag("artists_guild_supported"))
+- All 5 .ink files compiled to .ink.json via `npm run ink:compile` (27 files total compiled)
+- InkDialogueEngine auto-discovers via import.meta.glob — no explicit registration needed
+- 44 tests covering: JSON structure, Story instantiation, canContinue, Arabic content, 3+ choices, hub choices, 12+ lines, 4 quest hooks, 2 faction choices, comprehension checks, vocab tags, A2-B1 complexity, file discovery
+- Files changed:
+  - src/data/ink-source/trader-hassan.ink (new)
+  - src/data/ink-source/wanderer-ali.ink (new)
+  - src/data/ink-source/weaver-zahra.ink (new)
+  - src/data/ink-source/carpet-seller-jamal.ink (new)
+  - src/data/ink-source/poet-desert.ink (new)
+  - src/data/ink/trader-hassan.ink.json (compiled)
+  - src/data/ink/wanderer-ali.ink.json (compiled)
+  - src/data/ink/weaver-zahra.ink.json (compiled)
+  - src/data/ink/carpet-seller-jamal.ink.json (compiled)
+  - src/data/ink/poet-desert.ink.json (compiled)
+  - src/data/__tests__/desertDialogues.test.js (new)
+- **Learnings for future iterations:**
+  - Desert NPCs: trader-hassan, wanderer-ali, weaver-zahra, carpet-seller-jamal are in desert_marketplace; poet-desert is in desert_expanse
+  - No `changeFactionReputation` external exists in InkDialogueEngine — use `setFlag` with descriptive names (e.g., "merchants_guild_supported") as faction-affecting markers
+  - A2-B1 complexity check: filter Arabic lines by length > 30 chars as a proxy for multi-clause sentences
+  - Faction choices in 2+ dialogues: use same flag name across NPCs (merchants_guild_supported) so tests can verify consistently
+  - Test count: 3761 all pass, 0 lint errors on new files (1 warning same pattern as oasisDialogues), build succeeds
+---

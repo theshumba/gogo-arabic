@@ -178,7 +178,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "Desert zone is harder than Oasis. Check existing zone definitions for Desert NPCs."
     },
     {
