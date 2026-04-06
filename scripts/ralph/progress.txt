@@ -182,3 +182,53 @@ Started: 2026-04-05
   - joinedAt set on first positive reputation interaction (not on creation) — captures meaningful engagement timestamp
   - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
 ---
+
+## 2026-04-05 - GROW-008: Dynamic NPC schedule system
+- Created src/data/npcSchedules.js with schedule data for all 30 NPCs
+- Each NPC has 3-4 schedule blocks covering the full 24-hour cycle (morning/afternoon/evening/night)
+- Schedule blocks: { timeStart, timeEnd, location, activity } — supports overnight wrapping (e.g., 21:00-05:00)
+- getNpcLocation(npcId, gameHour) — returns current { location, activity } for an NPC, handles hour normalization
+- getNpcsAtLocation(locationId, gameHour) — returns all NPCs at a location with their activities
+- 9 zones used across schedules: oasis_village, ancient_library, desert_marketplace, farmland, bedouin_camp, mountain_village, coastal_port, royal_palace, garden_district
+- NPCs travel between zones during the day (e.g., scholar-yusuf teaches at ancient_library 8-17, returns to oasis_village evenings)
+- 23 tests covering: data structure (30 NPCs, 3-4 blocks each, required fields, valid hours, 24h coverage, valid locations), getNpcLocation (normal hours, overnight, boundaries, unknown NPC, midnight, hour 23, normalization of >24 and negative hours, exhaustive all-NPC-all-hour check), getNpcsAtLocation (morning population, activity check, empty locations, time-varying population, unknown location, uniqueness, overnight transitions)
+- Files changed:
+  - src/data/npcSchedules.js (new)
+  - src/data/__tests__/npcSchedules.test.js (new)
+- **Learnings for future iterations:**
+  - Overnight time ranges (timeStart > timeEnd) need special handling: gameHour >= timeStart OR gameHour < timeEnd
+  - Hour normalization with ((h % 24) + 24) % 24 handles both >24 and negative inputs cleanly
+  - This is a pure data + utility module — no Redux integration needed since TimeSystem already provides game hour via selectGameTime
+  - The npcs-meta.json already has partial schedule data for 4 NPCs; this new module provides complete standalone schedules for all 30
+  - Zone IDs from zones.js: oasis_village, ancient_library, desert_marketplace, farmland, bedouin_camp, mountain_village, coastal_port, royal_palace. Added garden_district from NPC data (poet-rumi, garden-keeper-leila home zone)
+  - Test count: 3676 all pass, 0 lint errors on new files, build succeeds
+---
+
+## 2026-04-06 - GROW-009: Expand Oasis zone NPC dialogues — 5 new conversation trees
+- Created 5 new Ink dialogue scripts for Oasis zone NPCs (guard-hamza, herbalist-maryam, baker-yasmin, imam-muhammad, guide-salim)
+- Each dialogue follows existing pattern: EXTERNAL declarations, VAR routing, first_meeting/returning_visitor/casual_return knots, NPC hub with 3+ choices, comprehension check
+- Arabic vocabulary woven naturally into dialogue at A1-A2 level
+- #vocab:word_id tags added to lines teaching new vocabulary (e.g. #vocab:bread_1, #vocab:honey_1, #vocab:camel_1)
+- Quest hooks in 4 dialogues: guard-hamza→guard_directions, herbalist-maryam→farm_nature, imam-muhammad→palace_faith, guide-salim→words_of_oasis
+- All 5 .ink files compiled to .ink.json via `npm run ink:compile` (22 files total compiled)
+- InkDialogueEngine auto-discovers new files via import.meta.glob — no explicit registration needed
+- 41 tests covering: JSON structure, Story instantiation, Arabic content, branching choices, 10+ dialogue lines, all 4 quest hooks, comprehension check calls, vocab tags, NPC naming convention
+- Files changed:
+  - src/data/ink-source/guard-hamza.ink (new)
+  - src/data/ink-source/herbalist-maryam.ink (new)
+  - src/data/ink-source/baker-yasmin.ink (new)
+  - src/data/ink-source/imam-muhammad.ink (new)
+  - src/data/ink-source/guide-salim.ink (new)
+  - src/data/ink/guard-hamza.ink.json (compiled)
+  - src/data/ink/herbalist-maryam.ink.json (compiled)
+  - src/data/ink/baker-yasmin.ink.json (compiled)
+  - src/data/ink/imam-muhammad.ink.json (compiled)
+  - src/data/ink/guide-salim.ink.json (compiled)
+  - src/data/__tests__/oasisDialogues.test.js (new)
+- **Learnings for future iterations:**
+  - InkDialogueEngine uses import.meta.glob('../data/ink/*.ink.json') — registration is just creating the file with correct npcId name
+  - #vocab:word_id is an inline ink tag — accessible via story.currentTags, ignored by engine until handled
+  - Quest choice text search in tests must be precise: "اختبريني عن الأعشاب" matches "أعشاب" before the actual quest choice — use unique substrings like "ساعدي" or "في جمع"
+  - bindNoopExternals helper pattern: iterate known external names with try/catch to skip undeclared ones
+  - Test count: 3717 all pass, 0 lint errors on new files, build succeeds
+---

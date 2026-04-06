@@ -142,7 +142,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "Read TimeSystem.js and DayNightCycle.js to understand how game time works. DO NOT modify Phaser scenes."
     },
     {
@@ -160,7 +160,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "Read existing .ink files in src/data/ink/ for the format. Use npm run ink:compile to compile. Keep Arabic at A1-A2 level for Oasis zone."
     },
     {
