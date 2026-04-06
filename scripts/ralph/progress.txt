@@ -263,3 +263,24 @@ Started: 2026-04-05
   - Faction choices in 2+ dialogues: use same flag name across NPCs (merchants_guild_supported) so tests can verify consistently
   - Test count: 3761 all pass, 0 lint errors on new files (1 warning same pattern as oasisDialogues), build succeeds
 ---
+---
+
+## 2026-04-06 - GROW-011: Dynamic quest generation service
+- Created src/services/questGenerator.js with deterministic daily/weekly quest generation
+- 4 quest templates: vocab_collection, battle_wins, crafting, npc_interaction
+- Seeded PRNG: mulberry32 algorithm — createSeededRng(seed) → same seed = same sequence
+- Seed derivation: deriveSeed(dateInt, level) = ((YYYYMMDD * 31 + level) * 1000003) >>> 0
+- generateDailyQuests(playerState, date) → exactly 3 quests, no template repeats per day
+- generateWeeklyQuest(playerState, date) → 1 weekly quest with larger target, week-scoped via ISO week integer
+- Difficulty scales via scaleTarget(base, increment, min, max, level) and scaleXp(base, level) — +10% XP per level
+- 34 tests covering: PRNG properties, date conversion, scaling helpers, determinism, 3-daily count, template diversity, difficulty scaling, edge cases, weekly quest fields
+- Files changed:
+  - src/services/questGenerator.js (new)
+  - src/services/__tests__/questGenerator.test.js (new)
+- **Learnings for future iterations:**
+  - mulberry32 PRNG: seed += 0x6d2b79f5; bit manipulation chain — fast, deterministic, good distribution
+  - Daily template selection: sort TEMPLATES array with rng()-0.5 comparator, then slice(0,3) — guarantees 3 unique types
+  - Weekly seed uses dateToWeekInt (ISO week number × year) so any day in the same week returns same quest
+  - Templates can be tested for full coverage by iterating 30 different dates and checking all 4 types appear
+  - Test count: 3795 all pass, 0 lint errors on new files, build succeeds
+---
