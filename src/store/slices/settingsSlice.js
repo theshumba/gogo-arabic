@@ -24,6 +24,7 @@ const initialState = {
   highContrast: false,            // Boost contrast for all UI elements
   screenReaderMode: false,        // Extra ARIA labels + live announcements
   pronunciationPractice: false,    // Opt-in mic button for pronunciation feedback
+  spacedListeningEnabled: false,   // Passive Arabic audio during exploration
 };
 
 const settingsSlice = createSlice({
@@ -109,6 +110,9 @@ const settingsSlice = createSlice({
     togglePronunciationPractice(state) {
       state.pronunciationPractice = !state.pronunciationPractice;
     },
+    toggleSpacedListening(state) {
+      state.spacedListeningEnabled = !state.spacedListeningEnabled;
+    },
   },
 });
 
@@ -135,6 +139,7 @@ export const {
   setHighContrast,
   setScreenReaderMode,
   togglePronunciationPractice,
+  toggleSpacedListening,
 } = settingsSlice.actions;
 
 // --- Selectors ---
@@ -161,5 +166,6 @@ export const selectReducedMotion = (state) => state.settings.reducedMotion;
 export const selectHighContrast = (state) => state.settings.highContrast;
 export const selectScreenReaderMode = (state) => state.settings.screenReaderMode;
 export const selectPronunciationPractice = (state) => state.settings.pronunciationPractice;
+export const selectSpacedListeningEnabled = (state) => state.settings.spacedListeningEnabled;
 
 export default settingsSlice.reducer;

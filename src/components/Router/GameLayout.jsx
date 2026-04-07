@@ -1,5 +1,8 @@
 import React, { useRef, useEffect, useState, useCallback, lazy, Suspense } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
+import { startListening, stopListening } from '../../services/spacedListeningService.js';
+import { selectSpacedListeningEnabled } from '../../store/slices/settingsSlice.js';
+import vocabularyAll from '../../data/vocabularyAll.js';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { toggleMenu, selectAnyOverlayOpen, selectInventoryOpen, closeInventory, selectRecipeBookOpen, closeRecipeBook, selectCraftingMiniGameActive, selectCraftingRecipeId, selectCraftingProfessionId, startCraftingMiniGame, endCraftingMiniGame, selectJournalOpen, openJournal, closeJournal } from '../../store/slices/uiSlice.js';
@@ -78,12 +81,24 @@ export default function GameLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { playSFX } = useAudio();
+  const store = useStore();
+  const spacedListeningEnabled = useSelector(selectSpacedListeningEnabled);
 
   // Custom hooks for EventBus, session tracking, and keyboard shortcuts
   useEventBusListeners(phaserRef, playSFX, navigate);
   useSessionTracking();
   useKeyboardShortcuts();
   useTutorialTrigger();
+
+  // Spaced listening — starts/stops based on settings toggle, stops on unmount
+  useEffect(() => {
+    if (spacedListeningEnabled) {
+      startListening(store.getState.bind(store), vocabularyAll);
+    } else {
+      stopListening();
+    }
+    return () => { stopListening(); };
+  }, [spacedListeningEnabled, store]);
 
   // UI state selectors — declared early so the emergency reset effect below can use them
   const dialogueOpen = useSelector((state) => state.ui.dialogueOpen);

@@ -9,6 +9,7 @@ import {
   toggleTransliteration,
   toggleDiacritics,
   setKeyboardMode,
+  toggleSpacedListening,
 } from '../../store/slices/settingsSlice.js';
 import { selectPlacement, resetPlacement, recordPlacementResult } from '../../store/slices/placementSlice.js';
 import { resetCefrProgress, setCefrLevel } from '../../store/slices/cefrProgressSlice.js';
@@ -120,6 +121,17 @@ export default function SettingsMenu({ onBack }) {
                 onChange={(e) => dispatch(setPronunciationVolume(+e.target.value))} className={styles.slider} />
               <span className={styles.volumeValue}>{settings.pronunciationVolume}%</span>
             </div>
+          </div>
+
+          <div className={styles.settingRow}>
+            <span className={styles.label}>Spaced Listening</span>
+            <button
+              className={settings.spacedListeningEnabled ? styles.toggleOn : styles.toggleOff}
+              onClick={() => dispatch(toggleSpacedListening())}
+              aria-label={`Spaced listening ${settings.spacedListeningEnabled ? 'on' : 'off'}`}
+            >
+              {settings.spacedListeningEnabled ? 'ON' : 'OFF'}
+            </button>
           </div>
         </div>
 
