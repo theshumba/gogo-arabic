@@ -1,5 +1,25 @@
 import User from '../models/User.js';
 import { AppError } from '../utils/AppError.js';
+import { z } from 'zod';
+
+const updateProfileSchema = z.object({
+  name: z.string().min(1).max(50).optional(),
+  character: z.object({
+    bodyType: z.string().optional(),
+    skinTone: z.string().optional(),
+    outfit: z.string().optional(),
+    headwear: z.string().nullable().optional(),
+  }).optional(),
+  settings: z.object({
+    volumeAmbience: z.number().min(0).max(1).optional(),
+    volumeSFX: z.number().min(0).max(1).optional(),
+    volumeWords: z.number().min(0).max(1).optional(),
+    showTransliteration: z.boolean().optional(),
+    showDiacritics: z.boolean().optional(),
+    keyboardMode: z.string().optional(),
+    difficulty: z.string().optional(),
+  }).optional(),
+}).strict();
 
 /**
  * Get the authenticated user's profile
@@ -36,11 +56,11 @@ export async function getProfile(req, res, next) {
  */
 export async function updateProfile(req, res, next) {
   try {
-    const allowed = ['name', 'character', 'settings'];
-    const updates = {};
-    allowed.forEach((key) => {
-      if (req.body[key] !== undefined) updates[key] = req.body[key];
-    });
+    const parsed = updateProfileSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return next(AppError.badRequest('Invalid profile data'));
+    }
+    const updates = parsed.data;
 
     const user = await User.findByIdAndUpdate(req.userId, updates, {
       new: true,

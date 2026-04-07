@@ -2,6 +2,8 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { EQUIPMENT_DATA } from '../../data/equipment.js';
 import { calculateTotalEquipmentStats } from '../../utils/itemStats.js';
 
+export const MAX_INVENTORY_SIZE = 200;
+
 const initialState = {
   equipped: {
     headCovering: null,
@@ -26,17 +28,16 @@ const inventorySlice = createSlice({
       // payload: { itemId, quantity = 1 }
       const { itemId, quantity = 1 } = action.payload;
 
-      // Cap at 200 items
-      if (state.items.length >= 200) {
-        console.warn('[inventorySlice] Inventory full (200 items)');
-        return;
-      }
-
-      // Check if item already exists
       const existingItem = state.items.find(item => item.itemId === itemId);
+
       if (existingItem) {
         existingItem.quantity += quantity;
       } else {
+        // Cap at MAX_INVENTORY_SIZE slots for new items
+        if (state.items.length >= MAX_INVENTORY_SIZE) {
+          console.warn(`[inventorySlice] Inventory full (${MAX_INVENTORY_SIZE} items)`);
+          return;
+        }
         state.items.push({ itemId, quantity, locked: false });
       }
     },
@@ -282,7 +283,7 @@ export const selectAffixesUnlocked = (state) => state.inventory.affixesUnlocked;
 
 export const selectInventoryCount = (state) => state.inventory.items.length;
 
-export const selectIsInventoryFull = (state) => state.inventory.items.length >= 200;
+export const selectIsInventoryFull = (state) => state.inventory.items.length >= MAX_INVENTORY_SIZE;
 
 /**
  * Compute total equipment stats including affixes, set bonuses, and enchantments

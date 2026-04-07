@@ -18,7 +18,7 @@
         "npm run build passes"
       ],
       "priority": 1,
-      "passes": true,
+      "passes": false,
       "notes": "CRITICAL — these scripts crash at runtime. Check each file's import section before modifying."
     },
     {
@@ -33,7 +33,7 @@
         "npm run lint passes"
       ],
       "priority": 2,
-      "passes": true,
+      "passes": false,
       "notes": "Read the file first to understand the full context of how capacity is checked."
     },
     {
@@ -47,7 +47,7 @@
         "npm run test:run passes"
       ],
       "priority": 3,
-      "passes": true,
+      "passes": false,
       "notes": "Read surrounding code to understand if transition tracking was intended."
     },
     {
@@ -61,7 +61,7 @@
         "npm run test:run passes"
       ],
       "priority": 4,
-      "passes": true,
+      "passes": false,
       "notes": "Check if any action creators dispatch form data — if they do, there may be missing logic."
     },
     {
@@ -75,7 +75,7 @@
         "npm run test:run passes"
       ],
       "priority": 5,
-      "passes": true,
+      "passes": false,
       "notes": "Read the full bonus computation to understand what the parseFloat was intended for."
     },
     {
@@ -91,7 +91,7 @@
         "npm run lint passes"
       ],
       "priority": 6,
-      "passes": true,
+      "passes": false,
       "notes": "Check existing Zod usage patterns in server/src/ before creating new schemas."
     },
     {
@@ -105,7 +105,7 @@
         "npm run lint passes"
       ],
       "priority": 7,
-      "passes": true,
+      "passes": false,
       "notes": "Small change. Object.entries returns a new array so this may be technically safe, but the spread makes intent explicit."
     },
     {
@@ -121,7 +121,7 @@
         "npm run test:run passes"
       ],
       "priority": 8,
-      "passes": true,
+      "passes": false,
       "notes": "Batch of small cleanups. Read each file before modifying."
     },
     {
@@ -135,7 +135,7 @@
         "npm run test:run passes"
       ],
       "priority": 9,
-      "passes": true,
+      "passes": false,
       "notes": "Read the full file to understand the calendar implementation before deciding."
     },
     {
@@ -151,7 +151,7 @@
         "npm run lint passes"
       ],
       "priority": 10,
-      "passes": true,
+      "passes": false,
       "notes": "Check how actionContext gets access to Redux state — may need store.getState() or a selector."
     }
   ]

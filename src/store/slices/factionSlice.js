@@ -17,7 +17,7 @@ const buildInitialAlignment = () =>
   Object.fromEntries(FACTIONS.map((f) => [f.id, 0]));
 
 const deriveLeaders = (alignment) => {
-  const sorted = Object.entries(alignment).sort(([, a], [, b]) => b - a);
+  const sorted = [...Object.entries(alignment)].sort(([, a], [, b]) => b - a);
   const primary   = sorted[0]?.[1] > 0 ? sorted[0][0] : null;
   const secondary = sorted[1]?.[1] > 0 ? sorted[1][0] : null;
   return { primary, secondary };
@@ -127,12 +127,12 @@ export const selectFactionBonuses = createSelector(
     const secondaryQuest = secondary ? secondary.bonuses.questXpMultiplier : 1.0;
 
     return {
-      vocabXpMultiplier: parseFloat(
-        (1 + (primaryVocab - 1) + (secondaryVocab - 1) * 0.5).toFixed(4)
-      ),
-      questXpMultiplier: parseFloat(
-        (1 + (primaryQuest - 1) + (secondaryQuest - 1) * 0.5).toFixed(4)
-      ),
+      vocabXpMultiplier: Math.round(
+        (1 + (primaryVocab - 1) + (secondaryVocab - 1) * 0.5) * 10000
+      ) / 10000,
+      questXpMultiplier: Math.round(
+        (1 + (primaryQuest - 1) + (secondaryQuest - 1) * 0.5) * 10000
+      ) / 10000,
       primaryFaction:   primary   ?? null,
       secondaryFaction: secondary ?? null,
     };

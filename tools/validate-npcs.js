@@ -19,15 +19,16 @@
  * Run with: node tools/validate-npcs.js
  */
 
-import { createRequire } from 'module';
+
 import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs';
+import process from 'node:process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
-const require = createRequire(import.meta.url);
+
 
 // ---------------------------------------------------------------------------
 // Loaders

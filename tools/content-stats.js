@@ -19,6 +19,7 @@
 import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs';
+import process from 'node:process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,9 +38,7 @@ const C = {
   dim: '\x1b[2m',
 };
 
-const PASS = `${C.green}PASS${C.reset}`;
-const FAIL = `${C.red}FAIL${C.reset}`;
-const WARN = `${C.yellow}WARN${C.reset}`;
+
 
 // ---------------------------------------------------------------------------
 // Vocabulary stats
@@ -152,7 +151,7 @@ function getNpcStats() {
   // Count invalid teachWord refs
   let invalidTeachWords = 0;
   for (const npc of npcs) {
-    const acc = { lines: 0, teachWords: 0, culturalNotes: 0 };
+
     const teachWordsList = [];
     const origWalk = (lines) => {
       if (!Array.isArray(lines)) return;

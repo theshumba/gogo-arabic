@@ -106,7 +106,8 @@ for i in $(seq 1 $MAX_ITERATIONS); do
     if [[ -n "$MODEL" ]]; then
       MODEL_FLAG="--model $MODEL"
     fi
-    OUTPUT=$(claude --dangerously-skip-permissions --print $MODEL_FLAG < "$SCRIPT_DIR/CLAUDE.md" 2>&1 | tee /dev/stderr) || true
+    OUTPUT=$(claude --dangerously-skip-permissions --print $MODEL_FLAG < "$SCRIPT_DIR/CLAUDE.md" 2>&1) || true
+    echo "$OUTPUT"
   fi
   
   # Check for completion signal
@@ -114,6 +115,19 @@ for i in $(seq 1 $MAX_ITERATIONS); do
     echo ""
     echo "Ralph completed all tasks!"
     echo "Completed at iteration $i of $MAX_ITERATIONS"
+
+    # Auto-merge to main and clean up branch
+    BRANCH=$(git branch --show-current)
+    if [[ "$BRANCH" != "main" ]]; then
+      echo ""
+      echo "Auto-merging $BRANCH into main..."
+      git checkout main
+      git merge "$BRANCH" --no-edit
+      echo "Merged. Deleting branch $BRANCH..."
+      git branch -d "$BRANCH"
+      echo "Done. All work is now on main."
+    fi
+
     exit 0
   fi
   

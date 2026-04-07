@@ -52,7 +52,6 @@ const seasonalEventSlice = createSlice({
       const { detectedEvent, dateISO, hijriYear } = action.payload;
       state.lastCheckedDate = dateISO;
 
-      const previousEvent = state.activeEvent;
       state.activeEvent = detectedEvent;
 
       // Record yearly history when an event becomes active

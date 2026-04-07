@@ -17,8 +17,9 @@
 /** Leap years within each 30-year Hijri cycle (IIa / civil) */
 const LEAP_YEARS_IN_CYCLE = [2, 5, 7, 10, 13, 16, 18, 21, 24, 26, 29];
 
-/** Hijri epoch as a Julian Day Number (July 16, 622 CE Julian) */
-const HIJRI_EPOCH_JDN = 1948439.5;
+// Note: The integer-based Kuwaiti algorithm is used below for conversion.
+// Therefore, the Hijri epoch (1948439.5 JDN) is implicitly handled in the 
+// algorithmic offsets (e.g., 1948440) rather than a floating-point constant.
 
 /** Month names in Arabic */
 const HIJRI_MONTH_NAMES = [

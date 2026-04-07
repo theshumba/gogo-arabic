@@ -27,7 +27,7 @@ export function buildActionContext(zoneOverride) {
   return {
     questStatuses: state.quest?.statuses || {},
     storyFlags: state.narrative?.storyFlags || {},
-    vocabMastery: {}, // TODO: wire to FSRS mastery in future phase
+    vocabMastery: state.vocabulary?.stats?.accuracy || 0,
     playerLevel: state.player?.level || 1,
     inventory: state.inventory?.items?.map((i) => i.id) || [],
     currentHour: selectGameTime(state).hour,

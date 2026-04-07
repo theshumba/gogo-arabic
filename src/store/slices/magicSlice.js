@@ -49,7 +49,7 @@ const magicSlice = createSlice({
 
     recordRootUse(state, action) {
       // payload: { rootId, form, accuracy }
-      const { rootId, form, accuracy } = action.payload;
+      const { rootId, accuracy } = action.payload;
 
       if (!state.rootMastery[rootId]) {
         console.error(`[magicSlice] Cannot record use of undiscovered root '${rootId}'`);
