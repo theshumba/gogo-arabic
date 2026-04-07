@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { updateFsrsCard, addFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { addXP, updateStreak } from '../../store/slices/playerSlice.js';
 import { incrementReviews } from '../../store/slices/achievementSlice.js';
+import { recordPronunciationResult } from '../../store/slices/analyticsSlice.js';
+import PronunciationFeedback from '../Arabic/PronunciationFeedback.jsx';
 import { checkPerfectQuiz } from '../../store/middleware/achievementMiddleware.js';
 import { reviewCard, getDueCards, Rating, getNewCardsForSession, createNewCard } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
@@ -363,6 +365,10 @@ export default function ReviewSession({ onBack }) {
             {settings.showTransliteration && (
               <div className={styles.transliteration} aria-label={`Transliteration: ${currentWord.transliteration}`}>{currentWord.transliteration}</div>
             )}
+            <PronunciationFeedback
+              arabicWord={currentWord.arabic}
+              onResult={(result) => dispatch(recordPronunciationResult({ wordId: currentWord.id, correct: result.correct, similarity: result.similarity }))}
+            />
             <div className={styles.choicesGrid} role="group" aria-label="Answer choices">
               {choices.map((w, _idx) => {
                 let extraClass = '';

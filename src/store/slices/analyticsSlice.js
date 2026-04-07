@@ -10,6 +10,8 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 const initialState = {
   // Per-word accuracy: { wordId: { correct: number, total: number } }
   wordAccuracy: {},
+  // Per-word pronunciation accuracy: { wordId: { correct: number, total: number, avgSimilarity: number } }
+  pronunciationAccuracy: {},
   // Session history: [{ startedAt, endedAt, wordsReviewed, correctCount, type }]
   sessions: [],
   // Current session (in-progress, cleared when ended)
@@ -99,6 +101,19 @@ const analyticsSlice = createSlice({
       state.dailyActivity[today].lessonsCompleted += 1;
     },
 
+    recordPronunciationResult(state, action) {
+      // payload: { wordId, correct: boolean, similarity: number }
+      const { wordId, correct, similarity } = action.payload;
+      if (!state.pronunciationAccuracy[wordId]) {
+        state.pronunciationAccuracy[wordId] = { correct: 0, total: 0, avgSimilarity: 0 };
+      }
+      const entry = state.pronunciationAccuracy[wordId];
+      entry.total += 1;
+      if (correct) entry.correct += 1;
+      // Rolling average similarity
+      entry.avgSimilarity = (entry.avgSimilarity * (entry.total - 1) + (similarity ?? 0)) / entry.total;
+    },
+
     resetAnalytics() {
       return initialState;
     },
@@ -107,6 +122,7 @@ const analyticsSlice = createSlice({
 
 export const {
   recordWordResult,
+  recordPronunciationResult,
   startSession,
   updateSessionProgress,
   endSession,
@@ -118,6 +134,7 @@ export const {
 // ========== SELECTORS ==========
 
 export const selectWordAccuracy = (state) => state.analytics.wordAccuracy;
+export const selectPronunciationAccuracy = (state) => state.analytics.pronunciationAccuracy;
 export const selectSessions = (state) => state.analytics.sessions;
 export const selectCurrentSession = (state) => state.analytics.currentSession;
 export const selectDropoutPoints = (state) => state.analytics.dropoutPoints;
