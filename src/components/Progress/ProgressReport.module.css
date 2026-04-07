@@ -273,6 +273,57 @@
   direction: rtl;
 }
 
+/* ── Words at Risk ── */
+
+.atRiskList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.atRiskItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(200, 60, 60, 0.12);
+  border: 1px solid rgba(200, 60, 60, 0.3);
+  border-left: 3px solid #c83c3c;
+}
+
+.atRiskArabic {
+  font-family: var(--font-arabic);
+  font-size: 14px;
+  color: var(--color-white);
+  direction: rtl;
+  flex: 1;
+}
+
+.atRiskEnglish {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--color-light);
+  flex: 1;
+}
+
+.atRiskStability {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: #ff6b6b;
+  flex-shrink: 0;
+}
+
+.atRiskMore {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--color-light);
+  margin: 8px 0 0 0;
+  text-align: center;
+}
+
 /* ── Responsive ── */
 
 @media (max-width: 480px) {

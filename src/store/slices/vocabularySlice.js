@@ -1,4 +1,5 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
+import { getDecayingWords } from '../../services/forgettingCurveService.js';
 
 const initialState = {
   fsrsCards: {}, // { wordId: { card: FSRS card object, log: last review log, source?: string } }
@@ -206,6 +207,15 @@ export const selectDueCardCount = createSelector(
     }
     return count;
   }
+);
+
+/**
+ * Select words at risk of being forgotten — FSRS stability below threshold.
+ * Wraps getDecayingWords() for Redux state. Returns urgency-sorted list.
+ */
+export const selectWordsAtRisk = createSelector(
+  [selectFsrsCards],
+  (fsrsCards) => getDecayingWords(fsrsCards, 3)
 );
 
 export default vocabularySlice.reducer;

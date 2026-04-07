@@ -9,7 +9,8 @@
 import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectPlayerStats, selectStreakInfo } from '../../store/slices/playerSlice.js';
-import { selectLearnedWordCount, selectFsrsCards } from '../../store/slices/vocabularySlice.js';
+import { selectLearnedWordCount, selectFsrsCards, selectWordsAtRisk } from '../../store/slices/vocabularySlice.js';
+import vocabulary from '../../data/vocabularyAll.js';
 import styles from './ProgressReport.module.css';
 import { getProgressReport, getUnlockedQuizTypes } from '../../services/progressionService.js';
 
@@ -42,6 +43,13 @@ function ProgressReport() {
       return Object.values(quests).filter((q) => q.status === 'completed').length;
     }
   );
+
+  const wordsAtRisk = useSelector(selectWordsAtRisk);
+  const wordLookup = useMemo(() => {
+    const map = {};
+    for (const w of vocabulary) map[w.id] = w;
+    return map;
+  }, []);
 
   const wordsMastered = useMemo(() => countMasteredWords(fsrsCards), [fsrsCards]);
 
@@ -101,6 +109,29 @@ function ProgressReport() {
           </div>
         </div>
       </section>
+
+      {/* Words at Risk */}
+      {wordsAtRisk.length > 0 && (
+        <section className={styles.section} aria-label="Words at risk of being forgotten">
+          <h3 className={styles.sectionTitle}>Words at Risk</h3>
+          <ul className={styles.atRiskList}>
+            {wordsAtRisk.slice(0, 5).map(({ wordId, stability }) => {
+              const word = wordLookup[wordId];
+              if (!word) return null;
+              return (
+                <li key={wordId} className={styles.atRiskItem}>
+                  <span className={styles.atRiskArabic} lang="ar">{word.arabic}</span>
+                  <span className={styles.atRiskEnglish}>{word.english}</span>
+                  <span className={styles.atRiskStability}>{stability.toFixed(1)}d</span>
+                </li>
+              );
+            })}
+          </ul>
+          {wordsAtRisk.length > 5 && (
+            <p className={styles.atRiskMore}>+{wordsAtRisk.length - 5} more words at risk</p>
+          )}
+        </section>
+      )}
 
       {/* Grammar Progress */}
       <section className={styles.section} aria-label="Grammar progress">

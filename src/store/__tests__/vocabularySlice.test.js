@@ -9,6 +9,7 @@ import vocabularyReducer, {
   selectReviewQueueCount,
   selectLearnedWordCount,
   selectVocabularyStats,
+  selectWordsAtRisk,
 } from '../slices/vocabularySlice.js';
 
 describe('vocabularySlice', () => {
@@ -172,6 +173,89 @@ describe('vocabularySlice', () => {
         accuracy: 0.9,
         streakDays: 7,
       });
+    });
+  });
+
+  describe('selectWordsAtRisk', () => {
+    it('returns empty array when no cards exist', () => {
+      const state = { vocabulary: { ...initialState } };
+      expect(selectWordsAtRisk(state)).toEqual([]);
+    });
+
+    it('returns words with stability below threshold (< 3)', () => {
+      const state = {
+        vocabulary: {
+          ...initialState,
+          fsrsCards: {
+            w1: { card: { stability: 1.5, due: null } },
+            w2: { card: { stability: 2.9, due: null } },
+          },
+        },
+      };
+      const result = selectWordsAtRisk(state);
+      expect(result).toHaveLength(2);
+      expect(result.map((r) => r.wordId)).toContain('w1');
+      expect(result.map((r) => r.wordId)).toContain('w2');
+    });
+
+    it('excludes words with stability >= 3', () => {
+      const state = {
+        vocabulary: {
+          ...initialState,
+          fsrsCards: {
+            safe: { card: { stability: 5, due: null } },
+            atrisk: { card: { stability: 1, due: null } },
+          },
+        },
+      };
+      const result = selectWordsAtRisk(state);
+      expect(result).toHaveLength(1);
+      expect(result[0].wordId).toBe('atrisk');
+    });
+
+    it('excludes words with zero stability (never reviewed)', () => {
+      const state = {
+        vocabulary: {
+          ...initialState,
+          fsrsCards: {
+            new_word: { card: { stability: 0, due: null } },
+            at_risk: { card: { stability: 1.2, due: null } },
+          },
+        },
+      };
+      const result = selectWordsAtRisk(state);
+      expect(result).toHaveLength(1);
+      expect(result[0].wordId).toBe('at_risk');
+    });
+
+    it('sorts by stability ascending (most at risk first)', () => {
+      const state = {
+        vocabulary: {
+          ...initialState,
+          fsrsCards: {
+            w_mid: { card: { stability: 2.0, due: null } },
+            w_low: { card: { stability: 0.5, due: null } },
+            w_high: { card: { stability: 2.8, due: null } },
+          },
+        },
+      };
+      const result = selectWordsAtRisk(state);
+      expect(result[0].wordId).toBe('w_low');
+      expect(result[result.length - 1].wordId).toBe('w_high');
+    });
+
+    it('includes stability and due fields in each result', () => {
+      const dueDate = '2026-04-05T00:00:00.000Z';
+      const state = {
+        vocabulary: {
+          ...initialState,
+          fsrsCards: {
+            w1: { card: { stability: 1.5, due: dueDate } },
+          },
+        },
+      };
+      const result = selectWordsAtRisk(state);
+      expect(result[0]).toMatchObject({ wordId: 'w1', stability: 1.5, due: dueDate });
     });
   });
 });
