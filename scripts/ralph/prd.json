@@ -423,7 +423,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 25,
-      "passes": false,
+      "passes": true,
       "notes": "Ensure cultural sensitivity and accuracy. Include contributions from across the Arab world."
     }
   ]

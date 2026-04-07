@@ -365,3 +365,22 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - `process.memoryUsage()` returns bytes — divide by 1024*1024 for MB
   - Request counter must be a module-level singleton (not per-request) — export a plain counter, not a class
 ---
+
+## 2026-04-07 - GROW-015
+- Created `src/data/culturalTrivia.js` — 200 trivia facts (20 per category × 10 categories)
+- Categories: history, food, science, art, music, architecture, literature, language, geography, customs
+- Each entry: id (trivia_[cat3]_[001-020]), fact (English), factArabic (Arabic), category, cefrLevel (A1-C1), region, era
+- Regions: Arabia, Egypt, Levant, Maghreb, Mesopotamia, Andalusia
+- Eras: ancient, classical, medieval, modern, contemporary
+- Selectors: `selectTriviaByCategory(category)`, `selectRandomTrivia(count)`, `selectTriviaByEra(era)`
+- 20 tests in `culturalTrivia.test.js`: total count ≥200, all 10 categories present, ≥18 per category, required fields, unique IDs, valid category/cefrLevel/era values, non-empty strings, selector correctness, random count, medieval dominance
+- Files changed: `src/data/culturalTrivia.js`, `src/data/__tests__/culturalTrivia.test.js`
+- **Learnings for future iterations:**
+  - 200 entries × required Arabic translations = very large file; write all at once to avoid multiple edits
+  - `selectRandomTrivia` uses `[...arr].sort(() => Math.random() - 0.5)` — do NOT use `arr.sort()` directly (mutates original)
+  - Test random selectors by checking count and field shapes, not specific values (non-deterministic)
+  - Medieval era dominates Islamic Golden Age facts (science, architecture, literature) — expected, not a bug
+  - ID format: `trivia_[3-char-category]_[3-digit-number]` — consistent across all 200 entries
+---
+
+## COMPLETE — All 25 user stories passed
