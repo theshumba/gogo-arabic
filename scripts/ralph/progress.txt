@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-04-07 - FEAT-002
+- `src/data/arabicPhonetics.js` already existed with 28 consonants, 6 vowels, 16 minimal pairs, and SOUND_CATEGORIES.
+- 38 tests in `src/data/__tests__/arabicPhonetics.test.js` already passed.
+- Added `selectConsonantsByArticulation(point)` and `selectMinimalPairsFor(letterId)` aliases to satisfy AC selector naming.
+- Files changed: `src/data/arabicPhonetics.js`, `scripts/ralph/prd.json`, `scripts/ralph/progress.txt`
+- **Learnings for future iterations:**
+  - Same pattern as FEAT-001: file pre-existed, only selector aliases were missing.
+---
+
 # Ralph Progress Log
 Started: Tue  7 Apr 2026 18:48:06 BST
 ---

@@ -34,7 +34,7 @@
         "npm run test:run passes"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Pure data file. No UI. Reference standard Arabic phonology."
     },
     {

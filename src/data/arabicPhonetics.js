@@ -857,3 +857,13 @@ export function getMinimalPairsForLetter(letterId) {
     (pair) => pair.soundA.id === letterId || pair.soundB.id === letterId
   );
 }
+
+/** Redux-selector alias for getConsonantsByArticulation */
+export function selectConsonantsByArticulation(point) {
+  return getConsonantsByArticulation(point);
+}
+
+/** Redux-selector alias for getMinimalPairsForLetter */
+export function selectMinimalPairsFor(letterId) {
+  return getMinimalPairsForLetter(letterId);
+}
