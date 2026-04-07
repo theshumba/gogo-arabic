@@ -4,6 +4,7 @@ import { addXP } from '../../store/slices/playerSlice.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { shuffle } from '../../utils/shuffle.js';
 import ArabicKeyboard from '../Keyboard/ArabicKeyboard.jsx';
+import HandwritingPractice from './HandwritingPractice.jsx';
 import alphabetData from '../../data/alphabet.json';
 import styles from './AlphabetModule.module.css';
 
@@ -21,6 +22,7 @@ export default function AlphabetModule({ onBack }) {
   const [quizAnswer, setQuizAnswer] = useState(null);
   const [writingInput, setWritingInput] = useState('');
   const [writingResult, setWritingResult] = useState(null);
+  const [showPractice, setShowPractice] = useState(false);
 
   const groupedLetters = useMemo(() => {
     const map = {};
@@ -46,6 +48,11 @@ export default function AlphabetModule({ onBack }) {
     return shuffle([...distractors, cl]);
   }, [selectedGroup, currentLetterIdx, groupedLetters]);
 
+  // Handwriting practice mode
+  if (showPractice) {
+    return <HandwritingPractice onBack={() => setShowPractice(false)} />;
+  }
+
   // Group list view
   if (selectedGroup === null) {
     return (
@@ -54,6 +61,13 @@ export default function AlphabetModule({ onBack }) {
           <button className={styles.backBtn} onClick={onBack}>Back</button>
           <div className={styles.title}>Arabic Alphabet</div>
           <div className={styles.headerProgress}>
+            <button
+              className={styles.practiceBtn}
+              onClick={() => setShowPractice(true)}
+              aria-label="Open handwriting practice mode"
+            >
+              Practice Writing
+            </button>
             {completedIds.size}/28 letters
           </div>
         </div>

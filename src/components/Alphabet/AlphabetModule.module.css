@@ -49,6 +49,20 @@
   font-family: var(--font-pixel);
   font-size: 9px;
   color: var(--color-light-gray);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.practiceBtn {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  padding: 5px 10px;
+  background: transparent;
+  border: 2px solid var(--color-xp-gold);
+  color: var(--color-xp-gold);
+  cursor: pointer;
+  text-transform: uppercase;
 }
 
 .body {
