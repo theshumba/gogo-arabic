@@ -80,7 +80,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "Read src/services/achievementChainService.js and src/data/achievementChains.js. Read achievementSlice.js for unlock flow."
     },
     {

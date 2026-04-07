@@ -79,3 +79,18 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - ShopInventory already handles `item.basePrice` vs `item.price` for direction arrows (from existing ECON-04 implementation) — zone pricing changes `item.price` so arrows still work
   - `shopId` must be included in `useMemo` deps when used inside the memo callback
 ---
+
+## 2026-04-07 - WIRE-005
+- Added `completedChains: []` to `achievementSlice` initial state; added `completeChain` reducer + export
+- Added `selectCompletedChains`, `selectAllChainProgress`, `selectChainProgress` selectors to `achievementSlice.js` (import `getChainProgress`/`getAllChainProgress` from achievementChainService)
+- Updated `achievementMiddleware.js`: collects `newlyUnlockedIds` during the achievement check loop; after the loop, calls `checkChainCompletions` per newly unlocked achievement and dispatches `completeChain` + batches chain XP rewards; uses `Set` to guard against duplicate chain rewards within a single middleware pass
+- Updated `AchievementPanel.jsx`: added "Chains" tab; renders chain progress cards with progress bar (X/Y), percentage, XP reward, and completion state
+- Fixed `achievementSlice.test.js`: added `completedChains: []` to expected initial state
+- Tests leveraged existing `achievementChainService.test.js` (8 tests already exist and cover the acceptance criteria)
+- Files changed: `src/store/slices/achievementSlice.js`, `src/store/middleware/achievementMiddleware.js`, `src/components/Achievements/AchievementPanel.jsx`, `src/store/__tests__/achievementSlice.test.js`
+- **Learnings for future iterations:**
+  - Adding fields to initial state ALWAYS breaks the existing `should return the initial state` test — update immediately
+  - Chain rewards must use a Set guard to prevent double-rewarding when multiple achievements unlock in one middleware pass
+  - `checkChainCompletions` takes the newly unlocked achievement ID + full unlocked map; call it after ALL achievements are dispatched so the state is current
+  - `achievementChainService.test.js` already existed with good coverage — check before creating duplicate test files
+---
