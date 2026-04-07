@@ -335,3 +335,19 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - Test boundary values with `toBeGreaterThanOrEqual`/`toBeLessThanOrEqual` for computed clamp ranges; exact `toBe` only when formula is known-zero
   - Operations array uses progressive tiers (OPERATIONS_BY_DIFFICULTY) not linear scaling
 ---
+
+## 2026-04-07 - GROW-024
+- Added `playerSettings: { type: mongoose.Schema.Types.Mixed, default: {} }` field to `server/src/models/User.js`
+- Added `playerSettingsSchema` (Zod `.strict()`) to `server/src/validation/userSchemas.js` — mirrors all 26 settingsSlice fields
+- Added `getSettings` and `saveSettings` to `server/src/controllers/userController.js` — getSettings returns `playerSettings || {}`, saveSettings merges with last-write-wins, increments syncVersion, updates lastSyncedAt; `markModified('playerSettings')` required for Mixed fields
+- Added `GET /settings` and `POST /settings` routes to `server/src/routes/user.js` — both behind authenticate; POST uses `validate(playerSettingsSchema)` middleware
+- Created 11 tests in `server/src/routes/__tests__/userSettings.test.js`: empty GET, GET after POST, save+return, syncVersion increment, partial merge, unknown field rejection (strict), masterVolume >100 rejection, masterVolume <0 rejection, invalid battleSpeed, valid battleSpeed values, 401 without auth
+- Note: ALL 14 server test files fail pre-existing with `Cannot find module '../../../src/data/items.json'` when run from `server/` directory — this is a pre-existing regression, not caused by this story
+- Files changed: `server/src/models/User.js`, `server/src/validation/userSchemas.js`, `server/src/controllers/userController.js`, `server/src/routes/user.js`, `server/src/routes/__tests__/userSettings.test.js`
+- **Learnings for future iterations:**
+  - Mongoose Mixed fields require `markModified('fieldName')` before save — without it, Mongoose won't detect the change and won't persist
+  - The `validate()` middleware calls `schema.parse(req.body)` and REPLACES `req.body` with validated output — controller should use `req.body` directly, not re-validate
+  - playerSettingsSchema must use `.strict()` to reject unknown fields (the validate middleware calls schema.parse which throws ZodError for extras, returned as 400)
+  - `syncVersion` and `lastSyncedAt` fields already existed in User model — no schema migration needed
+  - Server tests must be run as a suite (not individually) due to `shopController.js` using `createRequire` for a path relative to the project root
+---
