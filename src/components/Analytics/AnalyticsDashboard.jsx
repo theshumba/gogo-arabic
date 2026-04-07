@@ -30,6 +30,10 @@ import {
   selectOverallAccuracy,
   selectDailyActivity,
 } from '../../store/slices/analyticsSlice.js';
+import {
+  selectQuranicCoverage,
+  selectQuranicCoverageByCategory,
+} from '../../store/slices/vocabularySlice.js';
 import PropTypes from 'prop-types';
 
 function AnalyticsDashboard({ onBack }) {
@@ -37,6 +41,8 @@ function AnalyticsDashboard({ onBack }) {
   const sessionTrends = useSelector((s) => selectSessionTrends(s, 14));
   const overallAccuracy = useSelector(selectOverallAccuracy);
   const dailyActivity = useSelector(selectDailyActivity);
+  const quranicCoverage = useSelector(selectQuranicCoverage);
+  const quranicByCategory = useSelector(selectQuranicCoverageByCategory);
 
   const dailyData = useMemo(() => {
     return Object.entries(dailyActivity)
@@ -165,6 +171,41 @@ function AnalyticsDashboard({ onBack }) {
                     <Bar dataKey="lessons" fill="#2ecc71" name="Lessons" />
                   </BarChart>
                 </ResponsiveContainer>
+              </div>
+            )}
+
+            {/* Quranic Coverage */}
+            {quranicCoverage.total > 0 && (
+              <div style={styles.section} aria-label="Quranic vocabulary coverage">
+                <h3 style={styles.sectionTitle}>Quranic Coverage</h3>
+                <div style={styles.quranicSummary}>
+                  <span style={styles.quranicPct}>{quranicCoverage.percentage}%</span>
+                  <span style={styles.quranicDetail}>
+                    {quranicCoverage.mastered} / {quranicCoverage.total} words mastered
+                  </span>
+                  <span style={styles.quranicSeen}>({quranicCoverage.seen} seen)</span>
+                </div>
+                {quranicByCategory.length > 0 && (
+                  <div style={styles.wordList}>
+                    {quranicByCategory.slice(0, 5).map((cat) => (
+                      <div key={cat.category} style={styles.wordRow}>
+                        <span style={styles.wordId}>{cat.category}</span>
+                        <div style={styles.accuracyBar}>
+                          <div
+                            style={{
+                              ...styles.accuracyFill,
+                              width: `${cat.percentage}%`,
+                              background: cat.percentage < 30 ? '#f03131' : cat.percentage < 60 ? '#f8a060' : '#2ecc71',
+                            }}
+                          />
+                        </div>
+                        <span style={styles.accuracyText}>
+                          {cat.percentage}% ({cat.mastered}/{cat.total})
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -312,6 +353,28 @@ const styles = {
     fontSize: 8,
     color: '#666',
     lineHeight: 1.8,
+  },
+  quranicSummary: {
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: 8,
+    marginBottom: 10,
+  },
+  quranicPct: {
+    fontFamily: "'Press Start 2P', cursive",
+    fontSize: 22,
+    color: '#e2b659',
+    fontWeight: 'bold',
+  },
+  quranicDetail: {
+    fontFamily: "'Press Start 2P', cursive",
+    fontSize: 7,
+    color: '#f4fefa',
+  },
+  quranicSeen: {
+    fontFamily: "'Press Start 2P', cursive",
+    fontSize: 7,
+    color: '#666',
   },
 };
 

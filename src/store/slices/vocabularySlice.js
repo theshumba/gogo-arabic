@@ -1,5 +1,6 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { getDecayingWords } from '../../services/forgettingCurveService.js';
+import { calculateQuranicCoverage, getQuranicCoverageByCategory } from '../../services/quranicCoverage.js';
 import { DIALECT_COMPARISON } from '../../data/dialectComparison.js';
 import vocabularyAll from '../../data/vocabularyAll.js';
 
@@ -223,6 +224,16 @@ export const selectDueCardCount = createSelector(
 export const selectWordsAtRisk = createSelector(
   [selectFsrsCards],
   (fsrsCards) => getDecayingWords(fsrsCards, 3)
+);
+
+export const selectQuranicCoverage = createSelector(
+  [selectFsrsCards],
+  (fsrsCards) => calculateQuranicCoverage(fsrsCards, vocabularyAll)
+);
+
+export const selectQuranicCoverageByCategory = createSelector(
+  [selectFsrsCards],
+  (fsrsCards) => getQuranicCoverageByCategory(fsrsCards, vocabularyAll)
 );
 
 /**
