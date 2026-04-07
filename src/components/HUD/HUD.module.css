@@ -256,6 +256,30 @@
   font-weight: bold;
 }
 
+/* Pulse animation for review button when >10 FSRS cards are due */
+.duePulse {
+  animation: duePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes duePulse {
+
+  0%,
+  100% {
+    box-shadow:
+      inset -2px -2px 0px 0px rgba(0, 0, 0, 0.3),
+      inset 2px 2px 0px 0px rgba(255, 255, 255, 0.1),
+      0 2px 0 0 #1a191b;
+  }
+
+  50% {
+    box-shadow:
+      inset -2px -2px 0px 0px rgba(0, 0, 0, 0.3),
+      inset 2px 2px 0px 0px rgba(255, 255, 255, 0.1),
+      0 2px 0 0 #1a191b,
+      0 0 20px rgba(240, 49, 49, 0.7);
+  }
+}
+
 /* Media queries for responsive design */
 @media (max-width: 768px) {
   .container {

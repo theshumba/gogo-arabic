@@ -19,7 +19,15 @@ const ACTION_TO_GOAL_MAPPING = {
     goalType: DAILY_GOAL_TYPES.REVIEWS_DONE,
     amount: 1,
   },
-  // Quiz completion will be tracked manually via a custom action
+  // WIRE-01: Quiz and grammar completions auto-tracked
+  'vocabulary/updateFsrsCard': {
+    goalType: DAILY_GOAL_TYPES.REVIEWS_DONE,
+    amount: 1,
+  },
+  'grammar/completeLesson': {
+    goalType: DAILY_GOAL_TYPES.REVIEWS_DONE,
+    amount: 1,
+  },
 };
 
 // Re-entrancy guard: prevents infinite cascade when addXP from goal completion

@@ -36,6 +36,12 @@ const userSchema = new mongoose.Schema({
   lastSyncedAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 
+// Compound indexes for common query patterns
+userSchema.index({ level: -1, xp: -1 }); // Leaderboard lookups
+userSchema.index({ streak: -1 }); // Streak leaderboard
+userSchema.index({ lastSyncedAt: 1 }); // Sync staleness queries
+userSchema.index({ lastReviewDate: 1 }); // Spaced-repetition scheduling
+
 // Hash password before saving
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;

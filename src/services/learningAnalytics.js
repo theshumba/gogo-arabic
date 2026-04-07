@@ -443,3 +443,122 @@ export function generateStudyReport(playerState, period = 'weekly') {
     recommendations,
   };
 }
+
+/**
+ * Calculate words reviewed per hour of study time.
+ *
+ * @param {Array} sessions - state.analytics.sessions
+ * @returns {number} Words per hour (rounded to 1 decimal)
+ */
+export function getWordsPerHour(sessions) {
+  if (!Array.isArray(sessions) || sessions.length === 0) return 0;
+
+  let totalWords = 0;
+  let totalMs = 0;
+
+  for (const session of sessions) {
+    totalWords += session.wordsReviewed || 0;
+    if (session.startedAt && session.endedAt) {
+      totalMs += Math.max(0, new Date(session.endedAt) - new Date(session.startedAt));
+    }
+  }
+
+  const totalHours = totalMs / (1000 * 60 * 60);
+  if (totalHours <= 0) return 0;
+
+  return Math.round((totalWords / totalHours) * 10) / 10;
+}
+
+/**
+ * Find the optimal session length — the duration with the highest accuracy.
+ * Groups sessions into 5-minute buckets and finds the peak.
+ *
+ * @param {Array} sessions - state.analytics.sessions
+ * @returns {{ optimalMinutes: number, peakAccuracy: number }|null}
+ */
+export function getOptimalSessionLength(sessions) {
+  if (!Array.isArray(sessions) || sessions.length === 0) return null;
+
+  const buckets = {}; // { bucket: { totalAccuracy, count } }
+
+  for (const session of sessions) {
+    if (!session.startedAt || !session.endedAt || !session.wordsReviewed) continue;
+
+    const durationMs = new Date(session.endedAt) - new Date(session.startedAt);
+    const minutes = Math.max(1, durationMs / 60000);
+    const bucket = Math.round(minutes / 5) * 5 || 5; // 5-minute buckets
+
+    const accuracy = session.wordsReviewed > 0
+      ? (session.correctCount || 0) / session.wordsReviewed
+      : 0;
+
+    if (!buckets[bucket]) buckets[bucket] = { total: 0, count: 0 };
+    buckets[bucket].total += accuracy;
+    buckets[bucket].count += 1;
+  }
+
+  let peakBucket = null;
+  let peakAvg = 0;
+
+  for (const [bucket, data] of Object.entries(buckets)) {
+    if (data.count < 2) continue; // Need at least 2 sessions for meaningful data
+    const avg = data.total / data.count;
+    if (avg > peakAvg) {
+      peakAvg = avg;
+      peakBucket = Number(bucket);
+    }
+  }
+
+  if (!peakBucket) return null;
+
+  return {
+    optimalMinutes: peakBucket,
+    peakAccuracy: Math.round(peakAvg * 100),
+  };
+}
+
+/**
+ * Calculate rolling accuracy trend over time.
+ *
+ * @param {Object} dailyActivity - state.analytics.dailyActivity
+ * @param {number} days - Number of days to look back
+ * @param {number} window - Rolling average window in days (default 7)
+ * @returns {Array<{ date: string, accuracy: number, rollingAverage: number }>}
+ */
+export function getAccuracyTrend(dailyActivity, days = 30, window = 7) {
+  if (!dailyActivity || typeof dailyActivity !== 'object') return [];
+
+  const today = new Date();
+  const dataPoints = [];
+
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().slice(0, 10);
+    const activity = dailyActivity[dateStr];
+
+    const accuracy = activity?.wordsReviewed > 0
+      ? Math.round(((activity.correctCount || 0) / activity.wordsReviewed) * 100)
+      : null;
+
+    dataPoints.push({ date: dateStr, accuracy });
+  }
+
+  // Compute rolling average
+  return dataPoints.map((point, idx) => {
+    const windowStart = Math.max(0, idx - window + 1);
+    const windowSlice = dataPoints.slice(windowStart, idx + 1);
+    const validPoints = windowSlice.filter((p) => p.accuracy !== null);
+
+    const rollingAverage = validPoints.length > 0
+      ? Math.round(validPoints.reduce((sum, p) => sum + p.accuracy, 0) / validPoints.length)
+      : null;
+
+    return {
+      date: point.date,
+      accuracy: point.accuracy,
+      rollingAverage,
+    };
+  });
+}
+

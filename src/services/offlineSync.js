@@ -124,3 +124,145 @@ export async function syncQueuedReviews(dispatch, updateFsrsCard) {
 export function isOnline() {
   return typeof navigator !== 'undefined' ? navigator.onLine : true;
 }
+
+// ─── Generic Action Queue (Feature #11) ─────────────
+
+const ACTION_QUEUE_STORE = 'action-queue';
+const ACTION_DB_VERSION = 2;
+
+// Whitelist of action types safe to queue and replay
+const QUEUEABLE_ACTION_TYPES = new Set([
+  'quests/updateQuestProgress',
+  'quests/completeQuest',
+  'quests/visitNpc',
+  'quests/visitZone',
+  'quests/completeDialogue',
+  'quests/recordReviewSession',
+  'quests/recordQuizPassed',
+  'grammar/completeLesson',
+  'grammar/recordExerciseProgress',
+  'grammar/recordQuizProgress',
+  'grammar/updateGrammarFsrsCard',
+  'achievements/unlock',
+  'achievements/incrementReviews',
+  'player/incrementWordsLearned',
+  'player/addXP',
+  'vocabulary/updateFsrsCard',
+]);
+
+let actionDbInstance = null;
+
+function openActionDB() {
+  if (actionDbInstance) return Promise.resolve(actionDbInstance);
+
+  return new Promise((resolve, reject) => {
+    if (typeof indexedDB === 'undefined') {
+      reject(new Error('IndexedDB not available'));
+      return;
+    }
+    const request = indexedDB.open(SYNC_DB_NAME, ACTION_DB_VERSION);
+    request.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(SYNC_STORE)) {
+        db.createObjectStore(SYNC_STORE, { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains(ACTION_QUEUE_STORE)) {
+        db.createObjectStore(ACTION_QUEUE_STORE, { keyPath: 'id', autoIncrement: true });
+      }
+    };
+    request.onsuccess = () => {
+      actionDbInstance = request.result;
+      actionDbInstance.onclose = () => { actionDbInstance = null; };
+      resolve(actionDbInstance);
+    };
+    request.onerror = () => reject(request.error);
+  });
+}
+
+/**
+ * Queue a Redux action for later replay.
+ * Only whitelisted action types are accepted.
+ *
+ * @param {Object} action - { type, payload }
+ * @returns {Promise<boolean>} True if queued, false if not whitelisted
+ */
+export async function enqueueAction(action) {
+  if (!action?.type || !QUEUEABLE_ACTION_TYPES.has(action.type)) {
+    return false;
+  }
+
+  const db = await openActionDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(ACTION_QUEUE_STORE, 'readwrite');
+    const store = tx.objectStore(ACTION_QUEUE_STORE);
+    store.add({
+      type: action.type,
+      payload: action.payload,
+      timestamp: Date.now(),
+    });
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+/**
+ * Replay all queued actions by dispatching them to the Redux store.
+ *
+ * @param {Function} dispatch - Redux store.dispatch
+ * @returns {Promise<number>} Number of actions replayed
+ */
+export async function syncQueuedActions(dispatch) {
+  const db = await openActionDB();
+  const actions = await new Promise((resolve, reject) => {
+    const tx = db.transaction(ACTION_QUEUE_STORE, 'readonly');
+    const store = tx.objectStore(ACTION_QUEUE_STORE);
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+
+  if (actions.length === 0) return 0;
+
+  // Sort by timestamp to maintain order
+  actions.sort((a, b) => a.timestamp - b.timestamp);
+
+  for (const action of actions) {
+    dispatch({ type: action.type, payload: action.payload });
+  }
+
+  // Clear the queue
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(ACTION_QUEUE_STORE, 'readwrite');
+    const store = tx.objectStore(ACTION_QUEUE_STORE);
+    store.clear();
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+
+  return actions.length;
+}
+
+/**
+ * Get count of queued actions.
+ * @returns {Promise<number>}
+ */
+export async function getActionQueueCount() {
+  const db = await openActionDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(ACTION_QUEUE_STORE, 'readonly');
+    const store = tx.objectStore(ACTION_QUEUE_STORE);
+    const request = store.count();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+/**
+ * Check if an action type is in the whitelist.
+ * @param {string} actionType
+ * @returns {boolean}
+ */
+export function isActionQueueable(actionType) {
+  return QUEUEABLE_ACTION_TYPES.has(actionType);
+}
+

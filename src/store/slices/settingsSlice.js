@@ -23,6 +23,7 @@ const initialState = {
   reducedMotion: false,           // Suppress animations
   highContrast: false,            // Boost contrast for all UI elements
   screenReaderMode: false,        // Extra ARIA labels + live announcements
+  pronunciationPractice: false,    // Opt-in mic button for pronunciation feedback
 };
 
 const settingsSlice = createSlice({
@@ -105,6 +106,9 @@ const settingsSlice = createSlice({
     setScreenReaderMode(state, action) {
       state.screenReaderMode = Boolean(action.payload);
     },
+    togglePronunciationPractice(state) {
+      state.pronunciationPractice = !state.pronunciationPractice;
+    },
   },
 });
 
@@ -130,6 +134,7 @@ export const {
   setReducedMotion,
   setHighContrast,
   setScreenReaderMode,
+  togglePronunciationPractice,
 } = settingsSlice.actions;
 
 // --- Selectors ---
@@ -155,5 +160,6 @@ export const selectFontScale = (state) => state.settings.fontScale;
 export const selectReducedMotion = (state) => state.settings.reducedMotion;
 export const selectHighContrast = (state) => state.settings.highContrast;
 export const selectScreenReaderMode = (state) => state.settings.screenReaderMode;
+export const selectPronunciationPractice = (state) => state.settings.pronunciationPractice;
 
 export default settingsSlice.reducer;

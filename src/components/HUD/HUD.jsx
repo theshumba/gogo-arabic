@@ -5,7 +5,7 @@ import { openDialogue, openInventory } from '../../store/slices/uiSlice.js';
 import { selectUnlockedCount } from '../../store/slices/achievementSlice.js';
 import { selectPlayerStats } from '../../store/slices/playerSlice.js';
 import { selectActiveQuestCount } from '../../store/slices/questSlice.js';
-import { selectReviewQueueCount, selectLearnedWordCount } from '../../store/slices/vocabularySlice.js';
+import { selectReviewQueueCount, selectLearnedWordCount, selectDueCardCount } from '../../store/slices/vocabularySlice.js';
 import { selectCompletedGoalsCount, selectTotalGoalsCount } from '../../store/slices/dailyGoalsSlice.js';
 import { selectInventoryCount } from '../../store/slices/inventorySlice.js';
 import { selectCefrLevel } from '../../store/slices/cefrProgressSlice.js';
@@ -41,6 +41,7 @@ function HUD({ onMenu }) {
   const cefrLevel = useSelector(selectCefrLevel);
   const completedGroups = useSelector((s) => s.alphabet.completedGroups || []);
   const wordsLearned = useSelector(selectLearnedWordCount);
+  const fsrsDueCount = useSelector(selectDueCardCount);
   const completedQuestCount = useSelector((s) => {
     const quests = s.quests.quests;
     return Object.values(quests).filter(q => q.status === 'completed').length;
@@ -311,17 +312,17 @@ function HUD({ onMenu }) {
             )}
           </motion.button>
 
-          {/* Review button with due count badge */}
-          {reviewDueCount > 0 && (
+          {/* Review button with FSRS due count badge — always shown when words are due */}
+          {fsrsDueCount > 0 && (
             <motion.button
-              className={`${styles.btn} ${styles.reviewBtn}`}
+              className={`${styles.btn} ${styles.reviewBtn} ${fsrsDueCount > 10 ? styles.duePulse : ''}`}
               onClick={openReviewSession}
-              aria-label={`Start review session - ${reviewDueCount} words due`}
+              aria-label={`Start review session - ${fsrsDueCount} words due for review`}
               {...buttonProps}
             >
               Review
               <span className={`${styles.badge} ${styles.reviewBadge}`} aria-hidden="true">
-                {reviewDueCount}
+                {fsrsDueCount}
               </span>
             </motion.button>
           )}

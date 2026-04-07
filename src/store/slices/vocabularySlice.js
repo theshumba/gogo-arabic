@@ -191,4 +191,21 @@ export const selectNewCardsByPath = createSelector(
   }
 );
 
+/**
+ * Select count of FSRS cards that are currently due for review.
+ * Used by HUD to show a pulsing review debt badge.
+ */
+export const selectDueCardCount = createSelector(
+  [selectFsrsCards],
+  (cards) => {
+    const now = new Date();
+    let count = 0;
+    for (const data of Object.values(cards)) {
+      if (!data.card || !data.card.due) { count++; continue; }
+      if (new Date(data.card.due) <= now) count++;
+    }
+    return count;
+  }
+);
+
 export default vocabularySlice.reducer;
