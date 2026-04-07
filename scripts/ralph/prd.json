@@ -154,7 +154,7 @@
         "npm run test:run passes"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "Create server/src/models/Leaderboard.js and server/src/controllers/leaderboardController.js. Follow existing route patterns in server/src/routes/."
     },
     {

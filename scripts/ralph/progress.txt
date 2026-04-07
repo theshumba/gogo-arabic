@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-04-07 - FEAT-009
+- All leaderboard files already existed: `server/src/models/Leaderboard.js`, `server/src/controllers/leaderboardController.js`, `server/src/routes/leaderboard.js`, `server/src/validation/leaderboardSchemas.js`, and tests.
+- Server tests (in `server/`) are NOT part of root `npm run test:run` (vitest includes only `src/**`); they run via the server's own vitest.
+- No changes needed — marked as passing.
+- Files changed: `prd.json`, `progress.txt`
+---
+
 ## 2026-04-07 - FEAT-008
 - Added `canUseIngredientByMastery()`, `isRecipeCraftableByMastery()`, `calculateCefrScaledXP()`, `CEFR_XP_MULTIPLIER` to `craftingLogic.js` (new functions, did not break existing 37 tests).
 - Added `selectCraftableRecipes()` memoized selector to `craftingSlice.js` (needed to import RESOURCES too).
