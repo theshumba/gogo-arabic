@@ -86,7 +86,7 @@
         "npm run test:run passes"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "Check how vocabulary is currently introduced — may need to intercept an existing action."
     },
     {
