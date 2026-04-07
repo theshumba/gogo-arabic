@@ -38,6 +38,8 @@ export const QUIZ_TYPE_REGISTRY = {
   // ── Phase 80 audio types (requires Web Speech API TTS) ──
   'listening-comprehension': { label: 'Listening Comprehension', cluster: 'listening', minLevel: 3, cefrMin: 'A2', requiresTts: true },
   'dictation':               { label: 'Dictation',              cluster: 'listening', minLevel: 5, cefrMin: 'B1', requiresTts: true },
+  // ── WIRE-001: Generated sentence-building from player's mastered FSRS words ──
+  'sentence_build':          { label: 'Build from Words',       cluster: 'reading',   minLevel: 5, cefrMin: 'A1' },
 };
 
 /**

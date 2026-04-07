@@ -18,6 +18,7 @@ import { recordQuizCompletion } from '../store/middleware/dailyGoalsMiddleware.j
 import { DIALECT_ITEMS, DIALECT_OPTIONS } from '../data/dialectItems.js';
 import { ROOT_EXPANSIONS } from '../data/rootExpansions.js';
 import { CULTURAL_ITEMS } from '../data/culturalItems.js';
+import { generateSentence } from '../services/sentenceGenerator.js';
 
 export function isFsrsDue(card) {
   if (!card || !card.due) return true;
@@ -253,6 +254,28 @@ export function useQuiz() {
       ]);
     }
 
+    // sentence_build: generate a sentence from player's mastered FSRS words via sentenceGenerator
+    if (type === 'sentence_build') {
+      const masteredIds = new Set(Object.keys(fsrsCards));
+      const masteredWords = vocabulary.filter((w) => masteredIds.has(w.id));
+      const wordPool = masteredWords.length >= 2 ? masteredWords : vocabulary;
+      const sentence = generateSentence(wordPool, []);
+      if (sentence) {
+        word.sentenceBuild = sentence;
+        const allTiles = shuffle([...sentence.tiles, ...sentence.distractorTiles]);
+        return allTiles.map((t) => ({
+          label: t,
+          value: t,
+          correct: sentence.tiles.includes(t),
+          tile: true,
+        }));
+      }
+      // Fallback: use word's example sentence tiles
+      const tiles = (word.exampleSentence?.arabic || word.arabic)
+        .split(/\s+/).map((t) => t.trim()).filter(Boolean);
+      return tiles.map((t, i) => ({ label: t, value: t, correct: i === 0, tile: true }));
+    }
+
     // CulturalContext: pick a cultural item and show 4 situation options
     if (type === 'CulturalContext') {
       const idx = word.id ? word.id.charCodeAt(0) % CULTURAL_ITEMS.length : Math.floor(Math.random() * CULTURAL_ITEMS.length);
@@ -359,6 +382,15 @@ export function useQuiz() {
         .filter(Boolean)
         .join(' ');
       correct = normalize(userAnswer) === normalize(expectedSentence);
+    } else if (quizState.quizType === 'sentence_build') {
+      const sentenceBuild = word.sentenceBuild;
+      if (sentenceBuild) {
+        correct = normalize(userAnswer) === normalize(sentenceBuild.tiles.join(' '));
+      } else {
+        const expectedSentence = (word.exampleSentence?.arabic || word.arabic)
+          .split(/\s+/).map((t) => t.trim()).filter(Boolean).join(' ');
+        correct = normalize(userAnswer) === normalize(expectedSentence);
+      }
     } else if (quizState.quizType === 'category-sort') {
       // userAnswer is JSON of { [catA]: [...tiles], [catB]: [...tiles] }
       try {
@@ -453,6 +485,8 @@ export function useQuiz() {
       correctAnswer = word.root || word.rootLetters || word.arabic.slice(0, 3);
     } else if (quizState.quizType === 'sentence-build') {
       correctAnswer = word.exampleSentence?.arabic || word.arabic;
+    } else if (quizState.quizType === 'sentence_build') {
+      correctAnswer = word.sentenceBuild?.arabic || word.exampleSentence?.arabic || word.arabic;
     } else if (quizState.quizType === 'GrammarFill') {
       correctAnswer = quizState.choices.find((c) => c.correct)?.value || word.arabic;
     } else if (quizState.quizType === 'WordOrder') {
