@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-04-07 - FEAT-004
+- `src/store/middleware/battleRewardsMiddleware.js` already fully implemented (not a stub): routes XP→playerSlice, gold→playerSlice, items→inventorySlice, affix words→vocabularySlice+FSRS.
+- 17 tests in `battleRewardsMiddleware.test.js` already pass (AC requires 12+).
+- No changes needed — marked as passing.
+- Files changed: `scripts/ralph/prd.json`, `scripts/ralph/progress.txt`
+---
+
 ## 2026-04-07 - FEAT-003
 - `src/data/battleOpponents.js` already existed with 30 opponents across 8 zones, 25 passing tests.
 - Added `selectOpponentsByZone(zone)` and `selectOpponentById(id)` aliases to satisfy AC selector naming.
