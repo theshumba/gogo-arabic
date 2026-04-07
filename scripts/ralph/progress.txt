@@ -166,3 +166,16 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - `selectDialectVariants` is a plain function (not createSelector) since it uses static data, not Redux state
   - The real dialect data DOES have 'hello' — safe to use in tests without mocking dialectComparison.js
 ---
+
+## 2026-04-07 - WIRE-011
+- Created `loreEntriesBatch3.js` — converts CALLIGRAPHY_STYLES (6) and GOLDEN_AGE_SCHOLARS (30+) to lore entry format using `calligraphyToLore` and `scholarToLore` transform functions
+- Updated `loreEntries.js`: imported LORE_ENTRIES_BATCH_3, spread into LORE_ENTRIES, added 'calligraphy' and 'scholars' to LORE_CATEGORIES, added their CATEGORY_META entries (icons: ✒️ and 📚, Arabic labels: الخط, العلماء)
+- Updated `loreEntries.test.js`: changed "has 10 categories" to `>=10`, updated "25 entries per category" to allow 1+ for new extension categories
+- Added 10 tests in `src/data/__tests__/loreEntriesBatch3.test.js`
+- Files changed: `src/data/loreEntriesBatch3.js`, `src/data/loreEntries.js`, `src/data/__tests__/loreEntries.test.js`, `src/data/__tests__/loreEntriesBatch3.test.js`
+- **Learnings for future iterations:**
+  - `loreEntries.test.js` has strict assertions: category count (was 10), 25+ entries/category, valid trigger format — check before adding categories
+  - Valid trigger prefixes: `zone_visit:`, `npc_talk:`, `quest_complete:`, `word_learn:`, `faction_tier:`, `level_reach:`, `battle_win:`, `object_interact:`, `collection` — use `collection:codex_browse` for always-browsable entries
+  - `replace_all: true` on `'codex_browse'` won't catch backtick template literals `` `codex_browse` `` — check for both quote styles when replacing
+  - `getLoreEntriesByCategory` from loreEntries.js handles filtering — no extra wiring needed in LoreCodex.jsx since it already reads from LORE_ENTRIES
+---
