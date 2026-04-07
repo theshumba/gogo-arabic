@@ -304,3 +304,18 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - Pattern map in `decide()` must be updated when adding new patterns
   - Real file is at `src/game/systems/battle/EnemyAI.js`, not `src/game/systems/EnemyAI.js` as noted in PRD
 ---
+
+## 2026-04-07 - GROW-022
+- Created `src/data/vocabCollections.js` — 10 themed collections, 961 total words
+- Collections: greetings_social(90), food_drink(90), family_body(92), nature_animals(95), numbers_time_colors(92), trade_commerce(95), travel_directions(92), verbs_action(101), golden_age_science(110), advanced_discourse(100)
+- Used range helper `r(prefix, start, end, pad)` to generate consecutive exp_* ID ranges; curated words listed explicitly
+- Selectors: selectCollection(id), selectCollectionsByLevel(cefrLevel), selectWordCountByCollection(), selectCollectionProgress(collectionId, masteredWordIds)
+- 22 tests covering structure, word reference validity, selectors, progress calculation
+- Files changed: `vocabCollections.js`, `vocabCollections.test.js`
+- **Learnings for future iterations:**
+  - vocabulary.json has 8 INTERNAL duplicate Arabic texts: good_morning_1/sabah_al_khayr, goodbye_1/ma_a_salama, god_willing_1/inshallah, etc. — the PHRASE category versions (good_morning_1 etc.) appear EARLIER and win deduplication; GREETINGS category aliases (sabah_al_khayr etc.) are NOT in vocabularyAll
+  - vocabularyAll.js default export is SYNC-ONLY (curated + vocabulary-final A1-A2) — expanded exp_* IDs require importing vocabularyExpanded.js directly
+  - vocabularyExpanded.js uses DEFAULT export (not named VOCABULARY_EXPANDED) — import as `import VOCABULARY_EXPANDED from '../vocabularyExpanded.js'`
+  - All exp_a1_* IDs are contiguous by category (greetings: 001-030, pronouns: 031-060, numbers: 061-085, etc.) — range helper works for all CEFR levels
+  - Word reference validation test must check BOTH vocabularyAll AND vocabularyExpanded to cover all ID types
+---
