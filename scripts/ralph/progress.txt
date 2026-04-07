@@ -179,3 +179,17 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - `replace_all: true` on `'codex_browse'` won't catch backtick template literals `` `codex_browse` `` — check for both quote styles when replacing
   - `getLoreEntriesByCategory` from loreEntries.js handles filtering — no extra wiring needed in LoreCodex.jsx since it already reads from LORE_ENTRIES
 ---
+
+## 2026-04-07 - WIRE-012
+- Added `pronunciationAccuracy: {}` to `analyticsSlice.js` initialState with rolling-average similarity tracking per word
+- Added `recordPronunciationResult({ wordId, correct, similarity })` reducer — updates `correct`, `total`, and `avgSimilarity` (rolling average)
+- Exported `recordPronunciationResult` action and `selectPronunciationAccuracy` selector
+- Updated `ReviewSession.jsx`: imported `PronunciationFeedback` and `recordPronunciationResult`; added `<PronunciationFeedback arabicWord={...} onResult={...}>` in `ar-to-en` quiz type — shown before answer choices so player can attempt pronunciation before guessing
+- `PronunciationFeedback` already existed in `src/components/Arabic/` and was complete — only needed wiring and dispatch handler
+- Added 7 tests in `src/store/__tests__/pronunciationTracking.test.js` — initialState, first entry creation, correct/total increment, rolling average, missing similarity fallback, selector, reset
+- Files changed: `src/store/slices/analyticsSlice.js`, `src/components/Review/ReviewSession.jsx`, `src/store/__tests__/pronunciationTracking.test.js`
+- **Learnings for future iterations:**
+  - `PronunciationFeedback` gates itself on `state.settings.pronunciationPractice && isSpeechRecognitionSupported()` — safe to wire unconditionally, it self-hides when unavailable
+  - Rolling average formula: `(prevAvg * (total - 1) + newValue) / total` — compute AFTER incrementing total
+  - `onResult` receives `{ recognized, similarity, correct }` from `evaluatePronunciation` — similarity is 0–1 float
+---

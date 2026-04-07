@@ -193,7 +193,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "notes": "Read src/services/pronunciationService.js and src/components/Arabic/PronunciationFeedback.jsx."
     },
     {
