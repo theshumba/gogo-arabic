@@ -6,6 +6,12 @@
 
 ---
 
+## 2026-04-07 - FEAT-007
+- Full adaptive difficulty engine already existed: `difficultyEngine.js` (68 tests), `difficultyMiddleware.js` (12 tests), `difficultySlice.js`.
+- Added `selectCurrentDifficulty()` (1-5 numeric mapping) and `selectShouldSuggestBreak()` alias to `difficultySlice.js` to satisfy AC selector naming.
+- Files changed: `difficultySlice.js`, `prd.json`, `progress.txt`
+---
+
 ## 2026-04-07 - FEAT-006
 - Created `src/utils/conversationScoring.js` with `scoreConversationResponse()`, `calculateConversationXP()`, `extractVocabularyFromSentence()`, and `normaliseArabic()`.
 - Used existing `stripDiacritics()` from `arabicUtils.js` for tashkeel handling.

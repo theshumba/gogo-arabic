@@ -232,4 +232,19 @@ export const selectRecentAccuracy = createSelector(
 /** Select historical sessions. */
 export const selectHistoricalSessions = (state) => state.difficulty?.historicalSessions ?? [];
 
+/**
+ * Alias — returns current difficulty as a 1-5 numeric level.
+ * Maps: beginner→1, easy→2, medium→3, hard→4, expert→5
+ */
+export const selectCurrentDifficulty = createSelector(
+  [selectDifficultyLevel],
+  (level) => {
+    const map = { beginner: 1, easy: 2, medium: 3, hard: 4, expert: 5 };
+    return map[level] ?? 3;
+  },
+);
+
+/** Alias — whether a break should be suggested (same as selectShouldBreak). */
+export const selectShouldSuggestBreak = (state) => state.difficulty?.breakSuggested ?? false;
+
 export default difficultySlice.reducer;
