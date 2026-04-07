@@ -189,6 +189,15 @@ const questSlice = createSlice({
         state.activeQuestId = questId;
       }
     },
+
+    activateQuest(state, action) {
+      // payload: questId — force a locked/unknown quest to 'active' (used by chain middleware)
+      const questId = action.payload;
+      const entry = state.quests[questId];
+      if (entry && entry.status === 'locked') {
+        entry.status = 'active';
+      }
+    },
   },
 });
 
@@ -208,6 +217,7 @@ export const {
   masterLetter,
   incrementSentenceQuizzes,
   setActiveQuest,
+  activateQuest,
 } = questSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
