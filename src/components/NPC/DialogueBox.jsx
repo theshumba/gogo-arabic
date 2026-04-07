@@ -1,8 +1,12 @@
 import { useSelector } from 'react-redux';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useTypewriter } from '../../hooks/useTypewriter.js';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
+import { selectFsrsCards } from '../../store/slices/vocabularySlice.js';
+import { filterDialogueForPlayer } from '../../services/npcVocabFilter.js';
+import vocabulary from '../../data/vocabularyAll.js';
 import VocabularyHighlight from './VocabularyHighlight.jsx';
+import FilteredArabicLine from './FilteredArabicLine.jsx';
 import RelationshipIndicator from './RelationshipIndicator.jsx';
 import { EventBus } from '../../utils/eventBus.js';
 import styles from './DialogueOverlay.module.css';
@@ -55,7 +59,17 @@ function renderArabicWithHighlights(arabicText, inlineVocab) {
  */
 export default function DialogueBox({ npc, line, onAdvance, portrait, teachWordCard, isHubAndSpoke, relationshipLevel }) {
   const settings = useSelector((s) => s.settings);
+  const fsrsCards = useSelector(selectFsrsCards);
   const formatArabic = useFormatArabic();
+
+  // Compute known word IDs from FSRS cards
+  const knownWordIds = useMemo(() => new Set(Object.keys(fsrsCards)), [fsrsCards]);
+
+  // Apply vocab filter to annotate known/unknown words in the Arabic line
+  const filteredLine = useMemo(
+    () => filterDialogueForPlayer(line, knownWordIds, vocabulary),
+    [line, knownWordIds]
+  );
 
   const isPlayerSpeaking = line.speaker === 'player';
   const speakerName = isPlayerSpeaking ? 'You' : npc.name;
@@ -153,6 +167,8 @@ export default function DialogueBox({ npc, line, onAdvance, portrait, teachWordC
           <div className={styles.arabicLine} lang="ar">
             {arabicTypewriter.isComplete && line.inlineVocab
               ? renderArabicWithHighlights(formatArabic(line.arabic), line.inlineVocab)
+              : arabicTypewriter.isComplete && filteredLine?.hasUnknownWords
+              ? <FilteredArabicLine annotations={filteredLine.annotations} vocabAll={vocabulary} knownWordIds={knownWordIds} />
               : arabicTypewriter.displayText}
           </div>
         )}

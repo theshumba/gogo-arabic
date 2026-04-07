@@ -3,6 +3,7 @@ import {
   filterDialogue,
   buildVocabLookup,
   filterDialogueBatch,
+  filterDialogueForPlayer,
 } from '../npcVocabFilter.js';
 
 describe('npcVocabFilter', () => {
@@ -83,6 +84,64 @@ describe('npcVocabFilter', () => {
       expect(results.length).toBe(2);
       expect(results[0].hasUnknownWords).toBe(false);
       expect(results[1].hasUnknownWords).toBe(true);
+    });
+  });
+
+  describe('filterDialogueForPlayer', () => {
+    it('marks known words as known', () => {
+      const result = filterDialogueForPlayer(
+        { arabic: 'كِتَاب', english: 'book' },
+        ['kitab'],
+        vocabAll
+      );
+      expect(result.annotations[0].known).toBe(true);
+    });
+
+    it('marks unknown words as unknown with transliteration hint', () => {
+      const result = filterDialogueForPlayer(
+        { arabic: 'قَلَم', english: 'pen' },
+        [],
+        vocabAll
+      );
+      expect(result.annotations[0].known).toBe(false);
+      expect(result.annotations[0].transliteration).toBe('qalam');
+    });
+
+    it('sets hasUnknownWords true when any word is unknown', () => {
+      const result = filterDialogueForPlayer(
+        { arabic: 'كِتَاب قَلَم', english: 'book pen' },
+        ['kitab'],
+        vocabAll
+      );
+      expect(result.hasUnknownWords).toBe(true);
+    });
+
+    it('sets hasUnknownWords false when all words are known', () => {
+      const result = filterDialogueForPlayer(
+        { arabic: 'كِتَاب قَلَم', english: 'book pen' },
+        ['kitab', 'qalam'],
+        vocabAll
+      );
+      expect(result.hasUnknownWords).toBe(false);
+    });
+
+    it('accepts a Set of known word IDs', () => {
+      const result = filterDialogueForPlayer(
+        { arabic: 'كِتَاب', english: 'book' },
+        new Set(['kitab']),
+        vocabAll
+      );
+      expect(result.annotations[0].known).toBe(true);
+    });
+
+    it('handles empty dialogue gracefully', () => {
+      const result = filterDialogueForPlayer(
+        { arabic: '', english: '' },
+        ['kitab'],
+        vocabAll
+      );
+      expect(result.annotations).toEqual([]);
+      expect(result.hasUnknownWords).toBe(false);
     });
   });
 });

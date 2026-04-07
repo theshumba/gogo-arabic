@@ -117,3 +117,17 @@ export function filterDialogueBatch(dialogueLines, knownWordIds, vocabAll) {
     filterDialogue(line, knownArabicSet, transliterationMap)
   );
 }
+
+/**
+ * Convenience wrapper — filter a single dialogue line for a player.
+ * Builds the lookup tables internally from knownWordIds + vocabAll.
+ *
+ * @param {Object} dialogueLine - { arabic: string, english: string }
+ * @param {Set<string>|Array<string>} knownWordIds - Player's known word IDs (FSRS card keys)
+ * @param {Array} vocabAll - Full vocabulary array
+ * @returns {FilteredDialogue}
+ */
+export function filterDialogueForPlayer(dialogueLine, knownWordIds, vocabAll) {
+  const { knownArabicSet, transliterationMap } = buildVocabLookup(knownWordIds, vocabAll);
+  return filterDialogue(dialogueLine, knownArabicSet, transliterationMap);
+}
