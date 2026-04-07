@@ -31,6 +31,8 @@ const userSchema = new mongoose.Schema({
     keyboardMode: { type: String, default: 'standard' },
     difficulty: { type: String, default: 'normal' },
   },
+  // Full player settings (matches settingsSlice state) — last-write-wins sync
+  playerSettings: { type: mongoose.Schema.Types.Mixed, default: {} },
   // Cloud sync versioning
   syncVersion: { type: Number, default: 0 },
   lastSyncedAt: { type: Date, default: Date.now },

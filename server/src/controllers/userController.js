@@ -59,3 +59,53 @@ export async function updateProfile(req, res, next) {
     next(err);
   }
 }
+
+/**
+ * Get the authenticated user's player settings
+ *
+ * @route GET /api/v1/user/settings
+ * @auth Required
+ * @returns {Object} { success: true, data: { settings, syncVersion } }
+ */
+export async function getSettings(req, res, next) {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return next(AppError.notFound('User not found'));
+
+    res.json({
+      success: true,
+      data: { settings: user.playerSettings || {}, syncVersion: user.syncVersion },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Save (last-write-wins merge) the authenticated user's player settings
+ *
+ * @route POST /api/v1/user/settings
+ * @body {Object} Partial or full playerSettings object (validated by playerSettingsSchema)
+ * @auth Required
+ * @returns {Object} { success: true, data: { settings, syncVersion } }
+ */
+export async function saveSettings(req, res, next) {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) return next(AppError.notFound('User not found'));
+
+    // req.body already validated + stripped by validate(playerSettingsSchema) middleware
+    user.playerSettings = { ...(user.playerSettings || {}), ...req.body };
+    user.syncVersion = (user.syncVersion || 0) + 1;
+    user.lastSyncedAt = new Date();
+    user.markModified('playerSettings');
+    await user.save();
+
+    res.json({
+      success: true,
+      data: { settings: user.playerSettings, syncVersion: user.syncVersion },
+    });
+  } catch (err) {
+    next(err);
+  }
+}

@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
-import { getProfile, updateProfile } from '../controllers/userController.js';
-import { updateProfileSchema } from '../validation/userSchemas.js';
+import { getProfile, updateProfile, getSettings, saveSettings } from '../controllers/userController.js';
+import { updateProfileSchema, playerSettingsSchema } from '../validation/userSchemas.js';
 import { apiLimiter } from '../middleware/rateLimiter.js';
 
 const router = Router();
@@ -12,5 +12,8 @@ router.use(apiLimiter);
 
 router.get('/profile', authenticate, getProfile);
 router.put('/profile', authenticate, validate(updateProfileSchema), updateProfile);
+
+router.get('/settings', authenticate, getSettings);
+router.post('/settings', authenticate, validate(playerSettingsSchema), saveSettings);
 
 export default router;
