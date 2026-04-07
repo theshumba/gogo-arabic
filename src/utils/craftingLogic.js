@@ -190,3 +190,81 @@ export function calculateGatheringQuality(professionLevel, roll) {
   if (randomValue < 0.80) return 'pristine';
   return 'perfect';
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Vocabulary-mastery gating (FEAT-008)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const MASTERY_THRESHOLD = 0.8; // 80% mastery required
+
+/**
+ * Map of CEFR level → base XP multiplier for crafting.
+ * Higher CEFR ingredients yield more XP.
+ */
+export const CEFR_XP_MULTIPLIER = { A1: 1, A2: 1.5, B1: 2, B2: 3 };
+
+/**
+ * Check if a player can use a crafting ingredient based on vocabulary mastery.
+ *
+ * vocabMasteryMap: { [wordId]: number } where number is 0–1 (mastery score).
+ * A word qualifies if its mastery >= MASTERY_THRESHOLD (0.80).
+ *
+ * @param {string} ingredientId — resource ID (e.g. 'paper')
+ * @param {object} vocabMasteryMap — { [wordId]: mastery 0-1 }
+ * @param {object} RESOURCES — resources data map (injected for testability)
+ * @returns {boolean}
+ */
+export function canUseIngredientByMastery(ingredientId, vocabMasteryMap, RESOURCES) {
+  if (!RESOURCES || !RESOURCES[ingredientId]) return false;
+  const wordId = RESOURCES[ingredientId].wordId;
+  if (!wordId) return false;
+  return (vocabMasteryMap[wordId] ?? 0) >= MASTERY_THRESHOLD;
+}
+
+/**
+ * Check whether all ingredients in a recipe meet the 80%+ mastery requirement.
+ *
+ * @param {string} recipeId
+ * @param {object} vocabMasteryMap — { [wordId]: mastery 0-1 }
+ * @param {object} RECIPES — recipes data map (injected)
+ * @param {object} RESOURCES — resources data map (injected)
+ * @returns {boolean}
+ */
+export function isRecipeCraftableByMastery(recipeId, vocabMasteryMap, RECIPES, RESOURCES) {
+  if (!RECIPES || !RECIPES[recipeId]) return false;
+  const recipe = RECIPES[recipeId];
+  if (!recipe.ingredients || recipe.ingredients.length === 0) return true;
+  return recipe.ingredients.every(({ resourceId }) =>
+    canUseIngredientByMastery(resourceId, vocabMasteryMap, RESOURCES)
+  );
+}
+
+/**
+ * Calculate crafting XP scaled to the average CEFR level of the recipe's
+ * ingredient words.
+ *
+ * vocabData: array of { wordId, cefrLevel } entries.
+ *
+ * @param {number} baseXP
+ * @param {string[]} wordIds — word IDs of all ingredients
+ * @param {Array<{wordId: string, cefrLevel: string}>} vocabData
+ * @returns {number} scaled XP (integer)
+ */
+export function calculateCefrScaledXP(baseXP, wordIds, vocabData) {
+  if (!wordIds || wordIds.length === 0) return baseXP;
+
+  const cefrMap = new Map((vocabData || []).map((v) => [v.wordId, v.cefrLevel]));
+
+  let totalMultiplier = 0;
+  let found = 0;
+
+  for (const wordId of wordIds) {
+    const cefr = cefrMap.get(wordId);
+    const multiplier = CEFR_XP_MULTIPLIER[cefr] ?? 1;
+    totalMultiplier += multiplier;
+    found += 1;
+  }
+
+  const avg = found > 0 ? totalMultiplier / found : 1;
+  return Math.round(baseXP * avg);
+}

@@ -136,7 +136,7 @@
         "npm run test:run passes"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "Read craftingSlice.js and vocabulary data to understand the data models before implementing."
     },
     {

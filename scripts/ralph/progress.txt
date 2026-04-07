@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-04-07 - FEAT-008
+- Added `canUseIngredientByMastery()`, `isRecipeCraftableByMastery()`, `calculateCefrScaledXP()`, `CEFR_XP_MULTIPLIER` to `craftingLogic.js` (new functions, did not break existing 37 tests).
+- Added `selectCraftableRecipes()` memoized selector to `craftingSlice.js` (needed to import RESOURCES too).
+- Created 21 tests in `craftingVocabGate.test.js`.
+- Pattern: craftingSlice didn't import RESOURCES — needed to add it alongside existing RECIPES import.
+- Files changed: `craftingLogic.js`, `craftingSlice.js`, `craftingVocabGate.test.js` (new), `prd.json`, `progress.txt`
+---
+
 ## 2026-04-07 - FEAT-007
 - Full adaptive difficulty engine already existed: `difficultyEngine.js` (68 tests), `difficultyMiddleware.js` (12 tests), `difficultySlice.js`.
 - Added `selectCurrentDifficulty()` (1-5 numeric mapping) and `selectShouldSuggestBreak()` alias to `difficultySlice.js` to satisfy AC selector naming.

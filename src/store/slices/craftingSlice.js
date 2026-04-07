@@ -7,6 +7,7 @@
 
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { RECIPES } from '../../data/recipes.js';
+import { RESOURCES } from '../../data/resources.js';
 import { PROFESSIONS } from '../../data/professions.js';
 
 const initialState = {
@@ -325,6 +326,48 @@ export const selectProfessionMasteryBonus = createSelector(
     if (level >= 4) return 2;
     if (level >= 1) return 1;
     return 0;
+  }
+);
+
+/**
+ * selectCraftableRecipes — filters all discovered recipes by vocabulary mastery.
+ *
+ * Returns only recipes where every ingredient's word is at >= 80% mastery
+ * in the player's FSRS deck.
+ *
+ * vocabMasteryMap is derived from state.vocabulary.fsrsCards:
+ *   { [wordId]: mastery 0-1 } where mastery = min(1, card.stability / 10)
+ *
+ * @param {object} state — full Redux state
+ * @returns {string[]} array of craftable recipe IDs
+ */
+export const selectCraftableRecipes = createSelector(
+  [
+    selectDiscoveredRecipes,
+    (state) => state.vocabulary?.fsrsCards ?? {},
+  ],
+  (discoveredRecipes, fsrsCards) => {
+    // Build a mastery map: wordId → 0-1 score
+    const vocabMasteryMap = {};
+    for (const [wordId, entry] of Object.entries(fsrsCards)) {
+      const reps = entry?.card?.reps ?? 0;
+      const stability = entry?.card?.stability ?? 0;
+      // Mastery = fraction of reps completed, capped at 1
+      // Simple proxy: stability >= 10 → full mastery, else stability/10
+      vocabMasteryMap[wordId] = Math.min(1, stability / 10);
+      // Also count as mastered if reps >= 8 (reviewed many times)
+      if (reps >= 8) vocabMasteryMap[wordId] = 1;
+    }
+
+    return discoveredRecipes.filter((recipeId) => {
+      const recipe = RECIPES[recipeId];
+      if (!recipe || !recipe.ingredients) return false;
+      return recipe.ingredients.every(({ resourceId }) => {
+        const resource = RESOURCES[resourceId];
+        if (!resource?.wordId) return true; // no word requirement
+        return (vocabMasteryMap[resource.wordId] ?? 0) >= 0.8;
+      });
+    });
   }
 );
 
