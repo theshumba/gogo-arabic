@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getDueCards } from '../../services/fsrs.js';
 import { audioManager } from '../../services/audio.js';
 import { getTodayPhrase } from '../../services/dailyPhraseService.js';
+import { isDigestReady, getDigestIfReady } from '../../services/weeklyDigestService.js';
 import { selectCefrLevel } from '../../store/slices/cefrProgressSlice.js';
 import { selectHasCompletedPlacement, recordPlacementResult } from '../../store/slices/placementSlice.js';
 import { setCefrLevel } from '../../store/slices/cefrProgressSlice.js';
@@ -10,11 +11,13 @@ import { bulkUnlockLessons } from '../../store/slices/grammarSlice.js';
 import { bulkUnlockNodes } from '../../store/slices/skillTreeSlice.js';
 import { deriveGrammarUnlocks, deriveSkillTreeUnlocks } from '../../services/placementEngine.js';
 import PlacementTestOverlay from '../Placement/PlacementTestOverlay.jsx';
+import WeeklyDigestModal from './WeeklyDigestModal.jsx';
 import styles from './MainMenu.module.css';
 
 export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings, onCharacterCreation, onGrammar }) {
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
   const player = useSelector((s) => s.player);
+  const analytics = useSelector((s) => s.analytics);
   const hasCompletedPlacement = useSelector(selectHasCompletedPlacement);
   const cefrLevel = useSelector(selectCefrLevel);
   const dispatch = useDispatch();
@@ -22,6 +25,7 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
   // Today's phrase — deterministic by date, filtered to player's CEFR level
   const todayPhrase = useMemo(() => getTodayPhrase(cefrLevel || 'A1'), [cefrLevel]);
   const [showPlacement, setShowPlacement] = useState(false);
+  const [weeklyDigest, setWeeklyDigest] = useState(null);
 
   const hasCharacter = player.name !== '';
 
@@ -30,6 +34,25 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
     audioManager.playBGM('menu');
     // Don't stop BGM on unmount -- let the next screen's BGM crossfade naturally
   }, []);
+
+  // Check weekly digest on first render
+  useEffect(() => {
+    if (isDigestReady()) {
+      const playerState = {
+        dailyActivity: analytics.dailyActivity || {},
+        sessions: analytics.sessions || [],
+        wordAccuracy: analytics.wordAccuracy || {},
+        grammarState: {},
+        readingState: {},
+        conversationState: {},
+        statsState: {},
+      };
+      const digest = getDigestIfReady(playerState);
+      if (digest) {
+        setWeeklyDigest(digest);
+      }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-show placement test for players who have a character but haven't been placed
   useEffect(() => {
@@ -158,6 +181,13 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
         <PlacementTestOverlay
           onComplete={handlePlacementComplete}
           onSkip={handlePlacementSkip}
+        />
+      )}
+
+      {weeklyDigest && !showPlacement && (
+        <WeeklyDigestModal
+          digest={weeklyDigest}
+          onDismiss={() => setWeeklyDigest(null)}
         />
       )}
     </div>
