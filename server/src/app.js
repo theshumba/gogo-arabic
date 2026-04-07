@@ -16,10 +16,12 @@ import achievementRoutes from './routes/achievement.js';
 import leaderboardRoutes from './routes/leaderboard.js';
 import analyticsRoutes from './routes/analytics.js';
 import factionRoutes from './routes/faction.js';
+import healthRoutes from './routes/health.js';
 import { globalLimiter } from './middleware/rateLimiter.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { validateCsrfToken } from './middleware/csrf.js';
+import { requestCounterMiddleware } from './utils/requestCounter.js';
 import logger from './utils/logger.js';
 
 const require = createRequire(import.meta.url);
@@ -64,6 +66,12 @@ app.use(cookieParser());
 
 // Request logging
 app.use(requestLogger);
+
+// Request counter (for /health/detailed diagnostics)
+app.use(requestCounterMiddleware);
+
+// Health check routes — registered BEFORE CSRF so /health is always accessible
+app.use('/health', healthRoutes);
 
 // Global rate limiting
 app.use(globalLimiter);
