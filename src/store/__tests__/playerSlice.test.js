@@ -58,6 +58,10 @@ describe('playerSlice', () => {
       mentorAvailable: true,
       onboardingTargetNpc: null,
       learningPath: null,
+      lastLoginDate: null,
+      loginStreak: 0,
+      totalLogins: 0,
+      pendingLoginReward: null,
     };
   });
 

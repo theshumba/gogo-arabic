@@ -9,9 +9,10 @@
 import { LORE_ENTRIES_BATCH_1 } from './loreEntriesBatch1.js';
 import { LORE_ENTRIES_BATCH_2 } from './loreEntriesBatch2.js';
 import { LORE_ENTRIES_BATCH_3 } from './loreEntriesBatch3.js';
+import { LORE_ENTRIES_BATCH_4 } from './loreEntriesBatch4.js';
 
 /** All lore entries combined */
-export const LORE_ENTRIES = [...LORE_ENTRIES_BATCH_1, ...LORE_ENTRIES_BATCH_2, ...LORE_ENTRIES_BATCH_3];
+export const LORE_ENTRIES = [...LORE_ENTRIES_BATCH_1, ...LORE_ENTRIES_BATCH_2, ...LORE_ENTRIES_BATCH_3, ...LORE_ENTRIES_BATCH_4];
 
 /** Lookup by ID */
 const _byId = new Map(LORE_ENTRIES.map((e) => [e.id, e]));
@@ -38,7 +39,7 @@ export function getLoreEntriesByTrigger(trigger) {
 export const LORE_CATEGORIES = [
   'history', 'culture', 'language', 'geography', 'religion',
   'science', 'art', 'trade', 'warfare', 'mythology',
-  'calligraphy', 'scholars',
+  'calligraphy', 'scholars', 'world-lore',
 ];
 
 /** Category metadata for UI */
@@ -55,6 +56,7 @@ export const CATEGORY_META = {
   mythology:   { icon: '\uD83D\uDC09', label: 'Mythology',   labelArabic: '\u0623\u0633\u0627\u0637\u064A\u0631' },
   calligraphy: { icon: '\u2712\uFE0F',  label: 'Calligraphy', labelArabic: '\u0627\u0644\u062E\u0637' },
   scholars:    { icon: '\uD83D\uDCDA', label: 'Scholars',    labelArabic: '\u0627\u0644\u0639\u0644\u0645\u0627\u0621' },
+  'world-lore':{ icon: '\uD83C\uDF0D', label: 'World Lore', labelArabic: '\u0623\u0633\u0627\u0637\u064A\u0631 \u0627\u0644\u0639\u0627\u0644\u0645' },
 };
 
 /** Per-category totals for progress tracking */

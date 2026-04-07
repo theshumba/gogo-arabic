@@ -65,7 +65,7 @@ describe('loreEntries data integrity', () => {
   it('has at least 25 entries per category', () => {
     const totals = getCategoryTotals();
     // Original 10 categories require 25+; new extension categories require 1+
-    const newCategories = new Set(['calligraphy', 'scholars']);
+    const newCategories = new Set(['calligraphy', 'scholars', 'world-lore']);
     for (const cat of LORE_CATEGORIES) {
       const min = newCategories.has(cat) ? 1 : 25;
       expect(totals[cat], `${cat} has only ${totals[cat]}`).toBeGreaterThanOrEqual(min);
