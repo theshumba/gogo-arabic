@@ -108,3 +108,18 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - cefrProgress slice uses `currentLevel` (not `level`); placement slice uses `hasCompleted` (not `hasCompletedPlacement`) — match slice field names exactly in preloadedState
   - Mocking `dailyPhraseService.js` with `vi.mock` + fixed return value lets CEFR-level assertion use `toHaveBeenCalledWith` on the imported `getTodayPhrase`
 ---
+
+## 2026-04-07 - WIRE-007
+- Created `WeeklyDigestModal.jsx` — renders learning stats (wordsReviewed, wordsMastered, studyMinutes, streakDays, averageAccuracy) as a pixel-art overlay modal with dismiss button
+- Created `WeeklyDigestModal.module.css` — overlay + modal styles matching game's pixel aesthetic
+- Updated `MainMenu.jsx`: imports `isDigestReady`, `getDigestIfReady` from `weeklyDigestService`; reads `s.analytics` from Redux; on mount checks if digest is ready and sets `weeklyDigest` state; renders `WeeklyDigestModal` when digest is non-null and placement test is not active
+- `markDigestShown()` called inside the modal's dismiss handler (not in MainMenu) to keep the modal self-contained
+- Digest is suppressed while placement overlay is active (`!showPlacement` guard)
+- Added 5 tests in `src/components/Menu/__tests__/WeeklyDigestModal.test.jsx`
+- Files changed: `src/components/Menu/MainMenu.jsx`, `src/components/Menu/WeeklyDigestModal.jsx`, `src/components/Menu/WeeklyDigestModal.module.css`, `src/components/Menu/__tests__/WeeklyDigestModal.test.jsx`
+- **Learnings for future iterations:**
+  - `analyticsSlice` (Redux name: `'analytics'`) holds `dailyActivity`, `sessions`, `wordAccuracy` — exactly the fields `generateStudyReport` needs
+  - `getDigestIfReady` returns null if activity is zero — no need to guard in MainMenu
+  - Run-once effects for localStorage-based checks use `[]` deps with `// eslint-disable-line react-hooks/exhaustive-deps`
+  - Mock `formatDigestSummary` in tests to avoid emoji assertion brittleness
+---

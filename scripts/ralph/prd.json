@@ -112,7 +112,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "Read src/services/weeklyDigestService.js. It internally uses learningAnalytics.js which is already wired."
     },
     {
