@@ -227,7 +227,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "notes": "Read companionSlice.js and existing companion data to see the 12 companion IDs and names."
     },
     {

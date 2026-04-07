@@ -207,3 +207,15 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - `getQuranicCoverageByCategory` uses word.category (not surah name) — "surahs" in PRD = categories in practice
   - AnalyticsDashboard uses inline style objects (not CSS modules) — add new style keys to the `styles` const at bottom
 ---
+
+## 2026-04-07 - GROW-014
+- Created `src/data/companionBackstories.js` with all 12 companions: each has 4-paragraph backstory, personality traits[], gift preferences {loved, liked, disliked} tied to shops.js item IDs, and 4 dialogue triggers {onLevelUp, onBattleWin, onQuestComplete, onLowHealth} with {arabic, english}
+- `selectCompanionBackstory(id)` and `selectGiftReaction(companionId, itemId)` — plain functions using module-level Map for O(1) lookup; not Redux selectors (static data)
+- 35 tests: 12 for field completeness per companion (via it.each), 12 for dialogue trigger structure, plus selector tests for known/unknown/null inputs and all 4 reaction tiers
+- Files changed: `src/data/companionBackstories.js`, `src/data/__tests__/companionBackstories.test.js`
+- **Learnings for future iterations:**
+  - 12 companion IDs from companionSlice.js: companion_amira, _khalid, _zahra, _omar, _layla, _hassan, _fatima, _ali, _maryam, _samir, _nadia, _tariq
+  - Item IDs from shops.js: prayer_beads, ancient_inkwell, compass_of_qibla, astrolabe, desert_bisht, burda_of_blessing, emerald_pendant, etc.
+  - culturalItems.js is for quiz expressions (bismillah, alhamdulillah) NOT inventory items — use shops.js for gift itemIds
+  - `it.each(ARRAY)('%s has ...', (id) => {...})` pattern works cleanly for testing all 12 companions without repetition
+---
