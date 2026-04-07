@@ -103,7 +103,7 @@
         "npm run test:run passes"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "Check src/utils/ for any existing Arabic text comparison utilities. Normalize Arabic text before comparison (strip tashkeel for comparison purposes)."
     },
     {

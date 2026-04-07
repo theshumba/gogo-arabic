@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-04-07 - FEAT-006
+- Created `src/utils/conversationScoring.js` with `scoreConversationResponse()`, `calculateConversationXP()`, `extractVocabularyFromSentence()`, and `normaliseArabic()`.
+- Used existing `stripDiacritics()` from `arabicUtils.js` for tashkeel handling.
+- Created 26 tests in `src/utils/__tests__/conversationScoring.test.js`.
+- Pattern: word-level diff uses multiset difference (handles duplicates correctly).
+- Files changed: `conversationScoring.js` (new), `conversationScoring.test.js` (new), `prd.json`, `progress.txt`
+---
+
 ## 2026-04-07 - FEAT-005
 - Created `src/store/middleware/vocabRateMiddleware.js` with `getNewWordRate()`, `selectRemainingNewWords()`, module-level daily state, and UTC midnight reset.
 - Created `src/store/middleware/__tests__/vocabRateMiddleware.test.js` with 19 tests.
