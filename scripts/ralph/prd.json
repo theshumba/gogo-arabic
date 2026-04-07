@@ -299,7 +299,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 18,
-      "passes": false,
+      "passes": true,
       "notes": "Read playerSlice.js for existing login tracking. Use UTC dates for consistency."
     },
     {

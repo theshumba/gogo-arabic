@@ -258,3 +258,16 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - CEFR distribution is exact (15/15/15/10/5 = 60) — test checks exact counts per level
   - "verb forms" in PRD description maps to category "verb_forms" (underscore, no space)
 ---
+
+## 2026-04-07 - GROW-019
+- Created `src/data/loginRewards.js` — 30-day reward cycle; milestones at 7/14/21/30 with items prayer_beads/silver_ring/compass_of_qibla/astrolabe; getRewardForDay cycles after day 30; getNextMilestoneDay wraps across cycles
+- Added to `playerSlice.js`: lastLoginDate, loginStreak, totalLogins, pendingLoginReward in initialState; processLoginReward (increments streak, applies XP/dirhams/item immediately), resetLoginStreak (resets to 1), dismissLoginReward; 4 selectors
+- Created `src/store/middleware/loginRewardMiddleware.js` — fires on persist/REHYDRATE; same-day=noop, consecutive=processLoginReward, gap=resetLoginStreak; uses UTC date strings (YYYY-MM-DD)
+- 21 tests covering dataset completeness, cycling behavior, milestone detection, reducer state changes, streak reset
+- Files changed: `loginRewards.js`, `loginRewardMiddleware.js`, `playerSlice.js`, `store.js`, `loginRewards.test.js`
+- **Learnings for future iterations:**
+  - persist/REHYDRATE fires on every app start with redux-persist — safe hook for "app launch" logic
+  - UTC date string 'YYYY-MM-DD' is the reliable format; avoid Date.toLocaleDateString() which is locale-dependent
+  - processLoginReward applies XP/dirhams inline (no separate addXP dispatch) to keep state update atomic
+  - getTodayUTC unused helper — remove immediately to avoid ESLint warning
+---
