@@ -7,9 +7,10 @@
 
 import { ACHIEVEMENTS } from '../../data/achievements.js';
 import vocabularyData from '../../data/vocabularyAll.js';
-import { unlockAchievement, recordPerfectQuiz } from '../slices/achievementSlice.js';
+import { unlockAchievement, recordPerfectQuiz, completeChain } from '../slices/achievementSlice.js';
 import { addXP } from '../slices/playerSlice.js';
 import { SKILL_TREES } from '../../data/skillTrees.js';
+import { checkChainCompletions } from '../../services/achievementChainService.js';
 
 // Helper to check if an achievement requirement is met
 function isAchievementMet(achievement, state) {
@@ -178,6 +179,7 @@ export const achievementMiddleware = (store) => (next) => (action) => {
 
     // Collect all XP rewards to batch into a single dispatch
     let totalXpReward = 0;
+    const newlyUnlockedIds = [];
 
     // Check each relevant achievement
     relevantAchievements.forEach((achievement) => {
@@ -188,11 +190,30 @@ export const achievementMiddleware = (store) => (next) => (action) => {
       if (isAchievementMet(achievement, state)) {
         // Unlock the achievement
         store.dispatch(unlockAchievement(achievement.id));
+        newlyUnlockedIds.push(achievement.id);
 
         // Accumulate XP reward instead of dispatching immediately
         totalXpReward += achievement.xpReward;
       }
     });
+
+    // Check for chain completions triggered by newly unlocked achievements
+    if (newlyUnlockedIds.length > 0) {
+      const updatedState = store.getState();
+      const updatedUnlocked = updatedState.achievements?.unlockedAchievements || {};
+      const alreadyCompleted = new Set(updatedState.achievements?.completedChains || []);
+      const newlyCompletedChains = new Set();
+
+      newlyUnlockedIds.forEach((achievementId) => {
+        checkChainCompletions(achievementId, updatedUnlocked).forEach((chain) => {
+          if (!alreadyCompleted.has(chain.chainId) && !newlyCompletedChains.has(chain.chainId)) {
+            newlyCompletedChains.add(chain.chainId);
+            store.dispatch(completeChain(chain.chainId));
+            totalXpReward += chain.xpReward;
+          }
+        });
+      });
+    }
 
     // Dispatch batched XP reward once (avoids re-entrant addXP cascade)
     if (totalXpReward > 0) {

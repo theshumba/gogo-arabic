@@ -48,6 +48,7 @@ describe('achievementSlice', () => {
       expect(initialState).toEqual({
         unlockedAchievements: {},
         newAchievements: [],
+        completedChains: [],
         stats: {
           totalReviews: 0,
           reviewStreakDays: 0,

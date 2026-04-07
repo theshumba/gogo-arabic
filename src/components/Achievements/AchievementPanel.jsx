@@ -6,6 +6,8 @@ import {
   selectAchievementProgress,
   selectUnlockedCount,
   selectTotalAchievementXP,
+  selectAllChainProgress,
+  selectCompletedChains,
 } from '../../store/slices/achievementSlice.js';
 import {
   ACHIEVEMENTS,
@@ -88,6 +90,9 @@ function AchievementPanel({ onClose }) {
   const unlockedCount = useSelector(selectUnlockedCount);
   const totalXP = useSelector(selectTotalAchievementXP);
 
+  const allChainProgress = useSelector(selectAllChainProgress);
+  const completedChains = useSelector(selectCompletedChains);
+
   const focusTrapRef = useFocusTrap(true, null);
 
   // Escape key handler
@@ -104,6 +109,7 @@ function AchievementPanel({ onClose }) {
 
   const tabs = useMemo(() => [
     { id: 'all', label: 'All' },
+    { id: 'chains', label: 'Chains' },
     { id: ACHIEVEMENT_CATEGORIES.VOCABULARY, label: 'Vocabulary' },
     { id: ACHIEVEMENT_CATEGORIES.ALPHABET, label: 'Alphabet' },
     { id: ACHIEVEMENT_CATEGORIES.QUESTS, label: 'Quests' },
@@ -212,23 +218,63 @@ function AchievementPanel({ onClose }) {
 
         {/* Content */}
         <div className={styles.content}>
-          <div className={styles.grid}>
-            {filteredAchievements.map((achievement) => {
-              const isUnlocked = !!unlockedAchievements[achievement.id];
-              const unlockedDate = unlockedAchievements[achievement.id];
-              const progress = achievementProgress[achievement.id] || { current: 0, target: 1 };
+          {activeTab === 'chains' ? (
+            <div className={styles.grid}>
+              {allChainProgress.map((chain) => {
+                const isCompleted = completedChains.includes(chain.chainId);
+                return (
+                  <div
+                    key={chain.chainId}
+                    className={`${styles.card} ${isCompleted ? styles.cardUnlocked : styles.cardLocked}`}
+                    style={isCompleted ? { borderColor: '#a855f7' } : {}}
+                  >
+                    <div className={styles.cardHeader}>
+                      <div className={`${styles.cardIcon} ${isCompleted ? '' : styles.cardIconLocked}`}>
+                        {isCompleted ? chain.icon : '🔒'}
+                      </div>
+                      <div className={styles.cardContent}>
+                        <div className={styles.cardName} style={{ color: isCompleted ? '#a855f7' : undefined }}>
+                          {chain.name}
+                        </div>
+                        <div className={styles.cardInfo}>
+                          <span className={styles.cardRarity}>{chain.rarity}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.cardDescription}>{chain.nameArabic}</div>
+                    <div className={styles.progressBar}>
+                      <div className={styles.progressFill} style={{ width: `${chain.percentage}%` }} />
+                    </div>
+                    <div className={styles.progressText}>
+                      {chain.completed}/{chain.total} — {chain.percentage}%
+                    </div>
+                    <div className={styles.cardFooter}>
+                      <span className={styles.xpBadge}>+{chain.xpReward} XP</span>
+                      {isCompleted && <span className={styles.unlockedDate}>Complete!</span>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className={styles.grid}>
+              {filteredAchievements.map((achievement) => {
+                const isUnlocked = !!unlockedAchievements[achievement.id];
+                const unlockedDate = unlockedAchievements[achievement.id];
+                const progress = achievementProgress[achievement.id] || { current: 0, target: 1 };
 
-              return (
-                <AchievementCard
-                  key={achievement.id}
-                  achievement={achievement}
-                  isUnlocked={isUnlocked}
-                  unlockedDate={unlockedDate}
-                  progress={progress}
-                />
-              );
-            })}
-          </div>
+                return (
+                  <AchievementCard
+                    key={achievement.id}
+                    achievement={achievement}
+                    isUnlocked={isUnlocked}
+                    unlockedDate={unlockedDate}
+                    progress={progress}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </motion.div>
     </motion.div>

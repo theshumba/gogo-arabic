@@ -1,10 +1,12 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { ACHIEVEMENTS, getAchievementById } from '../../data/achievements.js';
 import vocabularyData from '../../data/vocabularyAll.js';
+import { getChainProgress, getAllChainProgress } from '../../services/achievementChainService.js';
 
 const initialState = {
   unlockedAchievements: {}, // { achievementId: timestamp }
   newAchievements: [], // Queue of achievement IDs to show as toasts
+  completedChains: [], // chainIds that have paid out bonus rewards
   stats: {
     totalReviews: 0,
     reviewStreakDays: 0,
@@ -77,6 +79,13 @@ const achievementSlice = createSlice({
         state.stats.quizTypeStats[quizType].perfectStreak = 0;
       }
     },
+
+    completeChain(state, action) {
+      // payload: chainId string
+      if (!state.completedChains.includes(action.payload)) {
+        state.completedChains.push(action.payload);
+      }
+    },
   },
 });
 
@@ -88,6 +97,7 @@ export const {
   recordPerfectQuiz,
   recordShopPurchase,
   recordQuizTypeResult,
+  completeChain,
 } = achievementSlice.actions;
 
 // ========== SELECTORS ==========
@@ -241,5 +251,22 @@ export const selectTotalAchievementXP = createSelector([selectUnlockedAchievemen
   });
   return total;
 });
+
+// ── Chain selectors ──
+
+export const selectCompletedChains = (state) => state.achievements.completedChains;
+
+/** All chains with progress info (memoized). */
+export const selectAllChainProgress = createSelector(
+  [selectUnlockedAchievements],
+  (unlockedAchievements) => getAllChainProgress(unlockedAchievements)
+);
+
+/** Progress for a single chain by ID (selector factory). */
+export const selectChainProgress = (chainId) =>
+  createSelector(
+    [selectUnlockedAchievements],
+    (unlockedAchievements) => getChainProgress(chainId, unlockedAchievements)
+  );
 
 export default achievementSlice.reducer;
