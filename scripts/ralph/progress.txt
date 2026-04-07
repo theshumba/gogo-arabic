@@ -123,3 +123,17 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - Run-once effects for localStorage-based checks use `[]` deps with `// eslint-disable-line react-hooks/exhaustive-deps`
   - Mock `formatDigestSummary` in tests to avoid emoji assertion brittleness
 ---
+
+## 2026-04-07 - WIRE-008
+- Added `spacedListeningEnabled: false` to `settingsSlice.js` initialState + `toggleSpacedListening` reducer + `selectSpacedListeningEnabled` selector
+- Added "Spaced Listening" toggle row in `SettingsMenu.jsx` Audio section — dispatches `toggleSpacedListening()`
+- Wired `startListening` / `stopListening` into `GameLayout.jsx` via `useEffect([spacedListeningEnabled])` — starts on enable, stops on disable, stops on unmount
+- Used `useStore()` from react-redux to get `store.getState` reference (service requires a `getState` fn, not hooks)
+- Service internally handles pause during battles/mute via `shouldPause(state)` — no extra wiring needed
+- Added 11 tests in `src/services/__tests__/spacedListeningService.test.js` covering start/stop, shouldPause conditions, settings toggle, speech synthesis support detection
+- Files changed: `src/store/slices/settingsSlice.js`, `src/components/Menu/SettingsMenu.jsx`, `src/components/Router/GameLayout.jsx`, `src/services/__tests__/spacedListeningService.test.js`
+- **Learnings for future iterations:**
+  - `useStore()` from react-redux gives access to `store.getState` — use when a service needs direct store access rather than reactive hooks
+  - `vi.useFakeTimers()` in service tests can produce IndexedDB teardown errors (known pre-existing artifact with fake-indexeddb) — tests still pass
+  - `spacedListeningService.setInterval` shadows globalThis.setInterval — it calls `globalThis.setInterval` internally to avoid recursion; no action needed
+---
