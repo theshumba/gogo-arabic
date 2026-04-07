@@ -219,3 +219,18 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - culturalItems.js is for quiz expressions (bismillah, alhamdulillah) NOT inventory items — use shops.js for gift itemIds
   - `it.each(ARRAY)('%s has ...', (id) => {...})` pattern works cleanly for testing all 12 companions without repetition
 ---
+
+## 2026-04-07 - GROW-016
+- Created `src/data/questChains.js` — 5 chains using existing quest IDs from quests.json (chain_oasis_scholar, chain_library_mastery, chain_desert_merchant, chain_mountain_wisdom, chain_port_navigator); each has chainReward {xp, dirhams, item}
+- Created `src/services/questChainService.js` — pure functions: getNextQuestInChain, isChainComplete, getChainProgress, getChainReward, getChainByQuestId; module-level Map for O(1) quest→chain lookups
+- Created `src/store/middleware/questChainMiddleware.js` — intercepts `quests/completeQuest`, auto-activates next locked quest in chain, dispatches addXP on full chain completion
+- Added `activateQuest` reducer to `questSlice.js` — force-activates a locked quest (for chain middleware)
+- Wired `questChainMiddleware` into `store.js` middleware array
+- 20 tests in `src/services/__tests__/questChainService.test.js`
+- Files changed: `questChains.js`, `questChainService.js`, `questChainMiddleware.js`, `questSlice.js`, `store.js`, `questChainService.test.js`
+- **Learnings for future iterations:**
+  - sideQuestChains.js already exists with 8 chains (oasis_mystery, etc.) but uses different IDs not in quests.json — use quests.json IDs for chains that wire into questSlice
+  - questSlice has no direct "unlock" action — add activateQuest for targeted chain unlocking
+  - getChainProgress falls back to locked quest when no active quest found in chain, so currentQuest is always the "next to tackle" quest
+  - `store.getState()` in middleware returns state AFTER next(action) completes — use it post-next for accurate chain completion check
+---
