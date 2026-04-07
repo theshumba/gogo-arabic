@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getDueCards } from '../../services/fsrs.js';
 import { audioManager } from '../../services/audio.js';
+import { getTodayPhrase } from '../../services/dailyPhraseService.js';
+import { selectCefrLevel } from '../../store/slices/cefrProgressSlice.js';
 import { selectHasCompletedPlacement, recordPlacementResult } from '../../store/slices/placementSlice.js';
 import { setCefrLevel } from '../../store/slices/cefrProgressSlice.js';
 import { bulkUnlockLessons } from '../../store/slices/grammarSlice.js';
@@ -14,8 +16,14 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
   const player = useSelector((s) => s.player);
   const hasCompletedPlacement = useSelector(selectHasCompletedPlacement);
+  const cefrLevel = useSelector(selectCefrLevel);
   const dispatch = useDispatch();
+
+  // Today's phrase — deterministic by date, filtered to player's CEFR level
+  const todayPhrase = useMemo(() => getTodayPhrase(cefrLevel || 'A1'), [cefrLevel]);
   const [showPlacement, setShowPlacement] = useState(false);
+
+  const hasCharacter = player.name !== '';
 
   // Start menu BGM when component mounts
   useEffect(() => {
@@ -36,8 +44,6 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
   } catch {
     dueCount = 0;
   }
-
-  const hasCharacter = player.name !== '';
 
   const handlePlacementComplete = (assignedLevel, rawScore, storedLevel) => {
     // 1. Record placement result
@@ -85,6 +91,15 @@ export default function MainMenu({ onStartGame, onAlphabet, onReview, onSettings
     <div className={styles.container} role="main">
       <h1 className={styles.title}>Gogo Arabic</h1>
       <div className={styles.titleArabic} lang="ar" aria-hidden="true">يلا عربي</div>
+
+      {todayPhrase && (
+        <div className={styles.phraseCard} aria-label="Daily Arabic phrase" role="complementary">
+          <div className={styles.phraseLabel}>Today&apos;s Phrase</div>
+          <div className={styles.phraseArabic} lang="ar">{todayPhrase.arabic}</div>
+          <div className={styles.phraseTranslit}>{todayPhrase.transliteration}</div>
+          <div className={styles.phraseEnglish}>{todayPhrase.english}</div>
+        </div>
+      )}
 
       <nav className={styles.btnGroup} aria-label="Main menu">
         {hasCharacter ? (

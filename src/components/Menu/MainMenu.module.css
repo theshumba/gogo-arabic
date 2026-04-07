@@ -41,6 +41,47 @@
   text-shadow: 2px 2px 0px var(--color-brown);
 }
 
+.phraseCard {
+  background: rgba(0, 0, 0, 0.55);
+  border: 2px solid var(--color-xp-gold);
+  padding: 12px 20px;
+  width: 300px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.phraseLabel {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--color-xp-gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.phraseArabic {
+  font-family: var(--font-arabic);
+  font-size: 22px;
+  color: var(--color-beige);
+  direction: rtl;
+  margin-bottom: 4px;
+}
+
+.phraseTranslit {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--color-beige);
+  opacity: 0.8;
+  margin-bottom: 4px;
+  font-style: italic;
+}
+
+.phraseEnglish {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--color-xp-gold);
+}
+
 .btnGroup {
   display: flex;
   flex-direction: column;
