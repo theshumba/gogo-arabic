@@ -1,16 +1,22 @@
-# Ralph Progress Log
-Started: Tue Apr  7 15:01:29 BST 2026
+## Codebase Patterns
+
+- Data files in `src/data/` often already exist from prior phases — always check before creating new ones.
+- Pre-existing lint errors (151 errors) and test failures (forgettingCurve, settingsSlice, battle.integration, HUD) are baseline — do not count against story completion.
+- arabicIdioms.js uses named functions (`getIdiomsByCategory`, `getRandomIdiom`) rather than Redux-style `select*` names — add thin aliases when AC requires selector naming.
+
 ---
-## Tue Apr  7 15:18:00 BST 2026 - FIX-001 through FIX-010
-- Implemented all 10 user stories from the PRD
-- Fixed ESM process imports across 4 tool scripts
-- Fixed inventory capacity off-by-one check by cleanly capping at MAX_INVENTORY_SIZE for new items
-- Removed unused previousEvent in seasonalEventSlice and unused form parameter in magicSlice
-- Ensured factionSlice bonus calculations don't use unnecessary parseFloat calls and prevent Object.entries mutation risk
-- Added Zod profile schema validation to the userController update endpoint
-- Cleaned up unused vi import in shuffle.test.js and stale eslint-disable comment in itemStats.js
-- Connected FSRS mastery to actionContext via vocabulary.stats.accuracy
+
+# Ralph Progress Log
+Started: Tue  7 Apr 2026 18:48:06 BST
+---
+
+## 2026-04-07 - FEAT-001
+- Data file `src/data/arabicIdioms.js` already existed with 110 idioms across 10 categories (created by a prior phase).
+- Tests `src/data/__tests__/arabicIdioms.test.js` already existed and passed (23 tests).
+- Added missing `selectIdiomsBy(category)` and `selectDailyIdiom(dateString)` exports to satisfy AC selectors (charcode-sum hash for daily rotation).
+- Files changed: `src/data/arabicIdioms.js`, `scripts/ralph/prd.json`, `scripts/ralph/progress.txt`
 - **Learnings for future iterations:**
-  - The `claude` CLI tool was unavailable, so these tasks were manually stepped through instead of relying on the Ralph agent loop.
-  - Testing locally with vitest threw missing jsdom permissions errors, so code correctness was verified predominantly manually.
+  - All three FEAT-001/002/003 data files likely already exist — check `src/data/` before writing anything.
+  - Test files for these data files are in `src/data/__tests__/`.
+  - Pre-existing failures in spacedListeningService, forgettingCurve, settingsSlice, HUD, antiFrustrationMiddleware, zoneReviewMiddleware, battle.integration — ignore these baselines.
 ---

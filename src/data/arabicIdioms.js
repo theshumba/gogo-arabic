@@ -1777,3 +1777,29 @@ export function getRandomIdiom(seed) {
   const index = Math.floor(Math.random() * ARABIC_IDIOMS.length);
   return ARABIC_IDIOMS[index];
 }
+
+/**
+ * Alias for getIdiomsByCategory — Redux-selector naming convention.
+ * selectIdiomsBy('wisdom') returns all wisdom idioms.
+ */
+export function selectIdiomsBy(category) {
+  return getIdiomsByCategory(category);
+}
+
+/**
+ * Daily idiom rotation — same date string always returns the same idiom.
+ * Uses charcode sum of date string modulo array length.
+ *
+ * @param {string} dateString - ISO date string, e.g. '2026-04-07'
+ * @returns {object} idiom object
+ */
+export function selectDailyIdiom(dateString) {
+  if (!dateString || typeof dateString !== 'string') {
+    return ARABIC_IDIOMS[0];
+  }
+  let hash = 0;
+  for (let i = 0; i < dateString.length; i++) {
+    hash += dateString.charCodeAt(i);
+  }
+  return ARABIC_IDIOMS[hash % ARABIC_IDIOMS.length];
+}
