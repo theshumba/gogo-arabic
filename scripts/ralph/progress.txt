@@ -151,3 +151,18 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - `alphabet.json` uses `forms.isolated` as the display character; `forms.initial/medial/final` for positional variants
   - Self-assessment (no canvas) approach satisfies "logic-only" requirement in PRD notes
 ---
+
+## 2026-04-07 - WIRE-010
+- Added `selectDialectVariants(wordId)` to `vocabularySlice.js` — plain function (not Redux selector) that looks up a word's English in `DIALECT_COMPARISON` via a pre-built Map at import time
+- Added imports for `DIALECT_COMPARISON` and `vocabularyAll` to `vocabularySlice.js`; Map is built once at module level for O(1) lookup
+- Created `DialectVariantsPanel.jsx` — shows MSA (marked with ★ as default), Egyptian, Levantine, Gulf forms (Arabic + transliteration); returns null if no dialect entry exists
+- Created `DialectVariantsPanel.module.css` — compact grid layout, MSA cell highlighted with gold border
+- Updated `ReviewSession.jsx`: imported `DialectVariantsPanel`, added `{answered && currentWord && <DialectVariantsPanel wordId={currentWord.id} />}` after answer reveal
+- Added 6 tests in `src/store/__tests__/dialectVariants.test.js` — null checks, missing word, known word, field shapes
+- Files changed: `src/store/slices/vocabularySlice.js`, `src/components/Review/DialectVariantsPanel.jsx`, `src/components/Review/DialectVariantsPanel.module.css`, `src/components/Review/ReviewSession.jsx`, `src/store/__tests__/dialectVariants.test.js`
+- **Learnings for future iterations:**
+  - DIALECT_COMPARISON is indexed by English string (lowercase) — not by word ID; need word lookup first
+  - Build the Map at module-level import time, not inside the selector function — avoids O(n) scan on every call
+  - `selectDialectVariants` is a plain function (not createSelector) since it uses static data, not Redux state
+  - The real dialect data DOES have 'hello' — safe to use in tests without mocking dialectComparison.js
+---

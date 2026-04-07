@@ -161,7 +161,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "Read src/data/dialectComparison.js for data structure. Find vocabulary detail components."
     },
     {
