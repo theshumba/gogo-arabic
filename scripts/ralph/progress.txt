@@ -53,3 +53,16 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - ProgressReport is the right place for retention health UI — already has `fsrsCards` and all the vocab stat context
   - Word lookup: import `vocabularyAll.js` directly and build a `useMemo` id→word map; vocabulary is already lazy-chunk-split so no extra bundle impact on main chunk
 ---
+
+## 2026-04-07 - WIRE-003
+- Added `filterDialogueForPlayer()` convenience wrapper to `npcVocabFilter.js` — single-line version of `filterDialogueBatch` for Redux state integration
+- Created `FilteredArabicLine.jsx` — renders annotated Arabic dialogue: known words shown normally, unknown words get dashed-border highlight + transliteration hint below, tappable to add to FSRS learning queue via `addFsrsCard`
+- Updated `DialogueBox.jsx` — after typewriter completes, shows `FilteredArabicLine` when `filteredLine.hasUnknownWords` is true; builds `knownWordIds` Set from `selectFsrsCards` via `useMemo`
+- Added 6 tests for `filterDialogueForPlayer` in existing `npcVocabFilter.test.js`
+- Files changed: `src/services/npcVocabFilter.js`, `src/components/NPC/FilteredArabicLine.jsx`, `src/components/NPC/FilteredArabicLine.module.css`, `src/components/NPC/DialogueBox.jsx`, `src/services/__tests__/npcVocabFilter.test.js`
+- **Learnings for future iterations:**
+  - DialogueBox uses `arabicTypewriter.isComplete` as gate — only show enhanced rendering AFTER typewriter completes (same pattern as `inlineVocab` highlights)
+  - `filteredLine.hasUnknownWords` guards the `FilteredArabicLine` render — lines where the player knows everything render plain (no performance cost)
+  - `addFsrsCard` is the correct action for tap-to-learn; `createNewCard()` from fsrs.js creates a fresh FSRS card
+  - Arabic→wordId map needs both diacriticized and stripped versions for flexible matching
+---
