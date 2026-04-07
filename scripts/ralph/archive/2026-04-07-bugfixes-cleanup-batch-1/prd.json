@@ -1,0 +1,178 @@
+{
+  "project": "Gogo Arabic",
+  "branchName": "ralph/features-batch-1",
+  "description": "New features — content data, game logic wiring, backend API endpoints. All logic-only, no visual/rendering changes.",
+  "userStories": [
+    {
+      "id": "FEAT-001",
+      "title": "Arabic idioms and proverbs dataset",
+      "description": "Create src/data/arabicIdioms.js with 100+ Arabic idioms/proverbs. Each entry: Arabic text, English meaning, literal translation, usage example sentence, CEFR level (A1-C2), category, origin region. Include selectors for filtering by category and CEFR level, plus a deterministic daily idiom rotation (same date = same idiom for all players).",
+      "acceptanceCriteria": [
+        "src/data/arabicIdioms.js exports array of 100+ idiom objects",
+        "Each idiom has: arabic, english, literal, example, cefrLevel, category, origin",
+        "10 categories: wisdom, social, nature, humor, work, family, patience, honor, courage, knowledge",
+        "selectIdiomsBy(category) selector works",
+        "selectDailyIdiom(dateString) returns deterministic result (same date = same idiom)",
+        "Tests: 12+ tests covering data structure, category coverage, daily rotation consistency",
+        "npm run test:run passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "Pure data file + selectors. No UI. Use a simple hash function for daily rotation (e.g., date string charcode sum % array length)."
+    },
+    {
+      "id": "FEAT-002",
+      "title": "Arabic phonetics reference data",
+      "description": "Create src/data/arabicPhonetics.js with all 28 Arabic consonants and 6 vowels. Each consonant: letter, IPA symbol, articulation point, voicing (voiced/voiceless), description. Include 15+ minimal pairs (e.g., ب/ف, ج/خ, ض/د) with example words for pronunciation practice.",
+      "acceptanceCriteria": [
+        "src/data/arabicPhonetics.js exports consonants array (28), vowels array (6), minimalPairs array (15+)",
+        "Each consonant has: letter, name, ipa, articulationPoint, voicing, description",
+        "Each vowel has: letter, name, ipa, type (short/long), description",
+        "Each minimal pair has: pair [letter1, letter2], examples [{arabic, english, transliteration}]",
+        "Selectors: selectConsonantsByArticulation(point), selectMinimalPairsFor(letter)",
+        "Tests: 10+ tests for data completeness and selector correctness",
+        "npm run test:run passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Pure data file. No UI. Reference standard Arabic phonology."
+    },
+    {
+      "id": "FEAT-003",
+      "title": "Battle opponents database",
+      "description": "Create src/data/battleOpponents.js with 30 human opponent profiles (3-4 per zone across 8 zones). Each opponent: name, zone, level, base stats (hp, attack, defense, speed), personality, Arabic dialogue lines (intro, hit, miss, defeat), weakness vocabulary, XP/gold rewards.",
+      "acceptanceCriteria": [
+        "src/data/battleOpponents.js exports array of 30 opponents",
+        "Each opponent has: id, name, zone, level, stats {hp, attack, defense, speed}, personality, dialogue {intro, hit, miss, defeat} (Arabic + English), weaknessVocab [wordIds], rewards {xp, gold}",
+        "3-4 opponents per zone, 8 zones covered",
+        "Selectors: selectOpponentsByZone(zone), selectOpponentById(id)",
+        "Difficulty scales with zone order (zone 1 easiest, zone 8 hardest)",
+        "Tests: 10+ tests for data distribution, stat ranges, zone coverage",
+        "npm run test:run passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Pure data file. Check existing zone names in the codebase. Arabic dialogue should be simple phrases appropriate to opponent personality."
+    },
+    {
+      "id": "FEAT-004",
+      "title": "Wire battle rewards to progression systems",
+      "description": "Complete the battleRewardsMiddleware to route battle results to game systems. XP feeds skill trees, loot goes to inventory, gold to economy, defeated opponent's weakness vocabulary gets queued for FSRS review, companion participation earns companion XP.",
+      "acceptanceCriteria": [
+        "battleRewardsMiddleware listens for battle end actions",
+        "XP distributed to correct skill tree based on battle type",
+        "Gold added to player economy state",
+        "Loot items added to inventory (skip if full, dispatch notification)",
+        "Weakness vocabulary from defeated opponent added to review queue",
+        "Companion XP awarded if companion participated",
+        "Tests: 12+ integration tests covering full reward chain",
+        "npm run test:run passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "Check existing battleRewardsMiddleware stub. Read inventorySlice, economySlice, skillTreeSlice, and companionSlice to understand dispatch patterns."
+    },
+    {
+      "id": "FEAT-005",
+      "title": "Vocabulary introduction rate controller",
+      "description": "Create a service/middleware that controls how many new words per day a player sees, based on their mastery of existing words. If mastery <60%: 0 new words. 60-70%: 5/day. 70-85%: 15/day. >85%: 30/day. Resets at UTC midnight.",
+      "acceptanceCriteria": [
+        "src/store/middleware/vocabRateMiddleware.js or similar",
+        "getNewWordRate(masteryPercent) returns words/day based on thresholds",
+        "Middleware tracks daily counter, resets at UTC midnight",
+        "When daily limit reached, new word introduction paused (dispatch action)",
+        "Selector: selectRemainingNewWords() returns how many new words left today",
+        "Tests: 14+ tests covering thresholds, day boundary reset, edge cases",
+        "npm run test:run passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Check how vocabulary is currently introduced — may need to intercept an existing action."
+    },
+    {
+      "id": "FEAT-006",
+      "title": "Conversation practice scoring engine",
+      "description": "Build scoring logic for conversation practice (Phase 84). Score player Arabic responses against expected answers: exact match=100, 1 word off=80, 2+ words off=50, completely wrong=25. Award XP and queue new vocabulary for FSRS review.",
+      "acceptanceCriteria": [
+        "scoreConversationResponse(playerText, expectedText) returns 0-100 score",
+        "Scoring: exact=100, 1 word diff=80, 2 word diff=50, 3+=25",
+        "Award XP: 50 + (score * 0.5), capped at 100",
+        "Extract vocabulary from expected sentence, queue for FSRS review",
+        "Handle Arabic diacritics gracefully (compare with and without tashkeel)",
+        "Tests: 14+ tests covering scoring algorithm, XP calculation, diacritic handling",
+        "npm run test:run passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "Check src/utils/ for any existing Arabic text comparison utilities. Normalize Arabic text before comparison (strip tashkeel for comparison purposes)."
+    },
+    {
+      "id": "FEAT-007",
+      "title": "Adaptive quiz difficulty engine",
+      "description": "Build a difficulty service that tracks last 50 quiz results and adjusts difficulty to target 70-85% success rate. Also suggests breaks after 10+ consecutive errors or 30+ minute sessions.",
+      "acceptanceCriteria": [
+        "calculateDifficultyLevel(recentResults) returns difficulty 1-5",
+        "Targets 70-85% success rate using exponential moving average",
+        "Middleware recalculates every 5 quizzes and updates store",
+        "Break suggestion: dispatch notification after 10 consecutive errors OR 30min continuous play",
+        "Selector: selectCurrentDifficulty(), selectShouldSuggestBreak()",
+        "Tests: 14+ tests covering EMA calculation, difficulty adjustment, break detection",
+        "npm run test:run passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "Check if Phase 59 built any existing adaptive difficulty in the codebase — build on top of it, don't duplicate."
+    },
+    {
+      "id": "FEAT-008",
+      "title": "Crafting system vocabulary gate",
+      "description": "Wire vocabulary mastery to the crafting system — players can only use crafting ingredients they've learned the Arabic word for. Recipe requires 80%+ ingredient mastery to craft.",
+      "acceptanceCriteria": [
+        "canUseIngredient(ingredientId, vocabMasteryMap) checks if player has learned the word",
+        "Recipe craftable only if all ingredients at 80%+ mastery",
+        "Selector: selectCraftableRecipes() filters recipes by mastery requirement",
+        "Crafting XP scaled to average CEFR level of ingredients used",
+        "Tests: 10+ tests covering ingredient checks, recipe gating, XP scaling",
+        "npm run test:run passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Read craftingSlice.js and vocabulary data to understand the data models before implementing."
+    },
+    {
+      "id": "FEAT-009",
+      "title": "Leaderboard API endpoints",
+      "description": "Build Express endpoints for server-side leaderboards: save scores, fetch rankings, get player's own rank. Categories: xp, wordsLearned, streak, questsCompleted.",
+      "acceptanceCriteria": [
+        "POST /api/leaderboard/score — save score with category, value, timestamp",
+        "GET /api/leaderboard/:category?limit=50 — fetch top players",
+        "GET /api/leaderboard/my-rank/:category — authenticated, returns player rank",
+        "MongoDB schema with indexes on category + score",
+        "Zod validation on all inputs",
+        "Rate limited to 1 request per 30 seconds per user",
+        "Tests: 10+ tests covering save, rank, pagination",
+        "npm run test:run passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "Create server/src/models/Leaderboard.js and server/src/controllers/leaderboardController.js. Follow existing route patterns in server/src/routes/."
+    },
+    {
+      "id": "FEAT-010",
+      "title": "Player progress snapshot service",
+      "description": "Build middleware + API to capture weekly snapshots of player stats for analytics. Snapshot: vocabCount, vocabMastered, cefrLevel, achievements, playtimeMinutes, zonesUnlocked. Stored in user document.",
+      "acceptanceCriteria": [
+        "Middleware checks once per session if a weekly snapshot is due (Monday UTC)",
+        "Snapshot captured and saved to user.snapshots array",
+        "GET /api/user/progress/snapshots?weeks=52 — fetch historical snapshots",
+        "Selector: selectProgressTrend(snapshots) returns data suitable for charting",
+        "Snapshots immutable once created (append-only)",
+        "Tests: 10+ tests for snapshot creation, historical queries, weekly boundary logic",
+        "npm run test:run passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "Add snapshots field to User model. Keep snapshot lightweight (<500 bytes each)."
+    }
+  ]
+}
