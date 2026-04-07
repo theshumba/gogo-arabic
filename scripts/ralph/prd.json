@@ -281,7 +281,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 17,
-      "passes": false,
+      "passes": true,
       "notes": "Read grammarSlice.js and existing grammar data. Focus on Modern Standard Arabic."
     },
     {

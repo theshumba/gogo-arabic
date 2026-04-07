@@ -245,3 +245,16 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - getAvailableQuests expects `allQuests` to have `npcGiver` matching the npcId string — not the full NPC ID from zones.js (which is e.g. `guide-amira`) but the npcGiver field from quests.json (e.g. `guide`)
   - Hostile NPCs refuse all quests AND no discount; Cold NPCs refuse discount but can give quests if minRelationship=0
 ---
+
+## 2026-04-07 - GROW-018
+- Created `src/data/grammarRules.js` — 60 rules (15 A1, 15 A2, 15 B1, 10 B2, 5 C1); categories: nouns, verbs, particles, sentence_structure, morphology, idafa, verb_forms
+- Each rule: id, title, titleArabic, cefrLevel, category, explanation, examples[{arabic, english, breakdown}], commonMistakes[], practiceTemplates[]
+- selectRuleById(id), selectRulesByLevel(cefr), selectRulesByCategory(cat) — plain functions with module-level Map for O(1) ID lookup
+- 16 tests: field completeness, ID uniqueness, exact CEFR distribution per level, all 7 categories represented, selector correctness
+- Files changed: `src/data/grammarRules.js`, `src/data/__tests__/grammarRules.test.js`
+- **Learnings for future iterations:**
+  - Grammar rule IDs use pattern: gr_[level]_[nnn] (e.g., gr_a1_001, gr_b2_010)
+  - All 7 category strings: nouns, verbs, particles, sentence_structure, morphology, idafa, verb_forms
+  - CEFR distribution is exact (15/15/15/10/5 = 60) — test checks exact counts per level
+  - "verb forms" in PRD description maps to category "verb_forms" (underscore, no space)
+---
