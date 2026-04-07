@@ -13,6 +13,7 @@ import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import ArabicKeyboard from '../Keyboard/ArabicKeyboard.jsx';
 import ProgressBar from '../Quiz/ProgressBar.jsx';
 import SentenceBuilder from './SentenceBuilder.jsx';
+import DialectVariantsPanel from './DialectVariantsPanel.jsx';
 import vocabulary from '../../data/vocabularyAll.js';
 import styles from './ReviewSession.module.css';
 
@@ -456,6 +457,11 @@ export default function ReviewSession({ onBack }) {
             onComplete={handleSentenceComplete}
             disabled={answered}
           />
+        )}
+
+        {/* Dialect variants — shown after answer is revealed */}
+        {answered && currentWord && (
+          <DialectVariantsPanel wordId={currentWord.id} />
         )}
 
       </div>

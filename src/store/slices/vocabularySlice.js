@@ -1,5 +1,12 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { getDecayingWords } from '../../services/forgettingCurveService.js';
+import { DIALECT_COMPARISON } from '../../data/dialectComparison.js';
+import vocabularyAll from '../../data/vocabularyAll.js';
+
+// Build a lowercase-English → dialect entry lookup once at import time
+const _dialectByEnglish = new Map(
+  DIALECT_COMPARISON.map((entry) => [entry.english.toLowerCase(), entry])
+);
 
 const initialState = {
   fsrsCards: {}, // { wordId: { card: FSRS card object, log: last review log, source?: string } }
@@ -217,5 +224,17 @@ export const selectWordsAtRisk = createSelector(
   [selectFsrsCards],
   (fsrsCards) => getDecayingWords(fsrsCards, 3)
 );
+
+/**
+ * selectDialectVariants(wordId) — returns dialect comparison entry for a word,
+ * or null if no dialect data is available for it.
+ * Not a Redux selector — takes wordId directly, uses static data.
+ */
+export function selectDialectVariants(wordId) {
+  if (!wordId) return null;
+  const word = vocabularyAll.find((w) => w.id === wordId);
+  if (!word?.english) return null;
+  return _dialectByEnglish.get(word.english.toLowerCase()) || null;
+}
 
 export default vocabularySlice.reducer;
