@@ -66,3 +66,16 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - `addFsrsCard` is the correct action for tap-to-learn; `createNewCard()` from fsrs.js creates a fresh FSRS card
   - Arabic→wordId map needs both diacriticized and stripped versions for flexible matching
 ---
+
+## 2026-04-07 - WIRE-004
+- Created `src/services/tradeRouteIntegration.js` — maps shopId→zoneId and equipment slot/rarity→trade category; exposes `getZoneAdjustedBuyPrice`, `getZoneAdjustedSellPrice`, `getCheapestZoneForItem`, `getBestSellZoneForItem`, `getShopZoneInfo`
+- Updated `ShopOverlay.jsx` — applies `getZoneAdjustedBuyPrice` to each shop item on inventory compute; shows zone name + specialty banner above buy grid
+- Added `.zoneInfo` CSS to `ShopOverlay.module.css`
+- Added 23 tests in `src/services/__tests__/tradeRouteIntegration.test.js`
+- Files changed: `src/services/tradeRouteIntegration.js`, `src/services/__tests__/tradeRouteIntegration.test.js`, `src/components/Shop/ShopOverlay.jsx`, `src/components/Shop/ShopOverlay.module.css`
+- **Learnings for future iterations:**
+  - `ZONE_TRADE_PROFILES[zone].buy[category]` gives the multiplier directly — no need to call `getBuyPrice` and divide by reference price
+  - Equipment items don't have a trade category — must map via slot (weapon→metals, armor→textiles, ring→gems) then fallback to rarity
+  - ShopInventory already handles `item.basePrice` vs `item.price` for direction arrows (from existing ECON-04 implementation) — zone pricing changes `item.price` so arrows still work
+  - `shopId` must be included in `useMemo` deps when used inside the memo callback
+---

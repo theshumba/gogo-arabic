@@ -64,7 +64,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "Read src/services/tradeRouteService.js and src/data/tradeRoutes.js. Read shopController.js and economySlice.js for current pricing."
     },
     {
