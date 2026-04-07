@@ -406,7 +406,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 24,
-      "passes": false,
+      "passes": true,
       "notes": "Register before auth middleware so /health is always accessible."
     },
     {

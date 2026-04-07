@@ -351,3 +351,17 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - `syncVersion` and `lastSyncedAt` fields already existed in User model — no schema migration needed
   - Server tests must be run as a suite (not individually) due to `shopController.js` using `createRequire` for a path relative to the project root
 ---
+
+## 2026-04-07 - GROW-025
+- Created `server/src/utils/requestCounter.js` — module-level in-memory counter with `requestCounterMiddleware` and `getRequestCount()`
+- Created `server/src/controllers/healthController.js` — `getHealth` (public) pings MongoDB via `mongoose.connection.db.admin().ping()`, returns {status, uptime, version, database, timestamp, responseMs}; `getDetailedHealth` (auth) adds {memory: {heapUsedMB, heapTotalMB, rssMB}, requestCount}
+- Created `server/src/routes/health.js` — GET / (public) and GET /detailed (authenticate middleware)
+- Updated `server/src/app.js`: imported healthRoutes + requestCounterMiddleware; registered `app.use('/health', healthRoutes)` and `app.use(requestCounterMiddleware)` BEFORE CSRF middleware so /health is always accessible
+- 11 tests in `server/src/routes/__tests__/health.test.js`: 200 with required fields, valid ISO timestamp, no-auth accessible, responseMs field, <100ms response, DB connected (MongoMemoryServer), detailed 401 without auth, detailed with auth + memory + requestCount, all basic fields in detailed, requestCount increases per request
+- Files changed: `healthController.js`, `health.js` (route), `requestCounter.js`, `app.js`, `health.test.js`
+- **Learnings for future iterations:**
+  - `mongoose.connection.readyState === 1` checks if connected; must guard before calling `.db.admin().ping()` or it throws
+  - Register public endpoints BEFORE `app.use(validateCsrfToken)` to avoid CSRF blocking health checks from load balancers
+  - `process.memoryUsage()` returns bytes — divide by 1024*1024 for MB
+  - Request counter must be a module-level singleton (not per-request) — export a plain counter, not a class
+---
