@@ -851,5 +851,15 @@ export function getOpponentById(id) {
   return battleOpponents.find((o) => o.id === id);
 }
 
+/** Redux-selector alias */
+export function selectOpponentsByZone(zone) {
+  return getOpponentsByZone(zone);
+}
+
+/** Redux-selector alias */
+export function selectOpponentById(id) {
+  return getOpponentById(id);
+}
+
 export { OPPONENT_TYPES, PERSONALITY_TYPES, WEAKNESS_CATEGORIES, OPPONENT_ZONES };
 export default battleOpponents;

@@ -51,7 +51,7 @@
         "npm run test:run passes"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "Pure data file. Check existing zone names in the codebase. Arabic dialogue should be simple phrases appropriate to opponent personality."
     },
     {
