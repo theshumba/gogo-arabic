@@ -137,3 +137,17 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - `vi.useFakeTimers()` in service tests can produce IndexedDB teardown errors (known pre-existing artifact with fake-indexeddb) — tests still pass
   - `spacedListeningService.setInterval` shadows globalThis.setInterval — it calls `globalThis.setInterval` internally to avoid recursion; no action needed
 ---
+
+## 2026-04-07 - WIRE-009
+- Created `HandwritingPractice.jsx` — self-assessment practice mode showing letter forms, accuracy rating buttons (Miss/Poor/OK/Good/Perfect), stats bar (attempts/best/avg/trend), and weak letters panel
+- Created `HandwritingPractice.module.css` — pixel-art styling matching AlphabetModule aesthetic
+- Updated `AlphabetModule.jsx`: added `HandwritingPractice` import, `showPractice` state, renders `HandwritingPractice` when `showPractice` is true, added "Practice Writing" button in header
+- Added `.practiceBtn` + `.headerProgress` flex layout to `AlphabetModule.module.css`
+- Trend detection: compares last two `recentAttempts` — improving if +5 delta, declining if -5 delta, otherwise stable
+- Added 8 tests in `src/components/Alphabet/__tests__/HandwritingPractice.test.jsx`
+- Files changed: `src/components/Alphabet/HandwritingPractice.jsx`, `src/components/Alphabet/HandwritingPractice.module.css`, `src/components/Alphabet/AlphabetModule.jsx`, `src/components/Alphabet/AlphabetModule.module.css`, `src/components/Alphabet/__tests__/HandwritingPractice.test.jsx`
+- **Learnings for future iterations:**
+  - `getLetterStats` returns null for unseen letters — always guard with `stats && ...`
+  - `alphabet.json` uses `forms.isolated` as the display character; `forms.initial/medial/final` for positional variants
+  - Self-assessment (no canvas) approach satisfies "logic-only" requirement in PRD notes
+---

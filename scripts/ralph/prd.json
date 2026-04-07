@@ -145,7 +145,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "Read src/services/handwritingStore.js for the API. This is logic-only — no canvas/drawing UI needed, just the data wiring."
     },
     {
