@@ -40,3 +40,16 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - Always update the `quizTypes.test.js` count assertion when adding new types
   - Lint has 420 pre-existing errors (tools/*.js node globals) — my changes add ≤1 warning, this is expected
 ---
+
+## 2026-04-07 - WIRE-002
+- Added `selectWordsAtRisk` selector to `vocabularySlice.js` — imports `getDecayingWords()` from `forgettingCurveService.js`, wraps it for Redux state, returns stability-sorted list (stability < 3 days)
+- Added "Words at Risk" section to `ProgressReport.jsx` — shows top 5 at-risk words (Arabic + English + stability), with overflow count if > 5
+- Added CSS styles for the at-risk list in `ProgressReport.module.css`
+- Added 5 tests to `vocabularySlice.test.js` covering empty state, filtering by threshold, exclusion of zero-stability words, sort order, and result shape
+- Files changed: `src/store/slices/vocabularySlice.js`, `src/components/Progress/ProgressReport.jsx`, `src/components/Progress/ProgressReport.module.css`, `src/store/__tests__/vocabularySlice.test.js`
+- **Learnings for future iterations:**
+  - `selectWordsAtRisk` uses `createSelector([selectFsrsCards], ...)` — single input selector is sufficient since service does all the logic
+  - `getDecayingWords(cards, 3)` excludes zero-stability words (new, never reviewed), so selector naturally skips unreviewed cards
+  - ProgressReport is the right place for retention health UI — already has `fsrsCards` and all the vocab stat context
+  - Word lookup: import `vocabularyAll.js` directly and build a `useMemo` id→word map; vocabulary is already lazy-chunk-split so no extra bundle impact on main chunk
+---
