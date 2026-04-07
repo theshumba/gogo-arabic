@@ -11,6 +11,7 @@ import { useOverlayClose } from '../../hooks/useOverlayClose.js';
 import { useFocusTrap } from '../../hooks/useFocusTrap.js';
 import { getShopInventory } from '../../data/shopGenerator.js';
 import { EQUIPMENT_DATA } from '../../data/equipment.js';
+import { getZoneAdjustedBuyPrice, getShopZoneInfo } from '../../services/tradeRouteIntegration.js';
 import { SUPPLY_DEFAULTS } from '../../game/systems/pricingAgent.js';
 import { AFFIXES } from '../../data/affixes.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
@@ -42,6 +43,9 @@ function ShopOverlay() {
 
   const handleOverlayClose = useOverlayClose(handleClose);
 
+  // Zone info for price comparison display
+  const zoneInfo = useMemo(() => getShopZoneInfo(shopId), [shopId]);
+
   // Dynamic shop inventory based on player level and world state
   const shopInventory = useMemo(() => {
     const state = store.getState();
@@ -56,8 +60,13 @@ function ShopOverlay() {
     });
     store.dispatch(initSupply({ shopId, items: supplyItems }));
 
-    return inv;
-  }, [dialogueConfig, player.level, completedQuests]);
+    // Apply zone-adjusted buy prices (trade route multipliers)
+    return inv.map((item) => {
+      const itemData = EQUIPMENT_DATA[item.itemId];
+      const zonePrice = getZoneAdjustedBuyPrice(item.price, itemData, shopId);
+      return { ...item, price: zonePrice };
+    });
+  }, [dialogueConfig, player.level, completedQuests, shopId]);
 
   // Shopkeeper info
   const shopId = dialogueConfig?.shopId || 'oasis_village_shop';
@@ -344,15 +353,22 @@ function ShopOverlay() {
         </div>
 
         {tab === 'buy' && (
-          <ShopInventory
-            items={shopInventory}
-            mode="buy"
-            onBuy={handleBuy}
-            onHaggle={handleHaggle}
-            playerDirhams={player.dirhams}
-            vocabularyState={vocabularyState}
-            inventoryFull={inventoryFull}
-          />
+          <>
+            {zoneInfo && (
+              <div className={styles.zoneInfo} title={`Prices vary by zone. ${zoneInfo.zoneName} specialises in ${zoneInfo.specialty}.`}>
+                {zoneInfo.zoneName} · {zoneInfo.specialty} specialty (best prices here)
+              </div>
+            )}
+            <ShopInventory
+              items={shopInventory}
+              mode="buy"
+              onBuy={handleBuy}
+              onHaggle={handleHaggle}
+              playerDirhams={player.dirhams}
+              vocabularyState={vocabularyState}
+              inventoryFull={inventoryFull}
+            />
+          </>
         )}
 
         {tab === 'sell' && (
