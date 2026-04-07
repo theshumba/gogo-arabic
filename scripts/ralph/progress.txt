@@ -193,3 +193,17 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - Rolling average formula: `(prevAvg * (total - 1) + newValue) / total` — compute AFTER incrementing total
   - `onResult` receives `{ recognized, similarity, correct }` from `evaluatePronunciation` — similarity is 0–1 float
 ---
+
+## 2026-04-07 - WIRE-013
+- Added `selectQuranicCoverage` and `selectQuranicCoverageByCategory` memoized selectors to `vocabularySlice.js` using `createSelector([selectFsrsCards], ...)` — both call the quranicCoverage service with the full `vocabularyAll` static dataset
+- Imported `calculateQuranicCoverage` and `getQuranicCoverageByCategory` from `src/services/quranicCoverage.js` into vocabularySlice
+- Added Quranic Coverage section to `AnalyticsDashboard.jsx`: shows percentage mastered (large number), mastered/total/seen counts, and per-category breakdown (top 5, with colored progress bars)
+- Section only renders when `quranicCoverage.total > 0` (hidden for players with no Quranic vocab in the dataset)
+- Added 6 tests in `src/store/__tests__/quranicCoverage.test.js` — empty cards, mastery threshold (≥7 days stability), percentage calc, category grouping, non-Quranic exclusion, sort order
+- Files changed: `src/store/slices/vocabularySlice.js`, `src/components/Analytics/AnalyticsDashboard.jsx`, `src/store/__tests__/quranicCoverage.test.js`
+- **Learnings for future iterations:**
+  - quranicCoverage.js filters by `w.source === 'quran' || w.quranRef` — both fields used
+  - Mastery threshold = 7 days FSRS stability (same as forgettingCurveService pattern)
+  - `getQuranicCoverageByCategory` uses word.category (not surah name) — "surahs" in PRD = categories in practice
+  - AnalyticsDashboard uses inline style objects (not CSS modules) — add new style keys to the `styles` const at bottom
+---
