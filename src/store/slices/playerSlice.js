@@ -56,6 +56,11 @@ const initialState = {
   mentorAvailable: true, // Guide Amira can be found for hints
   onboardingTargetNpc: null, // NPC ID to highlight during onboarding (e.g., 'guide-amira')
   learningPath: null, // null | 'scholar' | 'traveler' | 'historian' | 'polymath'
+  // Login rewards (GROW-019)
+  lastLoginDate: null,     // ISO date string 'YYYY-MM-DD' (UTC)
+  loginStreak: 0,          // consecutive days logged in
+  totalLogins: 0,          // all-time login count
+  pendingLoginReward: null, // reward object waiting to be displayed
 };
 
 const playerSlice = createSlice({
@@ -320,6 +325,37 @@ const playerSlice = createSlice({
     setOnboardingTargetNpc(state, action) {
       state.onboardingTargetNpc = action.payload;
     },
+
+    processLoginReward(state, action) {
+      // payload: { todayUTC: 'YYYY-MM-DD', reward: { xp, dirhams, item, day } }
+      const { todayUTC, reward } = action.payload;
+      state.totalLogins += 1;
+      state.lastLoginDate = todayUTC;
+      state.loginStreak = (state.loginStreak ?? 0) + 1;
+      state.pendingLoginReward = reward;
+      // Apply XP and dirhams immediately
+      if (reward.xp) state.xp += reward.xp;
+      if (reward.dirhams) state.dirhams += reward.dirhams;
+      if (reward.item) {
+        const already = state.inventory.some((i) => i.itemId === reward.item);
+        if (!already) state.inventory.push({ itemId: reward.item, equipped: false });
+      }
+    },
+
+    resetLoginStreak(state, action) {
+      // payload: { todayUTC } — gap detected, restart from day 1
+      const { todayUTC, reward } = action.payload;
+      state.totalLogins += 1;
+      state.lastLoginDate = todayUTC;
+      state.loginStreak = 1;
+      state.pendingLoginReward = reward;
+      if (reward.xp) state.xp += reward.xp;
+      if (reward.dirhams) state.dirhams += reward.dirhams;
+    },
+
+    dismissLoginReward(state) {
+      state.pendingLoginReward = null;
+    },
   },
 });
 
@@ -352,6 +388,9 @@ export const {
   setTutorialPhase,
   setLearningPath,
   setOnboardingTargetNpc,
+  processLoginReward,
+  resetLoginStreak,
+  dismissLoginReward,
 } = playerSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -440,5 +479,11 @@ export const selectFirstQuestId = createSelector(
   [(state) => state.player.learningPath],
   (path) => PATH_FIRST_QUESTS[path] || 'path_traveler_first_quest'
 );
+
+// Login reward selectors (GROW-019)
+export const selectLoginStreak = (state) => state.player.loginStreak ?? 0;
+export const selectTotalLogins = (state) => state.player.totalLogins ?? 0;
+export const selectLastLoginDate = (state) => state.player.lastLoginDate ?? null;
+export const selectPendingLoginReward = (state) => state.player.pendingLoginReward ?? null;
 
 export default playerSlice.reducer;
