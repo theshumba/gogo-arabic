@@ -234,3 +234,14 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - getChainProgress falls back to locked quest when no active quest found in chain, so currentQuest is always the "next to tackle" quest
   - `store.getState()` in middleware returns state AFTER next(action) completes — use it post-next for accurate chain completion check
 ---
+
+## 2026-04-07 - GROW-017
+- Created `src/services/npcRelationshipService.js` — pure functions: getTier, getShopDiscount (0/0/5/15/25%), getAvailableQuests (filters by npcGiver and minRelationship, hostile returns []), getDialogueVariant (returns tier key), getBattleAssistChance (0/0/0/7/15%)
+- RELATIONSHIP_TIERS exported constant: Hostile 0-19, Cold 20-39, Neutral 40-59, Friendly 60-79, Beloved 80-100
+- 26 tests covering all tiers for each function, edge cases (null npcId, out-of-range values, no npcGiver on quest)
+- Files changed: `src/services/npcRelationshipService.js`, `src/services/__tests__/npcRelationshipService.test.js`
+- **Learnings for future iterations:**
+  - Pure service + separate Redux middleware is cleaner than baking consequences into npcSlice
+  - getAvailableQuests expects `allQuests` to have `npcGiver` matching the npcId string — not the full NPC ID from zones.js (which is e.g. `guide-amira`) but the npcGiver field from quests.json (e.g. `guide`)
+  - Hostile NPCs refuse all quests AND no discount; Cold NPCs refuse discount but can give quests if minRelationship=0
+---
