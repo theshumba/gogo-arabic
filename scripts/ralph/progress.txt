@@ -6,6 +6,16 @@
 
 ---
 
+## 2026-04-07 - FEAT-010
+- Created `src/store/middleware/progressSnapshotMiddleware.js` with `isMondayUTC()`, `getISOWeekId()`, `captureSnapshot()`, `selectProgressTrend()`, `progressSnapshotMiddleware`, and `_resetSnapshotSession()`.
+- Created 23 tests in `progressSnapshotMiddleware.test.js` covering snapshot capture, Monday boundary, single-dispatch guard, trend selector, and edge cases.
+- Added `snapshots` subdocument array to `server/src/models/User.js`.
+- Added `getProgressSnapshots()` and `saveProgressSnapshot()` to `server/src/controllers/userController.js`.
+- Added GET/POST `/progress/snapshots` routes to `server/src/routes/user.js`.
+- Pattern: module-level `_snapshotCheckedThisSession` flag prevents multiple dispatches per session (same approach as vocabRateMiddleware).
+- Files changed: `progressSnapshotMiddleware.js` (new), `progressSnapshotMiddleware.test.js` (new), `User.js`, `userController.js`, `user.js`, `prd.json`, `progress.txt`
+---
+
 ## 2026-04-07 - FEAT-009
 - All leaderboard files already existed: `server/src/models/Leaderboard.js`, `server/src/controllers/leaderboardController.js`, `server/src/routes/leaderboard.js`, `server/src/validation/leaderboardSchemas.js`, and tests.
 - Server tests (in `server/`) are NOT part of root `npm run test:run` (vitest includes only `src/**`); they run via the server's own vitest.

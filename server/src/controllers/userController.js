@@ -129,3 +129,74 @@ export async function saveSettings(req, res, next) {
     next(err);
   }
 }
+
+/**
+ * Get historical weekly progress snapshots for the authenticated user.
+ *
+ * @route GET /api/v1/user/progress/snapshots?weeks=52
+ * @auth Required
+ * @returns {Object} { success: true, data: snapshot[] }
+ */
+export async function getProgressSnapshots(req, res, next) {
+  try {
+    const weeks = Math.min(parseInt(req.query.weeks, 10) || 52, 104);
+    const user = await User.findById(req.userId).select('snapshots');
+    if (!user) return next(AppError.notFound('User not found'));
+
+    const all = user.snapshots ?? [];
+    const recent = all.slice(-weeks);
+
+    res.json({ success: true, data: recent });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Append a new weekly progress snapshot (append-only — one per weekId).
+ *
+ * @route POST /api/v1/user/progress/snapshots
+ * @body { weekId, takenAt, vocabCount, vocabMastered, cefrLevel,
+ *         achievements, playtimeMinutes, zonesUnlocked }
+ * @auth Required
+ * @returns {Object} { success: true, data: snapshot }
+ */
+export async function saveProgressSnapshot(req, res, next) {
+  try {
+    const {
+      weekId, takenAt, vocabCount, vocabMastered,
+      cefrLevel, achievements, playtimeMinutes, zonesUnlocked,
+    } = req.body;
+
+    if (!weekId || !takenAt) {
+      return next(AppError.badRequest('weekId and takenAt are required'));
+    }
+
+    const user = await User.findById(req.userId);
+    if (!user) return next(AppError.notFound('User not found'));
+
+    // Append-only: skip if weekId already exists
+    const alreadyExists = (user.snapshots ?? []).some((s) => s.weekId === weekId);
+    if (alreadyExists) {
+      const existing = user.snapshots.find((s) => s.weekId === weekId);
+      return res.json({ success: true, data: existing });
+    }
+
+    const snapshot = {
+      weekId, takenAt: new Date(takenAt),
+      vocabCount: vocabCount ?? 0,
+      vocabMastered: vocabMastered ?? 0,
+      cefrLevel: cefrLevel ?? 'A1',
+      achievements: achievements ?? 0,
+      playtimeMinutes: playtimeMinutes ?? 0,
+      zonesUnlocked: zonesUnlocked ?? 0,
+    };
+
+    user.snapshots.push(snapshot);
+    await user.save();
+
+    res.status(201).json({ success: true, data: snapshot });
+  } catch (err) {
+    next(err);
+  }
+}

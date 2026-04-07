@@ -171,7 +171,7 @@
         "npm run test:run passes"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "Add snapshots field to User model. Keep snapshot lightweight (<500 bytes each)."
     }
   ]

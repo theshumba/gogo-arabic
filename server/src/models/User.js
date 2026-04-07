@@ -36,6 +36,17 @@ const userSchema = new mongoose.Schema({
   // Cloud sync versioning
   syncVersion: { type: Number, default: 0 },
   lastSyncedAt: { type: Date, default: Date.now },
+  // Weekly progress snapshots (append-only, immutable once written)
+  snapshots: [{
+    weekId:          { type: String, required: true }, // e.g. '2026-W15'
+    takenAt:         { type: Date,   required: true },
+    vocabCount:      { type: Number, default: 0 },
+    vocabMastered:   { type: Number, default: 0 },
+    cefrLevel:       { type: String, default: 'A1' },
+    achievements:    { type: Number, default: 0 },
+    playtimeMinutes: { type: Number, default: 0 },
+    zonesUnlocked:   { type: Number, default: 0 },
+  }],
 }, { timestamps: true });
 
 // Compound indexes for common query patterns
