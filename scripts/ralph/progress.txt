@@ -1,308 +1,42 @@
-# Ralph Progress Log — Gogo Arabic
-Started: 2026-04-05
+# Ralph Progress Log
+Started: Tue  7 Apr 2026 02:38:13 BST
+---
 
 ## Codebase Patterns
-- Redux slices in src/slices/ — 35+ slices, follow existing createSlice patterns
-- Middleware in src/middleware/ — 19 middleware, each in its own file
-- Tests co-located or in __tests__/ directories, using Vitest
-- Phaser scenes in src/phaser/ — DO NOT modify visual/world rendering
-- Loading screen is sacred — never touch koi fish / Gogo Arabic / Yala Arabic screen
-- Art assets at public/assets/kenmi/ — 969 PNGs from Kenmi Cute Fantasy bundle
-- Quality gate: npm run test:run && npm run lint && npm run build
-- Server patterns: routes in server/src/routes/, models in server/src/models/, controllers in server/src/controllers/, validation schemas in server/src/validation/
-- Route registration in server/src/app.js — both versioned (/api/v1/) and backward compat (/api/) paths
-- Tests use MongoMemoryServer, createTestUser() from server/test/helpers.js, supertest for HTTP
-- Auth: set Authorization header with Bearer token, middleware sets req.userId
-- Validate middleware: validate(schema) for body, validate(schema, 'params') for params, validate(schema, 'query') for query
-- Pre-existing lint errors (168) are in other files — always verify your new files have zero lint issues
+
+### Quiz Type Registration Pattern
+To add a new quiz type:
+1. Add entry to `QUIZ_TYPE_REGISTRY` in `src/data/quizTypes.js` — shape: `{ label, cluster, minLevel, cefrMin }`
+2. Add `buildChoices` case in `useQuiz.js` (the `buildChoices` closure has access to `fsrsCards` and `vocabulary`)
+3. Add grading case in `answer()` callback
+4. Add `correctAnswer` case in the correctAnswer block
+5. Update `src/data/__tests__/quizTypes.test.js` count assertion
+- Non-word-based types (DialectIdentify, RootExpand, CulturalContext, sentence_build) attach data to `word` object via mutation: `word.myField = data`
+
+### Pre-existing Test Failures (do not fix, not your bug)
+- `forgettingCurveService.test.js` — 4 failures (getUrgentReviewList, getRetentionForecast, getRetentionHealth)
+- `settingsSlice.test.js` — 1 failure (initial state)
+- `HUD.test.jsx` — 1 failure (review due count)
+- `antiFrustrationMiddleware.test.js` — full file failure
+- `zoneReviewMiddleware.test.js` — full file failure
+- `battle.integration.test.js` — full file failure
+- `datasetValidation.test.js` — 2 failures (goldenAgeScholars, achievementChains)
+Baseline: 8 test files failed, 9 tests failed before any changes.
+
 ---
 
-## 2026-04-05 - GROW-001: NPC state persistence model and API
-- Created MongoDB model NpcState with compound unique index on (userId, npcId)
-- Schema: userId, npcId, relationship (0-100), dialogueChoices [], questsGiven [], lastInteraction timestamp
-- POST /api/v1/npcs/:npcId/state — save/upsert NPC state
-- GET /api/v1/npcs/:npcId/state — load single NPC state
-- GET /api/v1/npcs/states — batch load all NPC states for user
-- Zod validation on inputs, auth middleware on all routes
-- 15 integration tests covering save, load, batch load, upsert, missing NPC, unauthorized access, cross-user isolation, validation
-- Files changed:
-  - server/src/models/NpcState.js (new)
-  - server/src/validation/npcSchemas.js (new)
-  - server/src/controllers/npcController.js (new)
-  - server/src/routes/npc.js (new)
-  - server/src/routes/__tests__/npc.test.js (new)
-  - server/src/app.js (modified — route registration)
+## 2026-04-07 - WIRE-001
+- Wired `sentenceGenerator.js` into the quiz system as a new `'sentence_build'` question type
+- Added `'sentence_build'` to `QUIZ_TYPE_REGISTRY` (cluster: reading, minLevel: 5, cefrMin: A1)
+- Imported `generateSentence()` into `useQuiz.js`; wired into `buildChoices()`, `answer()`, and `correctAnswer` block
+- `sentence_build` uses player's mastered FSRS words as vocabulary pool (falls back to full vocabulary if <2 mastered)
+- Generated sentence data stored on `word.sentenceBuild` for grading and feedback
+- Updated `quizTypes.test.js`: count assertion now expects 21 types (was 20) — fixed 1 pre-existing failure
+- Added 16 new tests in `src/hooks/__tests__/useQuiz.sentenceBuild.test.js`
+- Files changed: `src/data/quizTypes.js`, `src/hooks/useQuiz.js`, `src/data/__tests__/quizTypes.test.js`, `src/hooks/__tests__/useQuiz.sentenceBuild.test.js`
 - **Learnings for future iterations:**
-  - Batch load endpoint (/states) must be registered BEFORE parameterized routes (/:npcId) to avoid conflicts
-  - findOneAndUpdate with upsert:true + new:true is the pattern for save-or-create
-  - Empty body POST with defaults works fine — Mongoose schema defaults fill in
-  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
----
-
-## 2026-04-05 - GROW-002: World state persistence model and API
-- Created MongoDB model WorldState with unique index on userId
-- Schema: userId, flags (Map), factionControl (Map), zoneEvents [], lastUpdated
-- POST /api/v1/world/state — save with additive merge (flags OR'd, events deduplicated by eventId)
-- GET /api/v1/world/state — load world state (returns empty defaults for new users instead of 404)
-- Zod validation on inputs, auth middleware on all routes
-- 12 integration tests covering: create new state, additive flag merge, factionControl merge, zone event deduplication, empty body defaults, invalid input rejection, auth required, load state, empty state for new user, cross-user isolation
-- Files changed:
-  - server/src/models/WorldState.js (new)
-  - server/src/validation/worldSchemas.js (new)
-  - server/src/controllers/worldController.js (new)
-  - server/src/routes/world.js (new)
-  - server/src/routes/__tests__/world.test.js (new)
-  - server/src/app.js (modified — route registration)
-- **Learnings for future iterations:**
-  - Mongoose Map type used for dynamic key-value flags/factionControl — serializes to plain object in JSON
-  - Additive merge: load existing doc, iterate client keys with Map.set(), save — preserves server-side flags
-  - Zone events deduplicated by eventId using a Set for O(1) lookup
-  - GET returns empty defaults (not 404) for new users — better for client-side hydration
-  - Server tests (server/vitest.config.js) are broken pre-existing due to missing src/data/items.json — shopController.js import chain fails. Server tests not run by root `npm run test:run`
-  - Quality gate `npm run test:run && npm run lint && npm run build` only covers frontend tests (3653 pass), lint (168 pre-existing errors in other files), and Vite build
----
-
-## 2026-04-05 - GROW-003: Battle history model and API
-- Created MongoDB model BattleLog with index on (userId, timestamp)
-- Schema: userId, opponentId, opponentName, zone, result (win/loss/flee), duration, xpEarned, goldEarned, vocabTested [], vocabCorrect [], timestamp
-- POST /api/v1/battles/log — log a battle result (201 on success)
-- GET /api/v1/battles/history?limit=50&zone=oasis — fetch history with filters, sorted newest first
-- GET /api/v1/battles/stats — aggregate stats: total wins/losses/flees, win rate, avg duration, best streak, total XP/gold
-- Zod validation on inputs, auth middleware on all routes
-- 17 integration tests covering: log win/loss/flee, validation errors, missing fields, defaults, auth required, history sorting/filtering/limit/empty/cross-user isolation, stats aggregation, best streak calculation, empty stats, cross-user stats isolation
-- Files changed:
-  - server/src/models/BattleLog.js (new)
-  - server/src/validation/battleSchemas.js (new)
-  - server/src/controllers/battleController.js (new)
-  - server/src/routes/battle.js (new)
-  - server/src/routes/__tests__/battle.test.js (new)
-  - server/src/app.js (modified — route registration)
-- **Learnings for future iterations:**
-  - Mongoose aggregate requires ObjectId cast — use `new mongoose.Types.ObjectId(userId)` for $match
-  - Best streak calculation requires a separate query sorted by timestamp — can't do it in a single aggregation easily
-  - Express 5 req.query is read-only — validated query goes to req.validatedQuery (existing pattern)
-  - Stats endpoint returns sensible zero-defaults for new users (no 404)
-  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
----
-
-## 2026-04-05 - GROW-004: Achievement server-side validation and API
-- Created MongoDB model Achievement with unique compound index on (userId, achievementId)
-- Schema: userId, achievementId, unlockedAt, context {questId, wordCount, cefrLevel}
-- POST /api/v1/achievements/unlock — validates context (cefrLevel A1-C2, wordCount non-negative), prevents duplicate unlocks (409 Conflict), handles race conditions via unique index error code 11000
-- GET /api/v1/achievements — fetch all unlocked achievements for user, sorted newest first
-- GET /api/v1/achievements/global-stats — aggregate: totalPlayers, per-achievement unlockCount + percentage, sorted by percentage descending
-- Zod validation on inputs, auth middleware on all routes
-- 18 integration tests covering: unlock with full context, unlock with minimal data, duplicate prevention (409), cross-user unlock, invalid cefrLevel validation, missing achievementId, empty achievementId, auth required, list all achievements, sort order, empty state, cross-user isolation, global stats percentages, empty global stats, global stats sort order, global stats auth
-- Files changed:
-  - server/src/models/Achievement.js (new)
-  - server/src/validation/achievementSchemas.js (new)
-  - server/src/controllers/achievementController.js (new)
-  - server/src/routes/achievement.js (new)
-  - server/src/routes/__tests__/achievement.test.js (new)
-  - server/src/app.js (modified — route registration)
-- **Learnings for future iterations:**
-  - Duplicate prevention: check with findOne first for nice error message, but also handle MongoDB error code 11000 for race conditions
-  - Achievement.distinct('userId').then(ids => ids.length) for counting unique players — simpler than aggregation for total count
-  - $round in aggregation pipeline for clean percentage display: $round: [expr, 1] for 1 decimal place
-  - Don't import mongoose if not needed — eslint catches unused imports as warnings
-  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
----
-
-## 2026-04-05 - GROW-005: Leaderboard model and API with weekly snapshots
-- Created MongoDB model Leaderboard with compound unique index on (userId, category, week) and ranking index on (category, week, score)
-- Schema: userId, displayName, category (xp/wordsLearned/streak/questsCompleted), score, week (ISO week string e.g. "2026-W14"), updatedAt
-- Static method `getISOWeek(date)` computes ISO week string (Monday-based weeks)
-- POST /api/v1/leaderboard/score — upsert score using `$max` operator (only increases, never lowers)
-- GET /api/v1/leaderboard/:category?limit=50 — top players this week, sorted by score desc with rank field
-- GET /api/v1/leaderboard/my-rank/:category — user's rank + 2 above/2 below surrounding players
-- Custom rate limiter: 1 score update per 30s per user (separate from general apiLimiter)
-- Weekly isolation: entries scoped by week field, old weeks naturally archived (still queryable)
-- Zod validation on body, params, and query
-- 18 integration tests covering: create entry, upsert higher score, reject lower score, invalid category, negative score, missing displayName, auth required, rate limiting, top players ranking, limit param, empty leaderboard, week isolation, invalid category param, my-rank with surrounding, no entry rank, auth on my-rank, ISO week format, week boundaries
-- Files changed:
-  - server/src/models/Leaderboard.js (new)
-  - server/src/validation/leaderboardSchemas.js (new)
-  - server/src/controllers/leaderboardController.js (new)
-  - server/src/routes/leaderboard.js (new)
-  - server/src/routes/__tests__/leaderboard.test.js (new)
-  - server/src/app.js (modified — route registration)
-- **Learnings for future iterations:**
-  - `$max` operator in findOneAndUpdate is perfect for "only update if higher" — avoids read-then-write race conditions
-  - Custom rate limiters (not from env vars) work fine in tests because each test creates a new user with unique userId, so rate limit keys don't collide across tests
-  - my-rank route must be registered BEFORE /:category to avoid "my-rank" being parsed as a category param
-  - ISO week calculation: set date to nearest Thursday, count weeks from Jan 1 of that year
-  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
----
-
-## 2026-04-05 - GROW-006: Analytics event ingestion API
-- Created MongoDB model AnalyticsEvent with TTL index (90 days auto-delete) and userId+timestamp index
-- Schema: userId, event (enum of 6 types), properties (Mixed), sessionId, timestamp
-- POST /api/v1/analytics/events — batch ingest up to 50 events per request (201 on success)
-- 6 valid event types: session_start, session_end, quiz_completed, battle_started, lesson_completed, feature_used
-- Custom rate limiter: 1 batch per 10s per user (separate from general apiLimiter)
-- Zod validation: events array min 1, max 50, each event validated against enum + optional fields
-- 13 integration tests covering: batch ingest, single event, all event types, defaults, custom timestamp, invalid event type, empty array, >50 events, exactly 50 events, missing events field, auth required, cross-user isolation, rate limiting, TTL index verification
-- Files changed:
-  - server/src/models/AnalyticsEvent.js (new)
-  - server/src/validation/analyticsSchemas.js (new)
-  - server/src/controllers/analyticsController.js (new)
-  - server/src/routes/analytics.js (new)
-  - server/src/routes/__tests__/analytics.test.js (new)
-  - server/src/app.js (modified — route registration)
-- **Learnings for future iterations:**
-  - Mongoose Schema.Types.Mixed is the right type for freeform properties objects
-  - TTL index: `{ expireAfterSeconds: N }` on a Date field — MongoDB handles cleanup automatically
-  - insertMany is efficient for batch ingestion — returns array of inserted docs
-  - Zod z.record(z.unknown()) validates arbitrary key-value objects for the properties field
-  - z.string().datetime() validates ISO 8601 timestamp strings
-  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
----
-
-## 2026-04-05 - GROW-007: Faction management API
-- Created MongoDB model FactionState with unique index on userId, Map-based factions storage
-- Schema: userId, factions Map of {reputation (0-100), tier (auto-calculated), joinedAt}
-- POST /api/v1/factions/update — update reputation for a faction, auto-calculates tier
-- GET /api/v1/factions — get all faction states for user (empty object for new users)
-- GET /api/v1/factions/:factionId/rankings — top 50 players by reputation in a faction
-- Tier auto-calculation: 0-25 Outsider, 26-50 Member, 51-75 Trusted, 76-100 Elder
-- Zod validation on inputs, auth middleware on all routes
-- 22 integration tests covering: reputation update, accumulation, clamping (0/100), negative amounts, invalid factionId, missing fields, auth required, multiple factions independently, tier boundaries (Outsider/Member/Trusted/Elder), empty state for new user, cross-user isolation, rankings sorted by reputation, rankings filtered by faction, invalid faction param, auth on rankings
-- Files changed:
-  - server/src/models/FactionState.js (new)
-  - server/src/validation/factionSchemas.js (new)
-  - server/src/controllers/factionController.js (new)
-  - server/src/routes/faction.js (new)
-  - server/src/routes/__tests__/faction.test.js (new)
-  - server/src/app.js (modified — route registration)
-- **Learnings for future iterations:**
-  - Mongoose Map type with embedded subdocument schema works well for dynamic faction entries
-  - $objectToArray in aggregation pipeline converts Mongoose Map to array for unwinding/filtering
-  - Tier auto-calculation as a static method on the model keeps it co-located and testable
-  - Rankings aggregation: $objectToArray → $unwind → $match → $sort → $limit is the pattern for Map-based ranked queries
-  - joinedAt set on first positive reputation interaction (not on creation) — captures meaningful engagement timestamp
-  - Test count: 3653 all pass, 0 lint errors on new files, build succeeds
----
-
-## 2026-04-05 - GROW-008: Dynamic NPC schedule system
-- Created src/data/npcSchedules.js with schedule data for all 30 NPCs
-- Each NPC has 3-4 schedule blocks covering the full 24-hour cycle (morning/afternoon/evening/night)
-- Schedule blocks: { timeStart, timeEnd, location, activity } — supports overnight wrapping (e.g., 21:00-05:00)
-- getNpcLocation(npcId, gameHour) — returns current { location, activity } for an NPC, handles hour normalization
-- getNpcsAtLocation(locationId, gameHour) — returns all NPCs at a location with their activities
-- 9 zones used across schedules: oasis_village, ancient_library, desert_marketplace, farmland, bedouin_camp, mountain_village, coastal_port, royal_palace, garden_district
-- NPCs travel between zones during the day (e.g., scholar-yusuf teaches at ancient_library 8-17, returns to oasis_village evenings)
-- 23 tests covering: data structure (30 NPCs, 3-4 blocks each, required fields, valid hours, 24h coverage, valid locations), getNpcLocation (normal hours, overnight, boundaries, unknown NPC, midnight, hour 23, normalization of >24 and negative hours, exhaustive all-NPC-all-hour check), getNpcsAtLocation (morning population, activity check, empty locations, time-varying population, unknown location, uniqueness, overnight transitions)
-- Files changed:
-  - src/data/npcSchedules.js (new)
-  - src/data/__tests__/npcSchedules.test.js (new)
-- **Learnings for future iterations:**
-  - Overnight time ranges (timeStart > timeEnd) need special handling: gameHour >= timeStart OR gameHour < timeEnd
-  - Hour normalization with ((h % 24) + 24) % 24 handles both >24 and negative inputs cleanly
-  - This is a pure data + utility module — no Redux integration needed since TimeSystem already provides game hour via selectGameTime
-  - The npcs-meta.json already has partial schedule data for 4 NPCs; this new module provides complete standalone schedules for all 30
-  - Zone IDs from zones.js: oasis_village, ancient_library, desert_marketplace, farmland, bedouin_camp, mountain_village, coastal_port, royal_palace. Added garden_district from NPC data (poet-rumi, garden-keeper-leila home zone)
-  - Test count: 3676 all pass, 0 lint errors on new files, build succeeds
----
-
-## 2026-04-06 - GROW-009: Expand Oasis zone NPC dialogues — 5 new conversation trees
-- Created 5 new Ink dialogue scripts for Oasis zone NPCs (guard-hamza, herbalist-maryam, baker-yasmin, imam-muhammad, guide-salim)
-- Each dialogue follows existing pattern: EXTERNAL declarations, VAR routing, first_meeting/returning_visitor/casual_return knots, NPC hub with 3+ choices, comprehension check
-- Arabic vocabulary woven naturally into dialogue at A1-A2 level
-- #vocab:word_id tags added to lines teaching new vocabulary (e.g. #vocab:bread_1, #vocab:honey_1, #vocab:camel_1)
-- Quest hooks in 4 dialogues: guard-hamza→guard_directions, herbalist-maryam→farm_nature, imam-muhammad→palace_faith, guide-salim→words_of_oasis
-- All 5 .ink files compiled to .ink.json via `npm run ink:compile` (22 files total compiled)
-- InkDialogueEngine auto-discovers new files via import.meta.glob — no explicit registration needed
-- 41 tests covering: JSON structure, Story instantiation, Arabic content, branching choices, 10+ dialogue lines, all 4 quest hooks, comprehension check calls, vocab tags, NPC naming convention
-- Files changed:
-  - src/data/ink-source/guard-hamza.ink (new)
-  - src/data/ink-source/herbalist-maryam.ink (new)
-  - src/data/ink-source/baker-yasmin.ink (new)
-  - src/data/ink-source/imam-muhammad.ink (new)
-  - src/data/ink-source/guide-salim.ink (new)
-  - src/data/ink/guard-hamza.ink.json (compiled)
-  - src/data/ink/herbalist-maryam.ink.json (compiled)
-  - src/data/ink/baker-yasmin.ink.json (compiled)
-  - src/data/ink/imam-muhammad.ink.json (compiled)
-  - src/data/ink/guide-salim.ink.json (compiled)
-  - src/data/__tests__/oasisDialogues.test.js (new)
-- **Learnings for future iterations:**
-  - InkDialogueEngine uses import.meta.glob('../data/ink/*.ink.json') — registration is just creating the file with correct npcId name
-  - #vocab:word_id is an inline ink tag — accessible via story.currentTags, ignored by engine until handled
-  - Quest choice text search in tests must be precise: "اختبريني عن الأعشاب" matches "أعشاب" before the actual quest choice — use unique substrings like "ساعدي" or "في جمع"
-  - bindNoopExternals helper pattern: iterate known external names with try/catch to skip undeclared ones
-  - Test count: 3717 all pass, 0 lint errors on new files, build succeeds
----
-
-## 2026-04-06 - GROW-010: Expand Desert zone NPC dialogues — 5 new conversation trees
-- Created 5 new Ink dialogue scripts for Desert zone NPCs (trader-hassan, wanderer-ali, weaver-zahra, carpet-seller-jamal, poet-desert)
-- Each dialogue: 3 intro choices, hub with 4-5 options, comprehension check, Arabic at A2-B1 level
-- Arabic vocabulary at higher complexity: multi-clause sentences, lore references (silk road, mu'allaqat poetry, Islamic geometric art, weaving traditions)
-- #vocab:word_id tags on teaching lines in all 5 dialogues
-- Quest hooks in 4 dialogues: trader-hassan→silk_road_investigation, wanderer-ali→desert_paths, weaver-zahra→artisan_patterns, poet-desert→ancient_verses
-- Faction choices in 2 dialogues: trader-hassan and carpet-seller-jamal both offer merchants guild (setFlag("merchants_guild_supported"))
-- wanderer-ali offers travelers brotherhood (setFlag("travelers_brotherhood_joined")), poet-desert offers artists guild (setFlag("artists_guild_supported"))
-- All 5 .ink files compiled to .ink.json via `npm run ink:compile` (27 files total compiled)
-- InkDialogueEngine auto-discovers via import.meta.glob — no explicit registration needed
-- 44 tests covering: JSON structure, Story instantiation, canContinue, Arabic content, 3+ choices, hub choices, 12+ lines, 4 quest hooks, 2 faction choices, comprehension checks, vocab tags, A2-B1 complexity, file discovery
-- Files changed:
-  - src/data/ink-source/trader-hassan.ink (new)
-  - src/data/ink-source/wanderer-ali.ink (new)
-  - src/data/ink-source/weaver-zahra.ink (new)
-  - src/data/ink-source/carpet-seller-jamal.ink (new)
-  - src/data/ink-source/poet-desert.ink (new)
-  - src/data/ink/trader-hassan.ink.json (compiled)
-  - src/data/ink/wanderer-ali.ink.json (compiled)
-  - src/data/ink/weaver-zahra.ink.json (compiled)
-  - src/data/ink/carpet-seller-jamal.ink.json (compiled)
-  - src/data/ink/poet-desert.ink.json (compiled)
-  - src/data/__tests__/desertDialogues.test.js (new)
-- **Learnings for future iterations:**
-  - Desert NPCs: trader-hassan, wanderer-ali, weaver-zahra, carpet-seller-jamal are in desert_marketplace; poet-desert is in desert_expanse
-  - No `changeFactionReputation` external exists in InkDialogueEngine — use `setFlag` with descriptive names (e.g., "merchants_guild_supported") as faction-affecting markers
-  - A2-B1 complexity check: filter Arabic lines by length > 30 chars as a proxy for multi-clause sentences
-  - Faction choices in 2+ dialogues: use same flag name across NPCs (merchants_guild_supported) so tests can verify consistently
-  - Test count: 3761 all pass, 0 lint errors on new files (1 warning same pattern as oasisDialogues), build succeeds
----
----
-
-## 2026-04-06 - GROW-011: Dynamic quest generation service
-- Created src/services/questGenerator.js with deterministic daily/weekly quest generation
-- 4 quest templates: vocab_collection, battle_wins, crafting, npc_interaction
-- Seeded PRNG: mulberry32 algorithm — createSeededRng(seed) → same seed = same sequence
-- Seed derivation: deriveSeed(dateInt, level) = ((YYYYMMDD * 31 + level) * 1000003) >>> 0
-- generateDailyQuests(playerState, date) → exactly 3 quests, no template repeats per day
-- generateWeeklyQuest(playerState, date) → 1 weekly quest with larger target, week-scoped via ISO week integer
-- Difficulty scales via scaleTarget(base, increment, min, max, level) and scaleXp(base, level) — +10% XP per level
-- 34 tests covering: PRNG properties, date conversion, scaling helpers, determinism, 3-daily count, template diversity, difficulty scaling, edge cases, weekly quest fields
-- Files changed:
-  - src/services/questGenerator.js (new)
-  - src/services/__tests__/questGenerator.test.js (new)
-- **Learnings for future iterations:**
-  - mulberry32 PRNG: seed += 0x6d2b79f5; bit manipulation chain — fast, deterministic, good distribution
-  - Daily template selection: sort TEMPLATES array with rng()-0.5 comparator, then slice(0,3) — guarantees 3 unique types
-  - Weekly seed uses dateToWeekInt (ISO week number × year) so any day in the same week returns same quest
-  - Templates can be tested for full coverage by iterating 30 different dates and checking all 4 types appear
-  - Test count: 3795 all pass, 0 lint errors on new files, build succeeds
----
-
-## 2026-04-06 - GROW-012: Economy rebalancing — dynamic shop pricing middleware
-- Added `dynamicPricing` state to economySlice: purchaseCounts, priceMultipliers, lastWeekKey, lastDayKey
-- 4 new reducers: recordDynamicPurchase (+0.05, max 2.0), applyDailyDecay (-0.1, min 0.5), resetWeeklyPricing (clear all → 1.0), setDynamicPricingDay (init day key without decay)
-- Created economyMiddleware.js — intercepts economy/recordPurchase, applies weekly reset, daily decay, then increments multiplier
-- Weekly reset: fires when ISO week key changes (Monday UTC); first-ever purchase initialises week key via same reset path
-- Daily decay: lazy — applied on next purchase event when calendar day changes; first purchase of week only initialises day key (no decay)
-- Selectors: selectPriceMultiplier(itemId), selectAdjustedPrice(itemId, basePrice), selectDealOfTheDay()
-- 22 tests covering: date helpers, pass-through, no itemId, +0.05 increment, 2.0x cap, purchase counts, daily decay on day change, 0.5x floor, no decay same day, weekly reset, week init, all selectors, multiple items, deal selection
-- Key fix: test for floor used days Apr 7-13 crossing into new week (reset!) — corrected to Apr 7-12 (6 days in same ISO week)
-- Files changed:
-  - src/store/slices/economySlice.js (modified — dynamicPricing state, 4 new actions, 3 new selectors)
-  - src/store/middleware/economyMiddleware.js (new)
-  - src/store/middleware/__tests__/economyMiddleware.test.js (new)
-  - src/store/store.js (modified — import + register economyMiddleware)
-- **Learnings for future iterations:**
-  - ISO week boundary is Monday UTC — a test spanning Sun→Mon crosses weeks and triggers weekly reset
-  - `grep "error" | wc -l` over-counts lint errors because "no-undef" annotation text contains "error" — use the ESLint summary line `✖ N problems (M errors, ...)` for accurate count
-  - Re-entrancy guard pattern (`_isProcessing` flag) is the standard for middlewares that dispatch back to the same slice
-  - getWeekKey/getDayKey exported as named exports make them independently unit-testable
-  - Test count: 3817 all pass, 0 lint errors on new files (168 pre-existing), build succeeds
+  - `buildChoices` is a closure inside `useQuiz` — it has access to `fsrsCards` and `vocabulary` from outer scope, so no need to thread these as parameters
+  - Mutating the `word` object (`word.sentenceBuild = ...`) is the established pattern for attaching question-specific context (same as `word.dialectItem`, `word.rootExpansion`, `word.culturalItem`)
+  - Always update the `quizTypes.test.js` count assertion when adding new types
+  - Lint has 420 pre-existing errors (tools/*.js node globals) — my changes add ≤1 warning, this is expected
 ---
