@@ -271,3 +271,17 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - processLoginReward applies XP/dirhams inline (no separate addXP dispatch) to keep state update atomic
   - getTodayUTC unused helper — remove immediately to avoid ESLint warning
 ---
+
+## 2026-04-07 - GROW-020
+- Created `src/data/loreEntriesBatch4.js` — 50 entries: history (10), mythology (10), science (10), scholars (10), world-lore (10); each includes PRD-extra fields: cefrLevel, relatedVocab[], unlockCondition
+- Updated `loreEntries.js`: import + spread LORE_ENTRIES_BATCH_4; added 'world-lore' to LORE_CATEGORIES and CATEGORY_META (icon 🌍, labelArabic أساطير العالم)
+- Updated `loreEntries.test.js`: added 'world-lore' to newCategories Set (allows <25 entries for extension categories)
+- Updated `playerSlice.test.js`: added lastLoginDate/loginStreak/totalLogins/pendingLoginReward to initial state expectation (fields were added in GROW-019 but test wasn't updated)
+- 11 tests in `loreEntriesBatch4.test.js`: 50-entry count, 10-per-category, unique IDs, required fields, keyTerm completeness, valid rarities, valid trigger prefixes, PRD-extra fields, world-lore pattern, scholars pattern, legendary presence
+- Files changed: `loreEntriesBatch4.js`, `loreEntries.js`, `loreEntriesBatch4.test.js`, `loreEntries.test.js`, `playerSlice.test.js`
+- **Learnings for future iterations:**
+  - 'world-lore' is a new category — requires addition to LORE_CATEGORIES array, CATEGORY_META object, AND test's newCategories exception Set
+  - loreEntries.test.js has a separate check for categories with <25 entries (newCategories Set) — any new extension category must be added there
+  - playerSlice initial state test uses toEqual with a hardcoded object — any new initialState field MUST also be added to that test's beforeEach object
+  - Batch files use id pattern: category_batch4_NNN (e.g., history_batch4_001) except world-lore which uses world_lore_NNN
+---
