@@ -94,3 +94,17 @@ Baseline: 8 test files failed, 9 tests failed before any changes.
   - `checkChainCompletions` takes the newly unlocked achievement ID + full unlocked map; call it after ALL achievements are dispatched so the state is current
   - `achievementChainService.test.js` already existed with good coverage — check before creating duplicate test files
 ---
+
+## 2026-04-07 - WIRE-006
+- Added `getTodayPhrase(cefrLevel)` call in `MainMenu.jsx` via `useMemo` — phrase rotates daily and filters to player's CEFR level
+- Added `selectCefrLevel` selector from `cefrProgressSlice`; falls back to `'A1'` when null
+- Added phrase card JSX between title and nav (`phraseCard`, `phraseLabel`, `phraseArabic`, `phraseTranslit`, `phraseEnglish`)
+- Added CSS for `.phraseCard` and child classes in `MainMenu.module.css` — pixel-art style with gold border and semi-transparent dark background
+- Fixed pre-existing TDZ bug: `const hasCharacter` was declared AFTER the `useEffect` that referenced it in its dependency array — moved the declaration before the first `useEffect`
+- Added 6 tests in `src/components/Menu/__tests__/MainMenuDailyPhrase.test.jsx`
+- Files changed: `src/components/Menu/MainMenu.jsx`, `src/components/Menu/MainMenu.module.css`, `src/components/Menu/__tests__/MainMenuDailyPhrase.test.jsx`
+- **Learnings for future iterations:**
+  - `const` TDZ bugs in React components only surface when the component is rendered in tests (jsdom); they may not throw in a real browser due to Vite's transpilation. Always declare variables before the `useEffect` that references them in deps.
+  - cefrProgress slice uses `currentLevel` (not `level`); placement slice uses `hasCompleted` (not `hasCompletedPlacement`) — match slice field names exactly in preloadedState
+  - Mocking `dailyPhraseService.js` with `vi.mock` + fixed return value lets CEFR-level assertion use `toHaveBeenCalledWith` on the imported `getTodayPhrase`
+---

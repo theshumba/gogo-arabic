@@ -96,7 +96,7 @@
         "npm run test:run && npm run lint && npm run build passes"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "Read src/services/dailyPhraseService.js and src/data/dailyPhrases.js. Find the welcome/login component."
     },
     {
