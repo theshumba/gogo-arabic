@@ -179,3 +179,25 @@ Started: Wed  8 Apr 2026 02:09:50 BST
   - `SPELL_TIERS` from `rootMagic.js` provides the ordered form keys; `Object.keys(SPELL_TIERS)` = ['I','II',...,'X']
   - `magic.affinity.discoveryChoices` is an array of `{ element: string }` objects — count by element for affinity score
 ---
+
+## 2026-04-08 - FEAT-020
+- Created `src/store/slices/microReviewSlice.js` with `suggest({ zoneId, cards })` and `dismiss` actions; `selectMicroReview` selector
+- Created `src/store/middleware/zoneEntryReviewMiddleware.js` with pure `getZoneDueCards(zoneId, vocabCards, now, zoneWordIds?)` and `zoneEntryReviewMiddleware`
+- `getZoneDueCards`: filters to already-due cards (due <= now), scores by `(now - due) / (stability × DAY_MS)`, sorts descending, returns top MAX_REVIEW_CARDS (3) word IDs
+- Per-zone 1-hour cooldown stored in module-level `_zoneCooldowns` map; independent per zone
+- Action listened: `world/enterZone` — supports both `{ zoneId }` object and plain string payload
+- Zone vocabulary mapping loaded lazily from vocabularyAll.js (same pattern as zoneReviewMiddleware); test-injectable via `_setVocabByZone(map)`
+- Registered `microReviewReducer` in rootReducer and `zoneEntryReviewMiddleware` in middleware chain
+
+**Files changed:**
+- `src/store/slices/microReviewSlice.js` (new)
+- `src/store/middleware/zoneEntryReviewMiddleware.js` (new)
+- `src/store/middleware/__tests__/zoneEntryReviewMiddleware.test.js` (new — 23 tests)
+- `src/store/store.js` (import + reducer + middleware registration)
+
+**Learnings for future iterations:**
+  - Global test setup uses fake timers — `await new Promise(r => setTimeout(r, 10))` never resolves. Use `await Promise.resolve()` twice to flush async `.then()` chains instead
+  - For async middleware with lazy vocab loading, export `_setVocabByZone(map)` and `_resetZoneState()` for test injection so tests don't need to stub dynamic imports
+  - Vocabulary words use `word.zone || 'oasis_village'` as zone tag — same pattern as existing `zoneReviewMiddleware.js`
+  - The existing `zoneReviewMiddleware` is a separate system (uses EventBus, `player/setCurrentZone`, 10-min global cooldown); FEAT-020 is additive (Redux dispatch, `world/enterZone`, 1-hour per-zone cooldown)
+---

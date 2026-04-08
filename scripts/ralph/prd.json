@@ -173,7 +173,7 @@
         "npm run test:run passes"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "Check how zones are defined and how vocabulary is tagged to zones. Follow middleware patterns from progressSnapshotMiddleware for session-level guards."
     }
   ]
