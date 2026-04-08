@@ -33,3 +33,23 @@ Started: Wed  8 Apr 2026 04:37:33 BST
   - "conversation tree" maps to `speaking`; "pronunciation tree" maps to `listening`
   - Mock the slice's action creator with `vi.fn(...)` returning the action object — lets dispatch calls be inspected by type/payload
 ---
+
+## 2026-04-08 - FEAT-022
+- Implemented `src/data/factionRewards.js`
+  - `FACTION_TIER_REWARDS`: 30 reward sets (6 factions × 5 tiers: neutral/friendly/trusted/allied/revered)
+  - Reward types: shopDiscount (5-25%), exclusiveRecipes (IDs), xpMultiplier (1.1-1.5x), zoneAccess (zone IDs)
+  - `getFactionRewards(factionId, tier)` — accepts string label or FACTION_TIERS object
+  - `getAccumulatedFactionRewards(factionId, score)` — cumulative rewards up to player's current tier
+  - `checkFactionGate(factionId, requiredTier, playerState)` — gate check using Redux state
+- Extended `selectFactionBonuses` in `src/store/slices/factionSlice.js`
+  - Now takes `selectAlignment` as third input alongside primary/secondary faction IDs
+  - Returns shopDiscount, zoneAccess, exclusiveRecipes, xpMultiplier in addition to existing XP multipliers
+  - Secondary faction zone access/recipes unioned; discount takes max(primary, secondary*0.5)
+- Created `src/data/__tests__/factionRewards.test.js` — 26 tests
+- Files changed: 2 new, 1 modified
+- **Learnings for future iterations:**
+  - Existing FACTION_TIERS use labels Neutral/Friendly/Trusted/Allied/Revered (NOT the PRD notes' Novice/Initiate/Ally/Champion/Hero)
+  - `getFactionTier(score)` already exists in factions.js — reuse it
+  - Extending a `createSelector`: add to the input selectors array, update the result function signature
+  - Edit tool requires Read first even for files created in the same session
+---
