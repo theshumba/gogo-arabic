@@ -68,7 +68,7 @@
         "npm run test:run passes"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "Read economySlice.js — check dynamicPricing state and recordPurchase reducer. Follow existing middleware daily trigger patterns."
     },
     {

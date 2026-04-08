@@ -66,3 +66,24 @@ Started: Wed  8 Apr 2026 02:09:50 BST
   - npcGiver values in quests.json are short prefixes ('guide', 'scholar') not full IDs — use `npcId.startsWith(npcGiver + '-')` for prefix matching
   - questSlice's selectNpcQuestMarkers uses 'question'/'exclamation' marker types; this engine uses 'available'/'active'/'completable' — they are separate systems with different vocabularies
 ---
+
+## 2026-04-08 - FEAT-014
+- Created `src/store/middleware/economyDecayMiddleware.js` with pure function `updateEconomyState(currentState, daysSinceLastUpdate)` and `economyDecayMiddleware`
+- Price decay: excess above 1.0 compounds at 2%/day via `excess * 0.98^days`; baseline (1.0) never decays further
+- High-demand surge: items with purchaseCounts ≥ 20 get +0.30 multiplier (after decay, capped at 2.0)
+- Supply respawn: deficit * 0.70^days (30%/day toward max), rounded, clamped to max
+- Middleware triggers on `dailyGoals/claimReward` and `dailyGoals/startSession`; skips if lastDayKey already equals today
+- Added `bulkApplyEconomyDecay` reducer to economySlice for atomic state update
+- Registered `economyDecayMiddleware` in store.js after `economyMiddleware`
+
+**Files changed:**
+- `src/store/middleware/economyDecayMiddleware.js` (new)
+- `src/store/middleware/__tests__/economyDecayMiddleware.test.js` (new — 16 tests)
+- `src/store/slices/economySlice.js` (added bulkApplyEconomyDecay reducer + export)
+- `src/store/store.js` (import + concat registration)
+
+**Learnings for future iterations:**
+  - economyMiddleware already existed handling dynamic pricing on purchases; economyDecayMiddleware is additive (daily batch decay), not a replacement
+  - Use compound-decay formula `value * (1-rate)^days` for multi-day catch-up rather than looping
+  - store.js line 298 is the middleware `.concat(...)` chain — read the exact line before editing to match whitespace
+---
