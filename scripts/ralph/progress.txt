@@ -1,91 +1,35 @@
+# Ralph Progress Log
+Started: Wed  8 Apr 2026 02:09:50 BST
+---
+
 ## Codebase Patterns
 
-- Data files in `src/data/` often already exist from prior phases — always check before creating new ones.
-- Pre-existing lint errors (151 errors) and test failures (forgettingCurve, settingsSlice, battle.integration, HUD) are baseline — do not count against story completion.
-- arabicIdioms.js uses named functions (`getIdiomsByCategory`, `getRandomIdiom`) rather than Redux-style `select*` names — add thin aliases when AC requires selector naming.
+- **Middleware trigger signal**: Use an existing Redux action as the intercept point rather than creating new actions. For quiz completion, `dailyGoals/updateDailyGoal` with `goalType === 'quizzesPassed'` is the reliable session-end signal (only fires on score > 0, never for abandoned sessions).
+- **Module-level daily state**: All middleware use a `_daily = { date, ...counters }` pattern with `_maybeResetForNewDay()` checking UTC date. Always export `_resetDailyState(overrides)` and `_getDailyState()` for test isolation.
+- **Dedup key**: Use `new Date().toISOString().slice(0, 16)` for 'YYYY-MM-DDTHH:MM' minute-granularity dedup keys.
+- **Middleware registration**: Import in `src/store/store.js` and append to the `.concat(...)` chain after `dailyGoalsMiddleware` so it sees actions after the goals reducer has processed them.
+- **Pre-existing test failures**: 7 test files (antiFrustrationMiddleware, zoneReviewMiddleware, battle.integration, settingsSlice, datasetValidation, forgettingCurveService, HUD) were already failing before this batch. Do NOT treat them as regressions.
+- **Hook reminder**: The `READ-BEFORE-EDIT` hook fires on every edit to an existing file, even if already read. It's a reminder only — edits go through as long as the file was read earlier in the session.
 
 ---
 
-## 2026-04-07 - FEAT-010
-- Created `src/store/middleware/progressSnapshotMiddleware.js` with `isMondayUTC()`, `getISOWeekId()`, `captureSnapshot()`, `selectProgressTrend()`, `progressSnapshotMiddleware`, and `_resetSnapshotSession()`.
-- Created 23 tests in `progressSnapshotMiddleware.test.js` covering snapshot capture, Monday boundary, single-dispatch guard, trend selector, and edge cases.
-- Added `snapshots` subdocument array to `server/src/models/User.js`.
-- Added `getProgressSnapshots()` and `saveProgressSnapshot()` to `server/src/controllers/userController.js`.
-- Added GET/POST `/progress/snapshots` routes to `server/src/routes/user.js`.
-- Pattern: module-level `_snapshotCheckedThisSession` flag prevents multiple dispatches per session (same approach as vocabRateMiddleware).
-- Files changed: `progressSnapshotMiddleware.js` (new), `progressSnapshotMiddleware.test.js` (new), `User.js`, `userController.js`, `user.js`, `prd.json`, `progress.txt`
----
+## 2026-04-08 - FEAT-011
+- Implemented `quizDailyGoalsMiddleware` that listens for `dailyGoals/updateDailyGoal` with `goalType === 'quizzesPassed'` (the signal fired by `recordQuizCompletion` in `useQuiz.js` when a session ends with score > 0)
+- Added 1-minute deduplication to prevent double-counting same-session double-fires
+- Dispatches `dailyGoals/claimReward` once the daily quiz target (3 sessions) is met
+- Added `claimReward` and `resetQuizReward` actions to `dailyGoalsSlice`, plus `quizRewardClaimed` field to state
+- Registered middleware in `store.js` after `dailyGoalsMiddleware`
 
-## 2026-04-07 - FEAT-009
-- All leaderboard files already existed: `server/src/models/Leaderboard.js`, `server/src/controllers/leaderboardController.js`, `server/src/routes/leaderboard.js`, `server/src/validation/leaderboardSchemas.js`, and tests.
-- Server tests (in `server/`) are NOT part of root `npm run test:run` (vitest includes only `src/**`); they run via the server's own vitest.
-- No changes needed — marked as passing.
-- Files changed: `prd.json`, `progress.txt`
----
+**Files changed:**
+- `src/store/middleware/quizDailyGoalsMiddleware.js` (new)
+- `src/store/middleware/__tests__/quizDailyGoalsMiddleware.test.js` (new — 15 tests)
+- `src/store/slices/dailyGoalsSlice.js` (added `claimReward`, `resetQuizReward`, `quizRewardClaimed`)
+- `src/store/store.js` (import + concat registration)
 
-## 2026-04-07 - FEAT-008
-- Added `canUseIngredientByMastery()`, `isRecipeCraftableByMastery()`, `calculateCefrScaledXP()`, `CEFR_XP_MULTIPLIER` to `craftingLogic.js` (new functions, did not break existing 37 tests).
-- Added `selectCraftableRecipes()` memoized selector to `craftingSlice.js` (needed to import RESOURCES too).
-- Created 21 tests in `craftingVocabGate.test.js`.
-- Pattern: craftingSlice didn't import RESOURCES — needed to add it alongside existing RECIPES import.
-- Files changed: `craftingLogic.js`, `craftingSlice.js`, `craftingVocabGate.test.js` (new), `prd.json`, `progress.txt`
----
-
-## 2026-04-07 - FEAT-007
-- Full adaptive difficulty engine already existed: `difficultyEngine.js` (68 tests), `difficultyMiddleware.js` (12 tests), `difficultySlice.js`.
-- Added `selectCurrentDifficulty()` (1-5 numeric mapping) and `selectShouldSuggestBreak()` alias to `difficultySlice.js` to satisfy AC selector naming.
-- Files changed: `difficultySlice.js`, `prd.json`, `progress.txt`
----
-
-## 2026-04-07 - FEAT-006
-- Created `src/utils/conversationScoring.js` with `scoreConversationResponse()`, `calculateConversationXP()`, `extractVocabularyFromSentence()`, and `normaliseArabic()`.
-- Used existing `stripDiacritics()` from `arabicUtils.js` for tashkeel handling.
-- Created 26 tests in `src/utils/__tests__/conversationScoring.test.js`.
-- Pattern: word-level diff uses multiset difference (handles duplicates correctly).
-- Files changed: `conversationScoring.js` (new), `conversationScoring.test.js` (new), `prd.json`, `progress.txt`
----
-
-## 2026-04-07 - FEAT-005
-- Created `src/store/middleware/vocabRateMiddleware.js` with `getNewWordRate()`, `selectRemainingNewWords()`, module-level daily state, and UTC midnight reset.
-- Created `src/store/middleware/__tests__/vocabRateMiddleware.test.js` with 19 tests.
-- Gotcha: threshold comparisons must use `>=` not `>` so boundary values (60%, 70%, 85%) fall into the correct bucket.
-- Pattern: middleware uses module-level state for daily counters (not Redux) — easier to test with `_resetDailyState()` helper.
-- Files changed: `vocabRateMiddleware.js` (new), `vocabRateMiddleware.test.js` (new), `prd.json`, `progress.txt`
----
-
-## 2026-04-07 - FEAT-004
-- `src/store/middleware/battleRewardsMiddleware.js` already fully implemented (not a stub): routes XP→playerSlice, gold→playerSlice, items→inventorySlice, affix words→vocabularySlice+FSRS.
-- 17 tests in `battleRewardsMiddleware.test.js` already pass (AC requires 12+).
-- No changes needed — marked as passing.
-- Files changed: `scripts/ralph/prd.json`, `scripts/ralph/progress.txt`
----
-
-## 2026-04-07 - FEAT-003
-- `src/data/battleOpponents.js` already existed with 30 opponents across 8 zones, 25 passing tests.
-- Added `selectOpponentsByZone(zone)` and `selectOpponentById(id)` aliases to satisfy AC selector naming.
-- Files changed: `src/data/battleOpponents.js`, `scripts/ralph/prd.json`, `scripts/ralph/progress.txt`
----
-
-## 2026-04-07 - FEAT-002
-- `src/data/arabicPhonetics.js` already existed with 28 consonants, 6 vowels, 16 minimal pairs, and SOUND_CATEGORIES.
-- 38 tests in `src/data/__tests__/arabicPhonetics.test.js` already passed.
-- Added `selectConsonantsByArticulation(point)` and `selectMinimalPairsFor(letterId)` aliases to satisfy AC selector naming.
-- Files changed: `src/data/arabicPhonetics.js`, `scripts/ralph/prd.json`, `scripts/ralph/progress.txt`
-- **Learnings for future iterations:**
-  - Same pattern as FEAT-001: file pre-existed, only selector aliases were missing.
----
-
-# Ralph Progress Log
-Started: Tue  7 Apr 2026 18:48:06 BST
----
-
-## 2026-04-07 - FEAT-001
-- Data file `src/data/arabicIdioms.js` already existed with 110 idioms across 10 categories (created by a prior phase).
-- Tests `src/data/__tests__/arabicIdioms.test.js` already existed and passed (23 tests).
-- Added missing `selectIdiomsBy(category)` and `selectDailyIdiom(dateString)` exports to satisfy AC selectors (charcode-sum hash for daily rotation).
-- Files changed: `src/data/arabicIdioms.js`, `scripts/ralph/prd.json`, `scripts/ralph/progress.txt`
-- **Learnings for future iterations:**
-  - All three FEAT-001/002/003 data files likely already exist — check `src/data/` before writing anything.
-  - Test files for these data files are in `src/data/__tests__/`.
-  - Pre-existing failures in spacedListeningService, forgettingCurve, settingsSlice, HUD, antiFrustrationMiddleware, zoneReviewMiddleware, battle.integration — ignore these baselines.
+**Learnings for future iterations:**
+  - The quiz session completion signal is `dailyGoals/updateDailyGoal` with `goalType === 'quizzesPassed'` — there's no dedicated "quiz session complete" Redux action; the existing `recordQuizCompletion()` helper in `dailyGoalsMiddleware.js` is the source
+  - `achievements/recordQuizTypeResult` also fires at session end but lacks score/total info — avoid as trigger
+  - `vocabRateMiddleware.js` is the canonical pattern for module-level daily state middleware
+  - dailyGoalsSlice `QUIZZES_PASSED` target is 3 (from `DEFAULT_DAILY_GOALS`)
+  - Pre-existing lint errors: 152 errors, 246 warnings — none in the new files
 ---
