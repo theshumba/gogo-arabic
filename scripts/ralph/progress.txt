@@ -1,203 +1,35 @@
 # Ralph Progress Log
-Started: Wed  8 Apr 2026 02:09:50 BST
+Started: Wed  8 Apr 2026 04:37:33 BST
 ---
 
 ## Codebase Patterns
 
-- **Middleware trigger signal**: Use an existing Redux action as the intercept point rather than creating new actions. For quiz completion, `dailyGoals/updateDailyGoal` with `goalType === 'quizzesPassed'` is the reliable session-end signal (only fires on score > 0, never for abandoned sessions).
-- **Module-level daily state**: All middleware use a `_daily = { date, ...counters }` pattern with `_maybeResetForNewDay()` checking UTC date. Always export `_resetDailyState(overrides)` and `_getDailyState()` for test isolation.
-- **Dedup key**: Use `new Date().toISOString().slice(0, 16)` for 'YYYY-MM-DDTHH:MM' minute-granularity dedup keys.
-- **Middleware registration**: Import in `src/store/store.js` and append to the `.concat(...)` chain after `dailyGoalsMiddleware` so it sees actions after the goals reducer has processed them.
-- **Pre-existing test failures**: 7 test files (antiFrustrationMiddleware, zoneReviewMiddleware, battle.integration, settingsSlice, datasetValidation, forgettingCurveService, HUD) were already failing before this batch. Do NOT treat them as regressions.
-- **Hook reminder**: The `READ-BEFORE-EDIT` hook fires on every edit to an existing file, even if already read. It's a reminder only — edits go through as long as the file was read earlier in the session.
+- **Middleware pattern**: Always call `next(action)` first, then dispatch side-effects. Pattern from `vocabRateMiddleware.js`.
+- **Middleware test pattern**: Mock store with `{ getState: vi.fn(), dispatch: vi.fn() }`, mock `next = vi.fn((action) => action)`. Create middleware with `middleware = myMiddleware(store)(next)`. Check `store.dispatch` calls with `expect.objectContaining`.
+- **Skill tree IDs**: `reading`, `writing`, `listening`, `speaking`, `grammar`, `culture` (from `SKILL_TREE_ORDER` in `data/skillTrees.js`).
+- **Quiz completion hook**: `achievements/recordQuizTypeResult` — fires after every quiz session with `{ quizType, perfect }`.
+- **Battle end hook**: `battle/endBattle` — payload `{ victory, accuracy, timeElapsed, rewards, bossId }`.
+- **Conversation hook**: `conversation/completeScenario` — payload `{ scenarioId, score }`.
+- **Pronunciation hook**: `phonetics/recordPracticeAttempt` — payload `{ id, score, type }`.
+- **addSkillXP action**: `import { addSkillXP } from '../slices/skillTreeSlice.js'` — takes `{ treeId, amount }`.
+- **Pre-existing test failures**: 7 test files fail before any changes (IndexedDB, dataset, HUD, antiFrustration, zoneReview, battle integration). Not caused by feature work.
 
 ---
 
-## 2026-04-08 - FEAT-011
-- Implemented `quizDailyGoalsMiddleware` that listens for `dailyGoals/updateDailyGoal` with `goalType === 'quizzesPassed'` (the signal fired by `recordQuizCompletion` in `useQuiz.js` when a session ends with score > 0)
-- Added 1-minute deduplication to prevent double-counting same-session double-fires
-- Dispatches `dailyGoals/claimReward` once the daily quiz target (3 sessions) is met
-- Added `claimReward` and `resetQuizReward` actions to `dailyGoalsSlice`, plus `quizRewardClaimed` field to state
-- Registered middleware in `store.js` after `dailyGoalsMiddleware`
-
-**Files changed:**
-- `src/store/middleware/quizDailyGoalsMiddleware.js` (new)
-- `src/store/middleware/__tests__/quizDailyGoalsMiddleware.test.js` (new — 15 tests)
-- `src/store/slices/dailyGoalsSlice.js` (added `claimReward`, `resetQuizReward`, `quizRewardClaimed`)
-- `src/store/store.js` (import + concat registration)
-
-**Learnings for future iterations:**
-  - The quiz session completion signal is `dailyGoals/updateDailyGoal` with `goalType === 'quizzesPassed'` — there's no dedicated "quiz session complete" Redux action; the existing `recordQuizCompletion()` helper in `dailyGoalsMiddleware.js` is the source
-  - `achievements/recordQuizTypeResult` also fires at session end but lacks score/total info — avoid as trigger
-  - `vocabRateMiddleware.js` is the canonical pattern for module-level daily state middleware
-  - dailyGoalsSlice `QUIZZES_PASSED` target is 3 (from `DEFAULT_DAILY_GOALS`)
-  - Pre-existing lint errors: 152 errors, 246 warnings — none in the new files
----
-
-## 2026-04-08 - FEAT-012
-- Added `getTashkeelLevel(wordId, fsrsCard, now)` and `applyTashkeelFading(arabicText, level)` to existing `tashkeelFading.js`
-- `getTashkeelLevel`: returns FULL/PARTIAL/NONE based on FSRS stability thresholds (< 7 / 7-30 / > 30 days); recovery rule reverts to FULL if `lastFailDate` within 3 days
-- `applyTashkeelFading`: FULL = unchanged, NONE = strip all diacritics, PARTIAL = keep diacritics only on first base letter of each word
-- Key bug fixed: Arabic diacritics follow their base letter in Unicode, so PARTIAL logic must track `seenBaseCount` (keep diacritics only when `seenBaseCount === 1`), not a boolean flag
-
-**Files changed:**
-- `src/utils/tashkeelFading.js` (added getTashkeelLevel, applyTashkeelFading, TASHKEEL_LEVEL constant)
-- `src/utils/__tests__/tashkeelFading.test.js` (added 17 new tests; total 28)
-
-**Learnings for future iterations:**
-  - `tashkeelFading.js` already existed with `getDiacriticOpacity`/`splitTashkeel`/`hasDiacritics` — always check before creating new files
-  - Arabic diacritics are encoded AFTER their base letter — PARTIAL stripping must use a base-letter counter, not a "seen first letter" boolean
-  - The DIACRITIC_REGEX used in the file matches `[\u064B-\u065F\u0670\u06D6-\u06ED]` — same range used in `arabicUtils.stripDiacritics`
----
-
-## 2026-04-08 - FEAT-013
-- Created `src/utils/questMarkerEngine.js` with three pure functions + memoized selector
-- `checkQuestPreconditions(questDef, questState, playerState)` — checks quest chain (prerequisites), CEFR gate, friendship gate, level gate; all gates are optional fields on the quest def
-- `getNpcQuestMarker(npcId, questState, playerState, questDefs?)` — returns 'completable' | 'active' | 'available' | null with priority ordering; NPC matched via exact or prefix match on npcGiver
-- `getAvailableQuests(playerState, allQuestDefs, questState)` — filters to locked quests with met preconditions
-- `selectNpcMarkers(state)` — memoized createSelector reading quests/npc/cefrProgress/player slices
-
-**Files changed:**
-- `src/utils/questMarkerEngine.js` (new)
-- `src/utils/__tests__/questMarkerEngine.test.js` (new — 22 tests)
-
-**Learnings for future iterations:**
-  - quests.json has no cefrRequired/friendshipRequired/levelRequired fields yet — engine supports them as optional for future use
-  - npcGiver values in quests.json are short prefixes ('guide', 'scholar') not full IDs — use `npcId.startsWith(npcGiver + '-')` for prefix matching
-  - questSlice's selectNpcQuestMarkers uses 'question'/'exclamation' marker types; this engine uses 'available'/'active'/'completable' — they are separate systems with different vocabularies
----
-
-## 2026-04-08 - FEAT-014
-- Created `src/store/middleware/economyDecayMiddleware.js` with pure function `updateEconomyState(currentState, daysSinceLastUpdate)` and `economyDecayMiddleware`
-- Price decay: excess above 1.0 compounds at 2%/day via `excess * 0.98^days`; baseline (1.0) never decays further
-- High-demand surge: items with purchaseCounts ≥ 20 get +0.30 multiplier (after decay, capped at 2.0)
-- Supply respawn: deficit * 0.70^days (30%/day toward max), rounded, clamped to max
-- Middleware triggers on `dailyGoals/claimReward` and `dailyGoals/startSession`; skips if lastDayKey already equals today
-- Added `bulkApplyEconomyDecay` reducer to economySlice for atomic state update
-- Registered `economyDecayMiddleware` in store.js after `economyMiddleware`
-
-**Files changed:**
-- `src/store/middleware/economyDecayMiddleware.js` (new)
-- `src/store/middleware/__tests__/economyDecayMiddleware.test.js` (new — 16 tests)
-- `src/store/slices/economySlice.js` (added bulkApplyEconomyDecay reducer + export)
-- `src/store/store.js` (import + concat registration)
-
-**Learnings for future iterations:**
-  - economyMiddleware already existed handling dynamic pricing on purchases; economyDecayMiddleware is additive (daily batch decay), not a replacement
-  - Use compound-decay formula `value * (1-rate)^days` for multi-day catch-up rather than looping
-  - store.js line 298 is the middleware `.concat(...)` chain — read the exact line before editing to match whitespace
----
-
-## 2026-04-08 - FEAT-015
-- Exported `evaluateAchievementConditions(achievementDef, playerState)` from `achievementMiddleware.js` — thin wrapper around the internal `isAchievementMet`
-- Added `faction_alignment` case: checks `state.faction.alignment[req.faction] >= (req.threshold ?? 1)` — covers "join faction" (any points) and "max reputation" (threshold=100)
-- Added `npc_max_relationship` case: checks specific NPC or any NPC friendship >= threshold (75 default)
-- Added new `ACTION_TO_ACHIEVEMENT_TYPES` mappings: `faction/adjustAlignment`, `economy/recordHaggle`, `npc/adjustFriendship`, `npc/giveNpcGift`
-
-**Files changed:**
-- `src/store/middleware/achievementMiddleware.js` (added export, new cases, new trigger mappings)
-- `src/store/middleware/__tests__/achievementConditions.test.js` (new — 23 tests)
-
-**Learnings for future iterations:**
-  - `faction_alignment` achievements use `{ type: 'faction_alignment', faction: 'scholar' }` — no threshold = join check (default 1)
-  - `isAchievementMet` takes full Redux state (not just player slice) — `evaluateAchievementConditions` exposes the same signature
-  - New trigger mappings go in `ACTION_TO_ACHIEVEMENT_TYPES` at the bottom; the re-entrancy guard `_isProcessingAchievements` protects against dispatch cascades
----
-
-## 2026-04-08 - FEAT-016
-- Created `src/utils/cefrReportGenerator.js` with `generateCefrReport(vocabularyCards, placementResult)` and `selectCefrReport` memoized selector
-- Report includes: overallLevel, nextLevel, masteryByCefr map, per-skill breakdown (5 skills), progressSincePlacement, estimatedHoursToNextLevel
-- Overall level = highest CEFR level where known/total >= 60% threshold
-- Vocabulary categories mapped to 5 CEFR skills via CATEGORY_SKILL_MAP (grammar, reading, writing, listening, speaking)
-- Estimation: unknownWords * 5min / 60 = hours; nextLevel = level after current in [A1,A2,B1,B2]
-- Created `cefrProgressMiddleware.js` triggering on `vocabulary/updateFsrsCard` and `vocabulary/addFsrsCard`; only advances level, never downgrades
-
-**Files changed:**
-- `src/utils/cefrReportGenerator.js` (new)
-- `src/utils/__tests__/cefrReportGenerator.test.js` (new — 18 tests)
-- `src/store/middleware/cefrProgressMiddleware.js` (new)
-- `src/store/store.js` (import + concat registration)
-
-**Learnings for future iterations:**
-  - vocabulary FSRS cards in state are `{ wordId: { card: { stability, ... }, log, source } }` — presence of key = word started
-  - CEFR level inference is in vocabularyAll.js post-processing (uses frequency/difficulty fields), not in raw data files
-  - Vocabulary categories map to learning path domains (scholar/traveler/historian), not to CEFR skills directly — need custom CATEGORY_SKILL_MAP
----
-
-## 2026-04-08 - FEAT-017
-- Created `src/utils/npcRelationshipEngine.js` with `decayRelationships(relationships, daysElapsed)` and `getNpcGiftPreference(npcId, giftCategoryId)`
-- Decay: 1 point/day linear, floor at 0; fractional days are floored to whole days
-- Gift preferences: 4-tier system (favorite=5.0x, liked=2.0x, neutral=1.0x, disliked=0.5x)
-- `NPC_GIFT_PREFERENCES` data covers 12 NPCs with 2 favorites, ≥1 liked, 2 disliked each
-- Created `relationshipDecayMiddleware.js` triggering on `dailyGoals/startSession`; dispatches `npc/adjustFriendship` with negative deltas for each affected NPC
-- Module-level `_lastDecayDate` tracks when decay last ran (at most once/day)
-
-**Files changed:**
-- `src/utils/npcRelationshipEngine.js` (new)
-- `src/utils/__tests__/npcRelationshipEngine.test.js` (new — 17 tests)
-- `src/store/middleware/relationshipDecayMiddleware.js` (new)
-- `src/store/store.js` (import + concat registration)
-
-**Learnings for future iterations:**
-  - Gift data is in `src/data/gifts.js` with categories: food, crafts, books, clothing, tools, luxury, cultural (7 categories)
-  - npcSlice `adjustFriendship` defaults uninitialized NPC to 50 before adjusting — middleware only dispatches when oldValue > 0 to avoid false inits
-  - There is an existing `relationshipMiddleware` in the store — this is a different middleware (companion relationship system); new `relationshipDecayMiddleware` is additive
----
-
-## 2026-04-08 - FEAT-018
-- Created `src/utils/adaptiveQuizPool.js` with `selectAdaptiveQuizPool`, `adjustSessionDifficulty`, `computeRetrievability`
-- FSRS retrievability formula: `R = (1 + 19/81 * t/S)^(-0.5)` where t=days elapsed, S=stability
-- Sweet spot filter: 0.5 ≤ R ≤ 0.85; sorted ascending by R (most urgent first)
-- `adjustSessionDifficulty`: 3/3 correct→up, ≤1/3→down, 2/3→maintain; clamps at beginner/expert
-- GOTCHA: `makeCard(7, 10)` gives R≈0.866 (above 0.85, excluded); need elapsed ≥ 14 days for stability=7 to land in sweet spot (R≈0.825)
-- GOTCHA: For R=0.85 threshold: t/S ratio ≈ 1.64; for R=0.5: t/S ratio ≈ 12.8
-
-**Files changed:**
-- `src/utils/adaptiveQuizPool.js` (new)
-- `src/utils/__tests__/adaptiveQuizPool.test.js` (new — 20 tests)
-
-**Learnings for future iterations:**
-  - FSRS card object has `stability`, `reps`, `last_review` (ISO string), `due` (ISO string) fields
-  - `getRetrievability` in fsrs.js uses ts-fsrs scheduler — avoid importing it in pure utils (circular deps), implement formula inline instead
-  - DIFFICULTY_LEVELS = ['beginner', 'easy', 'medium', 'hard', 'expert'] — import from difficultyEngine.js
----
-
-## 2026-04-08 - FEAT-019
-- Created `src/utils/spellDiscoveryEngine.js` with `canDiscoverSpell`, `getDiscoverableSpells`, and `selectDiscoverableSpells` memoized selector
-- `canDiscoverSpell` checks 5 conditions: root in `magic.discoveredRoots`, grammar lesson for form completed, elemental affinity ≥ AFFINITY_THRESHOLD choices, Form N-1 unlocked for same root (spell chain), player level ≥ levelRequired
-- `FORM_TO_GRAMMAR_LESSON`: Form I → 'basic-verb-conjugation', Forms II-V → 'verb-forms-2-5', Forms VI-X → 'verb-forms-6-10'
-- `getDiscoverableSpells` excludes root+form pairs already in `rootMastery[rootId].formsUnlocked` to prevent re-discovery
-- `AFFINITY_THRESHOLD = 1` — at least 1 discovery choice for the spell's element required
-
-**Files changed:**
-- `src/utils/spellDiscoveryEngine.js` (new)
-- `src/utils/__tests__/spellDiscoveryEngine.test.js` (new — 25 tests)
-
-**Learnings for future iterations:**
-  - `magic.discoveredRoots` is the root knowledge signal (populated when player encounters a root word)
-  - `magic.rootMastery[rootId].formsUnlocked` tracks which verb forms are already unlocked for a root — use this for both the spell chain prerequisite check AND to exclude already-unlocked spells from the discoverable list
-  - `SPELL_TIERS` from `rootMagic.js` provides the ordered form keys; `Object.keys(SPELL_TIERS)` = ['I','II',...,'X']
-  - `magic.affinity.discoveryChoices` is an array of `{ element: string }` objects — count by element for affinity score
----
-
-## 2026-04-08 - FEAT-020
-- Created `src/store/slices/microReviewSlice.js` with `suggest({ zoneId, cards })` and `dismiss` actions; `selectMicroReview` selector
-- Created `src/store/middleware/zoneEntryReviewMiddleware.js` with pure `getZoneDueCards(zoneId, vocabCards, now, zoneWordIds?)` and `zoneEntryReviewMiddleware`
-- `getZoneDueCards`: filters to already-due cards (due <= now), scores by `(now - due) / (stability × DAY_MS)`, sorts descending, returns top MAX_REVIEW_CARDS (3) word IDs
-- Per-zone 1-hour cooldown stored in module-level `_zoneCooldowns` map; independent per zone
-- Action listened: `world/enterZone` — supports both `{ zoneId }` object and plain string payload
-- Zone vocabulary mapping loaded lazily from vocabularyAll.js (same pattern as zoneReviewMiddleware); test-injectable via `_setVocabByZone(map)`
-- Registered `microReviewReducer` in rootReducer and `zoneEntryReviewMiddleware` in middleware chain
-
-**Files changed:**
-- `src/store/slices/microReviewSlice.js` (new)
-- `src/store/middleware/zoneEntryReviewMiddleware.js` (new)
-- `src/store/middleware/__tests__/zoneEntryReviewMiddleware.test.js` (new — 23 tests)
-- `src/store/store.js` (import + reducer + middleware registration)
-
-**Learnings for future iterations:**
-  - Global test setup uses fake timers — `await new Promise(r => setTimeout(r, 10))` never resolves. Use `await Promise.resolve()` twice to flush async `.then()` chains instead
-  - For async middleware with lazy vocab loading, export `_setVocabByZone(map)` and `_resetZoneState()` for test injection so tests don't need to stub dynamic imports
-  - Vocabulary words use `word.zone || 'oasis_village'` as zone tag — same pattern as existing `zoneReviewMiddleware.js`
-  - The existing `zoneReviewMiddleware` is a separate system (uses EventBus, `player/setCurrentZone`, 10-min global cooldown); FEAT-020 is additive (Redux dispatch, `world/enterZone`, 1-hour per-zone cooldown)
+## 2026-04-08 - FEAT-021
+- Implemented `src/store/middleware/skillTreeXpMiddleware.js`
+  - Listens for 4 action types: quiz, battle, conversation, pronunciation
+  - QUIZ_TREE_MAP covers all 6 skill trees with 12+ quiz type mappings
+  - Battle XP scales with reward XP (BATTLE_BASE_XP + 10% of reward XP, capped at BATTLE_MAX_XP)
+  - Conversation XP scales with session score (CONVERSATION_BASE_XP + 0.2 * score)
+  - Pronunciation awards fixed PRONUNCIATION_XP per attempt
+  - All amounts in SKILL_TREE_XP_CONFIG constants
+- Created `src/store/middleware/__tests__/skillTreeXpMiddleware.test.js` — 25 tests (14+ required)
+- Files changed: 2 new files
+- **Learnings for future iterations:**
+  - `achievements/recordQuizTypeResult` is the right quiz completion hook (dispatched in useQuiz.js `next()`)
+  - `addSkillXP` validates treeId against `SKILL_TREES` — must use one of the 6 valid IDs
+  - "magic tree" in PRD maps to `grammar` (no magic tree exists; grammar is closest thematically)
+  - "conversation tree" maps to `speaking`; "pronunciation tree" maps to `listening`
+  - Mock the slice's action creator with `vi.fn(...)` returning the action object — lets dispatch calls be inspected by type/payload
 ---
