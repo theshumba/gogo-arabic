@@ -77,6 +77,7 @@ import { zoneReviewMiddleware } from './middleware/zoneReviewMiddleware.js';
 import { antiFrustrationMiddleware } from './middleware/antiFrustrationMiddleware.js';
 import { questChainMiddleware } from './middleware/questChainMiddleware.js';
 import { loginRewardMiddleware } from './middleware/loginRewardMiddleware.js';
+import { quizDailyGoalsMiddleware } from './middleware/quizDailyGoalsMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -293,7 +294,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, quizDailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware),
 });
 
 export const persistor = persistStore(store);

@@ -20,6 +20,7 @@ const initialState = {
   lastSessionReviewsDone: 0,
   lastSessionEndTime: null,
   welcomeBackShown: false,
+  quizRewardClaimed: false, // True once quiz daily target reward has been granted
 };
 
 const dailyGoalsSlice = createSlice({
@@ -150,6 +151,16 @@ const dailyGoalsSlice = createSlice({
     resetWelcomeBackShown(state) {
       state.welcomeBackShown = false;
     },
+
+    // Dispatched by quizDailyGoalsMiddleware when the daily quiz target is met
+    claimReward(state) {
+      state.quizRewardClaimed = true;
+    },
+
+    // Reset the quiz reward flag for a new day (called by checkDailyReset flow)
+    resetQuizReward(state) {
+      state.quizRewardClaimed = false;
+    },
   },
 });
 
@@ -164,6 +175,8 @@ export const {
   completeAllGoals,
   markWelcomeBackShown,
   resetWelcomeBackShown,
+  claimReward,
+  resetQuizReward,
 } = dailyGoalsSlice.actions;
 
 // ========== SELECTORS ==========
