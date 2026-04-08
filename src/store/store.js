@@ -77,6 +77,7 @@ import { zoneReviewMiddleware } from './middleware/zoneReviewMiddleware.js';
 import { antiFrustrationMiddleware } from './middleware/antiFrustrationMiddleware.js';
 import { questChainMiddleware } from './middleware/questChainMiddleware.js';
 import { loginRewardMiddleware } from './middleware/loginRewardMiddleware.js';
+import { leechDetectionMiddleware } from './middleware/leechDetectionMiddleware.js';
 import { quizDailyGoalsMiddleware } from './middleware/quizDailyGoalsMiddleware.js';
 import { economyDecayMiddleware } from './middleware/economyDecayMiddleware.js';
 import { cefrProgressMiddleware } from './middleware/cefrProgressMiddleware.js';
@@ -302,7 +303,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, quizDailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, economyDecayMiddleware, cefrProgressMiddleware, relationshipDecayMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, zoneEntryReviewMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, quizDailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, economyDecayMiddleware, cefrProgressMiddleware, relationshipDecayMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, zoneEntryReviewMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware, leechDetectionMiddleware),
 });
 
 export const persistor = persistStore(store);

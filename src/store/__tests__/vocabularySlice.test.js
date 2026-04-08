@@ -21,6 +21,7 @@ describe('vocabularySlice', () => {
       npcTeacherMap: {},
       reviewQueue: [],
       stats: { totalReviews: 0, accuracy: 0, streakDays: 0 },
+      suspendedCards: {},
     };
   });
 

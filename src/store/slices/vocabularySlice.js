@@ -3,6 +3,7 @@ import { getDecayingWords } from '../../services/forgettingCurveService.js';
 import { calculateQuranicCoverage, getQuranicCoverageByCategory } from '../../services/quranicCoverage.js';
 import { DIALECT_COMPARISON } from '../../data/dialectComparison.js';
 import vocabularyAll from '../../data/vocabularyAll.js';
+import { LEECH_THRESHOLD } from '../../services/leechDetection.js';
 
 // Build a lowercase-English → dialect entry lookup once at import time
 const _dialectByEnglish = new Map(
@@ -14,6 +15,7 @@ const initialState = {
   reviewQueue: [], // word IDs due for review
   stats: { totalReviews: 0, accuracy: 0, streakDays: 0 },
   npcTeacherMap: {}, // { wordId: npcId } — maps word to the NPC who taught it
+  suspendedCards: {}, // { wordId: true } — suspended cards excluded from review rotation
 };
 
 const vocabularySlice = createSlice({
@@ -55,6 +57,26 @@ const vocabularySlice = createSlice({
       }
     },
 
+    suspendCard(state, action) {
+      // payload: { wordId }
+      const { wordId } = action.payload;
+      state.suspendedCards[wordId] = true;
+    },
+
+    unsuspendCard(state, action) {
+      // payload: { wordId }
+      // Returns card to rotation with a reset interval (1 day, due now)
+      const { wordId } = action.payload;
+      delete state.suspendedCards[wordId];
+      if (state.fsrsCards[wordId]?.card) {
+        state.fsrsCards[wordId].card = {
+          ...state.fsrsCards[wordId].card,
+          scheduled_days: 1,
+          due: new Date().toISOString(),
+        };
+      }
+    },
+
   },
 });
 
@@ -64,6 +86,8 @@ export const {
   setReviewQueue,
   updateStats,
   associateWordWithNpc,
+  suspendCard,
+  unsuspendCard,
 } = vocabularySlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -247,5 +271,22 @@ export function selectDialectVariants(wordId) {
   if (!word?.english) return null;
   return _dialectByEnglish.get(word.english.toLowerCase()) || null;
 }
+
+// Select suspended cards map
+export const selectSuspendedCards = (state) => state.vocabulary.suspendedCards ?? {};
+
+/**
+ * Select count of leech cards (lapses >= LEECH_THRESHOLD).
+ */
+export const selectLeechCount = createSelector(
+  [selectFsrsCards],
+  (cards) => {
+    let count = 0;
+    for (const { card } of Object.values(cards)) {
+      if (card && (card.lapses ?? 0) >= LEECH_THRESHOLD) count++;
+    }
+    return count;
+  }
+);
 
 export default vocabularySlice.reducer;
