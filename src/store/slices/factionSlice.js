@@ -1,5 +1,6 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { FACTIONS, FACTION_BY_ID, getFactionTier } from '../../data/factions.js';
+import { getAccumulatedFactionRewards } from '../../data/factionRewards.js';
 
 /**
  * factionSlice.js — 6-faction alignment system
@@ -106,18 +107,21 @@ export const selectFactionRanks = createSelector(
 );
 
 /**
- * selectFactionBonuses — computes the effective XP multipliers the player
- * currently receives from their primary + secondary faction alignment.
+ * selectFactionBonuses — computes effective XP multipliers AND tier-based rewards
+ * the player currently receives from their primary + secondary faction alignment.
  *
- * Formula:
+ * Formula (XP multipliers):
  *   effectiveX = 1 + (primaryBonus - 1) + (secondaryBonus - 1) * 0.5
  *
- * Returns { vocabXpMultiplier, questXpMultiplier, primaryFaction, secondaryFaction }.
- * If no faction alignment exists, multipliers default to 1.0.
+ * Returns:
+ *   { vocabXpMultiplier, questXpMultiplier, primaryFaction, secondaryFaction,
+ *     shopDiscount, zoneAccess, exclusiveRecipes, xpMultiplier, primaryTierRewards }
+ *
+ * If no faction alignment exists, multipliers default to 1.0, arrays default to [].
  */
 export const selectFactionBonuses = createSelector(
-  [selectPrimaryFaction, selectSecondaryFaction],
-  (primaryId, secondaryId) => {
+  [selectPrimaryFaction, selectSecondaryFaction, selectAlignment],
+  (primaryId, secondaryId, alignment) => {
     const primary   = primaryId   ? FACTION_BY_ID[primaryId]   : null;
     const secondary = secondaryId ? FACTION_BY_ID[secondaryId] : null;
 
@@ -125,6 +129,32 @@ export const selectFactionBonuses = createSelector(
     const primaryQuest   = primary   ? primary.bonuses.questXpMultiplier   : 1.0;
     const secondaryVocab = secondary ? secondary.bonuses.vocabXpMultiplier : 1.0;
     const secondaryQuest = secondary ? secondary.bonuses.questXpMultiplier : 1.0;
+
+    // Tier-based rewards accumulated up to the player's current tier with each faction
+    const primaryTierRewards   = primaryId   ? getAccumulatedFactionRewards(primaryId,   alignment[primaryId]   ?? 0) : [];
+    const secondaryTierRewards = secondaryId ? getAccumulatedFactionRewards(secondaryId, alignment[secondaryId] ?? 0) : [];
+
+    // Aggregate best shop discount (primary takes precedence, secondary if higher)
+    const primaryDiscount   = primaryTierRewards.find((r) => r.type === 'shopDiscount')?.value   ?? 0;
+    const secondaryDiscount = secondaryTierRewards.find((r) => r.type === 'shopDiscount')?.value ?? 0;
+    const shopDiscount      = Math.max(primaryDiscount, secondaryDiscount * 0.5);
+
+    // Zone access: union of primary + secondary zones
+    const primaryZones   = primaryTierRewards.filter((r) => r.type === 'zoneAccess').flatMap((r) => r.value);
+    const secondaryZones = secondaryTierRewards.filter((r) => r.type === 'zoneAccess').flatMap((r) => r.value);
+    const zoneAccess     = [...new Set([...primaryZones, ...secondaryZones])];
+
+    // Exclusive recipes: union of primary + secondary
+    const primaryRecipes   = primaryTierRewards.filter((r) => r.type === 'exclusiveRecipes').flatMap((r) => r.value);
+    const secondaryRecipes = secondaryTierRewards.filter((r) => r.type === 'exclusiveRecipes').flatMap((r) => r.value);
+    const exclusiveRecipes = [...new Set([...primaryRecipes, ...secondaryRecipes])];
+
+    // XP multiplier from tier rewards (in addition to faction base bonuses)
+    const primaryXpTier   = primaryTierRewards.find((r) => r.type === 'xpMultiplier')?.value   ?? 1.0;
+    const secondaryXpTier = secondaryTierRewards.find((r) => r.type === 'xpMultiplier')?.value ?? 1.0;
+    const xpMultiplier    = Math.round(
+      (1 + (primaryXpTier - 1) + (secondaryXpTier - 1) * 0.5) * 10000
+    ) / 10000;
 
     return {
       vocabXpMultiplier: Math.round(
@@ -135,6 +165,11 @@ export const selectFactionBonuses = createSelector(
       ) / 10000,
       primaryFaction:   primary   ?? null,
       secondaryFaction: secondary ?? null,
+      shopDiscount,
+      zoneAccess,
+      exclusiveRecipes,
+      xpMultiplier,
+      primaryTierRewards,
     };
   }
 );
