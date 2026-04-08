@@ -9,11 +9,13 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { RECIPES } from '../../data/recipes.js';
 import { RESOURCES } from '../../data/resources.js';
 import { PROFESSIONS } from '../../data/professions.js';
+import { RECIPE_DISCOVERY_METHODS } from '../../data/recipeDiscovery.js';
 
 const initialState = {
   professions: {},           // { [professionId]: { level, xp, recipesUnlocked: [], craftCount } }
   resources: [],             // [{ resourceId, quantity, quality }]
-  discoveredRecipes: [],     // [recipeIds] found via exploration/NPC
+  discoveredRecipes: [],     // [recipeIds] found via exploration/NPC/experimentation
+  discoveredRecipeLog: {},   // { [recipeId]: { method, professionId, discoveredAt } }
   gatheringCooldowns: {},    // { [spotId]: lastGatheredTimestamp }
 };
 
@@ -210,6 +212,31 @@ const craftingSlice = createSlice({
         delete state.professions[professionId];
       }
     },
+
+    discoverRecipe(state, action) {
+      // payload: { professionId, recipeId, method }
+      const { professionId, recipeId, method } = action.payload;
+
+      // Validate recipe exists
+      if (!RECIPES[recipeId]) {
+        console.error(`[craftingSlice] discoverRecipe: unknown recipe '${recipeId}'`);
+        return;
+      }
+
+      // Add to global discovered list (idempotent)
+      if (!state.discoveredRecipes.includes(recipeId)) {
+        state.discoveredRecipes.push(recipeId);
+      }
+
+      // Record discovery log (tracks method and source)
+      if (!state.discoveredRecipeLog[recipeId]) {
+        state.discoveredRecipeLog[recipeId] = {
+          method,
+          professionId,
+          discoveredAt: Date.now(),
+        };
+      }
+    },
   },
 });
 
@@ -223,6 +250,7 @@ const craftingSlice = createSlice({
 export const selectProfessions = (state) => state.crafting.professions;
 export const selectResources = (state) => state.crafting.resources;
 export const selectDiscoveredRecipes = (state) => state.crafting.discoveredRecipes;
+export const selectDiscoveredRecipeLog = (state) => state.crafting.discoveredRecipeLog;
 export const selectGatheringCooldowns = (state) => state.crafting.gatheringCooldowns;
 
 /**
@@ -330,6 +358,21 @@ export const selectProfessionMasteryBonus = createSelector(
 );
 
 /**
+ * Memoized selector: Count undiscovered recipes for a profession
+ * (only counts recipes that have a discovery method defined)
+ */
+export const selectUndiscoveredRecipeCount = createSelector(
+  [selectDiscoveredRecipes, (state, professionId) => professionId],
+  (discoveredRecipes, professionId) => {
+    const discoveredSet = new Set(discoveredRecipes);
+    return Object.entries(RECIPE_DISCOVERY_METHODS).filter(([recipeId]) => {
+      const recipe = RECIPES[recipeId];
+      return recipe?.professionId === professionId && !discoveredSet.has(recipeId);
+    }).length;
+  }
+);
+
+/**
  * selectCraftableRecipes — filters all discovered recipes by vocabulary mastery.
  *
  * Returns only recipes where every ingredient's word is at >= 80% mastery
@@ -385,6 +428,7 @@ export const {
   craftItem,
   recordGatheringCooldown,
   resetProfession,
+  discoverRecipe,
 } = craftingSlice.actions;
 
 export default craftingSlice.reducer;
