@@ -76,3 +76,21 @@ Started: Wed  8 Apr 2026 04:37:33 BST
   - `vi.importActual` inside `beforeEach` lets reducer integration tests bypass the module-level vi.mock
   - Adding a field to initializeCompanions() loop is enough — each companion object gets the field
 ---
+
+## 2026-04-08 - FEAT-024
+- Implemented `src/store/slices/notificationSlice.js`
+  - Queue array sorted by priority (CRITICAL=3, HIGH=2, NORMAL=1, LOW=0)
+  - `enqueueNotification({ type, message, priority, duration, data })` with `prepare` callback for id/timestamp
+  - `dismissNotification()` moves active to history (max 50), promotes next from queue
+  - `clearQueue()` wipes queue and active
+  - `extraReducers` handles `ui/showNotification` (backward compat) at NORMAL priority
+  - Selectors: `selectActiveNotification`, `selectNotificationQueue`, `selectNotificationHistory`
+- Registered `notifications: notificationReducer` in `src/store/store.js` (transient — not persisted)
+- Created `src/store/slices/__tests__/notificationSlice.test.js` — 21 tests (14+ required)
+- Files changed: 2 new, 1 modified
+- **Learnings for future iterations:**
+  - Module-level `_idCounter` works fine for generating unique IDs across tests
+  - Priority ordering: insert at first position where queue[i].priority < notification.priority (stable sort)
+  - Backward compat via `extraReducers.addCase('ui/showNotification', ...)` avoids cross-import
+  - New slices should NOT be added to root persist whitelist if they are transient UI state
+---

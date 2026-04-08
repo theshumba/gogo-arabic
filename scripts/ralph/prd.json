@@ -72,7 +72,7 @@
         "npm run test:run passes"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "Read uiSlice.js for existing notification state. This replaces uiSlice notification with a dedicated slice. Don't break existing showNotification dispatches — add backward compat."
     },
     {
