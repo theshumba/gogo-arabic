@@ -29,6 +29,18 @@ export const RARITY_COLORS = Object.fromEntries(
 );
 
 /**
+ * RARITY_SELL_MULTIPLIERS — multiply item.sellPrice by this to get final sell value.
+ * common=1x, uncommon=2x, rare=5x, epic=15x, legendary=50x
+ */
+export const RARITY_SELL_MULTIPLIERS = {
+  common: 1,
+  uncommon: 2,
+  rare: 5,
+  epic: 15,
+  legendary: 50,
+};
+
+/**
  * EQUIPMENT_DATA — Flat object keyed by itemId for O(1) lookup
  * Each item has: id, name, nameArabic, slot, rarity, stats, affixes, lore, loreArabic, setId, sellPrice, minLevel
  */

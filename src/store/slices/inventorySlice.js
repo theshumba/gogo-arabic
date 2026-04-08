@@ -1,6 +1,15 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
-import { EQUIPMENT_DATA } from '../../data/equipment.js';
+import { EQUIPMENT_DATA, RARITY_SELL_MULTIPLIERS } from '../../data/equipment.js';
 import { calculateTotalEquipmentStats } from '../../utils/itemStats.js';
+
+/** Compute the total sell value for itemId × quantity using rarity multiplier. */
+export function computeSellPrice(itemId, quantity = 1) {
+  const item = EQUIPMENT_DATA[itemId];
+  if (!item) return 0;
+  const base = item.sellPrice ?? 0;
+  const multiplier = RARITY_SELL_MULTIPLIERS[item.rarity] ?? 1;
+  return base * multiplier * quantity;
+}
 
 export const MAX_INVENTORY_SIZE = 200;
 
@@ -18,6 +27,7 @@ const initialState = {
   items: [],           // [{ itemId: string, quantity: number, locked: boolean }] — max 200
   affixesUnlocked: [], // wordIds the player has discovered via equipment
   enchantments: {},    // { [slot]: { inscription, bonus: { stat, value } } } — Phase 31
+  buyBackHistory: [],  // [{ itemId, quantity, sellTotal, buyBackPrice, soldAt }] — last 10
 };
 
 const inventorySlice = createSlice({
@@ -196,6 +206,62 @@ const inventorySlice = createSlice({
       Object.assign(state, initialState);
     },
 
+    sellItem: {
+      // payload: { itemId, quantity, sellTotal, buyBackPrice }
+      // sellTotal and buyBackPrice are precomputed by the prepare callback so
+      // playerSlice extraReducers can read them without re-importing equipment data.
+      prepare({ itemId, quantity = 1 }) {
+        const sellTotal = computeSellPrice(itemId, quantity);
+        const buyBackPrice = Math.ceil(sellTotal * 1.2);
+        return { payload: { itemId, quantity, sellTotal, buyBackPrice } };
+      },
+      reducer(state, action) {
+        const { itemId, quantity, sellTotal, buyBackPrice } = action.payload;
+
+        const inventoryItem = state.items.find(i => i.itemId === itemId);
+        if (!inventoryItem || inventoryItem.locked) return;
+
+        const isEquipped = Object.values(state.equipped).includes(itemId);
+        if (isEquipped) return;
+
+        // Record in buyBackHistory (max 10, FIFO)
+        state.buyBackHistory.push({
+          itemId,
+          quantity,
+          sellTotal,
+          buyBackPrice,
+          soldAt: Date.now(),
+        });
+        if (state.buyBackHistory.length > 10) {
+          state.buyBackHistory.shift();
+        }
+
+        // Remove from inventory
+        inventoryItem.quantity -= quantity;
+        if (inventoryItem.quantity <= 0) {
+          state.items = state.items.filter(i => i.itemId !== itemId);
+        }
+      },
+    },
+
+    buyBackItem(state, action) {
+      // payload: { index, buyBackPrice } — index into buyBackHistory; caller provides price
+      const { index } = action.payload;
+      const entry = state.buyBackHistory[index];
+      if (!entry) return;
+
+      // Return item to inventory
+      const existing = state.items.find(i => i.itemId === entry.itemId);
+      if (existing) {
+        existing.quantity += entry.quantity;
+      } else {
+        state.items.push({ itemId: entry.itemId, quantity: entry.quantity, locked: false });
+      }
+
+      // Remove from buyback history
+      state.buyBackHistory.splice(index, 1);
+    },
+
     // ─── Phase 31 crafting consumable and enchantment reducers ───
 
     consumeItem(state, action) {
@@ -269,6 +335,8 @@ export const {
   clearInventory,
   consumeItem,
   applyEnchantment,
+  sellItem,
+  buyBackItem,
 } = inventorySlice.actions;
 
 // ────────────────────────────────────────────────
@@ -278,6 +346,19 @@ export const {
 export const selectEquippedItems = (state) => state.inventory.equipped;
 
 export const selectInventoryItems = (state) => state.inventory.items;
+
+export const selectBuyBackHistory = (state) => state.inventory.buyBackHistory;
+
+/**
+ * selectSellableItems — inventory items that are not locked and not currently equipped.
+ */
+export const selectSellableItems = createSelector(
+  [selectInventoryItems, selectEquippedItems],
+  (items, equipped) => {
+    const equippedIds = new Set(Object.values(equipped).filter(Boolean));
+    return items.filter(item => !item.locked && !equippedIds.has(item.itemId));
+  }
+);
 
 export const selectAffixesUnlocked = (state) => state.inventory.affixesUnlocked;
 

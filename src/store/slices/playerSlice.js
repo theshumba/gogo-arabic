@@ -357,6 +357,38 @@ const playerSlice = createSlice({
       state.pendingLoginReward = null;
     },
   },
+  extraReducers: (builder) => {
+    // Award currency when player sells an item
+    builder.addCase('inventory/sellItem', (state, action) => {
+      const { sellTotal } = action.payload;
+      if (!sellTotal || sellTotal <= 0) return;
+      if (!state.currency) state.currency = { fils: 0, dirhams: 0, dinars: 0 };
+      state.currency.fils += sellTotal;
+      if (state.currency.fils >= 100) {
+        const convert = Math.floor(state.currency.fils / 100);
+        state.currency.dirhams += convert;
+        state.currency.fils %= 100;
+      }
+      if (state.currency.dirhams >= 100) {
+        const convert = Math.floor(state.currency.dirhams / 100);
+        state.currency.dinars += convert;
+        state.currency.dirhams %= 100;
+      }
+    });
+
+    // Deduct currency when player buys back a sold item
+    builder.addCase('inventory/buyBackItem', (state, action) => {
+      const { buyBackPrice } = action.payload;
+      if (!buyBackPrice || buyBackPrice <= 0) return;
+      if (!state.currency) return;
+      const pool = state.currency.dinars * 10000 + state.currency.dirhams * 100 + state.currency.fils;
+      if (pool < buyBackPrice) return;
+      const remaining = pool - buyBackPrice;
+      state.currency.dinars = Math.floor(remaining / 10000);
+      state.currency.dirhams = Math.floor((remaining % 10000) / 100);
+      state.currency.fils = remaining % 100;
+    });
+  },
 });
 
 export const {
