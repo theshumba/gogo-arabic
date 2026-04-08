@@ -123,3 +123,23 @@ Started: Wed  8 Apr 2026 02:09:50 BST
   - CEFR level inference is in vocabularyAll.js post-processing (uses frequency/difficulty fields), not in raw data files
   - Vocabulary categories map to learning path domains (scholar/traveler/historian), not to CEFR skills directly — need custom CATEGORY_SKILL_MAP
 ---
+
+## 2026-04-08 - FEAT-017
+- Created `src/utils/npcRelationshipEngine.js` with `decayRelationships(relationships, daysElapsed)` and `getNpcGiftPreference(npcId, giftCategoryId)`
+- Decay: 1 point/day linear, floor at 0; fractional days are floored to whole days
+- Gift preferences: 4-tier system (favorite=5.0x, liked=2.0x, neutral=1.0x, disliked=0.5x)
+- `NPC_GIFT_PREFERENCES` data covers 12 NPCs with 2 favorites, ≥1 liked, 2 disliked each
+- Created `relationshipDecayMiddleware.js` triggering on `dailyGoals/startSession`; dispatches `npc/adjustFriendship` with negative deltas for each affected NPC
+- Module-level `_lastDecayDate` tracks when decay last ran (at most once/day)
+
+**Files changed:**
+- `src/utils/npcRelationshipEngine.js` (new)
+- `src/utils/__tests__/npcRelationshipEngine.test.js` (new — 17 tests)
+- `src/store/middleware/relationshipDecayMiddleware.js` (new)
+- `src/store/store.js` (import + concat registration)
+
+**Learnings for future iterations:**
+  - Gift data is in `src/data/gifts.js` with categories: food, crafts, books, clothing, tools, luxury, cultural (7 categories)
+  - npcSlice `adjustFriendship` defaults uninitialized NPC to 50 before adjusting — middleware only dispatches when oldValue > 0 to avoid false inits
+  - There is an existing `relationshipMiddleware` in the store — this is a different middleware (companion relationship system); new `relationshipDecayMiddleware` is additive
+---

@@ -121,7 +121,7 @@
         "npm run test:run passes"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "Read companionSlice.js and npcSlice.js for relationship data model. Gift categories should come from existing crafting/inventory data."
     },
     {
