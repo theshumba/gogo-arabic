@@ -161,3 +161,21 @@ Started: Wed  8 Apr 2026 02:09:50 BST
   - `getRetrievability` in fsrs.js uses ts-fsrs scheduler — avoid importing it in pure utils (circular deps), implement formula inline instead
   - DIFFICULTY_LEVELS = ['beginner', 'easy', 'medium', 'hard', 'expert'] — import from difficultyEngine.js
 ---
+
+## 2026-04-08 - FEAT-019
+- Created `src/utils/spellDiscoveryEngine.js` with `canDiscoverSpell`, `getDiscoverableSpells`, and `selectDiscoverableSpells` memoized selector
+- `canDiscoverSpell` checks 5 conditions: root in `magic.discoveredRoots`, grammar lesson for form completed, elemental affinity ≥ AFFINITY_THRESHOLD choices, Form N-1 unlocked for same root (spell chain), player level ≥ levelRequired
+- `FORM_TO_GRAMMAR_LESSON`: Form I → 'basic-verb-conjugation', Forms II-V → 'verb-forms-2-5', Forms VI-X → 'verb-forms-6-10'
+- `getDiscoverableSpells` excludes root+form pairs already in `rootMastery[rootId].formsUnlocked` to prevent re-discovery
+- `AFFINITY_THRESHOLD = 1` — at least 1 discovery choice for the spell's element required
+
+**Files changed:**
+- `src/utils/spellDiscoveryEngine.js` (new)
+- `src/utils/__tests__/spellDiscoveryEngine.test.js` (new — 25 tests)
+
+**Learnings for future iterations:**
+  - `magic.discoveredRoots` is the root knowledge signal (populated when player encounters a root word)
+  - `magic.rootMastery[rootId].formsUnlocked` tracks which verb forms are already unlocked for a root — use this for both the spell chain prerequisite check AND to exclude already-unlocked spells from the discoverable list
+  - `SPELL_TIERS` from `rootMagic.js` provides the ordered form keys; `Object.keys(SPELL_TIERS)` = ['I','II',...,'X']
+  - `magic.affinity.discoveryChoices` is an array of `{ element: string }` objects — count by element for affinity score
+---
