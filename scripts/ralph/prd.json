@@ -183,7 +183,7 @@
         "npm run test:run passes"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "Read src/services/audio.js (AudioManager singleton). Extend existing class, don't replace it. Howler.js supports volume fading natively via .fade(). Test with mock Howl instances."
     }
   ]

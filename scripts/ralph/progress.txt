@@ -218,3 +218,27 @@ Started: Wed  8 Apr 2026 04:37:33 BST
   - Skip your own slice's action types with `action.type.startsWith('sliceName/')` guard to prevent recursive dispatch loops
   - `flushAnalytics` as a plain async function (not createAsyncThunk) is easier to unit test — pass store as argument
 ---
+
+## 2026-04-08 - FEAT-030
+- Extended `src/services/audio.js` (existing AudioManager class)
+  - Added `export class AudioManager` (also exported for test instantiation) + `export const MAX_CONCURRENT_SFX = 3`
+  - New constructor state: `_isDucked`, `_preDuckVolume`, `_duckRefCount` (ducking), `_sfxActive`, `_sfxQueue` (SFX queue)
+  - `duckBGM(targetVolume=0.3, fadeDuration=300)` — fades BGM down; no-ops if already ducked; snapshots pre-duck volume
+  - `restoreBGM(fadeDuration=300)` — fades BGM back to pre-duck volume; no-ops if not ducked
+  - `_autoDuck(howl, soundId)` — ref-counted auto-duck: ducks on first pronunciation, restores when all in-flight end; `fired` flag prevents double-decrement if both 'end' and 'stop' fire
+  - `playWord` and `playLetter` now capture `soundId = howl.play()` and call `_autoDuck(howl, soundId)`
+  - `queueSfx(sfxName, priority=0)` — plays immediately if < 3 active; high-priority (>0) goes to front of queue; normal FIFO
+  - `clearSfxQueue()` — clears queue and stops/unloads all active SFX Howls
+  - `_playSfxQueued` / `_drainSfxQueue` — internal queue management; drains on 'end'/'stop' events
+  - `cleanup()` extended to call `clearSfxQueue()` and reset duck state
+- Created `src/services/__tests__/audio.test.js` — 19 tests (12+ required)
+  - `vi.mock('howler', ...)` with a MockHowl that stores `_handlers`/`_onceHandlers` and exposes `_emit()` for test control
+  - `mockHowlInstances` array reset in `beforeEach` so tests get fresh AudioManager + fresh Howl refs
+- Files changed: 2 (1 modified, 1 new)
+- **Learnings for future iterations:**
+  - Export the class (`export class AudioManager`) so tests can instantiate fresh copies — avoids singleton state leakage between tests
+  - `vi.mock('howler', ...)` is needed even if `global.Howl` is set in setup.js — module imports are not affected by globals
+  - Use a sound-ID–bound `once(event, fn, soundId)` when Howls are reused from LRU cache; the `fired` guard covers the 'end'+'stop' double-fire case for non-ID path
+  - SFX queue: clear `_sfxActive` array BEFORE calling `howl.stop()` in `clearSfxQueue` — the stop event fires synchronously in tests and would otherwise re-trigger the drain logic
+  - Howler's `fade()` target must be multiplied by `masterVolume` — all volumes in the class are stored as 0-1 internal fractions already multiplied by master
+---
