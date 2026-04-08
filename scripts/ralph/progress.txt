@@ -173,3 +173,24 @@ Started: Wed  8 Apr 2026 04:37:33 BST
   - When removing an import that was added via `vi.mock` re-import, the mock factory still runs; only the named import reference is unused
   - Write-then-edit cycle triggers the READ-BEFORE-EDIT hook — always Read a file before editing even if you just wrote it
 ---
+
+## 2026-04-08 - FEAT-028
+- Added `RARITY_SELL_MULTIPLIERS` to `src/data/equipment.js` (common=1x, uncommon=2x, rare=5x, epic=15x, legendary=50x)
+- Extended `src/store/slices/inventorySlice.js`
+  - Added `buyBackHistory: []` to initialState (max 10 entries, FIFO)
+  - Added `computeSellPrice(itemId, quantity)` pure export: `item.sellPrice * RARITY_SELL_MULTIPLIERS[item.rarity] * quantity`
+  - Added `sellItem({ itemId, quantity })` with `prepare` callback: precomputes `sellTotal` and `buyBackPrice` (ceil 120%) in payload so playerSlice extraReducers can read them without re-importing equipment data
+  - Added `buyBackItem({ index, buyBackPrice })`: caller provides buyBackPrice (read from selectBuyBackHistory first)
+  - Added `selectBuyBackHistory` and `selectSellableItems` (memoized, excludes locked + equipped items)
+- Extended `src/store/slices/playerSlice.js` with `extraReducers`
+  - `inventory/sellItem` → add sellTotal as fils (with auto-convert to dirhams/dinars)
+  - `inventory/buyBackItem` → spend buyBackPrice if player can afford
+- Created `src/store/slices/__tests__/itemSelling.test.js` — 28 tests (12+ required)
+- Files changed: 3 modified, 1 new
+- **Learnings for future iterations:**
+  - `RARITY_TIERS` and `sellPrice` fields already existed in equipment.js — only multipliers were missing
+  - currency is in `playerSlice` (not economySlice) — the PRD notes were misleading
+  - Cross-slice currency wiring: use `prepare` callback to embed computed values in payload, then `extraReducers` in the target slice use string literal `'sliceName/actionName'` to avoid circular imports
+  - Selector ordering matters: `selectSellableItems` referenced `selectInventoryItems` before it was defined — always place `createSelector` calls AFTER all their input selectors
+  - `buyBackItem` must include `buyBackPrice` in payload because extraReducers in playerSlice cannot access inventorySlice state
+---

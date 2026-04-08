@@ -146,7 +146,7 @@
         "npm run test:run passes"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "Read inventorySlice.js and economySlice.js. Add rarity to equipment.js data. Sell dispatches to economySlice for currency. Keep buyback in inventorySlice."
     },
     {
