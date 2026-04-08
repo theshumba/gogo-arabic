@@ -103,3 +103,23 @@ Started: Wed  8 Apr 2026 02:09:50 BST
   - `isAchievementMet` takes full Redux state (not just player slice) — `evaluateAchievementConditions` exposes the same signature
   - New trigger mappings go in `ACTION_TO_ACHIEVEMENT_TYPES` at the bottom; the re-entrancy guard `_isProcessingAchievements` protects against dispatch cascades
 ---
+
+## 2026-04-08 - FEAT-016
+- Created `src/utils/cefrReportGenerator.js` with `generateCefrReport(vocabularyCards, placementResult)` and `selectCefrReport` memoized selector
+- Report includes: overallLevel, nextLevel, masteryByCefr map, per-skill breakdown (5 skills), progressSincePlacement, estimatedHoursToNextLevel
+- Overall level = highest CEFR level where known/total >= 60% threshold
+- Vocabulary categories mapped to 5 CEFR skills via CATEGORY_SKILL_MAP (grammar, reading, writing, listening, speaking)
+- Estimation: unknownWords * 5min / 60 = hours; nextLevel = level after current in [A1,A2,B1,B2]
+- Created `cefrProgressMiddleware.js` triggering on `vocabulary/updateFsrsCard` and `vocabulary/addFsrsCard`; only advances level, never downgrades
+
+**Files changed:**
+- `src/utils/cefrReportGenerator.js` (new)
+- `src/utils/__tests__/cefrReportGenerator.test.js` (new — 18 tests)
+- `src/store/middleware/cefrProgressMiddleware.js` (new)
+- `src/store/store.js` (import + concat registration)
+
+**Learnings for future iterations:**
+  - vocabulary FSRS cards in state are `{ wordId: { card: { stability, ... }, log, source } }` — presence of key = word started
+  - CEFR level inference is in vocabularyAll.js post-processing (uses frequency/difficulty fields), not in raw data files
+  - Vocabulary categories map to learning path domains (scholar/traveler/historian), not to CEFR skills directly — need custom CATEGORY_SKILL_MAP
+---
