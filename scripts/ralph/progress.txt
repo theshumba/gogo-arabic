@@ -141,3 +141,35 @@ Started: Wed  8 Apr 2026 04:37:33 BST
   - When adding new state fields to a slice, check for existing snapshot tests that assert on `initialState` — they will fail if the field is missing from the fixture
   - NPC friendship state is at `state.npc.friendship[npcId]`; quest completion at `state.quests.quests[questId]?.status === 'completed'`
 ---
+
+## 2026-04-08 - FEAT-027
+- Implemented `src/services/dailyQuestGenerator.js`
+  - `generateDailyQuests(playerState, dateString)` — deterministic via `hashString(level:date)` + successive modular selection from pool of 5 quest types
+  - `DAILY_QUEST_TYPES` enum: vocab_review, battle_win, craft_item, visit_zone, gift_npc
+  - `QUEST_TARGETS` per type and tier (easy/medium/hard); difficulty scales by player level (1-10=easy, 11-25=medium, 26+=hard)
+  - `hashString` uses `Math.imul(31, hash)` + unsigned right-shift to produce stable non-negative integers
+- Implemented `src/store/slices/dailyQuestSlice.js`
+  - State: `{ date, quests, bonusAwarded, history }` — history keeps last 7 days
+  - `loadDailyQuests({ date, quests })` archives previous day before replacing
+  - `progressDailyQuest({ type, amount })` advances quest and auto-marks completed
+  - `markBonusAwarded()` guards against double-awarding the bonus XP
+  - Selectors: `selectAllDailyQuestsComplete`, `selectDailyQuestProgress`, `selectDailyQuestHistory`
+- Implemented `src/store/middleware/dailyQuestMiddleware.js`
+  - `vocabulary/updateFsrsCard` → vocab_review
+  - `battle/endBattle` (victory:true only) → battle_win
+  - `crafting/craftItem` → craft_item
+  - `quests/visitZone` → visit_zone
+  - `npc/giveNpcGift` → gift_npc
+  - `ensureDailyQuests()` regenerates on UTC date change (inline reset at midnight)
+  - `maybeAwardBonus()` dispatches `addXP(150)` + `markBonusAwarded` once when all 3 complete
+- Registered `dailyQuestReducer` + `dailyQuestMiddleware` in `store.js` (transient — not persisted)
+- Created `src/store/slices/__tests__/dailyQuestSlice.test.js` — 30 tests
+- Created `src/store/middleware/__tests__/dailyQuestMiddleware.test.js` — 14 tests (44 total)
+- Files changed: 5 new, 1 modified
+- **Learnings for future iterations:**
+  - `Math.imul(31, hash)` is the correct JS equivalent of Java's String.hashCode() — avoids float overflow unlike `31 * hash`
+  - Use `hash >>> 0` (unsigned right-shift) to convert signed 32-bit int to non-negative number
+  - `vi.setSystemTime` in `beforeEach` controls `new Date()` in middleware — must be set before creating the middleware function
+  - When removing an import that was added via `vi.mock` re-import, the mock factory still runs; only the named import reference is unused
+  - Write-then-edit cycle triggers the READ-BEFORE-EDIT hook — always Read a file before editing even if you just wrote it
+---

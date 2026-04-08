@@ -127,7 +127,7 @@
         "npm run test:run passes"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "Use player level + date hash for deterministic generation. Follow vocabRateMiddleware pattern for UTC midnight reset. Store daily quest state in a new dailyQuestSlice or extend dailyGoalsSlice."
     },
     {
