@@ -1,0 +1,180 @@
+{
+  "project": "Gogo Arabic",
+  "branchName": "ralph/features-batch-2",
+  "description": "Game systems wiring — engagement loops, economy, achievements, progression tracking. All logic-only, no visual/rendering changes.",
+  "userStories": [
+    {
+      "id": "FEAT-011",
+      "title": "Wire quiz completions to daily goals",
+      "description": "Create middleware that listens for quiz session completion events and increments dailyGoals.reviewsCompleted counter. Bridge the gap between quiz completion logic and the daily goals slice so the Daily Dashboard reflects actual progress.",
+      "acceptanceCriteria": [
+        "src/store/middleware/quizDailyGoalsMiddleware.js listens for quiz completion actions",
+        "Increments dailyGoals reviewsCompleted counter on each quiz finish",
+        "Only counts completed sessions (not abandoned mid-quiz)",
+        "Threshold reward: dispatch dailyGoals/claimReward when daily target met",
+        "Handles edge case: multiple quick quizzes in same minute don't double-count",
+        "Tests: 12+ tests covering increment, threshold, edge cases",
+        "npm run test:run passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "Check existing quiz completion actions in vocabulary slice and dailyGoalsSlice.js reducers. Follow middleware patterns from vocabRateMiddleware."
+    },
+    {
+      "id": "FEAT-012",
+      "title": "Progressive tashkeel fading engine",
+      "description": "Build pure functions that determine diacritic visibility level per word based on FSRS stability. Words the player knows well gradually lose their diacritics, forcing real reading. If the player gets a word wrong, tashkeel reverts to full for 3 days.",
+      "acceptanceCriteria": [
+        "getTashkeelLevel(wordId, fsrsCard) returns FULL | PARTIAL | NONE",
+        "FULL when stability < 7 days, PARTIAL when 7-30 days, NONE when > 30 days",
+        "applyTashkeelFading(arabicText, level) strips diacritics according to level",
+        "PARTIAL mode keeps harakat only on first letter of each word",
+        "Recovery: if word answered wrong, revert to FULL for 3 days (check lastFailDate)",
+        "Tests: 14+ tests covering all levels, fading logic, recovery, edge cases",
+        "npm run test:run passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Check if src/utils/tashkeelFading.js already exists. Use stripDiacritics from arabicUtils.js. Pure functions only — no middleware needed."
+    },
+    {
+      "id": "FEAT-013",
+      "title": "Quest marker visibility rule engine",
+      "description": "Build a pure function rule engine that determines what quest marker an NPC should show based on quest state, player progress, and preconditions. Returns marker type for each NPC so the world layer can render appropriately.",
+      "acceptanceCriteria": [
+        "getNpcQuestMarker(npcId, questState, playerState) returns 'available' | 'active' | 'completable' | null",
+        "Checks preconditions: CEFR level gates, friendship thresholds, previous quest chain completion",
+        "getAvailableQuests(playerState, allQuests) returns filtered list of quests player can start",
+        "Quest chain support: quest B requires quest A completed",
+        "Selector: selectNpcMarkers(state) returns map of npcId → marker type",
+        "Tests: 14+ tests covering all marker states, preconditions, chains",
+        "npm run test:run passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Read questSlice.js and npcSlice.js to understand existing quest/NPC data models. Pure functions + selector, no middleware."
+    },
+    {
+      "id": "FEAT-014",
+      "title": "Economy price decay and supply respawn",
+      "description": "Implement the economy service that decays item prices toward baseline and respawns shop supplies daily. Prevents economy softlock where items become too expensive or permanently out of stock.",
+      "acceptanceCriteria": [
+        "updateEconomyState(currentState, daysSinceLastUpdate) returns updated prices and supply",
+        "Prices decay 2% per day toward baseline (prevents runaway inflation)",
+        "Supply respawns 30% per day toward max (prevents permanent stockout)",
+        "High-demand items (purchased 20+ times/week) get +30% price surge",
+        "economyDecayMiddleware triggers daily on dailyGoals/claim or session start",
+        "Tests: 12+ tests covering decay math, supply respawn, surge pricing, multi-day catch-up",
+        "npm run test:run passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "Read economySlice.js — check dynamicPricing state and recordPurchase reducer. Follow existing middleware daily trigger patterns."
+    },
+    {
+      "id": "FEAT-015",
+      "title": "Achievement trigger event system",
+      "description": "Wire achievement unlock conditions across all game systems. The achievementMiddleware currently only covers battle/quizzes — extend it to vocabulary milestones, CEFR tiers, skill tree progress, economy actions, and faction reputation.",
+      "acceptanceCriteria": [
+        "evaluateAchievementConditions(achievementDef, playerState) returns true/false",
+        "Vocabulary triggers: word milestones at 10, 50, 100, 500, 1000, 2500",
+        "CEFR triggers: reaching each level (A1→A2, A2→B1, etc.) per skill",
+        "Skill tree triggers: first node unlocked, full tree unlocked",
+        "Economy triggers: haggle count milestones, total dinars spent milestones",
+        "Faction triggers: join faction, max reputation",
+        "Tests: 16+ tests covering each trigger category",
+        "npm run test:run passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Read achievementSlice.js (44 achievements) and achievementMiddleware.js. Extend existing middleware, don't replace it. Check FEATURES.md for designed achievements."
+    },
+    {
+      "id": "FEAT-016",
+      "title": "CEFR progress report generation",
+      "description": "Build a pure function that aggregates FSRS vocabulary cards and placement test results into a structured CEFR progress report showing overall level, per-skill breakdown, progress since placement, and estimated hours to next level.",
+      "acceptanceCriteria": [
+        "generateCefrReport(vocabularyCards, placementResult) returns structured report object",
+        "Report includes: overall CEFR level, per-skill breakdown (reading, writing, grammar, listening, speaking)",
+        "progressSincePlacement shows delta, lagging skills, and advanced skills",
+        "estimatedHoursToNextLevel extrapolates from current FSRS learning pace",
+        "selectCefrReport(state) memoized selector for Redux store",
+        "cefrProgressMiddleware recalculates after vocab card updates",
+        "Tests: 14+ tests covering report accuracy, edge cases, estimation logic",
+        "npm run test:run passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "Read cefrProgressSlice.js and placementSlice.js. Check how FSRS cards are tagged with CEFR levels. Pure aggregation logic."
+    },
+    {
+      "id": "FEAT-017",
+      "title": "NPC relationship decay and gift preferences",
+      "description": "Implement relationship decay so NPC friendships decrease with inactivity, and a gift preference system where each NPC has favorite/disliked gift categories affecting friendship gain multipliers.",
+      "acceptanceCriteria": [
+        "decayRelationships(relationships, daysElapsed) reduces each NPC friendship by 1-2 points per inactive day",
+        "Minimum friendship floor of 0 (never goes negative)",
+        "getNpcGiftPreference(npcId, giftCategoryId) returns multiplier: disliked=0.5x, neutral=1.0x, liked=2.0x, favorite=5.0x",
+        "Each NPC has 2 favorite and 2 disliked gift categories defined in data",
+        "relationshipDecayMiddleware triggers daily",
+        "Tests: 12+ tests covering decay math, gift multipliers, floor, multi-day catch-up",
+        "npm run test:run passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "Read companionSlice.js and npcSlice.js for relationship data model. Gift categories should come from existing crafting/inventory data."
+    },
+    {
+      "id": "FEAT-018",
+      "title": "Adaptive quiz question pool selector",
+      "description": "Build a service that selects quiz questions optimized for the player's current difficulty level and FSRS retrievability. Targets 70-85% success rate by filtering words in the right retrievability window and ordering quiz types by appropriateness.",
+      "acceptanceCriteria": [
+        "selectAdaptiveQuizPool(playerDifficulty, vocabCards, targetCount) returns ordered word list",
+        "Filters words to 0.5-0.85 retrievability range (sweet spot for learning)",
+        "Orders quiz types by difficulty appropriateness using difficultyEngine rankings",
+        "Session trajectory: starts medium, adjusts after every 3 questions based on performance",
+        "adjustSessionDifficulty(currentDifficulty, last3Results) returns updated difficulty",
+        "Tests: 14+ tests covering pool selection, retrievability filtering, session adjustment",
+        "npm run test:run passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Read difficultyEngine.js for existing difficulty ranking. Check how FSRS retrievability is calculated in the codebase. Pure functions, no server endpoint needed."
+    },
+    {
+      "id": "FEAT-019",
+      "title": "Root magic spell discovery engine",
+      "description": "Build the rule engine that determines when spells become available for discovery. A spell unlocks when the player knows the Arabic root, has learned the required morphological patterns, meets the elemental affinity threshold, and meets the level requirement.",
+      "acceptanceCriteria": [
+        "canDiscoverSpell(spellId, playerState) returns true if all conditions met",
+        "Checks: root knowledge (vocabulary), morphological pattern mastery (grammar), elemental affinity score, player level",
+        "getDiscoverableSpells(playerState, allSpells) returns list of newly available spells",
+        "Spell prerequisite graph: Form I spells unlock Form II, Form II unlocks Form III, etc.",
+        "selectDiscoverableSpells(state) memoized selector",
+        "Tests: 14+ tests covering individual conditions, prerequisite chains, edge cases",
+        "npm run test:run passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "Read rootMagicSlice.js and spellData.js. Check grammar progression data for morphological patterns. Pure discovery logic only."
+    },
+    {
+      "id": "FEAT-020",
+      "title": "Zone entry micro-review middleware",
+      "description": "Create middleware that triggers a micro-review opportunity when a player enters a zone. Checks if the zone has any FSRS-due vocabulary cards and selects up to 3 for quick review, with a 1-hour cooldown per zone to avoid nagging.",
+      "acceptanceCriteria": [
+        "zoneEntryReviewMiddleware listens for world/enterZone actions",
+        "getZoneDueCards(zoneId, vocabCards, now) returns up to 3 most urgent due cards for that zone",
+        "Urgency score: (now - nextReview) / interval — highest urgency first",
+        "1-hour cooldown per zone: skip if zone was reviewed within last hour",
+        "Only selects vocabulary tagged with the zone's vocabulary set",
+        "Dispatches microReview/suggest action with selected cards",
+        "Tests: 14+ tests covering card selection, urgency sorting, cooldown, zone filtering",
+        "npm run test:run passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "Check how zones are defined and how vocabulary is tagged to zones. Follow middleware patterns from progressSnapshotMiddleware for session-level guards."
+    }
+  ]
+}
