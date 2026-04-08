@@ -83,6 +83,7 @@ import { cefrProgressMiddleware } from './middleware/cefrProgressMiddleware.js';
 import { relationshipDecayMiddleware } from './middleware/relationshipDecayMiddleware.js';
 import { zoneEntryReviewMiddleware } from './middleware/zoneEntryReviewMiddleware.js';
 import microReviewReducer from './slices/microReviewSlice.js';
+import notificationReducer from './slices/notificationSlice.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -288,6 +289,7 @@ const rootReducer = combineReducers({
   idiom: idiomReducer,
   linguisticCombat: linguisticCombatReducer,
   microReview: microReviewReducer,
+  notifications: notificationReducer, // transient — not persisted
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
