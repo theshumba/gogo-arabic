@@ -81,6 +81,8 @@ import { quizDailyGoalsMiddleware } from './middleware/quizDailyGoalsMiddleware.
 import { economyDecayMiddleware } from './middleware/economyDecayMiddleware.js';
 import { cefrProgressMiddleware } from './middleware/cefrProgressMiddleware.js';
 import { relationshipDecayMiddleware } from './middleware/relationshipDecayMiddleware.js';
+import { zoneEntryReviewMiddleware } from './middleware/zoneEntryReviewMiddleware.js';
+import microReviewReducer from './slices/microReviewSlice.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -285,6 +287,7 @@ const rootReducer = combineReducers({
   phonetics: phoneticsReducer,
   idiom: idiomReducer,
   linguisticCombat: linguisticCombatReducer,
+  microReview: microReviewReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -297,7 +300,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, quizDailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, economyDecayMiddleware, cefrProgressMiddleware, relationshipDecayMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, quizDailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, economyDecayMiddleware, cefrProgressMiddleware, relationshipDecayMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, zoneEntryReviewMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware),
 });
 
 export const persistor = persistStore(store);
