@@ -1,0 +1,191 @@
+{
+  "project": "Gogo Arabic",
+  "branchName": "ralph/content-batch-4",
+  "description": "Content depth & game feel — tutorial flow, dialogue, quests, bosses, world systems. All logic-only, no visual/rendering changes.",
+  "userStories": [
+    {
+      "id": "FEAT-031",
+      "title": "Guided tutorial auto-trigger system",
+      "description": "Build middleware that automatically triggers tutorial steps based on player actions. First-time feature use shows a contextual tutorial. Tutorial gates early gameplay so players learn mechanics in order: vocabulary → quiz → battle → crafting → quests.",
+      "acceptanceCriteria": [
+        "tutorialMiddleware listens for first-use of each feature and dispatches tutorial triggers",
+        "Tutorial sequence: vocab_intro → first_quiz → first_battle → crafting_intro → quest_intro",
+        "Each step has a prerequisite (previous step completed)",
+        "skipTutorial() action skips all remaining steps for experienced players",
+        "Tutorial state persisted in onboardingSlice (extend existing slice)",
+        "selectNextTutorialStep(state) returns next incomplete step or null",
+        "selectTutorialComplete(state) returns true when all steps done",
+        "Tests: 14+ tests covering sequence, skip, persistence, gate logic",
+        "npm run test:run passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "Read onboardingSlice.js for existing state. Extend it, don't replace. Read featureIntroductions.js and onboardingTips.js for existing data. Middleware pattern from quizDailyGoalsMiddleware."
+    },
+    {
+      "id": "FEAT-032",
+      "title": "Dialogue choice tracking and world state effects",
+      "description": "Build a system that records dialogue choices and applies world state consequences. Choices can affect faction alignment, NPC relationships, quest availability, and unlock hidden content. Each choice has a weight and consequence definition.",
+      "acceptanceCriteria": [
+        "recordDialogueChoice(npcId, choiceId, consequences) stores choice and applies effects",
+        "Consequence types: factionChange(factionId, amount), relationshipChange(npcId, amount), questUnlock(questId), itemGrant(itemId)",
+        "getDialogueHistory(npcId) returns all choices made with that NPC",
+        "hasChosenOption(npcId, choiceId) check for branching future dialogue",
+        "dialogueChoiceMiddleware applies consequences to respective slices on choice",
+        "selectNpcDialogueFlags(npcId) returns set of flags for Ink variable binding",
+        "Tests: 14+ tests covering choice recording, each consequence type, history, flags",
+        "npm run test:run passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Read narrativeSlice.js or npcSlice.js for dialogue history. Store choices in a dialogueChoiceSlice or extend narrative. Consequences dispatch to factionSlice, companionSlice, questSlice, inventorySlice."
+    },
+    {
+      "id": "FEAT-033",
+      "title": "Zone boss encounter data and logic",
+      "description": "Create boss encounter data and challenge logic for all 8 zones. Each zone has a unique boss with special mechanics tied to that zone's vocabulary theme. Boss fights require answering vocabulary questions to deal damage.",
+      "acceptanceCriteria": [
+        "src/data/zoneBosses.js with 8 boss definitions (one per zone)",
+        "Each boss: id, name, zone, level, hp, arabicTitle, specialMechanic, vocabTheme, rewards, dialogue",
+        "Special mechanics: timed_vocab (answer in 5s), root_match (identify root), dictation (type what you hear), etc.",
+        "getBossForZone(zoneId) returns boss data",
+        "isBossDefeated(zoneId, playerState) checks completion",
+        "calculateBossDamage(answerCorrect, timeBonus, combo) returns damage dealt",
+        "Boss rewards: unique equipment item + large XP + faction reputation",
+        "Tests: 14+ tests covering boss data, damage calc, completion tracking, all 8 zones",
+        "npm run test:run passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Read zones.js for zone IDs and themes. Read battleOpponents.js for opponent data format. Bosses are data + pure functions, not Phaser scenes. Store defeat state in worldStateSlice."
+    },
+    {
+      "id": "FEAT-034",
+      "title": "Weather and time-of-day system",
+      "description": "Build a time and weather system that tracks in-game time and weather per zone. Time cycles through dawn/day/dusk/night (each period = 15 real minutes). Weather affects NPC availability and shop inventory. Pure state management, no rendering.",
+      "acceptanceCriteria": [
+        "src/store/slices/worldTimeSlice.js tracks currentTime (0-59 minutes cycle) and weather per zone",
+        "Time periods: dawn(0-14), day(15-29), dusk(30-44), night(45-59)",
+        "getCurrentTimePeriod(state) returns dawn|day|dusk|night",
+        "Weather types: clear, sandstorm, rain, fog — each zone has weighted probabilities",
+        "Weather changes every time period (roll on zone's probability table)",
+        "getActiveNpcs(zoneId, timePeriod) filters NPCs by their schedule field",
+        "worldTimeMiddleware advances clock every real minute",
+        "Tests: 14+ tests covering time cycling, weather generation, NPC schedules, period transitions",
+        "npm run test:run passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "Read zones.js — NPCs already have schedule fields. Weather is new. Use deterministic seeded random for weather so it's testable. Middleware uses setInterval internally."
+    },
+    {
+      "id": "FEAT-035",
+      "title": "Custom FSRS deck management",
+      "description": "Let players create custom vocabulary decks for focused review. Decks can be created by zone, CEFR level, category, or manual word selection. Review sessions can target a specific deck instead of the full pool.",
+      "acceptanceCriteria": [
+        "src/store/slices/deckSlice.js manages custom decks: create, delete, add/remove words",
+        "createDeck(name, filter) creates deck — filter can be: zone, cefrLevel, category, or manual wordIds",
+        "Auto-decks: generateDeckByZone(zoneId), generateDeckByCefr(level), generateDeckByCategory(cat)",
+        "getSessionCardsFromDeck(deckId, maxCards) returns due cards filtered to deck",
+        "Max 10 custom decks per player",
+        "selectDeckStats(deckId) returns card count, due count, average retrievability",
+        "Tests: 14+ tests covering create, filter types, session generation, limits, stats",
+        "npm run test:run passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Read vocabularySlice.js for card structure. Read fsrs.js for getDueCards and getSessionCards. Decks store wordId arrays, not card copies. Filter at review time."
+    },
+    {
+      "id": "FEAT-036",
+      "title": "Companion dialogue progression",
+      "description": "Create a dialogue progression system where companion conversations change based on relationship level. Each companion has 5 dialogue tiers (stranger→acquaintance→friend→close→bonded) with unique lines, hints, and backstory reveals.",
+      "acceptanceCriteria": [
+        "src/data/companionDialogue.js with dialogue for all 12 companions across 5 tiers",
+        "Tiers: stranger(0-19), acquaintance(20-39), friend(40-59), close(60-79), bonded(80-100)",
+        "Each tier has: greeting, idle lines (3+), hint (gameplay tip), backstoryReveal (lore)",
+        "getCompanionDialogue(companionId, relationshipLevel) returns tier-appropriate dialogue",
+        "selectActiveCompanionGreeting(state) returns greeting for currently active companion",
+        "Backstory reveals unlock codex entries (dispatch to codex slice)",
+        "Tests: 12+ tests covering tier selection, all companions have data, codex unlock",
+        "npm run test:run passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "Read companionSlice.js for relationship state and companion IDs. Read companionBackstories.js for existing lore. Dialogue is Arabic+English pairs. Keep lines short (1-2 sentences)."
+    },
+    {
+      "id": "FEAT-037",
+      "title": "NPC stat-aware dialogue lines",
+      "description": "Add contextual dialogue lines that NPCs say based on player stats. NPCs comment on player's CEFR level, faction alignment, quest progress, and vocabulary count. Makes NPCs feel aware of the player's journey.",
+      "acceptanceCriteria": [
+        "src/data/npcContextDialogue.js with stat-aware lines for 20+ NPCs",
+        "Condition types: cefrLevel (A1-C2), factionTier (per faction), vocabCount (thresholds), questComplete (quest IDs)",
+        "getNpcContextLine(npcId, playerState) returns most relevant contextual line or null",
+        "Priority: quest-specific > faction > CEFR > vocab count > null (most specific wins)",
+        "Each NPC has 5-10 contextual lines with conditions",
+        "Lines are Arabic + English pairs",
+        "Tests: 12+ tests covering condition matching, priority ordering, fallback to null",
+        "npm run test:run passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "Read npcs.json for NPC IDs and zones. Pure data file + selector function. Context lines supplement existing dialogue, don't replace it."
+    },
+    {
+      "id": "FEAT-038",
+      "title": "Faction vendor discounts and exclusive shop inventory",
+      "description": "Wire faction reputation to the shop system. Higher faction tiers unlock exclusive items in faction-aligned shops and provide progressive discounts. Each faction has a signature shop with 5 exclusive items unlocked across tiers.",
+      "acceptanceCriteria": [
+        "src/data/factionShops.js with 6 faction shops, each with 5 exclusive items",
+        "getShopInventory(factionId, playerTier) returns available items for player's tier",
+        "getFactionDiscount(factionId, playerTier) returns discount: Novice=0%, Initiate=5%, Ally=10%, Champion=15%, Hero=25%",
+        "applyFactionDiscount(basePrice, factionId, playerState) returns discounted price",
+        "Exclusive items: tier-gated (1 item per tier, cumulative)",
+        "selectAvailableFactionShops(state) returns shops where player has Initiate+ standing",
+        "Tests: 12+ tests covering discount calc, inventory gating, all 6 factions, tier progression",
+        "npm run test:run passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Read factionSlice.js for tier calculation. Read economySlice.js for shop/pricing patterns. Faction shop items should be thematic (Scholars sell books, Warriors sell weapons, etc.)."
+    },
+    {
+      "id": "FEAT-039",
+      "title": "Quest branching and failure states",
+      "description": "Add branching paths and failure conditions to the quest system. Quests can have multiple objectives with choice points. Failed quests can be retried. Some quests have timed objectives that fail if not completed within the session.",
+      "acceptanceCriteria": [
+        "Quest schema extended: branchPoints[] with choiceId→nextObjective mapping",
+        "makeQuestChoice(questId, choiceId) advances quest down chosen branch",
+        "failQuest(questId, reason) marks quest as failed with retry option",
+        "retryQuest(questId) resets progress to last checkpoint (or start)",
+        "Timed objectives: quest.timeLimit (minutes) triggers failure if exceeded",
+        "questTimerMiddleware tracks active timed quests and dispatches failure",
+        "selectActiveTimedQuests(state) returns quests with running timers",
+        "Tests: 14+ tests covering branching, failure, retry, timers, checkpoint reset",
+        "npm run test:run passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "Read questSlice.js for existing quest state model. Extend it — don't break existing quests. Add optional fields (branchPoints, timeLimit) that default to null for existing quests."
+    },
+    {
+      "id": "FEAT-040",
+      "title": "Quest content expansion — 30 new quests",
+      "description": "Add 30 new quests to quests.json expanding coverage across all 8 zones. Mix of side quests (vocabulary challenges, NPC fetch quests, crafting commissions) and faction quests (reputation-gated, faction-specific rewards). Each quest has Arabic title and description.",
+      "acceptanceCriteria": [
+        "30 new quests added to src/data/quests.json (total ~93+)",
+        "Distribution: 3-4 new quests per zone across all 8 zones",
+        "Types: 10 side quests, 10 faction quests (faction field set), 5 crafting quests, 5 vocabulary challenge quests",
+        "Each quest has: id, title, titleArabic, description, zone, type, target, prerequisites, reward, npcGiver",
+        "Faction quests require minimum faction tier as prerequisite",
+        "Rewards scale with quest difficulty (higher zone = better rewards)",
+        "Validation: npm run validate-quests passes (if script exists)",
+        "npm run test:run passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "Read existing quests.json for format and IDs. Follow existing naming convention (kebab-case IDs). Use existing NPC IDs from npcs.json. Arabic titles should be simple MSA. Don't duplicate existing quest objectives."
+    }
+  ]
+}
