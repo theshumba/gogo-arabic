@@ -49,3 +49,20 @@ Started: Wed  8 Apr 2026 02:09:50 BST
   - Arabic diacritics are encoded AFTER their base letter — PARTIAL stripping must use a base-letter counter, not a "seen first letter" boolean
   - The DIACRITIC_REGEX used in the file matches `[\u064B-\u065F\u0670\u06D6-\u06ED]` — same range used in `arabicUtils.stripDiacritics`
 ---
+
+## 2026-04-08 - FEAT-013
+- Created `src/utils/questMarkerEngine.js` with three pure functions + memoized selector
+- `checkQuestPreconditions(questDef, questState, playerState)` — checks quest chain (prerequisites), CEFR gate, friendship gate, level gate; all gates are optional fields on the quest def
+- `getNpcQuestMarker(npcId, questState, playerState, questDefs?)` — returns 'completable' | 'active' | 'available' | null with priority ordering; NPC matched via exact or prefix match on npcGiver
+- `getAvailableQuests(playerState, allQuestDefs, questState)` — filters to locked quests with met preconditions
+- `selectNpcMarkers(state)` — memoized createSelector reading quests/npc/cefrProgress/player slices
+
+**Files changed:**
+- `src/utils/questMarkerEngine.js` (new)
+- `src/utils/__tests__/questMarkerEngine.test.js` (new — 22 tests)
+
+**Learnings for future iterations:**
+  - quests.json has no cefrRequired/friendshipRequired/levelRequired fields yet — engine supports them as optional for future use
+  - npcGiver values in quests.json are short prefixes ('guide', 'scholar') not full IDs — use `npcId.startsWith(npcGiver + '-')` for prefix matching
+  - questSlice's selectNpcQuestMarkers uses 'question'/'exclamation' marker types; this engine uses 'available'/'active'/'completable' — they are separate systems with different vocabularies
+---

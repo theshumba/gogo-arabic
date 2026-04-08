@@ -51,7 +51,7 @@
         "npm run test:run passes"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "Read questSlice.js and npcSlice.js to understand existing quest/NPC data models. Pure functions + selector, no middleware."
     },
     {
