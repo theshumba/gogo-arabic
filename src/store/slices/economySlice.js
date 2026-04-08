@@ -164,6 +164,31 @@ const economySlice = createSlice({
     setDynamicPricingDay(state, action) {
       state.dynamicPricing.lastDayKey = action.payload.dayKey;
     },
+
+    /**
+     * bulkApplyEconomyDecay — atomically apply computed price decay and supply
+     * respawn from the economyDecayMiddleware's updateEconomyState() result.
+     *
+     * payload: {
+     *   priceMultipliers: { [itemId]: number },
+     *   supplyLevels: { [shopId]: { [itemId]: { current: number, max: number } } },
+     *   dayKey: string,
+     * }
+     */
+    bulkApplyEconomyDecay(state, action) {
+      const { priceMultipliers, supplyLevels, dayKey } = action.payload;
+      state.dynamicPricing.priceMultipliers = priceMultipliers;
+      state.dynamicPricing.lastDayKey = dayKey;
+      // Merge supply levels (preserve shops not included in the update)
+      for (const [shopId, items] of Object.entries(supplyLevels)) {
+        if (!state.supplyLevels[shopId]) {
+          state.supplyLevels[shopId] = {};
+        }
+        for (const [itemId, entry] of Object.entries(items)) {
+          state.supplyLevels[shopId][itemId] = entry;
+        }
+      }
+    },
   },
 });
 
@@ -180,6 +205,7 @@ export const {
   applyDailyDecay,
   resetWeeklyPricing,
   setDynamicPricingDay,
+  bulkApplyEconomyDecay,
 } = economySlice.actions;
 
 // ────────────────────────────────────────────────
