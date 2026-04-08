@@ -1,4 +1,5 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
+import { calculateCompanionLevel, MAX_COMPANION_LEVEL } from '../../data/companionAbilities.js';
 
 // Initial 12 companion entries (IDs will match companions.js)
 const COMPANION_IDS = [
@@ -27,6 +28,7 @@ const initializeCompanions = () => {
       relationship: 0,            // 0-100
       mood: 50,                   // 0-100 (affects dialogue tone)
       level: 1,                   // Mirrors player level - 2 (min 1)
+      xp: 0,                       // cumulative XP earned (for leveling)
       giftsReceived: [],          // [giftId, ...]
       lastGiftTimestamp: null,
       dialogueHistory: [],        // [{ lineId, timestamp }] — last 50
@@ -202,6 +204,28 @@ const companionSlice = createSlice({
       companion.level = Math.max(1, level);
     },
 
+    addCompanionXP(state, action) {
+      // payload: { companionId, xp }
+      const { companionId, xp } = action.payload;
+
+      const companion = state.companions[companionId];
+      if (!companion) {
+        console.error(`[companionSlice] Unknown companion '${companionId}'`);
+        return;
+      }
+
+      if (!companion.recruited) {
+        return; // Only award XP to recruited companions
+      }
+
+      // Add XP
+      companion.xp = (companion.xp ?? 0) + Math.max(0, xp);
+
+      // Recalculate level from cumulative XP (capped at MAX_COMPANION_LEVEL)
+      const newLevel = calculateCompanionLevel(companion.xp);
+      companion.level = Math.min(MAX_COMPANION_LEVEL, Math.max(companion.level, newLevel));
+    },
+
     clearBattleCompanionState(state) {
       // Reset all companion battleStats to zero
       Object.values(state.companions).forEach(companion => {
@@ -225,6 +249,7 @@ export const {
   setCompanionMood,
   recordDialogueLine,
   updateCompanionLevel,
+  addCompanionXP,
   clearBattleCompanionState,
 } = companionSlice.actions;
 
