@@ -34,7 +34,7 @@
         "npm run test:run passes"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Check if src/utils/tashkeelFading.js already exists. Use stripDiacritics from arabicUtils.js. Pure functions only — no middleware needed."
     },
     {

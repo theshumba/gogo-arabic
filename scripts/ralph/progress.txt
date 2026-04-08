@@ -33,3 +33,19 @@ Started: Wed  8 Apr 2026 02:09:50 BST
   - dailyGoalsSlice `QUIZZES_PASSED` target is 3 (from `DEFAULT_DAILY_GOALS`)
   - Pre-existing lint errors: 152 errors, 246 warnings — none in the new files
 ---
+
+## 2026-04-08 - FEAT-012
+- Added `getTashkeelLevel(wordId, fsrsCard, now)` and `applyTashkeelFading(arabicText, level)` to existing `tashkeelFading.js`
+- `getTashkeelLevel`: returns FULL/PARTIAL/NONE based on FSRS stability thresholds (< 7 / 7-30 / > 30 days); recovery rule reverts to FULL if `lastFailDate` within 3 days
+- `applyTashkeelFading`: FULL = unchanged, NONE = strip all diacritics, PARTIAL = keep diacritics only on first base letter of each word
+- Key bug fixed: Arabic diacritics follow their base letter in Unicode, so PARTIAL logic must track `seenBaseCount` (keep diacritics only when `seenBaseCount === 1`), not a boolean flag
+
+**Files changed:**
+- `src/utils/tashkeelFading.js` (added getTashkeelLevel, applyTashkeelFading, TASHKEEL_LEVEL constant)
+- `src/utils/__tests__/tashkeelFading.test.js` (added 17 new tests; total 28)
+
+**Learnings for future iterations:**
+  - `tashkeelFading.js` already existed with `getDiacriticOpacity`/`splitTashkeel`/`hasDiacritics` — always check before creating new files
+  - Arabic diacritics are encoded AFTER their base letter — PARTIAL stripping must use a base-letter counter, not a "seen first letter" boolean
+  - The DIACRITIC_REGEX used in the file matches `[\u064B-\u065F\u0670\u06D6-\u06ED]` — same range used in `arabicUtils.stripDiacritics`
+---
