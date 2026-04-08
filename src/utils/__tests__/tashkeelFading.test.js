@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { getDiacriticOpacity, splitTashkeel, hasDiacritics } from '../tashkeelFading.js';
+import {
+  getDiacriticOpacity,
+  splitTashkeel,
+  hasDiacritics,
+  getTashkeelLevel,
+  applyTashkeelFading,
+  TASHKEEL_LEVEL,
+} from '../tashkeelFading.js';
 
 describe('getDiacriticOpacity', () => {
   it('returns 1.0 for null stability (new word)', () => {
@@ -61,5 +68,111 @@ describe('hasDiacritics', () => {
 
   it('returns false for empty/null', () => {
     expect(hasDiacritics('')).toBe(false);
+  });
+});
+
+// ─── getTashkeelLevel ─────────────────────────────────────────────────────────
+
+const NOW = new Date('2026-02-09T00:00:00Z').getTime();
+const DAY = 24 * 60 * 60 * 1000;
+
+describe('getTashkeelLevel', () => {
+  it('returns FULL when fsrsCard is null', () => {
+    expect(getTashkeelLevel('w1', null, NOW)).toBe(TASHKEEL_LEVEL.FULL);
+  });
+
+  it('returns FULL when stability is null (new word)', () => {
+    expect(getTashkeelLevel('w1', { stability: null }, NOW)).toBe(TASHKEEL_LEVEL.FULL);
+  });
+
+  it('returns FULL when stability < 7', () => {
+    expect(getTashkeelLevel('w1', { stability: 0 }, NOW)).toBe(TASHKEEL_LEVEL.FULL);
+    expect(getTashkeelLevel('w1', { stability: 6.9 }, NOW)).toBe(TASHKEEL_LEVEL.FULL);
+  });
+
+  it('returns PARTIAL when stability is exactly 7', () => {
+    expect(getTashkeelLevel('w1', { stability: 7 }, NOW)).toBe(TASHKEEL_LEVEL.PARTIAL);
+  });
+
+  it('returns PARTIAL when stability is 7-30', () => {
+    expect(getTashkeelLevel('w1', { stability: 15 }, NOW)).toBe(TASHKEEL_LEVEL.PARTIAL);
+    expect(getTashkeelLevel('w1', { stability: 30 }, NOW)).toBe(TASHKEEL_LEVEL.PARTIAL);
+  });
+
+  it('returns NONE when stability > 30', () => {
+    expect(getTashkeelLevel('w1', { stability: 31 }, NOW)).toBe(TASHKEEL_LEVEL.NONE);
+    expect(getTashkeelLevel('w1', { stability: 100 }, NOW)).toBe(TASHKEEL_LEVEL.NONE);
+  });
+
+  it('recovery: lastFailDate within 3 days forces FULL even with high stability', () => {
+    const recentFail = new Date(NOW - 2 * DAY).toISOString(); // 2 days ago
+    expect(getTashkeelLevel('w1', { stability: 50, lastFailDate: recentFail }, NOW)).toBe(TASHKEEL_LEVEL.FULL);
+  });
+
+  it('recovery: lastFailDate as numeric timestamp within 3 days forces FULL', () => {
+    const recentFail = NOW - 1 * DAY; // 1 day ago
+    expect(getTashkeelLevel('w1', { stability: 50, lastFailDate: recentFail }, NOW)).toBe(TASHKEEL_LEVEL.FULL);
+  });
+
+  it('recovery: lastFailDate exactly 3 days ago does NOT force FULL', () => {
+    const oldFail = NOW - 3 * DAY; // exactly 3 days ago (not within < 3 days)
+    expect(getTashkeelLevel('w1', { stability: 50, lastFailDate: oldFail }, NOW)).toBe(TASHKEEL_LEVEL.NONE);
+  });
+
+  it('recovery: lastFailDate older than 3 days uses stability normally', () => {
+    const oldFail = new Date(NOW - 10 * DAY).toISOString();
+    expect(getTashkeelLevel('w1', { stability: 15, lastFailDate: oldFail }, NOW)).toBe(TASHKEEL_LEVEL.PARTIAL);
+  });
+
+  it('wordId parameter is accepted (reserved for future use)', () => {
+    // Should not throw or alter behaviour
+    expect(getTashkeelLevel('any-word-id', { stability: 8 }, NOW)).toBe(TASHKEEL_LEVEL.PARTIAL);
+  });
+});
+
+// ─── applyTashkeelFading ──────────────────────────────────────────────────────
+
+describe('applyTashkeelFading', () => {
+  const FULL_WORD = 'كَبِيرٌ'; // كَ بِ ي رٌ — fathah on ك, kasra on ب, tanwin-damm on ر
+
+  it('FULL level returns text unchanged', () => {
+    expect(applyTashkeelFading(FULL_WORD, TASHKEEL_LEVEL.FULL)).toBe(FULL_WORD);
+  });
+
+  it('NONE level strips all diacritics', () => {
+    const result = applyTashkeelFading(FULL_WORD, TASHKEEL_LEVEL.NONE);
+    expect(hasDiacritics(result)).toBe(false);
+    expect(result).toBe('كبير');
+  });
+
+  it('PARTIAL level keeps diacritics on first letter only', () => {
+    const result = applyTashkeelFading(FULL_WORD, TASHKEEL_LEVEL.PARTIAL);
+    // First letter كَ should keep its fathah; rest should be stripped
+    expect(result).toContain('كَ');
+    // The result should have fewer diacritics than original
+    const origDiacCount = [...FULL_WORD].filter(c => /[\u064B-\u065F\u0670\u06D6-\u06ED]/.test(c)).length;
+    const fadedDiacCount = [...result].filter(c => /[\u064B-\u065F\u0670\u06D6-\u06ED]/.test(c)).length;
+    expect(fadedDiacCount).toBeLessThan(origDiacCount);
+  });
+
+  it('PARTIAL on multi-word text keeps first-letter diacritics per word', () => {
+    const text = 'كَبِيرٌ جِدًّا'; // two words
+    const result = applyTashkeelFading(text, TASHKEEL_LEVEL.PARTIAL);
+    const words = result.split(' ');
+    // Each word's first letter retains its immediate diacritic; subsequent letters stripped
+    expect(words.length).toBe(2);
+    // Neither word should be fully stripped (first letter diacritics preserved)
+    expect(hasDiacritics(words[0])).toBe(true);
+    expect(hasDiacritics(words[1])).toBe(true);
+  });
+
+  it('handles empty string', () => {
+    expect(applyTashkeelFading('', TASHKEEL_LEVEL.NONE)).toBe('');
+    expect(applyTashkeelFading('', TASHKEEL_LEVEL.FULL)).toBe('');
+    expect(applyTashkeelFading('', TASHKEEL_LEVEL.PARTIAL)).toBe('');
+  });
+
+  it('NONE on text without diacritics returns same text', () => {
+    expect(applyTashkeelFading('كبير', TASHKEEL_LEVEL.NONE)).toBe('كبير');
   });
 });
