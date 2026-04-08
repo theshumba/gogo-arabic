@@ -143,3 +143,21 @@ Started: Wed  8 Apr 2026 02:09:50 BST
   - npcSlice `adjustFriendship` defaults uninitialized NPC to 50 before adjusting — middleware only dispatches when oldValue > 0 to avoid false inits
   - There is an existing `relationshipMiddleware` in the store — this is a different middleware (companion relationship system); new `relationshipDecayMiddleware` is additive
 ---
+
+## 2026-04-08 - FEAT-018
+- Created `src/utils/adaptiveQuizPool.js` with `selectAdaptiveQuizPool`, `adjustSessionDifficulty`, `computeRetrievability`
+- FSRS retrievability formula: `R = (1 + 19/81 * t/S)^(-0.5)` where t=days elapsed, S=stability
+- Sweet spot filter: 0.5 ≤ R ≤ 0.85; sorted ascending by R (most urgent first)
+- `adjustSessionDifficulty`: 3/3 correct→up, ≤1/3→down, 2/3→maintain; clamps at beginner/expert
+- GOTCHA: `makeCard(7, 10)` gives R≈0.866 (above 0.85, excluded); need elapsed ≥ 14 days for stability=7 to land in sweet spot (R≈0.825)
+- GOTCHA: For R=0.85 threshold: t/S ratio ≈ 1.64; for R=0.5: t/S ratio ≈ 12.8
+
+**Files changed:**
+- `src/utils/adaptiveQuizPool.js` (new)
+- `src/utils/__tests__/adaptiveQuizPool.test.js` (new — 20 tests)
+
+**Learnings for future iterations:**
+  - FSRS card object has `stability`, `reps`, `last_review` (ISO string), `due` (ISO string) fields
+  - `getRetrievability` in fsrs.js uses ts-fsrs scheduler — avoid importing it in pure utils (circular deps), implement formula inline instead
+  - DIFFICULTY_LEVELS = ['beginner', 'easy', 'medium', 'hard', 'expert'] — import from difficultyEngine.js
+---

@@ -138,7 +138,7 @@
         "npm run test:run passes"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "Read difficultyEngine.js for existing difficulty ranking. Check how FSRS retrievability is calculated in the codebase. Pure functions, no server endpoint needed."
     },
     {
