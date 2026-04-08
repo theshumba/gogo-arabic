@@ -1,5 +1,8 @@
 import { Howl, Howler } from 'howler';
 
+// Maximum number of SFX sounds that may play concurrently.
+export const MAX_CONCURRENT_SFX = 3;
+
 /**
  * Simple LRU cache implementation for managing Howl instances.
  * Automatically unloads oldest entries when cache exceeds max size.
@@ -59,8 +62,18 @@ class LRUCache {
  * Bus-based architecture:
  *   busVolumes tracks per-bus volume multipliers (bgm, sfx, ambient, voice).
  *   setBusVolume() adjusts bus multiplier and updates active sounds on that bus.
+ *
+ * BGM Ducking:
+ *   duckBGM() smoothly reduces BGM volume during voice playback.
+ *   restoreBGM() restores to pre-duck level.
+ *   playWord/playLetter auto-duck and auto-restore via _duckRefCount.
+ *
+ * SFX Queue:
+ *   Max MAX_CONCURRENT_SFX sounds play at once; extras queue FIFO.
+ *   High-priority sounds (priority > 0) jump to front of queue.
+ *   clearSfxQueue() stops all active and queued SFX.
  */
-class AudioManager {
+export class AudioManager {
   constructor() {
     /** @type {Howl|null} Currently playing ambient Howl */
     this.ambient = null;
@@ -122,6 +135,32 @@ class AudioManager {
      * @type {number}
      */
     this.ambientMuffle = 1.0;
+
+    // -------------------------------------------------------------------------
+    // BGM Ducking
+    // -------------------------------------------------------------------------
+
+    /** Whether BGM is currently ducked (prevents double-duck). */
+    this._isDucked = false;
+
+    /** BGM volume snapshot taken just before ducking, for restore. */
+    this._preDuckVolume = null;
+
+    /**
+     * Number of pronunciation sounds currently in-flight.
+     * BGM is ducked while > 0 and restored when it drops back to 0.
+     */
+    this._duckRefCount = 0;
+
+    // -------------------------------------------------------------------------
+    // SFX Queue
+    // -------------------------------------------------------------------------
+
+    /** Howl instances currently playing through the queue system. @type {Howl[]} */
+    this._sfxActive = [];
+
+    /** Pending SFX waiting to play. @type {Array<{sfxName: string, priority: number}>} */
+    this._sfxQueue = [];
   }
 
   // ---------------------------------------------------------------------------
@@ -519,13 +558,15 @@ class AudioManager {
       howl.volume(effectiveVolume);
     }
 
-    howl.play();
+    const soundId = howl.play();
+    this._autoDuck(howl, soundId);
   }
 
   /**
    * Play Arabic letter pronunciation.
    * Files at: /assets/audio/letters/{letter}.mp3
    * Uses LRU cache to prevent memory leaks.
+   * Auto-ducks BGM while the letter audio plays.
    * @param {string} letter - Arabic letter character or transliterated name
    */
   playLetter(letter) {
@@ -551,7 +592,144 @@ class AudioManager {
       howl.volume(effectiveVolume);
     }
 
+    const soundId = howl.play();
+    this._autoDuck(howl, soundId);
+  }
+
+  // ---------------------------------------------------------------------------
+  // BGM Ducking
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Smoothly reduce BGM volume during voice/pronunciation playback.
+   * No-ops if BGM is already ducked (prevents double-duck).
+   * @param {number} targetVolume - Target volume fraction 0-1 (default 0.3 = 30%)
+   * @param {number} fadeDuration - Fade duration in ms (default 300)
+   */
+  duckBGM(targetVolume = 0.3, fadeDuration = 300) {
+    if (this._isDucked) return;
+    this._isDucked = true;
+    this._preDuckVolume = this.bgm ? this.bgm.volume() : this.bgmVolume * this.masterVolume;
+    if (this.bgm) {
+      this.bgm.fade(this.bgm.volume(), Math.max(0, Math.min(1, targetVolume)) * this.masterVolume, fadeDuration);
+    }
+  }
+
+  /**
+   * Restore BGM to its pre-duck volume.
+   * No-ops if BGM is not currently ducked.
+   * @param {number} fadeDuration - Fade duration in ms (default 300)
+   */
+  restoreBGM(fadeDuration = 300) {
+    if (!this._isDucked) return;
+    this._isDucked = false;
+    if (this.bgm && this._preDuckVolume !== null) {
+      this.bgm.fade(this.bgm.volume(), this._preDuckVolume, fadeDuration);
+    }
+    this._preDuckVolume = null;
+  }
+
+  /**
+   * Auto-duck BGM when a pronunciation sound starts; restore when it finishes.
+   * Uses a reference count so concurrent pronunciations don't double-duck or
+   * restore early.
+   * @param {Howl} howl - The Howl instance that was just played
+   * @param {number|undefined} soundId - Howler sound ID returned by play()
+   * @private
+   */
+  _autoDuck(howl, soundId) {
+    this._duckRefCount++;
+    if (this._duckRefCount === 1) {
+      this.duckBGM(0.3);
+    }
+    let fired = false;
+    const onDone = () => {
+      if (fired) return;
+      fired = true;
+      this._duckRefCount = Math.max(0, this._duckRefCount - 1);
+      if (this._duckRefCount === 0) {
+        this.restoreBGM();
+      }
+    };
+    if (soundId !== undefined) {
+      howl.once('end', onDone, soundId);
+      howl.once('stop', onDone, soundId);
+    } else {
+      howl.once('end', onDone);
+      howl.once('stop', onDone);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // SFX Queue
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Queue a sound effect. Plays immediately if fewer than MAX_CONCURRENT_SFX
+   * are active; otherwise waits in a FIFO queue. High-priority sounds (priority > 0)
+   * are inserted at the front of the queue.
+   * @param {string} sfxName - SFX identifier (same as playSFX)
+   * @param {number} priority - 0 = normal (FIFO), >0 = high (skip to front)
+   */
+  queueSfx(sfxName, priority = 0) {
+    if (!sfxName) return;
+    if (this._sfxActive.length < MAX_CONCURRENT_SFX) {
+      this._playSfxQueued(sfxName);
+    } else if (priority > 0) {
+      this._sfxQueue.unshift({ sfxName, priority });
+    } else {
+      this._sfxQueue.push({ sfxName, priority });
+    }
+  }
+
+  /**
+   * Stop all queued and currently playing SFX that were started via queueSfx.
+   */
+  clearSfxQueue() {
+    this._sfxQueue = [];
+    const toStop = [...this._sfxActive];
+    this._sfxActive = [];
+    toStop.forEach(howl => {
+      howl.stop();
+      howl.unload();
+    });
+  }
+
+  /**
+   * Internal: create a Howl for an SFX, add it to the active set, and play it.
+   * Drains the queue when the sound finishes.
+   * @param {string} sfxName
+   * @private
+   */
+  _playSfxQueued(sfxName) {
+    const effectiveVolume = this.sfxVolume * this.masterVolume;
+    const howl = new Howl({
+      src: [`/assets/audio/sfx/sfx-${sfxName}.ogg`],
+      volume: effectiveVolume,
+      onloaderror: () => {
+        this._sfxActive = this._sfxActive.filter(h => h !== howl);
+        this._drainSfxQueue();
+      },
+    });
+    this._sfxActive.push(howl);
+    const onDone = () => {
+      this._sfxActive = this._sfxActive.filter(h => h !== howl);
+      this._drainSfxQueue();
+    };
+    howl.once('end', onDone);
+    howl.once('stop', onDone);
     howl.play();
+  }
+
+  /**
+   * Promote queued SFX to active as slots become available.
+   * @private
+   */
+  _drainSfxQueue() {
+    while (this._sfxQueue.length > 0 && this._sfxActive.length < MAX_CONCURRENT_SFX) {
+      const { sfxName } = this._sfxQueue.shift();
+      this._playSfxQueued(sfxName);
+    }
   }
 
   /**
@@ -581,6 +759,12 @@ class AudioManager {
     // Clean up LRU caches
     this.wordCache.clear();
     this.letterCache.clear();
+
+    // Clean up SFX queue
+    this.clearSfxQueue();
+    this._isDucked = false;
+    this._preDuckVolume = null;
+    this._duckRefCount = 0;
   }
 }
 
