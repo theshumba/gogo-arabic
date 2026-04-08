@@ -120,3 +120,24 @@ Started: Wed  8 Apr 2026 04:37:33 BST
   - `settingsSlice.test.js > initial state` is a pre-existing failure (pronunciationPractice field added by earlier batch, not in the progress.txt pre-existing list but confirmed via git log)
   - `applyLeechIntervalPenalty`: recalculate due from `Date.now() + newDays * 86400000` rather than adjusting the existing due — simpler and correct
 ---
+
+## 2026-04-08 - FEAT-026
+- Implemented `src/data/recipeDiscovery.js`
+  - `DISCOVERY_METHODS` enum: npcFriendship, questReward, experimentation
+  - `RECIPE_DISCOVERY_METHODS` data: 19 recipes across calligrapher (9) and cook (10) professions
+  - `getDiscoverableRecipes(professionId, playerState)` — pure function filtering by NPC friendship and quest completion; experimentation recipes excluded (need explicit experiment call)
+  - `experimentWithIngredients(ing1, ing2, ing3)` — maps resourceId → gatherType, sorts categories, finds matching experimentation recipe; order-independent
+- Extended `src/store/slices/craftingSlice.js`
+  - Added `discoveredRecipeLog: {}` to initialState — `{ [recipeId]: { method, professionId, discoveredAt } }`
+  - Added `discoverRecipe({ professionId, recipeId, method })` reducer — idempotent, does not overwrite first discovery log entry
+  - Added `selectUndiscoveredRecipeCount(state, professionId)` memoized selector — counts RECIPE_DISCOVERY_METHODS entries not yet in discoveredRecipes
+  - Imported RECIPE_DISCOVERY_METHODS from recipeDiscovery.js (no circular dependency)
+- Created `src/data/__tests__/recipeDiscovery.test.js` — 29 tests (12+ required)
+- Files changed: 2 new, 1 modified
+- **Learnings for future iterations:**
+  - "Ingredient category matching" = resource.gatherType lookup → sort → join as key; any 3 resources with matching types reveal the recipe (not exact IDs)
+  - RECIPE_DISCOVERY_METHODS as a separate overlay file avoids modifying a 300+ recipe data file
+  - Experimentation recipes intentionally excluded from getDiscoverableRecipes — they require a distinct code path (experimentWithIngredients), not passive state checking
+  - When adding new state fields to a slice, check for existing snapshot tests that assert on `initialState` — they will fail if the field is missing from the fixture
+  - NPC friendship state is at `state.npc.friendship[npcId]`; quest completion at `state.quests.quests[questId]?.status === 'completed'`
+---
