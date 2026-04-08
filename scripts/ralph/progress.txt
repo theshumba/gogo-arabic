@@ -194,3 +194,27 @@ Started: Wed  8 Apr 2026 04:37:33 BST
   - Selector ordering matters: `selectSellableItems` referenced `selectInventoryItems` before it was defined — always place `createSelector` calls AFTER all their input selectors
   - `buyBackItem` must include `buyBackPrice` in payload because extraReducers in playerSlice cannot access inventorySlice state
 ---
+
+## 2026-04-08 - FEAT-029
+- Implemented `src/store/slices/analyticsEventQueueSlice.js`
+  - State: `{ events: [], sessionId: null }` — transient, not persisted
+  - `initSession()` generates a `${Date.now()}-${random}` sessionId
+  - `enqueueEvent({ type, properties })` stamps timestamp + sessionId; FIFO overflow at 500 events
+  - `flushEvents()` clears the queue (called after successful server send)
+  - Selectors: `selectEventQueue`, `selectSessionId`
+- Implemented `src/store/middleware/analyticsMiddleware.js`
+  - Closure flag `sessionInitialized` ensures `initSession()` dispatched exactly once per store
+  - Guards against infinite loops by skipping `analyticsEventQueue/*` actions
+  - Snapshots `player.level` before `next(action)` for reliable level-up detection
+  - Tracks: `quiz_completed`, `battle_finished`, `level_up`, `achievement_unlocked`, `zone_entered`, `session_start`, `session_end`, `feature_used` (inventory/journal/recipeBook)
+  - `flushAnalytics(store)` — async export, sends to `/api/analytics`, no-ops on offline/error
+- Registered `analyticsEventQueueReducer` + `analyticsMiddleware` in `src/store/store.js` (transient — not persisted)
+- Created `src/store/middleware/__tests__/analyticsMiddleware.test.js` — 28 tests (14+ required)
+- Files changed: 3 new, 1 modified
+- **Learnings for future iterations:**
+  - `analyticsSlice.js` and `extendedAnalyticsSlice.js` already exist for learning analytics — use a distinct name (`analyticsEventQueueSlice`) to avoid collision
+  - Middleware session init: use a closure-scoped `sessionInitialized` flag (not module-level) so it resets per store instantiation in tests
+  - Level-up detection: read `store.getState().player.level` BEFORE `next(action)` and compare to post-action value — the reducer mutates state synchronously
+  - Skip your own slice's action types with `action.type.startsWith('sliceName/')` guard to prevent recursive dispatch loops
+  - `flushAnalytics` as a plain async function (not createAsyncThunk) is easier to unit test — pass store as argument
+---
