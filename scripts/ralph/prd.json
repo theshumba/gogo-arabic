@@ -53,7 +53,7 @@
         "npm run test:run passes"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "Read companionSlice.js for existing state. Companion IDs and data in companion files. Add companionAbilities.js data file. Middleware should listen for battle end actions where companion participated."
     },
     {

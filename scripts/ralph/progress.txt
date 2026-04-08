@@ -53,3 +53,26 @@ Started: Wed  8 Apr 2026 04:37:33 BST
   - Extending a `createSelector`: add to the input selectors array, update the result function signature
   - Edit tool requires Read first even for files created in the same session
 ---
+
+## 2026-04-08 - FEAT-023
+- Implemented `src/data/companionAbilities.js`
+  - 36 abilities (12 companions × 3) with unlock levels 5, 10, 15
+  - `calculateCompanionLevel(xp)` — level N reached at N*100 cumulative XP; formula: `Math.max(1, Math.min(20, Math.floor(xp / 100)))`
+  - `getCompanionAbilities(companionId, level)` — filters to abilities with unlocksAtLevel <= current level
+- Extended `src/store/slices/companionSlice.js`
+  - Added `xp: 0` field to each companion's initial state
+  - Added `addCompanionXP({ companionId, xp })` reducer: accumulates XP, recalculates level, skips unrecruited companions
+  - Imported `calculateCompanionLevel` and `MAX_COMPANION_LEVEL` from companionAbilities.js
+- Implemented `src/store/middleware/companionXpMiddleware.js`
+  - Listens for `battle/endBattle`
+  - Reads `store.getState().companions.activeParty.battle` to find participating companion
+  - XP scales with battle rewardXp; victory multiplier (1.5x); cap at 75 XP per battle
+  - Awards XP on both victory and defeat (defeat earns base XP only)
+- Created `src/store/middleware/__tests__/companionXpMiddleware.test.js` — 33 tests (14+ required)
+- Files changed: 3 new, 1 modified
+- **Learnings for future iterations:**
+  - Level formula: `Math.max(1, Math.min(MAX, Math.floor(xp / 100)))` — level 1 at 0-199 XP, level N at N*100 XP ✓
+  - Companion battle participation: read `state.companions.activeParty.battle` (not battle payload)
+  - `vi.importActual` inside `beforeEach` lets reducer integration tests bypass the module-level vi.mock
+  - Adding a field to initializeCompanions() loop is enough — each companion object gets the field
+---
