@@ -12,6 +12,20 @@ import { addXP } from '../slices/playerSlice.js';
 import { SKILL_TREES } from '../../data/skillTrees.js';
 import { checkChainCompletions } from '../../services/achievementChainService.js';
 
+/**
+ * evaluateAchievementConditions — pure function that checks whether a single
+ * achievement's requirement is satisfied by the current player state.
+ *
+ * Exported for testing and for use in analytics/UI without a Redux store.
+ *
+ * @param {Object} achievementDef - Achievement definition (from ACHIEVEMENTS)
+ * @param {Object} playerState - Full Redux state snapshot
+ * @returns {boolean}
+ */
+export function evaluateAchievementConditions(achievementDef, playerState) {
+  return isAchievementMet(achievementDef, playerState);
+}
+
 // Helper to check if an achievement requirement is met
 function isAchievementMet(achievement, state) {
   const req = achievement.requirement;
@@ -123,6 +137,29 @@ function isAchievementMet(achievement, state) {
       return state.placement?.hasCompleted === true;
     }
 
+    // ── Faction triggers ──────────────────────────────────────────────────────
+
+    case 'faction_alignment': {
+      // "Join faction" → any alignment points with the specified faction
+      // "Max reputation" → alignment >= 100 (req.threshold defaults to 1 for join)
+      const factionId = req.faction;
+      const threshold = req.threshold ?? 1;
+      const alignmentScore = state.faction?.alignment?.[factionId] ?? 0;
+      return alignmentScore >= threshold;
+    }
+
+    case 'npc_max_relationship': {
+      // Achievement triggers when any NPC (or req.npcId specific NPC) reaches max friendship
+      const maxTier = 75; // 'close' tier threshold from npcSlice
+      const threshold = req.threshold ?? maxTier;
+      if (req.npcId) {
+        return (state.npc?.friendship?.[req.npcId] ?? 0) >= threshold;
+      }
+      // Any NPC at threshold
+      const friendships = Object.values(state.npc?.friendship ?? {});
+      return friendships.some((val) => val >= threshold);
+    }
+
     default:
       return false;
   }
@@ -149,6 +186,13 @@ const ACTION_TO_ACHIEVEMENT_TYPES = {
   'achievements/recordQuizTypeResult': ['quiz_type_streak'],
   'cefrProgress/setCefrLevel':         ['cefr_level_reached'],
   'placement/recordPlacementResult':   ['placement_complete'],
+  // Faction triggers
+  'faction/adjustAlignment':           ['faction_alignment', 'npc_max_relationship'],
+  // Economy haggle triggers (haggles count as shop interactions)
+  'economy/recordHaggle':              ['shop_purchases'],
+  // NPC relationship triggers
+  'npc/adjustFriendship':              ['npc_max_relationship'],
+  'npc/giveNpcGift':                   ['npc_max_relationship', 'npc_gifts'],
 };
 
 // Re-entrancy guard: prevents infinite dispatch cascade when addXP triggers
