@@ -87,3 +87,19 @@ Started: Wed  8 Apr 2026 02:09:50 BST
   - Use compound-decay formula `value * (1-rate)^days` for multi-day catch-up rather than looping
   - store.js line 298 is the middleware `.concat(...)` chain — read the exact line before editing to match whitespace
 ---
+
+## 2026-04-08 - FEAT-015
+- Exported `evaluateAchievementConditions(achievementDef, playerState)` from `achievementMiddleware.js` — thin wrapper around the internal `isAchievementMet`
+- Added `faction_alignment` case: checks `state.faction.alignment[req.faction] >= (req.threshold ?? 1)` — covers "join faction" (any points) and "max reputation" (threshold=100)
+- Added `npc_max_relationship` case: checks specific NPC or any NPC friendship >= threshold (75 default)
+- Added new `ACTION_TO_ACHIEVEMENT_TYPES` mappings: `faction/adjustAlignment`, `economy/recordHaggle`, `npc/adjustFriendship`, `npc/giveNpcGift`
+
+**Files changed:**
+- `src/store/middleware/achievementMiddleware.js` (added export, new cases, new trigger mappings)
+- `src/store/middleware/__tests__/achievementConditions.test.js` (new — 23 tests)
+
+**Learnings for future iterations:**
+  - `faction_alignment` achievements use `{ type: 'faction_alignment', faction: 'scholar' }` — no threshold = join check (default 1)
+  - `isAchievementMet` takes full Redux state (not just player slice) — `evaluateAchievementConditions` exposes the same signature
+  - New trigger mappings go in `ACTION_TO_ACHIEVEMENT_TYPES` at the bottom; the re-entrancy guard `_isProcessingAchievements` protects against dispatch cascades
+---

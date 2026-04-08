@@ -86,7 +86,7 @@
         "npm run test:run passes"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "Read achievementSlice.js (44 achievements) and achievementMiddleware.js. Extend existing middleware, don't replace it. Check FEATURES.md for designed achievements."
     },
     {
