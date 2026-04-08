@@ -91,7 +91,7 @@
         "npm run test:run passes"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "Read vocabularySlice.js for card state (lapses field from FSRS). Read fsrs.js service. Add suspended field to card state. Middleware listens for vocabulary/reviewCard actions."
     },
     {

@@ -94,3 +94,29 @@ Started: Wed  8 Apr 2026 04:37:33 BST
   - Backward compat via `extraReducers.addCase('ui/showNotification', ...)` avoids cross-import
   - New slices should NOT be added to root persist whitelist if they are transient UI state
 ---
+
+## 2026-04-08 - FEAT-025
+- Implemented `src/services/leechDetection.js`
+  - `isLeech(card)` — returns true if card.lapses >= LEECH_THRESHOLD (5)
+  - `getLeechCards(allCards)` — filters and sorts leeched cards by lapses descending
+  - `applyLeechIntervalPenalty(card)` — halves scheduled_days (min 1), recalculates due from now
+- Extended `src/store/slices/vocabularySlice.js`
+  - Added `suspendedCards: {}` to initialState
+  - Added `suspendCard({ wordId })` reducer — marks word suspended
+  - Added `unsuspendCard({ wordId })` reducer — removes suspension, resets scheduled_days to 1 and due to now
+  - Added `selectSuspendedCards(state)` selector
+  - Added `selectLeechCount(state)` memoized selector (counts cards with lapses >= LEECH_THRESHOLD)
+- Implemented `src/store/middleware/leechDetectionMiddleware.js`
+  - Listens for `vocabulary/updateFsrsCard`
+  - After next(action), checks updated card's lapses; dispatches penalty update if leech
+  - Uses `_leechPenalty: true` flag in payload to prevent infinite dispatch loop (flag not stored in state — reducer only reads wordId/card/log)
+- Registered `leechDetectionMiddleware` in `src/store/store.js`
+- Created `src/store/middleware/__tests__/leechDetectionMiddleware.test.js` — 34 tests (14+ required)
+- Fixed pre-existing test: added `suspendedCards: {}` to expected initial state in `vocabularySlice.test.js`
+- Files changed: 3 new, 3 modified
+- **Learnings for future iterations:**
+  - Preventing middleware self-dispatch loops: use a `_leechPenalty` flag in action payload — safe because reducers destructure only named fields (flag not persisted to state)
+  - When adding fields to slice initialState, existing snapshot tests will fail — update the `beforeEach` initialState fixture to match
+  - `settingsSlice.test.js > initial state` is a pre-existing failure (pronunciationPractice field added by earlier batch, not in the progress.txt pre-existing list but confirmed via git log)
+  - `applyLeechIntervalPenalty`: recalculate due from `Date.now() + newDays * 86400000` rather than adjusting the existing due — simpler and correct
+---
