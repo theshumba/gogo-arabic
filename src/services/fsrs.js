@@ -3,6 +3,7 @@ import { shuffle } from '../utils/shuffle.js';
 import { selectNewCardsByPath } from '../store/slices/vocabularySlice.js';
 import { store } from '../store/store.js';
 import vocabulary from '../data/vocabularyAll.js';
+import { getFrequencyWeightedNewCards } from './frequencyWeighting.js';
 
 const params = generatorParameters();
 const scheduler = fsrs(params);
@@ -38,16 +39,31 @@ export function getSessionCards(cards, maxCards = 20) {
 }
 
 /**
- * Get new (unseen) cards ordered by learning path affinity for session introduction.
- * Used by ReviewSession to mix new cards into review when due cards are exhausted.
+ * Get new (unseen) cards ordered by frequency-weighted selection then path affinity.
+ * FEAT-047: frequency weighting is applied before path ordering — high-frequency
+ * words (rank 1-500) are 3× more likely to be selected than rank-2000+ words.
  * PATH-03: Scholar and Traveler see different first-encounter word sequences.
  * @param {number} maxCards - Maximum new cards to return (default 5)
- * @returns {string[]} Array of wordIds ordered by path affinity
+ * @returns {string[]} Array of wordIds
  */
 export function getNewCardsForSession(maxCards = 5) {
   const state = store.getState();
-  const pathOrdered = selectNewCardsByPath(state, vocabulary, maxCards);
-  return pathOrdered.map(w => w.id);
+  const cards = state.vocabulary?.fsrsCards ?? {};
+
+  // Step 1: collect all unseen vocabulary words
+  const unseenWords = vocabulary.filter((w) => !cards[w.id]);
+
+  // Step 2: frequency weighting — bias candidate pool toward high-frequency words
+  const candidatePool = getFrequencyWeightedNewCards(unseenWords, maxCards * 4);
+
+  // Step 3: path ordering on the frequency-weighted candidate pool
+  const pathOrdered = selectNewCardsByPath(
+    { ...state, vocabulary: { ...state.vocabulary, fsrsCards: {} } },
+    candidatePool,
+    maxCards
+  );
+
+  return pathOrdered.map((w) => w.id);
 }
 
 /**
