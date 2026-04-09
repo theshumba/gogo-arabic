@@ -152,7 +152,7 @@
         "npm run test:run passes"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "Read grammar.js for existing grammar data. Zone 1-2 grammar: basic sentence structure, present tense, pronouns. Zone 3-4: past tense, plurals, possession. Zone 5-6: future, conditionals, comparatives. Zone 7-8: passive, subjunctive, complex sentences."
     },
     {

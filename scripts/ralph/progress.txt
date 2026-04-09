@@ -119,3 +119,19 @@ Started: Thu  9 Apr 2026 19:09:00 BST
   - getNewCardsForSession integration passes `fsrsCards: {}` to selectNewCardsByPath when filtering the frequency-weighted candidate pool (treats candidates as "unseen" for path-ordering purposes)
   - Statistical bias test uses 300 iterations to assess weighting; threshold 0.28 is conservative (expected ~0.43 for 3x weighted tier-1 words)
 ---
+
+## 2026-04-09 20:35 - FEAT-048
+- Implemented grammar scaffolding data tied to zones
+- Files created:
+  - `src/data/zoneGrammarPoints.js` — 22 grammar points across 8 zones (2-3 per zone); each has id, zone, concept, explanation, arabicExample, pattern, relatedVocab, cefrLevel, order; exports ZONE_GRAMMAR_POINTS, GRAMMAR_ZONE_IDS, TOTAL_GRAMMAR_POINTS, getZoneGrammar, getAllGrammarPoints, getGrammarPointById
+  - `src/store/slices/zoneGrammarSlice.js` — tracks learnedPoints{}; exports markGrammarPointLearned, resetGrammarPoint, resetAllGrammarPoints, isGrammarPointLearned, getZoneGrammarProgress, selectGrammarProgress, selectIsGrammarPointLearned, selectLearnedGrammarPoints, selectUnlearnedGrammarPoints
+  - `src/store/__tests__/zoneGrammarSlice.test.js` — 32 tests covering all acceptance criteria
+- Files modified:
+  - `src/store/store.js` — registered zoneGrammarReducer, added 'zoneGrammar' to localStorage persist whitelist
+- **Learnings for future iterations:**
+  - Grammar point IDs follow pattern `gp_<zone_abbrev>_<seq>` (e.g. gp_ov_001 = oasis_village point 1) — easy to trace back to zone
+  - Grammar data does NOT integrate with grammarSlice.js (the existing lesson-based slice) — zoneGrammarSlice is a separate, lighter tracker; full grammar exercises use grammarSlice
+  - selectGrammarProgress reconstructs a fakeState object internally to reuse getZoneGrammarProgress — avoids duplicating logic while keeping selector pure
+  - CEFR progression: Zones 1-2 = A1, Zones 3-5 = A1/A2, Zone 6 = A2, Zones 7-8 = B1 — tests verify A1/A2 in early zones and B1 in late zones
+  - 22 total points (2×oasis_village=3, ancient_library=3, desert_marketplace=3, farmland=3, bedouin_camp=2, mountain_village=2, coastal_port=3, royal_palace=3)
+---
