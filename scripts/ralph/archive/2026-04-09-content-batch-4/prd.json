@@ -1,0 +1,197 @@
+{
+  "project": "Gogo Arabic",
+  "branchName": "ralph/curriculum-batch-5",
+  "description": "Curriculum layer — structured foundation phase, explicit teaching moments, and frequency-weighted vocabulary ordering. All logic-only, no visual/rendering changes.",
+  "userStories": [
+    {
+      "id": "FEAT-041",
+      "title": "Alphabet mastery progression engine",
+      "description": "Build a structured alphabet learning sequence that gates the rest of the game. Players must demonstrate recognition of all 28 Arabic letters (isolated, initial, medial, final forms) before the sandbox opens. Track per-letter mastery with FSRS cards.",
+      "acceptanceCriteria": [
+        "src/store/slices/alphabetProgressSlice.js tracks mastery per letter (28 consonants + 6 vowels)",
+        "Each letter has 4 form states: isolated, initial, medial, final — each tracked independently",
+        "getLetterMastery(letterId) returns mastery percentage across all 4 forms",
+        "isAlphabetComplete(state) returns true when all letters at 80%+ mastery",
+        "Letter introduction order follows standard AFL sequence (Alif Baa textbook order)",
+        "selectNextLettersToLearn(state, count) returns next unlearned letters in sequence",
+        "alphabetGateMiddleware blocks zone entry dispatches until isAlphabetComplete is true",
+        "Tests: 16+ tests covering per-letter tracking, form states, gate logic, completion check",
+        "npm run test:run passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "Read arabicPhonetics.js for letter data. Read settingsSlice.js for showDiacritics. Standard AFL order: أ ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي. Gate should be skippable if placement test shows existing knowledge."
+    },
+    {
+      "id": "FEAT-042",
+      "title": "Core 100 high-frequency word set with explicit teaching data",
+      "description": "Create an ordered set of the 100 most essential Arabic words for beginners, each with explicit teaching data: word, root, meaning, example sentence, pronunciation guide, mnemonic hint, and FSRS card. These are introduced sequentially after alphabet mastery, before the sandbox opens.",
+      "acceptanceCriteria": [
+        "src/data/coreVocabulary.js exports ordered array of 100 words",
+        "Each word has: arabic, english, root (trilateral), rootMeaning, exampleSentence, pronunciationGuide, mnemonicHint, category, frequencyRank",
+        "Categories covered: greetings (10), pronouns (8), basic verbs (15), numbers (10), family (8), food (8), directions (8), time (8), common nouns (15), adjectives (10)",
+        "getNextCoreWords(completedCount, batchSize) returns next N words in sequence",
+        "isCoreVocabComplete(state) returns true when all 100 words at 70%+ mastery",
+        "selectCoreVocabProgress(state) returns { completed, total, percentage }",
+        "Tests: 12+ tests covering data completeness, ordering, category coverage, progress tracking",
+        "npm run test:run passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Use frequency data from established Arabic word lists. Words should be MSA. Root field connects to the root system teaching in FEAT-043. Each word must exist in vocabularyExpanded.js — cross-reference by wordId."
+    },
+    {
+      "id": "FEAT-043",
+      "title": "Trilateral root system teaching engine",
+      "description": "Build an explicit root system introduction that teaches the Arabic trilateral root concept early. Show how one root generates multiple related words. Track root knowledge separately from individual word knowledge. This is Arabic's vocabulary multiplier.",
+      "acceptanceCriteria": [
+        "src/data/rootTeachingSet.js exports 30 common roots with derived word families",
+        "Each root entry: root (3 letters), coreMeaning, derivedWords [{arabic, english, pattern, form}] (4-6 words per root)",
+        "src/store/slices/rootKnowledgeSlice.js tracks known roots and mastery",
+        "learnRoot(rootId) marks root as introduced",
+        "getRootMastery(rootId) calculates mastery from derived word FSRS scores",
+        "selectKnownRoots(state) returns all roots player has been taught",
+        "predictWordFromRoot(root, pattern) pure function returns expected word — teaches pattern recognition",
+        "Root teaching integrated into foundation phase: 5 roots introduced after first 20 core words",
+        "Tests: 14+ tests covering root data, mastery calculation, prediction logic, teaching sequence",
+        "npm run test:run passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Read existing root-related code — rootMagicSlice.js, rootFsrsSyncMiddleware.js. Common roots: ك-ت-ب (writing), د-ر-س (studying), ع-ل-م (knowledge), etc. Root teaching should feel like a superpower discovery, not a grammar lesson."
+    },
+    {
+      "id": "FEAT-044",
+      "title": "Foundation phase orchestrator",
+      "description": "Build the orchestrator that sequences the foundation phase: alphabet → core vocabulary → root system introduction. Gates the open sandbox until foundation milestones are met. Tracks overall foundation progress and handles placement test bypass.",
+      "acceptanceCriteria": [
+        "src/store/slices/foundationSlice.js tracks foundation phase state",
+        "Foundation stages: alphabet → coreVocab → rootIntro → complete",
+        "getCurrentFoundationStage(state) returns current stage",
+        "advanceFoundationStage() moves to next stage when current is complete",
+        "Completion criteria: alphabet 80%+, core vocab 70%+ on first 50 words, 5 roots introduced",
+        "Placement test bypass: if placement score > A1, skip to sandbox (foundation marked complete)",
+        "foundationMiddleware enforces stage gates — blocks actions that require later stages",
+        "selectFoundationProgress(state) returns { stage, stageProgress, overallProgress }",
+        "Tests: 14+ tests covering stage progression, gates, bypass, progress calculation",
+        "npm run test:run passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "Read placementSlice.js for placement test state. This orchestrates FEAT-041, 042, 043 into a coherent flow. Foundation should feel like the game's prologue, not a test."
+    },
+    {
+      "id": "FEAT-045",
+      "title": "Zone vocabulary pre-teaching data",
+      "description": "For each of the 8 zones, create a curated set of 10-15 key words that players are explicitly taught before exploring that zone. Each word includes the root, a zone-contextual example, and a brief explanation. This is the 'brief explicit teaching moment' before contextual learning.",
+      "acceptanceCriteria": [
+        "src/data/zoneVocabIntros.js exports zone-keyed object with 8 zones",
+        "Each zone has 10-15 words: arabic, english, root, zoneContext (why this word matters here), exampleInZone",
+        "Words selected by relevance to zone theme (marketplace = commerce, library = academic, etc.)",
+        "getZoneIntroWords(zoneId) returns the teaching set for that zone",
+        "isZoneIntroComplete(zoneId, state) checks if player has reviewed all intro words",
+        "selectZoneIntroProgress(zoneId) returns { reviewed, total, percentage }",
+        "Total: 80-100 unique words across all 8 zones (some overlap allowed for high-frequency words)",
+        "Tests: 12+ tests covering all zones have data, word structure, progress tracking",
+        "npm run test:run passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Read zones.js for zone IDs and themes. Cross-reference with vocabularyExpanded.js to use existing word IDs. Zone themes: Oasis Village (basics), Desert Marketplace (commerce), Sacred Library (academic), Mountain Pass (nature/travel), Coastal Port (trade/foreign), Garden District (food/plants), Ancient Ruins (history), Bedouin Camp (culture/hospitality)."
+    },
+    {
+      "id": "FEAT-046",
+      "title": "Zone intro teaching middleware",
+      "description": "Create middleware that triggers the explicit teaching moment when a player enters a zone for the first time (or hasn't completed the zone's intro). Presents zone vocabulary words one at a time with root, meaning, and context before the player can freely explore.",
+      "acceptanceCriteria": [
+        "zoneIntroMiddleware intercepts world/enterZone actions",
+        "On first zone entry: dispatches zoneIntro/start with the zone's teaching words",
+        "Tracks which words have been reviewed per zone in zoneIntroSlice",
+        "presentNextIntroWord(zoneId) returns next unreviewed word with full teaching data",
+        "completeIntroWord(zoneId, wordId) marks word as reviewed, creates FSRS card",
+        "Zone intro can be dismissed early (player choice) but shows progress reminder",
+        "Re-entering zone after dismissal resumes where player left off",
+        "Tests: 14+ tests covering first entry trigger, word progression, dismissal, resume, FSRS card creation",
+        "npm run test:run passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "Read zoneEntryReviewMiddleware.js for zone entry interception pattern. This is different from micro-review — this is for FIRST entry teaching, micro-review is for returning visits with due cards. Create zoneIntroSlice.js for state."
+    },
+    {
+      "id": "FEAT-047",
+      "title": "Frequency-weighted vocabulary ordering",
+      "description": "Add frequency rank data to all vocabulary and create a weighted selection function that biases new word introduction toward higher-frequency words. Within each CEFR level, words are introduced roughly by frequency rank rather than randomly.",
+      "acceptanceCriteria": [
+        "frequencyRank field added to vocabulary data (rank 1 = most common, higher = less common)",
+        "At minimum, top 500 words have accurate frequency ranks from established Arabic frequency lists",
+        "getFrequencyWeightedNewCards(availableCards, count) selects new cards biased toward lower rank numbers",
+        "Weighting: rank 1-500 = 3x selection weight, 501-1000 = 2x, 1001-2000 = 1.5x, 2000+ = 1x",
+        "Integrates with existing getNewCardsForSession in fsrs.js — frequency weighting applied before path ordering",
+        "selectVocabByFrequencyTier(state) returns counts per tier for progress display",
+        "Tests: 14+ tests covering weighted selection distribution, tier counting, integration with FSRS",
+        "npm run test:run passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "Read vocabularyExpanded.js for current word structure. Read fsrs.js getNewCardsForSession. Frequency data source: use established MSA frequency lists. Don't reorder existing FSRS due cards — only affect NEW card introduction order."
+    },
+    {
+      "id": "FEAT-048",
+      "title": "Grammar scaffolding data tied to zones",
+      "description": "Create grammar teaching points mapped to zones. Each zone introduces 2-3 grammar concepts that are relevant to that zone's content. Grammar is taught just-in-time when the player needs it, not in abstract sequence.",
+      "acceptanceCriteria": [
+        "src/data/zoneGrammarPoints.js exports zone-keyed grammar teaching data",
+        "Each zone has 2-3 grammar points: concept, explanation (simple English), arabicExample, pattern, relatedVocab",
+        "Grammar concepts ordered by natural progression across zones (present tense before past, singular before plural, etc.)",
+        "getZoneGrammar(zoneId) returns grammar points for that zone",
+        "isGrammarPointLearned(pointId, state) checks if player has completed the grammar exercise",
+        "selectGrammarProgress(state) returns { learned, total, byZone }",
+        "Total: 16-24 grammar points across 8 zones covering A1-B1 grammar",
+        "Tests: 12+ tests covering data structure, zone coverage, progression tracking, grammar ordering",
+        "npm run test:run passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Read grammar.js for existing grammar data. Zone 1-2 grammar: basic sentence structure, present tense, pronouns. Zone 3-4: past tense, plurals, possession. Zone 5-6: future, conditionals, comparatives. Zone 7-8: passive, subjunctive, complex sentences."
+    },
+    {
+      "id": "FEAT-049",
+      "title": "Explicit teaching session service",
+      "description": "Build the service that powers explicit vocabulary teaching moments. Given a word with its teaching data (root, meaning, context, mnemonic), it creates a structured 4-step teaching sequence: see → hear → connect → practice. Returns structured session data for the UI to render.",
+      "acceptanceCriteria": [
+        "createTeachingSession(word) returns structured session with 4 steps",
+        "Step 1 (See): word in Arabic with diacritics, English meaning, transliteration",
+        "Step 2 (Hear): pronunciation data reference, word broken into syllables",
+        "Step 3 (Connect): root + root meaning + 2 related words from same root",
+        "Step 4 (Practice): generate a simple recognition question (pick this word from 4 options)",
+        "generateDistractors(targetWord, allVocab, count) returns plausible wrong answers",
+        "completeTeachingSession(wordId) creates FSRS card with initial Good rating",
+        "Distractor selection: same CEFR level, same category, visually distinct Arabic",
+        "Tests: 14+ tests covering session structure, distractor quality, FSRS card creation, all 4 steps",
+        "npm run test:run passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "This is the core service that FEAT-046 (zone intros) and the foundation phase use. Pure functions that return data — no UI rendering. Distractors should not share the same root as the target word."
+    },
+    {
+      "id": "FEAT-050",
+      "title": "Curriculum progress dashboard data service",
+      "description": "Build a service that aggregates all curriculum progression data into a single dashboard-ready object. Combines foundation progress, zone intro progress, vocabulary tiers, grammar coverage, root knowledge, and CEFR estimates into one comprehensive view.",
+      "acceptanceCriteria": [
+        "getCurriculumDashboard(state) returns complete progress object",
+        "Dashboard includes: foundationPhase (stage, progress), zonesIntroduced (per zone completion), vocabTiers (count per frequency tier), grammarCoverage (learned/total per zone), rootKnowledge (known roots, derived words unlocked), cefrEstimate (overall + per skill)",
+        "selectCurriculumDashboard(state) memoized selector for Redux",
+        "estimateTimeToNextCefr(currentProgress) returns hours estimate based on current pace",
+        "getWeakAreas(dashboard) identifies lowest-progress areas for recommendation",
+        "suggestNextActivity(dashboard) returns recommended next action (study roots, review zone vocab, practice grammar, etc.)",
+        "Tests: 12+ tests covering aggregation accuracy, time estimation, weak area detection, recommendations",
+        "npm run test:run passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "This reads from foundationSlice, alphabetProgressSlice, rootKnowledgeSlice, zoneIntroSlice, vocabularySlice, and cefrProgressSlice. Pure aggregation — no mutations. Time estimates extrapolate from FSRS review pace."
+    }
+  ]
+}
