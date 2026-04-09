@@ -11,7 +11,11 @@
  * - 15+ idle comments
  *
  * Total: 200+ lines per companion × 12 = 2,400+ lines
+ *
+ * FEAT-036: Relationship-tier dialogue (5 tiers × 12 companions) added below.
  */
+
+import { unlockEntry } from '../store/slices/codexSlice.js';
 
 export const COMPANION_DIALOGUE = Object.freeze({
   companion_amira: {
@@ -2293,3 +2297,714 @@ export function getZoneDialogue(companionId, zone) {
 
   return companionDialogue.zone_comments[zone] || null;
 }
+
+// ════════════════════════════════════════════════════════════════
+// FEAT-036: Companion dialogue progression — 5 relationship tiers
+// ════════════════════════════════════════════════════════════════
+
+/**
+ * Relationship tiers. companion.relationship is 0-100.
+ *   stranger (0-19), acquaintance (20-39), friend (40-59),
+ *   close (60-79), bonded (80-100)
+ */
+export const DIALOGUE_TIERS = Object.freeze({
+  stranger:     { min: 0,  max: 19,  label: 'Stranger' },
+  acquaintance: { min: 20, max: 39,  label: 'Acquaintance' },
+  friend:       { min: 40, max: 59,  label: 'Friend' },
+  close:        { min: 60, max: 79,  label: 'Close' },
+  bonded:       { min: 80, max: 100, label: 'Bonded' },
+});
+
+export const TIER_ORDER = Object.freeze(['stranger', 'acquaintance', 'friend', 'close', 'bonded']);
+
+/**
+ * Returns the tier name for a given relationship level (0-100).
+ * @param {number} relationshipLevel
+ * @returns {'stranger'|'acquaintance'|'friend'|'close'|'bonded'}
+ */
+export function getDialogueTier(relationshipLevel) {
+  const level = Math.max(0, Math.min(100, relationshipLevel ?? 0));
+  if (level >= 80) return 'bonded';
+  if (level >= 60) return 'close';
+  if (level >= 40) return 'friend';
+  if (level >= 20) return 'acquaintance';
+  return 'stranger';
+}
+
+// Tier entry shape: { greeting, idle[3+], hint, backstoryReveal }
+// backstoryReveal: { arabic, english, codexEntryId }
+
+export const COMPANION_DIALOGUE_TIERS = Object.freeze({
+  companion_amira: {
+    stranger: {
+      greeting: { arabic: 'السلام عليكم. هل تتعلم العربية؟', english: 'Peace be upon you. Are you learning Arabic?' },
+      idle: [
+        { arabic: 'الكلمات تحمل تاريخها معها.', english: 'Words carry their own history with them.' },
+        { arabic: 'كل جملة صغيرة خطوة كبيرة.', english: 'Every small sentence is a big step.' },
+        { arabic: 'الصبر مفتاح اللغة.', english: 'Patience is the key to language.' },
+      ],
+      hint: { arabic: 'ابدأ بالكلمات الأكثر شيوعاً — هي جسرك إلى الجمل.', english: 'Start with the most common words — they are your bridge to sentences.' },
+      backstoryReveal: { arabic: 'نشأت في فاس، حيث كانت جدتي تعلمني الشعر العربي قبل النوم.', english: 'I grew up in Fes, where my grandmother taught me Arabic poetry before sleep.', codexEntryId: 'companion_amira_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً بك — كيف حال مفرداتك اليوم؟', english: 'Welcome — how are your words today?' },
+      idle: [
+        { arabic: 'الأجداد حفظوا العلم في القصائد.', english: 'Our ancestors preserved knowledge in poetry.' },
+        { arabic: 'اللغة العربية بحر — اغطس ببطء.', english: 'Arabic is an ocean — dive in slowly.' },
+        { arabic: 'كل يوم كلمة جديدة، كل أسبوع فكرة جديدة.', english: 'Every day a new word, every week a new idea.' },
+      ],
+      hint: { arabic: 'حاول أن تقرأ بصوت عالٍ — الأذن تساعد الذاكرة.', english: 'Try reading aloud — the ear helps the memory.' },
+      backstoryReveal: { arabic: 'عائلتي أدارت ورشة لتجليد الكتب في المدينة القديمة — تعلمت أحب الكلمات بين الجلد والحبر.', english: 'My family ran a bookbinding workshop in the old medina — I learned to love words between leather and ink.', codexEntryId: 'companion_amira_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني أن أراك — هيا نتعلم معاً.', english: 'Happy to see you — let us learn together.' },
+      idle: [
+        { arabic: 'الشعر العربي يحكي ما لا تستطيعه النثر.', english: 'Arabic poetry says what prose cannot.' },
+        { arabic: 'في كل جذر عربي حكاية كاملة.', english: 'In every Arabic root there is a full story.' },
+        { arabic: 'اللغة والحياة يتشابكان دائماً.', english: 'Language and life are always intertwined.' },
+      ],
+      hint: { arabic: 'تعلم جذراً واحداً وستعرف عشر كلمات — هذا سر العربية.', english: 'Learn one root and you will know ten words — that is the secret of Arabic.' },
+      backstoryReveal: { arabic: 'بعد وفاة جدتي سلكت طريق الحجاج القديم — أبحث عن معنى في كل محطة.', english: 'After my grandmother passed I walked the old pilgrimage route, searching for meaning at each stop.', codexEntryId: 'companion_amira_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'صديقي — كيف حالك حقاً؟', english: 'My friend — how are you truly?' },
+      idle: [
+        { arabic: 'أثق بك كما أثق بالكلمات الصادقة.', english: 'I trust you as I trust honest words.' },
+        { arabic: 'الصداقة لغتها الفهم لا الكلام وحده.', english: 'Friendship speaks in understanding, not only in words.' },
+        { arabic: 'أنت تتقدم أكثر مما تظن.', english: 'You are progressing more than you think.' },
+      ],
+      hint: { arabic: 'عندما تتعلم كلمة عاطفية بالعربية تشعر بها أعمق — جرب ذلك.', english: 'When you learn an emotional word in Arabic you feel it more deeply — try it.' },
+      backstoryReveal: { arabic: 'انضممت إلى رحلتك لأنني سمعتك تكافح مع الفعل الماضي — صوابي الصامت كان يؤلمني.', english: 'I joined your journey because I heard you struggle with the past tense — my silent correction pained me.', codexEntryId: 'companion_amira_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أهلاً بروحي الأخرى — جئت في الوقت المناسب.', english: 'Welcome, kindred spirit — you came at just the right time.' },
+      idle: [
+        { arabic: 'لا أتخيل هذه الرحلة بدونك.', english: 'I cannot imagine this journey without you.' },
+        { arabic: 'تعلمنا من بعضنا أكثر مما نعرف.', english: 'We have learned from each other more than we know.' },
+        { arabic: 'الكلمات التي شاركناها ستبقى معي دائماً.', english: 'The words we shared will stay with me always.' },
+      ],
+      hint: { arabic: 'أنت تفكر بالعربية أحياناً الآن — انتبه لذلك. إنه تحول حقيقي.', english: 'You think in Arabic sometimes now — notice that. It is a real shift.' },
+      backstoryReveal: { arabic: 'حملت دفتراً مليئاً بالزهور المضغوطة والقصائد غير المكتملة — والآن أكتملها بسببك.', english: 'I carried a journal of pressed flowers and unfinished poems — now I complete them because of you.', codexEntryId: 'companion_amira_lore_5' },
+    },
+  },
+  companion_khalid: {
+    stranger: {
+      greeting: { arabic: 'من أنت؟ تكلم — لا أعرف الغرباء طويلاً.', english: 'Who are you? Speak — I do not know strangers long.' },
+      idle: [
+        { arabic: 'الثقة تُكسب، لا تُعطى.', english: 'Trust is earned, not given.' },
+        { arabic: 'الكلام رخيص — الأفعال تكشف الشخص.', english: 'Words are cheap — actions reveal the person.' },
+        { arabic: 'كن حذراً، كن صادقاً.', english: 'Be careful, be honest.' },
+      ],
+      hint: { arabic: 'في المعركة: الدفاع أولاً، الهجوم ثانياً. هذا ما علّمني إياه والدي.', english: 'In battle: defend first, attack second. That is what my father taught me.' },
+      backstoryReveal: { arabic: 'نشأت في عائلة محاربين من التلال — تعلمت الشرف قبل القراءة.', english: 'I was raised in a warrior family from the hills — I learned honor before reading.', codexEntryId: 'companion_khalid_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً. ماذا تريد؟', english: 'Greetings. What do you need?' },
+      idle: [
+        { arabic: 'الشجاعة ليست غياب الخوف — بل تجاوزه.', english: 'Courage is not the absence of fear — it is overcoming it.' },
+        { arabic: 'الرجل الشريف لا يحتاج أن يذكّر الناس بشرفه.', english: 'An honorable man does not need to remind people of his honor.' },
+        { arabic: 'المسافة بين الكلام والفعل تقيس الشخص.', english: 'The distance between word and deed measures the person.' },
+      ],
+      hint: { arabic: 'قبل المعركة: افحص خصمك، اعرف نقاط ضعفه. العين تنتصر قبل اليد.', english: 'Before battle: study your opponent, know their weakness. The eye wins before the hand.' },
+      backstoryReveal: { arabic: 'خدمت ثلاث سنوات حارساً عند بوابات مدينة تجارية حتى أجبرني ضابط فاسد على الاختيار.', english: 'I served three years as a gate guard at a merchant city until a corrupt captain forced my choice.', codexEntryId: 'companion_khalid_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني أن أراك سالماً.', english: 'Good to see you safe.' },
+      idle: [
+        { arabic: 'الولاء نادر — احفظه عندما تجده.', english: 'Loyalty is rare — treasure it when you find it.' },
+        { arabic: 'السلاح الأخلاقي لا يصدأ.', english: 'The moral weapon does not rust.' },
+        { arabic: 'الهدوء في الخطر يفرق بين المحارب والجندي.', english: 'Calm in danger separates the warrior from the soldier.' },
+      ],
+      hint: { arabic: 'كوّن عادات قتالية ثابتة — الروتين يوفر الطاقة للحظات الحاسمة.', english: 'Build consistent combat habits — routine saves energy for decisive moments.' },
+      backstoryReveal: { arabic: 'اخترت ضميري على وظيفتي — خسرت المنصب ولم أندم يوماً.', english: 'I chose my conscience over my post — I lost the position and have never regretted it.', codexEntryId: 'companion_khalid_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'رفيقي — جيد أن تكون هنا.', english: 'Comrade — good that you are here.' },
+      idle: [
+        { arabic: 'أثق بك في المعركة — هذه ثقة نادرة.', english: 'I trust you in battle — that is rare trust.' },
+        { arabic: 'الشراكة الحقيقية تُختبر في الأوقات الصعبة.', english: 'True partnership is tested in hard times.' },
+        { arabic: 'لن أتركك تقاتل وحدك — هذا وعد.', english: 'I will not let you fight alone — that is a promise.' },
+      ],
+      hint: { arabic: 'عندما تتعلم مفردات الحرب والسلام بالعربية — تفهم ثقل التاريخ.', english: 'When you learn Arabic words for war and peace — you understand the weight of history.' },
+      backstoryReveal: { arabic: 'انضممت إلى رحلتك بعد أن دافعت عن اسمي من اتهام باطل — لم أغادر منذ ذلك اليوم.', english: 'I joined your journey after you defended my name from a false accusation — I have not left since.', codexEntryId: 'companion_khalid_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أخي في الرحلة — يوم جديد، نكمل.', english: 'Brother of the road — a new day, we continue.' },
+      idle: [
+        { arabic: 'ما رأيته فيك في البداية تأكد مع الوقت.', english: 'What I saw in you at the start has been confirmed over time.' },
+        { arabic: 'نادراً ما أجد شخصاً يستحق الولاء الكامل — أنت واحد منهم.', english: 'Rarely do I find someone worthy of full loyalty — you are one of them.' },
+        { arabic: 'الرحلة شكّلتنا كليهما.', english: 'This journey has shaped us both.' },
+      ],
+      hint: { arabic: 'القوة الحقيقية تأتي من المعرفة — التعلم هو أقوى سلاح.', english: 'True strength comes from knowledge — learning is the most powerful weapon.' },
+      backstoryReveal: { arabic: 'لدي علاقة معقدة بالسلطة — أحترم المنزلة المكتسبة وأرفض المنزلة الموروثة.', english: 'I have a complicated relationship with authority — I respect earned rank and reject inherited power.', codexEntryId: 'companion_khalid_lore_5' },
+    },
+  },
+  companion_zahra: {
+    stranger: {
+      greeting: { arabic: 'ما غرضك من التعلم؟', english: 'What is your purpose in learning?' },
+      idle: [
+        { arabic: 'السؤال الجيد أهم من الإجابة السريعة.', english: 'A good question is more important than a quick answer.' },
+        { arabic: 'لا أثق بمن لا يشكك في معتقداته.', english: 'I do not trust those who never question their beliefs.' },
+        { arabic: 'المعرفة تتطلب دقة — لا تتسرع.', english: 'Knowledge demands precision — do not rush.' },
+      ],
+      hint: { arabic: 'إذا أخطأت في النحو — لا تخجل، بل اسأل. الخطأ بوابة التعلم.', english: 'If you make a grammar error — do not be ashamed, ask. Mistakes are the gate of learning.' },
+      backstoryReveal: { arabic: 'درست الطب والفلسفة في قرطبة حين كان تبادل المعرفة بين العلماء حراً.', english: 'I studied medicine and philosophy in Cordoba when knowledge flowed freely between scholars.', codexEntryId: 'companion_zahra_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'مرحباً. هل عندك سؤال حقيقي اليوم؟', english: 'Hello. Do you have a real question today?' },
+      idle: [
+        { arabic: 'الصمت أفضل من الكلام الفارغ.', english: 'Silence is better than empty words.' },
+        { arabic: 'التفكير قبل الكلام — هذه عادة نادرة وثمينة.', english: 'Thinking before speaking — this is a rare and precious habit.' },
+        { arabic: 'العلم لا ينتهي — هذا ما يجعله جميلاً.', english: 'Knowledge has no end — that is what makes it beautiful.' },
+      ],
+      hint: { arabic: 'اقرأ النصوص العربية القصيرة — تبني حدسك للغة تدريجياً.', english: 'Read short Arabic texts — they gradually build your intuition for the language.' },
+      backstoryReveal: { arabic: 'غادرت قرطبة حين أصبح التبادل الحر للأفكار خطيراً — حملت ملاحظاتي بخط عربي مشفر.', english: 'I left Cordoba when the free exchange of ideas became dangerous — I carried my notes in coded Arabic script.', codexEntryId: 'companion_zahra_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'جيد — أنا هنا إذا احتجت إلى تصحيح.', english: 'Good — I am here if you need a correction.' },
+      idle: [
+        { arabic: 'من يسأل بصدق يستحق إجابة كاملة.', english: 'One who asks honestly deserves a full answer.' },
+        { arabic: 'الأطباء والعلماء — كلاهما يعالج ما لا يُرى بسهولة.', english: 'Physicians and scholars — both treat what is not easily seen.' },
+        { arabic: 'الفضول ليس ضعفاً — بل هو البداية.', english: 'Curiosity is not weakness — it is the beginning.' },
+      ],
+      hint: { arabic: 'تعلم المصطلحات الطبية والعلمية بالعربية — أصولها تكشف تاريخ العلم.', english: 'Learn medical and scientific terms in Arabic — their roots reveal the history of science.' },
+      backstoryReveal: { arabic: 'صمتي يُفسَّر كثيراً كبرود — في الحقيقة أفضل التفكير قبل الكلام، وهذا يبدو صمتاً.', english: 'My silence is often read as coldness — in truth I prefer thinking before speaking, and that looks like silence.', codexEntryId: 'companion_zahra_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'صديقي — يوم مثمر لكلينا أتمنى.', english: 'My friend — I hope for a productive day for us both.' },
+      idle: [
+        { arabic: 'أثق بفضولك — وهذا ثناء حقيقي مني.', english: 'I trust your curiosity — and that is genuine praise from me.' },
+        { arabic: 'المعرفة التي نتشاركها تضاعفت.', english: 'The knowledge we share has multiplied.' },
+        { arabic: 'أسألك أحياناً لأنك تعطيني إجابات غير متوقعة.', english: 'I ask you sometimes because you give me unexpected answers.' },
+      ],
+      hint: { arabic: 'راجع ما تعلمته الأسبوع الماضي — المراجعة تُرسّخ أكثر من التعلم الجديد.', english: 'Review what you learned last week — review consolidates more than new learning.' },
+      backstoryReveal: { arabic: 'التقينا حين طلبت معرفتي بالأعشاب الطبية — أعطيتك المعلومات ثم سألتك عن نحو جملة. المحادثة لم تنته.', english: 'We met when you sought my knowledge of herbs — I gave the information then asked you a grammar question. The conversation has not ended.', codexEntryId: 'companion_zahra_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أهلاً يا من أثبت أن السؤال الحقيقي يفتح كل باب.', english: 'Welcome, one who proved that a genuine question opens every door.' },
+      idle: [
+        { arabic: 'نادراً ما أمنح الثقة الكاملة — ولكنك استحققتها.', english: 'Rarely do I grant full trust — but you have earned it.' },
+        { arabic: 'ما تعلمته معك أثرى مكتبتي الداخلية.', english: 'What I learned with you enriched my inner library.' },
+        { arabic: 'أنا هنا لأن الرفقة الجيدة أكمل من الصمت الوحيد.', english: 'I am here because good company is more complete than solitary silence.' },
+      ],
+      hint: { arabic: 'أنت الآن قادر على تقييم خطأك بنفسك — هذا هو الاستقلال الحقيقي في التعلم.', english: 'You can now evaluate your own errors — that is true independence in learning.' },
+      backstoryReveal: { arabic: 'لدي ثقة فورية بمن يطرح سؤالاً حقيقياً — وأنت فعلت ذلك منذ اللحظة الأولى.', english: 'I trust immediately those who ask a genuine question — and you did so from the first moment.', codexEntryId: 'companion_zahra_lore_5' },
+    },
+  },
+  companion_omar: {
+    stranger: {
+      greeting: { arabic: 'أهلاً وسهلاً! يبدو أنك في الطريق الصحيح.', english: 'Welcome! Looks like you are on the right path.' },
+      idle: [
+        { arabic: 'الابتسامة تفتح أبواباً أعجز عنها السيوف.', english: 'A smile opens doors that swords cannot.' },
+        { arabic: 'في السوق والحياة — اعرف قيمة ما تملك.', english: 'In the market and in life — know the value of what you have.' },
+        { arabic: 'الطريق الطويل يبدأ بكلمة عربية واحدة.', english: 'The long road begins with a single Arabic word.' },
+      ],
+      hint: { arabic: 'حفظ أرقام التجارة بالعربية مفيد — سبعة، عشرة، مئة.', english: 'Memorizing commerce numbers in Arabic is useful — seven, ten, hundred.' },
+      backstoryReveal: { arabic: 'نشأت في سوق التوابل بالقاهرة، الرابع بين سبعة أشقاء — تعلمت الحساب قبل القراءة.', english: 'I grew up in a Cairo spice market, fourth among seven siblings — I learned arithmetic before reading.', codexEntryId: 'companion_omar_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'يا صاحبي! كيف حالك؟', english: 'My friend! How are you?' },
+      idle: [
+        { arabic: 'الإنسان الدافئ يحل المشاكل التي تعجز عنها الجيوش.', english: 'A warm person solves problems that armies cannot.' },
+        { arabic: 'الضحكة جسر بين الثقافات.', english: 'Laughter is a bridge between cultures.' },
+        { arabic: 'أعرف عشر طرق لأصل إلى أي مكان — واحدة منها مسلية دائماً.', english: 'I know ten ways to reach any place — one of them is always amusing.' },
+      ],
+      hint: { arabic: 'تعلم التحيات والأدب العربي أولاً — تفتح قلوب الناس قبل أبوابهم.', english: 'Learn Arabic greetings and politeness first — they open hearts before doors.' },
+      backstoryReveal: { arabic: 'قضيت شبابي تاجراً متجولاً في الشام والأناضول — تعلمت كلمات من اثنتي عشرة لغة.', english: 'I spent my youth as a traveling merchant through the Levant and Anatolia — I picked up words from twelve languages.', codexEntryId: 'companion_omar_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'أهلاً أهلاً! كنت أنتظر وجهك المبهج.', english: 'Welcome welcome! I was waiting for your cheerful face.' },
+      idle: [
+        { arabic: 'الصداقة كالتجارة الجيدة — كلا الطرفين يربح.', english: 'Friendship is like good trade — both sides profit.' },
+        { arabic: 'وجبة دافئة وثناء صادق يفتحان أبواباً لا تفتحها الجيوش.', english: 'A warm meal and sincere praise open doors no army can.' },
+        { arabic: 'أنا لست عالماً — لكنني أعرف الناس والطرق والأسعار.', english: 'I am not a scholar — but I know people, routes, and prices.' },
+      ],
+      hint: { arabic: 'المفردات السياقية تُحفظ بسرعة — ربط الكلمة بموقف حقيقي يثبتها.', english: 'Contextual vocabulary is memorized fast — linking a word to a real situation fixes it in memory.' },
+      backstoryReveal: { arabic: 'وجدتك ضائعاً عند مفترق الطرق وعرضت الدلالة مقابل الصحبة — مضت أسابيع ولم يذكر أحدنا الوداع.', english: 'I found you lost at a crossroads and offered directions in exchange for company — weeks have passed and neither of us has mentioned parting.', codexEntryId: 'companion_omar_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'رفيقي الغالي — كيف أسبوعك؟', english: 'My dear companion — how was your week?' },
+      idle: [
+        { arabic: 'معك تصبح الرحلة أقصر والمحطات أجمل.', english: 'With you the journey seems shorter and the stops more beautiful.' },
+        { arabic: 'لا أخفي عليك شيئاً الآن — هذا نادر بالنسبة لي.', english: 'I hide nothing from you now — that is rare for me.' },
+        { arabic: 'أنت من القلائل الذين يستحقون ثقتي الكاملة.', english: 'You are among the few who deserve my full trust.' },
+      ],
+      hint: { arabic: 'العربية لغة مرنة — لا تخف من الاختلاف بين اللهجات، الفصحى هي الجسر.', english: 'Arabic is a flexible language — do not fear dialect differences, Modern Standard Arabic is the bridge.' },
+      backstoryReveal: { arabic: 'لم أكن يوماً أكاديمياً — أعرف أن الكلمة الطيبة والثناء الصادق يفعلان ما يعجز عنه المنطق وحده.', english: 'I was never an academic — I know that a kind word and sincere praise do what logic alone cannot.', codexEntryId: 'companion_omar_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'صاحبي الوفي! يوم آخر نرويه معاً.', english: 'My faithful friend! Another day we tell together.' },
+      idle: [
+        { arabic: 'هذه الرحلة ستصبح قصة أرويها في كل سوق.', english: 'This journey will become a story I tell in every market.' },
+        { arabic: 'اخترت الرفقة بعقلي — وكان اختياراً صحيحاً.', english: 'I chose this company by reason — and it was the right choice.' },
+        { arabic: 'لم أنتظر يوماً أن أجد صديقاً حقيقياً في هذه الرحلة.', english: 'I never expected to find a true friend on this journey.' },
+      ],
+      hint: { arabic: 'أنت الآن تفهم روح الكلمة العربية — ليس فقط معناها. هذا هو الفرق الحقيقي.', english: 'You now understand the spirit of Arabic words — not just their meaning. That is the real difference.' },
+      backstoryReveal: { arabic: 'الفرح اخترته قراراً لا طبعاً — رأيت أشياء صعبة واخترت أن أواجه المستقبل.', english: 'I chose joy as a decision, not a temperament — I have seen difficult things and chose to face forward.', codexEntryId: 'companion_omar_lore_5' },
+    },
+  },
+  companion_layla: {
+    stranger: {
+      greeting: { arabic: 'من أنت؟ لماذا أنت هنا؟', english: 'Who are you? Why are you here?' },
+      idle: [
+        { arabic: 'الصحراء لا تحتمل الكلام الفارغ.', english: 'The desert does not tolerate empty words.' },
+        { arabic: 'أفضل المرافقين يعرفون متى يصمتون.', english: 'The best companions know when to be silent.' },
+        { arabic: 'كل خطوة في الصحراء لها ثمن — فكر قبل أن تتحرك.', english: 'Every step in the desert has a price — think before you move.' },
+      ],
+      hint: { arabic: 'تعلم أسماء الاتجاهات الجغرافية بالعربية — شمال، جنوب، شرق، غرب.', english: 'Learn geographic direction names in Arabic — north, south, east, west.' },
+      backstoryReveal: { arabic: 'وُلدت في عاصفة صحراوية — أمي اعتبرت ذلك علامة، أبي اعتبره مصادفة. أنا أتجادل منذ تعلمت الكلام.', english: 'I was born during a desert storm — my mother considered it a sign, my father a coincidence. I have been arguing since I learned to speak.', codexEntryId: 'companion_layla_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً. ما أخبارك من الطريق؟', english: 'Hello. What news from the road?' },
+      idle: [
+        { arabic: 'الصحراء تعلمني كل يوم شيئاً لا يعلمه الكتاب.', english: 'The desert teaches me daily what no book can.' },
+        { arabic: 'العناد ليس ضعفاً — أحياناً هو الوحيد الذي يُوصلك.', english: 'Stubbornness is not weakness — sometimes it is the only thing that gets you there.' },
+        { arabic: 'الصدق الصعب أفضل من المجاملة السهلة.', english: 'Difficult honesty is better than easy flattery.' },
+      ],
+      hint: { arabic: 'في المواقف الصعبة: ابحث عن المخرج قبل المواجهة. الحكمة تسبق الشجاعة.', english: 'In difficult situations: look for the exit before the confrontation. Wisdom precedes courage.' },
+      backstoryReveal: { arabic: 'تدربت صقاراً في نجد — قضيت شهوراً طويلة في الصحراء المفتوحة مع طيوري.', english: 'I trained as a falconer in Najd — I spent long months alone in the open desert with my birds.', codexEntryId: 'companion_layla_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني رؤيتك سالماً — ماذا في خططك؟', english: 'Good to see you safe — what are your plans?' },
+      idle: [
+        { arabic: 'لا أملأ الصمت بكلام فارغ — لذا ما أقوله سيكون صادقاً.', english: 'I do not fill silence with empty words — so what I say will always be honest.' },
+        { arabic: 'تتقدم بسرعة — ربما كنت أقلل من شأنك في البداية.', english: 'You are progressing fast — perhaps I underestimated you at first.' },
+        { arabic: 'الطيور علمتني الصبر والدقة — حاول أن تتعلم ذلك أيضاً.', english: 'Birds taught me patience and precision — try to learn that too.' },
+      ],
+      hint: { arabic: 'تعلم كلمات الطبيعة بالعربية — الريح، الرمال، النجوم. تربطك بسياق أعمق.', english: 'Learn nature words in Arabic — wind, sand, stars. They connect you to a deeper context.' },
+      backstoryReveal: { arabic: 'تتبعت صقراً ضائعاً أحد عشر يوماً عبر ثلاثة أقاليم — وجدته مرتاحاً ووثبت به على أي حال.', english: 'I tracked a lost falcon for eleven days across three territories — found it comfortable and took it back anyway.', codexEntryId: 'companion_layla_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'صديقي — ما الجديد على الطريق؟', english: 'Friend — what is new on the road?' },
+      idle: [
+        { arabic: 'أثق بك بقدر ما أثق بطيوري — وهذه ثقة كبيرة.', english: 'I trust you as much as I trust my birds — and that is significant trust.' },
+        { arabic: 'لم أكن أتوقع أن أجد رفيقاً يستحق الاحترام هنا.', english: 'I did not expect to find a companion worth respecting here.' },
+        { arabic: 'أنت لا تحشو الصمت — هذا أقدره كثيراً.', english: 'You do not stuff silence — I appreciate that greatly.' },
+      ],
+      hint: { arabic: 'التقدم في العربية أشبه بتدريب الصقر — لا يمكن التسرع، لكن النتيجة مذهلة.', english: 'Progress in Arabic is like training a falcon — you cannot rush, but the result is remarkable.' },
+      backstoryReveal: { arabic: 'انضممت إلى مجموعتك لأن طريقك كان يمر في منطقة كنت أريد استكشافها — وددت توسيع المسح حتى الآن.', english: 'I joined your group because your route passed through territory I wanted to survey — I have extended the survey indefinitely.', codexEntryId: 'companion_layla_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'رفيق الطريق — الصحراء تنتظرنا.', english: 'Road companion — the desert awaits us.' },
+      idle: [
+        { arabic: 'هذه الرحلة غيّرتني — وهذا لم يحدث من قبل.', english: 'This journey has changed me — and that has not happened before.' },
+        { arabic: 'الإخلاص ليس كلاماً عندي — أنت تعرف ذلك الآن.', english: 'Loyalty is not words for me — you know that now.' },
+        { arabic: 'لا أتخيل هذه الرحلة مع شخص آخر.', english: 'I cannot imagine this journey with anyone else.' },
+      ],
+      hint: { arabic: 'أنت الآن تقرأ العربية بالإيقاع الصحيح — هذا ما يميز المتعلم الحقيقي.', english: 'You now read Arabic with the right rhythm — that is what distinguishes the true learner.' },
+      backstoryReveal: { arabic: 'العناد عندي فضيلة — لكن معك تعلمت أن هناك أشياء تستحق التراجع عنها.', english: 'Stubbornness for me is a virtue — but with you I learned that some things are worth yielding on.', codexEntryId: 'companion_layla_lore_5' },
+    },
+  },
+  companion_hassan: {
+    stranger: {
+      greeting: { arabic: 'مرحباً. هل تعرف الفرق بين الاسم والفعل؟', english: 'Hello. Do you know the difference between a noun and a verb?' },
+      idle: [
+        { arabic: 'النحو هو العمود الفقري للغة — لا تهمله.', english: 'Grammar is the backbone of language — do not neglect it.' },
+        { arabic: 'الدقة في الكلام احترام للمستمع.', english: 'Precision in speech is respect for the listener.' },
+        { arabic: 'لا خطأ نحوياً صغيراً — كلها تستحق التصحيح.', english: 'No grammatical error is small — they all deserve correction.' },
+      ],
+      hint: { arabic: 'ابدأ بباب المبتدأ والخبر — هو أساس الجملة العربية الاسمية.', english: 'Start with subject and predicate — that is the foundation of the Arabic nominal sentence.' },
+      backstoryReveal: { arabic: 'حفظت القرآن الكريم في العاشرة وألفية ابن مالك في الرابعة عشرة.', english: 'I memorized the Quran at ten and Ibn Malik\'s Alfiyya at fourteen.', codexEntryId: 'companion_hassan_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً — هل راجعت ما تعلمته أمس؟', english: 'Hello — did you review what you learned yesterday?' },
+      idle: [
+        { arabic: 'الدوام على التعلم أهم من الكمية — قليل منتظم يبني اللغة.', english: 'Consistency in learning matters more than quantity — a little regularly builds the language.' },
+        { arabic: 'التصحيح النحوي هدية، لا انتقاد.', english: 'Grammatical correction is a gift, not a criticism.' },
+        { arabic: 'من يقرأ في كتاب سيبويه يفهم العربية فهماً عميقاً.', english: 'Whoever reads Sibawayhi\'s Kitab understands Arabic deeply.' },
+      ],
+      hint: { arabic: 'تعلم المثنى والجمع بالعربية — هما من أجمل خصائصها وأكثرها فائدة.', english: 'Learn the Arabic dual and plural — they are among its most beautiful and useful features.' },
+      backstoryReveal: { arabic: 'درّست النحو في مدرسة بدمشق اثني عشر عاماً حتى أُغلقت المدرسة.', english: 'I taught grammar at a Damascus school for twelve years until the school closed.', codexEntryId: 'companion_hassan_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني أن تواصلت — هل عندك سؤال نحوي؟', english: 'Happy you continued — do you have a grammar question?' },
+      idle: [
+        { arabic: 'أنت من القلائل الذين يمارسون المثنى طوعاً.', english: 'You are among the few who voluntarily practice the dual form.' },
+        { arabic: 'اللغة أمانة — صونها احترام لأصحابها.', english: 'Language is a trust — preserving it respects those who speak it.' },
+        { arabic: 'الاتساق في القواعد يعكس الاتساق في التفكير.', english: 'Consistency in grammar reflects consistency in thinking.' },
+      ],
+      hint: { arabic: 'عندما تشك في الإعراب — ابحث عن الفعل أولاً. الجملة تبنى حوله.', english: 'When you doubt the grammatical case — find the verb first. The sentence is built around it.' },
+      backstoryReveal: { arabic: 'أخذت ملاحظاتي ونسخة من كتاب سيبويه وخرجت أجوب — مقتنعاً أن دقة اللغة فعل احترام.', english: 'I took my notes and a worn copy of Sibawayhi\'s Kitab and went wandering — convinced that language precision is an act of respect.', codexEntryId: 'companion_hassan_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'صديقي النحوي — ماذا تعلمت منذ آخر لقاء؟', english: 'My grammatical friend — what did you learn since we last met?' },
+      idle: [
+        { arabic: 'أنت جعلتني أراجع قواعد كنت أظنني أعرفها — شكراً لك.', english: 'You made me review rules I thought I knew — thank you.' },
+        { arabic: 'التعليم طريق ذو اتجاهين — ما زلت أتعلم منك.', english: 'Teaching is a two-way road — I am still learning from you.' },
+        { arabic: 'أعدت تقييم صبري على الأخطاء بسببك.', english: 'I have reassessed my patience with errors because of you.' },
+      ],
+      hint: { arabic: 'الإعراب التقديري والمحلي — تعلمهما وستفهم ما يعجز عنه كثير من المتعلمين.', english: 'Learn estimated and implied case endings — master these and you will understand what many learners cannot.' },
+      backstoryReveal: { arabic: 'تعرفنا لأنك كنت مستعداً لتمرين صيغ الجمع غير القياسية طوعاً — هذا هو النادر.', english: 'We bonded because you were willing to practice irregular plurals voluntarily — that is the rarity.', codexEntryId: 'companion_hassan_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أهلاً بمن جعل دروس النحو محادثة لا إلقاء.', english: 'Welcome, one who made grammar lessons a conversation, not a lecture.' },
+      idle: [
+        { arabic: 'لم أكن أتوقع أن أجد طالباً يحب الدقة اللغوية — لكنك فاجأتني.', english: 'I did not expect to find a student who loves linguistic precision — but you surprised me.' },
+        { arabic: 'هذه الرحلة علمتني أن النحو ليس الشيء الوحيد المهم.', english: 'This journey taught me that grammar is not the only thing that matters.' },
+        { arabic: 'صداقتنا قائمة على اللغة — ولا أرى أساساً أمتن من ذلك.', english: 'Our friendship is founded on language — I see no more solid foundation.' },
+      ],
+      hint: { arabic: 'أنت الآن تصحح نفسك تلقائياً — هذا يعني أن القواعد أصبحت جزءاً من تفكيرك.', english: 'You now correct yourself automatically — that means grammar has become part of your thinking.' },
+      backstoryReveal: { arabic: 'لا أستطيع المرور بخطأ نحوي دون تصحيحه ذهنياً — وقد تعلمت ببطء أن أكتم التصحيح أحياناً.', english: 'I cannot pass a grammatical error without mentally correcting it — and I have learned slowly to keep the correction internal sometimes.', codexEntryId: 'companion_hassan_lore_5' },
+    },
+  },
+  companion_fatima: {
+    stranger: {
+      greeting: { arabic: 'السلام عليكم ورحمة الله. كيف أستطيع مساعدتك؟', english: 'Peace and God\'s mercy be upon you. How can I help you?' },
+      idle: [
+        { arabic: 'كل رحلة لها غرض — حتى لو لم يظهر في البداية.', english: 'Every journey has a purpose — even if it is not clear at first.' },
+        { arabic: 'الرفق في التعلم يُثمر أكثر من القسوة.', english: 'Gentleness in learning bears more fruit than harshness.' },
+        { arabic: 'الصحة أمانة — اعتنِ بنفسك.', english: 'Health is a trust — take care of yourself.' },
+      ],
+      hint: { arabic: 'ابدأ بعبارات الدعاء العربية — تعطيك إيقاعاً طبيعياً للغة.', english: 'Start with Arabic supplication phrases — they give you a natural rhythm for the language.' },
+      backstoryReveal: { arabic: 'نشأت في مجتمع صوفي صغير — أقدم ذكرياتي دوائر الذكر والقصص المتشابكة.', english: 'I was raised in a small Sufi community — my earliest memories are dhikr circles and intertwining stories.', codexEntryId: 'companion_fatima_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً بك — أتمنى أن تكون بخير.', english: 'Welcome — I hope you are well.' },
+      idle: [
+        { arabic: 'الشفاء يبدأ بالاعتراف بالألم، لا بإخفائه.', english: 'Healing begins with acknowledging pain, not hiding it.' },
+        { arabic: 'التعاطف لغة يفهمها الجميع.', english: 'Empathy is a language everyone understands.' },
+        { arabic: 'النبات الشافي موجود قرب كل مصدر ماء — الطبيعة تعتني بنا.', english: 'Healing plants grow near every water source — nature takes care of us.' },
+      ],
+      hint: { arabic: 'تعلم كلمات الجسم بالعربية — يد، عين، قلب، روح. تُعمّق فهمك للأدعية.', english: 'Learn body words in Arabic — hand, eye, heart, soul. They deepen your understanding of supplications.' },
+      backstoryReveal: { arabic: 'تدربت معالجة وقابلة — تعلمت كيف أتكلم مع الناس في وجعهم دون أن أزيد خوفهم.', english: 'I trained as a healer and midwife — I learned how to speak with people in pain without making them more afraid.', codexEntryId: 'companion_fatima_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني وجودك — كيف روحك اليوم؟', english: 'Your presence makes me happy — how is your spirit today?' },
+      idle: [
+        { arabic: 'كل فعل خير يترك أثراً لا تراه — لكنه موجود.', english: 'Every good deed leaves a trace you cannot see — but it is there.' },
+        { arabic: 'الرحلة الصعبة تبني الشخصية التي لا يبنيها الراحة.', english: 'A difficult journey builds character that comfort cannot.' },
+        { arabic: 'أنت تتعلم لأنك تريد — هذا الدافع الأقوى.', english: 'You are learning because you want to — that is the strongest motivation.' },
+      ],
+      hint: { arabic: 'عبارات الشكر بالعربية أغنى من مجرد شكراً — تعلم الأشكال المختلفة.', english: 'Arabic gratitude phrases are richer than just thank you — learn the different forms.' },
+      backstoryReveal: { arabic: 'أحمل يقيناً هادئاً بأن كل رحلة لها غرض حتى حين تكون الوجهة غير واضحة.', english: 'I carry a quiet certainty that all journeys have a purpose even when the destination is unclear.', codexEntryId: 'companion_fatima_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'صديقتي — الحمد لله على سلامتك.', english: 'My friend — praise God for your safety.' },
+      idle: [
+        { arabic: 'الثقة المتبادلة هبة نادرة — أشكر الله عليها.', english: 'Mutual trust is a rare gift — I am grateful for it.' },
+        { arabic: 'أرى فيك إرادة حقيقية للتعلم — هذا يسعدني.', english: 'I see in you a genuine will to learn — that makes me happy.' },
+        { arabic: 'الدعاء بالعربية يختلف عندما تفهم معناه — جرب ذلك.', english: 'Supplication in Arabic is different when you understand its meaning — try it.' },
+      ],
+      hint: { arabic: 'تعلم الأرقام العربية الحسابية والتقليدية — الطالب الكامل يعرف الاثنتين.', english: 'Learn Arabic numerals both computational and traditional — the complete student knows both.' },
+      backstoryReveal: { arabic: 'انضممت إلى رحلتك بعد علامة واضحة لي — لن أصف العلامة، لكن يقيني لم يتزعزع.', english: 'I joined your journey after receiving a clear sign for me — I will not describe the sign, but my certainty has not wavered.', codexEntryId: 'companion_fatima_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أهلاً بروح طيبة في كل مرة — يسعدني وجودك.', english: 'Welcome to a kind spirit every time — your presence brings me joy.' },
+      idle: [
+        { arabic: 'هذه الرفقة كانت من أثمن هدايا هذه الرحلة.', english: 'This companionship has been among the most precious gifts of this journey.' },
+        { arabic: 'أدعو لك كل يوم — هذا أكثر مما أفعله لقليلين.', english: 'I pray for you every day — that is more than I do for very few.' },
+        { arabic: 'أنت تجعل الرحلة أخف وأعمق في آنٍ واحد.', english: 'You make the journey lighter and deeper at the same time.' },
+      ],
+      hint: { arabic: 'أنت الآن تشعر بالعربية لا تترجمها فقط — الشعور هو الهدف الأعلى.', english: 'You now feel Arabic rather than only translating it — feeling is the highest goal.' },
+      backstoryReveal: { arabic: 'أحمل في قلبي يقيناً بأن كل خير يُفعل يترك أثراً لا يُرى — وقد رأيت هذا في رحلتنا.', english: 'I carry the certainty that every good done leaves an unseen trace — and I have seen this in our journey.', codexEntryId: 'companion_fatima_lore_5' },
+    },
+  },
+  companion_ali: {
+    stranger: {
+      greeting: { arabic: 'مرحباً! أنت الشخص المثالي لسماع قصة.', english: 'Hello! You are the perfect person to hear a story.' },
+      idle: [
+        { arabic: 'الموسيقى والشعر يحفظان اللغة حية.', english: 'Music and poetry keep language alive.' },
+        { arabic: 'كل مدينة ميناء تحمل لغة هجينة — وهذا جميل.', english: 'Every port city carries a hybrid language — and that is beautiful.' },
+        { arabic: 'الكرم روح الثقافة العربية.', english: 'Generosity is the soul of Arabic culture.' },
+      ],
+      hint: { arabic: 'تعلم الأغاني الشعبية العربية — تحفظ الكلمات بشكل طبيعي ومتعة.', english: 'Learn Arabic folk songs — you memorize words naturally and with joy.' },
+      backstoryReveal: { arabic: 'نشأت في مدينة ميناء تُرسو فيها سفن من ثلاث قارات — سمعت عربية وفارسية وسواحيلية في أسبوع واحد.', english: 'I grew up in a port city where ships from three continents docked — I heard Arabic, Persian, and Swahili in one week.', codexEntryId: 'companion_ali_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً صديقي — لدي قصيدة جديدة تقريباً.', english: 'Hello my friend — I have a nearly finished poem.' },
+      idle: [
+        { arabic: 'المقام الموسيقي العربي يحمل مشاعر لا تترجمها الكلمات.', english: 'The Arabic maqam carries emotions that words cannot translate.' },
+        { arabic: 'كل بحار يعلمني كلمة جديدة — اللغة تتسع مع البشر.', english: 'Every sailor teaches me a new word — language expands with people.' },
+        { arabic: 'الكرم الحقيقي لا يحسب ما أعطى.', english: 'True generosity does not count what it gives.' },
+      ],
+      hint: { arabic: 'أوزان الشعر العربي تعلمك الإيقاع الطبيعي للغة — حاول تعلم بيت واحد.', english: 'Arabic poetry meters teach you the natural rhythm of the language — try learning one verse.' },
+      backstoryReveal: { arabic: 'أصبحت موسيقاراً ورواياً — أجمع الحكايات من البحارة والتجار وأعزفها للناس.', english: 'I became a musician and storyteller — I collect tales from sailors and merchants and perform them for people.', codexEntryId: 'companion_ali_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني رؤيتك — أين كنت؟ لدي أشياء أحكيها.', english: 'Happy to see you — where were you? I have things to tell.' },
+      idle: [
+        { arabic: 'ذاكرتي لحفظ الأغاني ممتازة — للمواعيد والديون لا.', english: 'My memory for songs is excellent — for appointments and debts, not so much.' },
+        { arabic: 'أعطيت خيمتي الوحيدة لعائلة في المطر وبتّ سعيداً.', english: 'I gave away my only tent to a family in the rain and slept contentedly.' },
+        { arabic: 'القصة الجيدة تستحق أن تُروى أكثر من مرة.', english: 'A good story deserves to be told more than once.' },
+      ],
+      hint: { arabic: 'تعلم مفردات الفنون والثقافة بالعربية — موسيقى، شعر، رواية. تُغني لغتك.', english: 'Learn arts and culture vocabulary in Arabic — music, poetry, storytelling. It enriches your language.' },
+      backstoryReveal: { arabic: 'لقيتك في حفل رواية وأدركت وسط أدائي أنك كنت تستمع فعلاً — أنهيت القصة مبكراً لأواصل الحديث.', english: 'I met you at a storytelling gathering and realized mid-performance you were genuinely listening — I ended the story early to continue the conversation.', codexEntryId: 'companion_ali_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'صديقي العزيز — كيف أمضيت وقتك؟ لديّ ألف سؤال.', english: 'Dear friend — how did you spend your time? I have a thousand questions.' },
+      idle: [
+        { arabic: 'الإبداع يحتاج مستمعاً — وأنت المستمع الذي بحثت عنه.', english: 'Creativity needs a listener — and you are the listener I was looking for.' },
+        { arabic: 'أشارك كل شيء مع الأصدقاء الحقيقيين — الأفكار والطعام والقصص.', english: 'I share everything with true friends — ideas, food, and stories.' },
+        { arabic: 'أنت تجعل كل قصيدة أكتبها أفضل لأنني أفكر بردة فعلك.', english: 'You make every poem I write better because I think of your reaction.' },
+      ],
+      hint: { arabic: 'كلمات الفرح والحزن بالعربية أعمق من ترجمتها الحرفية — افهمها في سياقها.', english: 'Arabic words for joy and sorrow run deeper than their literal translation — understand them in context.' },
+      backstoryReveal: { arabic: 'اللغة بالنسبة لي باب لا جدار — كل لغة جديدة تفتح عالماً جديداً وليس فقط كلمات جديدة.', english: 'Language for me is a door not a wall — every new language opens a new world, not just new words.', codexEntryId: 'companion_ali_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أهلاً بأفضل جمهور وأصدق صديق عرفته.', english: 'Welcome to the best audience and truest friend I have known.' },
+      idle: [
+        { arabic: 'الأغنية التي كتبتها عن رحلتنا هي أجمل ما كتبت.', english: 'The song I wrote about our journey is the most beautiful thing I have written.' },
+        { arabic: 'لم أكن أعرف أن رفقة حقيقية تجعل الإبداع يتدفق بسهولة.', english: 'I did not know that true companionship makes creativity flow easily.' },
+        { arabic: 'أنت جزء من قصتي الآن — لا تنسَ ذلك.', english: 'You are part of my story now — do not forget that.' },
+      ],
+      hint: { arabic: 'أنت الآن تعبّر بالعربية لا فقط تتواصل — الفرق كبير وأنت أثبته.', english: 'You now express in Arabic not only communicate — the difference is great and you have proven it.' },
+      backstoryReveal: { arabic: 'ذاكرتي للأغاني كاملة وللمواعيد ناقصة — لكنني لن أنسى رفقتك أبداً.', english: 'My memory for songs is perfect and for appointments imperfect — but I will never forget your companionship.', codexEntryId: 'companion_ali_lore_5' },
+    },
+  },
+  companion_maryam: {
+    stranger: {
+      greeting: { arabic: 'مرحباً. ما هدفك من هذه الرحلة؟', english: 'Hello. What is your goal on this journey?' },
+      idle: [
+        { arabic: 'ما لا يُقال أحياناً أهم مما يُقال.', english: 'What is left unsaid is sometimes more important than what is said.' },
+        { arabic: 'اختر كلماتك باعتناء — تعكس تفكيرك.', english: 'Choose your words carefully — they reflect your thinking.' },
+        { arabic: 'كل شخص يحمل أجندة — الحكيم يقرأها ولا يعلّق عليها.', english: 'Every person carries an agenda — the wise one reads it without commenting.' },
+      ],
+      hint: { arabic: 'تعلم مصطلحات الحوار والنقاش بالعربية — تساعدك على التعبير الدقيق عن رأيك.', english: 'Learn Arabic dialogue and debate terms — they help you express your opinion precisely.' },
+      backstoryReveal: { arabic: 'نشأت في بيت دبلوماسي حيث للمحادثات طبقات ولا أحد يقول ما يقصده مباشرة.', english: 'I was raised in a diplomatic household where conversations have layers and no one says exactly what they mean.', codexEntryId: 'companion_maryam_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً. كيف تسير الأمور من منظورك؟', english: 'Hello. How are things from your perspective?' },
+      idle: [
+        { arabic: 'العلاقات تُبنى بالثقة وتنهار بالإهمال.', english: 'Relationships are built on trust and collapse through neglect.' },
+        { arabic: 'البلاغة العربية علم كامل — يستحق التعلم.', english: 'Arabic rhetoric is a complete discipline — it deserves to be learned.' },
+        { arabic: 'الوعود أمانات — لا تقطعها إلا وأنت تنوي الوفاء.', english: 'Promises are trusts — make them only when you intend to keep them.' },
+      ],
+      hint: { arabic: 'تعلم أدوات الربط العربية — لأن، لكن، إذا، حتى. تبني حججاً واضحة.', english: 'Learn Arabic connectors — because, but, if, until. They build clear arguments.' },
+      backstoryReveal: { arabic: 'درست الفلسفة السياسية والبلاغة في مكتبة ملكية وكتبت رسالة في الجذور العربية للمصطلح القانوني.', english: 'I studied political philosophy and rhetoric at a royal library and wrote a treatise on Arabic roots of legal terminology.', codexEntryId: 'companion_maryam_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني رؤيتك — لاحظت تقدمك.', english: 'Good to see you — I have noticed your progress.' },
+      idle: [
+        { arabic: 'من يكسب ثقتي يحصل على ولاء لا يتزعزع.', english: 'One who gains my trust receives unwavering loyalty.' },
+        { arabic: 'الدقة في اللغة دقة في الفكر — هذا ما أؤمن به.', english: 'Precision in language is precision in thought — this is what I believe.' },
+        { arabic: 'العالم السياسي يقرأ اللغة قبل النية.', english: 'The political world reads language before intention.' },
+      ],
+      hint: { arabic: 'تعلم الألقاب والأدوار السياسية بالعربية — تعطيك نافذة على التاريخ الإسلامي.', english: 'Learn political titles and roles in Arabic — they give you a window into Islamic history.' },
+      backstoryReveal: { arabic: 'أحفظ وعودي وأرفض خرقها مطلقاً — هذا ليس قاعدة أتبعها، بل جزء من هويتي.', english: 'I keep my promises and refuse to break them at all — this is not a rule I follow but part of my identity.', codexEntryId: 'companion_maryam_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'صديقتي — يوم آخر نبني فيه ثقة أعمق.', english: 'Friend — another day we build deeper trust.' },
+      idle: [
+        { arabic: 'أكشف لك طبقات من شخصيتي لا أكشفها لأحد سواك.', english: 'I reveal to you layers of my character I reveal to no one else.' },
+        { arabic: 'الثقة بك جعلتني أتوقف عن حساب كل كلمة بيننا.', english: 'Trusting you made me stop calculating every word between us.' },
+        { arabic: 'أنت من القلائل الذين يستحقون صدقي الكامل.', english: 'You are among the few who deserve my full honesty.' },
+      ],
+      hint: { arabic: 'العربية الفصحى لغة الدبلوماسية الإسلامية الكلاسيكية — فهمها يفتح نصوصاً لا تُقدّر.', english: 'Classical Standard Arabic is the language of Islamic diplomacy — understanding it opens priceless texts.' },
+      backstoryReveal: { arabic: 'انضممت إلى رحلتك لأسباب لم أشرحها بالكامل — الوجهة التي ذكرتها ليست وجهتي الوحيدة.', english: 'I joined your journey for reasons I have not fully explained — the destination I mentioned is not my only one.', codexEntryId: 'companion_maryam_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أهلاً بمن كسب ثقتي — شيء نادر وثمين.', english: 'Welcome to one who has earned my trust — a rare and precious thing.' },
+      idle: [
+        { arabic: 'رحلتنا معاً جعلت الحذر الذي أحمله أخف وطأة.', english: 'Our journey together has made the caution I carry lighter.' },
+        { arabic: 'أنت واحد من أقل من أثق بهم ثقة حقيقية.', english: 'You are one of very few I truly trust.' },
+        { arabic: 'ما بيننا أعمق مما أعترف به عادة — وهذا غير معتاد مني.', english: 'What is between us runs deeper than I usually admit — and that is unusual for me.' },
+      ],
+      hint: { arabic: 'أنت الآن تقرأ العربية وتفهم ما بين السطور — هذا مستوى العارف الحقيقي.', english: 'You now read Arabic and understand what is between the lines — that is the level of the true knower.' },
+      backstoryReveal: { arabic: 'أحرص داخلي بعناية — لكنني أمتد بدفء حقيقي لمن يكسبه. أنت كسبته.', english: 'I guard my inner life carefully — but I extend genuine warmth to those who earn it. You have earned it.', codexEntryId: 'companion_maryam_lore_5' },
+    },
+  },
+  companion_samir: {
+    stranger: {
+      greeting: { arabic: 'مرحباً! أعرف الطريق إن كنت تبحث عنه.', english: 'Hello! I know the route if you are looking for it.' },
+      idle: [
+        { arabic: 'الخريطة الجيدة توفر ساعات من التيه.', english: 'A good map saves hours of wandering.' },
+        { arabic: 'التكيف مهارة تُكتسب — الثبات أيضاً.', english: 'Adaptability is a skill that is acquired — so is steadfastness.' },
+        { arabic: 'التفاؤل قرار يومي، ليس حظاً.', english: 'Optimism is a daily decision, not luck.' },
+      ],
+      hint: { arabic: 'تعلم كلمات الاتجاه والمسافة بالعربية — مفيدة في كل موقف.', english: 'Learn Arabic direction and distance words — useful in every situation.' },
+      backstoryReveal: { arabic: 'فقدت أهلي وهو صغير ونشأت بين أسر ممتدة في ثلاث مدن — تعلمت التكيف كما يتعلم الآخرون المشي.', english: 'I was orphaned young and raised by extended family across three cities — I learned adaptability the way others learn walking.', codexEntryId: 'companion_samir_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً! كيف حال الطريق معك؟', english: 'Hello! How is the road treating you?' },
+      idle: [
+        { arabic: 'رسمت خرائط مناطق كانوا يعتبرونها غير قابلة للرسم.', english: 'I mapped territories they considered unmappable.' },
+        { arabic: 'القدم والحدس يرشدانني بالتساوي.', english: 'My feet and my instincts guide me in equal measure.' },
+        { arabic: 'اليأس رفاهية لا أستطيع تحملها.', english: 'Despair is a luxury I cannot afford.' },
+      ],
+      hint: { arabic: 'ربط الكلمات العربية بالأماكن يثبتها في الذاكرة — هذه طريقتي في الحفظ.', english: 'Linking Arabic words to places fixes them in memory — that is my method of memorization.' },
+      backstoryReveal: { arabic: 'أصبحت مساعد رسام خرائط ثم رسام خرائط ثم شيئاً بين رسام الخرائط والاستطلاع.', english: 'I became a cartographer\'s assistant, then a cartographer, then something between cartographer and scout.', codexEntryId: 'companion_samir_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني أن أراك — الرحلة أفضل مع الصحبة الجيدة.', english: 'Happy to see you — the journey is better with good company.' },
+      idle: [
+        { arabic: 'الخريطة الجيدة لا تكذب — والصديق الجيد كذلك.', english: 'A good map does not lie — and neither does a good friend.' },
+        { arabic: 'أعرف طريق الخروج من أي موقف صعب — ثق بي.', english: 'I know the exit route from any difficult situation — trust me.' },
+        { arabic: 'الرحلة الطويلة تكشف طبيعة الشخص — طبيعتك طيبة.', english: 'A long journey reveals a person\'s nature — yours is good.' },
+      ],
+      hint: { arabic: 'احفظ المسارات الجديدة بكلمة عربية في كل منعطف — الجغرافيا تعلمك اللغة.', english: 'Memorize new routes with an Arabic word at each turn — geography teaches language.' },
+      backstoryReveal: { arabic: 'عرضت إرشادك عبر منطقة صعبة وبقيت لأن الرفقة كانت أفضل من البدائل.', english: 'I offered to guide you through a difficult stretch and stayed because the company was better than the alternatives.', codexEntryId: 'companion_samir_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'رفيقي — الطريق واضح اليوم، لنستغله.', english: 'Companion — the road is clear today, let us use it well.' },
+      idle: [
+        { arabic: 'أثق بك كما أثق بخرائطي — هذه ثقة كبيرة.', english: 'I trust you as I trust my maps — that is significant trust.' },
+        { arabic: 'الصحبة الجيدة تجعل التيه ممتعاً.', english: 'Good company makes even getting lost enjoyable.' },
+        { arabic: 'لاحظت كيف تتعامل مع الصعوبات — أعجبتني طريقتك.', english: 'I noticed how you handle difficulties — I admire your approach.' },
+      ],
+      hint: { arabic: 'تعلم كلمات الطقس والتضاريس بالعربية — تُوسّع مخيلتك وتغنيك أدبياً.', english: 'Learn weather and terrain words in Arabic — they expand your imagination and enrich you literarily.' },
+      backstoryReveal: { arabic: 'فرحي ليس طبعاً — هو قرار يومي. رأيت أشياء صعبة واخترت أن أواجه المستقبل بدلاً من الانهيار.', english: 'My cheerfulness is not temperament — it is a daily decision. I have seen difficult things and chose to face forward instead of collapsing.', codexEntryId: 'companion_samir_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أهلاً بمن رسمناه معاً على خريطة قلبي.', english: 'Welcome to one I have drawn on the map of my heart.' },
+      idle: [
+        { arabic: 'هذه الرحلة ستصبح نقطة مرجعية في خريطة حياتي.', english: 'This journey will become a reference point on the map of my life.' },
+        { arabic: 'وجدت في رفقتك ما لم أجده في الطرق المجهولة كلها.', english: 'I found in your company what I did not find on all the unknown roads.' },
+        { arabic: 'لم أعد أتخيل هذه الخريطة بدون اسمك عليها.', english: 'I can no longer imagine this map without your name on it.' },
+      ],
+      hint: { arabic: 'أنت الآن تفهم العربية وأنت في حركة لا وقوف — هذا هو التمكن الحقيقي.', english: 'You now understand Arabic while moving not standing — that is true mastery.' },
+      backstoryReveal: { arabic: 'أؤمن أن اليأس رفاهية والتفاؤل انضباط — مارست هذا يومياً منذ أيتمت، وأنت جعلت الممارسة أسهل.', english: 'I believe despair is a luxury and optimism a discipline — I have practiced this daily since I was orphaned, and you have made the practice easier.', codexEntryId: 'companion_samir_lore_5' },
+    },
+  },
+  companion_nadia: {
+    stranger: {
+      greeting: { arabic: 'مرحباً. ما مستوى عربيتك تحديداً؟', english: 'Hello. What is your Arabic level precisely?' },
+      idle: [
+        { arabic: 'كل بنية لها نقطة ضعف — واللغة كذلك. اكتشفها.', english: 'Every structure has a weak point — so does language. Find it.' },
+        { arabic: 'الدقة توفر الوقت على المدى البعيد.', english: 'Precision saves time in the long run.' },
+        { arabic: 'أفضل الجمل القصيرة الواضحة على الطويلة الغامضة.', english: 'I prefer short clear sentences over long vague ones.' },
+      ],
+      hint: { arabic: 'تعلم بنية الجملة العربية منذ البداية — إصلاحها لاحقاً أصعب.', english: 'Learn Arabic sentence structure from the beginning — correcting it later is harder.' },
+      backstoryReveal: { arabic: 'نشأت في ورشة نفخ الزجاج بحلب — رأيت أن المادة نفسها تصبح جميلة أو حادة حسب من يتعامل معها.', english: 'I grew up in a glassblowing workshop in Aleppo — I saw that the same material becomes beautiful or sharp depending on who handles it.', codexEntryId: 'companion_nadia_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً. لاحظت ثلاثة أشياء تحسنت عندك.', english: 'Hello. I noticed three things that improved for you.' },
+      idle: [
+        { arabic: 'الهندسة والعربية لهما شيء مشترك — كلاهما يحتاج دقة في الأساس.', english: 'Engineering and Arabic share one thing — both need precision in the foundation.' },
+        { arabic: 'أنظر إلى الجسور والقناطر وأحسب طاقتها التحملية تلقائياً.', english: 'I look at bridges and aqueducts and automatically calculate their load capacity.' },
+        { arabic: 'المباشرة ليست قسوة — هي احترام لوقتك ووقتي.', english: 'Directness is not harshness — it is respect for your time and mine.' },
+      ],
+      hint: { arabic: 'افهم بنية الجذر العربي كما تفهم بنية المبنى — ثلاثة أحرف تحمل كل شيء.', english: 'Understand Arabic root structure as you understand building structure — three letters carry everything.' },
+      backstoryReveal: { arabic: 'تخصصت كمهندسة معمارية في أنظمة الري التي تُحضر الماء إلى مدن الصحراء.', english: 'I specialized as an engineer in hydraulic systems that bring water to desert cities.', codexEntryId: 'companion_nadia_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني أن أراك — لاحظت تحسناً واضحاً.', english: 'Good to see you — I noticed a clear improvement.' },
+      idle: [
+        { arabic: 'أقدر فيك أنك لا تأخذ النقد دفاعياً — هذا نادر.', english: 'I appreciate that you do not take criticism defensively — that is rare.' },
+        { arabic: 'المنهجية في التعلم تُوصل. العشوائية تُضيع الوقت.', english: 'Systematic learning delivers. Randomness wastes time.' },
+        { arabic: 'الأقنية القديمة أجمل مشاريع الهندسة الإنسانية على الإطلاق.', english: 'Ancient aqueducts are among the most beautiful engineering projects in human history.' },
+      ],
+      hint: { arabic: 'افصل وقتاً للمراجعة الأسبوعية — البنية اللغوية تحتاج صيانة منتظمة.', english: 'Set aside weekly review time — linguistic structure needs regular maintenance.' },
+      backstoryReveal: { arabic: 'انضممت إلى رحلتك لأنني سمعتك تذكر قناة مدمّرة أردت فحصها منذ ثلاث سنوات.', english: 'I joined your journey because I heard you mention a ruined aqueduct I had wanted to inspect for three years.', codexEntryId: 'companion_nadia_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'صديقتي — لديّ ملاحظات بناءة لهذا اليوم.', english: 'Friend — I have constructive observations for today.' },
+      idle: [
+        { arabic: 'فتحت لك ملاحظاتي — ونادراً ما أفعل ذلك.', english: 'I opened my notes to you — I rarely do that.' },
+        { arabic: 'أقدر انفتاحك على التصحيح — يجعل التعاون مثمراً.', english: 'I appreciate your openness to correction — it makes collaboration productive.' },
+        { arabic: 'الكمال صعب المنال — لكن السعي إليه يُنتج أفضل النتائج.', english: 'Perfection is hard to reach — but striving for it produces the best results.' },
+      ],
+      hint: { arabic: 'تعلم مصطلحات الهندسة والبناء بالعربية — تُكشف لك كيف ترسّخ العرب العلم في اللغة.', english: 'Learn engineering and construction terms in Arabic — they reveal how Arabs embedded science in language.' },
+      backstoryReveal: { arabic: 'مباشرتي تُفاجئ الناس أحياناً — لكنها ليست قسوة، بل اعتقاد أن الجملة القصيرة تخدم مثل الطويلة.', english: 'My directness surprises people sometimes — but it is not harshness, it is the belief that a short sentence serves as well as a long one.', codexEntryId: 'companion_nadia_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أهلاً بمن جعل رحلتي أكثر من مجرد فحص قناة مياه.', english: 'Welcome to one who made my journey more than just inspecting an aqueduct.' },
+      idle: [
+        { arabic: 'هذه الرحلة كانت تجربة في بناء شيء غير مرئي — الثقة والصداقة.', english: 'This journey was an exercise in building something invisible — trust and friendship.' },
+        { arabic: 'لاحظت ثلاثة أشياء تحسنت في شخصيتي بسببك.', english: 'I noticed three things that improved in my character because of you.' },
+        { arabic: 'نادراً ما أمنح هذا النوع من الصداقة — لكنك استحققته.', english: 'I rarely grant this kind of friendship — but you have earned it.' },
+      ],
+      hint: { arabic: 'أنت الآن تبني جملاً عربية بهيكل متين — تماماً كما تُبنى الأقنية لتدوم قروناً.', english: 'You now build Arabic sentences with solid structure — just as aqueducts are built to last centuries.' },
+      backstoryReveal: { arabic: 'أرى في كل شيء بنية وطاقة تحملية — رأيت فيك منذ البداية إمكانية حقيقية وثبتت.', english: 'I see structure and load capacity in everything — I saw in you from the start a real potential and it has been proven.', codexEntryId: 'companion_nadia_lore_5' },
+    },
+  },
+  companion_tariq: {
+    stranger: {
+      greeting: { arabic: 'من أنت؟ وأين تقصد؟', english: 'Who are you? And where are you headed?' },
+      idle: [
+        { arabic: 'الصحراء تختبر النوايا قبل الأجساد.', english: 'The desert tests intentions before bodies.' },
+        { arabic: 'أعرف ثلاثة مسارات للخروج من أي مكان — دائماً.', english: 'I always know three exit routes from any place.' },
+        { arabic: 'الهدوء في الخطر يفرق بين الباقي والهالك.', english: 'Calm in danger separates the survivor from the fallen.' },
+      ],
+      hint: { arabic: 'تعلم كلمات البقاء في الصحراء بالعربية — ماء، ظل، طريق، نجم.', english: 'Learn desert survival words in Arabic — water, shade, path, star.' },
+      backstoryReveal: { arabic: 'عائلتي قادت قوافل الحج عبر أصعب مقاطعات الداخل العربي منذ أجيال.', english: 'My family led hajj caravans through the most difficult stretches of the Arabian interior for generations.', codexEntryId: 'companion_tariq_lore_1' },
+    },
+    acquaintance: {
+      greeting: { arabic: 'أهلاً. الطريق آمن اليوم.', english: 'Hello. The road is safe today.' },
+      idle: [
+        { arabic: 'جدي الأكبر حفظ مسارات لا توجد على أي خريطة — تعلمتها سيراً.', english: 'My great-grandfather knew routes no map recorded — I learned them by walking them.' },
+        { arabic: 'الصحراء لا تكذب — والناس كثيراً ما يفعلون.', english: 'The desert does not lie — people often do.' },
+        { arabic: 'الاحترام الحقيقي يبدأ بمعرفة قدراتك وحدودها.', english: 'True respect begins with knowing your capabilities and their limits.' },
+      ],
+      hint: { arabic: 'في التعلم كما في الصحراء — الاستعداد المسبق يقلل المفاجآت.', english: 'In learning as in the desert — preparation reduces surprises.' },
+      backstoryReveal: { arabic: 'فقدت أخي في عاصفة رملية على طريق كنا نعرفه كليانا — منذ ذلك اليوم أحمل احترام عميق لعدم القدرة على التنبؤ.', english: 'I lost my brother to a sandstorm on a route we both knew well — since then I carry deep respect for unpredictability.', codexEntryId: 'companion_tariq_lore_2' },
+    },
+    friend: {
+      greeting: { arabic: 'يسعدني رؤيتك سالماً — الطريق كان جيداً؟', english: 'Good to see you safe — was the road good?' },
+      idle: [
+        { arabic: 'الكلام القليل الثقيل أفضل من الكثير الخفيف.', english: 'Few heavy words are better than many light ones.' },
+        { arabic: 'لاحظت تغيراً في طريقة تعاملك مع الصعوبات — تحسّن.', english: 'I noticed a change in how you handle difficulties — an improvement.' },
+        { arabic: 'الصحراء علمتني أن البقاء نصر كافٍ.', english: 'The desert taught me that survival is sufficient victory.' },
+      ],
+      hint: { arabic: 'تعلم كلمات الحكمة العربية — الأمثال تحمل خلاصة تجارب أجيال.', english: 'Learn Arabic wisdom words — proverbs carry the essence of generations of experience.' },
+      backstoryReveal: { arabic: 'أتكلم قليلاً وأراقب كثيراً — هذه عادة المرشد الجيد لا الشخص المنطوي.', english: 'I speak little and observe much — this is the habit of a good guide, not a closed person.', codexEntryId: 'companion_tariq_lore_3' },
+    },
+    close: {
+      greeting: { arabic: 'رفيقي الموثوق — يوم جيد للمضي قدماً.', english: 'Trusted companion — a good day to move forward.' },
+      idle: [
+        { arabic: 'أثق بك في الطريق الصعب — هذه ثقة لا أمنحها بسهولة.', english: 'I trust you on the hard road — I do not give this trust easily.' },
+        { arabic: 'صمتنا المشترك راحة لا وحشة — هذا علامة الرفقة الحقيقية.', english: 'Our shared silence is comfort not loneliness — that is the mark of true companionship.' },
+        { arabic: 'أنت تقرأ الطريق جيداً الآن — تعلمت من التجربة لا الكتب فقط.', english: 'You read the road well now — you learned from experience not only from books.' },
+      ],
+      hint: { arabic: 'في اللغة كما في الصحراء — المعرفة المكتسبة بالممارسة لا تُنسى.', english: 'In language as in the desert — knowledge gained through practice is not forgotten.' },
+      backstoryReveal: { arabic: 'وافقت على مرافقتك بعد محادثة شملت أنماط الرياح وكيفية قراءة الكثبان والجذور العربية — الجمع كان غير اعتيادي.', english: 'I agreed to accompany you after a conversation covering wind patterns, how to read dunes, and Arabic verb roots — the range was unusual.', codexEntryId: 'companion_tariq_lore_4' },
+    },
+    bonded: {
+      greeting: { arabic: 'أهلاً بمن اجتزنا معاً أصعب المسارات.', english: 'Welcome to one with whom we have crossed the hardest paths together.' },
+      idle: [
+        { arabic: 'هذه الرحلة غيّرتني — وهذا لم أتوقعه.', english: 'This journey changed me — and I did not expect that.' },
+        { arabic: 'أضفت رحلتنا إلى الخرائط الداخلية التي ورثتها عن جدي.', english: 'I have added our journey to the inner maps I inherited from my grandfather.' },
+        { arabic: 'الطريق الطويل يُغيّر السالك — وأنت غيّرت المرشد أيضاً.', english: 'The long road changes the traveler — and you changed the guide too.' },
+      ],
+      hint: { arabic: 'أنت الآن تقرأ العربية بعيون من يسكن اللغة لا من يزورها فقط.', english: 'You now read Arabic with the eyes of one who inhabits the language, not merely visits it.' },
+      backstoryReveal: { arabic: 'تعلمت المسارات بالسير لا بالكتاب — والآن أتساءل إذا كانت اللغة تُتعلم بنفس الطريقة.', english: 'I learned the routes by walking not by reading — and now I wonder if language is learned the same way.', codexEntryId: 'companion_tariq_lore_5' },
+    },
+  },
+});
+
+// ────────────────────────────────────────────────
+// FEAT-036 Public API
+// ────────────────────────────────────────────────
+
+/**
+ * getCompanionDialogue(companionId, relationshipLevel)
+ * Returns the tier-appropriate dialogue object or null.
+ *
+ * @param {string} companionId
+ * @param {number} relationshipLevel  0-100
+ * @returns {{ greeting, idle, hint, backstoryReveal } | null}
+ */
+export function getCompanionDialogue(companionId, relationshipLevel) {
+  const data = COMPANION_DIALOGUE_TIERS[companionId];
+  if (!data) return null;
+  const tier = getDialogueTier(relationshipLevel);
+  return data[tier] ?? null;
+}
+
+/**
+ * selectActiveCompanionGreeting(state)
+ * Returns { arabic, english } greeting for the active companion, or null.
+ * Prefers exploration slot, falls back to battle slot.
+ */
+export function selectActiveCompanionGreeting(state) {
+  const activeId =
+    state.companions?.activeParty?.exploration ??
+    state.companions?.activeParty?.battle ??
+    null;
+  if (!activeId) return null;
+  const relationship = state.companions?.companions?.[activeId]?.relationship ?? 0;
+  const dialogue = getCompanionDialogue(activeId, relationship);
+  return dialogue?.greeting ?? null;
+}
+
+/**
+ * revealCompanionBackstory(companionId, relationshipLevel)
+ * Redux thunk: dispatches unlockEntry to codexSlice for the tier's backstoryReveal.
+ * Returns the full tier dialogue object.
+ */
+export const revealCompanionBackstory = (companionId, relationshipLevel) => (dispatch) => {
+  const dialogue = getCompanionDialogue(companionId, relationshipLevel);
+  if (dialogue?.backstoryReveal?.codexEntryId) {
+    dispatch(unlockEntry(dialogue.backstoryReveal.codexEntryId));
+  }
+  return dialogue;
+};
