@@ -55,6 +55,7 @@ import alphabetProgressReducer from './slices/alphabetProgressSlice.js';
 import coreVocabularyReducer from './slices/coreVocabularySlice.js';
 import rootKnowledgeReducer from './slices/rootKnowledgeSlice.js';
 import foundationReducer from './slices/foundationSlice.js';
+import zoneVocabIntroReducer from './slices/zoneVocabIntroSlice.js';
 import { alphabetGateMiddleware } from './middleware/alphabetGateMiddleware.js';
 import { foundationMiddleware } from './middleware/foundationMiddleware.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
@@ -257,6 +258,7 @@ const persistConfig = {
     'coreVocabulary',
     'rootKnowledge',
     'foundation',
+    'zoneVocabIntro',
   ],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
@@ -321,6 +323,7 @@ const rootReducer = combineReducers({
   coreVocabulary: coreVocabularyReducer,
   rootKnowledge: rootKnowledgeReducer,
   foundation: foundationReducer,
+  zoneVocabIntro: zoneVocabIntroReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
