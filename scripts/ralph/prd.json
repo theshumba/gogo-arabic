@@ -166,7 +166,7 @@
         "npm run test:run passes"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "Read questSlice.js for existing quest state model. Extend it — don't break existing quests. Add optional fields (branchPoints, timeLimit) that default to null for existing quests."
     },
     {

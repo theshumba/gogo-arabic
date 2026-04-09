@@ -9,6 +9,8 @@ Started: Thu  9 Apr 2026 01:01:20 BST
 - **Pre-existing test failures**: 30 tests were failing before batch-4 work began (forgettingCurveService, settingsSlice, datasetValidation, HUD, antiFrustrationMiddleware, zoneReviewMiddleware, battle.integration, spacedListeningService). Do not try to fix these — they are known pre-existing issues.
 - **Extending slices**: Export constants (like `TUTORIAL_SEQUENCE`) alongside the slice so both the middleware and tests can import them without circular deps.
 - **Fake timer date gotcha**: `describe`-level `const` declarations run at module load time (BEFORE `beforeEach` installs fake timers). Never use `new Date(Date.now() ± offset)` at describe scope. Always use hardcoded absolute ISO strings: `'2020-01-01T00:00:00.000Z'` (past) and `'2030-01-01T00:00:00.000Z'` (future) relative to the fake "now" of `2026-02-09T00:00:00Z`.
+- **Redux 5.x INIT action type**: Redux 5.x generates `@@redux/INIT<random-suffix>`. Use `action.type.startsWith('@@redux/INIT')` in middleware, NOT `=== '@@redux/INIT'`. The existing worldTimeMiddleware has this bug but it's masked because its clock tests avoid setInterval.
+- **Interval middleware test pattern**: For testing setInterval-based middleware with fake timers: (1) use `middleware: () => [myMiddleware]` (no `getDefaultMiddleware`) to avoid RTK timer interference; (2) trigger clock start via explicit `store.dispatch({ type: 'persist/REHYDRATE', payload: null })`; (3) use `vi.advanceTimersByTime(interval + 1)` (1ms over) to guarantee firing.
 
 ---
 
@@ -138,4 +140,20 @@ Started: Thu  9 Apr 2026 01:01:20 BST
   - `factionId` parameter in `getFactionDiscount` is a hook for future per-faction variation — safe to ignore for now
   - `selectAvailableFactionShops` is a pure function (not a reselect selector) because it only needs `state.faction.alignment` — no memoization needed at this scale
   - Items sorted by requiredTier ascending is the natural order — TIER_ORDER index comparison is the right way to filter cumulatively
+---
+
+## 2026-04-09 02:30 - FEAT-039
+
+- Implemented quest branching and failure states
+- Extended `src/store/slices/questSlice.js`: added `makeQuestChoice({ questId, choiceId })`, `failQuest({ questId, reason })`, `retryQuest(questId)`, `startQuestTimer({ questId, timeLimitMinutes })` reducers; exported all four; added `selectActiveTimedQuests(state)` memoized selector
+- Created `src/store/middleware/questTimerMiddleware.js`: `checkExpiredTimers(store)` (exported), `clearQuestTimerClock()` (exported for test teardown), `questTimerMiddleware` starts interval on `persist/REHYDRATE` or `@@redux/INIT*`
+- Created `src/store/middleware/__tests__/questTimerMiddleware.test.js`: 27 tests covering makeQuestChoice (choice recording, checkpoint saves, guard on non-active), failQuest (status, reason, retryable, completed guard), retryQuest (active restore, checkpoint/0 fallback, failReason clear, timerStartedAt clear), startQuestTimer (timeLimitMinutes, timerStartedAt, locked guard), selectActiveTimedQuests (filter, empty, multi), checkExpiredTimers (expired fail, not-expired pass, already-failed skip, multi-quest), middleware interval clock
+- Wired `questTimerMiddleware` into `store.js`
+- **Files changed**: `src/store/slices/questSlice.js`, `src/store/middleware/questTimerMiddleware.js`, `src/store/middleware/__tests__/questTimerMiddleware.test.js`, `src/store/store.js`
+- **Learnings for future iterations:**
+  - Redux 5.x (used by RTK 2.x) generates `@@redux/INIT<random-suffix>` — use `action.type.startsWith('@@redux/INIT')` NOT strict equality; the existing worldTimeMiddleware has the same bug but it's not caught because worldTimeMiddleware clock tests use manual dispatch
+  - For interval-based middleware tests: skip `getDefaultMiddleware()` in the test store (`middleware: () => [myMiddleware]`) to avoid RTK's serializable/immutability check timers polluting `vi.advanceTimersByTime`; trigger the clock via explicit `store.dispatch({ type: 'persist/REHYDRATE', payload: null })` instead of relying on @@redux/INIT matching
+  - `vi.advanceTimersByTime(60_001)` (1ms over) is safer than exactly `60_000` to avoid off-by-one issues with fake timer firing thresholds
+  - `retryQuest` sets `timerStartedAt = null` on retry so the middleware won't pick up the quest as a timed quest after retry (timer must be explicitly restarted via `startQuestTimer`)
+  - All new quest state fields (currentBranch, checkpoint, failReason, retryable, timerStartedAt, timeLimitMinutes) are optional — existing quests are unaffected
 ---
