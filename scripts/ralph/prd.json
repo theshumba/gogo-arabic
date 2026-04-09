@@ -190,7 +190,7 @@
         "npm run test:run passes"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "This reads from foundationSlice, alphabetProgressSlice, rootKnowledgeSlice, zoneIntroSlice, vocabularySlice, and cefrProgressSlice. Pure aggregation — no mutations. Time estimates extrapolate from FSRS review pace."
     }
   ]

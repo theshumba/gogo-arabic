@@ -148,3 +148,17 @@ Started: Thu  9 Apr 2026 19:09:00 BST
   - completeTeachingSession returns { wordId, card, source: 'teaching_session' } — callers dispatch vocabulary/addFsrsCard; card comes from reviewCard(emptyCard, 3) which calls ts-fsrs scheduler.repeat() with Good rating
   - generateDistractors priority: same CEFR+category > same CEFR > any; excludes target word (by id AND arabic) and all same-root words; returns ordered slice not random shuffle for deterministic tests
 ---
+
+## 2026-04-09 20:50 - FEAT-050
+- Implemented curriculum progress dashboard data service
+- Files created:
+  - `src/services/curriculumDashboard.js` — pure aggregation service; exports getCurriculumDashboard(state), selectCurriculumDashboard (memoized createSelector across 8 slices), estimateTimeToNextCefr(dashboard), getWeakAreas(dashboard), suggestNextActivity(dashboard)
+  - `src/services/__tests__/curriculumDashboard.test.js` — 28 tests covering all acceptance criteria
+- **Learnings for future iterations:**
+  - selectCurriculumDashboard uses 8-input createSelector; result function reconstructs a minState object from slice inputs and delegates to getCurriculumDashboard — pattern avoids full-state reference while keeping memoization tight
+  - estimateTimeToNextCefr uses weighted average of 4 signals (foundation 25%, vocab 40%, grammar 20%, zones 15%) to estimate level-completion fraction, then multiplies by HOURS_TO_NEXT_LEVEL[level]
+  - getWeakAreas constructs area objects with {name, progress} then sorts ascending — return just the names for a clean string[] API
+  - suggestNextActivity is prioritized: foundation incomplete → zone intros → grammar < 50% → roots < 10 → vocab < 200 → weakest area fallback
+  - CEFR perSkill uses different signals per skill: vocabulary via FSRS card count (100/1500/3500 thresholds), grammar/alphabet/reading via progressToCefr(%) helper (25/60/90 thresholds)
+  - Files were already present as untracked in git — only needed to run quality checks and commit
+---
