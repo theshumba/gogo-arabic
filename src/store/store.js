@@ -93,6 +93,7 @@ import { tutorialMiddleware } from './middleware/tutorialMiddleware.js';
 import { dialogueChoiceMiddleware } from './middleware/dialogueChoiceMiddleware.js';
 import worldTimeReducer from './slices/worldTimeSlice.js';
 import { worldTimeMiddleware } from './middleware/worldTimeMiddleware.js';
+import deckReducer from './slices/deckSlice.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -244,6 +245,7 @@ const persistConfig = {
     'idiom',
     'linguisticCombat',
     'worldTime',
+    'decks',
   ],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
@@ -303,6 +305,7 @@ const rootReducer = combineReducers({
   dailyQuest: dailyQuestReducer,            // transient — not persisted (middleware re-generates on date change)
   analyticsEventQueue: analyticsEventQueueReducer, // transient — not persisted (flushed to server)
   worldTime: worldTimeReducer,
+  decks: deckReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
