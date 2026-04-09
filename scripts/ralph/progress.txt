@@ -42,3 +42,18 @@ Started: Thu  9 Apr 2026 19:09:00 BST
   - CORE_MASTERY_THRESHOLD=70 (vs alphabet's 80) — different gates for different content types
   - category field uses underscores (basic_verbs, common_nouns) not spaces — keep consistent for subsequent slices that filter by category
 ---
+
+## 2026-04-09 19:50 - FEAT-043
+- Implemented trilateral root system teaching engine
+- Files created:
+  - `src/data/rootTeachingSet.js` — 30 MSA roots; each has id, root (e.g. "ك-ت-ب"), coreMeaning, foundationOrder (1-5 for foundation roots, null otherwise), derivedWords (4-6 per root with arabic/english/pattern/form); exports PATTERN_TEMPLATES, getRootById, getRootByLetters, getFoundationRoots, predictWordFromRoot
+  - `src/store/slices/rootKnowledgeSlice.js` — tracks knownRoots[] and wordScores{}; exports learnRoot, updateWordScore, resetRootScores, resetAllRootKnowledge, getRootMastery, getKnownRoots, selectKnownRoots, selectRootMastery, selectRootMasterySummary, selectRootKnowledgeProgress, ROOT_MASTERY_THRESHOLD=70
+  - `src/store/__tests__/rootKnowledgeSlice.test.js` — 43 tests covering all acceptance criteria
+- Files modified:
+  - `src/store/store.js` — registered rootKnowledgeReducer + added rootKnowledge to localStorage persist whitelist
+- **Learnings for future iterations:**
+  - predictWordFromRoot uses two-phase substitution (private-use Unicode placeholders U+E001-E003) to prevent cross-contamination when a root radical is the same character as a template placeholder (ف, ع, or ل)
+  - Foundation roots (foundationOrder 1-5): root_ktb, root_drs, root_3lm, root_qr2, root_klm — highest-yield for beginners
+  - rootKnowledgeSlice.wordScores keyed by [rootId][arabic] (Arabic word string), not wordId — keeps it self-contained; FSRS integration can be wired via middleware later
+  - getRootMastery averages scores across ALL derivedWords (including unscored ones at 0), so mastery only reaches 100 when every word in the set is scored
+---

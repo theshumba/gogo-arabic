@@ -57,7 +57,7 @@
         "npm run test:run passes"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "Read existing root-related code — rootMagicSlice.js, rootFsrsSyncMiddleware.js. Common roots: ك-ت-ب (writing), د-ر-س (studying), ع-ل-م (knowledge), etc. Root teaching should feel like a superpower discovery, not a grammar lesson."
     },
     {
