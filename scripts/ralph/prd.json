@@ -77,7 +77,7 @@
         "npm run test:run passes"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "Read placementSlice.js for placement test state. This orchestrates FEAT-041, 042, 043 into a coherent flow. Foundation should feel like the game's prologue, not a test."
     },
     {

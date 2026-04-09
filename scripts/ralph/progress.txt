@@ -57,3 +57,19 @@ Started: Thu  9 Apr 2026 19:09:00 BST
   - rootKnowledgeSlice.wordScores keyed by [rootId][arabic] (Arabic word string), not wordId — keeps it self-contained; FSRS integration can be wired via middleware later
   - getRootMastery averages scores across ALL derivedWords (including unscored ones at 0), so mastery only reaches 100 when every word in the set is scored
 ---
+
+## 2026-04-09 19:55 - FEAT-044
+- Implemented foundation phase orchestrator
+- Files created:
+  - `src/store/slices/foundationSlice.js` — 4-stage state machine (alphabet→coreVocab→rootIntro→complete); exports FOUNDATION_STAGES, getCurrentFoundationStage, isFoundationComplete, getNextStage, isStageComplete, getStageProgress, advanceFoundationStage, bypassFoundationWithPlacement, resetFoundation, selectFoundationProgress
+  - `src/store/middleware/foundationMiddleware.js` — blocks world/enterZone until stage='complete'; reads isFoundationComplete from foundationSlice
+  - `src/store/__tests__/foundationSlice.test.js` — 52 tests covering all acceptance criteria
+- Files modified:
+  - `src/store/store.js` — registered foundationReducer, added 'foundation' to localStorage persist whitelist, added foundationMiddleware to chain
+- **Learnings for future iterations:**
+  - foundationSlice imports AFL_SEQUENCE inline (not from alphabetProgressSlice) to avoid circular dep — foundationSlice already imports isAlphabetComplete, so re-importing the array too would be fine, but inline is safer
+  - selectFoundationProgress uses createSelector with 4 input selectors (stage, letterMastery, wordMastery, knownRoots) then reconstructs minimal state object inside — avoids passing full state through reselect while keeping memoization tight
+  - overallProgress formula: stageIndex * 25 + stageProgress * 0.25 (each of 4 stages = 25%, stage='complete' hardcoded to 100)
+  - Placement bypass sets bypassedViaPlacement=true AND stage='complete' — foundationMiddleware only checks isFoundationComplete (stage==='complete'), so placement field in foundation state is just for audit trail
+  - Stage completion criteria: alphabet=isAlphabetComplete(80%), coreVocab=first 50 words at 70%+, rootIntro=knownRoots.length>=5
+---
