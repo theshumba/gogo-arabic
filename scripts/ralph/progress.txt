@@ -157,3 +157,22 @@ Started: Thu  9 Apr 2026 01:01:20 BST
   - `retryQuest` sets `timerStartedAt = null` on retry so the middleware won't pick up the quest as a timed quest after retry (timer must be explicitly restarted via `startQuestTimer`)
   - All new quest state fields (currentBranch, checkpoint, failReason, retryable, timerStartedAt, timeLimitMinutes) are optional — existing quests are unaffected
 ---
+
+## 2026-04-09 - FEAT-040
+
+- Added 30 new quests to `src/data/quests.json` (103 → 133 total)
+- Distribution: oasis_village(4), ancient_library(3), desert_marketplace(4), farmland(3), bedouin_camp(4), mountain_village(4), coastal_port(4), royal_palace(4)
+- Types: 10 side_quest, 10 faction_quest, 5 crafting, 5 challenge
+- Faction quests include `faction` and `factionPrerequisite: { faction, minTier }` fields
+- All quests have: id, title, titleArabic, description, descriptionArabic, zone, type, target, trackEvent, autoStart, prerequisites, npcGiver, reward, objectives
+- Rewards scale with zone (oasis ~100-200xp → palace ~620-750xp)
+- All quest IDs use kebab-case and NPC IDs match existing npcs.json entries
+- No validate-quests script exists; all tests (7 pre-existing failures, 0 new failures), lint (pre-existing errors only), and build pass
+- **Files changed**: `src/data/quests.json`
+- **Learnings for future iterations:**
+  - Always check existing quest count before adding — was 103, needed 30 more for 133 total
+  - NPC IDs in quests use zone-agnostic assignments — e.g. farmer-omar appears in farmland quests even though his zone is oasis_village in npcs.json
+  - New quest type values (`faction_quest`, `crafting`) can be added freely — questSlice mocks quests.json in tests so no schema validation runs
+  - Faction quests use `factionPrerequisite: { faction, minTier }` as a new optional field alongside `faction` — these are consistent with factionShops.js TIER_ORDER labels: Neutral/Friendly/Trusted/Allied/Revered
+  - The last entry in quests.json used `"rewards"` (plural) instead of `"reward"` — keep `"reward"` (singular) for all new quests to match the majority format used by sq_ quests
+---

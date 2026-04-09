@@ -184,7 +184,7 @@
         "npm run test:run passes"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "Read existing quests.json for format and IDs. Follow existing naming convention (kebab-case IDs). Use existing NPC IDs from npcs.json. Arabic titles should be simple MSA. Don't duplicate existing quest objectives."
     }
   ]
