@@ -56,7 +56,9 @@ import coreVocabularyReducer from './slices/coreVocabularySlice.js';
 import rootKnowledgeReducer from './slices/rootKnowledgeSlice.js';
 import foundationReducer from './slices/foundationSlice.js';
 import zoneVocabIntroReducer from './slices/zoneVocabIntroSlice.js';
+import zoneIntroReducer from './slices/zoneIntroSlice.js';
 import { alphabetGateMiddleware } from './middleware/alphabetGateMiddleware.js';
+import { zoneIntroMiddleware } from './middleware/zoneIntroMiddleware.js';
 import { foundationMiddleware } from './middleware/foundationMiddleware.js';
 import { achievementMiddleware } from './middleware/achievementMiddleware.js';
 import { dailyGoalsMiddleware } from './middleware/dailyGoalsMiddleware.js';
@@ -259,6 +261,7 @@ const persistConfig = {
     'rootKnowledge',
     'foundation',
     'zoneVocabIntro',
+    'zoneIntro',
   ],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
@@ -324,6 +327,7 @@ const rootReducer = combineReducers({
   rootKnowledge: rootKnowledgeReducer,
   foundation: foundationReducer,
   zoneVocabIntro: zoneVocabIntroReducer,
+  zoneIntro: zoneIntroReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -336,7 +340,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(alphabetGateMiddleware, foundationMiddleware, achievementMiddleware, dailyGoalsMiddleware, quizDailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, economyDecayMiddleware, cefrProgressMiddleware, relationshipDecayMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, zoneEntryReviewMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware, leechDetectionMiddleware, dailyQuestMiddleware, analyticsMiddleware, tutorialMiddleware, dialogueChoiceMiddleware, worldTimeMiddleware, questTimerMiddleware),
+    }).concat(alphabetGateMiddleware, foundationMiddleware, achievementMiddleware, dailyGoalsMiddleware, quizDailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, economyDecayMiddleware, cefrProgressMiddleware, relationshipDecayMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, zoneEntryReviewMiddleware, zoneIntroMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware, leechDetectionMiddleware, dailyQuestMiddleware, analyticsMiddleware, tutorialMiddleware, dialogueChoiceMiddleware, worldTimeMiddleware, questTimerMiddleware),
 });
 
 export const persistor = persistStore(store);
