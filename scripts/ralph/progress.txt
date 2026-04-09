@@ -28,3 +28,17 @@ Started: Thu  9 Apr 2026 19:09:00 BST
   - Gate bypass uses placement.hasCompleted + assignedLevel !== 'A1' (not just hasCompleted)
   - Pre-existing lint/test failures: safe to ignore (152 errors, 8 test failures existed before batch-5)
 ---
+
+## 2026-04-09 19:30 - FEAT-042
+- Implemented core 100 high-frequency word set with explicit teaching data
+- Files created:
+  - `src/data/coreVocabulary.js` — 100 MSA words ordered by frequencyRank 1-100; categories: greetings(10), pronouns(8), basic_verbs(15), numbers(10), family(8), food(8), directions(8), time(8), common_nouns(15), adjectives(10); exports CORE_VOCABULARY array + getNextCoreWords(completedCount, batchSize)
+  - `src/store/slices/coreVocabularySlice.js` — tracks per-word mastery (0-100); exports isCoreVocabComplete, getCoreVocabProgress, selectCoreVocabProgress, CORE_MASTERY_THRESHOLD=70, CORE_WORD_COUNT=100
+  - `src/store/__tests__/coreVocabularySlice.test.js` — 29 tests covering data completeness, category counts, ordering, getNextCoreWords, reducer actions, completion logic, progress calculation, selectors
+- Files modified:
+  - `src/store/store.js` — registered coreVocabularyReducer + added coreVocabulary to localStorage persist whitelist
+- **Learnings for future iterations:**
+  - coreVocabulary.js uses wordId field to cross-reference vocabularyExpanded.js IDs (exp_a1_001, etc.) even though AC doesn't require it — useful for future integration
+  - CORE_MASTERY_THRESHOLD=70 (vs alphabet's 80) — different gates for different content types
+  - category field uses underscores (basic_verbs, common_nouns) not spaces — keep consistent for subsequent slices that filter by category
+---

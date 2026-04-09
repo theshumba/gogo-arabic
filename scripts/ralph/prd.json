@@ -37,7 +37,7 @@
         "npm run test:run passes"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Use frequency data from established Arabic word lists. Words should be MSA. Root field connects to the root system teaching in FEAT-043. Each word must exist in vocabularyExpanded.js — cross-reference by wordId."
     },
     {
