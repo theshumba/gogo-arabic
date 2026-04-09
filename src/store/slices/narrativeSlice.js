@@ -62,6 +62,17 @@ const narrativeSlice = createSlice({
       });
     },
 
+    recordDialogueChoice(state, action) {
+      // payload: { npcId, choiceId, consequences? }
+      // consequences are processed by dialogueChoiceMiddleware — not stored in state
+      const { npcId, choiceId } = action.payload;
+      state.choiceHistory.push({
+        npcId,
+        choiceId,
+        timestamp: new Date().toISOString(),
+      });
+    },
+
     markBuildingVisited(state, action) {
       // payload: buildingId (string or number)
       const buildingId = action.payload;
@@ -82,6 +93,7 @@ export const {
   incrementNpcRelationship,
   setWorldObjectState,
   recordChoice,
+  recordDialogueChoice,
   markBuildingVisited,
   resetNarrativeProgress,
 } = narrativeSlice.actions;
@@ -121,5 +133,24 @@ export const selectHasMadeChoice = (npcId, choiceId) =>
 // Budget monitoring — number of story flags currently set
 export const selectNarrativeFlagCount = (state) =>
   Object.keys(state.narrative.storyFlags).length;
+
+// FEAT-032 — Dialogue choice tracking selectors
+
+// Returns all choices made with a specific NPC (ordered by insertion)
+export const selectNpcDialogueHistory = (npcId) => (state) =>
+  state.narrative.choiceHistory.filter((entry) => entry.npcId === npcId);
+
+// Returns true if player has made a specific choice with a specific NPC
+export const hasChosenOption = (npcId, choiceId) => (state) =>
+  state.narrative.choiceHistory.some(
+    (entry) => entry.npcId === npcId && entry.choiceId === choiceId
+  );
+
+// Returns { [choiceId]: true } for every choice ever made with a specific NPC
+// Used for Ink story variable binding (choice gates in dialogue scripts)
+export const selectNpcDialogueFlags = (npcId) => (state) => {
+  const choices = state.narrative.choiceHistory.filter((entry) => entry.npcId === npcId);
+  return Object.fromEntries(choices.map((entry) => [entry.choiceId, true]));
+};
 
 export default narrativeSlice.reducer;
