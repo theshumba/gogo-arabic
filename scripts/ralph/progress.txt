@@ -54,3 +54,20 @@ Started: Thu  9 Apr 2026 01:01:20 BST
   - `calculateBossDamage(answerCorrect, timeBonus=0, combo=1)`: returns 0 if wrong; base=10, speedBonus=floor(clamp(time,0,1)*10), multiplier=max(1,combo)
   - PRD file names (zoneBosses.js) may differ from pre-existing Phase 96 files (bossEncounters.js) — create the PRD file as a wrapper rather than duplicating data
 ---
+
+## 2026-04-09 01:30 - FEAT-034
+
+- Implemented weather and time-of-day system
+- Created `src/store/slices/worldTimeSlice.js`: `currentTime` (0-59 cycle), `weatherByZone` map, `tickWorldTime()`, `setZoneWeather()`, `setWeatherBatch()` actions; `getCurrentTimePeriod(state)` selector, `getTimePeriodFromValue(n)` pure helper, `getActiveNpcs(zoneId, period)`, `rollWeather(zoneId, seed)`, `seededRandom(seed)` — deterministic LCG RNG; `ZONE_WEATHER_PROBS` for all 8 zones
+- Created `src/store/middleware/worldTimeMiddleware.js`: starts `setInterval` on `persist/REHYDRATE`/`@@redux/INIT`, ticks clock every 60s, rolls weather for all 8 core zones when period changes; exports `clearWorldTimeClock()` for test teardown and `rollAllZoneWeather(seed)` for direct use
+- Created `src/store/middleware/__tests__/worldTimeMiddleware.test.js`: 33 tests covering reducers, period boundaries (all 8 boundary values), selectors, seededRandom determinism, rollWeather validity/determinism/fallback, getActiveNpcs, rollAllZoneWeather, middleware clock via manual dispatch
+- Wired into `store.js`: `worldTime: worldTimeReducer` in rootReducer, `'worldTime'` in localStorage whitelist, `worldTimeMiddleware` in middleware chain
+- **Files changed**: `src/store/slices/worldTimeSlice.js` (new), `src/store/middleware/worldTimeMiddleware.js` (new), `src/store/middleware/__tests__/worldTimeMiddleware.test.js` (new), `src/store/store.js`
+- **Learnings for future iterations:**
+  - The hook fires on every Edit to a file — must Read before each Edit call in a session, not just once
+  - Zone NPCs in zones.js do NOT have `schedule` fields — `getActiveNpcs` must default to always-active when `npc.schedule` is absent
+  - `timeSlice.js` and `weatherSlice.js` already exist (full 24h cycle system) — `worldTimeSlice.js` is a separate simplified 60-min cycle system for gameplay; avoid naming conflicts
+  - `clearWorldTimeClock()` export pattern matches `clearMidnightTimer()` in seasonalAutomationMiddleware — use this pattern for all interval-based middleware
+  - Seeded RNG: `(Math.imul(seed >>> 0, 1664525) + 1013904223) >>> 0` — avoids floating point issues, fully deterministic
+  - Store hook fires on `'@@redux/INIT'` (no redux-persist in test stores) AND `'persist/REHYDRATE'` (production) — handle both
+---

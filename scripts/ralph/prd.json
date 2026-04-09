@@ -75,7 +75,7 @@
         "npm run test:run passes"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "Read zones.js — NPCs already have schedule fields. Weather is new. Use deterministic seeded random for weather so it's testable. Middleware uses setInterval internally."
     },
     {
