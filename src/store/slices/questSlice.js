@@ -198,6 +198,55 @@ const questSlice = createSlice({
         entry.status = 'active';
       }
     },
+
+    // FEAT-039: Quest branching and failure states
+
+    makeQuestChoice(state, action) {
+      // payload: { questId, choiceId }
+      // Records the player's branch choice and saves a checkpoint at the current progress.
+      const { questId, choiceId } = action.payload;
+      const entry = state.quests[questId];
+      if (entry && entry.status === 'active') {
+        entry.checkpoint = entry.progress ?? 0;
+        entry.currentBranch = choiceId;
+      }
+    },
+
+    failQuest(state, action) {
+      // payload: { questId, reason }
+      // Marks an active quest as failed with a retryable flag.
+      const { questId, reason } = action.payload;
+      const entry = state.quests[questId];
+      if (entry && entry.status === 'active') {
+        entry.status = 'failed';
+        entry.failReason = reason ?? 'unknown';
+        entry.retryable = true;
+      }
+    },
+
+    retryQuest(state, action) {
+      // payload: questId
+      // Resets a failed quest to active, restoring progress to the last checkpoint (or 0).
+      const questId = action.payload;
+      const entry = state.quests[questId];
+      if (entry && entry.status === 'failed' && entry.retryable) {
+        entry.status = 'active';
+        entry.progress = entry.checkpoint ?? 0;
+        entry.failReason = null;
+        entry.timerStartedAt = null; // clear so timer can be restarted
+      }
+    },
+
+    startQuestTimer(state, action) {
+      // payload: { questId, timeLimitMinutes }
+      // Starts a countdown timer for a timed objective quest.
+      const { questId, timeLimitMinutes } = action.payload;
+      const entry = state.quests[questId];
+      if (entry && entry.status === 'active') {
+        entry.timeLimitMinutes = timeLimitMinutes;
+        entry.timerStartedAt = Date.now();
+      }
+    },
   },
 });
 
@@ -218,6 +267,10 @@ export const {
   incrementSentenceQuizzes,
   setActiveQuest,
   activateQuest,
+  makeQuestChoice,
+  failQuest,
+  retryQuest,
+  startQuestTimer,
 } = questSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========
@@ -336,6 +389,14 @@ export const selectActiveQuestObjectiveLocation = createSelector(
       y: npc.y * 64,
     };
   }
+);
+
+// Select all active quests that have a running timer (FEAT-039)
+export const selectActiveTimedQuests = createSelector(
+  [selectAllQuests],
+  (quests) => Object.entries(quests)
+    .filter(([, quest]) => quest.status === 'active' && quest.timerStartedAt != null)
+    .reduce((acc, [id, quest]) => ({ ...acc, [id]: quest }), {})
 );
 
 export default questSlice.reducer;
