@@ -93,7 +93,7 @@
         "npm run test:run passes"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "Read vocabularySlice.js for card structure. Read fsrs.js for getDueCards and getSessionCards. Decks store wordId arrays, not card copies. Filter at review time."
     },
     {

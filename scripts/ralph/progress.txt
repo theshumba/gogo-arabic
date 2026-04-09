@@ -8,6 +8,7 @@ Started: Thu  9 Apr 2026 01:01:20 BST
 - **Middleware test setup**: Use `configureStore({ reducer: { sliceName: reducer }, middleware: (gDM) => gDM().concat(myMiddleware) })`. Test helpers `_resetState` / `_getState` exported from middleware for state inspection.
 - **Pre-existing test failures**: 30 tests were failing before batch-4 work began (forgettingCurveService, settingsSlice, datasetValidation, HUD, antiFrustrationMiddleware, zoneReviewMiddleware, battle.integration, spacedListeningService). Do not try to fix these — they are known pre-existing issues.
 - **Extending slices**: Export constants (like `TUTORIAL_SEQUENCE`) alongside the slice so both the middleware and tests can import them without circular deps.
+- **Fake timer date gotcha**: `describe`-level `const` declarations run at module load time (BEFORE `beforeEach` installs fake timers). Never use `new Date(Date.now() ± offset)` at describe scope. Always use hardcoded absolute ISO strings: `'2020-01-01T00:00:00.000Z'` (past) and `'2030-01-01T00:00:00.000Z'` (future) relative to the fake "now" of `2026-02-09T00:00:00Z`.
 
 ---
 
@@ -70,4 +71,19 @@ Started: Thu  9 Apr 2026 01:01:20 BST
   - `clearWorldTimeClock()` export pattern matches `clearMidnightTimer()` in seasonalAutomationMiddleware — use this pattern for all interval-based middleware
   - Seeded RNG: `(Math.imul(seed >>> 0, 1664525) + 1013904223) >>> 0` — avoids floating point issues, fully deterministic
   - Store hook fires on `'@@redux/INIT'` (no redux-persist in test stores) AND `'persist/REHYDRATE'` (production) — handle both
+---
+
+## 2026-04-09 01:32 - FEAT-035
+
+- Implemented custom FSRS deck management
+- Created `src/store/slices/deckSlice.js`: `createDeck()`, `deleteDeck()`, `addWordToDeck()`, `removeWordFromDeck()` reducers; pure functions `generateDeckByZone(zoneId, allWords)`, `generateDeckByCefr(level, allWords)`, `generateDeckByCategory(category, allWords)`, `getSessionCardsFromDeck(deck, fsrsCards, maxCards)`; `selectDeckStats(state, deckId)` memoized selector; `MAX_CUSTOM_DECKS = 10`, `ZONE_VOCAB_CATEGORIES` exported
+- Created `src/store/slices/__tests__/deckSlice.test.js`: 34 tests covering initial state, createDeck (all filter types, max limit enforcement), deleteDeck, add/removeWordToDeck, all three generateDeck* functions, getSessionCardsFromDeck (due filtering, maxCards, null deck), selectDeckStats (cardCount, dueCount, avgRetrievability), ZONE_VOCAB_CATEGORIES coverage
+- Wired `deckReducer` into `store.js` rootReducer as `decks`, added `'decks'` to localStorage whitelist
+- **Files changed**: `src/store/slices/deckSlice.js` (new), `src/store/slices/__tests__/deckSlice.test.js` (new), `src/store/store.js`
+- **Learnings for future iterations:**
+  - `describe`-level `const` declarations run at module load time (before `beforeEach` sets fake timers) — always use hardcoded absolute ISO dates (`'2020-01-01T00:00:00.000Z'` for past, `'2030-01-01T00:00:00.000Z'` for future) instead of `new Date(Date.now() ± offset)`
+  - Vocabulary words don't have a `zone` field — zone-based filtering uses category matching via `ZONE_VOCAB_CATEGORIES` map (same pattern as vocabularySlice)
+  - Deck slice is lightweight (wordId arrays only) — store in localStorage whitelist, not IndexedDB
+  - `selectDeckStats` crosses two state slices (`state.decks.decks` + `state.vocabulary.fsrsCards`) — test by constructing a full mock state `{ decks: deckState, vocabulary: { fsrsCards } }` and calling the selector directly
+  - `getRetrievability` from fsrs.js should be vi.mock'd in slice tests to avoid pulling in ts-fsrs scheduler internals
 ---
