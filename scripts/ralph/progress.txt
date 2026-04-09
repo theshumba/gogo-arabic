@@ -121,3 +121,21 @@ Started: Thu  9 Apr 2026 01:01:20 BST
   - Pattern for priority-with-last-match: iterate priority types outer loop, iterate lines inner loop accumulating lastMatch, return first type with a lastMatch
   - The hook fires on every Edit regardless of prior Reads — this is expected behavior, not an error
 ---
+
+## 2026-04-09 02:17 - FEAT-038
+
+- Implemented faction vendor discounts and exclusive shop inventory
+- Created `src/data/factionShops.js`: `FACTION_SHOP_DATA` (6 faction shops × 5 exclusive items), `TIER_ORDER`, `TIER_DISCOUNTS`; pure functions `getFactionDiscount(factionId, playerTier)`, `getShopInventory(factionId, playerTier)`, `applyFactionDiscount(basePrice, factionId, playerState)`, `selectAvailableFactionShops(state)`
+- Discount tiers map to existing factions.js tier labels: Neutral=0%, Friendly=5%, Trusted=10%, Allied=15%, Revered=25%
+- Items are thematic per faction: Scholars→books/tools, Merchants→trade goods, Artisans→craft tools, Travelers→navigation gear, Guardians→weapons/armor, Artists→instruments/scrolls
+- `getShopInventory` is cumulative: Trusted players see Neutral + Friendly + Trusted items
+- `selectAvailableFactionShops` uses Friendly (score≥25) as the access threshold ("Initiate+" in PRD)
+- `applyFactionDiscount` reads Redux state at `state.faction.alignment[factionId]`, calls `getFactionTier()`, floors result
+- Created `src/data/__tests__/factionShops.test.js`: 33 tests covering data integrity (6 shops, 5 items each, tier coverage, field validation, unique IDs), all discount tiers, inventory gating (cumulative counts), discount calculation (all 5 tiers, floor behaviour, null safety), selectAvailableFactionShops (empty/single/multi/all)
+- **Files changed**: `src/data/factionShops.js` (new), `src/data/__tests__/factionShops.test.js` (new), `scripts/ralph/prd.json`
+- **Learnings for future iterations:**
+  - PRD tier names (Novice/Initiate/Ally/Champion/Hero) don't match factions.js labels — map to actual labels (Neutral/Friendly/Trusted/Allied/Revered); acceptance criteria discount rates (0/5/10/15/25%) are authoritative, not the tier names
+  - `factionId` parameter in `getFactionDiscount` is a hook for future per-faction variation — safe to ignore for now
+  - `selectAvailableFactionShops` is a pure function (not a reselect selector) because it only needs `state.faction.alignment` — no memoization needed at this scale
+  - Items sorted by requiredTier ascending is the natural order — TIER_ORDER index comparison is the right way to filter cumulatively
+---

@@ -147,7 +147,7 @@
         "npm run test:run passes"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "Read factionSlice.js for tier calculation. Read economySlice.js for shop/pricing patterns. Faction shop items should be thematic (Scholars sell books, Warriors sell weapons, etc.)."
     },
     {
