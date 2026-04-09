@@ -129,7 +129,7 @@
         "npm run test:run passes"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "Read npcs.json for NPC IDs and zones. Pure data file + selector function. Context lines supplement existing dialogue, don't replace it."
     },
     {

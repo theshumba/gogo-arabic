@@ -104,3 +104,20 @@ Started: Thu  9 Apr 2026 01:01:20 BST
   - The `import { unlockEntry }` at the top of a data file is safe as long as there's no circular dependency: `companionDialogue.js` → `codexSlice.js` → `loreCodex.js` (no circle)
   - `selectActiveCompanionGreeting` prefers exploration slot, falls back to battle slot — match the UI's display priority
 ---
+
+## 2026-04-09 02:08 - FEAT-037
+
+- Implemented NPC stat-aware contextual dialogue lines
+- Created `src/data/npcContextDialogue.js`: pure data file + `getNpcContextLine(npcId, playerState)` function; `NPC_CONTEXT_DIALOGUE` map with 22 NPCs × 5-9 lines each
+- Condition types: `vocabCount` (threshold), `cefrLevel` (>= level), `factionTier` (per faction, >= tier label), `questComplete` (quest ID in completedQuests array)
+- Priority: questComplete > factionTier > cefrLevel > vocabCount > null; within each type the LAST matching line wins (lines sorted least→most specific)
+- `getFactionTier()` from `factions.js` used to map raw faction score → tier label for comparison against TIER_ORDER array
+- Created `src/data/__tests__/npcContextDialogue.test.js`: 31 tests covering null/unknown inputs, all 4 condition types, priority ordering, last-match-wins behavior, data coverage (20+ NPCs, 5+ lines each, valid condition types)
+- **Files changed**: `src/data/npcContextDialogue.js` (new), `src/data/__tests__/npcContextDialogue.test.js` (new), `scripts/ralph/prd.json`
+- **Learnings for future iterations:**
+  - Arabic diacritics in test `toContain()` must match the exact Unicode in the data — copy from the data file, don't retype
+  - `getFactionTier(score)` returns `{ label, labelArabic, threshold }` — compare `.label` against TIER_ORDER string array
+  - Faction tiers in factions.js are: Neutral (0), Friendly (25), Trusted (50), Allied (75), Revered (100)
+  - Pattern for priority-with-last-match: iterate priority types outer loop, iterate lines inner loop accumulating lastMatch, return first type with a lastMatch
+  - The hook fires on every Edit regardless of prior Reads — this is expected behavior, not an error
+---
