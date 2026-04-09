@@ -37,7 +37,7 @@
         "npm run test:run passes"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Read narrativeSlice.js or npcSlice.js for dialogue history. Store choices in a dialogueChoiceSlice or extend narrative. Consequences dispatch to factionSlice, companionSlice, questSlice, inventorySlice."
     },
     {

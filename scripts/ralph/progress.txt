@@ -24,3 +24,19 @@ Started: Thu  9 Apr 2026 01:01:20 BST
   - `recordFeatureUse` action type is `'onboarding/recordFeatureUse'` (slice name, not store key)
   - After `next(action)` is called, `featureUsage[featureId].timesUsed` is already updated — so `timesUsed === 1` correctly identifies first use
 ---
+
+## 2026-04-09 01:11 - FEAT-032
+
+- Implemented dialogue choice tracking and world state effects
+- Extended `narrativeSlice.js`: added `recordDialogueChoice()` action, `selectNpcDialogueHistory(npcId)`, `hasChosenOption(npcId, choiceId)`, `selectNpcDialogueFlags(npcId)` selectors
+- Created `dialogueChoiceMiddleware.js`: intercepts `narrative/recordDialogueChoice`, fans out consequences to factionSlice (adjustAlignment), narrativeSlice (incrementNpcRelationship), questSlice (activateQuest), inventorySlice (addItem)
+- Created `dialogueChoiceMiddleware.test.js`: 22 tests covering choice recording, history filtering, flags, all 4 consequence types, multi-consequence dispatch, empty/missing consequences, middleware guard
+- Wired `dialogueChoiceMiddleware` into `store.js`
+- **Files changed**: `src/store/slices/narrativeSlice.js`, `src/store/middleware/dialogueChoiceMiddleware.js`, `src/store/middleware/__tests__/dialogueChoiceMiddleware.test.js`, `src/store/store.js`
+- **Learnings for future iterations:**
+  - Extend existing narrativeSlice rather than creating a new slice — `choiceHistory` array already exists with the right structure
+  - `selectNpcDialogueFlags` returns `{ [choiceId]: true }` object — suitable for direct use as Ink variable bindings
+  - `incrementNpcRelationship` from narrativeSlice handles both NPCs (clamped 0-5) and companions (prefix `companion_`, clamped 0-100)
+  - For questUnlock consequence, use `activateQuest(questId)` — only works on 'locked' quests; test with preloaded state `{ quests: { quests: { id: { status: 'locked', ... } } } }`
+  - inventorySlice `addItem` reducer doesn't reference EQUIPMENT_DATA — safe to use in tests with arbitrary item IDs
+---
