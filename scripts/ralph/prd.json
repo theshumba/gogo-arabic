@@ -96,7 +96,7 @@
         "npm run test:run passes"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "Read zones.js for zone IDs and themes. Cross-reference with vocabularyExpanded.js to use existing word IDs. Zone themes: Oasis Village (basics), Desert Marketplace (commerce), Sacred Library (academic), Mountain Pass (nature/travel), Coastal Port (trade/foreign), Garden District (food/plants), Ancient Ruins (history), Bedouin Camp (culture/hospitality)."
     },
     {

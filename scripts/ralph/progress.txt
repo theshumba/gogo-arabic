@@ -73,3 +73,18 @@ Started: Thu  9 Apr 2026 19:09:00 BST
   - Placement bypass sets bypassedViaPlacement=true AND stage='complete' — foundationMiddleware only checks isFoundationComplete (stage==='complete'), so placement field in foundation state is just for audit trail
   - Stage completion criteria: alphabet=isAlphabetComplete(80%), coreVocab=first 50 words at 70%+, rootIntro=knownRoots.length>=5
 ---
+
+## 2026-04-09 20:10 - FEAT-045
+- Implemented zone vocabulary pre-teaching data
+- Files created:
+  - `src/data/zoneVocabIntros.js` — 8 zones × 12 words each (96 total); exports ZONE_VOCAB_INTROS, ZONE_IDS, ZONE_COUNT, getZoneIntroWords(zoneId), getAllZoneIntroWordIds(); zone IDs from zones.js: oasis_village, desert_marketplace, ancient_library, farmland, bedouin_camp, mountain_village, coastal_port, royal_palace
+  - `src/store/slices/zoneVocabIntroSlice.js` — tracks reviewedByZone state; exports markWordReviewed, resetZoneIntro, resetAllZoneIntros, isZoneIntroComplete, getZoneIntroProgress, getNextUnreviewedWord, selectIsZoneIntroComplete, selectZoneIntroProgress, makeSelectZoneIntroProgress, selectAllZoneIntroProgress
+  - `src/store/__tests__/zoneVocabIntroSlice.test.js` — 34 tests covering all acceptance criteria
+- Files modified:
+  - `src/store/store.js` — added zoneVocabIntroReducer import, registered reducer, added 'zoneVocabIntro' to localStorage persist whitelist
+- **Learnings for future iterations:**
+  - Zone IDs in zones.js differ from PRD theme descriptions: ancient_library (not sacred_library), farmland (not garden_district), mountain_village (not mountain_pass), royal_palace (not ancient_ruins) — always read zones.js for canonical IDs
+  - makeSelectZoneIntroProgress(zoneId) factory pattern used for memoized per-zone selectors (avoids parameterized selector issues with reselect)
+  - Each word's `root` field is an empty string for Arabic particles (لا، نعم) — tests must allow empty string for root field specifically
+  - 96 total words (8 zones × 12) comfortably within 80-100 range; overlap allowed but avoided here since each zone has distinct vocabulary
+---
