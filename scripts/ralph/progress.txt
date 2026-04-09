@@ -87,3 +87,20 @@ Started: Thu  9 Apr 2026 01:01:20 BST
   - `selectDeckStats` crosses two state slices (`state.decks.decks` + `state.vocabulary.fsrsCards`) — test by constructing a full mock state `{ decks: deckState, vocabulary: { fsrsCards } }` and calling the selector directly
   - `getRetrievability` from fsrs.js should be vi.mock'd in slice tests to avoid pulling in ts-fsrs scheduler internals
 ---
+
+## 2026-04-09 01:58 - FEAT-036
+
+- Implemented companion dialogue progression across 5 relationship tiers
+- Extended `src/data/companionDialogue.js` (existing 2295-line file): added import of `unlockEntry`, exported `DIALOGUE_TIERS`, `TIER_ORDER`, `COMPANION_DIALOGUE_TIERS` (12 companions × 5 tiers), `getDialogueTier()`, `getCompanionDialogue()`, `selectActiveCompanionGreeting()`, `revealCompanionBackstory()` thunk
+- Each tier entry: `greeting` (arabic+english), `idle[3+]` (arabic+english pairs), `hint` (gameplay tip), `backstoryReveal` (arabic+english+codexEntryId)
+- 60 unique codexEntryIds (12 companions × 5 tiers) following pattern `companion_<name>_lore_<1-5>`
+- `revealCompanionBackstory(companionId, level)` is a Redux thunk dispatching `unlockEntry(codexEntryId)` to codexSlice
+- Created `src/data/__tests__/companionDialogue.test.js`: 78 tests covering tier boundaries (all 15 level/tier combos), all 12 companions have 5 tiers, each tier has all required fields, codexEntryId uniqueness (per-companion and globally), getCompanionDialogue (known/unknown/null IDs), selectActiveCompanionGreeting (null/exploration/battle/tier-change), revealCompanionBackstory (dispatch verification, unknown companion, return value)
+- **Files changed**: `src/data/companionDialogue.js` (extended), `src/data/__tests__/companionDialogue.test.js` (new), `scripts/ralph/prd.json`
+- **Learnings for future iterations:**
+  - `companionDialogue.js` already existed as a 574KB, 2295-line file with a different structure (`greetings[]`, `zone_comments{}`, `teaching{}`, etc.) — NEVER assume a PRD-named file is new; always read it first
+  - Add FEAT-specific exports to the bottom of existing large data files rather than replacing or creating parallel files
+  - vi.mock() a slice module at the top of test files to avoid needing a real Redux store when testing thunks that dispatch to other slices
+  - The `import { unlockEntry }` at the top of a data file is safe as long as there's no circular dependency: `companionDialogue.js` → `codexSlice.js` → `loreCodex.js` (no circle)
+  - `selectActiveCompanionGreeting` prefers exploration slot, falls back to battle slot — match the UI's display priority
+---

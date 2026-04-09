@@ -111,7 +111,7 @@
         "npm run test:run passes"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "Read companionSlice.js for relationship state and companion IDs. Read companionBackstories.js for existing lore. Dialogue is Arabic+English pairs. Keep lines short (1-2 sentences)."
     },
     {
