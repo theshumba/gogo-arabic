@@ -1,178 +1,30 @@
-# Ralph Progress Log
-Started: Thu  9 Apr 2026 01:01:20 BST
----
-
 ## Codebase Patterns
 
-- **Middleware key for onboarding slice**: Store registers it as `onboarding2` but the slice selectors use `state.onboarding`. Pre-existing inconsistency. For middleware tests, mount the reducer at `onboarding` key to match selectors. Do NOT try to fix this inconsistency in passing.
-- **Middleware test setup**: Use `configureStore({ reducer: { sliceName: reducer }, middleware: (gDM) => gDM().concat(myMiddleware) })`. Test helpers `_resetState` / `_getState` exported from middleware for state inspection.
-- **Pre-existing test failures**: 30 tests were failing before batch-4 work began (forgettingCurveService, settingsSlice, datasetValidation, HUD, antiFrustrationMiddleware, zoneReviewMiddleware, battle.integration, spacedListeningService). Do not try to fix these — they are known pre-existing issues.
-- **Extending slices**: Export constants (like `TUTORIAL_SEQUENCE`) alongside the slice so both the middleware and tests can import them without circular deps.
-- **Fake timer date gotcha**: `describe`-level `const` declarations run at module load time (BEFORE `beforeEach` installs fake timers). Never use `new Date(Date.now() ± offset)` at describe scope. Always use hardcoded absolute ISO strings: `'2020-01-01T00:00:00.000Z'` (past) and `'2030-01-01T00:00:00.000Z'` (future) relative to the fake "now" of `2026-02-09T00:00:00Z`.
-- **Redux 5.x INIT action type**: Redux 5.x generates `@@redux/INIT<random-suffix>`. Use `action.type.startsWith('@@redux/INIT')` in middleware, NOT `=== '@@redux/INIT'`. The existing worldTimeMiddleware has this bug but it's masked because its clock tests avoid setInterval.
-- **Interval middleware test pattern**: For testing setInterval-based middleware with fake timers: (1) use `middleware: () => [myMiddleware]` (no `getDefaultMiddleware`) to avoid RTK timer interference; (2) trigger clock start via explicit `store.dispatch({ type: 'persist/REHYDRATE', payload: null })`; (3) use `vi.advanceTimersByTime(interval + 1)` (1ms over) to guarantee firing.
+- **Slice location**: `src/store/slices/` — all Redux slices live here
+- **Middleware location**: `src/store/middleware/` — all custom middleware here
+- **Slice tests**: `src/store/__tests__/` — tests for slices; middleware tests in `src/store/middleware/__tests__/`
+- **Store registration**: Add reducer to `rootReducer` in `store.js`, add to `persistConfig.whitelist` for localStorage persistence, add middleware to `.concat(...)` chain
+- **Pre-existing failures**: 8 test failures + 413 lint problems are pre-existing (not caused by batch-5 work)
+- **Middleware blocking pattern**: return early without calling `next(action)` to silently block; expose `_reset*` functions for test isolation
+- **Pure selector helpers**: Export standalone functions (e.g. `getLetterMastery`, `isAlphabetComplete`) in addition to Redux selectors so middleware can import them without circular deps
 
 ---
 
-## 2026-04-09 01:06 - FEAT-031
-
-- Implemented guided tutorial auto-trigger system
-- Extended `onboardingSlice.js`: added `tutorialSteps`, `tutorialSkipped`, `completeTutorialStep()`, `skipTutorial()`, `selectNextTutorialStep()`, `selectTutorialComplete()`, `TUTORIAL_SEQUENCE` constant
-- Created `tutorialMiddleware.js`: intercepts `onboarding/recordFeatureUse`, checks first-use (timesUsed===1) + prerequisites, dispatches `completeTutorialStep`
-- Created `tutorialMiddleware.test.js`: 22 tests covering sequence, gate logic, skip, first-use guard, selectNextTutorialStep, selectTutorialComplete
-- Wired `tutorialMiddleware` into `store.js`
-- **Files changed**: `src/store/slices/onboardingSlice.js`, `src/store/middleware/tutorialMiddleware.js`, `src/store/middleware/__tests__/tutorialMiddleware.test.js`, `src/store/store.js`
-- **Learnings for future iterations:**
-  - Store registers onboarding as `onboarding2` but selectors use `state.onboarding` — test stores must use `{ onboarding: reducer }` to match
-  - `recordFeatureUse` action type is `'onboarding/recordFeatureUse'` (slice name, not store key)
-  - After `next(action)` is called, `featureUsage[featureId].timesUsed` is already updated — so `timesUsed === 1` correctly identifies first use
+# Ralph Progress Log
+Started: Thu  9 Apr 2026 19:09:00 BST
 ---
 
-## 2026-04-09 01:11 - FEAT-032
-
-- Implemented dialogue choice tracking and world state effects
-- Extended `narrativeSlice.js`: added `recordDialogueChoice()` action, `selectNpcDialogueHistory(npcId)`, `hasChosenOption(npcId, choiceId)`, `selectNpcDialogueFlags(npcId)` selectors
-- Created `dialogueChoiceMiddleware.js`: intercepts `narrative/recordDialogueChoice`, fans out consequences to factionSlice (adjustAlignment), narrativeSlice (incrementNpcRelationship), questSlice (activateQuest), inventorySlice (addItem)
-- Created `dialogueChoiceMiddleware.test.js`: 22 tests covering choice recording, history filtering, flags, all 4 consequence types, multi-consequence dispatch, empty/missing consequences, middleware guard
-- Wired `dialogueChoiceMiddleware` into `store.js`
-- **Files changed**: `src/store/slices/narrativeSlice.js`, `src/store/middleware/dialogueChoiceMiddleware.js`, `src/store/middleware/__tests__/dialogueChoiceMiddleware.test.js`, `src/store/store.js`
+## 2026-04-09 19:20 - FEAT-041
+- Implemented alphabet mastery progression engine
+- Files created:
+  - `src/store/slices/alphabetProgressSlice.js` — tracks 28 consonants + 6 vowels, 4 forms each; exports AFL_SEQUENCE, VOWEL_IDS, getLetterMastery, isAlphabetComplete, selectNextLettersToLearn
+  - `src/store/middleware/alphabetGateMiddleware.js` — blocks world/enterZone until isAlphabetComplete; bypasses for A2/B1 placement test
+  - `src/store/__tests__/alphabetProgressSlice.test.js` — 35 tests covering all acceptance criteria
+- Files modified:
+  - `src/store/store.js` — registered alphabetProgressReducer + alphabetGateMiddleware
 - **Learnings for future iterations:**
-  - Extend existing narrativeSlice rather than creating a new slice — `choiceHistory` array already exists with the right structure
-  - `selectNpcDialogueFlags` returns `{ [choiceId]: true }` object — suitable for direct use as Ink variable bindings
-  - `incrementNpcRelationship` from narrativeSlice handles both NPCs (clamped 0-5) and companions (prefix `companion_`, clamped 0-100)
-  - For questUnlock consequence, use `activateQuest(questId)` — only works on 'locked' quests; test with preloaded state `{ quests: { quests: { id: { status: 'locked', ... } } } }`
-  - inventorySlice `addItem` reducer doesn't reference EQUIPMENT_DATA — safe to use in tests with arbitrary item IDs
----
-
-## 2026-04-09 01:17 - FEAT-033
-
-- Zone boss encounter data and logic implemented
-- `bossEncounters.js` already existed with 8 complete boss definitions and 34 passing tests — no changes needed
-- Created `src/data/zoneBosses.js`: thin wrapper adding PRD-required functions: `getBossForZone(zoneId)`, `isBossDefeated(zoneId, playerState)`, `calculateBossDamage(answerCorrect, timeBonus, combo)`
-- Created `src/data/__tests__/zoneBosses.test.js`: 25 tests covering getBossForZone (all 8 zones + unknowns), isBossDefeated (flag reading, null safety, all zones), calculateBossDamage (correct/incorrect, timeBonus clamping, combo multiplier, defaults)
-- **Files changed**: `src/data/zoneBosses.js` (new), `src/data/__tests__/zoneBosses.test.js` (new)
-- **Learnings for future iterations:**
-  - Check if `bossEncounters.js` (Phase 96 pre-built content) already exists before creating new boss data files — it does, and already covers all 8 zones
-  - `isBossDefeated` reads `worldState.flags.boss_defeated_<zoneId>` — set via `setFlag({ key: 'boss_defeated_<zoneId>', value: true })`
-  - `calculateBossDamage(answerCorrect, timeBonus=0, combo=1)`: returns 0 if wrong; base=10, speedBonus=floor(clamp(time,0,1)*10), multiplier=max(1,combo)
-  - PRD file names (zoneBosses.js) may differ from pre-existing Phase 96 files (bossEncounters.js) — create the PRD file as a wrapper rather than duplicating data
----
-
-## 2026-04-09 01:30 - FEAT-034
-
-- Implemented weather and time-of-day system
-- Created `src/store/slices/worldTimeSlice.js`: `currentTime` (0-59 cycle), `weatherByZone` map, `tickWorldTime()`, `setZoneWeather()`, `setWeatherBatch()` actions; `getCurrentTimePeriod(state)` selector, `getTimePeriodFromValue(n)` pure helper, `getActiveNpcs(zoneId, period)`, `rollWeather(zoneId, seed)`, `seededRandom(seed)` — deterministic LCG RNG; `ZONE_WEATHER_PROBS` for all 8 zones
-- Created `src/store/middleware/worldTimeMiddleware.js`: starts `setInterval` on `persist/REHYDRATE`/`@@redux/INIT`, ticks clock every 60s, rolls weather for all 8 core zones when period changes; exports `clearWorldTimeClock()` for test teardown and `rollAllZoneWeather(seed)` for direct use
-- Created `src/store/middleware/__tests__/worldTimeMiddleware.test.js`: 33 tests covering reducers, period boundaries (all 8 boundary values), selectors, seededRandom determinism, rollWeather validity/determinism/fallback, getActiveNpcs, rollAllZoneWeather, middleware clock via manual dispatch
-- Wired into `store.js`: `worldTime: worldTimeReducer` in rootReducer, `'worldTime'` in localStorage whitelist, `worldTimeMiddleware` in middleware chain
-- **Files changed**: `src/store/slices/worldTimeSlice.js` (new), `src/store/middleware/worldTimeMiddleware.js` (new), `src/store/middleware/__tests__/worldTimeMiddleware.test.js` (new), `src/store/store.js`
-- **Learnings for future iterations:**
-  - The hook fires on every Edit to a file — must Read before each Edit call in a session, not just once
-  - Zone NPCs in zones.js do NOT have `schedule` fields — `getActiveNpcs` must default to always-active when `npc.schedule` is absent
-  - `timeSlice.js` and `weatherSlice.js` already exist (full 24h cycle system) — `worldTimeSlice.js` is a separate simplified 60-min cycle system for gameplay; avoid naming conflicts
-  - `clearWorldTimeClock()` export pattern matches `clearMidnightTimer()` in seasonalAutomationMiddleware — use this pattern for all interval-based middleware
-  - Seeded RNG: `(Math.imul(seed >>> 0, 1664525) + 1013904223) >>> 0` — avoids floating point issues, fully deterministic
-  - Store hook fires on `'@@redux/INIT'` (no redux-persist in test stores) AND `'persist/REHYDRATE'` (production) — handle both
----
-
-## 2026-04-09 01:32 - FEAT-035
-
-- Implemented custom FSRS deck management
-- Created `src/store/slices/deckSlice.js`: `createDeck()`, `deleteDeck()`, `addWordToDeck()`, `removeWordFromDeck()` reducers; pure functions `generateDeckByZone(zoneId, allWords)`, `generateDeckByCefr(level, allWords)`, `generateDeckByCategory(category, allWords)`, `getSessionCardsFromDeck(deck, fsrsCards, maxCards)`; `selectDeckStats(state, deckId)` memoized selector; `MAX_CUSTOM_DECKS = 10`, `ZONE_VOCAB_CATEGORIES` exported
-- Created `src/store/slices/__tests__/deckSlice.test.js`: 34 tests covering initial state, createDeck (all filter types, max limit enforcement), deleteDeck, add/removeWordToDeck, all three generateDeck* functions, getSessionCardsFromDeck (due filtering, maxCards, null deck), selectDeckStats (cardCount, dueCount, avgRetrievability), ZONE_VOCAB_CATEGORIES coverage
-- Wired `deckReducer` into `store.js` rootReducer as `decks`, added `'decks'` to localStorage whitelist
-- **Files changed**: `src/store/slices/deckSlice.js` (new), `src/store/slices/__tests__/deckSlice.test.js` (new), `src/store/store.js`
-- **Learnings for future iterations:**
-  - `describe`-level `const` declarations run at module load time (before `beforeEach` sets fake timers) — always use hardcoded absolute ISO dates (`'2020-01-01T00:00:00.000Z'` for past, `'2030-01-01T00:00:00.000Z'` for future) instead of `new Date(Date.now() ± offset)`
-  - Vocabulary words don't have a `zone` field — zone-based filtering uses category matching via `ZONE_VOCAB_CATEGORIES` map (same pattern as vocabularySlice)
-  - Deck slice is lightweight (wordId arrays only) — store in localStorage whitelist, not IndexedDB
-  - `selectDeckStats` crosses two state slices (`state.decks.decks` + `state.vocabulary.fsrsCards`) — test by constructing a full mock state `{ decks: deckState, vocabulary: { fsrsCards } }` and calling the selector directly
-  - `getRetrievability` from fsrs.js should be vi.mock'd in slice tests to avoid pulling in ts-fsrs scheduler internals
----
-
-## 2026-04-09 01:58 - FEAT-036
-
-- Implemented companion dialogue progression across 5 relationship tiers
-- Extended `src/data/companionDialogue.js` (existing 2295-line file): added import of `unlockEntry`, exported `DIALOGUE_TIERS`, `TIER_ORDER`, `COMPANION_DIALOGUE_TIERS` (12 companions × 5 tiers), `getDialogueTier()`, `getCompanionDialogue()`, `selectActiveCompanionGreeting()`, `revealCompanionBackstory()` thunk
-- Each tier entry: `greeting` (arabic+english), `idle[3+]` (arabic+english pairs), `hint` (gameplay tip), `backstoryReveal` (arabic+english+codexEntryId)
-- 60 unique codexEntryIds (12 companions × 5 tiers) following pattern `companion_<name>_lore_<1-5>`
-- `revealCompanionBackstory(companionId, level)` is a Redux thunk dispatching `unlockEntry(codexEntryId)` to codexSlice
-- Created `src/data/__tests__/companionDialogue.test.js`: 78 tests covering tier boundaries (all 15 level/tier combos), all 12 companions have 5 tiers, each tier has all required fields, codexEntryId uniqueness (per-companion and globally), getCompanionDialogue (known/unknown/null IDs), selectActiveCompanionGreeting (null/exploration/battle/tier-change), revealCompanionBackstory (dispatch verification, unknown companion, return value)
-- **Files changed**: `src/data/companionDialogue.js` (extended), `src/data/__tests__/companionDialogue.test.js` (new), `scripts/ralph/prd.json`
-- **Learnings for future iterations:**
-  - `companionDialogue.js` already existed as a 574KB, 2295-line file with a different structure (`greetings[]`, `zone_comments{}`, `teaching{}`, etc.) — NEVER assume a PRD-named file is new; always read it first
-  - Add FEAT-specific exports to the bottom of existing large data files rather than replacing or creating parallel files
-  - vi.mock() a slice module at the top of test files to avoid needing a real Redux store when testing thunks that dispatch to other slices
-  - The `import { unlockEntry }` at the top of a data file is safe as long as there's no circular dependency: `companionDialogue.js` → `codexSlice.js` → `loreCodex.js` (no circle)
-  - `selectActiveCompanionGreeting` prefers exploration slot, falls back to battle slot — match the UI's display priority
----
-
-## 2026-04-09 02:08 - FEAT-037
-
-- Implemented NPC stat-aware contextual dialogue lines
-- Created `src/data/npcContextDialogue.js`: pure data file + `getNpcContextLine(npcId, playerState)` function; `NPC_CONTEXT_DIALOGUE` map with 22 NPCs × 5-9 lines each
-- Condition types: `vocabCount` (threshold), `cefrLevel` (>= level), `factionTier` (per faction, >= tier label), `questComplete` (quest ID in completedQuests array)
-- Priority: questComplete > factionTier > cefrLevel > vocabCount > null; within each type the LAST matching line wins (lines sorted least→most specific)
-- `getFactionTier()` from `factions.js` used to map raw faction score → tier label for comparison against TIER_ORDER array
-- Created `src/data/__tests__/npcContextDialogue.test.js`: 31 tests covering null/unknown inputs, all 4 condition types, priority ordering, last-match-wins behavior, data coverage (20+ NPCs, 5+ lines each, valid condition types)
-- **Files changed**: `src/data/npcContextDialogue.js` (new), `src/data/__tests__/npcContextDialogue.test.js` (new), `scripts/ralph/prd.json`
-- **Learnings for future iterations:**
-  - Arabic diacritics in test `toContain()` must match the exact Unicode in the data — copy from the data file, don't retype
-  - `getFactionTier(score)` returns `{ label, labelArabic, threshold }` — compare `.label` against TIER_ORDER string array
-  - Faction tiers in factions.js are: Neutral (0), Friendly (25), Trusted (50), Allied (75), Revered (100)
-  - Pattern for priority-with-last-match: iterate priority types outer loop, iterate lines inner loop accumulating lastMatch, return first type with a lastMatch
-  - The hook fires on every Edit regardless of prior Reads — this is expected behavior, not an error
----
-
-## 2026-04-09 02:17 - FEAT-038
-
-- Implemented faction vendor discounts and exclusive shop inventory
-- Created `src/data/factionShops.js`: `FACTION_SHOP_DATA` (6 faction shops × 5 exclusive items), `TIER_ORDER`, `TIER_DISCOUNTS`; pure functions `getFactionDiscount(factionId, playerTier)`, `getShopInventory(factionId, playerTier)`, `applyFactionDiscount(basePrice, factionId, playerState)`, `selectAvailableFactionShops(state)`
-- Discount tiers map to existing factions.js tier labels: Neutral=0%, Friendly=5%, Trusted=10%, Allied=15%, Revered=25%
-- Items are thematic per faction: Scholars→books/tools, Merchants→trade goods, Artisans→craft tools, Travelers→navigation gear, Guardians→weapons/armor, Artists→instruments/scrolls
-- `getShopInventory` is cumulative: Trusted players see Neutral + Friendly + Trusted items
-- `selectAvailableFactionShops` uses Friendly (score≥25) as the access threshold ("Initiate+" in PRD)
-- `applyFactionDiscount` reads Redux state at `state.faction.alignment[factionId]`, calls `getFactionTier()`, floors result
-- Created `src/data/__tests__/factionShops.test.js`: 33 tests covering data integrity (6 shops, 5 items each, tier coverage, field validation, unique IDs), all discount tiers, inventory gating (cumulative counts), discount calculation (all 5 tiers, floor behaviour, null safety), selectAvailableFactionShops (empty/single/multi/all)
-- **Files changed**: `src/data/factionShops.js` (new), `src/data/__tests__/factionShops.test.js` (new), `scripts/ralph/prd.json`
-- **Learnings for future iterations:**
-  - PRD tier names (Novice/Initiate/Ally/Champion/Hero) don't match factions.js labels — map to actual labels (Neutral/Friendly/Trusted/Allied/Revered); acceptance criteria discount rates (0/5/10/15/25%) are authoritative, not the tier names
-  - `factionId` parameter in `getFactionDiscount` is a hook for future per-faction variation — safe to ignore for now
-  - `selectAvailableFactionShops` is a pure function (not a reselect selector) because it only needs `state.faction.alignment` — no memoization needed at this scale
-  - Items sorted by requiredTier ascending is the natural order — TIER_ORDER index comparison is the right way to filter cumulatively
----
-
-## 2026-04-09 02:30 - FEAT-039
-
-- Implemented quest branching and failure states
-- Extended `src/store/slices/questSlice.js`: added `makeQuestChoice({ questId, choiceId })`, `failQuest({ questId, reason })`, `retryQuest(questId)`, `startQuestTimer({ questId, timeLimitMinutes })` reducers; exported all four; added `selectActiveTimedQuests(state)` memoized selector
-- Created `src/store/middleware/questTimerMiddleware.js`: `checkExpiredTimers(store)` (exported), `clearQuestTimerClock()` (exported for test teardown), `questTimerMiddleware` starts interval on `persist/REHYDRATE` or `@@redux/INIT*`
-- Created `src/store/middleware/__tests__/questTimerMiddleware.test.js`: 27 tests covering makeQuestChoice (choice recording, checkpoint saves, guard on non-active), failQuest (status, reason, retryable, completed guard), retryQuest (active restore, checkpoint/0 fallback, failReason clear, timerStartedAt clear), startQuestTimer (timeLimitMinutes, timerStartedAt, locked guard), selectActiveTimedQuests (filter, empty, multi), checkExpiredTimers (expired fail, not-expired pass, already-failed skip, multi-quest), middleware interval clock
-- Wired `questTimerMiddleware` into `store.js`
-- **Files changed**: `src/store/slices/questSlice.js`, `src/store/middleware/questTimerMiddleware.js`, `src/store/middleware/__tests__/questTimerMiddleware.test.js`, `src/store/store.js`
-- **Learnings for future iterations:**
-  - Redux 5.x (used by RTK 2.x) generates `@@redux/INIT<random-suffix>` — use `action.type.startsWith('@@redux/INIT')` NOT strict equality; the existing worldTimeMiddleware has the same bug but it's not caught because worldTimeMiddleware clock tests use manual dispatch
-  - For interval-based middleware tests: skip `getDefaultMiddleware()` in the test store (`middleware: () => [myMiddleware]`) to avoid RTK's serializable/immutability check timers polluting `vi.advanceTimersByTime`; trigger the clock via explicit `store.dispatch({ type: 'persist/REHYDRATE', payload: null })` instead of relying on @@redux/INIT matching
-  - `vi.advanceTimersByTime(60_001)` (1ms over) is safer than exactly `60_000` to avoid off-by-one issues with fake timer firing thresholds
-  - `retryQuest` sets `timerStartedAt = null` on retry so the middleware won't pick up the quest as a timed quest after retry (timer must be explicitly restarted via `startQuestTimer`)
-  - All new quest state fields (currentBranch, checkpoint, failReason, retryable, timerStartedAt, timeLimitMinutes) are optional — existing quests are unaffected
----
-
-## 2026-04-09 - FEAT-040
-
-- Added 30 new quests to `src/data/quests.json` (103 → 133 total)
-- Distribution: oasis_village(4), ancient_library(3), desert_marketplace(4), farmland(3), bedouin_camp(4), mountain_village(4), coastal_port(4), royal_palace(4)
-- Types: 10 side_quest, 10 faction_quest, 5 crafting, 5 challenge
-- Faction quests include `faction` and `factionPrerequisite: { faction, minTier }` fields
-- All quests have: id, title, titleArabic, description, descriptionArabic, zone, type, target, trackEvent, autoStart, prerequisites, npcGiver, reward, objectives
-- Rewards scale with zone (oasis ~100-200xp → palace ~620-750xp)
-- All quest IDs use kebab-case and NPC IDs match existing npcs.json entries
-- No validate-quests script exists; all tests (7 pre-existing failures, 0 new failures), lint (pre-existing errors only), and build pass
-- **Files changed**: `src/data/quests.json`
-- **Learnings for future iterations:**
-  - Always check existing quest count before adding — was 103, needed 30 more for 133 total
-  - NPC IDs in quests use zone-agnostic assignments — e.g. farmer-omar appears in farmland quests even though his zone is oasis_village in npcs.json
-  - New quest type values (`faction_quest`, `crafting`) can be added freely — questSlice mocks quests.json in tests so no schema validation runs
-  - Faction quests use `factionPrerequisite: { faction, minTier }` as a new optional field alongside `faction` — these are consistent with factionShops.js TIER_ORDER labels: Neutral/Friendly/Trusted/Allied/Revered
-  - The last entry in quests.json used `"rewards"` (plural) instead of `"reward"` — keep `"reward"` (singular) for all new quests to match the majority format used by sq_ quests
+  - AFL sequence IDs mapped from arabicPhonetics.js ARABIC_CONSONANTS: hamza=أ, ba=ب, … ya=ي
+  - Vowels (fatha/kasra/damma/alif/ya_vowel/waw_vowel) tracked but not gated
+  - Gate bypass uses placement.hasCompleted + assignedLevel !== 'A1' (not just hasCompleted)
+  - Pre-existing lint/test failures: safe to ignore (152 errors, 8 test failures existed before batch-5)
 ---
