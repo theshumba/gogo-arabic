@@ -135,3 +135,16 @@ Started: Thu  9 Apr 2026 19:09:00 BST
   - CEFR progression: Zones 1-2 = A1, Zones 3-5 = A1/A2, Zone 6 = A2, Zones 7-8 = B1 — tests verify A1/A2 in early zones and B1 in late zones
   - 22 total points (2×oasis_village=3, ancient_library=3, desert_marketplace=3, farmland=3, bedouin_camp=2, mountain_village=2, coastal_port=3, royal_palace=3)
 ---
+
+## 2026-04-09 20:45 - FEAT-049
+- Implemented explicit teaching session service
+- Files created:
+  - `src/services/teachingSession.js` — pure-function service; exports createTeachingSession(word, allVocab?), generateDistractors(targetWord, allVocab, count?), completeTeachingSession(wordId); 4-step session: see→hear→connect→practice
+  - `src/services/__tests__/teachingSession.test.js` — 36 tests covering all 4 steps, distractor selection, FSRS card creation, edge cases (no root, pronunciationGuide fallback, hyphenated root format)
+- **Learnings for future iterations:**
+  - normalizeRoot() strips hyphens so "ك-ت-ب" (zone vocab format) and "كتب" (vocabularyExpanded format) compare equal — critical for distractor exclusion
+  - transliteration fallback chain: word.transliteration → word.pronunciationGuide → null; syllabify handles hyphen-delimited ("SHUK-ran") and space-delimited ("as-sa-LAA-mu a-LAY-kum") forms
+  - createTeachingSession(word, allVocab = vocabularyAll) injects vocabulary for distractor generation — tests pass mock vocab without touching real data
+  - completeTeachingSession returns { wordId, card, source: 'teaching_session' } — callers dispatch vocabulary/addFsrsCard; card comes from reviewCard(emptyCard, 3) which calls ts-fsrs scheduler.repeat() with Good rating
+  - generateDistractors priority: same CEFR+category > same CEFR > any; excludes target word (by id AND arabic) and all same-root words; returns ordered slice not random shuffle for deterministic tests
+---

@@ -172,7 +172,7 @@
         "npm run test:run passes"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "This is the core service that FEAT-046 (zone intros) and the foundation phase use. Pure functions that return data — no UI rendering. Distractors should not share the same root as the target word."
     },
     {
