@@ -104,3 +104,18 @@ Started: Thu  9 Apr 2026 19:09:00 BST
   - completeIntroWord is a plain action creator (not a Redux Toolkit action), so it lives outside the slice definition; middleware intercepts 'zoneIntro/completeWord' by string match
   - Re-entry after dismissal works automatically: zoneIntroMiddleware checks isZoneIntroComplete on every world/enterZone; dismissed state is just UI chrome, not middleware state
 ---
+
+## 2026-04-09 20:15 - FEAT-047
+- Implemented frequency-weighted vocabulary ordering
+- Files created:
+  - `src/services/frequencyWeighting.js` — exports getFrequencyRank, getFrequencyTier, getTierWeight, getFrequencyWeightedNewCards, selectVocabByFrequencyTier; derives frequencyRank from the existing `frequency` field using piecewise linear interpolation across CEFR frequency bands (A1→ranks 1-500, A2→501-1500, B1→1501-3500, B2→3501+)
+  - `src/services/__tests__/frequencyWeighting.test.js` — 34 tests covering all acceptance criteria
+- Files modified:
+  - `src/services/fsrs.js` — getNewCardsForSession now applies frequency weighting (Step 1: collect unseen words, Step 2: getFrequencyWeightedNewCards for candidate pool, Step 3: selectNewCardsByPath for path ordering)
+- **Learnings for future iterations:**
+  - frequencyRank is NOT added directly to vocabularyExpanded.js entries — it's computed at runtime via getFrequencyRank(word) using the existing `frequency` field; avoids editing 5000+ lines
+  - Weighting uses integer pool copies (weight × 10): tier1=30 copies, tier2=20, tier3=15, tier4=10 — rejection sampling loop is safe for typical maxCards sizes (5-20)
+  - selectVocabByFrequencyTier(state, allWords = vocabularyAll) takes allWords as optional param with default — tests inject mock vocab, production uses real vocabulary
+  - getNewCardsForSession integration passes `fsrsCards: {}` to selectNewCardsByPath when filtering the frequency-weighted candidate pool (treats candidates as "unseen" for path-ordering purposes)
+  - Statistical bias test uses 300 iterations to assess weighting; threshold 0.28 is conservative (expected ~0.43 for 3x weighted tier-1 words)
+---
