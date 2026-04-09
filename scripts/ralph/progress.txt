@@ -40,3 +40,17 @@ Started: Thu  9 Apr 2026 01:01:20 BST
   - For questUnlock consequence, use `activateQuest(questId)` — only works on 'locked' quests; test with preloaded state `{ quests: { quests: { id: { status: 'locked', ... } } } }`
   - inventorySlice `addItem` reducer doesn't reference EQUIPMENT_DATA — safe to use in tests with arbitrary item IDs
 ---
+
+## 2026-04-09 01:17 - FEAT-033
+
+- Zone boss encounter data and logic implemented
+- `bossEncounters.js` already existed with 8 complete boss definitions and 34 passing tests — no changes needed
+- Created `src/data/zoneBosses.js`: thin wrapper adding PRD-required functions: `getBossForZone(zoneId)`, `isBossDefeated(zoneId, playerState)`, `calculateBossDamage(answerCorrect, timeBonus, combo)`
+- Created `src/data/__tests__/zoneBosses.test.js`: 25 tests covering getBossForZone (all 8 zones + unknowns), isBossDefeated (flag reading, null safety, all zones), calculateBossDamage (correct/incorrect, timeBonus clamping, combo multiplier, defaults)
+- **Files changed**: `src/data/zoneBosses.js` (new), `src/data/__tests__/zoneBosses.test.js` (new)
+- **Learnings for future iterations:**
+  - Check if `bossEncounters.js` (Phase 96 pre-built content) already exists before creating new boss data files — it does, and already covers all 8 zones
+  - `isBossDefeated` reads `worldState.flags.boss_defeated_<zoneId>` — set via `setFlag({ key: 'boss_defeated_<zoneId>', value: true })`
+  - `calculateBossDamage(answerCorrect, timeBonus=0, combo=1)`: returns 0 if wrong; base=10, speedBonus=floor(clamp(time,0,1)*10), multiplier=max(1,combo)
+  - PRD file names (zoneBosses.js) may differ from pre-existing Phase 96 files (bossEncounters.js) — create the PRD file as a wrapper rather than duplicating data
+---

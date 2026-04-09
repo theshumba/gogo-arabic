@@ -56,7 +56,7 @@
         "npm run test:run passes"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "Read zones.js for zone IDs and themes. Read battleOpponents.js for opponent data format. Bosses are data + pure functions, not Phaser scenes. Store defeat state in worldStateSlice."
     },
     {
