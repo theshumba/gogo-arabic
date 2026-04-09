@@ -19,12 +19,24 @@ const PHASE_THRESHOLDS = {
   advanced: 12,      // used at least 12 features
 };
 
+// Ordered tutorial step IDs — must be completed in sequence
+export const TUTORIAL_SEQUENCE = [
+  'vocab_intro',
+  'first_quiz',
+  'first_battle',
+  'crafting_intro',
+  'quest_intro',
+];
+
 const initialState = {
   introductionsSeen: [],   // feature intro IDs already shown
   tipsSeen: [],            // tip IDs already dismissed
   featureUsage: {},        // { [featureId]: { firstUsed: timestamp, timesUsed: number } }
   onboardingPhase: 'new',  // 'new' | 'learning' | 'intermediate' | 'advanced'
   suggestFeature: null,    // feature ID to suggest, or null
+  // ── Tutorial state ──
+  tutorialSteps: TUTORIAL_SEQUENCE.map((id) => ({ id, completed: false })),
+  tutorialSkipped: false,
 };
 
 const onboardingSlice = createSlice({
@@ -76,6 +88,21 @@ const onboardingSlice = createSlice({
     setSuggestFeature(state, action) {
       state.suggestFeature = action.payload; // featureId or null
     },
+
+    completeTutorialStep(state, action) {
+      const stepId = action.payload;
+      const step = state.tutorialSteps.find((s) => s.id === stepId);
+      if (step) {
+        step.completed = true;
+      }
+    },
+
+    skipTutorial(state) {
+      state.tutorialSkipped = true;
+      state.tutorialSteps.forEach((s) => {
+        s.completed = true;
+      });
+    },
   },
 });
 
@@ -85,6 +112,8 @@ export const {
   recordFeatureUse,
   updatePhase,
   setSuggestFeature,
+  completeTutorialStep,
+  skipTutorial,
 } = onboardingSlice.actions;
 
 // ========== SELECTORS ==========
@@ -137,5 +166,28 @@ export const selectUnusedFeatures = createSelector(
     return eligibleFeatures.filter((featureId) => !usage[featureId]);
   }
 );
+
+// ========== TUTORIAL SELECTORS ==========
+
+export const selectTutorialSteps = (state) => state.onboarding.tutorialSteps;
+export const selectTutorialSkipped = (state) => state.onboarding.tutorialSkipped;
+
+/**
+ * Returns the next incomplete tutorial step, or null if all complete / skipped.
+ */
+export const selectNextTutorialStep = (state) => {
+  if (state.onboarding.tutorialSkipped) return null;
+  return state.onboarding.tutorialSteps.find((s) => !s.completed) || null;
+};
+
+/**
+ * Returns true when all tutorial steps are done or the tutorial was skipped.
+ */
+export const selectTutorialComplete = (state) => {
+  return (
+    state.onboarding.tutorialSkipped ||
+    state.onboarding.tutorialSteps.every((s) => s.completed)
+  );
+};
 
 export default onboardingSlice.reducer;

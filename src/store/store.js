@@ -89,6 +89,7 @@ import dailyQuestReducer from './slices/dailyQuestSlice.js';
 import { dailyQuestMiddleware } from './middleware/dailyQuestMiddleware.js';
 import analyticsEventQueueReducer from './slices/analyticsEventQueueSlice.js';
 import { analyticsMiddleware } from './middleware/analyticsMiddleware.js';
+import { tutorialMiddleware } from './middleware/tutorialMiddleware.js';
 import indexedDBStorage from '../services/storage/indexedDBAdapter.js';
 import { migrate, CURRENT_VERSION } from '../services/storage/migrations.js';
 
@@ -309,7 +310,7 @@ export const store = configureStore({
         // Ignore all redux-persist actions (root + nested persistReducers generate their own)
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/REGISTER', 'persist/PURGE', 'persist/FLUSH'],
       },
-    }).concat(achievementMiddleware, dailyGoalsMiddleware, quizDailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, economyDecayMiddleware, cefrProgressMiddleware, relationshipDecayMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, zoneEntryReviewMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware, leechDetectionMiddleware, dailyQuestMiddleware, analyticsMiddleware),
+    }).concat(achievementMiddleware, dailyGoalsMiddleware, quizDailyGoalsMiddleware, storageQuotaMiddleware, rootFsrsSyncMiddleware, battleRewardsMiddleware, craftingVocabMiddleware, statusEffectVocabMiddleware, friendshipMiddleware, utilityBonusMiddleware, worldStateMiddleware, factionMiddleware, gossipMiddleware, poetryRewardsMiddleware, learningProgressMiddleware, offlineFsrsMiddleware, grammarFsrsMiddleware, divergentExperienceMiddleware, relationshipMiddleware, loreMiddleware, difficultyMiddleware, economyMiddleware, economyDecayMiddleware, cefrProgressMiddleware, relationshipDecayMiddleware, seasonalAutomationMiddleware, zoneReviewMiddleware, zoneEntryReviewMiddleware, antiFrustrationMiddleware, questChainMiddleware, loginRewardMiddleware, leechDetectionMiddleware, dailyQuestMiddleware, analyticsMiddleware, tutorialMiddleware),
 });
 
 export const persistor = persistStore(store);
