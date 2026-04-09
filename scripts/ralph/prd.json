@@ -115,7 +115,7 @@
         "npm run test:run passes"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "Read zoneEntryReviewMiddleware.js for zone entry interception pattern. This is different from micro-review — this is for FIRST entry teaching, micro-review is for returning visits with due cards. Create zoneIntroSlice.js for state."
     },
     {

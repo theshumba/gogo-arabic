@@ -88,3 +88,19 @@ Started: Thu  9 Apr 2026 19:09:00 BST
   - Each word's `root` field is an empty string for Arabic particles (لا، نعم) — tests must allow empty string for root field specifically
   - 96 total words (8 zones × 12) comfortably within 80-100 range; overlap allowed but avoided here since each zone has distinct vocabulary
 ---
+
+## 2026-04-09 20:07 - FEAT-046
+- Implemented zone intro teaching middleware
+- Files created:
+  - `src/store/slices/zoneIntroSlice.js` — active session state (activeZone, status, startedZones); exports startIntro, dismissIntro, clearIntro, resetZoneIntroSession, resetAllIntroSessions, completeIntroWord (plain action creator), presentNextIntroWord, selectActiveIntroZone, selectIntroStatus, selectIsIntroActive, selectIsIntroDismissed, selectActiveIntroProgress, selectZoneIntroShouldStart, selectZoneIntroProgress
+  - `src/store/middleware/zoneIntroMiddleware.js` — intercepts world/enterZone (dispatches startIntro when intro incomplete) and zoneIntro/completeWord (dispatches markWordReviewed + addFsrsCard; clears intro when all words reviewed)
+  - `src/store/middleware/__tests__/zoneIntroMiddleware.test.js` — 28 tests covering all acceptance criteria
+- Files modified:
+  - `src/store/store.js` — imported zoneIntroReducer, zoneIntroMiddleware; added 'zoneIntro' to localStorage persist whitelist; added zoneIntroMiddleware to concat chain
+- **Learnings for future iterations:**
+  - Immer freezes reducer initial state in dev mode — test mocks must use fresh plain objects, NOT spread from `reducer(undefined, { type: '@@INIT' })` output when those objects need to be mutated in dispatch mocks
+  - Two-slice design: zoneVocabIntroSlice (persistent reviewed-word tracking, FEAT-045) + zoneIntroSlice (active session state, FEAT-046) — clean separation of concerns
+  - addFsrsCard payload expects { wordId, card, source? } where card is a nested object — pass { wordId, card: { state, stability, ... }, source } not flat fields
+  - completeIntroWord is a plain action creator (not a Redux Toolkit action), so it lives outside the slice definition; middleware intercepts 'zoneIntro/completeWord' by string match
+  - Re-entry after dismissal works automatically: zoneIntroMiddleware checks isZoneIntroComplete on every world/enterZone; dismissed state is just UI chrome, not middleware state
+---
