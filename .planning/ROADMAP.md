@@ -14,7 +14,12 @@
 - ✅ **v10.0 Onboarding & First 5 Minutes** — Phases 47-49 (shipped 2026-03-19, Phases 48-49 absorbed into v11.0)
 - ✅ **v11.0 Deep Systems & Content Engine** — Phases 50-55 (shipped 2026-03-21) → [archive](milestones/v11.0-ROADMAP.md)
 - ✅ **v12.0 Learning Systems** — Phases 56-64 (shipped 2026-03-23) → [archive](milestones/v12.0-ROADMAP.md)
-- 🚧 **v13.0 Systems Polish & Immersion** — Phases 65-71 (in progress)
+- ✅ **v13.0 Systems Polish & Immersion** — Phases 65-71 (shipped 2026-03-27)
+- ✅ **v14.0 Narrative, Social & Audio** — Phases 76-80 (shipped 2026-03-28)
+- ✅ **v15.0 Core Learning Loop** — Phases 81-85 (shipped 2026-03-28)
+- 🚧 **v16.0 Visual Rebuild** — Phase 86 (planning, 2026-04-17) — leverage Opus 4.7 1M context for single-pass visual/world layer rebuild
+- ⏳ **v17.0 Code Health** — Phase 87 (planned) — audit-first whole-codebase refactor with guardrails
+- ⏳ **v18.0 Advanced AI Systems** — Phases 88-90 (planned) — curriculum orchestrator, dynamic NPC memory, procedural quest generation
 
 ## Phases
 
@@ -430,12 +435,77 @@ Plans:
 - [ ] 71-01: Battle system integration tests (TEST-01)
 - [ ] 71-02: Grammar overlay + quest system integration tests (TEST-02, TEST-03)
 
+### v16.0 Visual Rebuild (Phase 86)
+
+#### Phase 86: Visual/World Layer Rebuild
+**Goal**: Rebuild the visual/world layer of GoGo Arabic so every zone renders correctly with Kenmi assets, no broken tiles, consistent art style, and the "world" feels hand-authored rather than programmatically placeholder-filled. Leverages Opus 4.7's 1M context to reason about all zones, plugins, and render paths in one pass.
+**Depends on**: None (independent visual work — does not touch game logic)
+**Requirements**: TBD (to be defined during planning)
+**Success Criteria** (what must be TRUE):
+  1. All 8 zones render without missing/broken tiles — every tile asset used in code exists in assets, every zone loads visually clean on first play
+  2. Kenmi assets (terrain, buildings, decorations, characters) are used consistently across all zones — no mismatched art style
+  3. "World" terminology used throughout — no "map" or "UI" in new code or docs (per user guidance)
+  4. No new overlay wiring introduced (per user guidance — visual work only)
+  5. Existing game logic untouched — all 2535 tests still pass after visual rebuild
+
+Plans: TBD (planning in progress via /gsd-plan-phase 86)
+
+### v17.0 Code Health (Phase 87)
+
+#### Phase 87: Codebase Audit & Refactor
+**Goal**: Audit the entire 210K LOC codebase in a single Opus 4.7 pass, produce a prioritised findings report, then refactor with explicit guardrails — no feature removal, test coverage before any refactor, user signs off on every deletion.
+**Depends on**: Phase 86 (refactor on visually-stable codebase)
+**Requirements**: TBD
+**Success Criteria** (what must be TRUE):
+  1. AUDIT.md produced listing dead code, inconsistencies, architectural drift, tangled dependencies — user reviews before any code is touched
+  2. Every "dead code" item is explicitly approved by the user before removal — no silent deletions
+  3. Every system being refactored has test coverage added BEFORE refactor begins
+  4. Feature preservation verification: all 2535 existing tests continue to pass; user-facing feature list is unchanged
+  5. Codebase LOC reduction measurable (target: at least 10% reduction without feature loss)
+
+Plans: TBD
+
+### v18.0 Advanced AI Systems (Phases 88-90)
+
+#### Phase 88: Curriculum Orchestrator
+**Goal**: A single learning director that ties FEAT-042 through FEAT-050 (core 100 words, roots, grammar scaffolding, frequency ordering, zone pre-teaching, teaching sessions, curriculum dashboard) into a unified player-facing system that decides what to teach next across zones, FSRS, grammar, and roots.
+**Depends on**: v13.0-v15.0 learning systems complete
+**Requirements**: TBD
+**Success Criteria**:
+  1. Orchestrator selects next learning activity from all available sources (FSRS review, grammar lesson, zone vocab, root family gap) based on player state
+  2. Recommendations surfaced in Daily Dashboard and after every quest/teaching session
+  3. Orchestrator respects CEFR progression gates across all skill dimensions
+
+Plans: TBD
+
+#### Phase 89: Dynamic NPC AI with Memory
+**Goal**: NPCs remember past conversations with the player across sessions, reference your vocab mastery, have moods/schedules that evolve based on player interaction history.
+**Depends on**: Phase 88 (orchestrator provides mastery signals)
+**Requirements**: TBD
+**Success Criteria**:
+  1. NPCs reference specific past conversations by name ("last time you asked about X...")
+  2. NPC dialogue pulls from player's FSRS mastery to avoid teaching what's already learned
+  3. NPC mood state persists across sessions and affects dialogue tone
+
+Plans: TBD
+
+#### Phase 90: Procedural Quest Generation
+**Goal**: Quests generated from FSRS state + zone + root families so practice is always contextual and never repeats stale content.
+**Depends on**: Phase 88
+**Requirements**: TBD
+**Success Criteria**:
+  1. Quest generator produces valid, playable quests from templates parameterized by FSRS state + zone + root families
+  2. Generated quests pass narrative coherence checks (no contradictions with canonical story)
+  3. No generated quest repeats within a 7-day rolling window for a given player
+
+Plans: TBD
+
 ---
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 71
+Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 85 → 86 → 87 → 88 → 89 → 90
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -503,16 +573,27 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 71
 | 62. Grammar B1-B2 + CEFR Gating | v12.0 | 0/2 | Complete    | 2026-03-23 |
 | 63. Achievement Expansion | v12.0 | 3/3 | Complete    | 2026-03-23 |
 | 64. CEFR Reports + Social Sharing | v12.0 | 3/3 | Complete    | 2026-03-23 |
-| 65. Bundle Optimization | v13.0 | 3/3 | Complete | 65-01, 65-02, 65-03 |
+| 65. Bundle Optimization | v13.0 | 3/3 | Complete | 2026-03-24 |
 | 66. CSS Modules Migration | v13.0 | 3/3 | Complete | 2026-03-24 |
-| 67. Systems Wiring | v13.0 | 0/3 | Not started | - |
+| 67. Systems Wiring | v13.0 | 3/3 | Complete | 2026-03-27 |
 | 68. Quiz Expansion — Final 3 Types | v13.0 | 2/2 | Complete | 2026-03-24 |
-| 69. Immersion — Dialogue & Welcome Back | v13.0 | 0/2 | Not started | - |
-| 70. Immersion — Environmental Arabic & Quiz Stats | v13.0 | 0/2 | Not started | - |
-| 71. Integration Testing | v13.0 | 0/2 | Not started | - |
+| 69. Immersion — Dialogue & Welcome Back | v13.0 | 2/2 | Complete | 2026-03-27 |
+| 70. Immersion — Environmental Arabic & Quiz Stats | v13.0 | 2/2 | Complete | 2026-03-27 |
+| 71. Integration Testing | v13.0 | 2/2 | Complete | 2026-03-27 |
+| 76-80. v14.0 Narrative, Social & Audio | v14.0 | 10/10 | Complete | 2026-03-28 |
+| 81. Daily Challenge System | v15.0 | 2/2 | Complete | 2026-03-28 |
+| 82. Graded Reading Passages | v15.0 | 2/2 | Complete | 2026-03-28 |
+| 83. Arabic Writing Practice | v15.0 | 2/2 | Complete | 2026-03-28 |
+| 84. Conversation Practice | v15.0 | 2/2 | Complete | 2026-03-28 |
+| 85. Mini-Game Expansion | v15.0 | 2/2 | Complete | 2026-03-28 |
+| 86. Visual/World Layer Rebuild | v16.0 | 0/? | Planning | - |
+| 87. Codebase Audit & Refactor | v17.0 | 0/? | Planned | - |
+| 88. Curriculum Orchestrator | v18.0 | 0/? | Planned | - |
+| 89. Dynamic NPC AI with Memory | v18.0 | 0/? | Planned | - |
+| 90. Procedural Quest Generation | v18.0 | 0/? | Planned | - |
 
-**Cumulative:** 66 phases shipped, 190+ plans complete, 12 milestones shipped
+**Cumulative:** 85 phases shipped, 229+ plans complete, 15 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-03-24 — v13.0 phases 65, 66, 68 complete; phases 67, 69-71 remaining*
+*Last updated: 2026-04-17 — drift fix (v13/v14/v15 marked complete from STATE.md); v16.0 Visual Rebuild opened with Phase 86; v17.0 Code Health and v18.0 Advanced AI Systems queued*

@@ -72,7 +72,41 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 
 **Delivered:** 9 phases (56-64), 22 plans. Teaching infrastructure: skill trees, grammar curriculum, quiz expansion, adaptive difficulty, placement test, achievements, CEFR reports, social sharing.
 
-## Current Milestone: v13.0 Systems Polish & Immersion
+## Shipped: v13.0 Systems Polish & Immersion (2026-03-27)
+
+**Delivered:** 7 phases (65-71), 16 plans. Bundle optimisation, CSS modules migration, systems wiring, final 3 quiz types, environmental Arabic labels, in-dialogue comprehension, welcome back, integration tests.
+
+## Shipped: v14.0 Narrative, Social & Audio (2026-03-28)
+
+**Delivered:** 5 phases (76-80), 10 plans.
+
+## Shipped: v15.0 Core Learning Loop (2026-03-28)
+
+**Delivered:** 5 phases (81-85), 10 plans. Daily challenges with deterministic selection and streak rewards, 60 graded reading passages with FSRS tooltip integration, canvas-based Arabic writing practice with stroke validation, 40 conversation scenarios with word-bank construction, expanded mini-game hub (word search, crossword, number challenge, memory match).
+
+## Current Milestone: v16.0 Visual Rebuild
+
+**Goal:** Rebuild the visual/world layer of GoGo Arabic in a single Opus 4.7 1M-context pass so every zone renders correctly with Kenmi assets, no broken tiles, consistent art style, and the "world" feels hand-authored rather than programmatically placeholder-filled. Game logic is untouched — this is pure visual work.
+
+**Target features:**
+- All 8 zones render without missing/broken tiles
+- Consistent Kenmi art style across terrain, buildings, decorations, characters
+- Claude does ALL visual work (no user-driven Tiled editing)
+- "World" terminology throughout (not "map" or "UI")
+- No new overlay wiring
+- All 2535 existing tests continue to pass
+
+**Upcoming milestones:**
+- v17.0 Code Health — whole-codebase audit (report first, no silent deletions, test coverage before any refactor, feature preservation verified)
+- v18.0 Advanced AI Systems — curriculum orchestrator (Phase 88), dynamic NPC AI with memory (Phase 89), procedural quest generation (Phase 90)
+
+**Previous milestone:** v15.0 Core Learning Loop (Phases 81-85, shipped 2026-03-28)
+
+---
+
+### Earlier milestone (absorbed above — kept for historical context)
+
+## Shipped: v13.0 Systems Polish & Immersion — original goal
 
 **Goal:** Deepen the "learn by playing" experience — optimize performance, wire disconnected systems together, embed Arabic practice into exploration, and add the 3 remaining quiz types. No new UI frameworks or major features — pure under-the-hood improvements that make existing systems work better together.
 
@@ -181,4 +215,4 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 | Arabic numeral haggling | Teaches Eastern Arabic numerals through gameplay | Good — unique learning mechanic |
 
 ---
-*Last updated: 2026-03-23 after Phase 64 (CEFR Reports + Social Sharing) complete — v12.0 MILESTONE COMPLETE. recharts RadarChart + LineChart, forward-only CEFR snapshots, Amira milestone ink dialogue, SVG social share card + Web Share API. All 9 phases (56-64) shipped.*
+*Last updated: 2026-04-17 — drift fix: v13.0/v14.0/v15.0 marked as shipped (reconciled with STATE.md). v16.0 Visual Rebuild opened (Phase 86). v17.0 Code Health and v18.0 Advanced AI Systems queued.*
