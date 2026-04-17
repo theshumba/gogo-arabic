@@ -670,32 +670,32 @@ No formal REQ-IDs are assigned to Phase 97 (per CONTEXT "TBD — to be defined d
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Face-removal strategy for Kenmi NPC sprites**
    - What we know: 24 entries in NPC_KEY_MAP, several map to `kenmi-desert-npc-desert-person-*` which have visible eyes.
-   - What's unclear: whether the user prefers (a) revert to existing `/assets/sprites/npcs/faceless/*.png` PNGs (already 23 of them on disk), or (b) post-process Kenmi sprites via script to black out eye pixels.
-   - Recommendation: prefer option (a) — the faceless PNGs already exist, already wired to `FACELESS_NPCS` in zoneAssetManifests. Keep Kenmi for animals / enemies / buildings / decorations, use existing faceless sprites for named NPCs. Confirm with user during plan-phase.
+   - What's unclear: whether the user prefers (a) revert to existing `/assets/sprites/npcs/faceless/*.png` PNGs, or (b) post-process Kenmi sprites via script to black out eye pixels.
+   - **RESOLVED:** Option (a) — use existing faceless PNGs. The `/assets/sprites/npcs/faceless/` directory contains **24 PNGs** (including `guide-amira.png`). Registration in `FACELESS_NPCS` (`src/data/zoneAssetManifests.js`) is currently only 23 entries; Plan 03 adds `guide-amira` to reach full 24/24 parity. Keep Kenmi for animals / enemies / buildings / decorations; use existing faceless sprites for named NPCs.
 
 2. **Snow-biome decoration parity**
    - What we know: `scatterDecorations` skips everything except desert/grass. `mountain_village` has zero scatter.
-   - What's unclear: does "consistent art style" in CONTEXT require snow decorations (A7-esque completeness) or is sparse snow acceptable?
-   - Recommendation: treat as required (WORLD-09). Fill gap with christmas pack selectively (snowman ok, santa/reindeer NO, no cross-bearing items).
+   - What's unclear: does "consistent art style" in CONTEXT require snow decorations or is sparse snow acceptable?
+   - **RESOLVED:** Treat as required (WORLD-09). User confirmed in plan-phase that snow-biome parity is required. Plan 05 fills gap with christmas pack selectively (snowman ok, santa/reindeer NO, no cross-bearing items). CULTURAL_EXCLUDES regex tightened in revision (W-4) to avoid false-matching benign tokens like `crossroads`.
 
 3. **Tiled JSON path: keep or remove?**
    - What we know: TiledMapLoader exists, `map-test-map` is the only registered Tiled JSON.
    - What's unclear: does Phase 97 promote any zone to Tiled JSON, or keep everything programmatic?
-   - Recommendation: keep everything programmatic; CONTEXT forbids user-driven Tiled and there's no Claude-driven advantage for this rebuild. Leave TiledMapLoader in place for future phases. Don't remove `map-test-map` registration (defer to Phase 98 cleanup).
+   - **RESOLVED:** Keep everything programmatic; CONTEXT forbids user-driven Tiled and there's no Claude-driven advantage for this rebuild. TiledMapLoader left in place for future phases. `map-test-map` registration NOT removed in this phase (deferred to Phase 98 Code Health cleanup).
 
 4. **Will any object-collision size need re-tuning?**
    - What we know: zones.js entries hard-code `collideW` and `collideH` per object (e.g., `desert-house-1.1` = 180×80). These were hand-tuned in v8.0.
    - What's unclear: if Kenmi building PNGs are visually re-seated (different x,y), do hard-coded collide sizes still match visual footprint?
-   - Recommendation: keep collideW/H values unless the object visual origin changes. If a rebuild repositions a building, also verify collide size visually (headless screenshot).
+   - **RESOLVED:** Keep collideW/H values unchanged unless the object visual origin changes. Plan 06 preserves existing collide sizes. If a rebuild repositions a building, verify collide size visually (headless screenshot in Plan 08).
 
 5. **Will `_safeFrame` still be needed after kenmiFrameTables.js lands?**
    - What we know: `_safeFrame` clamps invalid frame requests to frame 0 or the max frame.
    - What's unclear: if frame tables are derived from PNGs, are there any remaining paths that can request an invalid frame?
-   - Recommendation: keep `_safeFrame` as a belt-and-braces guard; add a DEV-mode `console.warn` when triggered so future bugs surface loudly.
+   - **RESOLVED:** Keep `_safeFrame` as a belt-and-braces guard. Plan 04 adds a DEV-mode `console.warn` when triggered so future bugs surface loudly. Do not remove the clamp — it protects against any future path that might pass a frame from stale cached data.
 
 ---
 
