@@ -96,9 +96,11 @@ Players naturally learn Arabic through guided exploration and interaction in an 
 - No new overlay wiring
 - All 2535 existing tests continue to pass
 
+**Phase:** 97 (pre-existing stubs 86-96 remain unassigned and need review separately)
+
 **Upcoming milestones:**
-- v17.0 Code Health — whole-codebase audit (report first, no silent deletions, test coverage before any refactor, feature preservation verified)
-- v18.0 Advanced AI Systems — curriculum orchestrator (Phase 88), dynamic NPC AI with memory (Phase 89), procedural quest generation (Phase 90)
+- v17.0 Code Health (Phase 98) — whole-codebase audit (report first, no silent deletions, test coverage before any refactor, feature preservation verified)
+- v18.0 Advanced AI Systems (Phases 99-101) — curriculum orchestrator, dynamic NPC AI with memory, procedural quest generation
 
 **Previous milestone:** v15.0 Core Learning Loop (Phases 81-85, shipped 2026-03-28)
 

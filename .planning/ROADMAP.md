@@ -17,9 +17,10 @@
 - ✅ **v13.0 Systems Polish & Immersion** — Phases 65-71 (shipped 2026-03-27)
 - ✅ **v14.0 Narrative, Social & Audio** — Phases 76-80 (shipped 2026-03-28)
 - ✅ **v15.0 Core Learning Loop** — Phases 81-85 (shipped 2026-03-28)
-- 🚧 **v16.0 Visual Rebuild** — Phase 86 (planning, 2026-04-17) — leverage Opus 4.7 1M context for single-pass visual/world layer rebuild
-- ⏳ **v17.0 Code Health** — Phase 87 (planned) — audit-first whole-codebase refactor with guardrails
-- ⏳ **v18.0 Advanced AI Systems** — Phases 88-90 (planned) — curriculum orchestrator, dynamic NPC memory, procedural quest generation
+- 🪧 **Unassigned stubs** — Phase directories 86-96 exist with pre-existing plan stubs (Ramadan/Eid events, difficulty curve, progression balancing, NPC dialogue expansion, reading/conversation content, leaderboards, tutorial refresh, analytics, idioms/proverbs, pronunciation, battle expansion). Not currently assigned to a milestone. Needs review before or alongside v16.0.
+- 🚧 **v16.0 Visual Rebuild** — Phase 97 (planning, 2026-04-17) — leverage Opus 4.7 1M context for single-pass visual/world layer rebuild
+- ⏳ **v17.0 Code Health** — Phase 98 (planned) — audit-first whole-codebase refactor with guardrails
+- ⏳ **v18.0 Advanced AI Systems** — Phases 99-101 (planned) — curriculum orchestrator, dynamic NPC memory, procedural quest generation
 
 ## Phases
 
@@ -435,9 +436,9 @@ Plans:
 - [ ] 71-01: Battle system integration tests (TEST-01)
 - [ ] 71-02: Grammar overlay + quest system integration tests (TEST-02, TEST-03)
 
-### v16.0 Visual Rebuild (Phase 86)
+### v16.0 Visual Rebuild (Phase 97)
 
-#### Phase 86: Visual/World Layer Rebuild
+#### Phase 97: Visual/World Layer Rebuild
 **Goal**: Rebuild the visual/world layer of GoGo Arabic so every zone renders correctly with Kenmi assets, no broken tiles, consistent art style, and the "world" feels hand-authored rather than programmatically placeholder-filled. Leverages Opus 4.7's 1M context to reason about all zones, plugins, and render paths in one pass.
 **Depends on**: None (independent visual work — does not touch game logic)
 **Requirements**: TBD (to be defined during planning)
@@ -448,13 +449,13 @@ Plans:
   4. No new overlay wiring introduced (per user guidance — visual work only)
   5. Existing game logic untouched — all 2535 tests still pass after visual rebuild
 
-Plans: TBD (planning in progress via /gsd-plan-phase 86)
+Plans: TBD (planning in progress via /gsd-plan-phase 97)
 
-### v17.0 Code Health (Phase 87)
+### v17.0 Code Health (Phase 98)
 
-#### Phase 87: Codebase Audit & Refactor
+#### Phase 98: Codebase Audit & Refactor
 **Goal**: Audit the entire 210K LOC codebase in a single Opus 4.7 pass, produce a prioritised findings report, then refactor with explicit guardrails — no feature removal, test coverage before any refactor, user signs off on every deletion.
-**Depends on**: Phase 86 (refactor on visually-stable codebase)
+**Depends on**: Phase 97 (refactor on visually-stable codebase)
 **Requirements**: TBD
 **Success Criteria** (what must be TRUE):
   1. AUDIT.md produced listing dead code, inconsistencies, architectural drift, tangled dependencies — user reviews before any code is touched
@@ -465,9 +466,9 @@ Plans: TBD (planning in progress via /gsd-plan-phase 86)
 
 Plans: TBD
 
-### v18.0 Advanced AI Systems (Phases 88-90)
+### v18.0 Advanced AI Systems (Phases 99-101)
 
-#### Phase 88: Curriculum Orchestrator
+#### Phase 99: Curriculum Orchestrator
 **Goal**: A single learning director that ties FEAT-042 through FEAT-050 (core 100 words, roots, grammar scaffolding, frequency ordering, zone pre-teaching, teaching sessions, curriculum dashboard) into a unified player-facing system that decides what to teach next across zones, FSRS, grammar, and roots.
 **Depends on**: v13.0-v15.0 learning systems complete
 **Requirements**: TBD
@@ -478,9 +479,9 @@ Plans: TBD
 
 Plans: TBD
 
-#### Phase 89: Dynamic NPC AI with Memory
+#### Phase 100: Dynamic NPC AI with Memory
 **Goal**: NPCs remember past conversations with the player across sessions, reference your vocab mastery, have moods/schedules that evolve based on player interaction history.
-**Depends on**: Phase 88 (orchestrator provides mastery signals)
+**Depends on**: Phase 99 (orchestrator provides mastery signals)
 **Requirements**: TBD
 **Success Criteria**:
   1. NPCs reference specific past conversations by name ("last time you asked about X...")
@@ -489,9 +490,9 @@ Plans: TBD
 
 Plans: TBD
 
-#### Phase 90: Procedural Quest Generation
+#### Phase 101: Procedural Quest Generation
 **Goal**: Quests generated from FSRS state + zone + root families so practice is always contextual and never repeats stale content.
-**Depends on**: Phase 88
+**Depends on**: Phase 99
 **Requirements**: TBD
 **Success Criteria**:
   1. Quest generator produces valid, playable quests from templates parameterized by FSRS state + zone + root families
@@ -586,14 +587,15 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 85 
 | 83. Arabic Writing Practice | v15.0 | 2/2 | Complete | 2026-03-28 |
 | 84. Conversation Practice | v15.0 | 2/2 | Complete | 2026-03-28 |
 | 85. Mini-Game Expansion | v15.0 | 2/2 | Complete | 2026-03-28 |
-| 86. Visual/World Layer Rebuild | v16.0 | 0/? | Planning | - |
-| 87. Codebase Audit & Refactor | v17.0 | 0/? | Planned | - |
-| 88. Curriculum Orchestrator | v18.0 | 0/? | Planned | - |
-| 89. Dynamic NPC AI with Memory | v18.0 | 0/? | Planned | - |
-| 90. Procedural Quest Generation | v18.0 | 0/? | Planned | - |
+| 86-96. Pre-existing stubs (Ramadan, difficulty curve, progression, NPC/quest expansion, content, leaderboards, tutorial, analytics, idioms, pronunciation, battle) | unassigned | 0/? | Stubbed | - |
+| 97. Visual/World Layer Rebuild | v16.0 | 0/? | Planning | - |
+| 98. Codebase Audit & Refactor | v17.0 | 0/? | Planned | - |
+| 99. Curriculum Orchestrator | v18.0 | 0/? | Planned | - |
+| 100. Dynamic NPC AI with Memory | v18.0 | 0/? | Planned | - |
+| 101. Procedural Quest Generation | v18.0 | 0/? | Planned | - |
 
 **Cumulative:** 85 phases shipped, 229+ plans complete, 15 milestones shipped
 
 ---
 *Roadmap created: 2026-02-08*
-*Last updated: 2026-04-17 — drift fix (v13/v14/v15 marked complete from STATE.md); v16.0 Visual Rebuild opened with Phase 86; v17.0 Code Health and v18.0 Advanced AI Systems queued*
+*Last updated: 2026-04-17 — drift fix (v13/v14/v15 marked complete from STATE.md); pre-existing phase stubs 86-96 noted as unassigned; v16.0 Visual Rebuild opened as Phase 97; v17.0 Code Health (Phase 98) and v18.0 Advanced AI Systems (Phases 99-101) queued*
