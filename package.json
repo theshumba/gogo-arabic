@@ -22,6 +22,8 @@
     "test:e2e": "playwright test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "lint:world-terminology": "node scripts/lint-world-terminology.js",
+    "report:kenmi-coverage": "node scripts/report-kenmi-coverage.js",
     "format": "prettier --write \"src/**/*.{js,jsx,json,css}\" \"server/**/*.{js,json}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,json,css}\" \"server/**/*.{js,json}\""
   },
