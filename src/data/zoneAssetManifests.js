@@ -5,6 +5,11 @@
  * ZONE_ASSET_MANIFESTS: Loaded on zone transition via loadZoneAssets().
  *
  * Each entry: { key: string, path: string, type: 'image'|'spritesheet', frameWidth?, frameHeight? }
+ *
+ * As of Phase 97 Plan 02 (2026-04-18): Kenmi desert tile PNGs are loaded exclusively
+ * through KENMI_CATALOG (src/data/kenmiCatalog.js) -- duplicate registrations that
+ * previously lived in DESERT_TILESETS have been removed. ZONE_ASSET_MANIFESTS now
+ * hold per-zone extensions only; currently empty for all 8 core zones.
  */
 
 const BODY_OUTFITS = [
@@ -137,31 +142,23 @@ export const SHARED_ASSETS = [
   { key: 'rpg-ui-icons', path: '/assets/ui/rpg-ui-kit/PNG/Icons.png', type: 'image' },
 ];
 
-// Desert tileset images for Tiled maps (zone-specific)
-const DESERT_TILESETS = [
-  { key: 'desert-beach-tiles-1', path: '/assets/kenmi/desert/tiles/desert-beach-tiles-1.png', type: 'image' },
-  { key: 'desert-beach-tiles-2', path: '/assets/kenmi/desert/tiles/desert-beach-tiles-2.png', type: 'image' },
-  { key: 'desert-beach-tiles-3', path: '/assets/kenmi/desert/tiles/desert-beach-tiles-3.png', type: 'image' },
-  { key: 'desert-grass', path: '/assets/kenmi/desert/tiles/desert-grass.png', type: 'image' },
-  { key: 'desert-water-tiles-1', path: '/assets/kenmi/desert/tiles/desert-water-tiles-1.png', type: 'image' },
-  { key: 'desert-water-tiles-2', path: '/assets/kenmi/desert/tiles/desert-water-tiles-2.png', type: 'image' },
-  { key: 'desert-water-tiles-3', path: '/assets/kenmi/desert/tiles/desert-water-tiles-3.png', type: 'image' },
-];
-
 /**
  * Per-zone asset lists loaded on demand during zone transition.
  * Assets in these lists are NOT loaded at boot -- only when the player first visits the zone.
  * On revisit the TextureManager cache is checked; already-loaded assets are skipped.
+ *
+ * Phase 97 Plan 02: empty for all 8 core zones. Kenmi desert tiles are now loaded
+ * exclusively through KENMI_CATALOG at BootScene preload time.
  */
 export const ZONE_ASSET_MANIFESTS = {
-  oasis_village: [...DESERT_TILESETS],
-  ancient_library: [...DESERT_TILESETS],
-  desert_marketplace: [...DESERT_TILESETS],
+  oasis_village: [],
+  ancient_library: [],
+  desert_marketplace: [],
   farmland: [],
-  bedouin_camp: [...DESERT_TILESETS],
+  bedouin_camp: [],
   mountain_village: [],
   coastal_port: [],
-  royal_palace: [...DESERT_TILESETS],
+  royal_palace: [],
 };
 
 /**
