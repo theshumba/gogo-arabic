@@ -214,6 +214,45 @@
 - Mapped to phases: 12
 - Unmapped: 0
 
+## v16.0 Requirements — Visual/World Layer Rebuild
+
+### Visual Layer
+
+- [ ] **WORLD-01**: All 8 core zones render without missing/broken tiles — every Kenmi key in zones.js exists in KENMI_CATALOG and every ground sprite resolves to a valid frame index
+- [ ] **WORLD-02**: Each of 8 core zones renders to a deterministic snapshot matching a committed fixture (Kenmi art style consistent across zones)
+- [ ] **WORLD-03**: Every NPC sprite key referenced by NPC_KEY_MAP is from the `/assets/sprites/npcs/faceless/` whitelist (Islamic art constraint — no faces)
+- [ ] **WORLD-04**: No new file added in Phase 97 (`src/game/systems/world/`, new `src/data` entries, `src/test/fixtures/world-snapshots/`) contains the token "map" or "UI" — use "world" terminology exclusively
+- [ ] **WORLD-05**: No new overlay wired into `src/components/GameLayout.jsx` during Phase 97
+- [ ] **WORLD-06**: All 2535 existing tests continue to pass after every Phase 97 commit
+- [ ] **WORLD-07**: 8 zone snapshot fixture files exist at `src/test/fixtures/world-snapshots/{zoneId}.json` and parse as valid JSON
+- [ ] **WORLD-08**: `WORLD-AUDIT.md` exists at the phase directory with all required sections (Zone Kenmi Key Inventory, Missing References, Face-Bearing NPCs, Frame Table Audit, Biome Gaps, BootScene Duplicates, Terminology Hits, Recommendations, 1M-Context Strategy Verification, Verified vs. Assumed)
+- [ ] **WORLD-09**: `mountain_village` snapshot has non-zero decoCount AND non-zero animalCount (snow biome parity with desert zones)
+- [ ] **WORLD-10**: `farmland` and `coastal_port` snapshots have non-zero animalCount (grass biome ambient life)
+- [ ] **WORLD-11**: No Phaser texture key is loaded twice under different classifications (BootScene duplicate-load elimination — DESERT_TILESETS vs KENMI_CATALOG collision resolved)
+- [ ] **WORLD-12**: Interior scenes (`scholar_house_interior`, `merchant_house_interior`, `oasis_guild_interior`) render to valid snapshots
+
+## v16.0 Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| WORLD-01 | Phase 97 (Plans 01, 04, 06) | Planning |
+| WORLD-02 | Phase 97 (Plans 01, 06, 07) | Planning |
+| WORLD-03 | Phase 97 (Plan 03) | Planning |
+| WORLD-04 | Phase 97 (Plans 01, 08) | Planning |
+| WORLD-05 | Phase 97 (Plan 08) | Planning |
+| WORLD-06 | Phase 97 (all plans) | Planning |
+| WORLD-07 | Phase 97 (Plans 01, 07) | Planning |
+| WORLD-08 | Phase 97 (Plans 01, 08) | Planning |
+| WORLD-09 | Phase 97 (Plans 05, 07) | Planning |
+| WORLD-10 | Phase 97 (Plans 05, 07) | Planning |
+| WORLD-11 | Phase 97 (Plan 02) | Planning |
+| WORLD-12 | Phase 97 (Plans 01, 07) | Planning |
+
+**Coverage:**
+- v16.0 requirements: 12 total
+- Mapped to phases: 12
+- Unmapped: 0
+
 ---
 *Requirements defined: 2026-03-22*
-*Last updated: 2026-03-28 — v15.0 complete, all 12 requirements across 5 phases (81-85) shipped*
+*Last updated: 2026-04-18 — v16.0 Visual Rebuild requirements added (WORLD-01 through WORLD-12) for Phase 97. v15.0 shipped.*
