@@ -51,7 +51,9 @@ export const BIOME_BUILDING_SETS = {
   snow: {
     small: [
       'kenmi-base-buildings-buildings-houses-stone-house-1-stone-base-black',
-      'kenmi-base-buildings-buildings-houses-stone-house-2-stone-base-black',
+      // Phase 97 Plan 06: stone-house-2-stone-base-black has a catalog-gen typo (blackpng suffix).
+      // Use stone-house-3-stone-base-blue as a working replacement; preserves dark-stone variety.
+      'kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue',
       'kenmi-base-buildings-buildings-houses-limestone-house-1-limestone-base-black',
       'kenmi-base-buildings-buildings-houses-limestone-house-2-limestone-base-black',
     ],

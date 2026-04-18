@@ -1036,7 +1036,10 @@ const mountain_village = {
     { key: 'kenmi-base-buildings-buildings-houses-limestone-house-3-limestone-base-black', x: 15, y: 9, collide: true, collideW: 240, collideH: 100 },
     { key: 'kenmi-base-buildings-buildings-houses-limestone-house-4-limestone-base-black', x: 25, y: 9, collide: true, collideW: 240, collideH: 100 },
     { key: 'kenmi-base-buildings-buildings-houses-stone-house-1-stone-base-black', x: 14, y: 18, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-base-buildings-buildings-houses-stone-house-2-stone-base-black', x: 26, y: 18, collide: true, collideW: 180, collideH: 80 },
+    // Phase 97 Plan 06: KENMI_CATALOG has a typo-suffixed key 'stone-house-2-stone-base-blackpng'
+    // (auto-generator leaked .png into key name). Use stone-house-3-stone-base-blue as a working variant
+    // until scripts/generate-kenmi-catalog.js is fixed. Preserves visual intent (dark stone village).
+    { key: 'kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue', x: 26, y: 18, collide: true, collideW: 180, collideH: 80 },
     // Mountain trees (dead/sparse trees fitting cold climate)
     { key: 'kenmi-desert-props-dead-tree', x: 4, y: 6, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-dead-tree', x: 8, y: 4, collide: true, collideW: 30, collideH: 20 },
