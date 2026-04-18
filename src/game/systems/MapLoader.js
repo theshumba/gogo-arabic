@@ -1,5 +1,5 @@
 import { TILE, SAND, GRASS, WATER, ICE_GRASS, STONE, WOOD } from '../../data/zones.js';
-import { SPRITE_KEY_MAP } from '../../data/spriteKeyMap.js';
+import { SPRITE_KEY_MAP, BIOME_DECORATION_SETS, BIOME_ANIMAL_SETS } from '../../data/spriteKeyMap.js';
 import { KENMI_FRAME_TABLES } from '../../data/kenmiFrameTables.js';
 
 // ================================================================
@@ -1116,12 +1116,15 @@ export class MapLoader {
    */
   scatterDecorations(zone, groundData, mapW, mapH) {
     const biome = zone.tilesetTheme || 'desert';
-    // Only desert and grass biomes have dedicated decoration props for now.
-    // Dungeon/volcano/mushroom/snow zones skip decoration scattering.
-    if (biome !== 'desert' && biome !== 'grass') return;
+    // Phase 97 Plan 05: registry-driven biome gate. If the biome has NO entry in
+    // BIOME_DECORATION_SETS (or empty), skip. Previously only desert+grass ran;
+    // now snow also runs (via BIOME_DECORATION_SETS.snow).
+    const biomePropKeys = BIOME_DECORATION_SETS[biome];
+    if (!biomePropKeys || biomePropKeys.length === 0) return;
 
-    // Only run when Kenmi desert props are loaded
-    if (!this.scene.textures.exists('kenmi-desert-props-cactus')) return;
+    // Ensure at least ONE of the biome's decoration textures is loaded before proceeding.
+    const anyLoaded = biomePropKeys.some((k) => this.scene.textures.exists(k));
+    if (!anyLoaded) return;
 
     // Create animated grass animations if not yet registered
     this._createDecoGrassAnimations();
@@ -1616,12 +1619,14 @@ export class MapLoader {
    * decoration sprites. Uses seeded placement for deterministic positions.
    */
   spawnAmbientAnimals(zone, groundData, mapW, mapH) {
-    // Only spawn if Kenmi animal textures are loaded
-    if (!this.scene.textures.exists('kenmi-desert-animals-camel-camel-1')) return;
-
-    // Only spawn desert animals in desert-themed zones
+    // Phase 97 Plan 05: registry-driven biome gate. Previously desert-only; now
+    // grass (farmland, coastal_port) and snow (mountain_village) also get ambient life.
     const tilesetTheme = zone.tilesetTheme || 'desert';
-    if (tilesetTheme !== 'desert') return;
+    const biomeAnimalKeys = BIOME_ANIMAL_SETS[tilesetTheme];
+    if (!biomeAnimalKeys || biomeAnimalKeys.length === 0) return;
+
+    const anyAnimalLoaded = biomeAnimalKeys.some((k) => this.scene.textures.exists(k));
+    if (!anyAnimalLoaded) return;
 
     // Create animal animations if they don't already exist
     this._createAnimalAnimations();

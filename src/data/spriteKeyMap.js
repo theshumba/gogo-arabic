@@ -90,6 +90,111 @@ export const BIOME_BUILDING_SETS = {
 };
 
 /**
+ * BIOME_DECORATION_SETS — Prop keys available for scatterDecorations per biome.
+ * Phase 97 Plan 05.
+ *
+ * Cultural constraint (per CONTEXT + research Pitfall 6):
+ *   NO crosses, Santa, reindeer, Halloween/pumpkin items, or explicit Christian imagery.
+ *   Snowmen, chimneys, neutral pine trees, chocolate are OK.
+ *
+ * CULTURAL_EXCLUDES below is enforced at module load time — if a banned key is
+ * added here the import itself throws.
+ */
+export const BIOME_DECORATION_SETS = {
+  desert: [
+    'kenmi-desert-props-palm-tree-1',
+    'kenmi-desert-props-palm-tree-2',
+    'kenmi-desert-props-acacia-tree',
+    'kenmi-desert-props-halfdead-tree',
+    'kenmi-desert-props-dead-tree',
+    'kenmi-desert-props-ambarakaman-plant',
+    'kenmi-desert-props-desert-rocks',
+  ],
+  grass: [
+    'kenmi-base-outdoor-decoration-barrels',
+    'kenmi-base-outdoor-decoration-benches',
+    'kenmi-base-outdoor-decoration-fences',
+    'kenmi-base-outdoor-decoration-flowers',
+    'kenmi-base-outdoor-decoration-fountain',
+    'kenmi-base-outdoor-decoration-hay-bales',
+    'kenmi-base-outdoor-decoration-lantern',
+    'kenmi-base-outdoor-decoration-nests',
+  ],
+  snow: [
+    'kenmi-christmas-decorations-snowman-1-anim',
+    'kenmi-christmas-decorations-snowman-2-anim',
+    'kenmi-christmas-decorations-chocolate-chimney',
+    'kenmi-christmas-decorations-decor',
+  ],
+};
+
+/**
+ * BIOME_ANIMAL_SETS — Animal sprite keys available for spawnAmbientAnimals per biome.
+ * Phase 97 Plan 05.
+ *
+ * Keys here must be registered in KENMI_CATALOG as spritesheets — frame sizes vary
+ * (see kenmiCatalog.js for per-entry frameWidth / frameHeight).
+ */
+export const BIOME_ANIMAL_SETS = {
+  desert: [
+    'kenmi-desert-animals-camel-camel-1',
+    'kenmi-desert-animals-camel-camel-2',
+    'kenmi-desert-animals-camel-camel-3',
+    'kenmi-desert-animals-vulture-vulture-1',
+    'kenmi-desert-animals-vulture-vulture-2',
+    'kenmi-desert-animals-scarab-scarab-black',
+    'kenmi-desert-animals-scarab-scarab-brown',
+  ],
+  grass: [
+    'kenmi-base-animals-chicken-chicken-01',
+    'kenmi-base-animals-chicken-chicken-02',
+    'kenmi-base-animals-chicken-chicken-03',
+    'kenmi-base-animals-bee-bee-flying-animation',
+    'kenmi-base-animals-butterfly-butterfly',
+  ],
+  snow: [
+    'kenmi-base-animals-butterfly-butterfly',
+    'kenmi-base-animals-bee-bee-flying-animation',
+    'kenmi-base-animals-chicken-chicken-01',
+  ],
+};
+
+/**
+ * CULTURAL_EXCLUDES — regex patterns for sprite keys that violate the Islamic-art
+ * cultural constraints (no crosses, no Santa, no reindeer, etc.).
+ *
+ * Phase 97 Plan 05 — tightened per plan-checker W-4: use word boundaries to avoid
+ * false-matching benign tokens like `crossroads` or `witch-hazel`.
+ */
+export const CULTURAL_EXCLUDES = [
+  /\bsanta\b/i,
+  /\breindeer\b/i,
+  /-cross(-|$|ifix)/i,
+  /\bpumpkin\b/i,
+  /\bhalloween\b/i,
+  /\bwitch\b/i,
+];
+
+function _culturallyAllowed(key) {
+  return !CULTURAL_EXCLUDES.some((re) => re.test(key));
+}
+
+for (const [biome, keys] of Object.entries(BIOME_DECORATION_SETS)) {
+  for (const k of keys) {
+    if (!_culturallyAllowed(k)) {
+      throw new Error(`BIOME_DECORATION_SETS.${biome} contains culturally-excluded key: ${k}`);
+    }
+  }
+}
+for (const [biome, keys] of Object.entries(BIOME_ANIMAL_SETS)) {
+  for (const k of keys) {
+    if (!_culturallyAllowed(k)) {
+      throw new Error(`BIOME_ANIMAL_SETS.${biome} contains culturally-excluded key: ${k}`);
+    }
+  }
+}
+
+/**
  * LEGACY FALLBACK — Maps old placeholder sprite keys to Kenmi asset keys.
  *
  * As of v8.0 Phase 43, zone data files (zones.js, mapPlaceholder.js) reference
