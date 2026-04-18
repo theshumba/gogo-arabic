@@ -191,15 +191,22 @@ export function createMockScene(overrides = {}) {
 
     // Add methods
     add: {
-      image: vi.fn((x, y, key) => ({
+      // Phase 97 Plan 07: include texture.key + frame.name so WorldSnapshot.test.js
+      // can compare against captured fixtures (fixture capture uses a headless scene
+      // that provides these fields).
+      image: vi.fn((x, y, key, frame) => ({
         ...mockImage,
         x,
-        y
+        y,
+        texture: { key },
+        frame: frame != null ? { name: frame } : { name: 0 },
       })),
-      sprite: vi.fn((x, y, key) => ({
+      sprite: vi.fn((x, y, key, frame) => ({
         ...mockSprite,
         x,
-        y
+        y,
+        texture: { key },
+        frame: frame != null ? { name: frame } : { name: 0 },
       })),
       text: vi.fn((x, y, content, style) => ({
         ...mockText,

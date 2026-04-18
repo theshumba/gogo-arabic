@@ -1,4 +1,4 @@
-import { buildPlaceholderMap, defaultSpawnPoint, getDefaultObjects } from './mapPlaceholder';
+import { buildPlaceholderMap, defaultSpawnPoint, getDefaultObjects } from './mapPlaceholder.js';
 
 /**
  * Fantasy Arabic Zones (8 zones)

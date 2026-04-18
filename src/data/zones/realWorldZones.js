@@ -1,4 +1,4 @@
-import { buildPlaceholderMap, defaultSpawnPoint, getDefaultObjects } from './mapPlaceholder';
+import { buildPlaceholderMap, defaultSpawnPoint, getDefaultObjects } from './mapPlaceholder.js';
 
 /**
  * Real World Zones (8 zones)

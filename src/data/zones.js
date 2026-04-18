@@ -1554,8 +1554,8 @@ const royal_palace = {
 
 
 
-import { realWorldZones } from './zones/realWorldZones';
-import { fantasyZones } from './zones/fantasyZones';
+import { realWorldZones } from './zones/realWorldZones.js';
+import { fantasyZones } from './zones/fantasyZones.js';
 
 export const ZONES = {
   oasis_village,
