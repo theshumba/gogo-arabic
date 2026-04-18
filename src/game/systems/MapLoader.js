@@ -1,9 +1,32 @@
 import { TILE, SAND, GRASS, WATER, ICE_GRASS, STONE, WOOD } from '../../data/zones.js';
 import { SPRITE_KEY_MAP } from '../../data/spriteKeyMap.js';
+import { KENMI_FRAME_TABLES } from '../../data/kenmiFrameTables.js';
 
 // ================================================================
 // Kenmi 16x16 desert tileset keys & frame maps
 // ================================================================
+
+/**
+ * Phase 97 Plan 04 — Frame table drift detector.
+ * Asserts that KENMI_FRAME_TABLES agrees with the hardcoded BEACH/GRASS_F/WATER_F
+ * dimensions below. If a future Kenmi artist re-exports a tile PNG at different
+ * dimensions, regenerating kenmiFrameTables.js and re-running the game will throw
+ * here immediately — no more silent black squares from frame-index drift.
+ */
+function _assertFrameTableMatch(key, expectedCols, expectedRows) {
+  const table = KENMI_FRAME_TABLES[key];
+  if (!table) {
+    if (typeof console !== 'undefined') {
+      console.warn(`[MapLoader] No frame table for ${key}; regenerate with: npm run generate:kenmi-frame-tables`);
+    }
+    return;
+  }
+  if (table.cols !== expectedCols || table.rows !== expectedRows) {
+    throw new Error(
+      `[MapLoader] Frame table mismatch for ${key}: hardcoded expects ${expectedCols}x${expectedRows}, PNG is ${table.cols}x${table.rows}. Update MapLoader constants OR regenerate frame tables.`,
+    );
+  }
+}
 
 // Sand ground tilesets (3 color variants, same layout: 5 cols x 3 rows = 15 frames)
 const BEACH_KEYS = [
@@ -85,6 +108,13 @@ const WATER_F = {
   SOLID_9:      WATER_COLS * 2 + 4,
   SOLID_10:     WATER_COLS * 2 + 5,
 };
+
+// Phase 97 Plan 04 — drift detection: throw at module load if PNG dimensions
+// disagree with the hardcoded constants above. Catches the "black squares" class
+// of bug from VISUAL-LAYER-DIAGNOSIS.md the moment it could occur.
+for (const k of BEACH_KEYS) _assertFrameTableMatch(k, 5, 3);
+_assertFrameTableMatch(GRASS_KEY, 3, 5);
+_assertFrameTableMatch(WATER_KEY, 6, 3);
 
 // Water foam animation key (20 cols x 3 rows = 60 frames)
 const FOAM_KEY = 'kenmi-desert-tiles-desert-water-foam-animation';
@@ -453,6 +483,12 @@ export class MapLoader {
     if (tex.frames[String(frame)]) return frame;
     // Fallback: find max valid frame
     const maxFrame = Object.keys(tex.frames).filter(k => k !== '__BASE').length - 1;
+    // Phase 97 Plan 04 — DEV-mode warn when clamping so future frame-index drift surfaces loudly.
+    if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
+      const table = KENMI_FRAME_TABLES[textureKey];
+      // eslint-disable-next-line no-console
+      console.warn(`[MapLoader] _safeFrame clamped: key=${textureKey} requested=${frame} maxFrame=${maxFrame}${table ? ` tableTotal=${table.totalFrames}` : ''}`);
+    }
     return Math.min(frame, Math.max(0, maxFrame));
   }
 

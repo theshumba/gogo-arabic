@@ -24,6 +24,7 @@
     "lint:fix": "eslint . --fix",
     "lint:world-terminology": "node scripts/lint-world-terminology.js",
     "report:kenmi-coverage": "node scripts/report-kenmi-coverage.js",
+    "generate:kenmi-frame-tables": "node scripts/generate-kenmi-frame-tables.js",
     "format": "prettier --write \"src/**/*.{js,jsx,json,css}\" \"server/**/*.{js,json}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,json,css}\" \"server/**/*.{js,json}\""
   },
