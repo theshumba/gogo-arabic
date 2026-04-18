@@ -117,44 +117,51 @@ export const SPRITE_KEY_MAP = {
 };
 
 /**
- * Maps old NPC sprite keys to Kenmi character sprite keys.
- * Used by NPC.js to render Kenmi art with existing zone NPC data.
- * Keys not in this map fall back to the original 128x128 sprite behavior.
+ * Maps logical NPC IDs to FACELESS sprite keys registered in BootScene
+ * via SHARED_ASSETS.npcSprites (zoneAssetManifests.js FACELESS_NPCS loop).
+ *
+ * Phase 97 Plan 03: every value is `npc-{id}` matching one of the 24 faceless
+ * PNGs at public/assets/sprites/npcs/faceless/*.png. No kenmi-desert-npc-*,
+ * kenmi-desert-npc-pharaoh, kenmi-desert-npc-traders-*, or kenmi-base-npcs-premade-*
+ * references permitted — those sprites have visible eyes (cultural constraint per
+ * Islamic art considerations in PROJECT.md).
+ *
+ * 1:1 mapping with FACELESS_NPCS array. guide-amira registered via Plan 03 Task 1a.
  */
 export const NPC_KEY_MAP = {
-  // Desert scholars/elders → person variants
-  'npc-scholar-yusuf': 'kenmi-desert-npc-desert-person-1',
-  'npc-student-khalid': 'kenmi-desert-npc-desert-person-2',
-  'npc-librarian-ibrahim': 'kenmi-desert-npc-desert-person-3',
-  'npc-scribe-amina': 'kenmi-desert-npc-desert-person-4',
-  'npc-imam-muhammad': 'kenmi-desert-npc-desert-person-1',
-  'npc-poet-rumi': 'kenmi-desert-npc-desert-person-3',
-  'npc-elder-tariq': 'kenmi-desert-npc-pharaoh',
-  'npc-storyteller-noor': 'kenmi-desert-npc-desert-person-4',
+  // Desert scholars/elders
+  'npc-scholar-yusuf':      'npc-scholar-yusuf',
+  'npc-student-khalid':     'npc-student-khalid',
+  'npc-librarian-ibrahim':  'npc-librarian-ibrahim',
+  'npc-scribe-amina':       'npc-scribe-amina',
+  'npc-imam-muhammad':      'npc-imam-muhammad',
+  'npc-poet-rumi':          'npc-poet-rumi',
+  'npc-elder-tariq':        'npc-elder-tariq',
+  'npc-storyteller-noor':   'npc-storyteller-noor',
 
-  // Merchants/traders → trader variants
-  'npc-merchant-fatima': 'kenmi-desert-npc-traders-desert-trader-1',
-  'npc-spice-seller-layla': 'kenmi-desert-npc-traders-desert-trader-2',
-  'npc-trader-hassan': 'kenmi-desert-npc-traders-desert-trader-3',
+  // Merchants/traders
+  'npc-merchant-fatima':    'npc-merchant-fatima',
+  'npc-spice-seller-layla': 'npc-spice-seller-layla',
+  'npc-trader-hassan':      'npc-trader-hassan',
 
-  // Role-specific → base RPG premade NPCs
-  'npc-farmer-omar': 'kenmi-base-npcs-premade-farmer-bob',
-  'npc-herbalist-maryam': 'kenmi-base-npcs-premade-chef-chloe',
-  'npc-blacksmith-daud': 'kenmi-base-npcs-premade-miner-mike',
-  'npc-weaver-zahra': 'kenmi-base-npcs-premade-bartender-katy',
-  'npc-fishmonger-hana': 'kenmi-base-npcs-premade-fisherman-fin',
-  'npc-captain-rashid': 'kenmi-desert-npc-desert-person-2',
-  'npc-healer-khadija': 'kenmi-desert-npc-desert-person-4',
+  // Role-specific
+  'npc-farmer-omar':        'npc-farmer-omar',
+  'npc-herbalist-maryam':   'npc-herbalist-maryam',
+  'npc-blacksmith-daud':    'npc-blacksmith-daud',
+  'npc-weaver-zahra':       'npc-weaver-zahra',
+  'npc-fishmonger-hana':    'npc-fishmonger-hana',
+  'npc-captain-rashid':     'npc-captain-rashid',
+  'npc-healer-khadija':     'npc-healer-khadija',
 
   // Authority figures
-  'npc-vizier-abbas': 'kenmi-desert-npc-pharaoh',
-  'npc-princess-aisha': 'kenmi-desert-npc-traders-desert-trader-1',
-  'npc-guard-hamza': 'kenmi-desert-npc-desert-person-3',
+  'npc-vizier-abbas':       'npc-vizier-abbas',
+  'npc-princess-aisha':     'npc-princess-aisha',
+  'npc-guard-hamza':        'npc-guard-hamza',
 
   // Wanderers/guides
-  'npc-wanderer-ali': 'kenmi-desert-npc-desert-person-2',
-  'npc-guide-salim': 'kenmi-desert-npc-desert-person-1',
-  'npc-guide-amira': 'kenmi-desert-npc-traders-desert-trader-2',
+  'npc-wanderer-ali':       'npc-wanderer-ali',
+  'npc-guide-salim':        'npc-guide-salim',
+  'npc-guide-amira':        'npc-guide-amira',
 };
 
 /**

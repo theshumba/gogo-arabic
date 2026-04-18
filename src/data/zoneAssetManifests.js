@@ -31,7 +31,7 @@ const FACELESS_NPCS = [
   'captain-rashid', 'fishmonger-hana',
   'vizier-abbas', 'princess-aisha', 'guard-hamza',
   'wanderer-ali', 'healer-khadija', 'imam-muhammad',
-  'blacksmith-daud', 'poet-rumi',
+  'blacksmith-daud', 'poet-rumi', 'guide-amira',
 ];
 
 const bodyAssets = BODY_OUTFITS.map((outfit) => ({
