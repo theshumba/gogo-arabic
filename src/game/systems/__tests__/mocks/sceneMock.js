@@ -336,14 +336,27 @@ export function createMockScene(overrides = {}) {
       })
     },
 
-    // Textures — default to false so MapLoader falls through to flat tile rendering
-    textures: {
-      exists: vi.fn(() => false),
-      get: vi.fn(() => ({
-        getFrameNames: vi.fn(() => []),
-        frames: {},
-      })),
-    },
+    // Textures — default to false so MapLoader falls through to flat tile rendering.
+    // Phase 97 extension: _textureFrameCounts backs textures.get(key).frameTotal so
+    // WorldSnapshot and frameValidity tests can introspect textures without running BootScene.
+    // Use textures._setFrameTotal(key, total) in tests to seed known frame counts.
+    textures: (() => {
+      const _textureFrameCounts = new Map();
+      const texturesObj = {
+        exists: vi.fn((key) => _textureFrameCounts.has(key)),
+        get: vi.fn((key) => ({
+          key,
+          frameTotal: _textureFrameCounts.get(key) ?? 1,
+          getFrameNames: vi.fn((includeBase = false) => {
+            const total = _textureFrameCounts.get(key) ?? 1;
+            return Array.from({ length: total }, (_, i) => String(i));
+          }),
+          frames: {},
+        })),
+        _setFrameTotal: (key, total) => _textureFrameCounts.set(key, total),
+      };
+      return texturesObj;
+    })(),
 
     // Game reference for MapLoader and DOMOverlay
     game: {
