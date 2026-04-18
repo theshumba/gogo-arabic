@@ -441,7 +441,7 @@ Plans:
 #### Phase 97: Visual/World Layer Rebuild
 **Goal**: Rebuild the visual/world layer of GoGo Arabic so every zone renders correctly with Kenmi assets, no broken tiles, consistent art style, and the "world" feels hand-authored rather than programmatically placeholder-filled. Leverages Opus 4.7's 1M context to reason about all zones, plugins, and render paths in one pass.
 **Depends on**: None (independent visual work — does not touch game logic)
-**Requirements**: TBD (to be defined during planning)
+**Requirements**: WORLD-01, WORLD-02, WORLD-03, WORLD-04, WORLD-05, WORLD-06, WORLD-07, WORLD-08, WORLD-09, WORLD-10, WORLD-11, WORLD-12 (12 IDs — see REQUIREMENTS.md v16.0 section)
 **Success Criteria** (what must be TRUE):
   1. All 8 zones render without missing/broken tiles — every tile asset used in code exists in assets, every zone loads visually clean on first play
   2. Kenmi assets (terrain, buildings, decorations, characters) are used consistently across all zones — no mismatched art style
@@ -449,22 +449,43 @@ Plans:
   4. No new overlay wiring introduced (per user guidance — visual work only)
   5. Existing game logic untouched — all 2535 tests still pass after visual rebuild
 
-Plans: TBD (planning in progress via /gsd-plan-phase 97)
+**Plans:** 8 plans in 4 waves
+
+Plans:
+- [ ] 97-01-PLAN.md — WORLD-AUDIT.md 1M-context single-pass + Wave-0 test infrastructure + WORLD-* requirement IDs registration (WORLD-01, 02, 04, 06, 07, 08, 12)
+- [ ] 97-02-PLAN.md — BootScene duplicate-load elimination (DESERT_TILESETS removal + regression test) (WORLD-11)
+- [ ] 97-03-PLAN.md — Faceless NPC enforcement: rewire NPC_KEY_MAP to 23 existing faceless PNGs (WORLD-03)
+- [ ] 97-04-PLAN.md — PNG-derived Kenmi frame tables + MapLoader startup assertion (WORLD-01)
+- [ ] 97-05-PLAN.md — BIOME_DECORATION_SETS + BIOME_ANIMAL_SETS + snow/grass biome parity (WORLD-09, 10)
+- [ ] 97-06-PLAN.md — Rebuild objects arrays for 8 core zones; preserve all game-logic fields (WORLD-01, 02)
+- [ ] 97-07-PLAN.md — Capture deterministic world-snapshot fixtures for regression (WORLD-02, 07, 09, 10, 12)
+- [ ] 97-08-PLAN.md — Lint gate + diff gate + WORLD-AUDIT finalization + before/after screenshots + human checkpoint (WORLD-04, 05, 08)
 
 ### v17.0 Code Health (Phase 98)
 
 #### Phase 98: Codebase Audit & Refactor
 **Goal**: Audit the entire 210K LOC codebase in a single Opus 4.7 pass, produce a prioritised findings report, then refactor with explicit guardrails — no feature removal, test coverage before any refactor, user signs off on every deletion.
 **Depends on**: Phase 97 (refactor on visually-stable codebase)
-**Requirements**: TBD
+**Requirements**: HEALTH-01, HEALTH-02, HEALTH-03, HEALTH-04, HEALTH-05, HEALTH-06, HEALTH-07, HEALTH-08, HEALTH-09, HEALTH-10, HEALTH-11, HEALTH-12, HEALTH-13, HEALTH-14 (14 IDs — registered in REQUIREMENTS.md v17.0 section by Plan 01)
 **Success Criteria** (what must be TRUE):
   1. AUDIT.md produced listing dead code, inconsistencies, architectural drift, tangled dependencies — user reviews before any code is touched
   2. Every "dead code" item is explicitly approved by the user before removal — no silent deletions
   3. Every system being refactored has test coverage added BEFORE refactor begins
   4. Feature preservation verification: all 2535 existing tests continue to pass; user-facing feature list is unchanged
-  5. Codebase LOC reduction measurable (target: at least 10% reduction without feature loss)
+  5. Codebase LOC reduction measurable (target: at least 10% aspirational reduction without feature loss — not a gate per user decision)
+  6. 15 Playwright golden-path smoke tests pass at phase end
+  7. Bundle size never grows (HEALTH-12); test runtime within 20% of baseline (HEALTH-13)
 
-Plans: TBD
+**Plans:** 7 plans in 4 waves
+
+Plans:
+- [ ] 98-01-PLAN.md — Audit + baseline + knip.json + 98-AUDIT.md + 98-DELETIONS.md + smoke tests + invariants + Ralph pause + HEALTH-01..14 registration (HEALTH-01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14)
+- [ ] 98-02-PLAN.md — Wave-0 test coverage uplift for coverage-gap directories (50% global / 70% elevated-risk) (HEALTH-04, 05, 07)
+- [ ] 98-03-PLAN.md — Execute user-approved DELETIONS.md rows as atomic commits with full audit trail (HEALTH-02, 03, 05, 07, 11, 14)
+- [ ] 98-04-PLAN.md — STUB: Duplicate-logic consolidation (content derived from AUDIT.md Section 2 after user review) (HEALTH-05, 07, 11, 14)
+- [ ] 98-05-PLAN.md — STUB: Tangled-dependency unwinding (content derived from AUDIT.md Sections 3 + 7) (HEALTH-05, 07, 11)
+- [ ] 98-06-PLAN.md — Planning-doc drift reconciliation + phase 86-96 stub disposition per user approval (HEALTH-09, 11)
+- [ ] 98-07-PLAN.md — Final invariant sweep, coverage-threshold ratchet, Ralph resume, v17.0 milestone archive, phase close (HEALTH-04, 05, 06, 07, 12, 13, 14)
 
 ### v18.0 Advanced AI Systems (Phases 99-101)
 

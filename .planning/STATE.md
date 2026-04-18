@@ -1,13 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v15.0
-milestone_name: Core Learning Loop
-status: complete
-stopped_at: All 5 phases (81-85) shipped + integration wiring
-last_updated: "2026-03-28"
+milestone: v16.0
+milestone_name: Visual Rebuild
+status: executing
+stopped_at: v15.0 milestone COMPLETE
+last_updated: "2026-04-17T02:27:21.413Z"
+last_activity: 2026-04-17 -- Phase 98 planning complete
 progress:
-  total_phases: 5
-  completed_phases: 5
+  total_phases: 17
+  completed_phases: 9
+  total_plans: 47
+  completed_plans: 23
+  percent: 49
 ---
 
 # Project State
@@ -23,8 +27,8 @@ See: .planning/PROJECT.md (updated 2026-03-22)
 
 Phase: 85 of 85 (v15.0 complete)
 Plan: All shipped
-Status: Milestone complete
-Last activity: 2026-03-28 — v15.0 built and integrated, all tests passing
+Status: Ready to execute
+Last activity: 2026-04-17 -- Phase 98 planning complete
 
 Progress: [█████████] 100% (v15.0) — 5/5 phases complete
 
@@ -53,6 +57,7 @@ Progress: [█████████] 100% (v15.0) — 5/5 phases complete
 ## v15.0 Completion Summary
 
 ### Phase 81: Daily Challenge System (DAILY-01, DAILY-02) — SHIPPED
+
 - 4 rotating challenge types: Word of the Day, Grammar Challenge, Speed Quiz, Cultural Trivia
 - Deterministic daily selection (xorshift32 hash — all players get same daily)
 - Streak tracking with 5 reward tiers (3/7/14/30/60 days)
@@ -60,6 +65,7 @@ Progress: [█████████] 100% (v15.0) — 5/5 phases complete
 - 83 tests
 
 ### Phase 82: Graded Reading Passages (READ-01, READ-02) — SHIPPED
+
 - 60 graded passages (15 per CEFR level A1-B2) across 15 topics
 - Inline vocabulary tooltips with "Add to review" FSRS integration
 - 3-5 comprehension questions per passage (multiple choice + true/false)
@@ -67,6 +73,7 @@ Progress: [█████████] 100% (v15.0) — 5/5 phases complete
 - 68 tests
 
 ### Phase 83: Arabic Writing Practice (WRITE-01, WRITE-02) — SHIPPED
+
 - Canvas-based tracing for all 28 Arabic letters with stroke order data
 - 32 word exercises + 22 phrase exercises (progressive difficulty)
 - Grid-based IoU (8x8) stroke validation with interpolation
@@ -74,6 +81,7 @@ Progress: [█████████] 100% (v15.0) — 5/5 phases complete
 - 59 tests
 
 ### Phase 84: Conversation Practice (CONV-01, CONV-02) — SHIPPED
+
 - 40 conversation scenarios (5 per zone) with authentic Arabic dialogue
 - Word bank sentence construction with RTL layout
 - Chat-style UI with NPC portraits and feedback
@@ -81,6 +89,7 @@ Progress: [█████████] 100% (v15.0) — 5/5 phases complete
 - 70 tests
 
 ### Phase 85: Mini-Game Expansion (MINI-01 to MINI-04) — SHIPPED
+
 - MiniGameHub selection screen
 - Word Search: 20 pre-built 10x10 Arabic grids
 - Crossword: 15 pre-built puzzles with English clues, Arabic answers
@@ -89,6 +98,7 @@ Progress: [█████████] 100% (v15.0) — 5/5 phases complete
 - 365 tests
 
 ### Integration Wiring
+
 - store.js: Added 5 new reducers (dailyChallenge, reading, writing, conversation, miniGame)
 - GameLayout.jsx: 5 new lazy-loaded overlay imports
 - readingPassages.js: Added compatibility aliases for pre-existing ReadingExercise component
