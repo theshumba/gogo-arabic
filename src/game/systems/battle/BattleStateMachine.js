@@ -1151,9 +1151,18 @@ export class BattleStateMachine {
 
     const isDefending = store.getState().battle.isPlayerDefending;
 
-    // Apply equipment defense bonus (reduces incoming damage)
-    const equipmentDefenseMult = this.scene.equipmentStats?.getStatForBattle('defense') || 1.0;
-    let reducedDamage = Math.floor(damage / equipmentDefenseMult);
+    // Apply equipment defense bonus (multiplicative — higher value = more damage reduction).
+    // Model: defense is a damage-taken multiplier where 1.0 = neutral, 0.8 = 20% reduction.
+    // Clamp to [0.1, Infinity) so defense=0 never produces Infinity and a debuff (<1.0)
+    // correctly increases damage taken rather than dividing by a near-zero value.
+    // Consistent with BattleDamageCalculator which uses equipmentDamageMult multiplicatively.
+    const rawDefenseMult = this.scene.equipmentStats?.getStatForBattle('defense');
+    const equipmentDefenseMult = (Number.isFinite(rawDefenseMult) && rawDefenseMult > 0)
+      ? rawDefenseMult
+      : 1.0;
+    // damage * defenseMult: defenseMult < 1.0 → player takes less damage (protected);
+    //                       defenseMult > 1.0 → player takes more damage (debuffed).
+    let reducedDamage = Math.floor(damage * Math.max(0.1, equipmentDefenseMult));
 
     // Apply defend bonus (50% reduction)
     const finalDamage = isDefending ? Math.floor(reducedDamage * 0.5) : reducedDamage;
