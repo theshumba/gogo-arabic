@@ -25,7 +25,7 @@ export async function saveToSlot(slotNumber, store) {
     playerName: state.player.name,
     playerLevel: state.player.level,
     currentZone: state.player.currentZone,
-    playtime: state.stats?.totalPlaytime || 0,
+    playtime: state.stats?.totalPlayTime || 0,
     // Serialize relevant slices — UI/sync/transient slices excluded
     data: compressState({
       player: state.player,
