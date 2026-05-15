@@ -136,10 +136,16 @@ export function useObjectEvents(playSFX) {
           message: `${word.arabic} — ${word.english}`,
           type: 'word',
         }));
-      } else if (reread) {
+      } else if (reread && word) {
         dispatch(showNotification({
           message: `${word.arabic} — ${word.english}`,
           type: 'word',
+        }));
+      } else if (reread && !word) {
+        // Category has no words (empty or future category) — fail gracefully.
+        dispatch(showNotification({
+          message: 'Nothing new here.',
+          type: 'info',
         }));
       }
       EventBus.emit(EVENTS.PLAYER_UNFREEZE);
