@@ -273,7 +273,7 @@ export default function ExerciseStage({
               <div className={styles.multiSelectSubmit}>
                 <button
                   onClick={() => {
-                    const joined = exercise.correctAnswers.slice().sort().join(',');
+                    const joined = multiSelected.slice().sort().join(',');
                     onAnswerSelect(joined);
                     setMultiSelected([]);
                   }}
