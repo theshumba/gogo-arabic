@@ -10,8 +10,10 @@ const EXPECTED_LETTERS = 28;
 const EXPECTED_GROUPS = 13;
 
 async function main() {
-  const raw = await readFile('client/src/data/alphabet.json', 'utf-8');
-  const letters = JSON.parse(raw);
+  const raw = await readFile('src/data/alphabet.json', 'utf-8');
+  const parsed = JSON.parse(raw);
+  // alphabet.json has shape { meta, letters, groups } — extract the letters array.
+  const letters = Array.isArray(parsed) ? parsed : parsed.letters;
 
   console.log(`Loaded ${letters.length} letters`);
 

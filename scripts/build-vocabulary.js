@@ -13,7 +13,7 @@ const VALID_CATEGORIES = [
 ];
 
 async function main() {
-  const raw = await readFile('client/src/data/vocabulary.json', 'utf-8');
+  const raw = await readFile('src/data/vocabulary.json', 'utf-8');
   const words = JSON.parse(raw);
 
   console.log(`Loaded ${words.length} vocabulary words`);
