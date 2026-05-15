@@ -2,7 +2,9 @@ import { test, expect } from '@playwright/test';
 
 test.describe('GoGo Arabic - Authentication & Character Creation', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear localStorage to start fresh
+    // Navigate first to establish the correct origin, then clear localStorage.
+    // Clearing before navigation affects about:blank (wrong origin), not the app.
+    await page.goto('/');
     await page.evaluate(() => localStorage.clear());
   });
 

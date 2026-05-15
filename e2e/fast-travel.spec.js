@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('GoGo Arabic - Fast Travel (World Map)', () => {
   test.beforeEach(async ({ page }) => {
-    // Pre-seed player data with multiple unlocked and visited zones
+    // Navigate first to establish the correct origin, then seed localStorage.
+    // Writing localStorage before any navigation lands the write on about:blank
+    // (wrong origin) and the app boots with no seeded state.
+    await page.goto('/');
     await page.evaluate(() => {
       const playerData = {
         player: JSON.stringify({
@@ -59,6 +62,8 @@ test.describe('GoGo Arabic - Fast Travel (World Map)', () => {
 
       localStorage.setItem('persist:gogo-arabic', JSON.stringify(playerData));
     });
+    // Reload so the app boots with the seeded state.
+    await page.reload();
   });
 
   test('world map displays unlocked zones', async ({ page }) => {
