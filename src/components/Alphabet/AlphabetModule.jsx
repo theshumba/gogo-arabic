@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { addXP } from '../../store/slices/playerSlice.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
@@ -110,8 +110,15 @@ export default function AlphabetModule({ onBack }) {
   // Letter lesson view
   const groupLettersList = groupedLetters[selectedGroup] || [];
   const currentLetter = groupLettersList[currentLetterIdx];
+
+  // Guard: if currentLetterIdx overshot the group, reset to group list via effect
+  useEffect(() => {
+    if (selectedGroup !== null && !groupLettersList[currentLetterIdx]) {
+      setSelectedGroup(null);
+    }
+  }, [selectedGroup, groupLettersList, currentLetterIdx]);
+
   if (!currentLetter) {
-    setSelectedGroup(null);
     return null;
   }
 
