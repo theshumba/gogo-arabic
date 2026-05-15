@@ -893,7 +893,15 @@ export class BattleStateMachine {
   }
 
   _applyDamage() {
-    const { resolvedDamage, wasCorrect, isMiss, target } = this.currentAction;
+    const { resolvedDamage, wasCorrect, isMiss, target, type } = this.currentAction;
+
+    // Magic with resolvedDamage=0: damage is applied asynchronously by RootMagicManager's
+    // delayedCall (800ms after castSpell). Skip all dispatch here — the manager owns the
+    // damage application. We still animate the hit so the player gets visual feedback.
+    if (type === 'magic' && wasCorrect && !isMiss && resolvedDamage === 0) {
+      this._transition(STATES.ANIMATE_HIT);
+      return;
+    }
 
     if (isMiss || !wasCorrect) {
       // Player takes counter-damage on miss
