@@ -51,7 +51,10 @@ export const tutorialMiddleware = (store) => (next) => (action) => {
   if (!stepId) return result;
 
   const state = store.getState();
-  const onboarding = state.onboarding;
+  // The onboarding reducer is registered at 'onboarding2' in the root store
+  // (see store.js:316 — onboarding2: onboardingReducer).
+  // Using 'onboarding' caused this middleware to always short-circuit silently.
+  const onboarding = state.onboarding2 ?? state.onboarding;
   if (!onboarding) return result;
 
   // Skip if tutorial already skipped or step already done
