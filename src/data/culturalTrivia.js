@@ -8,6 +8,8 @@
  * Eras: ancient, classical, medieval, modern, contemporary
  */
 
+import { shuffle } from '../utils/shuffle.js';
+
 export const CULTURAL_TRIVIA = [
   // ── HISTORY (20) ──────────────────────────────────────────────────────────
   {
@@ -1247,8 +1249,8 @@ export function selectTriviaByCategory(category) {
  * @returns {Array}
  */
 export function selectRandomTrivia(count) {
-  const shuffled = [...CULTURAL_TRIVIA].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, Math.max(0, count));
+  // Use Fisher-Yates shuffle via shuffle() — Array.sort with random comparator is biased
+  return shuffle(CULTURAL_TRIVIA).slice(0, Math.max(0, count));
 }
 
 /**

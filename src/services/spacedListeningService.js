@@ -7,6 +7,7 @@
  */
 
 import { getDueCards } from './fsrs.js';
+import { shuffle } from '../utils/shuffle.js';
 
 const DEFAULT_INTERVAL_MS = 45_000; // 45 seconds between words
 const MIN_INTERVAL_MS = 15_000;
@@ -42,10 +43,8 @@ function buildWordQueue(fsrsCards, currentZone, vocabAll) {
     (w) => (w.zone === currentZone || !w.zone) && allDueIds.has(w.id)
   );
 
-  // Shuffle
-  return zoneWords
-    .map((w) => ({ id: w.id, arabic: w.arabic }))
-    .sort(() => Math.random() - 0.5);
+  // Shuffle using Fisher-Yates (Array.sort with random comparator is biased)
+  return shuffle(zoneWords.map((w) => ({ id: w.id, arabic: w.arabic })));
 }
 
 /**
