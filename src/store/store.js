@@ -217,6 +217,8 @@ const persistedPoetryReducer = persistReducer(poetryPersistConfig, poetryReducer
 const persistConfig = {
   key: 'gogo-arabic',
   storage, // localStorage
+  version: CURRENT_VERSION,
+  migrate,
   whitelist: [
     'player',
     'quests',
@@ -264,6 +266,7 @@ const persistConfig = {
     'zoneVocabIntro',
     'zoneIntro',
     'zoneGrammar',
+    'dailyQuest',
   ],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
@@ -320,7 +323,7 @@ const rootReducer = combineReducers({
   linguisticCombat: linguisticCombatReducer,
   microReview: microReviewReducer,
   notifications: notificationReducer,       // transient — not persisted
-  dailyQuest: dailyQuestReducer,            // transient — not persisted (middleware re-generates on date change)
+  dailyQuest: dailyQuestReducer,            // persisted — bonusAwarded + date guard prevent daily-XP exploit
   analyticsEventQueue: analyticsEventQueueReducer, // transient — not persisted (flushed to server)
   worldTime: worldTimeReducer,
   decks: deckReducer,
