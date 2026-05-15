@@ -15,6 +15,8 @@
  *   generateWeeklyQuest(playerState, date)  → 1 weekly quest object
  */
 
+import { shuffleDeterministic } from '../utils/shuffle.js';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Seeded PRNG — mulberry32
 // ─────────────────────────────────────────────────────────────────────────────
@@ -245,8 +247,8 @@ function buildNpcQuest(rng, level, idSuffix) {
   const xp = scaleXp(80, level);
   const dirhams = Math.round(xp * 0.5);
 
-  // Pick `target` distinct NPCs to suggest
-  const shuffled = [...NPC_IDS].sort(() => rng() - 0.5);
+  // Pick `target` distinct NPCs to suggest (Fisher-Yates with seeded rng for determinism)
+  const shuffled = shuffleDeterministic(rng, NPC_IDS);
   const targets = shuffled.slice(0, Math.min(target, NPC_IDS.length));
 
   return {
@@ -295,8 +297,9 @@ export function generateDailyQuests(playerState, date) {
   const seed = deriveSeed(dateInt, level);
   const rng = createSeededRng(seed);
 
-  // Pick 3 distinct templates (no duplicates on the same day)
-  const templateOrder = [...TEMPLATES].sort(() => rng() - 0.5);
+  // Pick 3 distinct templates (no duplicates on the same day).
+  // Fisher-Yates shuffle with the seeded rng ensures determinism: same date + level → same order.
+  const templateOrder = shuffleDeterministic(rng, TEMPLATES);
   const chosen = templateOrder.slice(0, 3);
 
   const idSuffix = `${dateInt}_lvl${level}`;

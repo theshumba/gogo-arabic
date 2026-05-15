@@ -13,6 +13,8 @@
  *   - preposition + noun
  */
 
+import { shuffle } from '../utils/shuffle.js';
+
 /**
  * @typedef {Object} GeneratedSentence
  * @property {string} english - English translation
@@ -150,9 +152,8 @@ function generateDistractors(correctTiles, allKnown, count = 2) {
     .map((w) => w.arabic)
     .filter((a) => a && !correctSet.has(a) && !correctSet.has(`ال${a}`));
 
-  // Shuffle and pick
-  const shuffled = pool.sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  // Shuffle and pick (Fisher-Yates — Array.sort with random comparator is biased)
+  return shuffle(pool).slice(0, count);
 }
 
 /**
