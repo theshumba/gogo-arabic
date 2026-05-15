@@ -37,6 +37,11 @@ function ShopOverlay() {
 
   const focusTrapRef = useFocusTrap(true, null);
 
+  // Shopkeeper info — declared early so useMemo deps below can reference shopId safely
+  const shopId = dialogueConfig?.shopId || 'oasis_village_shop';
+  const shopName = dialogueConfig?.shopName || "Merchant Fatima's Shop";
+  const shopGreeting = dialogueConfig?.shopGreeting || 'مرحبا! Welcome to my shop!';
+
   const handleClose = useCallback(() => {
     dispatch(closeDialogue());
   }, [dispatch]);
@@ -49,7 +54,6 @@ function ShopOverlay() {
   // Dynamic shop inventory based on player level and world state
   const shopInventory = useMemo(() => {
     const state = store.getState();
-    const shopId = dialogueConfig?.shopId || 'oasis_village_shop';
     const inv = getShopInventory(shopId, state);
 
     // ECON-02: Initialize supply levels on first shop open (idempotent — initSupply skips existing)
@@ -67,11 +71,6 @@ function ShopOverlay() {
       return { ...item, price: zonePrice };
     });
   }, [dialogueConfig, player.level, completedQuests, shopId]);
-
-  // Shopkeeper info
-  const shopId = dialogueConfig?.shopId || 'oasis_village_shop';
-  const shopName = dialogueConfig?.shopName || "Merchant Fatima's Shop";
-  const shopGreeting = dialogueConfig?.shopGreeting || 'مرحبا! Welcome to my shop!';
 
   const handleBuy = useCallback((itemId, price) => {
     if (player.dirhams < price) {
@@ -150,8 +149,9 @@ function ShopOverlay() {
   }, [player.dirhams, inventoryFull, dispatch, shopId, vocabularyState]);
 
   const handleSell = useCallback((itemId, sellPrice, rarity, itemName) => {
-    // Rare+ items require confirmation
-    if ((rarity === 'rare' || rarity === 'epic' || rarity === 'legendary') && !confirmSell) {
+    // Rare+ items require confirmation — compare itemId so a stale confirmSell
+    // for a different item doesn't bypass the gate when the player switches selection
+    if ((rarity === 'rare' || rarity === 'epic' || rarity === 'legendary') && confirmSell?.itemId !== itemId) {
       setConfirmSell({ itemId, sellPrice, itemName });
       return;
     }
@@ -180,7 +180,24 @@ function ShopOverlay() {
   const handleHaggleSuccess = useCallback((finalPrice) => {
     const { itemId } = hagglingItem;
 
-    // Record haggle
+    // Validate affordability and inventory capacity BEFORE recording success.
+    // Recording haggle success first (then silently aborting) would inflate
+    // achievement counters and analytics even when no item was actually transferred.
+    if (player.dirhams < finalPrice) {
+      setHagglingItem(null);
+      setToast('Not enough dirhams!');
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+
+    if (inventoryFull) {
+      setHagglingItem(null);
+      setToast('Inventory full (200 items)!');
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+
+    // Record haggle (only after confirming the purchase will succeed)
     dispatch(recordHaggle({
       shopId,
       itemId,
@@ -194,19 +211,6 @@ function ShopOverlay() {
 
     // Close haggling modal
     setHagglingItem(null);
-
-    // Purchase at discounted price (reuse buy logic but with different price)
-    if (player.dirhams < finalPrice) {
-      setToast('Not enough dirhams!');
-      setTimeout(() => setToast(null), 2000);
-      return;
-    }
-
-    if (inventoryFull) {
-      setToast('Inventory full (200 items)!');
-      setTimeout(() => setToast(null), 2000);
-      return;
-    }
 
     // Deduct dirhams
     dispatch(spendDirhams(finalPrice));
