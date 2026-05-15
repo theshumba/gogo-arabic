@@ -66,7 +66,11 @@ export default function GrammarLesson({ lessonId, onBack }) {
     const isExercise = stage === 'exercises';
     const currentIndex = isExercise ? currentExerciseIndex : currentQuizIndex;
     const item = isExercise ? lesson.exercises[currentIndex] : lesson.quiz[currentIndex];
-    const isCorrect = answer === item.answer || answer === item.correct;
+    const isCorrect = item.correctAnswers
+      ? answer === item.correctAnswers.slice().sort().join(',')
+      : typeof item.correct === 'number'
+        ? answer === item.options[item.correct]
+        : answer === item.answer;
     if (isExercise) {
       setExerciseAnswers({ ...exerciseAnswers, [currentIndex]: answer });
       if (isCorrect) { setExerciseScore(exerciseScore + 1); dispatch(addXP(XP_REWARDS.EXERCISE_CORRECT)); }
@@ -74,7 +78,12 @@ export default function GrammarLesson({ lessonId, onBack }) {
       setQuizAnswers({ ...quizAnswers, [currentIndex]: answer });
       if (isCorrect) { setQuizScore(quizScore + 1); dispatch(addXP(XP_REWARDS.QUIZ_CORRECT)); }
     }
-    setFeedbackMessage(isCorrect ? 'Correct!' : `Wrong! The answer is: ${item.answer || item.options[item.correct]}`);
+    const correctDisplay = item.correctAnswers
+      ? item.correctAnswers.join(', ')
+      : typeof item.correct === 'number'
+        ? item.options[item.correct]
+        : item.answer;
+    setFeedbackMessage(isCorrect ? 'Correct!' : `Wrong! The answer is: ${correctDisplay}`);
     setShowFeedback(true);
   };
 
