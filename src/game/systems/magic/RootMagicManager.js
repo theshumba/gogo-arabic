@@ -21,7 +21,7 @@ import {
   selectRootMastery,
   selectAffinity,
 } from '../../../store/slices/magicSlice.js';
-import { spendMP, dealDamage } from '../../../store/slices/battleSlice.js';
+import { spendMP, dealDamage, dealBonusDamage } from '../../../store/slices/battleSlice.js';
 import { EventBus } from '../../../utils/eventBus.js';
 import { EVENTS } from '../../../utils/eventBusTypes.js';
 import { SPELL_TIERS } from '../../../data/rootMagic.js';
@@ -199,14 +199,12 @@ export class RootMagicManager {
           damageMultiplier: combo.damageMultiplier,
         });
 
-        // Apply bonus damage
+        // Apply bonus damage via dealBonusDamage — does NOT touch streak or currentRound.
+        // Using dealDamage({ correct: true }) here would inflate the streak on a turn
+        // that already recorded one correct answer (the primary spell), which compounds
+        // geometrically into the comboMult in BattleDamageCalculator.
         const bonusDamage = Math.floor(10 * combo.damageMultiplier);
-        store.dispatch(
-          dealDamage({
-            damage: bonusDamage,
-            correct: true,
-          })
-        );
+        store.dispatch(dealBonusDamage({ damage: bonusDamage }));
       }
     }
 
