@@ -372,8 +372,12 @@ export const EVENTS = Object.freeze({
   BATTLE_FLEE_CHALLENGE: 'phaser:battle:flee-challenge',
   /** Phaser → React: flee attempt failed */
   BATTLE_FLEE_FAILED: 'phaser:battle:flee-failed',
+  /** Phaser → React: state machine requests React to show the target picker */
+  BATTLE_TARGET_PROMPT: 'phaser:battle:target-prompt',
   /** React → Phaser: player selected a target in multi-enemy battle */
   BATTLE_TARGET_SELECT: 'phaser:battle:target-select',
+  /** React → Phaser: player confirmed their target choice (replaces BATTLE_TARGET_SELECT for React→Phaser direction) */
+  BATTLE_TARGET_CHOSEN: 'react:battle:target-chosen',
   /** React → Phaser: item menu opened during battle */
   BATTLE_ITEM_MENU_OPEN: 'phaser:battle:item-menu-open',
   /** React → React: post-battle vocabulary review started */
