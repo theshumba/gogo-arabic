@@ -210,9 +210,13 @@ export default function BattleOverlay() {
     EventBus.on(EVENTS.COMPANION_BATTLE_ACTION, onCompanionAction);
     EventBus.on(EVENTS.COMPANION_BATTLE_TURN_END, onCompanionTurnEnd);
     // Phase 32 events
+    // BATTLE_TARGET_PROMPT is the Phaser→React direction (show picker).
+    // BATTLE_TARGET_SELECT is kept as the legacy alias but we now subscribe on
+    // BATTLE_TARGET_PROMPT so React's own BATTLE_TARGET_CHOSEN emit (React→Phaser)
+    // never re-enters this listener.
     EventBus.on(EVENTS.BATTLE_GRAMMAR_COMBO, onGrammarCombo);
     EventBus.on(EVENTS.BATTLE_FLEE_CHALLENGE, onFleeChallenge);
-    EventBus.on(EVENTS.BATTLE_TARGET_SELECT, onTargetSelect);
+    EventBus.on(EVENTS.BATTLE_TARGET_PROMPT, onTargetSelect);
     EventBus.on(EVENTS.BATTLE_ITEM_MENU_OPEN, onItemMenuOpen);
     EventBus.on(EVENTS.BATTLE_POST_REVIEW, onPostReview);
     EventBus.on(EVENTS.ARENA_WAVE_START, onArenaWaveStart);
@@ -230,7 +234,7 @@ export default function BattleOverlay() {
       // Phase 32 cleanup
       EventBus.off(EVENTS.BATTLE_GRAMMAR_COMBO, onGrammarCombo);
       EventBus.off(EVENTS.BATTLE_FLEE_CHALLENGE, onFleeChallenge);
-      EventBus.off(EVENTS.BATTLE_TARGET_SELECT, onTargetSelect);
+      EventBus.off(EVENTS.BATTLE_TARGET_PROMPT, onTargetSelect);
       EventBus.off(EVENTS.BATTLE_ITEM_MENU_OPEN, onItemMenuOpen);
       EventBus.off(EVENTS.BATTLE_POST_REVIEW, onPostReview);
       EventBus.off(EVENTS.ARENA_WAVE_START, onArenaWaveStart);
@@ -277,8 +281,10 @@ export default function BattleOverlay() {
   }, []);
 
   // Phase 32: Handle target selection
+  // Emit BATTLE_TARGET_CHOSEN (React→Phaser) — distinct from BATTLE_TARGET_PROMPT
+  // (Phaser→React) to avoid the listener re-entering and reopening the picker.
   const handleTargetSelect = useCallback((targetIndex) => {
-    EventBus.emit(EVENTS.BATTLE_TARGET_SELECT, { targetIndex });
+    EventBus.emit(EVENTS.BATTLE_TARGET_CHOSEN, { targetIndex });
     setShowTargetSelector(false);
     setTargetSelectorData(null);
   }, []);
