@@ -56,6 +56,9 @@ export default function DailyChallengeOverlay({ onClose }) {
 
   const [phase, setPhase] = useState(completedToday ? 'complete' : 'preview');
   const [challengeResult, setChallengeResult] = useState(null);
+  // Idempotency guard: track in-flight streak reward claims to prevent
+  // multiple dispatches from rapid clicks before Redux re-renders.
+  const claimingDaysRef = useRef(new Set());
 
   const today = getTodayDate();
   const challengeTypeKey = storedChallengeType || getDailyChallengeType(today);
@@ -115,7 +118,12 @@ export default function DailyChallengeOverlay({ onClose }) {
 
   const handleClaimReward = useCallback(
     (days) => {
+      // Guard against double-click: if this tier is already being claimed, bail
+      if (claimingDaysRef.current.has(days)) return;
+      claimingDaysRef.current.add(days);
       dispatch(claimStreakReward({ days }));
+      // The button will disappear on re-render (removed from unclaimedRewards).
+      // claimingDaysRef is intentionally never cleaned — once claimed it stays claimed.
     },
     [dispatch]
   );
