@@ -1388,9 +1388,9 @@ export class BattleStateMachine {
       this._targetSelectListener = null;
     }
 
-    // Reset magic battle state
+    // Destroy magic manager — cancels all in-flight timers before nulling
     if (this.magicManager) {
-      this.magicManager.resetBattleState();
+      this.magicManager.destroy();
       this.magicManager = null;
     }
 
