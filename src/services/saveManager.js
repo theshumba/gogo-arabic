@@ -97,32 +97,29 @@ export function deleteSlot(slotNumber) {
 }
 
 /**
- * Simple compression using base64 encoding.
- * Reduces storage cost ~30-40% vs uncompressed JSON for typical game state.
- * Falls back to raw JSON if encoding fails.
+ * Encode game state to a base64 string using TextEncoder (handles all Unicode, including Arabic).
+ * Note: base64 encoding increases payload size slightly — it is used purely for
+ * transport-safety (avoids control characters / newlines in localStorage values),
+ * NOT for compression.
  * @param {object} state
  * @returns {string}
  */
 function compressState(state) {
   const json = JSON.stringify(state);
-  try {
-    return btoa(unescape(encodeURIComponent(json)));
-  } catch {
-    return json;
-  }
+  const bytes = new TextEncoder().encode(json);
+  return btoa(String.fromCharCode(...bytes));
 }
 
 /**
- * Reverse of compressState. Handles both compressed (base64) and legacy raw JSON.
- * @param {string} compressed
+ * Reverse of compressState. Handles base64-encoded state.
+ * Throws on decode failure so the caller (loadSlot) can surface the error to the UI.
+ * @param {string} encoded
  * @returns {object}
  */
-function decompressState(compressed) {
-  try {
-    return JSON.parse(decodeURIComponent(escape(atob(compressed))));
-  } catch {
-    return JSON.parse(compressed);
-  }
+function decompressState(encoded) {
+  const bytes = Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0));
+  const json = new TextDecoder().decode(bytes);
+  return JSON.parse(json);
 }
 
 /**
