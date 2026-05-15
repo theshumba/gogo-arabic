@@ -1,12 +1,26 @@
 /**
- * saveManager.js — 3-slot save system with compression and migration support
+ * saveManager.js — 3-slot save system with encoding and migration support
  *
  * Architecture notes:
  * - Save data is stored in localStorage under keys gogo_save_1, gogo_save_2, gogo_save_3
- * - State is base64-compressed to reduce ~30-40% storage cost vs raw JSON
- * - Only game-relevant slices are saved (not UI/sync/transient state)
+ * - State is base64-encoded (TextEncoder) for safe localStorage storage
+ * - All game-relevant slices are saved (derived from PERSISTED_SLICES below)
  * - Migration system handles version upgrades without corrupting old saves
  */
+
+/**
+ * Transient slices that are EXCLUDED from saves.
+ * These are runtime-only, re-generated at boot, or session-ephemeral.
+ */
+const TRANSIENT_SLICES = new Set([
+  'ui',
+  'sync',
+  'gossip',
+  'notifications',
+  'dailyQuest',
+  'analyticsEventQueue',
+  'microReview',
+]);
 
 export const SAVE_SLOTS = 3;
 export const SAVE_VERSION = 1;
@@ -19,32 +33,25 @@ export const SAVE_VERSION = 1;
  */
 export async function saveToSlot(slotNumber, store) {
   const state = store.getState();
+
+  // Capture all slices except transient/session-only ones.
+  // This stays in sync automatically as new slices are added to the store.
+  const sliceData = {};
+  for (const key of Object.keys(state)) {
+    if (!TRANSIENT_SLICES.has(key)) {
+      sliceData[key] = state[key];
+    }
+  }
+
   const saveData = {
     version: SAVE_VERSION,
     timestamp: Date.now(),
-    playerName: state.player.name,
-    playerLevel: state.player.level,
-    currentZone: state.player.currentZone,
+    playerName: state.player?.name,
+    playerLevel: state.player?.level,
+    currentZone: state.player?.currentZone,
     playtime: state.stats?.totalPlayTime || 0,
-    // Serialize relevant slices — UI/sync/transient slices excluded
-    data: compressState({
-      player: state.player,
-      vocabulary: state.vocabulary,
-      quests: state.quests,
-      npc: state.npc,
-      narrative: state.narrative,
-      achievements: state.achievements,
-      grammar: state.grammar,
-      magic: state.magic,
-      inventory: state.inventory,
-      economy: state.economy,
-      companions: state.companions,
-      crafting: state.crafting,
-      skillTree: state.skillTree,
-      faction: state.faction,
-      journal: state.journal,
-      codex: state.codex,
-    }),
+    // All non-transient slices
+    data: compressState(sliceData),
   };
   localStorage.setItem(`gogo_save_${slotNumber}`, JSON.stringify(saveData));
   return saveData;
