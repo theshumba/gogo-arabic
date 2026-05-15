@@ -255,9 +255,17 @@ export default function AlphabetModule({ onBack }) {
                 );
               })}
             </div>
-            {quizAnswer && (
+            {quizAnswer === currentLetter.id && (
               <button className={styles.nextBtn} onClick={goNextStep}>
                 Next: Writing Quiz
+              </button>
+            )}
+            {quizAnswer && quizAnswer !== currentLetter.id && (
+              <button
+                className={styles.nextBtn}
+                onClick={() => setQuizAnswer(null)}
+              >
+                Try Again
               </button>
             )}
           </>
@@ -283,16 +291,19 @@ export default function AlphabetModule({ onBack }) {
                 Correct answer: {currentLetter.letter}
               </div>
             )}
-            {writingResult === null ? (
-              <ArabicKeyboard
-                onKeyPress={(k) => setWritingInput(writingInput + k)}
-                onBackspace={() => setWritingInput(writingInput.slice(0, -1))}
-                onSubmit={() => {
-                  const correct = writingInput.trim() === currentLetter.letter;
-                  setWritingResult(correct);
-                }}
-                highlightedKeys={[]}
-              />
+            {writingResult === null || writingResult === false ? (
+              <>
+                <ArabicKeyboard
+                  onKeyPress={(k) => setWritingInput(writingInput + k)}
+                  onBackspace={() => setWritingInput(writingInput.slice(0, -1))}
+                  onSubmit={() => {
+                    const correct = writingInput.trim() === currentLetter.letter;
+                    setWritingResult(correct);
+                    if (!correct) setWritingInput('');
+                  }}
+                  highlightedKeys={[]}
+                />
+              </>
             ) : (
               <button className={styles.nextBtn} onClick={goNextStep}>
                 {currentLetterIdx < groupLettersList.length - 1 ? 'Next Letter' : 'Complete Group'}
