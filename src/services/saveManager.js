@@ -132,6 +132,14 @@ export function migrateState(saveData) {
   let state = saveData.data;
   let version = saveData.version;
 
+  // Reject saves from a newer version of the game — we cannot safely interpret them.
+  if (version > SAVE_VERSION) {
+    throw new Error(
+      `Save is from a newer version of the game (v${version}) and cannot be loaded by this build (v${SAVE_VERSION}). ` +
+      `Please update the game or use a compatible save.`
+    );
+  }
+
   // v0 → v1: add slices that were introduced after initial release
   if (!version || version < 1) {
     state.skillTree = state.skillTree || {
