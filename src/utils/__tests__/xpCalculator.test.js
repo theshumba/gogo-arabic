@@ -49,16 +49,22 @@ describe('getLevelFromXP', () => {
   });
 
   it('should return correct levels for various XP amounts', () => {
-    // Level 2 requires 100 XP total
+    // XP_TABLE is cumulative: getXPForLevel(N) = total XP needed to reach level N.
+    // Level 2 threshold = 100 XP
     expect(getLevelFromXP(100)).toBe(2);
     expect(getLevelFromXP(150)).toBe(2);
 
-    // Level 3 requires cumulative: 100 + 250 = 350 XP total, so 250 is still level 2
-    expect(getLevelFromXP(250)).toBe(2);
+    // Level 3 threshold = 250 XP, so 250 exactly is level 3
+    expect(getLevelFromXP(250)).toBe(3);
+    expect(getLevelFromXP(249)).toBe(2);
 
-    // getLevelFromXP sums getXPForLevel() values: 0+100+250+450=800 for level 4
-    // 700 < 800, so 700 XP = level 3
-    expect(getLevelFromXP(700)).toBe(3);
+    // Level 5 threshold = 700 XP, so 700 exactly is level 5
+    expect(getLevelFromXP(700)).toBe(5);
+    expect(getLevelFromXP(699)).toBe(4);
+
+    // Level 4 threshold = 450 XP
+    expect(getLevelFromXP(450)).toBe(4);
+    expect(getLevelFromXP(449)).toBe(3);
   });
 
   it('should handle very high XP values', () => {
@@ -75,11 +81,13 @@ describe('getLevelFromXP', () => {
   });
 
   it('should be consistent with getXPForLevel', () => {
-    // If we have exactly the XP for a level, we should be at that level
-    const level10Cumulative = [2, 3, 4, 5, 6, 7, 8, 9, 10]
-      .reduce((sum, lvl) => sum + getXPForLevel(lvl), 0);
-
-    expect(getLevelFromXP(level10Cumulative)).toBe(10);
+    // getXPForLevel(N) returns the total (cumulative) XP threshold for level N.
+    // A player with exactly that XP should be at level N.
+    expect(getLevelFromXP(getXPForLevel(10))).toBe(10);
+    expect(getLevelFromXP(getXPForLevel(5))).toBe(5);
+    expect(getLevelFromXP(getXPForLevel(20))).toBe(20);
+    // One XP short of level N means still at level N-1.
+    expect(getLevelFromXP(getXPForLevel(10) - 1)).toBe(9);
   });
 });
 
