@@ -128,10 +128,16 @@ export function getRetentionHealth(fsrsCards) {
 
   for (const data of Object.values(fsrsCards)) {
     if (!data?.card) continue;
-    total++;
 
     const due = data.card.due ? new Date(data.card.due) : null;
     const stability = data.card.stability || 0;
+
+    // Skip brand-new cards (never reviewed): no due date AND zero stability.
+    // Matches the convention used by getDecayingWords/getUrgentReviewList —
+    // a card with no measured retention can't contribute to a retention metric.
+    if (!due && stability === 0) continue;
+
+    total++;
 
     if (due && due <= now) {
       overdue++;
