@@ -180,6 +180,10 @@ describe('HUD Component', () => {
   });
 
   it('should display review due count when reviews exist', () => {
+    // HUD reads selectDueCardCount(state.vocabulary.fsrsCards), not reviewQueue.
+    // Global test setup pins system time to 2026-02-09; use an earlier date so
+    // cards are objectively overdue under that clock.
+    const overdueIso = '2026-02-08T00:00:00.000Z';
     const preloadedState = {
       player: {
         level: 1,
@@ -190,8 +194,14 @@ describe('HUD Component', () => {
         wordsLearned: 0,
       },
       vocabulary: {
-        fsrsCards: {},
-        reviewQueue: ['word1', 'word2', 'word3', 'word4', 'word5'],
+        fsrsCards: {
+          word1: { card: { due: overdueIso, stability: 2 } },
+          word2: { card: { due: overdueIso, stability: 2 } },
+          word3: { card: { due: overdueIso, stability: 2 } },
+          word4: { card: { due: overdueIso, stability: 2 } },
+          word5: { card: { due: overdueIso, stability: 2 } },
+        },
+        reviewQueue: [],
         stats: { totalReviews: 0, accuracy: 0, streakDays: 0 },
       },
     };
