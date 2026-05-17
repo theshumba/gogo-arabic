@@ -51,7 +51,11 @@ export const tutorialMiddleware = (store) => (next) => (action) => {
   if (!stepId) return result;
 
   const state = store.getState();
-  const onboarding = state.onboarding;
+  // Production store.js registers the onboarding reducer as `onboarding2`.
+  // The slice's internal name is still 'onboarding' so action types are
+  // unchanged. Reading `state.onboarding` here returned undefined and
+  // disabled the tutorial auto-trigger in production.
+  const onboarding = state.onboarding2;
   if (!onboarding) return result;
 
   // Skip if tutorial already skipped or step already done

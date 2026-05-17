@@ -25,11 +25,13 @@ import onboardingReducer, {
 
 function makeStore(preloadedOnboarding = {}) {
   return configureStore({
-    reducer: { onboarding: onboardingReducer },
+    // Match production store.js: slice is registered as `onboarding2`
+    // (the createSlice name is still 'onboarding' so action types are unchanged).
+    reducer: { onboarding2: onboardingReducer },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(tutorialMiddleware),
     preloadedState: preloadedOnboarding
-      ? { onboarding: { ...onboardingReducer(undefined, { type: '@@INIT' }), ...preloadedOnboarding } }
+      ? { onboarding2: { ...onboardingReducer(undefined, { type: '@@INIT' }), ...preloadedOnboarding } }
       : undefined,
   });
 }
