@@ -26,8 +26,13 @@ function daysBetween(dateA, dateB) {
 export const loginRewardMiddleware = (store) => (next) => (action) => {
   const result = next(action);
 
-  // Only check on rehydration (app start with persisted state)
-  if (action.type === 'persist/REHYDRATE') {
+  // Only check on rehydration of the ROOT persistor (app start with persisted state).
+  // Nested persistReducers (vocabulary, battle, magic, inventory, companions, crafting,
+  // worldState, faction, poetry) each fire their own persist/REHYDRATE action; without
+  // gating on `action.key === 'gogo-arabic'` (the root persistConfig key), the nested
+  // REHYDRATEs run BEFORE state.player has been restored — making lastLogin appear null
+  // and re-granting the "first ever login" reward to returning players on every cold start.
+  if (action.type === 'persist/REHYDRATE' && action.key === 'gogo-arabic') {
     const state = store.getState();
     const today = getUTCDateString();
     const lastLogin = state.player?.lastLoginDate ?? null;
