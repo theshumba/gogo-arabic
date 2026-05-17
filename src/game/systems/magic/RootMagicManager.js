@@ -76,10 +76,14 @@ export class RootMagicManager {
       targetIndex,
     });
 
-    // Delayed damage and effects (after VFX animation)
-    const timer = this.scene.time.delayedCall(800, () => {
+    // Delayed damage and effects (after VFX animation).
+    // Use a ref object so the callback can read the timer through .current
+    // even when delayedCall fires the callback synchronously (test mocks
+    // and possibly Phaser zero-delay paths).
+    const ref = { current: null };
+    ref.current = this.scene.time.delayedCall(800, () => {
       // Remove from pending list now that callback is firing
-      const idx = this._pendingTimers.indexOf(timer);
+      const idx = this._pendingTimers.indexOf(ref.current);
       if (idx !== -1) this._pendingTimers.splice(idx, 1);
 
       // Guard: if battle is no longer active (scene shutdown / new battle started) bail out
@@ -119,7 +123,7 @@ export class RootMagicManager {
       // Emit VFX end event
       EventBus.emit(EVENTS.MAGIC_VFX_END);
     });
-    this._pendingTimers.push(timer);
+    this._pendingTimers.push(ref.current);
 
     return true;
   }

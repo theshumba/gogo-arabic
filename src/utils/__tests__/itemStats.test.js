@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { State } from 'ts-fsrs';
 import { calculateItemStats, calculateTotalEquipmentStats, compareItemStats } from '../itemStats.js';
 
 describe('itemStats', () => {
@@ -18,7 +19,7 @@ describe('itemStats', () => {
     it('applies full affix bonus (1.0) when word is learned', () => {
       const vocabularyState = {
         fsrsCards: {
-          word_wise: { state: 'Review' }, // Fully learned
+          word_wise: { card: { state: State.Review }, log: null }, // Fully learned
         },
       };
       const stats = calculateItemStats('scholars_kufi', vocabularyState);
@@ -32,7 +33,7 @@ describe('itemStats', () => {
     it('applies half affix bonus (0.5) when word is unlearned', () => {
       const vocabularyState = {
         fsrsCards: {
-          word_wise: { state: 'Learning' }, // Not in Review state
+          word_wise: { card: { state: State.Learning }, log: null }, // Not in Review state
         },
       };
       const stats = calculateItemStats('scholars_kufi', vocabularyState);
@@ -56,7 +57,7 @@ describe('itemStats', () => {
     it('handles item with multiple affixes', () => {
       const vocabularyState = {
         fsrsCards: {
-          word_noble: { state: 'Review' }, // Learned
+          word_noble: { card: { state: State.Review }, log: null }, // Learned
         },
       };
       const stats = calculateItemStats('royal_ghutra', vocabularyState);
@@ -188,7 +189,7 @@ describe('itemStats', () => {
       };
       const vocabularyState = {
         fsrsCards: {
-          word_wise: { state: 'Review' }, // Learned
+          word_wise: { card: { state: State.Review }, log: null }, // Learned
         },
       };
 
@@ -270,7 +271,7 @@ describe('itemStats', () => {
     it('respects vocabulary-gated affix bonuses in comparison', () => {
       const vocabularyState = {
         fsrsCards: {
-          word_wise: { state: 'Review' }, // Learned
+          word_wise: { card: { state: State.Review }, log: null }, // Learned
         },
       };
       const diff = compareItemStats('scholars_kufi', 'simple_kufi', vocabularyState);

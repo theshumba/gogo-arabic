@@ -72,6 +72,9 @@ describe('RootMagicManager', () => {
       },
       battle: {
         playerMP: 100,
+        // CR-G1 magic spell timer cancellation guard requires activeBattle truthy
+        // for the delayed callback to dispatch damage/recordRootUse.
+        activeBattle: { id: 'test-battle', enemies: [{ id: 'e0', hp: 100 }] },
       },
     });
   });

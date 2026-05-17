@@ -132,11 +132,9 @@ describe('Storage Migrations', () => {
       // Run migration
       await migrate(inputState, 1);
 
-      // Cleanup is scheduled with 5s setTimeout
-      expect(vi.getTimerCount()).toBeGreaterThan(0);
-
-      // Fast-forward timers to trigger cleanup
-      vi.runAllTimers();
+      // Cleanup is scheduled via Promise.resolve() microtask (was 5s setTimeout
+      // pre-fix; the timing change drops the cleanup race during reload).
+      await Promise.resolve();
 
       // After cleanup, localStorage should have vocabulary and battle removed
       const cleanedData = localStorage.getItem('persist:gogo-arabic');
