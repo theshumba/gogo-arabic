@@ -51,7 +51,9 @@ export const tutorialMiddleware = (store) => (next) => (action) => {
   if (!stepId) return result;
 
   const state = store.getState();
-  const onboarding = state.onboarding;
+  // Reducer is registered as `onboarding2` in store.js combineReducers — reading
+  // state.onboarding returns undefined and the tutorial auto-trigger is dead.
+  const onboarding = state.onboarding2;
   if (!onboarding) return result;
 
   // Skip if tutorial already skipped or step already done
