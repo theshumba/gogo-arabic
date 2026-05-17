@@ -37,6 +37,10 @@ export default function QuestLog() {
   const focusTrapRef = useFocusTrap(true, handleOverlayClose);
 
   const handleClaim = (questId) => {
+    // Idempotency guard: bail if already claimed (handles rapid double-clicks
+    // before Redux re-renders and disables the button)
+    if (quests[questId]?.rewardClaimed) return;
+
     const qd = questsData.find((q) => q.id === questId);
     if (qd?.reward) {
       dispatch(addXP(qd.reward.xp));
@@ -152,9 +156,11 @@ export default function QuestLog() {
           <span className={styles.progressText}>
             {progress}/{target} <span className={styles.progressPct}>({Math.round(pct)}%)</span>
           </span>
-          <span className={styles.reward}>
-            {qd.reward.xp} XP + {qd.reward.dirhams} Dirhams
-          </span>
+          {qd.reward && (
+            <span className={styles.reward}>
+              {qd.reward.xp} XP + {qd.reward.dirhams} Dirhams
+            </span>
+          )}
         </div>
         {status === 'active' && (
           <button

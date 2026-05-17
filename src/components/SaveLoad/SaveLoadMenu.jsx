@@ -55,7 +55,8 @@ export default function SaveLoadMenu({ onClose, mode = 'save', onLoad }) {
   const dispatch = useDispatch();
   const [slots, setSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(null); // slot number awaiting confirm
+  const [confirmDelete, setConfirmDelete] = useState(null); // slot number awaiting delete confirm
+  const [confirmOverwrite, setConfirmOverwrite] = useState(null); // slot number awaiting overwrite confirm
   const [feedback, setFeedback] = useState(null); // { type: 'success'|'error', msg }
   const [busy, setBusy] = useState(false);
 
@@ -104,6 +105,22 @@ export default function SaveLoadMenu({ onClose, mode = 'save', onLoad }) {
     } else {
       showFeedback('error', 'onLoad handler not provided');
     }
+  }
+
+  // ── Overwrite confirmation ────────────────────────────────────────────────
+  function requestOverwrite(slotNumber) {
+    setConfirmOverwrite(slotNumber);
+  }
+
+  async function confirmOverwriteSlot() {
+    if (confirmOverwrite === null) return;
+    const slot = confirmOverwrite;
+    setConfirmOverwrite(null);
+    await handleSave(slot);
+  }
+
+  function cancelOverwrite() {
+    setConfirmOverwrite(null);
   }
 
   // ── Delete ────────────────────────────────────────────────────────────────
@@ -188,7 +205,14 @@ export default function SaveLoadMenu({ onClose, mode = 'save', onLoad }) {
                     {isSaveMode ? (
                       <button
                         className={styles.btnSave}
-                        onClick={(e) => { e.stopPropagation(); handleSave(slot.slot); }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!slot.empty) {
+                            requestOverwrite(slot.slot);
+                          } else {
+                            handleSave(slot.slot);
+                          }
+                        }}
                         disabled={busy}
                       >
                         {slot.empty ? 'Save Here' : 'Overwrite'}
@@ -218,6 +242,26 @@ export default function SaveLoadMenu({ onClose, mode = 'save', onLoad }) {
             );
           })}
         </ul>
+
+        {/* Overwrite confirmation dialog */}
+        {confirmOverwrite !== null && (
+          <div className={styles.confirmOverlay} role="alertdialog" aria-modal="true">
+            <div className={styles.confirmBox}>
+              <p className={styles.confirmMsg}>
+                Overwrite Slot {confirmOverwrite}?<br />
+                <span className={styles.confirmSub}>Your previous save will be lost.</span>
+              </p>
+              <div className={styles.confirmActions}>
+                <button className={styles.btnSave} onClick={confirmOverwriteSlot} disabled={busy}>
+                  Yes, Overwrite
+                </button>
+                <button className={styles.btnCancel} onClick={cancelOverwrite}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Delete confirmation dialog */}
         {confirmDelete !== null && (
