@@ -23,8 +23,10 @@ import onboardingReducer, {
 
 const baseState = onboardingReducer(undefined, { type: '@@INIT' });
 
-// Helper to wrap slice state in the shape selectors expect
-const wrapState = (sliceState) => ({ onboarding: sliceState });
+// Helper to wrap slice state in the shape selectors expect.
+// Selectors read state.onboarding2 because the reducer is registered as
+// `onboarding2` in store.js (the slice's internal name is still 'onboarding').
+const wrapState = (sliceState) => ({ onboarding2: sliceState });
 
 // ============================================================
 // Initial state

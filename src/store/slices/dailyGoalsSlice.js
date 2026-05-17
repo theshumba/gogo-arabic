@@ -43,6 +43,9 @@ const dailyGoalsSlice = createSlice({
         state.allCompleted = false;
         state.totalSessionMinutes = 0;
         state.welcomeBackShown = false;
+        // Reset reward-claim idempotency flag — quizDailyGoalsMiddleware
+        // relies on this to re-allow the daily quiz reward on a new day.
+        state.quizRewardClaimed = false;
       }
 
       // Update the goal
@@ -69,6 +72,7 @@ const dailyGoalsSlice = createSlice({
         state.allCompleted = false;
         state.totalSessionMinutes = 0;
         state.welcomeBackShown = false;
+        state.quizRewardClaimed = false;
       }
 
       state.goals[goalType].current = current;
@@ -83,6 +87,7 @@ const dailyGoalsSlice = createSlice({
       state.allCompleted = false;
       state.totalSessionMinutes = 0;
       state.welcomeBackShown = false;
+      state.quizRewardClaimed = false;
     },
 
     // Check and auto-reset if date has changed
@@ -94,6 +99,7 @@ const dailyGoalsSlice = createSlice({
         state.allCompleted = false;
         state.totalSessionMinutes = 0;
         state.welcomeBackShown = false;
+        state.quizRewardClaimed = false;
       }
     },
 

@@ -4,6 +4,10 @@ const initialState = {
   dialogueState: {}, // { [npcId]: { lastLine: 0, wordsTaught: [] } }
   friendship: {},    // { [npcId]: number (0-100) }
   giftsGiven: {},    // { [npcId]: [giftId, ...] } — all gifts ever given to each NPC
+  // 'YYYY-MM-DD' UTC of last successful friendship-decay pass.
+  // Persisted (npc is in the root persist whitelist) so that
+  // relationshipDecayMiddleware does not re-apply decay on every page reload.
+  lastDecayDate: null,
 };
 
 const npcSlice = createSlice({
@@ -51,6 +55,15 @@ const npcSlice = createSlice({
       state.friendship[npcId] = Math.max(0, Math.min(100, value));
     },
 
+    /**
+     * Record the UTC dayKey of the last successful relationship-decay pass.
+     * Used by relationshipDecayMiddleware to gate "once per day" across reloads.
+     * payload: dayKey string ('YYYY-MM-DD').
+     */
+    setLastDecayDate(state, action) {
+      state.lastDecayDate = action.payload;
+    },
+
     giveNpcGift(state, action) {
       // payload: { npcId, giftId, relationshipDelta }
       // Adjusts NPC friendship by relationshipDelta and logs the gift in giftsGiven.
@@ -82,8 +95,12 @@ export const {
   resetNpcDialogue,
   adjustFriendship,
   setFriendship,
+  setLastDecayDate,
   giveNpcGift,
 } = npcSlice.actions;
+
+// Selector for the persisted last-decay date (null until first decay).
+export const selectLastDecayDate = (state) => state.npc?.lastDecayDate ?? null;
 
 // --- Selectors ---
 export const selectDialogueState = (state) => state.npc?.dialogueState || {};

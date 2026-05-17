@@ -18,6 +18,9 @@ describe('npcSlice', () => {
         dialogueState: {},
         friendship: {},
         giftsGiven: {},
+        // CRITICAL #6 — persisted in npc slice so relationshipDecayMiddleware
+        // survives page reloads.
+        lastDecayDate: null,
       });
     });
   });

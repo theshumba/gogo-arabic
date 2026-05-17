@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
 import { learningProgressMiddleware } from '../learningProgressMiddleware.js';
 import skillTreeReducer from '../../slices/skillTreeSlice.js';
@@ -8,6 +8,10 @@ import achievementReducer, { recordPerfectQuiz, incrementReviews } from '../../s
 import alphabetReducer, { completeGroup } from '../../slices/alphabetSlice.js';
 import poetryReducer, { endPoetryBattle } from '../../slices/poetrySlice.js';
 import playerReducer from '../../slices/playerSlice.js';
+import worldStateReducer from '../../slices/worldStateSlice.js';
+import cefrProgressReducer, { setCefrLevel } from '../../slices/cefrProgressSlice.js';
+import { EventBus } from '../../../utils/eventBus.js';
+import { EVENTS } from '../../../utils/eventBusTypes.js';
 
 function buildStore() {
   return configureStore({
@@ -19,6 +23,8 @@ function buildStore() {
       alphabet: alphabetReducer,
       poetry: poetryReducer,
       player: playerReducer,
+      worldState: worldStateReducer,
+      cefrProgress: cefrProgressReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(learningProgressMiddleware),
@@ -108,5 +114,66 @@ describe('learningProgressMiddleware XP routing', () => {
     // Should not throw, unlockedLessons should not have undefined added
     const unlocked = store.getState().grammar.unlockedLessons;
     expect(unlocked).not.toContain(undefined);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CRITICAL #7 — CEFR milestone setFlag regression
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Before the fix, the middleware checked `worldState.flags[milestoneKey]`
+// but never dispatched `setFlag` to mark the milestone as shown, so every
+// subsequent setCefrLevel for the same level re-emitted the event (Amira
+// dialogue spam, UI flicker, analytics double-count).
+
+describe('CRITICAL #7 — CEFR milestone setFlag idempotency', () => {
+  let store;
+  let emitSpy;
+
+  beforeEach(() => {
+    store = buildStore();
+    emitSpy = vi.spyOn(EventBus, 'emit');
+  });
+
+  it('emits CEFR_MILESTONE_REACHED exactly once for the same level', () => {
+    store.dispatch(setCefrLevel({ level: 'A2', source: 'system' }));
+    store.dispatch(setCefrLevel({ level: 'A2', source: 'system' }));
+    store.dispatch(setCefrLevel({ level: 'A2', source: 'system' }));
+
+    const milestoneEmits = emitSpy.mock.calls.filter(
+      ([eventName]) => eventName === EVENTS.CEFR_MILESTONE_REACHED
+    );
+    expect(milestoneEmits).toHaveLength(1);
+  });
+
+  it('persists the milestone flag in worldState after first emit', () => {
+    store.dispatch(setCefrLevel({ level: 'B1', source: 'system' }));
+    expect(store.getState().worldState.flags.cefr_milestone_b1_shown).toBe(true);
+  });
+
+  it('emits separately for distinct CEFR levels', () => {
+    store.dispatch(setCefrLevel({ level: 'A1', source: 'system' }));
+    store.dispatch(setCefrLevel({ level: 'A2', source: 'system' }));
+    store.dispatch(setCefrLevel({ level: 'B1', source: 'system' }));
+
+    const milestoneEmits = emitSpy.mock.calls.filter(
+      ([eventName]) => eventName === EVENTS.CEFR_MILESTONE_REACHED
+    );
+    expect(milestoneEmits).toHaveLength(3);
+  });
+
+  it('does not emit if the flag is already set (simulates restored persisted state)', () => {
+    // Simulate restored persisted state with the milestone already shown.
+    store.dispatch({
+      type: 'worldState/setFlag',
+      payload: { key: 'cefr_milestone_a2_shown', value: true },
+    });
+
+    store.dispatch(setCefrLevel({ level: 'A2', source: 'system' }));
+
+    const milestoneEmits = emitSpy.mock.calls.filter(
+      ([eventName]) => eventName === EVENTS.CEFR_MILESTONE_REACHED
+    );
+    expect(milestoneEmits).toHaveLength(0);
   });
 });

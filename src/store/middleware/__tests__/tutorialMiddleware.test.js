@@ -26,26 +26,14 @@ import onboardingReducer, {
 function makeStore(preloadedOnboarding = {}) {
   // Mount the reducer under `onboarding2` to match the production store key
   // in store.js (combineReducers registers onboardingReducer as `onboarding2`).
-  // tutorialMiddleware reads state.onboarding2; without this, the middleware
-  // would early-return and none of the tutorial-trigger assertions would fire.
-  //
-  // NOTE: The slice's own selectors (selectTutorialSteps, selectTutorialSkipped,
-  // selectNextTutorialStep, selectTutorialComplete) still read state.onboarding —
-  // that's a separate selector-mismatch bug outside this fix's scope. We
-  // construct a state object exposing the slice under BOTH keys so this test
-  // can verify the middleware fix without depending on that other bug.
   return configureStore({
-    reducer: {
-      onboarding: onboardingReducer,
-      onboarding2: onboardingReducer,
-    },
+    // Match production store.js: slice is registered as `onboarding2`
+    // (the createSlice name is still 'onboarding' so action types are unchanged).
+    reducer: { onboarding2: onboardingReducer },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(tutorialMiddleware),
     preloadedState: preloadedOnboarding
-      ? {
-          onboarding: { ...onboardingReducer(undefined, { type: '@@INIT' }), ...preloadedOnboarding },
-          onboarding2: { ...onboardingReducer(undefined, { type: '@@INIT' }), ...preloadedOnboarding },
-        }
+      ? { onboarding2: { ...onboardingReducer(undefined, { type: '@@INIT' }), ...preloadedOnboarding } }
       : undefined,
   });
 }

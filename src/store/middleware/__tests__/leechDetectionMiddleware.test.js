@@ -308,3 +308,145 @@ describe('leechDetectionMiddleware', () => {
     ).not.toThrow();
   });
 });
+
+// ─── CRITICAL #8 — Tier idempotency regression ──────────────────────────────
+//
+// Before the fix, every review of an already-leeched card re-halved its
+// scheduled_days, collapsing the interval geometrically and locking the
+// player into reviewing the card every session forever. The fix stamps
+// `leechPenalizedAtLapses` on the card after each penalty and skips
+// re-penalizing if `card.lapses <= card.leechPenalizedAtLapses`.
+
+describe('leechDetectionMiddleware — tier idempotency (CRITICAL #8)', () => {
+  let store;
+  let next;
+  let middleware;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    store = {
+      getState: vi.fn(),
+      dispatch: vi.fn(),
+    };
+    next = vi.fn((action) => action);
+    middleware = leechDetectionMiddleware(store)(next);
+  });
+
+  it('does NOT re-penalize a leech card that has already been penalized at the same lapse count', () => {
+    // Card was already penalized at lapses=5 in a previous session.
+    store.getState.mockReturnValue({
+      vocabulary: {
+        fsrsCards: {
+          kitab: {
+            card: {
+              lapses: 5,
+              scheduled_days: 4,
+              due: new Date().toISOString(),
+              leechPenalizedAtLapses: 5,
+            },
+            log: null,
+          },
+        },
+      },
+    });
+
+    middleware({
+      type: 'vocabulary/updateFsrsCard',
+      payload: { wordId: 'kitab', card: { lapses: 5 }, log: null },
+    });
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+
+  it('DOES penalize again when lapses increases past the previous penalty tier', () => {
+    // Card was penalized at lapses=5; player has since lapsed again to lapses=6.
+    store.getState.mockReturnValue({
+      vocabulary: {
+        fsrsCards: {
+          kitab: {
+            card: {
+              lapses: 6,
+              scheduled_days: 4,
+              due: new Date(Date.now() + 4 * 86400000).toISOString(),
+              leechPenalizedAtLapses: 5,
+            },
+            log: null,
+          },
+        },
+      },
+    });
+
+    middleware({
+      type: 'vocabulary/updateFsrsCard',
+      payload: { wordId: 'kitab', card: { lapses: 6 }, log: null },
+    });
+
+    expect(store.dispatch).toHaveBeenCalledTimes(1);
+    const dispatched = store.dispatch.mock.calls[0][0];
+    expect(dispatched.payload.card.leechPenalizedAtLapses).toBe(6);
+    expect(dispatched.payload.card.scheduled_days).toBe(2); // halved from 4
+  });
+
+  it('stamps leechPenalizedAtLapses on the dispatched card on first-time penalty', () => {
+    store.getState.mockReturnValue({
+      vocabulary: {
+        fsrsCards: {
+          kitab: {
+            card: {
+              lapses: 5,
+              scheduled_days: 10,
+              due: new Date(Date.now() + 10 * 86400000).toISOString(),
+              // no leechPenalizedAtLapses field yet — first time crossing the threshold
+            },
+            log: null,
+          },
+        },
+      },
+    });
+
+    middleware({
+      type: 'vocabulary/updateFsrsCard',
+      payload: { wordId: 'kitab', card: { lapses: 5 }, log: null },
+    });
+
+    const dispatched = store.dispatch.mock.calls[0][0];
+    expect(dispatched.payload.card.leechPenalizedAtLapses).toBe(5);
+    expect(dispatched.payload.card.scheduled_days).toBe(5);
+  });
+
+  it('10 consecutive reviews of the same leech card without new lapses → only 1 penalty', () => {
+    // Simulate the original bug scenario: 10 reviews of a leeched card.
+    // Each review re-reads state with whatever the previous penalty wrote.
+    let storedCard = {
+      lapses: 5,
+      scheduled_days: 1024,
+      due: new Date(Date.now() + 1024 * 86400000).toISOString(),
+    };
+
+    store.getState.mockImplementation(() => ({
+      vocabulary: { fsrsCards: { kitab: { card: storedCard, log: null } } },
+    }));
+
+    store.dispatch.mockImplementation((action) => {
+      if (action.type === 'vocabulary/updateFsrsCard' && action.payload._leechPenalty) {
+        // Simulate the reducer applying the penalty card to state.
+        storedCard = action.payload.card;
+      }
+      return action;
+    });
+
+    for (let i = 0; i < 10; i++) {
+      middleware({
+        type: 'vocabulary/updateFsrsCard',
+        payload: { wordId: 'kitab', card: storedCard, log: null },
+      });
+    }
+
+    // Only one penalty dispatch — not ten.
+    const penaltyCalls = store.dispatch.mock.calls.filter(
+      ([action]) => action.payload?._leechPenalty === true
+    );
+    expect(penaltyCalls).toHaveLength(1);
+    expect(storedCard.scheduled_days).toBe(512); // halved from 1024 exactly once
+  });
+});

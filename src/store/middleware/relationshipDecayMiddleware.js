@@ -12,7 +12,7 @@
  */
 
 import { decayRelationships } from '../../utils/npcRelationshipEngine.js';
-import { adjustFriendship } from '../slices/npcSlice.js';
+import { adjustFriendship, setLastDecayDate } from '../slices/npcSlice.js';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -26,19 +26,23 @@ export function daysBetween(fromKey, toKey) {
   return Math.max(0, Math.floor((to - from) / 86400000));
 }
 
-// ── Module-level state ────────────────────────────────────────────────────────
+// ── Legacy test helpers (kept as no-ops for API compatibility) ────────────────
+// The "last decay date" now lives in the persisted `state.npc.lastDecayDate`
+// field. Tests that need to seed it should dispatch `setLastDecayDate(date)`
+// against their test store. These helpers used to mutate module-level state.
 
-let _lastDecayDate = null;
-
-export function _resetDecayState(date = null) {
-  _lastDecayDate = date;
+export function _resetDecayState(_date = null) {
+  // Module state was removed — this is a no-op kept for API compatibility.
 }
 
 export function _getDecayState() {
-  return { lastDecayDate: _lastDecayDate };
+  return { lastDecayDate: null };
 }
 
 // ── Re-entrancy guard ─────────────────────────────────────────────────────────
+// Still module-scoped — its purpose is to prevent the synchronous
+// adjustFriendship cascade from re-entering THIS middleware within the same
+// dispatch tick; unrelated to the "once per real day" persistence fix.
 
 let _isProcessingDecay = false;
 
@@ -49,18 +53,25 @@ export const relationshipDecayMiddleware = (store) => (next) => (action) => {
 
   if (action.type !== 'dailyGoals/startSession' || _isProcessingDecay) return result;
 
+  // Read the persisted last-decay date from Redux state instead of a
+  // module-level variable. Before this fix, the module-level
+  // `_lastDecayDate` reset on every page reload, so the middleware applied
+  // a full day of friendship decay every cold start — multiple times per
+  // real day on a heavy-use session.
+  const state = store.getState();
+  const lastDecayDate = state.npc?.lastDecayDate ?? null;
   const todayKey = getDayKey();
-  if (_lastDecayDate === todayKey) return result; // already ran today
+  if (lastDecayDate === todayKey) return result; // already ran today
 
-  const daysSince = _lastDecayDate ? daysBetween(_lastDecayDate, todayKey) : 1;
+  const daysSince = lastDecayDate ? daysBetween(lastDecayDate, todayKey) : 1;
   if (daysSince <= 0) {
-    _lastDecayDate = todayKey;
+    store.dispatch(setLastDecayDate(todayKey));
     return result;
   }
 
-  const friendships = store.getState().npc?.friendship ?? {};
+  const friendships = state.npc?.friendship ?? {};
   if (Object.keys(friendships).length === 0) {
-    _lastDecayDate = todayKey;
+    store.dispatch(setLastDecayDate(todayKey));
     return result;
   }
 
@@ -76,7 +87,7 @@ export const relationshipDecayMiddleware = (store) => (next) => (action) => {
       }
     }
 
-    _lastDecayDate = todayKey;
+    store.dispatch(setLastDecayDate(todayKey));
   } finally {
     _isProcessingDecay = false;
   }
