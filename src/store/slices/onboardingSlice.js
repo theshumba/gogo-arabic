@@ -118,11 +118,11 @@ export const {
 
 // ========== SELECTORS ==========
 
-export const selectIntroductionsSeen = (state) => state.onboarding.introductionsSeen;
-export const selectTipsSeen = (state) => state.onboarding.tipsSeen;
-export const selectFeatureUsage = (state) => state.onboarding.featureUsage;
-export const selectOnboardingPhase = (state) => state.onboarding.onboardingPhase;
-export const selectSuggestFeature = (state) => state.onboarding.suggestFeature;
+export const selectIntroductionsSeen = (state) => state.onboarding2.introductionsSeen;
+export const selectTipsSeen = (state) => state.onboarding2.tipsSeen;
+export const selectFeatureUsage = (state) => state.onboarding2.featureUsage;
+export const selectOnboardingPhase = (state) => state.onboarding2.onboardingPhase;
+export const selectSuggestFeature = (state) => state.onboarding2.suggestFeature;
 
 /**
  * Get the first unseen feature introduction that the player's current level qualifies for.
@@ -169,15 +169,15 @@ export const selectUnusedFeatures = createSelector(
 
 // ========== TUTORIAL SELECTORS ==========
 
-export const selectTutorialSteps = (state) => state.onboarding.tutorialSteps;
-export const selectTutorialSkipped = (state) => state.onboarding.tutorialSkipped;
+export const selectTutorialSteps = (state) => state.onboarding2.tutorialSteps;
+export const selectTutorialSkipped = (state) => state.onboarding2.tutorialSkipped;
 
 /**
  * Returns the next incomplete tutorial step, or null if all complete / skipped.
  */
 export const selectNextTutorialStep = (state) => {
-  if (state.onboarding.tutorialSkipped) return null;
-  return state.onboarding.tutorialSteps.find((s) => !s.completed) || null;
+  if (state.onboarding2.tutorialSkipped) return null;
+  return state.onboarding2.tutorialSteps.find((s) => !s.completed) || null;
 };
 
 /**
@@ -185,8 +185,8 @@ export const selectNextTutorialStep = (state) => {
  */
 export const selectTutorialComplete = (state) => {
   return (
-    state.onboarding.tutorialSkipped ||
-    state.onboarding.tutorialSteps.every((s) => s.completed)
+    state.onboarding2.tutorialSkipped ||
+    state.onboarding2.tutorialSteps.every((s) => s.completed)
   );
 };
 
