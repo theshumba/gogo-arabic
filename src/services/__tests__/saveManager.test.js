@@ -265,3 +265,63 @@ describe('saveManager — quota-exceeded path', () => {
     await expect(saveToSlot(1, buildMockStore())).rejects.toThrow();
   });
 });
+
+describe('saveManager — atomic write protocol', () => {
+  it('previous good save in slot N survives a QuotaExceededError on next save', async () => {
+    // Seed slot 1 with a good save.
+    await saveToSlot(1, buildMockStore({ player: { name: 'Original', level: 1, currentZone: 'oasis_village' } }));
+    expect(loadSlot(1).playerName).toBe('Original');
+
+    // Now make every subsequent setItem throw quota.
+    const failingStorage = {
+      getItem: mockLocalStorage.getItem,
+      removeItem: mockLocalStorage.removeItem,
+      setItem: () => {
+        const err = new DOMException('QuotaExceededError');
+        err.name = 'QuotaExceededError';
+        throw err;
+      },
+    };
+    vi.stubGlobal('localStorage', failingStorage);
+
+    await expect(
+      saveToSlot(1, buildMockStore({ player: { name: 'NewAttempt', level: 99, currentZone: 'desert' } }))
+    ).rejects.toThrow();
+
+    // Restore real storage and re-read — original save must still be there.
+    vi.stubGlobal('localStorage', mockLocalStorage);
+    const after = loadSlot(1);
+    expect(after.playerName).toBe('Original');
+    expect(after.playerLevel).toBe(1);
+  });
+
+  it('cleans up the _pending key after a successful save', async () => {
+    await saveToSlot(2, buildMockStore());
+    expect(storage['gogo_save_2_pending']).toBeUndefined();
+    expect(storage['gogo_save_2']).toBeDefined();
+  });
+
+  it('cleans up the _pending key even when promote fails', async () => {
+    let setItemCallCount = 0;
+    const partialFailStorage = {
+      getItem: (k) => storage[k] ?? null,
+      removeItem: (k) => { delete storage[k]; },
+      setItem: (k, v) => {
+        setItemCallCount += 1;
+        // First call (pending key) succeeds, second call (promote) throws.
+        if (setItemCallCount === 2) {
+          const err = new DOMException('QuotaExceededError');
+          err.name = 'QuotaExceededError';
+          throw err;
+        }
+        storage[k] = v;
+      },
+    };
+    vi.stubGlobal('localStorage', partialFailStorage);
+
+    await expect(saveToSlot(1, buildMockStore())).rejects.toThrow();
+
+    // Pending key was written then must be cleaned up in finally.
+    expect(storage['gogo_save_1_pending']).toBeUndefined();
+  });
+});

@@ -155,6 +155,14 @@ export async function getProgressSnapshots(req, res, next) {
 /**
  * Append a new weekly progress snapshot (append-only — one per weekId).
  *
+ * Security:
+ *   - Body is validated by progressSnapshotSchema (.strict()) at the route
+ *     level — unknown fields, out-of-range numbers, non-enum cefrLevel,
+ *     malformed weekId/takenAt are all rejected before this controller
+ *     runs. A 100KB hard cap is enforced by snapshotSizeGuard on the route.
+ *   - userId is taken from req.userId (authenticate middleware); the body
+ *     cannot spoof another user's snapshot.
+ *
  * @route POST /api/v1/user/progress/snapshots
  * @body { weekId, takenAt, vocabCount, vocabMastered, cefrLevel,
  *         achievements, playtimeMinutes, zonesUnlocked }
@@ -163,14 +171,11 @@ export async function getProgressSnapshots(req, res, next) {
  */
 export async function saveProgressSnapshot(req, res, next) {
   try {
+    // All fields below are validated + defaulted by progressSnapshotSchema.
     const {
       weekId, takenAt, vocabCount, vocabMastered,
       cefrLevel, achievements, playtimeMinutes, zonesUnlocked,
     } = req.body;
-
-    if (!weekId || !takenAt) {
-      return next(AppError.badRequest('weekId and takenAt are required'));
-    }
 
     const user = await User.findById(req.userId);
     if (!user) return next(AppError.notFound('User not found'));
@@ -183,13 +188,14 @@ export async function saveProgressSnapshot(req, res, next) {
     }
 
     const snapshot = {
-      weekId, takenAt: new Date(takenAt),
-      vocabCount: vocabCount ?? 0,
-      vocabMastered: vocabMastered ?? 0,
-      cefrLevel: cefrLevel ?? 'A1',
-      achievements: achievements ?? 0,
-      playtimeMinutes: playtimeMinutes ?? 0,
-      zonesUnlocked: zonesUnlocked ?? 0,
+      weekId,
+      takenAt: new Date(takenAt),
+      vocabCount,
+      vocabMastered,
+      cefrLevel,
+      achievements,
+      playtimeMinutes,
+      zonesUnlocked,
     };
 
     user.snapshots.push(snapshot);

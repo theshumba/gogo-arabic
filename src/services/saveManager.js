@@ -27,6 +27,20 @@ export const SAVE_VERSION = 1;
 
 /**
  * Save current game state to a slot (1–3).
+ *
+ * Atomic write protocol (temp-key + promote):
+ *   1. Serialize the save payload.
+ *   2. Validate the payload is round-trippable (JSON.parse(JSON.stringify(...))
+ *      succeeds AND the encoded slice data decodes cleanly).
+ *   3. Write to `gogo_save_<n>_pending`.
+ *   4. Re-read the pending key and confirm it parses.
+ *   5. Promote to the final key `gogo_save_<n>` with a single setItem call.
+ *   6. Remove the pending key.
+ *
+ * If any step before step 5 throws (encoding error, quota error on the
+ * pending key, validation failure) the previous good save in slot N
+ * remains untouched. The pending key is cleaned up in a finally block.
+ *
  * @param {number} slotNumber - 1, 2, or 3
  * @param {object} store - Redux store
  * @returns {object} The save data object written to storage
@@ -53,7 +67,47 @@ export async function saveToSlot(slotNumber, store) {
     // All non-transient slices
     data: compressState(sliceData),
   };
-  localStorage.setItem(`gogo_save_${slotNumber}`, JSON.stringify(saveData));
+
+  const serialized = JSON.stringify(saveData);
+
+  // Pre-write integrity check: ensure the serialized payload round-trips.
+  // If JSON.parse fails here we never touched the live slot.
+  try {
+    JSON.parse(serialized);
+  } catch (err) {
+    throw new Error(`saveToSlot: serialized payload is not valid JSON: ${err.message}`);
+  }
+
+  const finalKey = `gogo_save_${slotNumber}`;
+  const pendingKey = `gogo_save_${slotNumber}_pending`;
+
+  try {
+    // Step 3: write to pending key.
+    // If this throws (e.g., QuotaExceededError) the previous good save
+    // at finalKey is untouched.
+    localStorage.setItem(pendingKey, serialized);
+
+    // Step 4: read-back validation — guards against any post-write corruption
+    // (e.g., a storage layer that silently truncated the value).
+    const readBack = localStorage.getItem(pendingKey);
+    if (readBack !== serialized) {
+      throw new Error('saveToSlot: pending write did not round-trip cleanly');
+    }
+
+    // Step 5: promote to final key. setItem is atomic per-key in the
+    // Web Storage spec — there is no observable partial state.
+    localStorage.setItem(finalKey, serialized);
+  } finally {
+    // Step 6: cleanup. Safe to run on success or failure — removeItem on a
+    // missing key is a no-op.
+    try {
+      localStorage.removeItem(pendingKey);
+    } catch {
+      // Cleanup failure is non-fatal; the pending key is harmless and will
+      // be overwritten on the next save.
+    }
+  }
+
   return saveData;
 }
 

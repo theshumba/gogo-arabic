@@ -81,6 +81,46 @@ describe('Leaderboard Routes', () => {
       expect(response.body.success).toBe(false);
     });
 
+    it('should reject non-integer score', async () => {
+      const response = await request(app)
+        .post('/api/v1/leaderboard/score')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ category: 'xp', score: 1.5, displayName: 'Test' });
+
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should reject score above MAX_LEADERBOARD_SCORE cap', async () => {
+      const response = await request(app)
+        .post('/api/v1/leaderboard/score')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ category: 'xp', score: 10_000_001, displayName: 'Test' });
+
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should reject Number.MAX_SAFE_INTEGER (classic cheat)', async () => {
+      const response = await request(app)
+        .post('/api/v1/leaderboard/score')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ category: 'xp', score: Number.MAX_SAFE_INTEGER, displayName: 'Test' });
+
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should reject unknown fields in body (strict schema)', async () => {
+      const response = await request(app)
+        .post('/api/v1/leaderboard/score')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ category: 'xp', score: 100, displayName: 'Test', userId: 'someOtherUserId' });
+
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+    });
+
     it('should reject missing displayName', async () => {
       const response = await request(app)
         .post('/api/v1/leaderboard/score')
