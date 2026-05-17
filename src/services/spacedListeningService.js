@@ -136,7 +136,8 @@ export function startListening(getState, vocabAll, options = {}) {
 
   // Clear any existing timer
   if (_timer) clearInterval(_timer);
-  _timer = setInterval(playNext, _intervalMs);
+  // Use globalThis.setInterval to avoid calling the exported setListeningInterval function
+  _timer = globalThis.setInterval(playNext, _intervalMs);
 }
 
 /**
@@ -168,9 +169,13 @@ export function refreshQueue(vocabAll) {
 
 /**
  * Set the interval between words.
+ * Renamed from setInterval to avoid shadowing the global window.setInterval.
+ * The original setInterval name caused startListening to call this function
+ * instead of the global, passing playNext (a function reference) as `ms`,
+ * which produced NaN and made the timer fire every ~1ms.
  * @param {number} ms - Interval in milliseconds (15000–120000)
  */
-export function setInterval(ms) {
+export function setListeningInterval(ms) {
   _intervalMs = Math.max(MIN_INTERVAL_MS, Math.min(MAX_INTERVAL_MS, ms));
   if (_isRunning && _timer) {
     clearInterval(_timer);
