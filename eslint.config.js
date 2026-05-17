@@ -63,7 +63,7 @@ export default [
 
   // Server and scripts config (Node.js environment)
   {
-    files: ['server/**/*.js', 'scripts/**/*.js'],
+    files: ['server/**/*.{js,cjs,mjs}', 'scripts/**/*.{js,cjs,mjs}', '.mcp/**/*.{js,cjs,mjs}'],
     languageOptions: {
       globals: {
         ...globals.node,

@@ -2,11 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
 
 // Mock EventBus
-vi.mock('../../utils/eventBus.js', () => ({
+vi.mock('../../../utils/eventBus.js', () => ({
   EventBus: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },
 }));
 
-vi.mock('../../utils/eventBusTypes.js', () => ({
+vi.mock('../../../utils/eventBusTypes.js', () => ({
   EVENTS: { TEACHING_MOMENT_TRIGGER: 'react:teaching-moment' },
 }));
 
@@ -25,7 +25,7 @@ describe('antiFrustrationMiddleware', () => {
   beforeEach(async () => {
     vi.resetModules();
 
-    const { EventBus } = await import('../../utils/eventBus.js');
+    const { EventBus } = await import('../../../utils/eventBus.js');
     EventBusMock = EventBus;
     EventBusMock.emit.mockClear();
 
