@@ -69,14 +69,24 @@ export const battleRewardsMiddleware = (store) => (next) => (action) => {
                 // Add to unlocked affixes list
                 store.dispatch(unlockAffix(affix.wordId));
 
-                // Add to FSRS deck with New state
+                // Add to FSRS deck with New state.
+                // addFsrsCard signature: { wordId, card, source } — flat FSRS fields
+                // would be dropped, leaving card: undefined in the store.
                 store.dispatch(
                   addFsrsCard({
                     wordId: affix.wordId,
-                    state: 0, // FSRS state 0 = New
-                    difficulty: 0,
-                    stability: 0,
-                    last_review: null,
+                    card: {
+                      due: new Date().toISOString(),
+                      stability: 0,
+                      difficulty: 0,
+                      elapsed_days: 0,
+                      scheduled_days: 0,
+                      reps: 0,
+                      lapses: 0,
+                      state: 0, // FSRS state 0 = New
+                      last_review: null,
+                    },
+                    source: 'battle_affix_discovery',
                   })
                 );
 

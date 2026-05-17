@@ -268,7 +268,10 @@ describe('battleRewardsMiddleware', () => {
         type: 'vocabulary/addFsrsCard',
         payload: expect.objectContaining({
           wordId: 'word_sharp',
-          state: 0, // FSRS New state
+          // Canonical addFsrsCard payload: { wordId, card, source }.
+          // The FSRS state field lives inside `card`, not flat on payload.
+          card: expect.objectContaining({ state: 0 }), // FSRS New state
+          source: 'battle_affix_discovery',
         }),
       })
     );

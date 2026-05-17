@@ -71,18 +71,25 @@ export const zoneIntroMiddleware = (store) => (next) => (action) => {
       const state = store.getState();
       const existingCard = state.vocabulary?.fsrsCards?.[wordId];
       if (!existingCard) {
+        const nowIso = new Date().toISOString();
+        // addFsrsCard signature: { wordId, card, source } — flat FSRS fields
+        // would be dropped, leaving card: undefined in the store.
         store.dispatch(
           addFsrsCard({
             wordId,
-            // Initial Good rating: state 2 (Review), stability=1 day, difficulty=5
-            // This reflects that the player just actively engaged with the word
-            state: 1,  // Learning state
-            stability: 1,
-            difficulty: 5,
-            last_review: new Date().toISOString(),
-            due: new Date().toISOString(),
-            reps: 1,
-            lapses: 0,
+            card: {
+              // Initial Good rating: state 1 (Learning), stability=1 day, difficulty=5.
+              // Reflects that the player just actively engaged with the word.
+              due: nowIso,
+              stability: 1,
+              difficulty: 5,
+              elapsed_days: 0,
+              scheduled_days: 1,
+              reps: 1,
+              lapses: 0,
+              state: 1, // Learning state
+              last_review: nowIso,
+            },
             source: 'zoneIntro',
           }),
         );

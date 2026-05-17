@@ -48,13 +48,26 @@ export const poetryRewardsMiddleware = (storeAPI) => (next) => (action) => {
     // XP reward — 50 XP for winning a poetry battle
     storeAPI.dispatch(addXP(50));
 
-    // FSRS vocabulary rewards for correctly answered words
+    // FSRS vocabulary rewards for correctly answered words.
+    // Pass a real default FSRS card (not null) so the word is actually schedulable
+    // by the review system; addFsrsCard signature: { wordId, card, source }.
     if (battle?.playerAnswers) {
+      const nowIso = new Date().toISOString();
       battle.playerAnswers.forEach((answer) => {
         if (answer?.isCorrect && answer.wordId && !fsrsCards[answer.wordId]) {
           storeAPI.dispatch(addFsrsCard({
             wordId: answer.wordId,
-            card: null,
+            card: {
+              due: nowIso,
+              stability: 0,
+              difficulty: 0,
+              elapsed_days: 0,
+              scheduled_days: 0,
+              reps: 0,
+              lapses: 0,
+              state: 0, // FSRS state 0 = New (due now)
+              last_review: null,
+            },
             source: 'poetry_battle',
           }));
         }
