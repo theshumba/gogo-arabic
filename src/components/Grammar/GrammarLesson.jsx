@@ -66,7 +66,18 @@ export default function GrammarLesson({ lessonId, onBack }) {
     const isExercise = stage === 'exercises';
     const currentIndex = isExercise ? currentExerciseIndex : currentQuizIndex;
     const item = isExercise ? lesson.exercises[currentIndex] : lesson.quiz[currentIndex];
-    const isCorrect = answer === item.answer || answer === item.correct;
+    // Cloze/classify send a pipe-joined "all correct answers" string on success,
+    // or the string literal 'WRONG' on partial failure.
+    let isCorrect;
+    if (item.type === 'cloze' || item.type === 'classify') {
+      isCorrect = answer !== 'WRONG';
+    } else if (item.correctAnswers) {
+      isCorrect = answer === item.correctAnswers.slice().sort().join(',');
+    } else if (typeof item.correct === 'number') {
+      isCorrect = answer === item.options[item.correct];
+    } else {
+      isCorrect = answer === item.answer;
+    }
     if (isExercise) {
       setExerciseAnswers({ ...exerciseAnswers, [currentIndex]: answer });
       if (isCorrect) { setExerciseScore(exerciseScore + 1); dispatch(addXP(XP_REWARDS.EXERCISE_CORRECT)); }
@@ -74,7 +85,19 @@ export default function GrammarLesson({ lessonId, onBack }) {
       setQuizAnswers({ ...quizAnswers, [currentIndex]: answer });
       if (isCorrect) { setQuizScore(quizScore + 1); dispatch(addXP(XP_REWARDS.QUIZ_CORRECT)); }
     }
-    setFeedbackMessage(isCorrect ? 'Correct!' : `Wrong! The answer is: ${item.answer || item.options[item.correct]}`);
+    let correctDisplay;
+    if (item.type === 'cloze' && item.blanks) {
+      correctDisplay = item.blanks.map((b) => b.answer).join(', ');
+    } else if (item.type === 'classify' && item.items) {
+      correctDisplay = item.items.map((it) => `${it.text} → ${it.category}`).join(', ');
+    } else if (item.correctAnswers) {
+      correctDisplay = item.correctAnswers.join(', ');
+    } else if (typeof item.correct === 'number') {
+      correctDisplay = item.options[item.correct];
+    } else {
+      correctDisplay = item.answer;
+    }
+    setFeedbackMessage(isCorrect ? 'Correct!' : `Wrong! The answer is: ${correctDisplay}`);
     setShowFeedback(true);
   };
 

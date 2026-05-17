@@ -21,7 +21,7 @@ import {
   selectRootMastery,
   selectAffinity,
 } from '../../../store/slices/magicSlice.js';
-import { spendMP, dealDamage } from '../../../store/slices/battleSlice.js';
+import { spendMP, dealDamage, dealBonusDamage } from '../../../store/slices/battleSlice.js';
 import { EventBus } from '../../../utils/eventBus.js';
 import { EVENTS } from '../../../utils/eventBusTypes.js';
 import { SPELL_TIERS } from '../../../data/rootMagic.js';
@@ -31,6 +31,7 @@ export class RootMagicManager {
   constructor(scene) {
     this.scene = scene;
     this.recentCasts = []; // Track last 5 spells cast for combo detection
+    this._pendingTimers = []; // Phaser TimerEvent handles for in-flight delayed calls
   }
 
   /**
@@ -76,7 +77,15 @@ export class RootMagicManager {
     });
 
     // Delayed damage and effects (after VFX animation)
-    this.scene.time.delayedCall(800, () => {
+    const timer = this.scene.time.delayedCall(800, () => {
+      // Remove from pending list now that callback is firing
+      const idx = this._pendingTimers.indexOf(timer);
+      if (idx !== -1) this._pendingTimers.splice(idx, 1);
+
+      // Guard: if battle is no longer active (scene shutdown / new battle started) bail out
+      const currentState = store.getState();
+      if (!currentState.battle?.activeBattle) return;
+
       // Calculate spell damage
       const finalDamage = this._calculateSpellDamage(spell, grammarAccuracy);
 
@@ -110,6 +119,7 @@ export class RootMagicManager {
       // Emit VFX end event
       EventBus.emit(EVENTS.MAGIC_VFX_END);
     });
+    this._pendingTimers.push(timer);
 
     return true;
   }
@@ -189,14 +199,12 @@ export class RootMagicManager {
           damageMultiplier: combo.damageMultiplier,
         });
 
-        // Apply bonus damage
+        // Apply bonus damage via dealBonusDamage — does NOT touch streak or currentRound.
+        // Using dealDamage({ correct: true }) here would inflate the streak on a turn
+        // that already recorded one correct answer (the primary spell), which compounds
+        // geometrically into the comboMult in BattleDamageCalculator.
         const bonusDamage = Math.floor(10 * combo.damageMultiplier);
-        store.dispatch(
-          dealDamage({
-            damage: bonusDamage,
-            correct: true,
-          })
-        );
+        store.dispatch(dealBonusDamage({ damage: bonusDamage }));
       }
     }
 
@@ -208,10 +216,32 @@ export class RootMagicManager {
   }
 
   /**
-   * Reset battle-specific state when battle ends
+   * Reset battle-specific state when battle ends.
+   * Also cancels any in-flight delayed calls so stale damage cannot land on a
+   * freshly-started battle.
    */
   resetBattleState() {
+    this._cancelPendingTimers();
     this.recentCasts = [];
     store.dispatch(clearBattleState());
+  }
+
+  /**
+   * Cancel all pending Phaser timer events and clear the list.
+   * Called by resetBattleState() and destroy() so timers never outlive the battle.
+   */
+  _cancelPendingTimers() {
+    for (const t of this._pendingTimers) {
+      t?.remove?.(false);
+    }
+    this._pendingTimers = [];
+  }
+
+  /**
+   * Full teardown — call from BattleStateMachine.destroy().
+   */
+  destroy() {
+    this._cancelPendingTimers();
+    this.recentCasts = [];
   }
 }

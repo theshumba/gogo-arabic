@@ -12,7 +12,9 @@ export default function ExerciseStage({
   // Internal state for multi-step exercise types
   const [multiSelected, setMultiSelected] = useState([]);
   const [clozeIndex, setClozeIndex] = useState(0);
+  const [blankResults, setBlankResults] = useState([]);
   const [classifyIndex, setClassifyIndex] = useState(0);
+  const [classifyResults, setClassifyResults] = useState([]);
 
   const feedbackClass = feedbackMessage.includes('Correct') ? styles.feedbackCorrect : styles.feedbackWrong;
 
@@ -273,7 +275,7 @@ export default function ExerciseStage({
               <div className={styles.multiSelectSubmit}>
                 <button
                   onClick={() => {
-                    const joined = exercise.correctAnswers.slice().sort().join(',');
+                    const joined = multiSelected.slice().sort().join(',');
                     onAnswerSelect(joined);
                     setMultiSelected([]);
                   }}
@@ -337,11 +339,19 @@ export default function ExerciseStage({
                         onClick={() => {
                           if (showFeedback) return;
                           const correct = option === exercise.blanks[clozeIndex].answer;
-                          if (correct && clozeIndex < exercise.blanks.length - 1) {
+                          const next = [...blankResults, correct];
+                          if (clozeIndex < exercise.blanks.length - 1) {
+                            setBlankResults(next);
                             setClozeIndex(clozeIndex + 1);
                           } else {
-                            onAnswerSelect(option);
+                            const allCorrect = next.every(Boolean);
+                            onAnswerSelect(
+                              allCorrect
+                                ? exercise.blanks.map((b) => b.answer).join('|')
+                                : 'WRONG'
+                            );
                             setClozeIndex(0);
+                            setBlankResults([]);
                           }
                         }}
                         className={cls}
@@ -384,11 +394,19 @@ export default function ExerciseStage({
                     onClick={() => {
                       if (showFeedback) return;
                       const correct = cat === correctCat;
-                      if (correct && classifyIndex < exercise.items.length - 1) {
+                      const next = [...classifyResults, correct];
+                      if (classifyIndex < exercise.items.length - 1) {
+                        setClassifyResults(next);
                         setClassifyIndex(classifyIndex + 1);
                       } else {
-                        onAnswerSelect(cat);
+                        const allCorrect = next.every(Boolean);
+                        onAnswerSelect(
+                          allCorrect
+                            ? exercise.items.map((item) => item.category).join('|')
+                            : 'WRONG'
+                        );
                         setClassifyIndex(0);
+                        setClassifyResults([]);
                       }
                     }}
                     className={cls}

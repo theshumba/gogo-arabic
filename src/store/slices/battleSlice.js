@@ -446,6 +446,18 @@ const battleSlice = createSlice({
         comboType: comboType || null,
       });
     },
+
+    /**
+     * Apply bonus damage (e.g. magic combo) without touching streak or currentRound.
+     * Use this instead of dealDamage({ correct: true }) when the damage is supplemental
+     * to an already-recorded player turn so that streak/round counters are not inflated.
+     *
+     * payload: { damage: number }
+     */
+    dealBonusDamage(state, action) {
+      const { damage } = action.payload;
+      state.bossHP = Math.max(0, state.bossHP - damage);
+    },
   },
 });
 
@@ -489,6 +501,7 @@ export const {
   setGrammarComboState,
   clearGrammarComboState,
   recordArabicUsed,
+  dealBonusDamage,
 } = battleSlice.actions;
 
 // ========== MEMOIZED SELECTORS ==========

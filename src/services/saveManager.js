@@ -1,12 +1,26 @@
 /**
- * saveManager.js — 3-slot save system with compression and migration support
+ * saveManager.js — 3-slot save system with encoding and migration support
  *
  * Architecture notes:
  * - Save data is stored in localStorage under keys gogo_save_1, gogo_save_2, gogo_save_3
- * - State is base64-compressed to reduce ~30-40% storage cost vs raw JSON
- * - Only game-relevant slices are saved (not UI/sync/transient state)
+ * - State is base64-encoded (TextEncoder) for safe localStorage storage
+ * - All game-relevant slices are saved (derived from PERSISTED_SLICES below)
  * - Migration system handles version upgrades without corrupting old saves
  */
+
+/**
+ * Transient slices that are EXCLUDED from saves.
+ * These are runtime-only, re-generated at boot, or session-ephemeral.
+ */
+const TRANSIENT_SLICES = new Set([
+  'ui',
+  'sync',
+  'gossip',
+  'notifications',
+  'dailyQuest',
+  'analyticsEventQueue',
+  'microReview',
+]);
 
 export const SAVE_SLOTS = 3;
 export const SAVE_VERSION = 1;
@@ -19,32 +33,25 @@ export const SAVE_VERSION = 1;
  */
 export async function saveToSlot(slotNumber, store) {
   const state = store.getState();
+
+  // Capture all slices except transient/session-only ones.
+  // This stays in sync automatically as new slices are added to the store.
+  const sliceData = {};
+  for (const key of Object.keys(state)) {
+    if (!TRANSIENT_SLICES.has(key)) {
+      sliceData[key] = state[key];
+    }
+  }
+
   const saveData = {
     version: SAVE_VERSION,
     timestamp: Date.now(),
-    playerName: state.player.name,
-    playerLevel: state.player.level,
-    currentZone: state.player.currentZone,
-    playtime: state.stats?.totalPlaytime || 0,
-    // Serialize relevant slices — UI/sync/transient slices excluded
-    data: compressState({
-      player: state.player,
-      vocabulary: state.vocabulary,
-      quests: state.quests,
-      npc: state.npc,
-      narrative: state.narrative,
-      achievements: state.achievements,
-      grammar: state.grammar,
-      magic: state.magic,
-      inventory: state.inventory,
-      economy: state.economy,
-      companions: state.companions,
-      crafting: state.crafting,
-      skillTree: state.skillTree,
-      faction: state.faction,
-      journal: state.journal,
-      codex: state.codex,
-    }),
+    playerName: state.player?.name,
+    playerLevel: state.player?.level,
+    currentZone: state.player?.currentZone,
+    playtime: state.stats?.totalPlayTime || 0,
+    // All non-transient slices
+    data: compressState(sliceData),
   };
   localStorage.setItem(`gogo_save_${slotNumber}`, JSON.stringify(saveData));
   return saveData;
@@ -97,32 +104,29 @@ export function deleteSlot(slotNumber) {
 }
 
 /**
- * Simple compression using base64 encoding.
- * Reduces storage cost ~30-40% vs uncompressed JSON for typical game state.
- * Falls back to raw JSON if encoding fails.
+ * Encode game state to a base64 string using TextEncoder (handles all Unicode, including Arabic).
+ * Note: base64 encoding increases payload size slightly — it is used purely for
+ * transport-safety (avoids control characters / newlines in localStorage values),
+ * NOT for compression.
  * @param {object} state
  * @returns {string}
  */
 function compressState(state) {
   const json = JSON.stringify(state);
-  try {
-    return btoa(unescape(encodeURIComponent(json)));
-  } catch {
-    return json;
-  }
+  const bytes = new TextEncoder().encode(json);
+  return btoa(String.fromCharCode(...bytes));
 }
 
 /**
- * Reverse of compressState. Handles both compressed (base64) and legacy raw JSON.
- * @param {string} compressed
+ * Reverse of compressState. Handles base64-encoded state.
+ * Throws on decode failure so the caller (loadSlot) can surface the error to the UI.
+ * @param {string} encoded
  * @returns {object}
  */
-function decompressState(compressed) {
-  try {
-    return JSON.parse(decodeURIComponent(escape(atob(compressed))));
-  } catch {
-    return JSON.parse(compressed);
-  }
+function decompressState(encoded) {
+  const bytes = Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0));
+  const json = new TextDecoder().decode(bytes);
+  return JSON.parse(json);
 }
 
 /**
@@ -134,6 +138,14 @@ function decompressState(compressed) {
 export function migrateState(saveData) {
   let state = saveData.data;
   let version = saveData.version;
+
+  // Reject saves from a newer version of the game — we cannot safely interpret them.
+  if (version > SAVE_VERSION) {
+    throw new Error(
+      `Save is from a newer version of the game (v${version}) and cannot be loaded by this build (v${SAVE_VERSION}). ` +
+      `Please update the game or use a compatible save.`
+    );
+  }
 
   // v0 → v1: add slices that were introduced after initial release
   if (!version || version < 1) {

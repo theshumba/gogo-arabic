@@ -18,7 +18,7 @@
  * - Migration function receives already-deserialized state from redux-persist
  * - Data movement happens automatically (redux-persist writes to new storage backend)
  * - Migration returns state unchanged (structure is the same, only storage backend changes)
- * - Cleanup of old localStorage keys happens AFTER successful rehydration (5s delay)
+ * - Cleanup of old localStorage keys happens synchronously (next microtask via Promise.resolve)
  * - Graceful degradation on migration errors (Pitfall 5)
  */
 
@@ -42,8 +42,10 @@ const migrations = {
       // The new nested persistReducers will now write vocabulary + battle to IndexedDB
       // We just need to return the state and schedule cleanup of old localStorage data
 
-      // Schedule cleanup of old localStorage vocabulary/battle data after rehydration
-      setTimeout(() => {
+      // Cleanup old localStorage vocabulary/battle data synchronously in the next microtask.
+      // Using Promise.resolve().then() instead of setTimeout so cleanup cannot be skipped
+      // if the user closes the tab before the 5-second window elapses.
+      Promise.resolve().then(() => {
         try {
           const rootKey = 'persist:gogo-arabic';
           const oldData = localStorage.getItem(rootKey);
@@ -67,7 +69,7 @@ const migrations = {
           console.warn('[Migration] Failed to cleanup old localStorage data:', cleanupError);
           // Non-critical — app still works, just leaves stale data in localStorage
         }
-      }, 5000);
+      });
 
       if (import.meta.env.DEV) {
         // eslint-disable-next-line no-console
@@ -188,8 +190,8 @@ const migrations = {
       console.log('[Migration] Starting v7 -> v8: worldState moved to IndexedDB');
     }
 
-    // Schedule cleanup of old localStorage worldState data after rehydration
-    setTimeout(() => {
+    // Cleanup old localStorage worldState data synchronously in the next microtask.
+    Promise.resolve().then(() => {
       try {
         const rootKey = 'persist:gogo-arabic';
         const oldData = localStorage.getItem(rootKey);
@@ -209,7 +211,7 @@ const migrations = {
       } catch (cleanupError) {
         console.warn('[Migration] Failed to cleanup old localStorage worldState:', cleanupError);
       }
-    }, 5000);
+    });
 
     if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
@@ -225,7 +227,7 @@ const migrations = {
       console.log('[Migration] Starting v8 -> v9: faction moved to IndexedDB');
     }
 
-    setTimeout(() => {
+    Promise.resolve().then(() => {
       try {
         const rootKey = 'persist:gogo-arabic';
         const oldData = localStorage.getItem(rootKey);
@@ -241,7 +243,7 @@ const migrations = {
       } catch (cleanupError) {
         console.warn('[Migration] Failed to cleanup old localStorage faction:', cleanupError);
       }
-    }, 5000);
+    });
 
     if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
@@ -258,7 +260,7 @@ const migrations = {
     }
 
     // Clean up any stale localStorage poetry key if it exists (defensive)
-    setTimeout(() => {
+    Promise.resolve().then(() => {
       try {
         const rootKey = 'persist:gogo-arabic';
         const oldData = localStorage.getItem(rootKey);
@@ -276,7 +278,7 @@ const migrations = {
       } catch (cleanupError) {
         console.warn('[Migration] Failed to cleanup old localStorage poetry:', cleanupError);
       }
-    }, 5000);
+    });
 
     if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
