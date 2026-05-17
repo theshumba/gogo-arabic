@@ -48,9 +48,13 @@ const getDB = () => {
       dbInstance = request.result;
       // Invalidate cache if connection is closed by browser (tab sleep, background eviction)
       dbInstance.onclose = () => { dbInstance = null; };
+      // Guard against onclose firing first (or both firing on the same eviction event):
+      // dbInstance may already be null here, in which case there's nothing to close.
       dbInstance.onversionchange = () => {
-        dbInstance.close();
-        dbInstance = null;
+        if (dbInstance) {
+          dbInstance.close();
+          dbInstance = null;
+        }
       };
       resolve(dbInstance);
     };
