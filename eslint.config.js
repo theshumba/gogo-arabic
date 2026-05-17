@@ -73,7 +73,7 @@ export default [
 
   // Ignore patterns
   {
-    ignores: ['node_modules', 'dist', 'coverage', 'build', 'public'],
+    ignores: ['node_modules', 'dist', 'coverage', 'build', 'public', '.claude/worktrees'],
   },
 
   // Prettier config (MUST be last to disable conflicting rules)
