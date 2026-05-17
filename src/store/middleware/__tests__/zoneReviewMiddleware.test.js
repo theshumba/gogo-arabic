@@ -14,16 +14,16 @@ const playerReducer = (state = { currentZone: 'oasis_village' }, action) => {
 };
 
 // Mock EventBus
-vi.mock('../../utils/eventBus.js', () => ({
+vi.mock('../../../utils/eventBus.js', () => ({
   EventBus: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },
 }));
 
-vi.mock('../../utils/eventBusTypes.js', () => ({
+vi.mock('../../../utils/eventBusTypes.js', () => ({
   EVENTS: { MICRO_REVIEW_TRIGGER: 'react:quiz:micro-review-trigger' },
 }));
 
 // Mock vocabularyAll — provide some words with zones
-vi.mock('../../data/vocabularyAll.js', () => ({
+vi.mock('../../../data/vocabularyAll.js', () => ({
   default: [
     { id: 'word1', zone: 'oasis_village' },
     { id: 'word2', zone: 'oasis_village' },
@@ -44,7 +44,7 @@ describe('zoneReviewMiddleware', () => {
   beforeEach(async () => {
     vi.resetModules();
 
-    const { EventBus } = await import('../../utils/eventBus.js');
+    const { EventBus } = await import('../../../utils/eventBus.js');
     EventBusMock = EventBus;
     EventBusMock.emit.mockClear();
 
