@@ -8,7 +8,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.js'],
     css: { modules: { classNameStrategy: 'non-scoped' } },
-    include: ['src/**/*.{test,spec}.{js,jsx}'],
+    include: ['src/**/*.{test,spec}.{js,jsx}', 'tests/**/*.{test,spec}.{js,jsx}'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'json-summary'],

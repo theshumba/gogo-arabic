@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('GoGo Arabic - Shop Purchase (Wardrobe)', () => {
   test.beforeEach(async ({ page }) => {
-    // Pre-seed player data with sufficient dirhams for purchases
+    // Navigate first to establish the correct origin, then seed localStorage.
+    // Writing localStorage before any navigation lands the write on about:blank
+    // (wrong origin) and the app boots with no seeded state.
+    await page.goto('/');
     await page.evaluate(() => {
       const playerData = {
         player: JSON.stringify({
@@ -61,6 +64,8 @@ test.describe('GoGo Arabic - Shop Purchase (Wardrobe)', () => {
 
       localStorage.setItem('persist:gogo-arabic', JSON.stringify(playerData));
     });
+    // Reload so the app boots with the seeded state.
+    await page.reload();
   });
 
   test('wardrobe shows available outfits for purchase', async ({ page }) => {

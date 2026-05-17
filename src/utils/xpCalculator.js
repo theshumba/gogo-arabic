@@ -29,10 +29,11 @@ export function getXPForLevel(level) {
 }
 
 export function getLevelFromXP(totalXP) {
-  let cumulative = 0;
-  for (let level = 1; level <= 100; level++) {
-    cumulative += getXPForLevel(level);
-    if (totalXP < cumulative) return level - 1 || 1;
+  // XP_TABLE stores cumulative thresholds — compare totalXP directly.
+  // Do NOT accumulate: getXPForLevel already returns the total XP needed.
+  if (totalXP < getXPForLevel(2)) return 1;
+  for (let level = 2; level <= 100; level++) {
+    if (totalXP < getXPForLevel(level + 1)) return level;
   }
   return 100;
 }

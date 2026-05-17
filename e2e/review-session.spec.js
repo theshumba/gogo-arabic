@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('GoGo Arabic - Review Session', () => {
   test.beforeEach(async ({ page }) => {
-    // Pre-seed player data with due review cards
+    // Navigate first to establish the correct origin, then seed localStorage.
+    // Writing localStorage before any navigation lands the write on about:blank
+    // (wrong origin) and the app boots with no seeded state.
+    await page.goto('/');
     await page.evaluate(() => {
       const now = Date.now();
       const oneDayAgo = now - (24 * 60 * 60 * 1000);
@@ -93,6 +96,8 @@ test.describe('GoGo Arabic - Review Session', () => {
 
       localStorage.setItem('persist:gogo-arabic', JSON.stringify(playerData));
     });
+    // Reload so the app boots with the seeded state.
+    await page.reload();
   });
 
   test('review session loads and shows quiz interface', async ({ page }) => {
