@@ -3,32 +3,39 @@ export const utilityBonusMiddleware = (store) => (next) => (action) => {
   const state = store.getState();
   const utilities = state.home?.utilities || {};
 
-  // Knowledge bonus: +XP on word learn / quiz complete
-  if (action.type === 'player/addXp' || action.type === 'fsrs/recordReview') {
-    const knowledgeBonus = Math.floor(utilities.Knowledge / 10); // +1 XP per 10 Knowledge
-    if (knowledgeBonus > 0 && action.payload?.xp) {
-      // The XP was already added by the original action.
-      // We dispatch a small bonus XP on top.
-      // Avoid infinite loop: check for a _bonusApplied flag
-      if (!action.meta?.utilityBonus) {
+  // Knowledge bonus: +XP on player/addXP (canonical) and vocabulary card updates.
+  // The base XP reducer (player/addXP) takes a NUMBER payload — not {xp: ...}.
+  // Previously this listened to 'player/addXp' (lowercase typo, dead branch)
+  // AND would have dispatched a {xp, source} object payload — which the real
+  // reducer would have summed into state.xp as `state.xp += { ... }` → NaN.
+  if (action.type === 'player/addXP' && !action.meta?.utilityBonus) {
+    const xp = typeof action.payload === 'number' ? action.payload : 0;
+    if (xp > 0) {
+      const knowledgeBonus = Math.floor(utilities.Knowledge / 10); // +1 XP per 10 Knowledge
+      if (knowledgeBonus > 0) {
         store.dispatch({
-          type: 'player/addXp',
-          payload: { xp: knowledgeBonus, source: 'knowledge_utility' },
-          meta: { utilityBonus: true },
+          type: 'player/addXP',
+          payload: knowledgeBonus,
+          meta: { utilityBonus: true, source: 'knowledge_utility' },
         });
       }
     }
   }
 
-  // Hospitality bonus: friendship gains are amplified
-  if (action.type === 'npc/adjustFriendship') {
-    const hospitalityBonus = Math.floor(utilities.Hospitality / 20); // +1 per 20
-    if (hospitalityBonus > 0 && action.payload?.delta > 0 && !action.meta?.utilityBonus) {
-      store.dispatch({
-        type: 'npc/adjustFriendship',
-        payload: { ...action.payload, delta: hospitalityBonus },
-        meta: { utilityBonus: true },
-      });
+  // Hospitality bonus: friendship gains amplified by a flat additional delta.
+  // Must ADD to the existing delta, not REPLACE it. Previously this overwrote
+  // the original payload.delta with the small bonus value.
+  if (action.type === 'npc/adjustFriendship' && !action.meta?.utilityBonus) {
+    const baseDelta = action.payload?.delta;
+    if (typeof baseDelta === 'number' && baseDelta > 0) {
+      const hospitalityBonus = Math.floor(utilities.Hospitality / 20); // +1 per 20
+      if (hospitalityBonus > 0) {
+        store.dispatch({
+          type: 'npc/adjustFriendship',
+          payload: { ...action.payload, delta: hospitalityBonus, reason: 'hospitality_utility' },
+          meta: { utilityBonus: true },
+        });
+      }
     }
   }
 
