@@ -33,7 +33,7 @@ vi.mock('../../../data/vocabularyAll.js', () => ({
 }));
 
 // Mock getDueCards to return specified due cards
-vi.mock('../../services/fsrs.js', () => ({
+vi.mock('../../../services/fsrs.js', () => ({
   getDueCards: vi.fn((cards) => Object.keys(cards)),
 }));
 

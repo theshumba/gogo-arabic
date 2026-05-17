@@ -1,7 +1,6 @@
 import { createEmptyCard, fsrs, generatorParameters, Rating } from 'ts-fsrs';
 import { shuffle } from '../utils/shuffle.js';
 import { selectNewCardsByPath } from '../store/slices/vocabularySlice.js';
-import { store } from '../store/store.js';
 import vocabulary from '../data/vocabularyAll.js';
 import { getFrequencyWeightedNewCards } from './frequencyWeighting.js';
 
@@ -46,8 +45,9 @@ export function getSessionCards(cards, maxCards = 20) {
  * @param {number} maxCards - Maximum new cards to return (default 5)
  * @returns {string[]} Array of wordIds
  */
-export function getNewCardsForSession(maxCards = 5) {
-  const state = store.getState();
+// State must be passed in by caller (component uses useSelector).
+// Avoids circular dep: middlewares import fsrs.js; store.js imports middlewares.
+export function getNewCardsForSession(state, maxCards = 5) {
   const cards = state.vocabulary?.fsrsCards ?? {};
 
   // Step 1: collect all unseen vocabulary words

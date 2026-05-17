@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import { motion } from 'framer-motion';
 import { updateFsrsCard, addFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { addXP, updateStreak } from '../../store/slices/playerSlice.js';
@@ -46,6 +46,7 @@ export default function ReviewSession({ onBack }) {
   const dispatch = useDispatch();
   const cards = useSelector((s) => s.vocabulary.fsrsCards);
   const settings = useSelector((s) => s.settings);
+  const store = useStore();
   const formatArabic = useFormatArabic();
 
   const [sessionCards] = useState(() => {
@@ -61,7 +62,7 @@ export default function ReviewSession({ onBack }) {
     // path-affinity-ordered new words so players encounter path-relevant words first
     if (dueEntries.length < 20) {
       const remaining = 20 - dueEntries.length;
-      const newWordIds = getNewCardsForSession(remaining);
+      const newWordIds = getNewCardsForSession(store.getState(), remaining);
       const dueWordIdSet = new Set(dueEntries.map(e => e.wordId));
       const newEntries = newWordIds
         .filter(id => !dueWordIdSet.has(id))
