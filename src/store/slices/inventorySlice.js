@@ -13,6 +13,21 @@ export function computeSellPrice(itemId, quantity = 1) {
 
 export const MAX_INVENTORY_SIZE = 200;
 
+/**
+ * Push a new inventory entry while respecting MAX_INVENTORY_SIZE.
+ * Returns true if pushed, false if cap was hit (caller can decide fallback).
+ * Used by addItem, equipItem (when unequipping prev slot occupant),
+ * unequipItem, and buyBackItem to keep the 200-slot cap unbypassable.
+ */
+function pushItemRespectingCap(state, entry) {
+  if (state.items.length >= MAX_INVENTORY_SIZE) {
+    console.warn(`[inventorySlice] Inventory full (${MAX_INVENTORY_SIZE} items) — dropping ${entry.itemId}`);
+    return false;
+  }
+  state.items.push(entry);
+  return true;
+}
+
 const initialState = {
   equipped: {
     headCovering: null,
@@ -38,17 +53,22 @@ const inventorySlice = createSlice({
       // payload: { itemId, quantity = 1 }
       const { itemId, quantity = 1 } = action.payload;
 
+      // Guard: itemId must be a non-empty string and quantity a positive finite number.
+      if (typeof itemId !== 'string' || !itemId) {
+        console.warn('[inventorySlice] addItem: invalid itemId');
+        return;
+      }
+      if (!Number.isFinite(quantity) || quantity <= 0) {
+        console.warn(`[inventorySlice] addItem: invalid quantity ${quantity} for ${itemId}`);
+        return;
+      }
+
       const existingItem = state.items.find(item => item.itemId === itemId);
 
       if (existingItem) {
         existingItem.quantity += quantity;
       } else {
-        // Cap at MAX_INVENTORY_SIZE slots for new items
-        if (state.items.length >= MAX_INVENTORY_SIZE) {
-          console.warn(`[inventorySlice] Inventory full (${MAX_INVENTORY_SIZE} items)`);
-          return;
-        }
-        state.items.push({ itemId, quantity, locked: false });
+        pushItemRespectingCap(state, { itemId, quantity, locked: false });
       }
     },
 
@@ -100,7 +120,7 @@ const inventorySlice = createSlice({
         if (existingInventoryItem) {
           existingInventoryItem.quantity += 1;
         } else {
-          state.items.push({ itemId: previousItemId, quantity: 1, locked: false });
+          pushItemRespectingCap(state, { itemId: previousItemId, quantity: 1, locked: false });
         }
       }
 
@@ -138,7 +158,11 @@ const inventorySlice = createSlice({
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
-        state.items.push({ itemId, quantity: 1, locked: false });
+        const pushed = pushItemRespectingCap(state, { itemId, quantity: 1, locked: false });
+        if (!pushed) {
+          // Inventory was full — refuse to unequip rather than drop the item.
+          return;
+        }
       }
 
       // Clear slot
@@ -247,15 +271,38 @@ const inventorySlice = createSlice({
     buyBackItem(state, action) {
       // payload: { index, buyBackPrice } — index into buyBackHistory; caller provides price
       const { index } = action.payload;
+
+      // Guard: index must be an in-range non-negative integer.
+      // Without this, `splice(negative, 1)` silently removes the wrong entry
+      // (negative indices are offset from the end), and out-of-range indices
+      // were already short-circuited by `!entry` but only after risking
+      // confusion if a coerced value happened to land on a valid slot.
+      if (
+        !Number.isInteger(index) ||
+        index < 0 ||
+        index >= state.buyBackHistory.length
+      ) {
+        console.warn(`[inventorySlice] buyBackItem: invalid index ${index}`);
+        return;
+      }
+
       const entry = state.buyBackHistory[index];
       if (!entry) return;
 
-      // Return item to inventory
+      // Return item to inventory (respect cap when creating a new entry)
       const existing = state.items.find(i => i.itemId === entry.itemId);
       if (existing) {
         existing.quantity += entry.quantity;
       } else {
-        state.items.push({ itemId: entry.itemId, quantity: entry.quantity, locked: false });
+        const pushed = pushItemRespectingCap(state, {
+          itemId: entry.itemId,
+          quantity: entry.quantity,
+          locked: false,
+        });
+        if (!pushed) {
+          // Refuse to buy back if inventory full — caller retains buyback option.
+          return;
+        }
       }
 
       // Remove from buyback history

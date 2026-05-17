@@ -55,7 +55,13 @@ const ACTION_EVENT_MAP = {
   'achievements/unlockAchievement': (action) => ({
     type: ANALYTICS_EVENT_TYPES.ACHIEVEMENT_UNLOCKED,
     properties: {
-      achievementId: action.payload?.id ?? action.payload?.achievementId ?? null,
+      // achievementSlice.unlockAchievement dispatches with payload = achievementId
+      // (a STRING), not an object. The old `?.id ?? ?.achievementId` chain
+      // never matched and every analytics event reported achievementId: null.
+      achievementId:
+        typeof action.payload === 'string'
+          ? action.payload
+          : (action.payload?.id ?? action.payload?.achievementId ?? null),
     },
   }),
 
