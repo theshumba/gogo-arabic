@@ -278,6 +278,13 @@ function ActiveView({ scenarioId, onComplete, onBack }) {
     onBack();
   }, [dispatch, onBack]);
 
+  // Completed all exchanges — call onComplete from effect, not during render
+  useEffect(() => {
+    if (isLastExchange && !feedback) {
+      onComplete(sessionScore);
+    }
+  }, [isLastExchange, feedback, sessionScore, onComplete]);
+
   if (!scenario) {
     return (
       <div className={styles.activeView}>
@@ -287,9 +294,7 @@ function ActiveView({ scenarioId, onComplete, onBack }) {
     );
   }
 
-  // Completed all exchanges — show final
   if (isLastExchange && !feedback) {
-    onComplete(sessionScore);
     return null;
   }
 

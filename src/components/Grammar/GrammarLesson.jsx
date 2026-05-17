@@ -33,6 +33,8 @@ export default function GrammarLesson({ lessonId, onBack }) {
   useEffect(() => {
     if (!lesson) return;
     const handleKeyPress = (e) => {
+      // Do not intercept keys when focus is in a text input or editable element
+      if (e.target?.matches?.('input, textarea, [contenteditable]')) return;
       if (e.key === 'Escape') { onBack(); }
       if (stage === 'exercises' || stage === 'quiz') {
         const exercise = stage === 'exercises' ? lesson.exercises[currentExerciseIndex] : null;

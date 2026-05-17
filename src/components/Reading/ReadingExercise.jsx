@@ -38,6 +38,8 @@ export default function ReadingExercise({ onBack }) {
 
   useEffect(() => {
     const handleKeyPress = (e) => {
+      // Do not intercept keys when focus is in a text input or editable element
+      if (e.target?.matches?.('input, textarea, [contenteditable]')) return;
       if (!showResults && question && !selectedAnswer) {
         const num = parseInt(e.key);
         if (num >= 1 && num <= question.options.length) {

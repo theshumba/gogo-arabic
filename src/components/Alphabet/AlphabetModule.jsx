@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { addXP } from '../../store/slices/playerSlice.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
@@ -110,8 +110,15 @@ export default function AlphabetModule({ onBack }) {
   // Letter lesson view
   const groupLettersList = groupedLetters[selectedGroup] || [];
   const currentLetter = groupLettersList[currentLetterIdx];
+
+  // Guard: if currentLetterIdx overshot the group, reset to group list via effect
+  useEffect(() => {
+    if (selectedGroup !== null && !groupLettersList[currentLetterIdx]) {
+      setSelectedGroup(null);
+    }
+  }, [selectedGroup, groupLettersList, currentLetterIdx]);
+
   if (!currentLetter) {
-    setSelectedGroup(null);
     return null;
   }
 
@@ -248,9 +255,17 @@ export default function AlphabetModule({ onBack }) {
                 );
               })}
             </div>
-            {quizAnswer && (
+            {quizAnswer === currentLetter.id && (
               <button className={styles.nextBtn} onClick={goNextStep}>
                 Next: Writing Quiz
+              </button>
+            )}
+            {quizAnswer && quizAnswer !== currentLetter.id && (
+              <button
+                className={styles.nextBtn}
+                onClick={() => setQuizAnswer(null)}
+              >
+                Try Again
               </button>
             )}
           </>
@@ -276,16 +291,19 @@ export default function AlphabetModule({ onBack }) {
                 Correct answer: {currentLetter.letter}
               </div>
             )}
-            {writingResult === null ? (
-              <ArabicKeyboard
-                onKeyPress={(k) => setWritingInput(writingInput + k)}
-                onBackspace={() => setWritingInput(writingInput.slice(0, -1))}
-                onSubmit={() => {
-                  const correct = writingInput.trim() === currentLetter.letter;
-                  setWritingResult(correct);
-                }}
-                highlightedKeys={[]}
-              />
+            {writingResult === null || writingResult === false ? (
+              <>
+                <ArabicKeyboard
+                  onKeyPress={(k) => setWritingInput(writingInput + k)}
+                  onBackspace={() => setWritingInput(writingInput.slice(0, -1))}
+                  onSubmit={() => {
+                    const correct = writingInput.trim() === currentLetter.letter;
+                    setWritingResult(correct);
+                    if (!correct) setWritingInput('');
+                  }}
+                  highlightedKeys={[]}
+                />
+              </>
             ) : (
               <button className={styles.nextBtn} onClick={goNextStep}>
                 {currentLetterIdx < groupLettersList.length - 1 ? 'Next Letter' : 'Complete Group'}

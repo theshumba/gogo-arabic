@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { updateFsrsCard } from '../../store/slices/vocabularySlice.js';
 import { incrementReviews } from '../../store/slices/achievementSlice.js';
 import { addXP } from '../../store/slices/playerSlice.js';
-import { reviewCard } from '../../services/fsrs.js';
+import { reviewCard, createNewCard } from '../../services/fsrs.js';
 import { XP_REWARDS } from '../../utils/xpCalculator.js';
 import { audioManager } from '../../services/audio.js';
 import vocabulary from '../../data/vocabularyAll.js';
@@ -60,13 +60,12 @@ export default function MicroReviewOverlay({ wordIds, onClose }) {
 
       if (correct) setScore((s) => s + 1);
 
-      // Update FSRS card
-      const card = fsrsCards[currentWord.id]?.card;
-      if (card) {
-        const rating = correct ? 3 : 1; // Good or Again
-        const result = reviewCard(card, rating);
-        dispatch(updateFsrsCard({ wordId: currentWord.id, card: result.card, log: result.log }));
-      }
+      // Update FSRS card — create one for first-encounter words so they enter SRS
+      const existingCard = fsrsCards[currentWord.id]?.card;
+      const cardToReview = existingCard ?? createNewCard();
+      const rating = correct ? 3 : 1; // Good or Again
+      const result = reviewCard(cardToReview, rating);
+      dispatch(updateFsrsCard({ wordId: currentWord.id, card: result.card, log: result.log }));
       dispatch(incrementReviews());
       if (correct) dispatch(addXP(XP_REWARDS.CORRECT_ANSWER));
 
@@ -87,8 +86,14 @@ export default function MicroReviewOverlay({ wordIds, onClose }) {
     onClose();
   }, [onClose]);
 
+  // Close from effect, not render — calling onClose during render violates React 19 rules
+  useEffect(() => {
+    if (!currentWord || words.length === 0) {
+      onClose();
+    }
+  }, [currentWord, words.length, onClose]);
+
   if (!currentWord || words.length === 0) {
-    onClose();
     return null;
   }
 
