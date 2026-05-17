@@ -61,7 +61,11 @@ export const learningProgressMiddleware = (store) => (next) => (action) => {
       }
       break;
     case 'cefrProgress/setCefrLevel': {
-      // Emit milestone event once per CEFR level — guarded by worldState flag
+      // Emit milestone event once per CEFR level — guarded by worldState flag.
+      // CRITICAL #7: the prior implementation read `flags[milestoneKey]` but
+      // never dispatched `setFlag` to mark the milestone as shown, so every
+      // subsequent setCefrLevel re-emitted the milestone event (Amira
+      // dialogue spam, UI flicker, double-counted analytics).
       const level = action.payload?.level;
       if (level) {
         const flags = store.getState().worldState?.flags || {};
@@ -71,6 +75,9 @@ export const learningProgressMiddleware = (store) => (next) => (action) => {
             npcId: 'guide-amira-cefr',
             context: { cefr_level: level },
           });
+          // Persist the "shown" flag so the milestone cannot re-fire on
+          // subsequent setCefrLevel dispatches for the same level.
+          store.dispatch(setFlag({ key: milestoneKey, value: true }));
         }
       }
       break;
