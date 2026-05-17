@@ -134,10 +134,30 @@ function BattleContent({
       rewards.push('50 XP earned');
       dispatch(addXP(50));
 
-      // FSRS vocabulary reward: add card for each correctly answered word
+      // FSRS vocabulary reward: add card for each correctly answered word.
+      // Use a proper FSRS-shaped "New" card (state: 0) instead of `null` so
+      // downstream selectors (selectDueCardCount, selectWordsAtRisk,
+      // selectLeechCount) can read card.lapses / card.due without crashing.
+      // Shape mirrors battleRewardsMiddleware.js:78-89.
       battle.playerAnswers.forEach((answer) => {
         if (answer?.isCorrect && answer.wordId && !fsrsCards[answer.wordId]) {
-          dispatch(addFsrsCard({ wordId: answer.wordId, card: null, source: 'poetry_battle' }));
+          dispatch(
+            addFsrsCard({
+              wordId: answer.wordId,
+              card: {
+                due: new Date().toISOString(),
+                stability: 0,
+                difficulty: 0,
+                elapsed_days: 0,
+                scheduled_days: 0,
+                reps: 0,
+                lapses: 0,
+                state: 0, // FSRS state 0 = New
+                last_review: null,
+              },
+              source: 'poetry_battle',
+            })
+          );
           rewards.push(`New word unlocked`);
         }
       });
