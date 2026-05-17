@@ -94,12 +94,24 @@ export const quizDailyGoalsMiddleware = (store) => (next) => (action) => {
   const currentMinute = _getCurrentMinuteUTC();
   if (_daily.lastQuizMinute === currentMinute) return result;
 
-  // Record this completion
+  // Record this completion (transient — used for the in-session
+  // best-effort counter and the same-minute dedup only).
   _daily.lastQuizMinute = currentMinute;
   _daily.reviewsCompleted += 1;
 
-  // Dispatch threshold reward once the daily target is met
-  if (!_daily.rewardDispatched && _daily.reviewsCompleted >= QUIZ_DAILY_TARGET) {
+  // Reward idempotency: rely on persisted state, NOT the module-level
+  // `_daily.rewardDispatched` flag (which resets on every page reload and
+  // enabled the grind exploit of completing 3 quizzes → claim → reload →
+  // claim again indefinitely). The dailyGoals slice persists both
+  // `quizRewardClaimed` and `goals.quizzesPassed.current` keyed by `date`,
+  // and `updateDailyGoal` auto-resets these when `date` rolls over.
+  const todayUTC = _getTodayUTC();
+  const dailyGoals = store.getState().dailyGoals;
+  const goalsForToday = dailyGoals?.date === todayUTC ? dailyGoals.goals : null;
+  const persistedCount = goalsForToday?.[QUIZ_GOAL_TYPE]?.current ?? 0;
+  const alreadyClaimed = goalsForToday ? !!dailyGoals.quizRewardClaimed : false;
+
+  if (!alreadyClaimed && persistedCount >= QUIZ_DAILY_TARGET) {
     _daily.rewardDispatched = true;
     store.dispatch(claimReward());
   }
