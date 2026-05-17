@@ -38,6 +38,16 @@ export default defineConfig({
     }),
   ].filter(Boolean),
   publicDir: 'public',
+  // Force single instance of React across the bundle. Without dedupe, Vite's
+  // optimizer can pre-bundle react and react-redux's nested context into
+  // separate chunks; useContext then returns null and useSelector explodes
+  // with "Cannot read properties of null (reading 'useContext')".
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-dom/client', 'react-redux'],
+  },
   server: {
     port: 3000,
     proxy: {
