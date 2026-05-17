@@ -1084,8 +1084,16 @@ export class BattleStateMachine {
         store.dispatch(setCompanionDefending(true));
         break;
       case 'buff':
+        // Companion AI returns `duration` in TURNS — the canonical field name in
+        // battleSlice.playerEffects is `remainingTurns`, which tickStatusEffects
+        // decrements each turn. Pass remainingTurns explicitly to avoid any
+        // future drift between Companion AI semantics and the slice.
         store.dispatch(
-          applyPlayerEffect({ id: action.effectId, duration: action.duration, source: 'companion' })
+          applyPlayerEffect({
+            id: action.effectId,
+            remainingTurns: action.duration,
+            source: 'companion',
+          })
         );
         store.dispatch(spendCompanionMP(action.mpCost));
         break;

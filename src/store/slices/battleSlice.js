@@ -296,11 +296,19 @@ const battleSlice = createSlice({
     },
 
     applyPlayerEffect(state, action) {
-      // payload: { id, duration, source }
-      const { id, duration, source } = action.payload;
+      // payload: { id, remainingTurns, source }
+      //
+      // NOTE: tickStatusEffects (above) decrements `remainingTurns` each turn —
+      // that's the canonical field name. We accept `duration` only as a
+      // backwards-compatible alias so any stale callers don't accidentally
+      // produce a permanent buff (the original concern from code review).
+      const { id, source } = action.payload;
+      const turns =
+        action.payload.remainingTurns ?? action.payload.duration;
+      if (!id || !Number.isFinite(turns) || turns <= 0) return;
       // Remove existing instance of same effect (no stacking)
       const filtered = state.playerEffects.filter((e) => e.id !== id);
-      filtered.push({ id, remainingTurns: duration, source: source || 'companion' });
+      filtered.push({ id, remainingTurns: turns, source: source || 'companion' });
       state.playerEffects = filtered;
     },
 
