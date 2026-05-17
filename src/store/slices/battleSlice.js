@@ -546,14 +546,27 @@ export const selectBattleWinRate = createSelector(
   }
 );
 
-export const selectCompanionBattleState = (state) => ({
-  companionHP: state.battle.companionHP,
-  companionMaxHP: state.battle.companionMaxHP,
-  companionMP: state.battle.companionMP,
-  companionMaxMP: state.battle.companionMaxMP,
-  companionEffects: state.battle.companionEffects,
-  companionDefending: state.battle.companionDefending,
-});
+// Wrapped in createSelector so referential equality holds across unrelated
+// dispatches — previously this returned a fresh object literal on every
+// useSelector call, forcing every battle-action to re-render companion HUD.
+export const selectCompanionBattleState = createSelector(
+  [
+    (state) => state.battle.companionHP,
+    (state) => state.battle.companionMaxHP,
+    (state) => state.battle.companionMP,
+    (state) => state.battle.companionMaxMP,
+    (state) => state.battle.companionEffects,
+    (state) => state.battle.companionDefending,
+  ],
+  (companionHP, companionMaxHP, companionMP, companionMaxMP, companionEffects, companionDefending) => ({
+    companionHP,
+    companionMaxHP,
+    companionMP,
+    companionMaxMP,
+    companionEffects,
+    companionDefending,
+  })
+);
 
 // Phase 31 — Crafted consumable buff selectors
 export const selectActiveBuffs = (state) => state.battle.activeBuffs;
@@ -587,10 +600,14 @@ export const selectActiveEnemies = createSelector(
   (enemies) => enemies.filter((e) => !e.defeated)
 );
 export const selectTargetEnemy = (state) => state.battle.enemies[state.battle.targetIndex] || null;
-export const selectComboMeter = (state) => ({
-  comboMeter: state.battle.comboMeter,
-  maxComboMeter: state.battle.maxComboMeter,
-});
+// Wrapped in createSelector to avoid returning a fresh object on every call.
+export const selectComboMeter = createSelector(
+  [
+    (state) => state.battle.comboMeter,
+    (state) => state.battle.maxComboMeter,
+  ],
+  (comboMeter, maxComboMeter) => ({ comboMeter, maxComboMeter })
+);
 export const selectGrammarComboState = (state) => state.battle.grammarComboState;
 export const selectArabicUsedThisBattle = (state) => state.battle.arabicUsedThisBattle;
 export const selectAllEnemiesDefeated = createSelector(
