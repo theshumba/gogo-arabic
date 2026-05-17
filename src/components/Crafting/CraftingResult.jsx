@@ -58,13 +58,8 @@ function CraftingResult({ recipeId, quality, accuracy, xpGained, onClose, onCraf
   const focusTrapRef = useFocusTrap(true, onClose);
 
   const recipe = RECIPES[recipeId];
-  if (!recipe) {
-    console.error(`[CraftingResult] Recipe '${recipeId}' not found`);
-    return null;
-  }
-
-  const professionState = professions[recipe.professionId];
-  const professionData = PROFESSIONS[recipe.professionId];
+  const professionState = recipe ? professions[recipe.professionId] : null;
+  const professionData = recipe ? PROFESSIONS[recipe.professionId] : null;
 
   // Calculate profession XP progress
   const xpProgress = useMemo(() => {
@@ -74,16 +69,14 @@ function CraftingResult({ recipeId, quality, accuracy, xpGained, onClose, onCraf
 
   // Check if can craft again
   const canCraftAgain = useMemo(() => {
+    if (!recipe) return false;
     const check = hasRequiredResources(recipeId, resources, RECIPES);
     return check.canCraft;
-  }, [recipeId, resources]);
-
-  // Determine if this is a consumable (has buffEffect)
-  const isConsumable = Boolean(recipe.buffEffect);
-  const isEnchantment = recipe.category === 'enchantment';
+  }, [recipe, recipeId, resources]);
 
   // Play sound based on quality
   useEffect(() => {
+    if (!recipe) return;
     if (quality === 'legendary' || quality === 'epic') {
       EventBus.emit(EVENTS.SFX_LEVELUP);
     } else {
@@ -94,7 +87,7 @@ function CraftingResult({ recipeId, quality, accuracy, xpGained, onClose, onCraf
     if (quality === 'legendary') {
       EventBus.emit(EVENTS.VFX_PARTICLES_BURST, { x: 400, y: 300, color: 0xffd700 });
     }
-  }, [quality]);
+  }, [quality, recipe]);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -105,6 +98,15 @@ function CraftingResult({ recipeId, quality, accuracy, xpGained, onClose, onCraf
       onCraftAgain();
     }
   }, [canCraftAgain, onCraftAgain]);
+
+  if (!recipe) {
+    console.error(`[CraftingResult] Recipe '${recipeId}' not found`);
+    return null;
+  }
+
+  // Determine if this is a consumable (has buffEffect)
+  const isConsumable = Boolean(recipe.buffEffect);
+  const isEnchantment = recipe.category === 'enchantment';
 
   return (
     <div className={styles.backdrop} onClick={handleClose}>
