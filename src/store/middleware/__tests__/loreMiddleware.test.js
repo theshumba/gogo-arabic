@@ -107,7 +107,7 @@ describe('loreMiddleware', () => {
       faction: { alignment: {} },
       player: { level: 5 },
     });
-    invoke({ type: 'player/addXp', payload: 100 });
+    invoke({ type: 'player/addXP', payload: 100 });
     expect(dispatched).toEqual([
       expect.objectContaining({
         type: 'lore/discoverEntry',
@@ -121,9 +121,10 @@ describe('loreMiddleware', () => {
       lore: { discovered: {} },
       faction: { alignment: {} },
       player: { level: 1 },
-      battle: { totalVictories: 10 },
+      // battlesWon is 9 at end of recordBattle; +1 for the in-flight win = 10.
+      stats: { battlesWon: 9 },
     });
-    invoke({ type: 'battle/recordVictory' });
+    invoke({ type: 'battle/endBattle', payload: { victory: true } });
     expect(dispatched).toEqual([
       expect.objectContaining({
         type: 'lore/discoverEntry',

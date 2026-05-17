@@ -3,12 +3,13 @@
  * Phase 79 (NAR-04).
  *
  * Listens for:
- *   - quest/completeQuest          → 'quest_complete:{questId}'
+ *   - quests/completeQuest         → 'quest_complete:{questId}'
  *   - faction/adjustAlignment      → 'faction_tier:{factionId}:{tier}' (on threshold crossing)
  *   - worldState/setFlag           → 'zone_visit:{zone}' (for zone discovery flags)
  *   - vocabulary/addFsrsCard       → 'word_learn:{wordId}'
  *   - npc/recordDialogue           → 'npc_talk:{npcId}'
- *   - player/addXp                 → 'level_reach:{level}' (on level-up)
+ *   - player/addXP                 → 'level_reach:{level}' (on level-up)
+ *   - battle/endBattle             → 'battle_win:{milestone}' (when payload.victory)
  */
 
 import { getLoreEntriesByTrigger } from '../../data/loreEntries.js';
@@ -95,17 +96,26 @@ const loreMiddleware = (store) => (next) => (action) => {
       break;
     }
 
-    // Level up — check all level thresholds
-    case 'player/addXp': {
+    // Level up — check all level thresholds.
+    // Canonical action type is 'player/addXP' (uppercase XP). The earlier
+    // 'player/addXp' branch never matched, so level_reach lore never unlocked.
+    case 'player/addXP': {
       const level = state.player?.level;
       if (level) tryDiscover(`level_reach:${level}`);
       break;
     }
 
-    // Battle wins
-    case 'battle/recordVictory': {
-      const wins = state.battle?.totalVictories ?? state.player?.battlesWon;
-      if (wins) {
+    // Battle wins.
+    // There is no 'battle/recordVictory' action. Victories end via
+    // 'battle/endBattle' with payload.victory === true, and statsSlice
+    // tracks the running count at state.stats.battlesWon.
+    case 'battle/endBattle': {
+      if (action.payload?.victory) {
+        // statsSlice.recordBattle is dispatched separately on victory; it
+        // increments BEFORE this middleware re-reads state in cases where
+        // endBattle is dispatched last. Use the latest count and include +1
+        // for the current victory to cover both orderings.
+        const wins = (state.stats?.battlesWon ?? 0) + 1;
         for (const milestone of [5, 10, 25, 50, 100]) {
           if (wins >= milestone) tryDiscover(`battle_win:${milestone}`);
         }
