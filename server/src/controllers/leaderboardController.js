@@ -5,6 +5,15 @@ import logger from '../utils/logger.js';
  * Upsert score for a category (current week).
  * Only updates if new score is higher than existing.
  *
+ * Security:
+ *   - Body is validated by upsertScoreSchema (.strict()) — unknown fields,
+ *     non-integer scores, and scores above MAX_LEADERBOARD_SCORE are rejected
+ *     at the route level before we get here.
+ *   - userId is taken from req.userId (set by `authenticate` middleware from
+ *     the verified JWT). Any userId in the body is rejected by .strict().
+ *   - Duplicate-submission window is enforced by `scoreUpdateLimiter` on the
+ *     route (1 request / 30s / user).
+ *
  * @route POST /api/v1/leaderboard/score
  * @auth Required
  */
@@ -12,6 +21,14 @@ export async function upsertScore(req, res, next) {
   try {
     const { category, score, displayName } = req.body;
     const userId = req.userId;
+
+    // Defensive: req.userId MUST be set by the authenticate middleware.
+    // If it isn't, refuse to write rather than create an orphaned record.
+    if (!userId) {
+      logger.warn('upsertScore: missing req.userId on authenticated route');
+      return next(new Error('Authentication context missing'));
+    }
+
     const week = Leaderboard.getISOWeek(new Date());
 
     const entry = await Leaderboard.findOneAndUpdate(
