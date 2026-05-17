@@ -14,6 +14,9 @@ const playerReducer = (state = { currentZone: 'oasis_village' }, action) => {
 };
 
 // Mock EventBus
+// Paths are resolved relative to the test file (src/store/middleware/__tests__/),
+// so we need three `..` to reach src/, matching the modules the SUT imports
+// (which from src/store/middleware/ are referenced as `../../utils/eventBus.js`).
 vi.mock('../../../utils/eventBus.js', () => ({
   EventBus: { emit: vi.fn(), on: vi.fn(), off: vi.fn() },
 }));
@@ -75,7 +78,10 @@ describe('zoneReviewMiddleware', () => {
     store.dispatch({ type: 'player/setCurrentZone', payload: 'oasis_village' });
 
     // Wait for the async vocab lookup
-    await new Promise((r) => setTimeout(r, 100));
+    // Global test setup enables vi.useFakeTimers(); the SUT does its work in a
+    // microtask chain (dynamic import + Promise.then). runAllTimersAsync drains
+    // both pending timers and microtasks so the EventBus.emit call lands.
+    await vi.runAllTimersAsync();
 
     expect(EventBusMock.emit).toHaveBeenCalledWith(
       'react:quiz:micro-review-trigger',
@@ -94,7 +100,10 @@ describe('zoneReviewMiddleware', () => {
 
     store.dispatch({ type: 'player/setCurrentZone', payload: 'oasis_village' });
 
-    await new Promise((r) => setTimeout(r, 100));
+    // Global test setup enables vi.useFakeTimers(); the SUT does its work in a
+    // microtask chain (dynamic import + Promise.then). runAllTimersAsync drains
+    // both pending timers and microtasks so the EventBus.emit call lands.
+    await vi.runAllTimersAsync();
 
     // word2 and word4 don't have FSRS cards, so getDueCards won't include them
     // Only word1 has a card, which is 1 < MIN_DUE_FOR_TRIGGER
@@ -118,7 +127,10 @@ describe('zoneReviewMiddleware', () => {
 
     store.dispatch({ type: 'player/setCurrentZone', payload: 'unknown_zone' });
 
-    await new Promise((r) => setTimeout(r, 100));
+    // Global test setup enables vi.useFakeTimers(); the SUT does its work in a
+    // microtask chain (dynamic import + Promise.then). runAllTimersAsync drains
+    // both pending timers and microtasks so the EventBus.emit call lands.
+    await vi.runAllTimersAsync();
 
     expect(EventBusMock.emit).not.toHaveBeenCalledWith(
       'react:quiz:micro-review-trigger',
@@ -137,7 +149,10 @@ describe('zoneReviewMiddleware', () => {
     });
 
     store.dispatch({ type: 'player/setCurrentZone', payload: 'oasis_village' });
-    await new Promise((r) => setTimeout(r, 100));
+    // Global test setup enables vi.useFakeTimers(); the SUT does its work in a
+    // microtask chain (dynamic import + Promise.then). runAllTimersAsync drains
+    // both pending timers and microtasks so the EventBus.emit call lands.
+    await vi.runAllTimersAsync();
 
     const call = EventBusMock.emit.mock.calls.find(
       (c) => c[0] === 'react:quiz:micro-review-trigger'

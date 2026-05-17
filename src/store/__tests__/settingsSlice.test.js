@@ -43,6 +43,8 @@ describe('settingsSlice', () => {
         reducedMotion: false,
         highContrast: false,
         screenReaderMode: false,
+        pronunciationPractice: false,
+        spacedListeningEnabled: false,
       });
     });
   });
