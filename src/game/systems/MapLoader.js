@@ -1,6 +1,21 @@
 import { TILE, SAND, GRASS, WATER, ICE_GRASS, STONE, WOOD } from '../../data/zones.js';
-import { SPRITE_KEY_MAP, BIOME_DECORATION_SETS, BIOME_ANIMAL_SETS } from '../../data/spriteKeyMap.js';
+import { SPRITE_KEY_MAP, BIOME_DECORATION_SETS, BIOME_SCATTER_PROP_SETS, BIOME_ANIMAL_SETS, ANIMATED_DECO_PROPS } from '../../data/spriteKeyMap.js';
 import { KENMI_FRAME_TABLES } from '../../data/kenmiFrameTables.js';
+import { KENMI_CATALOG } from '../../data/kenmiCatalog.js';
+import { SHARED_ASSETS } from '../../data/zoneAssetManifests.js';
+import ReplaceColorPipeline from './ReplaceColorPipeline.js';
+
+// Lazy key→original-path lookup built from the asset manifests.
+// Used by the ?autotileDebug=1 tooltip so the displayed filename is the
+// authored source PNG, not a Vite-rewritten/hashed runtime URL.
+let _ASSET_KEY_TO_PATH = null;
+function getAssetKeyToPath() {
+  if (_ASSET_KEY_TO_PATH) return _ASSET_KEY_TO_PATH;
+  _ASSET_KEY_TO_PATH = new Map();
+  for (const entry of KENMI_CATALOG) _ASSET_KEY_TO_PATH.set(entry.key, entry.path);
+  for (const entry of SHARED_ASSETS) _ASSET_KEY_TO_PATH.set(entry.key, entry.path);
+  return _ASSET_KEY_TO_PATH;
+}
 
 // ================================================================
 // Kenmi 16x16 desert tileset keys & frame maps
@@ -40,106 +55,133 @@ const BEACH_COLS = 5;
 const BEACH = {
   // Sand-water border edges (sand with water cutout)
   CORNER_TL: 0,                       // (0,0) top-left corner
-  EDGE_TOP:  1,                        // (1,0) top edge — sand above, water below
-  CORNER_TR: 2,                        // (2,0) top-right corner
-  SAND_SOLID: 3,                       // (3,0) solid sand fill
-  WATER_POOL: 4,                       // (4,0) solid water pool
+  EDGE_TOP:  1,                     
+  CORNER_TR: 2,                     
+  SAND_SOLID: BEACH_COLS + 1,         
+  WATER_POOL: BEACH_COLS * 2 + 3,       
 
-  EDGE_LEFT:   BEACH_COLS + 0,        // (0,1) left edge — sand left, water right
-  WATER_CENTER: BEACH_COLS + 1,       // (1,1) water surrounded by sand
-  EDGE_RIGHT:  BEACH_COLS + 2,        // (2,1) right edge — sand right, water left
-  SAND_VAR_1:  BEACH_COLS + 3,        // (3,1) inner sand variant
-  WATER_VAR:   BEACH_COLS + 4,        // (4,1) water variant
+  EDGE_LEFT:   BEACH_COLS + 0,      
+  WATER_CENTER: BEACH_COLS * 2 + 3,   
+  EDGE_RIGHT:  BEACH_COLS + 2,      
+  SAND_VAR_1:  BEACH_COLS + 1,      
+  WATER_VAR:   BEACH_COLS * 2 + 3,    
 
-  CORNER_BL:   BEACH_COLS * 2 + 0,   // (0,2) bottom-left corner
-  EDGE_BOTTOM: BEACH_COLS * 2 + 1,   // (1,2) bottom edge — sand below, water above
-  CORNER_BR:   BEACH_COLS * 2 + 2,   // (2,2) bottom-right corner
-  SAND_VAR_2:  BEACH_COLS * 2 + 3,   // (3,2) sand variant 2
-  WATER_INNER: BEACH_COLS * 2 + 4,   // (4,2) water inner
+  CORNER_BL:   BEACH_COLS * 2 + 0,  
+  EDGE_BOTTOM: BEACH_COLS * 2 + 1,  
+  CORNER_BR:   BEACH_COLS * 2 + 2,  
+  SAND_VAR_2:  BEACH_COLS + 1,   
+  WATER_INNER: BEACH_COLS * 2 + 3,  
 };
 
-// Grass tileset (3 cols x 5 rows = 15 frames)
-const GRASS_KEY = 'kenmi-desert-tiles-desert-grass';
-const GRASS_COLS = 3;
+const GRASS_KEY = 'kenmi-base-tiles-grass-grass-tiles-3';
+const GRASS_COLS = 16;
 
 const GRASS_F = {
-  CORNER_TL: 0,
-  EDGE_TOP:  1,
-  CORNER_TR: 2,
-  EDGE_LEFT:  GRASS_COLS + 0,
-  SOLID:      GRASS_COLS + 1,
-  EDGE_RIGHT: GRASS_COLS + 2,
-  CORNER_BL:  GRASS_COLS * 2 + 0,
-  EDGE_BOTTOM: GRASS_COLS * 2 + 1,
-  CORNER_BR:  GRASS_COLS * 2 + 2,
+  CORNER_TL: GRASS_COLS *5,
+  EDGE_TOP:  GRASS_COLS * 5 + 1,
+  CORNER_TR: GRASS_COLS * 5 + 2,
+  EDGE_LEFT:  GRASS_COLS * 6,
+  SOLID:      GRASS_COLS * 9 + 5,
+  EDGE_RIGHT: GRASS_COLS * 6 + 2,
+  CORNER_BL:  GRASS_COLS * 7 ,
+  EDGE_BOTTOM: GRASS_COLS * 7 + 1,
+  CORNER_BR:  GRASS_COLS * 7 + 2,
+  // Inner (concave) corners — rows 8-9, cols 0-1
+  INNER_TL: GRASS_COLS * 9 + 1,
+  INNER_TR: GRASS_COLS * 9 + 0,
+  INNER_BL: GRASS_COLS * 8 + 1,
+  INNER_BR: GRASS_COLS * 8 + 0,
   // Variants in rows 3-4
-  VAR_1: GRASS_COLS * 3 + 0,
-  VAR_2: GRASS_COLS * 3 + 1,
-  VAR_3: GRASS_COLS * 3 + 2,
-  VAR_4: GRASS_COLS * 4 + 0,
-  VAR_5: GRASS_COLS * 4 + 1,
-  VAR_6: GRASS_COLS * 4 + 2,
+  VAR_1: GRASS_COLS * 9 + 6,
+  VAR_2: GRASS_COLS * 9 + 7,
+  VAR_3: GRASS_COLS * 9 + 5,
+  VAR_4: GRASS_COLS * 9 + 6,
+  VAR_5: GRASS_COLS * 9 + 7,
+  VAR_6: GRASS_COLS * 9 + 5,
 };
 
-// Water tileset (6 cols x 3 rows = 18 frames)
-const WATER_KEY = 'kenmi-desert-tiles-desert-water-tiles-1';
-const WATER_COLS = 6;
+// Water tileset animated (24 cols x 5 rows = 120 frames)
+const WATER_KEY = 'kenmi-base-tiles-water-water-tile-3-anim';
+const _WATER_COLS = 24;
 
+// Animated water tileset frame indices (stride=3 per row)
 const WATER_F = {
-  // Row 0: top edges
+  // Row 0: CORNER_TL, EDGE_TOP, CORNER_TR (frames 0-23)
   CORNER_TL: 0,
   EDGE_TOP:  1,
   CORNER_TR: 2,
-  SOLID_1:   3,
-  SOLID_2:   4,
-  SOLID_3:   5,
-  // Row 1: mid edges + solid fills
-  EDGE_LEFT:   WATER_COLS + 0,
-  SOLID_4:     WATER_COLS + 1,
-  EDGE_RIGHT:  WATER_COLS + 2,
-  SOLID_5:     WATER_COLS + 3,
-  SOLID_6:     WATER_COLS + 4,
-  SOLID_7:     WATER_COLS + 5,
-  // Row 2: bottom edges
-  CORNER_BL:    WATER_COLS * 2 + 0,
-  EDGE_BOTTOM:  WATER_COLS * 2 + 1,
-  CORNER_BR:    WATER_COLS * 2 + 2,
-  SOLID_8:      WATER_COLS * 2 + 3,
-  SOLID_9:      WATER_COLS * 2 + 4,
-  SOLID_10:     WATER_COLS * 2 + 5,
+  SOLID_1:   25,
+  SOLID_2:   25,
+  SOLID_3:   25,
+  // Row 1: EDGE_LEFT, SOLID, EDGE_RIGHT (frames 24-47)
+  EDGE_LEFT:   24,
+  SOLID_4:     25,
+  EDGE_RIGHT:  26,
+  SOLID_5:     25,
+  SOLID_6:     25,
+  SOLID_7:     25,
+  // Row 2: CORNER_BL, EDGE_BOTTOM, CORNER_BR (frames 48-71)
+  CORNER_BL:    48,
+  EDGE_BOTTOM:  49,
+  CORNER_BR:    50,
+  SOLID_8:      25,
+  SOLID_9:      25,
+  SOLID_10:     25,
+  // Row 3-4: Inner corners (frames 72-119)
+  INNER_TL: 97,
+  INNER_TR: 96,
+  INNER_BL: 73,
+  INNER_BR: 72,
 };
 
 // Phase 97 Plan 04 — drift detection: throw at module load if PNG dimensions
 // disagree with the hardcoded constants above. Catches the "black squares" class
 // of bug from VISUAL-LAYER-DIAGNOSIS.md the moment it could occur.
 for (const k of BEACH_KEYS) _assertFrameTableMatch(k, 5, 3);
-_assertFrameTableMatch(GRASS_KEY, 3, 5);
-_assertFrameTableMatch(WATER_KEY, 6, 3);
+_assertFrameTableMatch(GRASS_KEY, 16, 10);
+_assertFrameTableMatch(WATER_KEY, 24, 5);
 
 // Water foam animation key (20 cols x 3 rows = 60 frames)
-const FOAM_KEY = 'kenmi-desert-tiles-desert-water-foam-animation';
-const FOAM_COLS = 20;
+const _FOAM_KEY = 'kenmi-desert-tiles-desert-water-foam-animation';
+const _FOAM_COLS = 20;
 
-const KENMI_SCALE = 4; // 16px tiles -> 64px game tiles
+export const KENMI_SCALE = 4; // 16px tiles -> 64px game tiles
+
+// Props that lie flat on the ground — always rendered just above the tilemap (depth ~0.5)
+// and below all upright objects/players.
+export const FLAT_GROUND_PROPS = new Set([
+  'kenmi-desert-props-desert-rugs',
+]);
 
 // Crop regions for multi-item prop sheets (each region is one item in the sheet).
-// Maps texture key -> array of { x, y, w, h } regions in source pixels (16x16 grid).
+// Maps texture key -> array of { x, y, w, h } regions in source pixels
 // Props NOT listed here are single-item or large-object images — rendered at native or scaled size.
-const PROP_CROP_REGIONS = {
-  // desert-rocks.png: 192x32 = 12 cols x 2 rows of 16x16
+export const PROP_CROP_REGIONS = {
   'kenmi-desert-props-desert-rocks': [
     { x: 0,   y: 0,  w: 16, h: 16 },
     { x: 16,  y: 0,  w: 16, h: 16 },
-    { x: 32,  y: 0,  w: 16, h: 16 },
-    { x: 48,  y: 0,  w: 16, h: 16 },
+    { x: 32,  y: 0,  w: 32, h: 32 },
     { x: 64,  y: 0,  w: 16, h: 16 },
     { x: 80,  y: 0,  w: 16, h: 16 },
-    { x: 0,   y: 16, w: 16, h: 16 },
-    { x: 16,  y: 16, w: 16, h: 16 },
-    { x: 32,  y: 16, w: 16, h: 16 },
-    { x: 48,  y: 16, w: 16, h: 16 },
+    { x: 96,  y: 0,  w: 16, h: 16 },
+    { x: 112,   y: 0, w: 32, h: 32 },
+    { x: 144,  y: 0, w: 16, h: 16 },
+    { x: 160,  y: 0, w: 32, h: 32 },
+    { x: 0,   y: 16,  w: 16, h: 16 },
+    { x: 16,  y: 16,  w: 16, h: 16 },
+    { x: 64,  y: 16,  w: 16, h: 16 },
+    { x: 80,  y: 16,  w: 16, h: 16 },
+    { x: 96,  y: 16,  w: 16, h: 16 },    
   ],
-  // desert-pots-sacks.png: 80x16 = 5 cols x 1 row of 16x16
+  'kenmi-desert-props-palm-tree-1': [
+    { x: 48,  y: 0, w: 48, h: 60 },
+  ],  
+  'kenmi-desert-props-palm-tree-2': [
+    { x: 32,  y: 0, w: 32, h: 48 },
+  ],
+  'kenmi-desert-props-acacia-tree':[
+    { x: 80,  y: 0, w: 80, h: 62 },
+  ],
   'kenmi-desert-props-desert-pots-sacks': [
     { x: 0,  y: 0, w: 16, h: 16 },
     { x: 16, y: 0, w: 16, h: 16 },
@@ -147,117 +189,123 @@ const PROP_CROP_REGIONS = {
     { x: 48, y: 0, w: 16, h: 16 },
     { x: 64, y: 0, w: 16, h: 16 },
   ],
-  // desert-rugs.png: 96x96 = 6 cols x 6 rows of 16x16
   'kenmi-desert-props-desert-rugs': [
-    { x: 0,  y: 0,  w: 16, h: 16 },
-    { x: 16, y: 0,  w: 16, h: 16 },
-    { x: 32, y: 0,  w: 16, h: 16 },
-    { x: 0,  y: 16, w: 16, h: 16 },
-    { x: 16, y: 16, w: 16, h: 16 },
-    { x: 32, y: 16, w: 16, h: 16 },
-    { x: 0,  y: 32, w: 16, h: 16 },
-    { x: 16, y: 32, w: 16, h: 16 },
+    { x: 0,  y: 0,  w: 48, h: 32 },
+    { x: 48, y: 0,  w: 48, h: 32 },
+    { x: 0, y: 32,  w: 48, h: 32 },
+    { x: 48,  y: 32, w: 48, h: 32 },
+    { x: 0, y: 64, w: 48, h: 32 },
+    { x: 48, y: 64, w: 48, h: 32 },
   ],
-  // desert-bones.png: 160x128 = 10 cols x 8 rows of 16x16
   'kenmi-desert-props-desert-bones': [
-    { x: 0,  y: 0,  w: 16, h: 16 },
-    { x: 16, y: 0,  w: 16, h: 16 },
-    { x: 32, y: 0,  w: 16, h: 16 },
-    { x: 48, y: 0,  w: 16, h: 16 },
-    { x: 64, y: 0,  w: 16, h: 16 },
-    { x: 0,  y: 16, w: 16, h: 16 },
-    { x: 16, y: 16, w: 16, h: 16 },
-    { x: 32, y: 16, w: 16, h: 16 },
+    { x: 0, y: 32,  w: 32, h: 32 },
+    { x: 0, y: 64,  w: 32, h: 32 },
+    { x: 32,  y: 64, w: 32, h: 32 },
   ],
-  // golden-pots.png: 48x16 = 3 cols x 1 row of 16x16
   'kenmi-desert-props-golden-pots': [
     { x: 0,  y: 0, w: 16, h: 16 },
     { x: 16, y: 0, w: 16, h: 16 },
     { x: 32, y: 0, w: 16, h: 16 },
   ],
-  // desert-grass-props.png: 48x16 = 3 cols x 1 row of 16x16
   'kenmi-desert-props-desert-grass-props': [
     { x: 0,  y: 0, w: 16, h: 16 },
     { x: 16, y: 0, w: 16, h: 16 },
     { x: 32, y: 0, w: 16, h: 16 },
   ],
-  // fallen-palm-leaves.png: 32x32 = 2 cols x 2 rows of 16x16
   'kenmi-desert-props-fallen-palm-leaves': [
-    { x: 0,  y: 0,  w: 16, h: 16 },
-    { x: 16, y: 0,  w: 16, h: 16 },
-    { x: 0,  y: 16, w: 16, h: 16 },
-    { x: 16, y: 16, w: 16, h: 16 },
+    { x: 0,  y: 0,  w: 32, h: 32 },
   ],
-  // fallen-palm-leaves-dead.png: 32x32 = 2 cols x 2 rows of 16x16
   'kenmi-desert-props-fallen-palm-leaves-dead': [
-    { x: 0,  y: 0,  w: 16, h: 16 },
-    { x: 16, y: 0,  w: 16, h: 16 },
-    { x: 0,  y: 16, w: 16, h: 16 },
-    { x: 16, y: 16, w: 16, h: 16 },
+    { x: 0,  y: 0,  w: 32, h: 32 },
   ],
-  // dead-bush.png: 32x16 = 2 cols x 1 row of 16x16
   'kenmi-desert-props-dead-bush': [
     { x: 0,  y: 0, w: 16, h: 16 },
     { x: 16, y: 0, w: 16, h: 16 },
   ],
-  // cactus.png: 224x256 = 14 cols x 16 rows of 16x16
   'kenmi-desert-props-cactus': [
-    { x: 0,   y: 0,  w: 16, h: 16 },
-    { x: 16,  y: 0,  w: 16, h: 16 },
-    { x: 32,  y: 0,  w: 16, h: 16 },
-    { x: 48,  y: 0,  w: 16, h: 16 },
-    { x: 64,  y: 0,  w: 16, h: 16 },
-    { x: 80,  y: 0,  w: 16, h: 16 },
-    { x: 0,   y: 16, w: 16, h: 16 },
-    { x: 16,  y: 16, w: 16, h: 16 },
-    { x: 32,  y: 16, w: 16, h: 16 },
-    { x: 48,  y: 16, w: 16, h: 16 },
+    { x: 0,   y: 0,  w: 32, h: 32 },
+    { x: 32,   y: 0,  w: 32, h: 32 },
+    { x: 64,   y: 0,  w: 32, h: 32 },
+    { x: 96,   y: 0,  w: 32, h: 32 },
+    { x: 128,   y: 0,  w: 32, h: 32 },
+    { x: 0,   y: 32,  w: 32, h: 32 },
+    { x: 32,   y: 32,  w: 32, h: 32 },
+    { x: 64,   y: 32,  w: 32, h: 32 },
+    { x: 96,   y: 32,  w: 32, h: 32 },
+    { x: 128,   y: 32,  w: 32, h: 32 },
+    { x: 0,   y: 64,  w: 32, h: 32 },
+    { x: 32,   y: 64,  w: 32, h: 32 },
+    { x: 64,   y: 64,  w: 32, h: 32 },
+    { x: 96,   y: 64,  w: 32, h: 32 },
+    { x: 128,   y: 64,  w: 32, h: 32 },
+    { x: 0,   y: 96,  w: 32, h: 32 },
+    { x: 32,   y: 96,  w: 32, h: 32 },
+    { x: 64,   y: 96,  w: 32, h: 32 },
+    { x: 96,   y: 96,  w: 32, h: 32 },
+    { x: 128,   y: 96,  w: 32, h: 32 },
+    { x: 0,   y: 128,  w: 32, h: 32 },
+    { x: 32,   y: 128,  w: 32, h: 32 },
+    { x: 64,   y: 128,  w: 32, h: 32 },
+    { x: 96,   y: 128,  w: 32, h: 32 },
+    { x: 128,   y: 128,  w: 32, h: 32 },
+    { x: 0,   y: 160,  w: 32, h: 32 },
+    { x: 32,   y: 160,  w: 32, h: 32 },
+    { x: 64,   y: 160,  w: 32, h: 32 },
+    { x: 96,   y: 160,  w: 32, h: 32 },
+    { x: 128,   y: 160,  w: 32, h: 32 },
+    { x: 0,   y: 192,  w: 32, h: 32 },
+    { x: 32,   y: 192,  w: 32, h: 32 },
+    { x: 64,   y: 192,  w: 32, h: 32 },
+    { x: 96,   y: 192,  w: 32, h: 32 },
+    { x: 128,   y: 192,  w: 32, h: 32 },
+    { x: 0,   y: 224,  w: 32, h: 32 },
+    { x: 32,   y: 224,  w: 32, h: 32 },
+    { x: 64,   y: 224,  w: 32, h: 32 },
+    { x: 96,   y: 224,  w: 32, h: 32 },
+    { x: 128,   y: 224,  w: 32, h: 32 },
   ],
-  // sleeping-mat.png: 32x32 = 2 cols x 2 rows of 16x16
   'kenmi-desert-props-sleeping-mat': [
-    { x: 0,  y: 0,  w: 16, h: 16 },
-    { x: 16, y: 0,  w: 16, h: 16 },
-    { x: 0,  y: 16, w: 16, h: 16 },
-    { x: 16, y: 16, w: 16, h: 16 },
+    { x: 0,  y: 0,  w: 32, h: 32 },
   ],
-  // fire-pit.png: 112x16 = 7 cols x 1 row of 16x16
   'kenmi-desert-props-fire-pit': [
     { x: 0,  y: 0, w: 16, h: 16 },
     { x: 16, y: 0, w: 16, h: 16 },
     { x: 32, y: 0, w: 16, h: 16 },
     { x: 48, y: 0, w: 16, h: 16 },
+    { x: 64, y: 0, w: 16, h: 16 },
+    { x: 80, y: 0, w: 16, h: 16 },
+    { x: 96, y: 0, w: 16, h: 16 },
   ],
-  // desert-campfire.png: 96x16 = 6 cols x 1 row of 16x16
   'kenmi-desert-props-desert-campfire': [
     { x: 0,  y: 0, w: 16, h: 16 },
     { x: 16, y: 0, w: 16, h: 16 },
     { x: 32, y: 0, w: 16, h: 16 },
+    { x: 48, y: 0, w: 16, h: 16 },
+    { x: 64, y: 0, w: 16, h: 16 },
+    { x: 80, y: 0, w: 16, h: 16 },
   ],
-  // ambarakaman-plant.png: 48x16 = 3 cols x 1 row of 16x16
   'kenmi-desert-props-ambarakaman-plant': [
     { x: 0,  y: 0, w: 16, h: 16 },
     { x: 16, y: 0, w: 16, h: 16 },
     { x: 32, y: 0, w: 16, h: 16 },
   ],
-  // barrels.png: 96x64 = 6 cols x 4 rows of 16x16
   'kenmi-base-outdoor-decoration-barrels': [
-    { x: 0,  y: 0,  w: 16, h: 16 },
-    { x: 16, y: 0,  w: 16, h: 16 },
-    { x: 32, y: 0,  w: 16, h: 16 },
-    { x: 0,  y: 16, w: 16, h: 16 },
-    { x: 16, y: 16, w: 16, h: 16 },
-    { x: 32, y: 16, w: 16, h: 16 },
+    { x: 0,  y: 0,  w: 16, h: 32 },
+    { x: 16, y: 0,  w: 16, h: 32 },
+    { x: 32, y: 0,  w: 16, h: 32 },
+    { x: 48, y: 0,  w: 16, h: 32 },
+    { x: 64, y: 0,  w: 16, h: 32 },
+    { x: 0,  y: 32, w: 16, h: 32 },
+    { x: 16, y: 32, w: 16, h: 32 },
+    { x: 32, y: 32, w: 16, h: 32 },
+    { x: 48, y: 32, w: 16, h: 32 },
+    { x: 64, y: 32, w: 16, h: 32 },
+    { x: 80, y: 32, w: 16, h: 32 },
   ],
-  // benches.png: 64x32 = 4 cols x 2 rows of 16x16
   'kenmi-base-outdoor-decoration-benches': [
-    { x: 0,  y: 0,  w: 16, h: 16 },
-    { x: 16, y: 0,  w: 16, h: 16 },
-    { x: 32, y: 0,  w: 16, h: 16 },
-    { x: 48, y: 0,  w: 16, h: 16 },
-    { x: 0,  y: 16, w: 16, h: 16 },
-    { x: 16, y: 16, w: 16, h: 16 },
+    { x: 0,  y: 0,  w: 16, h: 32 },
+    { x: 32, y: 0,  w: 16, h: 32 },
   ],
-  // camp-decor.png: 80x16 = 5 cols x 1 row of 16x16
   'kenmi-base-outdoor-decoration-camp-decor': [
     { x: 0,  y: 0, w: 16, h: 16 },
     { x: 16, y: 0, w: 16, h: 16 },
@@ -265,16 +313,9 @@ const PROP_CROP_REGIONS = {
     { x: 48, y: 0, w: 16, h: 16 },
     { x: 64, y: 0, w: 16, h: 16 },
   ],
-  // fences.png: 64x64 = 4 cols x 4 rows of 16x16
   'kenmi-base-outdoor-decoration-fences': [
-    { x: 0,  y: 0,  w: 16, h: 16 },
-    { x: 16, y: 0,  w: 16, h: 16 },
-    { x: 32, y: 0,  w: 16, h: 16 },
-    { x: 0,  y: 16, w: 16, h: 16 },
-    { x: 16, y: 16, w: 16, h: 16 },
-    { x: 32, y: 16, w: 16, h: 16 },
+    { x: 16, y: 0,  w: 48, h: 16 },
   ],
-  // flowers.png: 160x160 = 10 cols x 10 rows of 16x16
   'kenmi-base-outdoor-decoration-flowers': [
     { x: 0,  y: 0,  w: 16, h: 16 },
     { x: 16, y: 0,  w: 16, h: 16 },
@@ -284,14 +325,53 @@ const PROP_CROP_REGIONS = {
     { x: 0,  y: 16, w: 16, h: 16 },
     { x: 16, y: 16, w: 16, h: 16 },
     { x: 32, y: 16, w: 16, h: 16 },
+    { x: 48, y: 16, w: 16, h: 16 },
+    { x: 64, y: 16, w: 16, h: 16 },
+    { x: 0,  y: 32, w: 16, h: 16 },
+    { x: 16, y: 32, w: 16, h: 16 },
+    { x: 32, y: 32, w: 16, h: 16 },
+    { x: 48, y: 32, w: 16, h: 16 },
+    { x: 64, y: 32, w: 16, h: 16 },
+    { x: 0,  y: 48, w: 16, h: 16 },
+    { x: 16, y: 48, w: 16, h: 16 },
+    { x: 32, y: 48, w: 16, h: 16 },
+    { x: 48, y: 48, w: 16, h: 16 },
+    { x: 64, y: 48, w: 16, h: 16 },
+    { x: 0,  y: 64, w: 16, h: 16 },
+    { x: 16, y: 64, w: 16, h: 16 },
+    { x: 32, y: 64, w: 16, h: 16 },
+    { x: 48, y: 64, w: 16, h: 16 },
+    { x: 64, y: 64, w: 16, h: 16 },
+    { x: 0,  y: 80, w: 16, h: 16 },
+    { x: 16, y: 80, w: 16, h: 16 },
+    { x: 32, y: 80, w: 16, h: 16 },
+    { x: 48, y: 80, w: 16, h: 16 },
+    { x: 64, y: 80, w: 16, h: 16 },
+    { x: 0,  y: 96, w: 16, h: 16 },
+    { x: 16, y: 96, w: 16, h: 16 },
+    { x: 32, y: 96, w: 16, h: 16 },
+    { x: 48, y: 96, w: 16, h: 16 },
+    { x: 64, y: 96, w: 16, h: 16 },
+    { x: 0,  y: 112, w: 16, h: 16 },
+    { x: 16, y: 112, w: 16, h: 16 },
+    { x: 32, y: 112, w: 16, h: 16 },
+    { x: 48, y: 112, w: 16, h: 16 },
+    { x: 64, y: 112, w: 16, h: 16 },
+    { x: 0,  y: 128, w: 16, h: 16 },
+    { x: 16, y: 128, w: 16, h: 16 },
+    { x: 32, y: 128, w: 16, h: 16 },
+    { x: 48, y: 128, w: 16, h: 16 },
+    { x: 64, y: 128, w: 16, h: 16 },
+    { x: 0,  y: 144, w: 16, h: 16 },
+    { x: 16, y: 144, w: 16, h: 16 },
+    { x: 32, y: 144, w: 16, h: 16 },
+    { x: 48, y: 144, w: 16, h: 16 },
+    { x: 64, y: 144, w: 16, h: 16 },
   ],
-  // hay-bales.png: 48x16 = 3 cols x 1 row of 16x16
   'kenmi-base-outdoor-decoration-hay-bales': [
     { x: 0,  y: 0, w: 16, h: 16 },
-    { x: 16, y: 0, w: 16, h: 16 },
-    { x: 32, y: 0, w: 16, h: 16 },
+    { x: 16, y: 0, w: 32, h: 16 },
   ],
-  // outdoor-decor.png: 144x416 = 9 cols x 26 rows of 16x16 (large multi-item sheet)
   'kenmi-base-outdoor-decoration-outdoor-decor': [
     { x: 0,  y: 0,  w: 16, h: 16 },
     { x: 16, y: 0,  w: 16, h: 16 },
@@ -301,6 +381,28 @@ const PROP_CROP_REGIONS = {
     { x: 32, y: 16, w: 16, h: 16 },
     { x: 0,  y: 32, w: 16, h: 16 },
     { x: 16, y: 32, w: 16, h: 16 },
+  ],
+
+  'kenmi-desert-props-desert-fencewall': [
+    { x: 16, y: 0, w: 48, h: 16 },
+  ],
+
+  'kenmi-military-military-tents': [
+    { x: 0, y: 0, w: 80, h: 80 },
+    { x: 0, y: 96, w: 80, h: 80 },
+    { x: 0, y: 192, w: 80, h: 80 },
+    { x: 0, y: 288, w: 80, h: 80 },
+    { x: 0, y: 384, w: 80, h: 80 },
+  ],
+  'kenmi-military-palisade': [
+    { x: 160, y: 0, w: 80, h: 48 },
+    { x: 160, y: 48, w: 80, h: 48 },
+  ],
+  'kenmi-military-lookout-towers': [
+    { x: 0, y: 0, w: 72, h: 128 },
+  ],
+  'kenmi-base-outdoor-decoration-scarecrows': [
+    { x: 64, y: 0, w: 32, h: 32 },
   ],
 };
 
@@ -315,10 +417,10 @@ const BIOME_TILESETS = {
       'kenmi-desert-tiles-desert-beach-tiles-3',
     ],
     sandCols: 5,
-    grassKey: 'kenmi-desert-tiles-desert-grass',
-    grassCols: 3,
-    waterKey: 'kenmi-desert-tiles-desert-water-tiles-1',
-    waterCols: 6,
+    grassKey: 'kenmi-base-tiles-grass-grass-tiles-3',
+    grassCols: 16,
+    waterKey: 'kenmi-base-tiles-water-water-tile-3-anim',
+    waterCols: 24,
     foamKey: 'kenmi-desert-tiles-desert-water-foam-animation',
     foamCols: 20,
   },
@@ -402,6 +504,75 @@ export class MapLoader {
     this.wallGroup = null;
     this.exitTriggers = [];
     this.activeTweens = [];
+
+    // ?autotileDebug=1 — overlay every ground tile with its frame index and texture key
+    this._autotileDebug = false;
+    if (typeof window !== 'undefined' && window.location && window.location.search) {
+      this._autotileDebug = new URLSearchParams(window.location.search).get('autotileDebug') === '1';
+    }
+
+    scene.renderer.pipelines.add('ReplaceColor', new ReplaceColorPipeline(scene.game));
+  }
+
+  /**
+   * When ?autotileDebug=1 is set, make the tile interactive and show a single
+   * shared tooltip with frame index + texture key while the mouse hovers it.
+   * The shared label is pushed into groundSprites so it gets destroyed on teardown.
+   */
+  _addTileDebugLabel(sprite, px, py) {
+    if (!this._autotileDebug || !sprite) return;
+
+    if (!this._debugHoverLabel) {
+      this._debugHoverLabel = this.scene.add.text(0, 0, '', {
+        fontFamily: 'monospace',
+        fontSize: '12px',
+        color: '#ffff00',
+        backgroundColor: 'rgba(0,0,0,0.85)',
+        align: 'center',
+        padding: { x: 4, y: 2 },
+        resolution: 2,
+      });
+      this._debugHoverLabel.setOrigin(0.5, 1);
+      this._debugHoverLabel.setDepth(99999);
+      this._debugHoverLabel.setVisible(false);
+      this.groundSprites.push(this._debugHoverLabel);
+    }
+
+    sprite.setInteractive();
+    sprite.on('pointerover', () => {
+      const key = (sprite.texture && sprite.texture.key) || '?';
+      const frameName = sprite.frame ? String(sprite.frame.name) : '?';
+      const file = this._getTextureFilename(sprite.texture);
+      const method = sprite._debugMethod || '?';
+      this._debugHoverLabel.setText(`${frameName}\n${key}\n${file}\n${method}`);
+      this._debugHoverLabel.setPosition(px, py - TILE / 2 - 2);
+      this._debugHoverLabel.setVisible(true);
+    });
+    sprite.on('pointerout', () => {
+      this._debugHoverLabel.setVisible(false);
+    });
+  }
+
+  /**
+   * Extract the original source PNG filename (e.g. "desert-beach-tiles-1.png")
+   * for a Phaser Texture. Prefers the asset manifest (authored path, stable
+   * across Vite hashing) and falls back to the runtime image URL.
+   */
+  _getTextureFilename(texture) {
+    const key = texture && texture.key;
+    const manifestPath = key && getAssetKeyToPath().get(key);
+    if (manifestPath) {
+      return manifestPath.substring(manifestPath.lastIndexOf('/') + 1) || manifestPath;
+    }
+    const src = texture && texture.source && texture.source[0];
+    const url = src && src.image && src.image.src;
+    if (!url) return '?';
+    try {
+      const path = new URL(url, window.location.origin).pathname;
+      return path.substring(path.lastIndexOf('/') + 1) || path;
+    } catch {
+      return url.substring(url.lastIndexOf('/') + 1) || url;
+    }
   }
 
   /**
@@ -413,6 +584,7 @@ export class MapLoader {
     this.decoSprites = [];
     this.animalSprites = [];
     this.exitTriggers = [];
+    this._debugHoverLabel = null;
     this.activeTweens.forEach((t) => { if (t) t.remove(); });
     this.activeTweens = [];
 
@@ -438,9 +610,9 @@ export class MapLoader {
     // Place world objects
     this.placeObjects(objects);
 
-    this.scatterDecorations(zone, groundData, mapWidth, mapHeight);
+    // this.scatterDecorations(zone, groundData, mapWidth, mapHeight);
 
-    this.spawnAmbientAnimals(zone, groundData, mapWidth, mapHeight);
+    // this.spawnAmbientAnimals(zone, groundData, mapWidth, mapHeight);
 
     // Create exit triggers (signposts at zone edges)
     this.createExitTriggers(exits, mapWidth, mapHeight);
@@ -486,7 +658,7 @@ export class MapLoader {
     // Phase 97 Plan 04 — DEV-mode warn when clamping so future frame-index drift surfaces loudly.
     if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
       const table = KENMI_FRAME_TABLES[textureKey];
-      // eslint-disable-next-line no-console
+       
       console.warn(`[MapLoader] _safeFrame clamped: key=${textureKey} requested=${frame} maxFrame=${maxFrame}${table ? ` tableTotal=${table.totalFrames}` : ''}`);
     }
     return Math.min(frame, Math.max(0, maxFrame));
@@ -514,6 +686,7 @@ export class MapLoader {
           sprite = this.scene.add.image(px, py, 'tile-sand');
         }
         this.groundSprites.push(sprite);
+        this._addTileDebugLabel(sprite, px, py);
       }
     }
   }
@@ -529,6 +702,8 @@ export class MapLoader {
 
     // Create foam animation if not yet registered
     this._createFoamAnimations();
+    // Create water animation if not yet registered
+    this._createWaterAnimations();
 
     for (let y = 0; y < mapH; y++) {
       for (let x = 0; x < mapW; x++) {
@@ -543,7 +718,7 @@ export class MapLoader {
         switch (tileType) {
           case GRASS:
           case ICE_GRASS:
-            sprite = this._renderGrassTile(px, py, n, hash, tileType);
+            sprite = this._renderGrassTile(px, py, n, hash, tileType,groundData, x, y, mapW, mapH);
             break;
           case WATER:
             sprite = this._renderWaterTile(px, py, n, hash, groundData, x, y, mapW, mapH);
@@ -558,6 +733,7 @@ export class MapLoader {
 
         sprite.setDepth(0);
         this.groundSprites.push(sprite);
+        this._addTileDebugLabel(sprite, px, py);
       }
     }
   }
@@ -576,7 +752,11 @@ export class MapLoader {
     const sWater = neighbors.s === WATER;
     const wWater = neighbors.w === WATER;
     const eWater = neighbors.e === WATER;
-    const hasWaterNeighbor = nWater || sWater || wWater || eWater;
+    const nwWater = (ty > 0 && tx > 0) ? groundData[ty - 1][tx - 1] === WATER : false;
+    const neWater = (ty > 0 && tx < mapW - 1) ? groundData[ty - 1][tx + 1] === WATER : false;
+    const swWater = (ty < mapH - 1 && tx > 0) ? groundData[ty + 1][tx - 1] === WATER : false;
+    const seWater = (ty < mapH - 1 && tx < mapW - 1) ? groundData[ty + 1][tx + 1] === WATER : false;
+    const hasWaterNeighbor = nWater || sWater || wWater || eWater || nwWater || neWater || swWater || seWater;
 
     if (!hasWaterNeighbor) {
       // Solid sand — pick from biome color variants for visual variety
@@ -591,18 +771,32 @@ export class MapLoader {
         const varHash = tileHash(tx, ty, 99);
         frame = solidFrames[Math.floor(varHash * solidFrames.length)];
       } else {
-        // Non-desert: 3×3 auto-tile block at top-left of sheet, center solid = row1,col1
+        // Non-desert: SAND auto-tile block at rows 5-7 (offset cols*5 from GRASS rows 0-2)
         const cols = cfg.sandCols;
-        const solidCenter = cols + 1;
-        const solidVariants = [solidCenter, solidCenter + 1, solidCenter + 2];
+        const solidCenter = cols * 6 + 1;
+        const solidVariants = [solidCenter];
         const varHash = tileHash(tx, ty, 99);
         frame = solidVariants[Math.floor(varHash * solidVariants.length)];
       }
 
       const sprite = this.scene.add.image(px, py, key, this._safeFrame(key, frame));
       sprite.setScale(KENMI_SCALE);
+      sprite._debugMethod = '_renderSandTile';
       if (this._currentBiome === 'snow' && cfg.sandTint) {
         sprite.setTint(cfg.sandTint);
+      }
+      if (this._currentBiome === 'desert') {
+        const nGrass = neighbors.n === GRASS;
+        const sGrass = neighbors.s === GRASS;
+        const wGrass = neighbors.w === GRASS;
+        const eGrass = neighbors.e === GRASS;
+        const nwGrass = (ty > 0 && tx > 0) ? groundData[ty-1][tx-1] === GRASS : false;
+        const neGrass = (ty > 0 && tx < mapW-1) ? groundData[ty-1][tx+1] === GRASS : false;
+        const swGrass = (ty < mapH-1 && tx > 0) ? groundData[ty+1][tx-1] === GRASS : false;
+        const seGrass = (ty < mapH-1 && tx < mapW-1) ? groundData[ty+1][tx+1] === GRASS : false;
+        if (nGrass || sGrass || wGrass || eGrass || nwGrass || neGrass || swGrass || seGrass) {
+          this._addGrassOverlay(px, py, nGrass, sGrass, wGrass, eGrass, nwGrass, neGrass, swGrass, seGrass);
+        }
       }
       return sprite;
     }
@@ -614,19 +808,29 @@ export class MapLoader {
     if (this._currentBiome === 'desert') {
       frame = this._pickSandWaterFrame(nWater, sWater, wWater, eWater, groundData, tx, ty, mapW, mapH);
     } else {
-      // Non-desert: use generic 3×3 auto-tile edge frames
-      const cols = cfg.sandCols;
-      const TL = 0, T = 1, TR = 2;
-      const L = cols, R = cols + 2;
-      const BL = cols * 2, B = cols * 2 + 1, BR = cols * 2 + 2;
-      const solidCenter = cols + 1;
-      frame = this._pickEdgeFrame(nWater, sWater, wWater, eWater, TL, T, TR, L, B, R, solidCenter, BL, BR);
+      // Non-desert: SAND auto-tile edge frames at rows 5-7 (offset cols*5 from GRASS rows 0-2)
+        frame = this._pickSandWaterFrameNoDesert(nWater, sWater, wWater, eWater, groundData, tx, ty, mapW, mapH);
     }
 
     const sprite = this.scene.add.image(px, py, key, this._safeFrame(key, frame));
     sprite.setScale(KENMI_SCALE);
+    sprite._debugMethod = '_renderSandTile';
     if (this._currentBiome === 'snow' && cfg.sandTint) {
       sprite.setTint(cfg.sandTint);
+    }
+
+    if (this._currentBiome === 'desert') {
+      const nGrass = neighbors.n === GRASS;
+      const sGrass = neighbors.s === GRASS;
+      const wGrass = neighbors.w === GRASS;
+      const eGrass = neighbors.e === GRASS;
+      const nwGrass = (ty > 0 && tx > 0) ? groundData[ty-1][tx-1] === GRASS : false;
+      const neGrass = (ty > 0 && tx < mapW-1) ? groundData[ty-1][tx+1] === GRASS : false;
+      const swGrass = (ty < mapH-1 && tx > 0) ? groundData[ty+1][tx-1] === GRASS : false;
+      const seGrass = (ty < mapH-1 && tx < mapW-1) ? groundData[ty+1][tx+1] === GRASS : false;
+      if (nGrass || sGrass || wGrass || eGrass || nwGrass || neGrass || swGrass || seGrass) {
+        this._addGrassOverlay(px, py, nGrass, sGrass, wGrass, eGrass, nwGrass, neGrass, swGrass, seGrass);
+      }
     }
     return sprite;
   }
@@ -666,22 +870,61 @@ export class MapLoader {
     return BEACH.SAND_SOLID;
   }
 
+
+  _pickSandWaterFrameNoDesert(nWater, sWater, wWater, eWater, groundData, tx, ty, mapW, mapH) {
+    const cfg = this._currentBiomeConfig;
+    const cols = cfg.sandCols;
+    const TL = cols * 5, T = cols * 5 + 1, TR = cols * 5 + 2;
+    const L = cols * 6, R = cols * 6 + 2;
+    const BL = cols * 7, B = cols * 7 + 1, BR = cols * 7 + 2;
+    const solidCenter = cols * 6 + 1;
+    const INNER_TL = cols * 9 + 1, INNER_TR = cols * 9;
+    const INNER_BL = cols * 8 + 1, INNER_BR = cols * 8;
+   
+    // Also check diagonal neighbors for corner detection
+    const nw = (ty > 0 && tx > 0) ? groundData[ty - 1][tx - 1] === WATER : false;
+    const ne = (ty > 0 && tx < mapW - 1) ? groundData[ty - 1][tx + 1] === WATER : false;
+    const sw = (ty < mapH - 1 && tx > 0) ? groundData[ty + 1][tx - 1] === WATER : false;
+    const se = (ty < mapH - 1 && tx < mapW - 1) ? groundData[ty + 1][tx + 1] === WATER : false;
+
+    // Two-edge corners (L-shaped water borders) — original directions
+    if (nWater && wWater) return BR;
+    if (nWater && eWater) return BL;
+    if (sWater && wWater) return TR;
+    if (sWater && eWater) return TL;
+
+    // Single cardinal edges — inverted
+    if (nWater) return T;
+    if (sWater) return B;
+    if (wWater) return L;
+    if (eWater) return R;
+
+    // Inner corners (only diagonal water neighbor) — inverted
+    if (nw) return INNER_TL;
+    if (ne) return INNER_TR;
+    if (sw) return INNER_BL;
+    if (se) return INNER_BR;
+
+    // Fallback to solid sand
+    return solidCenter;
+  }
   /**
    * Render a grass tile with auto-tiling edges.
    * Uses biome config to select the correct grass spritesheet.
    */
-  _renderGrassTile(px, py, neighbors, hash, tileType) {
+  _renderGrassTile(px, py, neighbors, hash, tileType, groundData, tx, ty, mapW, mapH) {
     const cfg = this._currentBiomeConfig;
-    const isGrassLike = (t) => t === GRASS || t === ICE_GRASS;
+    const isGrassLike = (t) => t === GRASS || t === ICE_GRASS || t=== WATER; // treat water as "grass-like" for grass edge rendering (sand is the "foreign" type)
     const nForeign = !isGrassLike(neighbors.n);
     const sForeign = !isGrassLike(neighbors.s);
     const wForeign = !isGrassLike(neighbors.w);
     const eForeign = !isGrassLike(neighbors.e);
 
+
     let frame;
     if (this._currentBiome === 'desert') {
-      // Desert grass: 3 cols x 5 rows
-      if (!nForeign && !sForeign && !wForeign && !eForeign) {
+      //  (path in grass, reversed logic)
+      if (nForeign || sForeign || wForeign || eForeign) {
         const solids = [GRASS_F.SOLID, GRASS_F.VAR_1, GRASS_F.VAR_2, GRASS_F.VAR_3];
         frame = solids[Math.floor(hash * solids.length)];
       } else {
@@ -694,32 +937,113 @@ export class MapLoader {
         );
       }
     } else {
-      // Non-desert grass: use 3×3 auto-tile block at top-left of sheet
-      const cols = cfg.grassCols; // 16 for base grass
-      const TL = 0, T = 1, TR = 2;
-      const L = cols, CENTER = cols + 1, R = cols + 2;
-      const BL = cols * 2, B = cols * 2 + 1, BR = cols * 2 + 2;
-      if (!nForeign && !sForeign && !wForeign && !eForeign) {
-        // Solid fill variants from rows 1-2
-        const solids = [CENTER, CENTER + 1, cols * 2 + 1, cols * 2 + 2];
-        frame = solids[Math.floor(hash * solids.length)];
-      } else {
-        frame = this._pickEdgeFrame(nForeign, sForeign, wForeign, eForeign, TL, T, TR, L, B, R, CENTER, BL, BR);
-      }
+      // Non-desert grass: inverted edge logic (sand outside, grass inside) + inner corners
+        frame = this._pickGrassForeignFrame(nForeign, sForeign, wForeign, eForeign, hash, groundData, tx, ty, mapW, mapH);
     }
 
     const grassKey = cfg.grassKey;
     const sprite = this.scene.add.image(px, py, grassKey, this._safeFrame(grassKey, frame));
     sprite.setScale(KENMI_SCALE);
+    sprite._debugMethod = '_renderGrassTile';
 
-    // Ice-grass tint: use biome-aware tint if available, fall back to default
-    if (tileType === ICE_GRASS) {
-      const iceTint = (cfg && cfg.iceGrassTint) || 0x99ccff;
-      sprite.setTint(iceTint);
+    if (tileType === ICE_GRASS) { 
+      //paint in white and let the shader recolor it, so the same tile can be used for both snow and desert biomes with different tints
+      sprite.setPipeline('ReplaceColor');
+      const pipeline = sprite.pipeline;
+
+      if(this._currentBiome === 'desert')
+      {
+        pipeline.set3f(
+          'targetColor',
+          0.486, // R
+          0.588, // G
+          0.235  // B
+        );
+      }
+      else{
+        pipeline.set3f(
+          'targetColor',
+          0.243, // R
+          0.537, // G
+          0.282  // B
+        );
+      }
     }
 
     return sprite;
   }
+
+  _pickGrassForeignFrame(nForeign, sForeign, wForeign, eForeign, hash, groundData, tx, ty, mapW, mapH) {
+    const cfg = this._currentBiomeConfig;
+    const cols = cfg.grassCols;
+    const T = cols * 5 + 1, L = cols * 6, CENTER = cols * 9 + 5, R = cols * 6 + 2, B = cols * 7 + 1;
+    const INNER_TL = cols * 9 + 1, INNER_TR = cols * 9;
+    const INNER_BL = cols * 8 + 1, INNER_BR = cols * 8;
+    const TL = cols * 5, TR = cols * 5 + 2, BL = cols * 7, BR = cols * 7 + 2;
+
+    const isGrassLike = (t) => t === GRASS || t === ICE_GRASS || t=== WATER; // treat water as "grass-like" for grass edge rendering (sand is the "foreign" type)
+
+    // Water-specific cardinal checks (water is grass-like, but we need to distinguish it for mixed corners)
+    const nWater = (ty > 0) ? groundData[ty - 1][tx] === WATER : false;
+    const sWater = (ty < mapH - 1) ? groundData[ty + 1][tx] === WATER : false;
+    const wWater = (tx > 0) ? groundData[ty][tx - 1] === WATER : false;
+    const eWater = (tx < mapW - 1) ? groundData[ty][tx + 1] === WATER : false;
+    const nwWater = (ty > 0 && tx > 0) ? groundData[ty - 1][tx - 1] === WATER : false;
+    const neWater = (ty > 0 && tx < mapW - 1) ? groundData[ty - 1][tx + 1] === WATER : false;
+    const swWater = (ty < mapH - 1 && tx > 0) ? groundData[ty + 1][tx - 1] === WATER : false;
+    const seWater = (ty < mapH - 1 && tx < mapW - 1) ? groundData[ty + 1][tx + 1] === WATER : false;
+
+    // Also check diagonal neighbors for corner detection
+    const nw = (ty > 0 && tx > 0) ? !isGrassLike(groundData[ty - 1][tx - 1]) : false;
+    const ne = (ty > 0 && tx < mapW - 1) ? !isGrassLike(groundData[ty - 1][tx + 1]) : false;
+    const sw = (ty < mapH - 1 && tx > 0) ? !isGrassLike(groundData[ty + 1][tx - 1]) : false;
+    const se = (ty < mapH - 1 && tx < mapW - 1) ? !isGrassLike(groundData[ty + 1][tx + 1]) : false;
+
+    // Two-edge corners (L-shaped  borders)
+    if (nForeign && wForeign) return INNER_BR;  //  BR corner
+    if (nForeign && eForeign) return INNER_BL;  //  BL corner
+    if (sForeign && wForeign) return INNER_TR;  //  TR corner
+    if (sForeign && eForeign) return INNER_TL;  //  TL corner
+
+    // Mixed grass/water/sand outer corners: sand on one vertical cardinal + water on one horizontal cardinal
+    if (sForeign && eWater && !nForeign && !wForeign) return TR;
+    if (sForeign && wWater && !nForeign && !eForeign) return TL;
+    if (nForeign && eWater && !sForeign && !wForeign) return BR;
+    if (nForeign && wWater && !sForeign && !eForeign) return BL;
+
+    // Mixed grass/water/sand outer corners: sand on one horizontal cardinal + water on one vertical cardinal
+    if (wForeign && nWater && !sForeign && !eForeign) return TR;
+    if (eForeign && nWater && !sForeign && !wForeign) return TL;
+    if (wForeign && sWater && !nForeign && !eForeign) return BR;
+    if (eForeign && sWater && !nForeign && !wForeign) return BL;
+
+    // Mixed grass/water/sand outer corners: sand on one cardinal + water on adjacent diagonal
+    if (eForeign && neWater && !wForeign && !nForeign) return TL;
+    if (eForeign && seWater && !wForeign && !sForeign) return BL;
+    if (wForeign && nwWater && !eForeign && !nForeign) return TR;
+    if (wForeign && swWater && !eForeign && !sForeign) return BR;
+    if (nForeign && nwWater && !sForeign && !wForeign) return BL;
+    if (nForeign && neWater && !sForeign && !eForeign) return BR;
+    if (sForeign && swWater && !nForeign && !wForeign) return TL;
+    if (sForeign && seWater && !nForeign && !eForeign) return TR;
+
+    // Single cardinal edges
+    if (nForeign) return B; // above -> bottom edge of island
+    if (sForeign) return T;    // below -> top edge of island
+    if (wForeign) return R;  // left -> right edge of island
+    if (eForeign) return L;   // right -> left edge of island
+
+    // corners (only diagonal water neighbor)
+    if (nw && !swWater) return BR;
+    if (ne && !seWater) return BL;
+    if (sw && !nwWater) return TR;
+    if (se && !neWater) return TL;
+
+    // Fallback to solid sand
+    const solids = [CENTER, CENTER + 1, CENTER + 2];
+    return solids[Math.floor(hash * solids.length)];
+  }
+
 
   /**
    * Render a water tile with auto-tiling edges.
@@ -755,7 +1079,7 @@ export class MapLoader {
       const L = cols, CENTER = cols + 1, R = cols + 2;
       const BL = cols * 2, B = cols * 2 + 1, BR = cols * 2 + 2;
       if (!nForeign && !sForeign && !wForeign && !eForeign) {
-        const solids = [CENTER, CENTER + 1];
+        const solids = [CENTER];
         frame = solids[Math.floor(hash * solids.length)];
       } else {
         frame = this._pickEdgeFrame(nForeign, sForeign, wForeign, eForeign, TL, T, TR, L, B, R, CENTER, BL, BR);
@@ -763,12 +1087,40 @@ export class MapLoader {
     }
 
     const waterKey = cfg.waterKey;
-    const sprite = this.scene.add.image(px, py, waterKey, this._safeFrame(waterKey, frame));
+
+    // Use sprite for desert biome water to enable animations
+    let sprite;
+    if (this._currentBiome === 'desert') {
+      sprite = this.scene.add.sprite(px, py, waterKey, this._safeFrame(waterKey, frame));
+      sprite._debugMethod = '_renderWaterTile';
+
+      // Determine which row (0-4) and tile type (0-2) the frame belongs to
+      const rowSize = 24;
+      const row = Math.floor(frame / rowSize);
+      const frameInRow = frame % rowSize;
+      const tileType = frameInRow % 3;
+      const animKey = `water-anim-row${row}-${tileType}`;
+      if (this.scene.anims.exists(animKey)) {
+        sprite.play(animKey);
+      }
+    } else {
+      // Non-desert water uses static image
+      sprite = this.scene.add.image(px, py, waterKey, this._safeFrame(waterKey, frame));
+      sprite._debugMethod = '_renderWaterTile';
+    }
+
     sprite.setScale(KENMI_SCALE);
 
-    // Add foam animation overlay on water tiles that border land
-    if (nForeign || sForeign || wForeign || eForeign) {
-      this._addFoamOverlay(px, py, nForeign, sForeign, wForeign, eForeign);
+
+    // Add water inner corner overlays for desert biome
+    if (this._currentBiome === 'desert') {
+      const nwWater = (ty > 0 && tx > 0) ? groundData[ty-1][tx-1] === WATER : false;
+      const neWater = (ty > 0 && tx < mapW-1) ? groundData[ty-1][tx+1] === WATER : false;
+      const swWater = (ty < mapH-1 && tx > 0) ? groundData[ty+1][tx-1] === WATER : false;
+      const seWater = (ty < mapH-1 && tx < mapW-1) ? groundData[ty+1][tx+1] === WATER : false;
+      if (nwWater || neWater || swWater || seWater) {
+        this._addWaterOverlay(px, py, nForeign, sForeign, wForeign, eForeign, nwWater, neWater, swWater, seWater);
+      }
     }
 
     return sprite;
@@ -890,6 +1242,50 @@ export class MapLoader {
   }
 
   /**
+   * Create water animation configs (run once per zone load).
+   * Water has 5 rows of animations, each with 3 tile types spaced by stride=3.
+   * Row 0: CORNER_TL(0,3,6,...), EDGE_TOP(1,4,7,...), CORNER_TR(2,5,8,...)
+   * Row 1: EDGE_LEFT(24,27,30,...), SOLID(25,28,31,...), EDGE_RIGHT(26,29,32,...)
+   * etc.
+   */
+  _createWaterAnimations() {
+    if (!this.scene.textures.exists(WATER_KEY)) return;
+
+    const stride = 3;  // 3 tile types per row
+    const variations = 8;  // 8 animation frames per tile type
+    const rowSize = 24;  // frames per row
+    const numRows = 5;  // 5 animation rows
+
+    // Create animation for each row and tile type
+    for (let row = 0; row < numRows; row++) {
+      for (let tileType = 0; tileType < stride; tileType++) {
+        const animKey = `water-anim-row${row}-${tileType}`;
+
+        // Skip if already created
+        if (this.scene.anims.exists(animKey)) continue;
+
+        // Generate frames for this row: rowStart + 0*3+tileType, rowStart + 1*3+tileType, etc.
+        const frames = [];
+        const rowStart = row * rowSize;
+        for (let i = 0; i < variations; i++) {
+          const frameIndex = rowStart + i * stride + tileType;
+          frames.push(frameIndex);
+        }
+
+        // Create animation
+        this.scene.anims.create({
+          key: animKey,
+          frames: frames.map(f => ({ key: WATER_KEY, frame: f })),
+          frameRate: 8,
+          repeat: -1,
+        });
+      }
+    }
+
+    this._waterAnimCreated = true;
+  }
+
+  /**
    * Add animated foam sprite overlay on a water tile that borders land.
    * Uses biome-specific foam texture and animation keys.
    */
@@ -911,7 +1307,7 @@ export class MapLoader {
 
     const foam = this.scene.add.sprite(px, py, foamKey, 0);
     foam.setScale(KENMI_SCALE);
-    foam.setDepth(1);
+    foam.setDepth(0.1);
     foam.setAlpha(0.7);
     foam.play(animKey);
 
@@ -927,6 +1323,61 @@ export class MapLoader {
     this.groundSprites.push(foam);
   }
 
+
+  _addGrassOverlay(px, py, nGrass, sGrass, wGrass, eGrass, nwGrass = false, neGrass = false, swGrass = false, seGrass = false) {
+    if (!this.scene.textures.exists(GRASS_KEY)) return;
+
+    const addOverlayFrame = (frame) => {
+      const overlay = this.scene.add.image(px, py, GRASS_KEY, this._safeFrame(GRASS_KEY, frame));
+      overlay.setScale(KENMI_SCALE);
+      overlay.setDepth(0.1);
+      this.groundSprites.push(overlay);
+    };
+
+    // Cardinal edges and convex corners
+    const frame = this._pickEdgeFrame(
+      nGrass, sGrass, wGrass, eGrass,
+      GRASS_F.CORNER_TL, GRASS_F.EDGE_TOP, GRASS_F.CORNER_TR,
+      GRASS_F.EDGE_LEFT, GRASS_F.EDGE_BOTTOM, GRASS_F.EDGE_RIGHT,
+      null,
+      GRASS_F.CORNER_BL, GRASS_F.CORNER_BR
+    );
+    if (frame !== null) addOverlayFrame(frame);
+
+    // Concave (inner) corners: diagonal grass with no adjacent cardinal grass
+    if (nwGrass && !nGrass && !wGrass) addOverlayFrame(GRASS_F.INNER_TL);
+    if (neGrass && !nGrass && !eGrass) addOverlayFrame(GRASS_F.INNER_TR);
+    if (swGrass && !sGrass && !wGrass) addOverlayFrame(GRASS_F.INNER_BL);
+    if (seGrass && !sGrass && !eGrass) addOverlayFrame(GRASS_F.INNER_BR);
+  }
+
+  _addWaterOverlay(px, py, nForeign, sForeign, wForeign, eForeign, nwWater = false, neWater = false, swWater = false, seWater = false) {
+    if (!this.scene.textures.exists(WATER_KEY)) return;
+
+    const addOverlayFrame = (frameNum) => {
+      const overlay = this.scene.add.sprite(px, py, WATER_KEY, this._safeFrame(WATER_KEY, frameNum));
+      overlay.setScale(KENMI_SCALE);
+      overlay.setDepth(1);
+
+      // Determine which row and tile type to play correct animation
+      const rowSize = 24;
+      const row = Math.floor(frameNum / rowSize);
+      const frameInRow = frameNum % rowSize;
+      const tileType = frameInRow % 3;
+      const animKey = `water-anim-row${row}-${tileType}`;
+      if (this.scene.anims.exists(animKey)) {
+        overlay.play(animKey);
+      }
+
+      this.groundSprites.push(overlay);
+    };
+
+    // Concave (inner) corners: no diagonal water but cardinal water on both sides
+    if (!nwWater && !nForeign && !wForeign) addOverlayFrame(WATER_F.INNER_TL);
+    if (!neWater && !nForeign && !eForeign) addOverlayFrame(WATER_F.INNER_TR);
+    if (!swWater && !sForeign && !wForeign) addOverlayFrame(WATER_F.INNER_BL);
+    if (!seWater && !sForeign && !eForeign) addOverlayFrame(WATER_F.INNER_BR);
+  }
   // ================================================================
   // Water edge effects
   // ================================================================
@@ -1026,6 +1477,12 @@ export class MapLoader {
    * Place world objects (trees, buildings, etc.) with Y-sorting
    */
   placeObjects(objects) {
+    // If any object is an animated deco prop, register its animation configs
+    // so .play() will work below. Idempotent.
+    if (objects.some((o) => ANIMATED_DECO_PROPS[o.key])) {
+      this._createDecoGrassAnimations();
+    }
+
     const sortedObjects = [...objects].sort((a, b) => a.y - b.y);
     sortedObjects.forEach((obj) => {
       const px = obj.x * TILE + TILE / 2;
@@ -1034,18 +1491,49 @@ export class MapLoader {
       // Remap old placeholder keys to Kenmi asset keys (backward compatible)
       const kenmiKey = SPRITE_KEY_MAP[obj.key];
       const textureKey = kenmiKey && this.scene.textures.exists(kenmiKey) ? kenmiKey : obj.key;
-      const sprite = this.scene.add.image(px, py, textureKey).setOrigin(0.5, 0.8);
+      const animName = ANIMATED_DECO_PROPS[textureKey];
+      const sprite = animName
+        ? this.scene.add.sprite(px, py, textureKey, 0)
+        : this.scene.add.image(px, py, textureKey);
+      if (animName && this.scene.anims.exists(animName)) sprite.play(animName);
 
-      // Kenmi buildings/props are already 80-144px images — do NOT scale 4x.
-      // Only scale if the texture is smaller than a game tile (< 64px wide).
-      if (kenmiKey && this.scene.textures.exists(kenmiKey)) {
-        const tex = this.scene.textures.get(kenmiKey);
-        const srcWidth = tex.source[0]?.width || 64;
-        if (srcWidth <= 32) {
-          sprite.setScale(KENMI_SCALE);
-        }
-        // Otherwise render at native size — Kenmi buildings are already proportional
+      // Select crop variation from spritesheet if multi-item prop (2+ regions).
+      // If the object specifies a `cropIndex` (set by ObjectPlacerEditor) use
+      // that exact variant so saved placements render identically to what the
+      // editor showed; otherwise pick a random variant for procedural scatters.
+      const cropRegions = PROP_CROP_REGIONS[textureKey];
+      let depth = py;
+      if (cropRegions && cropRegions.length > 0) {
+        const idx = (Number.isInteger(obj.cropIndex)
+          && obj.cropIndex >= 0
+          && obj.cropIndex < cropRegions.length)
+          ? obj.cropIndex
+          : Math.floor(Math.random() * cropRegions.length);
+        const region = cropRegions[idx];
+        sprite.setCrop(region.x, region.y, region.w, region.h);
+        sprite.setScale(KENMI_SCALE);
+        // Pin origin to the visual center of the crop region so py lands on the
+        // centre of the visible sprite (not the centre of the full frame).
+        const src = this.scene.textures.get(textureKey).source[0];
+        sprite.setOrigin(
+          (region.x + region.w / 2) / src.width,
+          (region.y + region.h / 2) / src.height
+        );
+        // Flat ground props (rugs, mats) sit just above the tilemap.
+        // Everything else uses visual-bottom Y-sort.
+        depth = FLAT_GROUND_PROPS.has(textureKey)
+          ? 0.5 + py * 0.0001
+          : py + (region.h / 2) * KENMI_SCALE;
+      } else {
+        sprite.setOrigin(0.5, 0.8);
+        sprite.setScale(KENMI_SCALE);
+        // Foot = visual bottom with origin 0.8 → py + displayHeight * 0.2
+        depth = FLAT_GROUND_PROPS.has(textureKey)
+          ? 0.5 + py * 0.0001
+          : py + sprite.displayHeight * 0.2;
       }
+
+      sprite.setDepth(depth);
 
       this.objectSprites.push(sprite);
 
@@ -1161,55 +1649,14 @@ export class MapLoader {
       }
     }
 
-    // Prop sets by context — biome-specific
-    let NEAR_WATER_PROPS, NEAR_BUILDING_PROPS, EDGE_PROPS, OPEN_PROPS;
-
-    if (biome === 'grass') {
-      NEAR_WATER_PROPS = [
-        'kenmi-base-outdoor-decoration-flowers',
-        'kenmi-base-outdoor-decoration-outdoor-decor',
-      ];
-      NEAR_BUILDING_PROPS = [
-        'kenmi-base-outdoor-decoration-barrels',
-        'kenmi-base-outdoor-decoration-hay-bales',
-        'kenmi-base-outdoor-decoration-camp-decor',
-      ];
-      EDGE_PROPS = [
-        'kenmi-base-outdoor-decoration-fences',
-        'kenmi-base-outdoor-decoration-outdoor-decor',
-      ];
-      OPEN_PROPS = [
-        'kenmi-base-outdoor-decoration-flowers',
-        'kenmi-base-outdoor-decoration-outdoor-decor',
-        'kenmi-base-outdoor-decoration-hay-bales',
-      ];
-    } else {
-      // desert (default)
-      NEAR_WATER_PROPS = [
-        'kenmi-desert-props-desert-fern',
-        'kenmi-desert-props-fallen-palm-leaves',
-        'kenmi-desert-props-desert-grass-props',
-      ];
-      NEAR_BUILDING_PROPS = [
-        'kenmi-desert-props-desert-pots-sacks',
-        'kenmi-desert-props-desert-rugs',
-        'kenmi-desert-props-sleeping-mat',
-        'kenmi-desert-props-golden-pots',
-      ];
-      EDGE_PROPS = [
-        'kenmi-desert-props-dead-bush',
-        'kenmi-desert-props-desert-fern-dead',
-        'kenmi-desert-props-desert-bones',
-        'kenmi-desert-props-fallen-palm-leaves-dead',
-      ];
-      OPEN_PROPS = [
-        'kenmi-desert-props-cactus',
-        'kenmi-desert-props-desert-rocks',
-        'kenmi-desert-props-dead-bush',
-        'kenmi-desert-props-desert-grass-props',
-        'kenmi-desert-props-desert-fern',
-      ];
-    }
+    // Prop sets by context — biome-specific. Source of truth lives in
+    // BIOME_SCATTER_PROP_SETS so the ObjectPlacerEditor can filter its palette
+    // identically. Snow biomes fall through to desert sets (legacy behaviour).
+    const propSets = BIOME_SCATTER_PROP_SETS[biome] || BIOME_SCATTER_PROP_SETS.desert;
+    const NEAR_WATER_PROPS = propSets.nearWater;
+    const NEAR_BUILDING_PROPS = propSets.nearBuilding;
+    const EDGE_PROPS = propSets.edge;
+    const OPEN_PROPS = propSets.open;
 
     // Animated grass spritesheet keys
     const ANIM_GRASS_KEYS = [
@@ -1293,15 +1740,15 @@ export class MapLoader {
 
         // Determine placement chance based on context
         const hash1 = tileHash(x, y, DECO_SEED);
-        let chance = 0.08; // base 8%
+        let chance = 0.04; // base 4%
 
         const isNearObj = nearObject(x, y, 3);
         const isNearWater = nearWater(x, y, 2);
         const isNearEdge = nearEdge(x, y, 2);
 
-        if (isNearObj) chance = 0.25;
-        else if (isNearWater) chance = 0.18;
-        else if (isNearEdge) chance = 0.15;
+        if (isNearObj) chance = 0.08;
+        else if (isNearWater) chance = 0.06;
+        else if (isNearEdge) chance = 0.02;
 
         if (hash1 > chance) continue;
 
@@ -1321,6 +1768,12 @@ export class MapLoader {
 
         if (!propKey) continue;
 
+        // Rugs are large; reduce their spawn rate by 50%
+        if (propKey === 'kenmi-desert-props-desert-rugs') {
+          const rugHash = tileHash(x, y, DECO_SEED + 10);
+          if (rugHash > 0.5) continue;
+        }
+
         // Random offset within tile for natural look
         const offsetX = (tileHash(x, y, DECO_SEED + 2) - 0.5) * 24;
         const offsetY = (tileHash(x, y, DECO_SEED + 3) - 0.5) * 24;
@@ -1330,7 +1783,6 @@ export class MapLoader {
 
         const sprite = this._createDecoSprite(px, py, propKey, tileHash(x, y, DECO_SEED + 5));
         if (sprite) {
-          sprite.setAlpha(0.8 + tileHash(x, y, DECO_SEED + 4) * 0.2); // 0.8-1.0
           this.decoSprites.push(sprite);
         }
       }
@@ -1347,28 +1799,15 @@ export class MapLoader {
       )
     );
 
-    const CLUSTER_PROPS_DESERT = [
-      'kenmi-desert-props-desert-pots-sacks',
-      'kenmi-desert-props-desert-rugs',
-      'kenmi-desert-props-sleeping-mat',
-      'kenmi-desert-props-water-sack-on-stick',
-      'kenmi-desert-props-fire-pit',
-      'kenmi-desert-props-desert-ladder',
-    ];
-
-    const CLUSTER_PROPS_GRASS = [
-      'kenmi-base-outdoor-decoration-barrels',
-      'kenmi-base-outdoor-decoration-camp-decor',
-      'kenmi-base-outdoor-decoration-hay-bales',
-      'kenmi-base-outdoor-decoration-benches',
-    ];
-
-    const clusterProps = biome === 'grass' ? CLUSTER_PROPS_GRASS : CLUSTER_PROPS_DESERT;
+    // Cluster pool comes from BIOME_SCATTER_PROP_SETS (shared with the editor).
+    // Snow biomes fall back to desert clusters (legacy behaviour).
+    const clusterProps = (propSets && propSets.cluster) || BIOME_SCATTER_PROP_SETS.desert.cluster;
 
     for (let bi = 0; bi < buildingObjects.length; bi++) {
       const bldg = buildingObjects[bi];
       const clusterSize = 2 + Math.floor(tileHash(bldg.x, bldg.y, DECO_SEED + 100) * 3); // 2-4
 
+      
       for (let ci = 0; ci < clusterSize; ci++) {
         // Offset 1.5-3.5 tiles from building in random direction
         const angle = tileHash(bldg.x + ci, bldg.y, DECO_SEED + 101 + ci) * Math.PI * 2;
@@ -1385,6 +1824,12 @@ export class MapLoader {
         const propIdx = Math.floor(tileHash(tx, ty, DECO_SEED + 200 + ci) * clusterProps.length);
         const propKey = clusterProps[propIdx];
         if (!this.scene.textures.exists(propKey)) continue;
+
+        // Rugs are large; reduce their spawn rate by 50%
+        if (propKey === 'kenmi-desert-props-desert-rugs') {
+          const rugHash = tileHash(tx, ty, DECO_SEED + 210 + ci);
+          if (rugHash > 0.5) continue;
+        }
 
         const offsetX = (tileHash(tx, ty, DECO_SEED + 201) - 0.5) * 16;
         const offsetY = (tileHash(tx, ty, DECO_SEED + 202) - 0.5) * 16;
@@ -1489,15 +1934,16 @@ export class MapLoader {
     if (!this.scene.textures.exists(propKey)) return null;
 
     const sprite = this.scene.add.image(px, py, propKey);
-    sprite.setDepth(py); // Y-sort depth
 
     const cropRegions = PROP_CROP_REGIONS[propKey];
+    let displayH;
     if (cropRegions && cropRegions.length > 0) {
       // Multi-item sheet: pick one region, crop to it, then scale 4x
       const regionIdx = Math.floor(hash * cropRegions.length);
       const region = cropRegions[regionIdx];
       sprite.setCrop(region.x, region.y, region.w, region.h);
       sprite.setScale(KENMI_SCALE);
+      displayH = region.h * KENMI_SCALE;
     } else {
       // Not in crop list — check texture source dimensions
       const tex = this.scene.textures.get(propKey);
@@ -1511,7 +1957,16 @@ export class MapLoader {
         // These are already sized for the visual world (80-240px wide)
         sprite.setScale(1);
       }
+      displayH = sprite.displayHeight;
     }
+
+    // Flat ground props sit just above the tilemap (depth 0) but below all
+    // upright objects and the player. The tiny py factor preserves Y-sort
+    // between overlapping rugs/mats without ever reaching object-range depths.
+    const depth = FLAT_GROUND_PROPS.has(propKey)
+      ? 0.5 + py * 0.0001
+      : py - displayH;
+    sprite.setDepth(depth);
 
     return sprite;
   }
@@ -1563,8 +2018,9 @@ export class MapLoader {
     // Military banner and flag animations for bedouin camp
     const bannerKey = 'kenmi-military-banners-anim';
     if (this.scene.textures.exists(bannerKey) && !this.scene.anims.exists('deco-banner')) {
-      const tex = this.scene.textures.get(bannerKey);
-      const frameCount = tex.frameTotal - 1;
+      const _tex = this.scene.textures.get(bannerKey);
+      const firstBannersFrames = 17;
+      const frameCount = firstBannersFrames - 1;
       if (frameCount > 0) {
         this.scene.anims.create({
           key: 'deco-banner',
@@ -1577,8 +2033,9 @@ export class MapLoader {
 
     const flagKey = 'kenmi-military-flags-anim';
     if (this.scene.textures.exists(flagKey) && !this.scene.anims.exists('deco-flag')) {
-      const tex = this.scene.textures.get(flagKey);
-      const frameCount = tex.frameTotal - 1;
+      const _tex = this.scene.textures.get(flagKey);
+      const firstFlagFrames = 6;
+      const frameCount = firstFlagFrames - 1;
       if (frameCount > 0) {
         this.scene.anims.create({
           key: 'deco-flag',
