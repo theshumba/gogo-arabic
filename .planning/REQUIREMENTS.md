@@ -253,6 +253,65 @@
 - Mapped to phases: 12
 - Unmapped: 0
 
+## v17.5 Requirements — Platform Foundation
+
+### Observability & Test Coverage (Phase 102)
+
+- [ ] **OBS-01**: PostHog product analytics SDK wired into the React shell with `autocapture: false` and identified per anonymous session ID
+- [ ] **OBS-02**: Canonical learning-loop events emitted with stable names (`quest.started`, `quest.completed`, `fsrs.reviewed`, `zone.entered`, `lesson.completed`, `teaching.started`, `teaching.completed`, `dashboard.viewed`); event properties are enum/ID only, never free text
+- [ ] **OBS-03**: PostHog session replay enabled with all user-typed input fields masked (no Arabic learner-text in replays)
+- [ ] **OBS-04**: Uncaught errors and unhandled promise rejections captured into PostHog with stack trace and breadcrumbs
+- [ ] **OBS-05**: In-game perf overlay (FPS, frame time, draw calls, heap MB) togglable via `?perf=1` URL flag or debug key combo; ≤1ms/frame overhead when active, zero cost when off
+- [ ] **OBS-06**: Low-end-device flag detected (avg FPS <45 over 10s warm-up OR `navigator.deviceMemory < 4`) and persisted to existing IndexedDB store from Phase 27.1
+- [ ] **OBS-07**: Telemetry opt-out toggle in settings; default is opt-out for users under 13 per existing onboarding age data, opt-in otherwise
+- [ ] **OBS-08**: Playwright smoke suite covers boot → title → new game → walk one zone → talk to one NPC → take one FSRS review → save+reload-restores-state, green in CI in under 3 minutes with `video: 'retain-on-failure'`
+- [ ] **OBS-09**: Existing vitest suite count (2535+ tests at start) remains green with zero regressions after Phase 102 lands
+
+### Mobile & Cloud Sync (Phase 103)
+
+- [ ] **MOB-01**: Virtual joystick rendered on touch devices (`pointer: coarse`) on the left half of screen; mirrors keyboard movement input
+- [ ] **MOB-02**: Tap-to-interact on world objects/NPCs casts a small radius from tap location, picks nearest interactable, fires the same path as keyboard "E"
+- [ ] **MOB-03**: Phaser canvas scales responsively with `pixelArt: true` and integer scaling; tile art remains crisp at all viewport sizes
+- [ ] **MOB-04**: CSS `safe-area-inset-{top,bottom,left,right}` respected on notched phones; no UI elements clipped by display cutouts
+- [ ] **MOB-05**: Touch controls do NOT render on desktop (`pointer: fine` media query); keyboard/mouse path is unchanged
+- [ ] **MOB-06**: PWA manifest present, installable on iOS Safari and Android Chrome with a Gogo Arabic icon and splash screen
+- [ ] **MOB-07**: Service worker caches app shell + recent zone assets for offline play; offline boot returns to the last visited zone
+- [ ] **SYNC-01**: Email magic-link auth backed by existing `server/`; no third-party auth provider; rate-limited
+- [ ] **SYNC-02**: IndexedDB → cloud push runs on save with append-only mutation queue that drains when online; survives offline play
+- [ ] **SYNC-03**: Cloud → IndexedDB pull runs on boot; replaces local slot only if cloud `lastSyncedAt` is newer than local
+- [ ] **SYNC-04**: Conflict UI shown when both sides have changes since last sync; user picks "keep local" or "keep cloud" per slot; no auto-merge
+- [ ] **SYNC-05**: Cloud sync is opt-in; anonymous local-only play remains fully functional and is the default for new installs
+- [ ] **SYNC-06**: Save schema migration is backward-compatible with Phase 27.1 IndexedDB — existing saves load without data loss; new `lastSyncedAt` field added without breaking old reads
+
+### Dev Infrastructure (Phase 104)
+
+- [ ] **PIPE-01**: Sprite atlas packing is deterministic — same source inputs produce byte-identical atlases across CI runs
+- [ ] **PIPE-02**: Kenmi sprites and tilesets packed into multi-page atlases (JSON-Hash format) ingested natively by Phaser without consumer code changes
+- [ ] **PIPE-03**: Audio assets re-encoded to OGG (primary) + MP3 (fallback) where size reduction exceeds 30%; original perceptual fidelity preserved (OGG q≥5 or equivalent)
+- [ ] **PIPE-04**: `content/zone-manifest.json` generated declaring which atlases and audio each zone needs
+- [ ] **PIPE-05**: Per-zone lazy loading: only global core loads in BootScene; ZoneLoader loads zone bundle on entry and releases on exit; adjacent zones pre-fetched on proximity with no visible asset pop-in
+- [ ] **PIPE-06**: CI bundle-size gate warns on >+5% delta from base branch and fails on >+15%
+- [ ] **HMR-01**: Vite HMR boundary on `content/**/*.json` (dialogue trees, zone JSON, vocab packs); only fires in `import.meta.env.DEV`
+- [ ] **HMR-02**: On HMR event, new JSON re-validated via existing Zod schemas (reusing `scripts/validate-vocab.mjs` patterns) before applying to game state
+- [ ] **HMR-03**: HMR code path is stripped from production bundle at build time; production loads remain unchanged
+- [ ] **HMR-04**: When HMR JSON fails Zod validation, error surfaces in the dev overlay with file path + Zod issue; game state is NOT mutated and the game does NOT crash
+
+## v17.5 Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| OBS-01 to OBS-09 | Phase 102 (plans TBD) | Stubbed |
+| MOB-01 to MOB-07 | Phase 103 (plans TBD) | Stubbed |
+| SYNC-01 to SYNC-06 | Phase 103 (plans TBD) | Stubbed |
+| PIPE-01 to PIPE-06 | Phase 104 (plans TBD) | Stubbed |
+| HMR-01 to HMR-04 | Phase 104 (plans TBD) | Stubbed |
+
+**Coverage:**
+- v17.5 requirements: 32 total (OBS×9 + MOB×7 + SYNC×6 + PIPE×6 + HMR×4)
+- Mapped to phases: 32
+- Unmapped: 0
+
 ---
 *Requirements defined: 2026-03-22*
 *Last updated: 2026-04-18 — v16.0 Visual Rebuild requirements added (WORLD-01 through WORLD-12) for Phase 97. v15.0 shipped.*
+*2026-05-26 — v17.5 Platform Foundation requirements added: OBS-01..OBS-09 (Phase 102), MOB-01..MOB-07 + SYNC-01..SYNC-06 (Phase 103), PIPE-01..PIPE-06 + HMR-01..HMR-04 (Phase 104). 32 new requirements registered.*

@@ -20,6 +20,7 @@
 - 🪧 **Unassigned stubs** — Phase directories 86-96 exist with pre-existing plan stubs (Ramadan/Eid events, difficulty curve, progression balancing, NPC dialogue expansion, reading/conversation content, leaderboards, tutorial refresh, analytics, idioms/proverbs, pronunciation, battle expansion). Not currently assigned to a milestone. Needs review before or alongside v16.0.
 - 🚧 **v16.0 Visual Rebuild** — Phase 97 (planning, 2026-04-17) — leverage Opus 4.7 1M context for single-pass visual/world layer rebuild
 - ⏳ **v17.0 Code Health** — Phase 98 (planned) — audit-first whole-codebase refactor with guardrails
+- ⏳ **v17.5 Platform Foundation** — Phases 102-104 (stubbed 2026-05-26) — observability, mobile + cloud sync, dev infrastructure (atlas packing + content hot reload)
 - ⏳ **v18.0 Advanced AI Systems** — Phases 99-101 (planned) — curriculum orchestrator, dynamic NPC memory, procedural quest generation
 
 ## Phases
@@ -487,6 +488,76 @@ Plans:
 - [ ] 98-06-PLAN.md — Planning-doc drift reconciliation + phase 86-96 stub disposition per user approval (HEALTH-09, 11)
 - [ ] 98-07-PLAN.md — Final invariant sweep, coverage-threshold ratchet, Ralph resume, v17.0 milestone archive, phase close (HEALTH-04, 05, 06, 07, 12, 13, 14)
 
+### v17.5 Platform Foundation (Phases 102-104)
+
+#### Phase 102: Observability & Test Coverage
+**Goal**: Install the signal layer for every later phase — PostHog product analytics + session replay + crash capture, in-game perf overlay with low-end-device mode flag, and a Playwright smoke suite covering the golden learning path.
+**Depends on**: Phase 97 (stable visual layer for perf measurement). Independent of Phase 98 — can ship in parallel.
+**Requirements**: OBS-01, OBS-02, OBS-03, OBS-04, OBS-05, OBS-06, OBS-07, OBS-08, OBS-09 (9 IDs — see REQUIREMENTS.md v17.5 section)
+**Success Criteria**:
+  1. Canonical learning-loop events (`quest.started`, `quest.completed`, `fsrs.reviewed`, `zone.entered`, `lesson.completed`, `teaching.started`, `teaching.completed`, `dashboard.viewed`) flowing to PostHog with enum/ID-only properties
+  2. Uncaught errors + session replay captured with PII masking; opt-out toggle in settings (default opt-OUT for ALL users — no age-gate exists in codebase per RESEARCH gap)
+  3. Perf overlay toggleable via `?perf=1`; low-end-device flag detected and persisted in IndexedDB via migration v12 -> v13
+  4. Playwright golden-path smoke green in CI in <3 minutes; existing 5623+ vitest tests unaffected (per STATE.md, not the 2535 in CONTEXT.md)
+
+**Plans:** 9 plans in 5 waves (0..4)
+
+Plans:
+- [ ] 102-01-PLAN.md — Wave 0 baseline + RED test scaffolds + checkpoint:human-verify for posthog package legitimacy + PostHog project creation (OBS-01, OBS-02, OBS-03, OBS-04, OBS-05, OBS-06, OBS-07, OBS-09)
+- [ ] 102-02-PLAN.md — posthog-js + @posthog/react install + init in main.jsx + opt-OUT-by-default + settings opt-in toggle + telemetry middleware skeleton (OBS-01, OBS-07)
+- [ ] 102-03-PLAN.md — Canonical learning-loop events: ACTION_EVENT_MAP + PROP_EXTRACTORS + EventBus zone.entered relay (OBS-02)
+- [ ] 102-04-PLAN.md — Session replay PII hardening: explicit captureCanvas:false + ph-no-capture on free-text DOM nodes (OBS-03)
+- [ ] 102-05-PLAN.md — Exception capture via capture_exceptions config + RouteErrorBoundary/ErrorBoundary captureException + PostHogErrorBoundary wrap (OBS-04)
+- [ ] 102-06-PLAN.md — Phaser PerfOverlay (FPS/Δms/draws/heap) at 1Hz + ?perf=1 URL flag + dynamic-import tree-shaking (OBS-05)
+- [ ] 102-07-PLAN.md — Low-end-device sampler + devicePerformanceSlice + IndexedDB migration v12 -> v13 (OBS-06)
+- [ ] 102-08-PLAN.md — Playwright e2e/golden-path.spec.js using storageState({ indexedDB: true }) + CI workflow integration (OBS-08)
+- [ ] 102-09-PLAN.md — Phase-end regression verification + REGRESSION.md + human-verify PostHog Live Events + STATE.md update (OBS-09)
+
+#### Phase 103: Mobile & Cloud Sync
+**Goal**: Make Gogo Arabic playable on phones and survive device swaps — touch input layer, responsive viewport, PWA install, and an opt-in email-magic-link cloud sync on top of the existing Phase 27.1 IndexedDB save.
+**Depends on**: Phase 27.1 (IndexedDB), Phase 97 (visual). Prefers Phase 102 ahead so mobile telemetry is available for validation.
+**Requirements**: MOB-01, MOB-02, MOB-03, MOB-04, MOB-05, MOB-06, MOB-07, SYNC-01, SYNC-02, SYNC-03, SYNC-04, SYNC-05, SYNC-06
+**Success Criteria**:
+  1. Virtual joystick + tap-to-interact functional on touch devices; desktop keyboard/mouse path unchanged
+  2. Phaser canvas scales responsively with crisp pixel art; safe-area-inset respected on notched phones
+  3. PWA installable with offline play via service worker
+  4. Email magic-link auth backed by existing `server/`; cloud save push/pull with last-write-wins conflict UI; anonymous local-only play remains the default
+
+**Plans:** 8 plans in 4 waves
+
+Plans:
+- [ ] 103-01-PLAN.md — Wave-0 dead-code audit (sync.js + /api/game/*) + bundle baseline + human verdict checkpoint
+- [ ] 103-02-PLAN.md — Phaser Scale.FIT config + viewport-fit=cover + safe-area-inset CSS (MOB-03, MOB-04)
+- [ ] 103-03-PLAN.md — rex VirtualJoyStick install + TouchInputAdapter + TapToInteract + pointer:coarse gate (MOB-01, MOB-02, MOB-05)
+- [ ] 103-04-PLAN.md — PWA hardening: SW /api/ NetworkOnly fix (cross-user leak BLOCKING) + manifest validation (MOB-06, MOB-07)
+- [ ] 103-05-PLAN.md — Magic-link auth via Resend SMTP + OTP-in-app fallback decision + nodemailer install gate (SYNC-01)
+- [ ] 103-06-PLAN.md — CloudSave Mongo model + /api/v1/cloudsave/{push,pull,list} + client IDB outbox + lastSyncedAt field (SYNC-02, SYNC-03, SYNC-06)
+- [ ] 103-07-PLAN.md — cloudSyncSlice + opt-in toggle in Settings + ConflictResolutionModal + HUD SyncStatusIndicator (SYNC-04, SYNC-05)
+- [ ] 103-08-PLAN.md — Regression sweep + Playwright mobile-sync E2E + Lighthouse PWA audit + offline smoke + cross-device manual checkpoint
+
+#### Phase 104: Dev Infrastructure
+**Goal**: Asset Pipeline v2 (deterministic atlas packing, OGG audio compression, per-zone lazy loading, CI bundle-size gate) plus content hot reload — Vite HMR for `content/*.json` (dialogue/zones/vocab) with Zod re-validation, dev-only.
+**Depends on**: Phase 38 (existing asset pipeline), Phase 97 (visual). Strongly prefers Phase 98 (Code Health) completes first to avoid packing soon-to-be-deleted assets.
+**Requirements**: PIPE-01, PIPE-02, PIPE-03, PIPE-04, PIPE-05, PIPE-06, HMR-01, HMR-02, HMR-03, HMR-04
+**Success Criteria**:
+  1. Sprite atlases produced deterministically; multi-page atlases ingested by Phaser without code changes at use sites
+  2. Per-zone lazy load + adjacent-zone pre-fetch with no visible asset pop-in
+  3. CI bundle-size gate warns >+5%, fails >+15%
+  4. Editing `content/*.json` in dev hot-swaps into game state via Redux action; invalid JSON surfaces the Zod error without crashing the game; production loads unchanged
+
+**Plans:** 9 plans in 6 waves
+
+Plans:
+- [ ] 104-01-PLAN.md — Wave-0 spike: free-tex-packer-core install (human-verify), frame-naming probe, verify-atlas-determinism.mjs (PIPE-01)
+- [ ] 104-02-PLAN.md — scripts/pack-atlases.mjs deterministic multi-pack output + vitest (PIPE-01, PIPE-02)
+- [ ] 104-03-PLAN.md — BootScene cut-over to multiatlas loading + atlas wiring tests (PIPE-02)
+- [ ] 104-04-PLAN.md — scripts/encode-audio.mjs with -bitexact + hash-keyed cache + 30%-win threshold (PIPE-03)
+- [ ] 104-05-PLAN.md — scripts/generate-zone-manifest.mjs + content/zone-manifest.json from zones.js exits[] (PIPE-04)
+- [ ] 104-06-PLAN.md — ZoneLoader load/release/prefetch with LRU-3 + ZoneTransition wiring (PIPE-05)
+- [ ] 104-07-PLAN.md — .github/workflows/bundle-size.yml + vite.config.js stats emission + PR human-verify (PIPE-06)
+- [ ] 104-08-PLAN.md — Vite HMR boundary src/dev/hmrContent.js + ContentSchema + devOverlay + tree-shake guards (HMR-01, HMR-02, HMR-03, HMR-04)
+- [ ] 104-09-PLAN.md — Phase verifier scripts/verify-phase-104.mjs covering all 10 reqs + final human sign-off (all)
+
 ### v18.0 Advanced AI Systems (Phases 99-101)
 
 #### Phase 99: Curriculum Orchestrator
@@ -611,6 +682,9 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 85 
 | 86-96. Pre-existing stubs (Ramadan, difficulty curve, progression, NPC/quest expansion, content, leaderboards, tutorial, analytics, idioms, pronunciation, battle) | unassigned | 0/? | Stubbed | - |
 | 97. Visual/World Layer Rebuild | v16.0 | 0/? | Planning | - |
 | 98. Codebase Audit & Refactor | v17.0 | 0/? | Planned | - |
+| 102. Observability & Test Coverage | v17.5 | 0/9 | Planned | - |
+| 103. Mobile & Cloud Sync | v17.5 | 0/8 | Planning | - |
+| 104. Dev Infrastructure | v17.5 | 0/? | Stubbed | - |
 | 99. Curriculum Orchestrator | v18.0 | 0/? | Planned | - |
 | 100. Dynamic NPC AI with Memory | v18.0 | 0/? | Planned | - |
 | 101. Procedural Quest Generation | v18.0 | 0/? | Planned | - |
@@ -620,3 +694,4 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 85 
 ---
 *Roadmap created: 2026-02-08*
 *Last updated: 2026-04-17 — drift fix (v13/v14/v15 marked complete from STATE.md); pre-existing phase stubs 86-96 noted as unassigned; v16.0 Visual Rebuild opened as Phase 97; v17.0 Code Health (Phase 98) and v18.0 Advanced AI Systems (Phases 99-101) queued*
+*2026-05-26 — v17.5 Platform Foundation opened with Phases 102 (Observability & Test Coverage), 103 (Mobile & Cloud Sync), 104 (Dev Infrastructure). CONTEXT stubs only — run `/gsd-plan-phase {102|103|104}` to plan in detail.*
