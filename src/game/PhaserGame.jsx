@@ -28,12 +28,44 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) 
       window.__PHASER_GAME__ = game;
     }
 
-    // When WorldScene is ready, notify parent
-    EventBus.once(EVENTS.SCENE_READY, () => {
-      if (onSceneReady) onSceneReady(game.scene.getScene('WorldScene'));
+    // When WorldScene is ready, notify parent and optionally mount the perf overlay.
+    EventBus.once(EVENTS.SCENE_READY, async () => {
+      const worldScene = game.scene.getScene('WorldScene');
+      if (onSceneReady) onSceneReady(worldScene);
+
+      // Plan 102-06 (OBS-05): gated dynamic import of PerfOverlay.
+      // - `?perf=1` URL flag OR `import.meta.env.DEV` → load and mount.
+      // - Production build without the flag → `await import` is NOT reached, so
+      //   Vite tree-shakes PerfOverlay.js into its own chunk that the prod bundle
+      //   never fetches. Zero runtime cost when off (T-102-19 mitigation,
+      //   RESEARCH Pitfall 6).
+      // - PerfOverlay is local-only debug instrumentation — no PostHog/telemetry
+      //   coupling here. (TODO Plan 03: optional perf-session tag.)
+      const perfEnabled =
+        import.meta.env.DEV ||
+        new URLSearchParams(window.location.search).has('perf');
+      if (perfEnabled && worldScene) {
+        try {
+          const { default: PerfOverlay } = await import('./ui/PerfOverlay.js');
+          const overlay = new PerfOverlay(worldScene);
+          if (import.meta.env.DEV) {
+            window.__PERF_OVERLAY__ = overlay;
+          }
+        } catch (err) {
+          // Overlay is non-essential — log and continue.
+          // eslint-disable-next-line no-console
+          console.warn('[PerfOverlay] failed to load:', err);
+        }
+      }
     });
 
     return () => {
+      // Tear down the perf overlay first so its timer/text don't reference a
+      // destroyed scene.
+      if (typeof window !== 'undefined' && window.__PERF_OVERLAY__) {
+        try { window.__PERF_OVERLAY__.destroy(); } catch (_) { /* noop */ }
+        delete window.__PERF_OVERLAY__;
+      }
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;
