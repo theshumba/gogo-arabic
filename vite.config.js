@@ -150,6 +150,12 @@ export default defineConfig({
             if (id.includes('node_modules/react-router')) {
               return 'router-vendor';
             }
+            // PostHog product analytics SDK + React adapter — isolate so the
+            // initial app chunk hash doesn't churn on SDK upgrades (RESEARCH Pitfall 2).
+            if (id.includes('node_modules/posthog-js') ||
+              id.includes('node_modules/@posthog/react')) {
+              return 'posthog-vendor';
+            }
             // Scheduler (shared by react and framer-motion)
             if (id.includes('node_modules/scheduler')) {
               return 'react-vendor';

@@ -30,12 +30,14 @@
     "format:check": "prettier --check \"src/**/*.{js,jsx,json,css}\" \"server/**/*.{js,json}\""
   },
   "dependencies": {
+    "@posthog/react": "^1.9.1",
     "@reduxjs/toolkit": "^2.11.2",
     "framer-motion": "^11.15.0",
     "howler": "^2.2.4",
     "inkjs": "^2.4.0",
     "js-arabic-reshaper": "^1.0.0",
     "phaser": "^3.90.0",
+    "posthog-js": "^1.376.2",
     "prop-types": "^15.8.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
