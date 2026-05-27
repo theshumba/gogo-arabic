@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { RouterProvider } from 'react-router-dom';
+import { PostHogProvider } from '@posthog/react';
 import { store, persistor } from './store/store.js';
 import { router } from './routes.jsx';
 import { initializeQuests, checkPrerequisites } from './store/slices/questSlice.js';
@@ -12,11 +13,16 @@ import { initializeSkillTree } from './data/initializeSkillTree.js';
 import { registerSW } from './services/swRegistration.js';
 import { initOfflineSync } from './store/middleware/offlineFsrsMiddleware.js';
 import { useAccessibilitySync } from './hooks/useAccessibilitySync.js';
+import { initPostHog, getPostHog } from './services/posthogClient.js';
 import questsData from './data/quests.json';
 import ErrorBoundaryClass from './components/ErrorBoundary/RouteErrorBoundary.jsx';
 import LoadingScreen from './components/UI/LoadingScreen.jsx';
 import AudioUnlockOverlay from './components/UI/AudioUnlockOverlay.jsx';
 import UpdatePrompt from './components/UI/UpdatePrompt.jsx';
+
+// Initialise PostHog BEFORE any store.dispatch — boot-time events must not be lost
+// (RESEARCH Pitfall 5). Graceful no-op when VITE_POSTHOG_KEY is empty.
+initPostHog();
 
 // Initialize app state on boot
 store.dispatch(initializeQuests(questsData));
@@ -50,16 +56,18 @@ function AppRoot() {
 
   return (
     <Provider store={store}>
-      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
-        <AccessibilityBridge />
-        <ErrorBoundaryClass>
-          <AudioUnlockOverlay />
-          <RouterProvider router={router} />
-          {updateReady && (
-            <UpdatePrompt onDismiss={() => setUpdateReady(false)} />
-          )}
-        </ErrorBoundaryClass>
-      </PersistGate>
+      <PostHogProvider client={getPostHog()}>
+        <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+          <AccessibilityBridge />
+          <ErrorBoundaryClass>
+            <AudioUnlockOverlay />
+            <RouterProvider router={router} />
+            {updateReady && (
+              <UpdatePrompt onDismiss={() => setUpdateReady(false)} />
+            )}
+          </ErrorBoundaryClass>
+        </PersistGate>
+      </PostHogProvider>
     </Provider>
   );
 }

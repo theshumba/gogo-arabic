@@ -115,10 +115,6 @@ describe('posthogClient (OBS-01, OBS-03, OBS-04)', () => {
     expect(config.opt_out_capturing_by_default).toBe(true);
   });
 
-  // Force a deterministic failure at suite level until Plan 02 lands.
-  // Even if the import above somehow resolves (e.g. via a future stub),
-  // this guard keeps the RED state explicit so the gate is visible in CI.
-  it('RED gate: Plan 02 has not yet implemented posthogClient.js — this test fails by design', () => {
-    throw new Error('not implemented — Plan 102-02 (posthog-js install + posthogClient.js)');
-  });
+  // RED gate from Plan 01 removed — Plan 102-02 lands posthogClient.js + posthog-js install.
+  // All assertions above pass with the real implementation in src/services/posthogClient.js.
 });
