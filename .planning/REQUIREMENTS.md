@@ -260,7 +260,7 @@
 - [ ] **OBS-01**: PostHog product analytics SDK wired into the React shell with `autocapture: false` and identified per anonymous session ID
 - [ ] **OBS-02**: Canonical learning-loop events emitted with stable names (`quest.started`, `quest.completed`, `fsrs.reviewed`, `zone.entered`, `lesson.completed`, `teaching.started`, `teaching.completed`, `dashboard.viewed`); event properties are enum/ID only, never free text
 - [ ] **OBS-03**: PostHog session replay enabled with all user-typed input fields masked (no Arabic learner-text in replays)
-- [ ] **OBS-04**: Uncaught errors and unhandled promise rejections captured into PostHog with stack trace and breadcrumbs
+- [x] **OBS-04**: Uncaught errors and unhandled promise rejections captured into PostHog with stack trace and breadcrumbs (Plan 102-05, commits adeef37 + 64acfe0)
 - [ ] **OBS-05**: In-game perf overlay (FPS, frame time, draw calls, heap MB) togglable via `?perf=1` URL flag or debug key combo; ≤1ms/frame overhead when active, zero cost when off
 - [ ] **OBS-06**: Low-end-device flag detected (avg FPS <45 over 10s warm-up OR `navigator.deviceMemory < 4`) and persisted to existing IndexedDB store from Phase 27.1
 - [ ] **OBS-07**: Telemetry opt-out toggle in settings; default is opt-out for users under 13 per existing onboarding age data, opt-in otherwise

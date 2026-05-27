@@ -507,7 +507,7 @@ Plans:
 - [ ] 102-02-PLAN.md — posthog-js + @posthog/react install + init in main.jsx + opt-OUT-by-default + settings opt-in toggle + telemetry middleware skeleton (OBS-01, OBS-07)
 - [ ] 102-03-PLAN.md — Canonical learning-loop events: ACTION_EVENT_MAP + PROP_EXTRACTORS + EventBus zone.entered relay (OBS-02)
 - [ ] 102-04-PLAN.md — Session replay PII hardening: explicit captureCanvas:false + ph-no-capture on free-text DOM nodes (OBS-03)
-- [ ] 102-05-PLAN.md — Exception capture via capture_exceptions config + RouteErrorBoundary/ErrorBoundary captureException + PostHogErrorBoundary wrap (OBS-04)
+- [x] 102-05-PLAN.md — Exception capture via capture_exceptions config + RouteErrorBoundary/ErrorBoundary captureException + PostHogErrorBoundary wrap (OBS-04)
 - [ ] 102-06-PLAN.md — Phaser PerfOverlay (FPS/Δms/draws/heap) at 1Hz + ?perf=1 URL flag + dynamic-import tree-shaking (OBS-05)
 - [ ] 102-07-PLAN.md — Low-end-device sampler + devicePerformanceSlice + IndexedDB migration v12 -> v13 (OBS-06)
 - [ ] 102-08-PLAN.md — Playwright e2e/golden-path.spec.js using storageState({ indexedDB: true }) + CI workflow integration (OBS-08)
