@@ -48,9 +48,13 @@ export function initPostHog() {
       capture_console_errors: false,
     },
     // OBS-03 — mask every input field; do NOT capture canvas (Phaser performance gate)
+    // Plan 04 hardening: captureCanvas is set EXPLICITLY (was omitted in Plan 02 ship,
+    // relying on SDK default-off). Explicit value makes the invariant tamper-resistant
+    // against future posthog-js default changes — Phaser 120→25fps regression
+    // (see posthog-js #3273, RESEARCH correction 5).
     session_recording: {
       maskAllInputs: true,
-      // captureCanvas intentionally omitted — see RESEARCH correction 5
+      captureCanvas: false,
     },
     api_host: apiHost,
     // OBS-07 — default opt-OUT for ALL users (no age-gate exists per planning_context correction 1)
