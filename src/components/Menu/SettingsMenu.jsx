@@ -10,16 +10,36 @@ import {
   toggleDiacritics,
   setKeyboardMode,
   toggleSpacedListening,
+  setTelemetryOptOut,
 } from '../../store/slices/settingsSlice.js';
 import { selectPlacement, resetPlacement, recordPlacementResult } from '../../store/slices/placementSlice.js';
 import { resetCefrProgress, setCefrLevel } from '../../store/slices/cefrProgressSlice.js';
 import { bulkUnlockLessons } from '../../store/slices/grammarSlice.js';
 import { bulkUnlockNodes } from '../../store/slices/skillTreeSlice.js';
 import { deriveGrammarUnlocks, deriveSkillTreeUnlocks } from '../../services/placementEngine.js';
+import { optInTelemetry, optOutTelemetry } from '../../services/posthogClient.js';
 import PlacementTestOverlay from '../Placement/PlacementTestOverlay.jsx';
 import AccessibilityPanel from '../Settings/AccessibilityPanel.jsx';
 import ExportProgress from '../Settings/ExportProgress.jsx';
 import styles from './SettingsMenu.module.css';
+
+/**
+ * SDK-level opt-in / opt-out handler (OBS-07 belt+braces).
+ *
+ * Exported so the Plan 01 RED test (`SettingsMenuTelemetry.test.jsx`) can call it
+ * directly. The component below also uses it so the SDK call and the Redux slice
+ * update never drift out of sync.
+ *
+ * @param {boolean} optedIn — true === user wants telemetry ON (opted IN)
+ *                          — false === user wants telemetry OFF (opted OUT)
+ */
+export function handleTelemetryToggle(optedIn) {
+  if (optedIn) {
+    optInTelemetry();
+  } else {
+    optOutTelemetry();
+  }
+}
 
 export default function SettingsMenu({ onBack }) {
   const settings = useSelector((s) => s.settings);
@@ -209,6 +229,30 @@ export default function SettingsMenu({ onBack }) {
               <span className={styles.label}>Not yet taken</span>
             </div>
           )}
+        </div>
+
+        {/* Privacy Section (Phase 102 / OBS-07) */}
+        <div className={styles.settingsSection}>
+          <div className={styles.sectionHeading}>Privacy</div>
+          <div className={styles.settingRow}>
+            <span className={styles.label}>Share anonymous usage data</span>
+            <button
+              className={!settings.telemetryOptOut ? styles.toggleOn : styles.toggleOff}
+              onClick={() => {
+                const nextOptedIn = settings.telemetryOptOut; // currently OUT -> next will be IN
+                // Update Redux slice (single source of truth for middleware short-circuit).
+                dispatch(setTelemetryOptOut(!nextOptedIn));
+                // Belt+braces: also hit the SDK so buffered/queued events are wire-blocked.
+                handleTelemetryToggle(nextOptedIn);
+              }}
+              aria-label={`Share anonymous usage data is ${settings.telemetryOptOut ? 'off' : 'on'}`}
+            >
+              {settings.telemetryOptOut ? 'OFF' : 'ON'}
+            </button>
+          </div>
+          <div className={styles.retakeWarning}>
+            Off by default. Helps us improve Gogo Arabic. No Arabic text you write is ever sent.
+          </div>
         </div>
 
         {/* Data Export Section */}

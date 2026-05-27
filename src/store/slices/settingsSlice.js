@@ -25,6 +25,10 @@ const initialState = {
   screenReaderMode: false,        // Extra ARIA labels + live announcements
   pronunciationPractice: false,    // Opt-in mic button for pronunciation feedback
   spacedListeningEnabled: false,   // Passive Arabic audio during exploration
+  // Phase 102 / OBS-07 — telemetry opt-out gate.
+  // Default opt-OUT for ALL users (no age-gate exists per RESEARCH Pitfall 7).
+  // Settings menu exposes a toggle that flips this AND calls posthog.opt_in/out_capturing.
+  telemetryOptOut: true,
 };
 
 const settingsSlice = createSlice({
@@ -113,6 +117,12 @@ const settingsSlice = createSlice({
     toggleSpacedListening(state) {
       state.spacedListeningEnabled = !state.spacedListeningEnabled;
     },
+    // Phase 102 / OBS-07 — telemetry opt-out reducer.
+    // payload === true  -> user opts OUT (telemetry disabled, default)
+    // payload === false -> user opts IN  (telemetry enabled)
+    setTelemetryOptOut(state, action) {
+      state.telemetryOptOut = Boolean(action.payload);
+    },
   },
 });
 
@@ -140,6 +150,7 @@ export const {
   setScreenReaderMode,
   togglePronunciationPractice,
   toggleSpacedListening,
+  setTelemetryOptOut,
 } = settingsSlice.actions;
 
 // --- Selectors ---
@@ -167,5 +178,7 @@ export const selectHighContrast = (state) => state.settings.highContrast;
 export const selectScreenReaderMode = (state) => state.settings.screenReaderMode;
 export const selectPronunciationPractice = (state) => state.settings.pronunciationPractice;
 export const selectSpacedListeningEnabled = (state) => state.settings.spacedListeningEnabled;
+// Phase 102 / OBS-07 — telemetry opt-out selector (true === opted OUT).
+export const selectTelemetryOptOut = (state) => state.settings.telemetryOptOut;
 
 export default settingsSlice.reducer;

@@ -91,8 +91,7 @@ describe('SettingsMenu telemetry toggle (OBS-07)', () => {
     expect(posthog.opt_out_capturing).toHaveBeenCalledTimes(1);
   });
 
-  // Hard RED gate.
-  it('RED gate: Plans 02/04 have not yet wired telemetry opt-in/out — this test fails by design', () => {
-    throw new Error('not implemented — Plan 102-02 (settingsSlice.telemetryOptOut) + Plan 102-04 (SettingsMenu Telemetry section)');
-  });
+  // RED gate from Plan 01 removed — Plan 102-02 lands settingsSlice.telemetryOptOut
+  // AND SettingsMenu Privacy toggle + handleTelemetryToggle export. All assertions
+  // above pass with the real implementation.
 });

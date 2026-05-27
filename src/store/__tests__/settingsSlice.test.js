@@ -45,6 +45,8 @@ describe('settingsSlice', () => {
         screenReaderMode: false,
         pronunciationPractice: false,
         spacedListeningEnabled: false,
+        // Phase 102 / OBS-07 — telemetry opt-out gate (default opt-OUT for ALL users).
+        telemetryOptOut: true,
       });
     });
   });
