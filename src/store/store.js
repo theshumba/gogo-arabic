@@ -58,6 +58,7 @@ import foundationReducer from './slices/foundationSlice.js';
 import zoneVocabIntroReducer from './slices/zoneVocabIntroSlice.js';
 import zoneIntroReducer from './slices/zoneIntroSlice.js';
 import zoneGrammarReducer from './slices/zoneGrammarSlice.js';
+import devicePerformanceReducer from './slices/devicePerformanceSlice.js';
 import { alphabetGateMiddleware } from './middleware/alphabetGateMiddleware.js';
 import { zoneIntroMiddleware } from './middleware/zoneIntroMiddleware.js';
 import { foundationMiddleware } from './middleware/foundationMiddleware.js';
@@ -268,6 +269,7 @@ const persistConfig = {
     'zoneIntro',
     'zoneGrammar',
     'dailyQuest',
+    'devicePerformance', // Plan 102-07 (OBS-06): low-end-device verdict from 10s warmup sampler
   ],
   // NOTE: vocabulary, battle, magic, inventory, companions, crafting REMOVED from whitelist — they use nested persistReducer with IndexedDB
 };
@@ -335,6 +337,7 @@ const rootReducer = combineReducers({
   zoneVocabIntro: zoneVocabIntroReducer,
   zoneIntro: zoneIntroReducer,
   zoneGrammar: zoneGrammarReducer,
+  devicePerformance: devicePerformanceReducer, // Plan 102-07 (OBS-06)
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
