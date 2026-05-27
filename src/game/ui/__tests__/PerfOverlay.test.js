@@ -1,10 +1,9 @@
 /**
- * Phase 102 — Plan 06 RED scaffold
+ * Phase 102 — Plan 06 GREEN (was Plan 01 RED scaffold)
  *
  * Covers OBS-05 (Phaser perf overlay, 1Hz update, zero cost when off).
  *
- * Asserts the PerfOverlay class (Plan 06 will create
- * `src/game/ui/PerfOverlay.js`):
+ * Asserts the PerfOverlay class (`src/game/ui/PerfOverlay.js`):
  *
  *   - Constructor adds a `scene.time.addEvent` with delay: 1000 (1Hz cadence,
  *     not per-frame — that's the "<=1ms/frame" budget enforcement).
@@ -14,9 +13,11 @@
  *     Firefox/Safari (where it's undefined).
  *   - destroy() removes the timer AND destroys the text object.
  *
- * RED: import of '../PerfOverlay.js' throws MODULE_NOT_FOUND until Plan 06.
+ * Status: GREEN — Plan 102-06 implemented PerfOverlay.js. The original hard RED
+ * gate (`throw new Error('not implemented')`) has been removed now that the
+ * module ships.
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 function makeScene({ fps = 60, delta = 16.6, drawCount = 42 } = {}) {
   const text = {
@@ -72,20 +73,20 @@ describe('PerfOverlay (OBS-05, Plan 06)', () => {
   it('OBS-05 cross-browser: update() does NOT throw when performance.memory is undefined (Firefox/Safari path)', () => {
     const scene = makeScene();
     const overlay = new PerfOverlay(scene);
-    const originalPerf = globalThis.performance;
-    // Simulate Firefox/Safari: performance defined but .memory absent.
-    Object.defineProperty(globalThis, 'performance', {
-      value: { now: () => 0 },
-      configurable: true,
-    });
+    // Simulate Firefox/Safari: `performance` defined but `.memory` absent.
+    // jsdom's `performance` is non-configurable, so use `vi.stubGlobal` (which
+    // Vitest restores via `unstubAllGlobals`) instead of `Object.defineProperty`.
+    vi.stubGlobal('performance', { now: () => 0 });
     try {
       expect(() => overlay.update()).not.toThrow();
     } finally {
-      Object.defineProperty(globalThis, 'performance', {
-        value: originalPerf,
-        configurable: true,
-      });
+      vi.unstubAllGlobals();
     }
+  });
+
+  afterEach(() => {
+    // Defensive: ensure no stubbed globals leak into other tests.
+    vi.unstubAllGlobals();
   });
 
   it('OBS-05: destroy() removes the timer and destroys the text', () => {
@@ -94,10 +95,5 @@ describe('PerfOverlay (OBS-05, Plan 06)', () => {
     overlay.destroy();
     expect(scene._timer.remove).toHaveBeenCalledTimes(1);
     expect(scene._text.destroy).toHaveBeenCalledTimes(1);
-  });
-
-  // Hard RED gate.
-  it('RED gate: Plan 06 has not yet implemented PerfOverlay.js — this test fails by design', () => {
-    throw new Error('not implemented — Plan 102-06 (PerfOverlay 1Hz overlay)');
   });
 });
