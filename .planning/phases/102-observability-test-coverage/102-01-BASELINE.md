@@ -79,13 +79,14 @@ Command: `npm run test:run`
 
 | Field | Value |
 |---|---|
-| Organization | FrameCoach |
-| Organization ID | `019d2bf5-3889-0000-1412-5918dc7408b0` |
-| Project name | Gogo Arabic (NEW — to be created in Task 3 checkpoint) |
-| Project ID | TBD — captured during Task 3 human-verify checkpoint, will replace this placeholder |
+| Organization | DEFERRED — user creates new PostHog org "Gogo Arabic" (or umbrella "Melusi Ventures") manually when ready |
+| Organization ID | DEFERRED — fill in when org is created |
+| Project name | Gogo Arabic (default project of the new org is fine) |
+| Project ID | DEFERRED — fill in `.env.local` after org/project creation |
 | Region | EU (per UK user data residency) |
 | Host | `https://eu.i.posthog.com` |
-| Default project to AVOID | Default project 148422 (FrameCoach Default — do NOT co-mingle Gogo Arabic events here) |
+| Existing FrameCoach org to AVOID | id `019d2bf5-3889-0000-1412-5918dc7408b0` / Default project 148422 — Gogo Arabic gets its own dedicated org for clean naming |
+| Decision date | 2026-05-27 — PostHog MCP exposes only read/list/switch tools; org/project creation requires the dashboard. User opted for placeholder-and-continue rather than blocking on manual setup. |
 
 ### Required env vars (NOT in `.env.example` yet — Plan 02 adds them)
 - **`VITE_POSTHOG_KEY`** — Public ingest key from new Gogo Arabic project (Project Settings → Project API Key). Starts with `phc_`. Safe to ship in client bundle (PostHog enforces per-origin allow-list).
@@ -128,4 +129,4 @@ Failure to find any of these anchors indicates this baseline file was tampered w
 
 1. **Vitest count drift:** STATE.md captured 5623 passing on 2026-05-17; today's run shows 5725 passing on the same branch (`fix/redux-state-2026-05-15`). Recorded both — the OBS-09 gate uses the STATE.md anchor (5623) per acceptance criteria, but the actual measured pass count is healthier than the baseline (no regression risk).
 2. **STATE.md known-failing files now pass:** The 5 files listed as "known-failing" in STATE.md appear to be passing in today's full-suite run; the only failure observed is `src/test/fixtures/captureViaVitest.test.js` (Phaser/WebGL not available in jsdom — unrelated to Phase 102).
-3. **PostHog project ID is `TBD`** — will be filled in by the human verifier during Task 3 checkpoint.
+3. **PostHog project ID is DEFERRED** — `.env.local` ships with empty `VITE_POSTHOG_KEY=`. The `init()` is a graceful no-op when the key is empty (per OBS-01 acceptance), so Plans 02..08 run cleanly with telemetry effectively disabled. User fills in the real key in `.env.local` after manually creating a PostHog org via the dashboard. Plan 09's PostHog Live Events check will surface this gap if not done before final regression.
