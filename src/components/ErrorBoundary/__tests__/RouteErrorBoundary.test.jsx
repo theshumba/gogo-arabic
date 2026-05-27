@@ -1,22 +1,18 @@
 /**
- * Phase 102 — Plan 05 RED scaffold
+ * Phase 102 — Plan 05 GREEN
  *
  * Covers OBS-04 (React render-error boundary → posthog.captureException).
  *
- * Asserts that the route/error-boundary wrapper (Plan 05) provides a class
- * component (export named `RouteErrorBoundaryClass`) which:
+ * Asserts that the route/error-boundary wrapper provides a class component
+ * (named export `RouteErrorBoundaryClass`) which:
  *
- *   - Renders its fallback UI when a child component throws during render.
+ *   - Renders its `fallback` prop when a child component throws during render.
  *   - In componentDidCatch, calls posthog.captureException(error) EXACTLY ONCE
  *     with the caught error instance.
  *
- * Today's `RouteErrorBoundary.jsx` is the hook-based react-router variant
- * (uses useRouteError) — it CANNOT catch render errors. Plan 05 must add a
- * class boundary alongside it.
- *
- * RED: import of `RouteErrorBoundaryClass` throws (no such export yet) and the
- * `posthog-js` mock proves the boundary never calls captureException until the
- * class is wired.
+ * The hook-based `RouteErrorBoundary` (default export) remains the react-router
+ * `errorElement` and uses `useRouteError()` — that's a router error reporter, not
+ * a render-error boundary. This class is the render-error boundary alongside it.
  */
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -71,10 +67,5 @@ describe('RouteErrorBoundaryClass (OBS-04, Plan 05)', () => {
     const [errArg] = posthog.captureException.mock.calls[0];
     expect(errArg).toBeInstanceOf(Error);
     expect(errArg.message).toBe('OBS-04 probe');
-  });
-
-  // Hard RED gate.
-  it('RED gate: Plan 05 has not yet implemented RouteErrorBoundaryClass — this test fails by design', () => {
-    throw new Error('not implemented — Plan 102-05 (RouteErrorBoundaryClass + posthog.captureException)');
   });
 });

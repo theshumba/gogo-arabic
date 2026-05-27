@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import posthog from 'posthog-js';
 import cssStyles from './ErrorBoundary.module.css';
 
 /**
@@ -28,6 +29,19 @@ class ErrorBoundary extends Component {
     // Log full details to console for debugging
     console.error('[ErrorBoundary] Caught error:', error);
     console.error('[ErrorBoundary] Component stack:', errorInfo?.componentStack);
+
+    // OBS-04 — forward to PostHog. SDK-level opt-out gate
+    // (opt_out_capturing_by_default in posthogClient.js) keeps opted-out users
+    // off the wire; telemetry must never crash the error path itself.
+    try {
+      posthog.captureException(error, {
+        extra: { componentStack: errorInfo?.componentStack, source: 'ErrorBoundary' },
+      });
+    } catch (telemetryErr) {
+      if (import.meta.env.DEV) {
+        console.warn('[ErrorBoundary] captureException failed', telemetryErr);
+      }
+    }
   }
 
   handleTryAgain = () => {
