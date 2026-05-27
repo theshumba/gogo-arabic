@@ -280,7 +280,11 @@ function WritingCanvas({
         ref={canvasRef}
         width={size}
         height={size}
-        className={styles.canvas}
+        // Plan 102-04: ph-no-capture removes this canvas from PostHog session
+        // replay rrweb scrape entirely. The learner draws raw Arabic glyphs here
+        // — never let that surface leak into replays (defense-in-depth alongside
+        // the SDK-level session_recording.captureCanvas:false invariant).
+        className={`${styles.canvas} ph-no-capture`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}

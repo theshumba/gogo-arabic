@@ -45,8 +45,11 @@ function WordBank({
   return (
     <div className={styles.container}>
       {/* Sentence Builder Area (RTL) */}
+      {/* Plan 102-04: ph-no-capture on the whole sentence-builder + bank — every
+          Arabic token here is learner-arranged free text (no enum/ID surface),
+          must never reach PostHog session replay. */}
       <div
-        className={`${styles.sentenceArea} ${showCorrect ? styles.sentenceCorrect : ''}`}
+        className={`${styles.sentenceArea} ph-no-capture ${showCorrect ? styles.sentenceCorrect : ''}`}
         data-testid="sentence-area"
       >
         {selectedWords.length === 0 ? (
@@ -71,7 +74,7 @@ function WordBank({
       </div>
 
       {/* Word Bank */}
-      <div className={styles.bankArea} data-testid="word-bank">
+      <div className={`${styles.bankArea} ph-no-capture`} data-testid="word-bank">
         {words.map((word, idx) => (
           <button
             key={`bank-${idx}`}

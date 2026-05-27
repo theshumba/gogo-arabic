@@ -229,7 +229,11 @@ export default function ReadingExercise({ onBack }) {
       </div>
 
       {/* Arabic passage */}
-      <div className={styles.passageBox}>
+      {/* Plan 102-04: ph-no-capture on the passage box — passage Arabic is content,
+          but learner toggle-state plus the surrounding Arabic-laden DOM (title +
+          translation/transliteration) is exactly the free-text surface session
+          replay must NOT scrape. */}
+      <div className={`${styles.passageBox} ph-no-capture`}>
         <p className={styles.arabicText}>{formatArabic(passage.arabic)}</p>
 
         {/* Toggle buttons */}
