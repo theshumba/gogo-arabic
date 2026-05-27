@@ -73,8 +73,7 @@ describe('devicePerformance persistence (OBS-06, Plan 07)', () => {
     expect(typeof globalThis.indexedDB).toBe('object');
   });
 
-  // Hard RED gate.
-  it('RED gate: Plan 07 has not yet bumped CURRENT_VERSION to 13 or authored devicePerformanceSlice — this test fails by design', () => {
-    throw new Error('not implemented — Plan 102-07 (devicePerformanceSlice + migrations[13] + redux-persist allow-list)');
-  });
+  // Plan 102-07 GREEN: CURRENT_VERSION bumped to 13, migrations[13] added,
+  // devicePerformanceSlice authored, and 'devicePerformance' added to the
+  // root redux-persist allow-list. The hard RED gate from Plan 01 is removed.
 });

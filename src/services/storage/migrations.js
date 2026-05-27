@@ -24,7 +24,7 @@
 
 import { createMigrate } from 'redux-persist';
 
-export const CURRENT_VERSION = 12;
+export const CURRENT_VERSION = 13;
 
 /**
  * Migration definitions
@@ -409,6 +409,23 @@ const migrations = {
     }
     return state;
   },
+
+  // Version 13: Add devicePerformance slice (Phase 102, Plan 07, OBS-06)
+  // Additive only — preserves every existing key via `...state` spread and
+  // seeds a default devicePerformance slice when absent. The slice's own
+  // initialState (in devicePerformanceSlice.js) is the source of truth at
+  // store-creation time; this migration just guarantees the key exists for
+  // users upgrading from v12 so redux-persist's allow-list write succeeds.
+  // (T-102-20 mitigation: backward-compatible against any v12 snapshot.)
+  13: (state) => ({
+    ...state,
+    devicePerformance: state?.devicePerformance ?? {
+      isLowEnd: false,
+      avgFps: null,
+      deviceMemory: null,
+      sampleCount: 0,
+    },
+  }),
 };
 
 /**

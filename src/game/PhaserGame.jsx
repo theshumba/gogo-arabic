@@ -3,6 +3,8 @@ import Phaser from 'phaser';
 import { gameConfig } from './config.js';
 import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
+import { store } from '../store/store.js';
+import { startWarmupSampler } from '../services/devicePerformance.js';
 
 export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) {
   const gameRef = useRef(null);
@@ -32,6 +34,18 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) 
     EventBus.once(EVENTS.SCENE_READY, async () => {
       const worldScene = game.scene.getScene('WorldScene');
       if (onSceneReady) onSceneReady(worldScene);
+
+      // Plan 102-07 (OBS-06): kick off the 10s low-end-device warmup sampler.
+      // Wired here (NOT in main.jsx) because this is the only call-site where
+      // the Phaser `game` instance — and therefore `game.loop.actualFps` — is
+      // in scope. Idempotent: re-entry is guarded by a module-scoped flag.
+      try {
+        startWarmupSampler(game, store);
+      } catch (err) {
+        // Telemetry must never crash gameplay (RESEARCH Pitfall 5 mirror).
+        // eslint-disable-next-line no-console
+        console.warn('[devicePerformance] sampler failed to start:', err);
+      }
 
       // Plan 102-06 (OBS-05): gated dynamic import of PerfOverlay.
       // - `?perf=1` URL flag OR `import.meta.env.DEV` → load and mount.

@@ -41,8 +41,9 @@ describe('Storage Migrations', () => {
   });
 
   describe('Migration version', () => {
-    it('CURRENT_VERSION equals 12', () => {
-      expect(CURRENT_VERSION).toBe(12);
+    it('CURRENT_VERSION equals 13', () => {
+      // Bumped from 12 -> 13 in Plan 102-07 (OBS-06) for the devicePerformance slice.
+      expect(CURRENT_VERSION).toBe(13);
     });
 
     it('migrate is a function', () => {

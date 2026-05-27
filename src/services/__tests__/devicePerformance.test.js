@@ -117,8 +117,8 @@ describe('devicePerformance warmup sampler (OBS-06)', () => {
     expect(dispatched.payload.isLowEnd).toBe(false);
   });
 
-  // Hard RED gate.
-  it('RED gate: Plan 07 has not yet implemented devicePerformance.js — this test fails by design', () => {
-    throw new Error('not implemented — Plan 102-07 (devicePerformance sampler + slice + migration v13)');
-  });
+  // Plan 102-07 GREEN: sampler + slice + migration v13 all implemented.
+  // The hard RED gate from Plan 01 was removed once `startWarmupSampler`,
+  // `devicePerformanceSlice`, and `migrations[13]` shipped (commits cbc7433 +
+  // this commit).
 });
