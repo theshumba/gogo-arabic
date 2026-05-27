@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { RouterProvider } from 'react-router-dom';
-import { PostHogProvider } from '@posthog/react';
+import { PostHogProvider, PostHogErrorBoundary } from '@posthog/react';
 import { store, persistor } from './store/store.js';
 import { router } from './routes.jsx';
 import { initializeQuests, checkPrerequisites } from './store/slices/questSlice.js';
@@ -55,6 +55,22 @@ function AccessibilityBridge() {
   return null;
 }
 
+/**
+ * Phase 102 / OBS-04 — outermost render-error fallback used by
+ * `PostHogErrorBoundary` when an error escapes `ErrorBoundaryClass` (defence-in-
+ * depth). Kept intentionally minimal: the branded full-screen fallback lives in
+ * `ErrorBoundaryClass`; this one is the belt-and-braces "should never fire"
+ * surface.
+ */
+function ErrorFallback() {
+  return (
+    <div role="alert" style={{ padding: 24, fontFamily: 'sans-serif' }}>
+      <h1>Something went wrong</h1>
+      <p>Please reload the page. Your progress is saved.</p>
+    </div>
+  );
+}
+
 function AppRoot() {
   const [updateReady, setUpdateReady] = useState(false);
   setUpdateAvailable = setUpdateReady;
@@ -64,13 +80,24 @@ function AppRoot() {
       <PostHogProvider client={getPostHog()}>
         <PersistGate loading={<LoadingScreen />} persistor={persistor}>
           <AccessibilityBridge />
-          <ErrorBoundaryClass>
-            <AudioUnlockOverlay />
-            <RouterProvider router={router} />
-            {updateReady && (
-              <UpdatePrompt onDismiss={() => setUpdateReady(false)} />
-            )}
-          </ErrorBoundaryClass>
+          {/*
+            Triple-layer error capture (OBS-04):
+              1. window.onerror / unhandledrejection — wired in posthogClient.js
+                 via capture_exceptions config.
+              2. ErrorBoundaryClass — branded full-screen fallback for React
+                 render errors; forwards to posthog.captureException.
+              3. PostHogErrorBoundary — final safety net if an error somehow
+                 escapes ErrorBoundaryClass (defence in depth).
+          */}
+          <PostHogErrorBoundary fallback={<ErrorFallback />}>
+            <ErrorBoundaryClass>
+              <AudioUnlockOverlay />
+              <RouterProvider router={router} />
+              {updateReady && (
+                <UpdatePrompt onDismiss={() => setUpdateReady(false)} />
+              )}
+            </ErrorBoundaryClass>
+          </PostHogErrorBoundary>
         </PersistGate>
       </PostHogProvider>
     </Provider>

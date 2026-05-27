@@ -17,9 +17,12 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { PostHogProvider, PostHogErrorBoundary } from '@posthog/react';
 
-// Mock posthog-js so we can spy on captureException. (posthog-js not yet
-// installed — Plan 02. vi.mock returns a stub regardless.)
+// Mock posthog-js so we can spy on captureException. The same mock instance is
+// also handed to <PostHogProvider client={posthog}> in the PostHogErrorBoundary
+// test below — that boundary reads `client.captureException` off React context,
+// so the wire-up flows through the same spy.
 vi.mock('posthog-js', () => ({
   default: {
     captureException: vi.fn(),
@@ -67,5 +70,25 @@ describe('RouteErrorBoundaryClass (OBS-04, Plan 05)', () => {
     const [errArg] = posthog.captureException.mock.calls[0];
     expect(errArg).toBeInstanceOf(Error);
     expect(errArg.message).toBe('OBS-04 probe');
+  });
+
+  it('OBS-04: PostHogErrorBoundary from @posthog/react also forwards to posthog.captureException (defence-in-depth wrap in main.jsx)', () => {
+    render(
+      <PostHogProvider client={posthog}>
+        <PostHogErrorBoundary fallback={<div data-testid="ph-fallback">ph-fallback</div>}>
+          <Bomb message="OBS-04 PostHogErrorBoundary probe" />
+        </PostHogErrorBoundary>
+      </PostHogProvider>
+    );
+
+    // PostHogErrorBoundary reads client.captureException(error, extraProps) off
+    // its React context. Because we pass the same mocked posthog instance into
+    // <PostHogProvider client={posthog}>, the call lands on the same spy.
+    expect(posthog.captureException).toHaveBeenCalledTimes(1);
+    const [errArg] = posthog.captureException.mock.calls[0];
+    expect(errArg).toBeInstanceOf(Error);
+    expect(errArg.message).toBe('OBS-04 PostHogErrorBoundary probe');
+    // Fallback rendered without crashing the test tree.
+    expect(screen.getByTestId('ph-fallback')).toBeInTheDocument();
   });
 });
