@@ -1,10 +1,9 @@
 /**
- * Phase 102 — Plan 03 RED scaffold
+ * Phase 102 — Plan 03 (OBS-02)
  *
  * Covers OBS-02 (canonical event vocabulary + PII discipline).
  *
- * Asserts the `telemetryMiddleware` (Plan 03 will create
- * `src/store/middleware/telemetryMiddleware.js`):
+ * Asserts the `telemetryMiddleware` at `src/store/middleware/telemetryMiddleware.js`:
  *
  *   - Maps Redux actions to posthog.capture('domain.action', enumProps)
  *     for the 8 canonical learning-loop events:
@@ -16,8 +15,18 @@
  *   - Short-circuits when state.settings.telemetryOptOut === true.
  *   - Catches thrown errors in extractors so telemetry never crashes the app.
  *
- * RED: importing '../telemetryMiddleware.js' throws MODULE_NOT_FOUND until
- * Plan 03 creates the file.
+ * ─────────────────────────────────────────────────────────────────────────
+ * Canonical event -> source mapping (verified against actual slice action types)
+ * ─────────────────────────────────────────────────────────────────────────
+ * quest.started        <- 'quest/startQuest'              (canonical), aliased to 'quests/startQuest' (real slice name: `quests`)
+ * quest.completed      <- 'quest/completeQuest'           (canonical), aliased to 'quests/completeQuest'
+ * fsrs.reviewed        <- 'vocabulary/reviewCard'         (canonical alias — vocabularySlice uses `updateFsrsCard` + `updateStats`; the alias decouples telemetry vocabulary from internal reducer names so the contract is stable across slice refactors)
+ * lesson.completed     <- 'grammar/completeLesson'        (matches `grammarSlice.completeLesson`)
+ * teaching.started     <- 'teaching/startSession'         (canonical alias — no teaching slice exists yet; reserved for the future tutor session feature)
+ * teaching.completed   <- 'teaching/endSession'           (canonical alias — same as above)
+ * dashboard.viewed     <- 'dashboard/viewDashboard'       (canonical alias — no dashboard slice; component-level useEffect dispatch is the future binding point; the action name is reserved in the map so PostHog Insights can be authored ahead of the wire-up)
+ * zone.entered         <- EventBus event EVENTS.ZONE_CHANGE  (NOT a Redux action; payload { zone, x, y }; relayed via initTelemetryEventBusRelay)
+ * ─────────────────────────────────────────────────────────────────────────
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
@@ -173,8 +182,4 @@ describe('telemetryMiddleware (OBS-02)', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  // Hard RED gate — guarantees this suite fails until Plan 03 lands.
-  it('RED gate: Plan 03 has not yet implemented telemetryMiddleware.js — this test fails by design', () => {
-    throw new Error('not implemented — Plan 102-03 (telemetryMiddleware)');
-  });
 });
