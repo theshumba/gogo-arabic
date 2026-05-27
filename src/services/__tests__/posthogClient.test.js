@@ -93,6 +93,24 @@ describe('posthogClient (OBS-01, OBS-03, OBS-04)', () => {
     expect(config.session_recording?.captureCanvas).not.toBe(true);
   });
 
+  it('Plan 04 hardening: init() sets session_recording.captureCanvas === false EXPLICITLY (not just absent)', () => {
+    // Plan 02 originally omitted captureCanvas (relied on SDK default-off).
+    // Plan 04 makes it tamper-resistant by setting it explicitly, so that a future
+    // dev who toggles posthog-js defaults can't accidentally re-enable it.
+    initPostHog();
+    const [, config] = posthog.init.mock.calls[0];
+    expect(config.session_recording).toBeDefined();
+    expect(config.session_recording.captureCanvas).toBe(false);
+  });
+
+  it('Plan 04 hardening: init() does NOT set legacy recordCanvas alias (defensive)', () => {
+    // rrweb's legacy alias for the same setting. Belt+braces — assert neither path
+    // can be flipped truthy.
+    initPostHog();
+    const [, config] = posthog.init.mock.calls[0];
+    expect(config.session_recording?.recordCanvas).toBeFalsy();
+  });
+
   it('init() defaults api_host to https://eu.i.posthog.com when VITE_POSTHOG_HOST is unset (UK user / EU residency)', () => {
     delete import.meta.env.VITE_POSTHOG_HOST;
     initPostHog();
