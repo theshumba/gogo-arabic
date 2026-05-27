@@ -30,13 +30,24 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// Mock posthog-js so we can spy on capture(). posthog-js isn't installed yet
-// (Plan 02) — vi.mock returns a stub regardless of registry resolution.
-vi.mock('posthog-js', () => ({
-  default: {
+// Hoist a STABLE mock object so every import of 'posthog-js' resolves to the
+// SAME `capture` spy, even across vi.resetModules() boundaries. Without this,
+// `vi.importMock('posthog-js')` returns a fresh factory result and the
+// middleware's import resolves to a DIFFERENT instance — the spy in the test
+// would never see the call. The `vi.hoisted` block runs before vi.mock is
+// hoisted, so the factory closes over the stable singleton.
+const mocks = vi.hoisted(() => ({
+  posthog: {
     capture: vi.fn(),
     captureException: vi.fn(),
+    opt_in_capturing: vi.fn(),
+    opt_out_capturing: vi.fn(),
+    init: vi.fn(),
   },
+}));
+
+vi.mock('posthog-js', () => ({
+  default: mocks.posthog,
 }));
 
 // Canonical event names asserted across the 8 learning-loop signals.
@@ -86,9 +97,8 @@ describe('telemetryMiddleware (OBS-02)', () => {
 
   beforeEach(async () => {
     vi.resetModules();
-    posthog = (await vi.importMock('posthog-js')).default;
+    posthog = mocks.posthog;
     posthog.capture.mockClear();
-    // RED: module does not exist until Plan 03 lands.
     ({ telemetryMiddleware } = await import('../telemetryMiddleware.js'));
   });
 
