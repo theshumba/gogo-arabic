@@ -17,6 +17,13 @@ Observed during Plan 05 execution, confirmed pre-existing by stashing Plan 05 ch
 
 Plan 05 leaves vitest at **5748 passing / 11 skipped / 2 failed (5761 total)**. Baseline before Plan 05: 5746 passing (per Plan 04 SUMMARY). Plan 05 adds 2 GREEN tests in `RouteErrorBoundary.test.jsx`.
 
+## Plan 02 — `gsd-sdk query state.advance-plan` schema-mismatch warning (2026-05-27)
+
+Executor for Plan 102-02 reported that `gsd-sdk query state.advance-plan` emitted a schema-mismatch warning when called to advance the plan counter. STATE.md was updated manually for that plan. Same path used for Plan 09 close (Plan 09 executor wrote STATE.md, ROADMAP.md, REQUIREMENTS.md by hand rather than via the SDK state handlers).
+
+**Owner:** GSD SDK maintainer (the user / Claude in a future GSD-infra plan).
+**Impact:** Low — STATE.md, ROADMAP.md, REQUIREMENTS.md remain in sync with disk reality after each plan, just via manual edits rather than SDK helpers. The SDK-state handlers (`state.advance-plan`, `state.update-progress`, `state.record-metric`, `state.add-decision`, `state.record-session`, `roadmap.update-plan-progress`, `requirements.mark-complete`) should be revisited and brought up to the current STATE.md schema (probably `gsd_state_version: 1.0` shape evolved beyond what the SDK validator was written against). Until then, all Phase 102 (and likely Phase 103/104) executors should update planning docs manually.
+
 ## Plan 08 — local Playwright run blocked by environmental port clash (2026-05-27)
 
 Running `npx playwright test e2e/golden-path.spec.js` against `http://localhost:3000` locally returns `MyHijrahJourney — Plan your hijrah with clarity, not confusion` instead of GoGo Arabic. A different local dev server (the user's MyHijrahJourney venture) is bound to port 3000 on this machine.

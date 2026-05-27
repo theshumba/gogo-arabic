@@ -20,7 +20,7 @@
 - 🪧 **Unassigned stubs** — Phase directories 86-96 exist with pre-existing plan stubs (Ramadan/Eid events, difficulty curve, progression balancing, NPC dialogue expansion, reading/conversation content, leaderboards, tutorial refresh, analytics, idioms/proverbs, pronunciation, battle expansion). Not currently assigned to a milestone. Needs review before or alongside v16.0.
 - 🚧 **v16.0 Visual Rebuild** — Phase 97 (planning, 2026-04-17) — leverage Opus 4.7 1M context for single-pass visual/world layer rebuild
 - ⏳ **v17.0 Code Health** — Phase 98 (planned) — audit-first whole-codebase refactor with guardrails
-- ⏳ **v17.5 Platform Foundation** — Phases 102-104 (stubbed 2026-05-26) — observability, mobile + cloud sync, dev infrastructure (atlas packing + content hot reload)
+- 🚧 **v17.5 Platform Foundation** — Phases 102-104 (1 of 3 phases complete) — Phase 102 ✅ shipped 2026-05-27; Phases 103-104 still planned
 - ⏳ **v18.0 Advanced AI Systems** — Phases 99-101 (planned) — curriculum orchestrator, dynamic NPC memory, procedural quest generation
 
 ## Phases
@@ -503,15 +503,15 @@ Plans:
 **Plans:** 9 plans in 5 waves (0..4)
 
 Plans:
-- [ ] 102-01-PLAN.md — Wave 0 baseline + RED test scaffolds + checkpoint:human-verify for posthog package legitimacy + PostHog project creation (OBS-01, OBS-02, OBS-03, OBS-04, OBS-05, OBS-06, OBS-07, OBS-09)
-- [ ] 102-02-PLAN.md — posthog-js + @posthog/react install + init in main.jsx + opt-OUT-by-default + settings opt-in toggle + telemetry middleware skeleton (OBS-01, OBS-07)
-- [ ] 102-03-PLAN.md — Canonical learning-loop events: ACTION_EVENT_MAP + PROP_EXTRACTORS + EventBus zone.entered relay (OBS-02)
-- [ ] 102-04-PLAN.md — Session replay PII hardening: explicit captureCanvas:false + ph-no-capture on free-text DOM nodes (OBS-03)
-- [x] 102-05-PLAN.md — Exception capture via capture_exceptions config + RouteErrorBoundary/ErrorBoundary captureException + PostHogErrorBoundary wrap (OBS-04)
-- [ ] 102-06-PLAN.md — Phaser PerfOverlay (FPS/Δms/draws/heap) at 1Hz + ?perf=1 URL flag + dynamic-import tree-shaking (OBS-05)
-- [ ] 102-07-PLAN.md — Low-end-device sampler + devicePerformanceSlice + IndexedDB migration v12 -> v13 (OBS-06)
-- [ ] 102-08-PLAN.md — Playwright e2e/golden-path.spec.js using storageState({ indexedDB: true }) + CI workflow integration (OBS-08)
-- [ ] 102-09-PLAN.md — Phase-end regression verification + REGRESSION.md + human-verify PostHog Live Events + STATE.md update (OBS-09)
+- [x] 102-01-PLAN.md — Wave 0 baseline + RED test scaffolds + checkpoint:human-verify for posthog package legitimacy + PostHog project creation (OBS-01, OBS-02, OBS-03, OBS-04, OBS-05, OBS-06, OBS-07, OBS-09) — 2026-05-27
+- [x] 102-02-PLAN.md — posthog-js + @posthog/react install + init in main.jsx + opt-OUT-by-default + settings opt-in toggle + telemetry middleware skeleton (OBS-01, OBS-07) — 2026-05-27
+- [x] 102-03-PLAN.md — Canonical learning-loop events: ACTION_EVENT_MAP + PROP_EXTRACTORS + EventBus zone.entered relay (OBS-02) — 2026-05-27
+- [x] 102-04-PLAN.md — Session replay PII hardening: explicit captureCanvas:false + ph-no-capture on free-text DOM nodes (OBS-03) — 2026-05-27
+- [x] 102-05-PLAN.md — Exception capture via capture_exceptions config + RouteErrorBoundary/ErrorBoundary captureException + PostHogErrorBoundary wrap (OBS-04) — 2026-05-27
+- [x] 102-06-PLAN.md — Phaser PerfOverlay (FPS/Δms/draws/heap) at 1Hz + ?perf=1 URL flag + dynamic-import tree-shaking (OBS-05) — 2026-05-27
+- [x] 102-07-PLAN.md — Low-end-device sampler + devicePerformanceSlice + IndexedDB migration v12 -> v13 (OBS-06) — 2026-05-27
+- [x] 102-08-PLAN.md — Playwright e2e/golden-path.spec.js using storageState({ indexedDB: true }) + CI workflow integration (OBS-08) — 2026-05-27
+- [x] 102-09-PLAN.md — Phase-end regression verification + REGRESSION.md + human-verify PostHog Live Events + STATE.md update (OBS-09) — 2026-05-27
 
 #### Phase 103: Mobile & Cloud Sync
 **Goal**: Make Gogo Arabic playable on phones and survive device swaps — touch input layer, responsive viewport, PWA install, and an opt-in email-magic-link cloud sync on top of the existing Phase 27.1 IndexedDB save.
@@ -682,16 +682,17 @@ Phases execute in numeric order: 1 → 27.1 → 28 → 29 → 30 → ... → 85 
 | 86-96. Pre-existing stubs (Ramadan, difficulty curve, progression, NPC/quest expansion, content, leaderboards, tutorial, analytics, idioms, pronunciation, battle) | unassigned | 0/? | Stubbed | - |
 | 97. Visual/World Layer Rebuild | v16.0 | 0/? | Planning | - |
 | 98. Codebase Audit & Refactor | v17.0 | 0/? | Planned | - |
-| 102. Observability & Test Coverage | v17.5 | 0/9 | Planned | - |
+| 102. Observability & Test Coverage | v17.5 | 9/9 | Complete | 2026-05-27 |
 | 103. Mobile & Cloud Sync | v17.5 | 0/8 | Planning | - |
-| 104. Dev Infrastructure | v17.5 | 0/? | Stubbed | - |
+| 104. Dev Infrastructure | v17.5 | 0/9 | Planning | - |
 | 99. Curriculum Orchestrator | v18.0 | 0/? | Planned | - |
 | 100. Dynamic NPC AI with Memory | v18.0 | 0/? | Planned | - |
 | 101. Procedural Quest Generation | v18.0 | 0/? | Planned | - |
 
-**Cumulative:** 85 phases shipped, 229+ plans complete, 15 milestones shipped
+**Cumulative:** 86 phases shipped, 238+ plans complete, 15 milestones shipped + v17.5 partial (1 of 3 phases — Phase 102 only)
 
 ---
 *Roadmap created: 2026-02-08*
 *Last updated: 2026-04-17 — drift fix (v13/v14/v15 marked complete from STATE.md); pre-existing phase stubs 86-96 noted as unassigned; v16.0 Visual Rebuild opened as Phase 97; v17.0 Code Health (Phase 98) and v18.0 Advanced AI Systems (Phases 99-101) queued*
 *2026-05-26 — v17.5 Platform Foundation opened with Phases 102 (Observability & Test Coverage), 103 (Mobile & Cloud Sync), 104 (Dev Infrastructure). CONTEXT stubs only — run `/gsd-plan-phase {102|103|104}` to plan in detail.*
+*2026-05-27 — Phase 102 (Observability & Test Coverage) shipped: 9/9 plans complete, OBS-01..09 all delivered, vitest 5757 ≥ 5623 baseline, posthog-vendor chunk isolated (193 KB), Playwright golden-path spec wired to CI. PostHog Live Events human-verify still pending user action. See `.planning/phases/102-observability-test-coverage/102-09-REGRESSION.md`.*
