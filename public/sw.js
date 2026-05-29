@@ -4,13 +4,13 @@
  *
  * Strategies:
  * - Cache-first: static assets (sprites, fonts, audio, images)
- * - Network-first: API calls with IndexedDB fallback
+ * - Network-only: API calls are NEVER cached. /api/ responses are auth-bound, so
+ *   caching them leaks one user's data to the next on a shared device (Phase 103-04).
  * - Stale-while-revalidate: JS/CSS bundles
  */
 
 const CACHE_VERSION = 'gogo-arabic-v1';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
-const API_CACHE = `${CACHE_VERSION}-api`;
 
 // Static asset extensions for cache-first strategy
 const STATIC_EXTENSIONS = [
@@ -44,7 +44,10 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key.startsWith('gogo-arabic-') && key !== STATIC_CACHE && key !== API_CACHE)
+          // Delete every gogo cache except the current static cache. This also
+          // purges any legacy `${CACHE_VERSION}-api` cache from older SW versions,
+          // clearing data that may have leaked across users (Phase 103-04).
+          .filter((key) => key.startsWith('gogo-arabic-') && key !== STATIC_CACHE)
           .map((key) => caches.delete(key))
       )
     ).then(() => self.clients.claim())
@@ -59,9 +62,10 @@ self.addEventListener('fetch', (event) => {
   // Only handle same-origin requests
   if (url.origin !== self.location.origin) return;
 
-  // API calls: network-first with cache fallback
+  // API calls: NetworkOnly — never read or write a cache. /api/ responses are
+  // auth-bound; caching them would leak data across users on shared devices.
   if (url.pathname.startsWith(API_PREFIX)) {
-    event.respondWith(networkFirst(request, API_CACHE));
+    event.respondWith(networkOnly(request));
     return;
   }
 
@@ -108,19 +112,13 @@ async function cacheFirst(request, cacheName) {
 }
 
 /**
- * Network-first: try network, fall back to cache
+ * Network-only: go to the network and never touch any cache. On failure return a
+ * fresh 503 — we must NOT fall back to cached, auth-bound /api/ data (Phase 103-04).
  */
-async function networkFirst(request, cacheName) {
+async function networkOnly(request) {
   try {
-    const response = await fetch(request);
-    if (response.ok) {
-      const cache = await caches.open(cacheName);
-      cache.put(request, response.clone());
-    }
-    return response;
+    return await fetch(request);
   } catch {
-    const cached = await caches.match(request);
-    if (cached) return cached;
     return new Response(JSON.stringify({ error: 'offline' }), {
       status: 503,
       headers: { 'Content-Type': 'application/json' },
