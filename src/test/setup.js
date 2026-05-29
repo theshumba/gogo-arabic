@@ -60,6 +60,12 @@ vi.mock('phaser', () => ({
     },
     Scene: class Scene {},
     AUTO: 'AUTO',
+    Scale: {
+      FIT: 'FIT',
+      RESIZE: 'RESIZE',
+      NONE: 'NONE',
+      CENTER_BOTH: 'CENTER_BOTH',
+    },
   },
 }));
 

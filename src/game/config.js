@@ -23,7 +23,10 @@ export const gameConfig = {
   },
   scene: [BootScene, WorldScene, InteriorScene, BattleScene],
   scale: {
-    mode: Phaser.Scale.RESIZE,
+    // FIT (not RESIZE) preserves the 1280×720 aspect ratio and letterboxes on
+    // mobile, so pixel-art tiles scale uniformly and stay crisp (with pixelArt +
+    // roundPixels) instead of stretching to arbitrary viewport ratios (MOB-03).
+    mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     parent: 'phaser-container',
     // Mobile-friendly scaling
