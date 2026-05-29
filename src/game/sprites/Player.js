@@ -257,10 +257,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.speedBoostActive = false;
     }
 
-    const left = this.cursors.left.isDown || this.wasd.left.isDown;
-    const right = this.cursors.right.isDown || this.wasd.right.isDown;
-    const up = this.cursors.up.isDown || this.wasd.up.isDown;
-    const down = this.cursors.down.isDown || this.wasd.down.isDown;
+    // Touch joystick (set by TouchInputAdapter on touch devices) feeds the same
+    // movement reads as keyboard; null on desktop so this is a no-op there.
+    const touch = this.scene.touchCursors;
+    const left = this.cursors.left.isDown || this.wasd.left.isDown || !!(touch && touch.left.isDown);
+    const right = this.cursors.right.isDown || this.wasd.right.isDown || !!(touch && touch.right.isDown);
+    const up = this.cursors.up.isDown || this.wasd.up.isDown || !!(touch && touch.up.isDown);
+    const down = this.cursors.down.isDown || this.wasd.down.isDown || !!(touch && touch.down.isDown);
 
     // Detect double-tap for speed boost (key pressed -> released -> pressed again)
     const now = Date.now();

@@ -20,6 +20,7 @@ import QuestTracker from './QuestTracker.jsx';
 import NextObjectiveIndicator from './NextObjectiveIndicator.jsx';
 import ClockHUD from './ClockHUD.jsx';
 import OfflineIndicator from './OfflineIndicator.jsx';
+import TouchControls from '../Mobile/TouchControls.jsx';
 
 function HUD({ onMenu }) {
   const dispatch = useDispatch();
@@ -343,6 +344,9 @@ function HUD({ onMenu }) {
 
       {/* Next objective indicator - below quest tracker */}
       <NextObjectiveIndicator />
+
+      {/* Touch controls — self-hidden on desktop via @media (pointer: coarse) */}
+      <TouchControls />
 
       {/* Achievement Panel Overlay */}
       {achievementPanelOpen && (

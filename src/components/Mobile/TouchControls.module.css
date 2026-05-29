@@ -1,0 +1,41 @@
+/* Touch controls overlay — Phase 103-03.
+   Hidden by default (desktop). Only shown on coarse-pointer (touch) devices so
+   the keyboard/mouse experience is completely untouched (MOB-05). */
+.touchControls {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .touchControls {
+    display: block;
+    position: fixed;
+    /* Respect the iPhone safe area (paired with viewport-fit=cover, 103-02). */
+    right: calc(env(safe-area-inset-right, 0px) + 28px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+    z-index: 60;
+    pointer-events: none; /* container is transparent; only the button is tappable */
+  }
+}
+
+.interactButton {
+  pointer-events: auto;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 2px solid rgba(245, 240, 230, 0.7);
+  background: rgba(17, 17, 34, 0.45);
+  color: #f5f0e6;
+  font-size: 2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.interactButton:active {
+  background: rgba(17, 17, 34, 0.7);
+  transform: scale(0.94);
+}

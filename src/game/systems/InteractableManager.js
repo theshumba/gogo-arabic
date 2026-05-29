@@ -205,6 +205,44 @@ export class InteractableManager {
   }
 
   /**
+   * Find the nearest interactable within `radius` world-pixels of (x, y).
+   * Used by tap-to-interact (Phase 103-03). Returns null if none in range.
+   */
+  findNearest(x, y, radius) {
+    let nearest = null;
+    let nearestDist = radius;
+    this.interactables.forEach((obj) => {
+      const dist = Phaser.Math.Distance.Between(x, y, obj.worldX, obj.worldY);
+      if (dist <= nearestDist) {
+        nearest = obj;
+        nearestDist = dist;
+      }
+    });
+    return nearest;
+  }
+
+  /**
+   * Interact with the nearest object within the keyboard interact range of the
+   * player — the touch action-button equivalent of pressing the interact key
+   * (Phase 103-03). Uses INTERACT_RANGE so it matches keyboard reach.
+   */
+  interactNearest(playerSprite, interactCooldown, setInteractCooldown) {
+    const obj = this.findNearest(playerSprite.x, playerSprite.y, INTERACT_RANGE);
+    this.activate(obj, interactCooldown, setInteractCooldown);
+  }
+
+  /**
+   * Activate an interactable via the same code path as the keyboard interact key,
+   * honouring the interact cooldown. Used by tap-to-interact (Phase 103-03).
+   */
+  activate(obj, interactCooldown, setInteractCooldown) {
+    if (!obj || interactCooldown) return;
+    setInteractCooldown(true);
+    this.scene.time.delayedCall(500, () => setInteractCooldown(false));
+    this.handleInteractable(obj);
+  }
+
+  /**
    * Handle interaction with an object (sign, chest, bookshelf, door, or world object)
    */
   handleInteractable(obj) {

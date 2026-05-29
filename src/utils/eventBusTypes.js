@@ -106,6 +106,8 @@ export const EVENTS = Object.freeze({
   // ────────────────────────────────────────────────
   // OBJECTS — interactable world objects
   // ────────────────────────────────────────────────
+  /** React → Phaser: touch interact button pressed (mobile); interact with nearest object */
+  TOUCH_INTERACT: 'react:touch:interact',
   /** Phaser → React: player interacted with a sign object */
   SIGN_SHOW: 'phaser:object:sign-show',
   /** Phaser → React: player interacted with a bookshelf */

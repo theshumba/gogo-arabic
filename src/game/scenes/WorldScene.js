@@ -6,6 +6,8 @@ import ZoneTransition from '../systems/ZoneTransition.js';
 import { PlayerController } from '../systems/PlayerController.js';
 import { NPCManager } from '../systems/NPCManager.js';
 import { InteractableManager } from '../systems/InteractableManager.js';
+import { TapToInteract } from '../systems/TapToInteract.js';
+import { createTouchInput } from '../systems/TouchInputAdapter.js';
 import { MapLoader } from '../systems/MapLoader.js';
 import { TiledMapLoader } from '../systems/TiledMapLoader.js';
 import ScreenShake from '../systems/ScreenShake.js';
@@ -146,6 +148,10 @@ export class WorldScene extends Phaser.Scene {
     this.input.keyboard.on('keydown-M', () => {
       if (this.mountSystem && !this.frozen) this.mountSystem.mount('camel');
     });
+
+    // Touch controls — mobile only (pointer: coarse). No-op on desktop, so the
+    // keyboard/mouse path is untouched (MOB-05).
+    this._initTouchControls();
 
     // Restore player position when resuming from InteriorScene
     this.events.off('resume');
@@ -291,6 +297,9 @@ export class WorldScene extends Phaser.Scene {
     this.usingTiledMap = false;
     if (this.floatingLabelManager) { this.floatingLabelManager.destroy(); this.floatingLabelManager = null; }
     if (this.npcManager) this.npcManager.destroy();
+    if (this._handleTouchInteract) { EventBus.off(EVENTS.TOUCH_INTERACT, this._handleTouchInteract); this._handleTouchInteract = null; }
+    if (this.tapToInteract) { this.tapToInteract.destroy(); this.tapToInteract = null; }
+    if (this.touchInputAdapter) { this.touchInputAdapter.destroy(); this.touchInputAdapter = null; }
     if (this.interactableManager) this.interactableManager.destroy();
     if (this.playerController) this.playerController.destroy();
   }
@@ -370,6 +379,37 @@ export class WorldScene extends Phaser.Scene {
   }
 
   setInteractCooldown(value) { this.interactCooldown = value; }
+
+  /**
+   * Initialise touch controls on coarse-pointer (touch) devices only: a rex
+   * virtual joystick feeding scene.touchCursors, plus tap-to-interact. Desktop
+   * (pointer: fine) returns early so the keyboard/mouse path is unchanged.
+   */
+  _initTouchControls() {
+    const coarse = typeof window !== 'undefined'
+      && typeof window.matchMedia === 'function'
+      && window.matchMedia('(pointer: coarse)').matches;
+    if (!coarse) return;
+
+    createTouchInput(this).then((adapter) => { this.touchInputAdapter = adapter; });
+    this.tapToInteract = new TapToInteract(
+      this,
+      this.interactableManager,
+      () => this.interactCooldown,
+      this.setInteractCooldown.bind(this),
+    );
+
+    // Action button (React HUD) → interact with nearest object, like the keyboard key.
+    this._handleTouchInteract = () => {
+      const player = this.playerController && this.playerController.getPlayer();
+      if (player && !this.frozen) {
+        this.interactableManager.interactNearest(
+          player, this.interactCooldown, this.setInteractCooldown.bind(this),
+        );
+      }
+    };
+    EventBus.on(EVENTS.TOUCH_INTERACT, this._handleTouchInteract);
+  }
 
   handleVfxShake({ intensity }) { if (this.screenShake) this.screenShake.shake(intensity); }
 
