@@ -14,6 +14,22 @@ let swRegistration = null;
 export function registerSW(onUpdate) {
   if (!('serviceWorker' in navigator)) return;
 
+  // Never run the service worker in development. Its stale-while-revalidate JS
+  // cache serves hashed Vite-optimizer chunks across dev-server restarts, which
+  // mixes chunks from different optimizer generations and breaks React with
+  // "Cannot read properties of null (reading 'useContext'/'useCallback')".
+  // Proactively unregister any SW left over from a previous session and drop its
+  // caches so existing dev environments self-heal on the next load.
+  if (import.meta.env.DEV) {
+    navigator.serviceWorker.getRegistrations()
+      .then((regs) => regs.forEach((r) => r.unregister()))
+      .catch(() => {});
+    if (window.caches) {
+      caches.keys().then((keys) => keys.forEach((k) => caches.delete(k))).catch(() => {});
+    }
+    return;
+  }
+
   window.addEventListener('load', async () => {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js');
