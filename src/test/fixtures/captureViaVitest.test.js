@@ -8,9 +8,21 @@
  * Usage:  CAPTURE_WORLD_SNAPSHOTS=1 npx vitest run src/test/fixtures/captureViaVitest.test.js
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
+
+// MapLoader imports ReplaceColorPipeline (extends a Phaser WebGL global at
+// module-eval). Mock it out — same as WorldSnapshot.test.js — so this capturer
+// runs headless. The snapshot records tile keys/objects, not shader output.
+vi.mock('../../game/systems/ReplaceColorPipeline.js', () => ({
+  default: class ReplaceColorPipeline {
+    constructor(game) {
+      this.game = game;
+    }
+  },
+}));
+
 import '../../game/systems/__tests__/mocks/sceneMock.js';
 import { createMockScene } from '../../game/systems/__tests__/mocks/sceneMock.js';
 import { MapLoader } from '../../game/systems/MapLoader.js';

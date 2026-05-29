@@ -959,6 +959,8 @@ export class MapLoader {
           0.588, // G
           0.235  // B
         );
+        // Desert keeps the legacy whiten behaviour (sun-bleached grass).
+        pipeline.set3f('replaceColor', 1.0, 1.0, 1.0);
       }
       else{
         pipeline.set3f(
@@ -967,6 +969,9 @@ export class MapLoader {
           0.537, // G
           0.282  // B
         );
+        // Snow biome: re-tint matched grass to the ice tint (snow.iceGrassTint
+        // 0xaaddff) instead of plain white, so the same tile reads as snow.
+        pipeline.set3f('replaceColor', 0.667, 0.867, 1.0);
       }
     }
 
