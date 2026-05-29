@@ -1,0 +1,17 @@
+{
+  "capturedAt": "2026-05-29",
+  "commit": "0e6189f",
+  "srcLoc": 243468,
+  "serverLoc": 6952,
+  "dataLoc": 97465,
+  "srcFiles": 932,
+  "testFiles": 287,
+  "testCount": 5786,
+  "skippedTests": 11,
+  "bundleBytesJs": 8747701,
+  "prodDeps": 18,
+  "devDeps": 19,
+  "eslintDisables": 52,
+  "todoMarkers": 3,
+  "orphanCandidates": 101
+}
