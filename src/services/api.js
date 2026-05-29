@@ -57,11 +57,8 @@ export const getCards = () => request('/review/cards');
 export const syncQuests = (quests) =>
   request('/quest/sync', { method: 'POST', body: JSON.stringify({ quests }) });
 
-// Game save with sync versioning
-export const saveGame = (state) =>
-  request('/game/save', { method: 'POST', body: JSON.stringify(state) });
-
-export const loadGame = () => request('/game/load');
-
-export const resolveConflict = (data) =>
-  request('/game/resolve', { method: 'POST', body: JSON.stringify(data) });
+// NOTE (Phase 103-01 audit): the game save/load/resolveConflict client helpers
+// were removed as dead code (their only consumer, services/sync.js, was deleted).
+// They will be replaced by the /api/v1/cloudsave/* client in Plan 06. The
+// remaining exports above (register/login/getProfile/syncCards/syncQuests) are
+// now orphaned too — Plan 05 (OTP auth) should reuse or remove them.

@@ -1,7 +1,6 @@
 import { useState, memo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectPlayerStats } from '../../store/slices/playerSlice.js';
-import SyncIndicator from './SyncIndicator.jsx';
 import styles from './StatsPanel.module.css';
 
 function StatsPanel() {
@@ -38,7 +37,6 @@ function StatsPanel() {
           <span className={styles.statLabel}>Streak:</span>
           <span className={styles.statValue}>{streak} days</span>
         </div>
-        <SyncIndicator />
       </div>
     </div>
   );
