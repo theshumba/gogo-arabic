@@ -324,3 +324,24 @@
     height: 12px;
   }
 }
+
+/* Loading tip (Phase: orphan wire-in 2026-05-29) */
+.tip {
+  margin-top: 1.5rem;
+  max-width: 32rem;
+  padding: 0 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  opacity: 0.85;
+}
+.tipText {
+  font-size: 0.95rem;
+  color: #e8e0d0;
+  line-height: 1.4;
+}
+.tipArabic {
+  font-size: 1.05rem;
+  color: #f0c860;
+}

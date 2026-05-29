@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useFormatArabic } from '../../hooks/useFormatArabic.js';
 import vocabulary from '../../data/vocabularyAll.js';
+import RootFamilyCard from '../Roots/RootFamilyCard.jsx';
 import styles from './DialogueOverlay.module.css';
 
 /**
@@ -31,6 +32,9 @@ export default function TeacherWordCard({ wordId }) {
           </div>
         )}
       </div>
+      {/* Root-family enrichment — self-suppresses (renders null) when the word
+          has no resolvable trilateral root family. */}
+      <RootFamilyCard wordId={wordId} arabic={word.arabic} rootLetters={word.rootLetters ?? null} />
     </div>
   );
 }

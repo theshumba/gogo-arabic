@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { ACHIEVEMENTS } from '../../data/achievements.js';
 import { selectUnlockedAchievements } from '../../store/slices/achievementSlice.js';
 import { selectFsrsCards } from '../../store/slices/vocabularySlice.js';
 import { useGameNavigation } from '../../hooks/useGameNavigation.js';
+import StatsShareCard from '../Social/StatsShareCard.jsx';
 import styles from './PlayerProfile.module.css';
 
 /**
@@ -21,6 +22,7 @@ import styles from './PlayerProfile.module.css';
  */
 function PlayerProfile() {
   const { goBack } = useGameNavigation();
+  const [shareOpen, setShareOpen] = useState(false);
 
   // Redux state
   const player = useSelector((state) => state.player);
@@ -141,12 +143,22 @@ function PlayerProfile() {
           </div>
           <button
             className={styles.backButton}
+            onClick={() => setShareOpen(true)}
+            aria-label="Share stats"
+            style={{ right: '3.5rem' }}
+          >
+            ↗
+          </button>
+          <button
+            className={styles.backButton}
             onClick={goBack}
             aria-label="Go back"
           >
             ✕
           </button>
         </motion.header>
+
+        {shareOpen && <StatsShareCard onClose={() => setShareOpen(false)} />}
 
         {/* Stats Grid */}
         <motion.section className={styles.statsSection} variants={itemVariants}>

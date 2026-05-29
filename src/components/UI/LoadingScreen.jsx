@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getRandomTip } from '../../game/systems/LoadingTips.js';
 import styles from './LoadingScreen.module.css';
 
 /**
@@ -8,6 +9,8 @@ import styles from './LoadingScreen.module.css';
 export default function LoadingScreen() {
   const [dots, setDots] = useState(1);
   const [progress, setProgress] = useState(0);
+  // Pick one tip per mount (lazy init so it stays stable across re-renders).
+  const [tip] = useState(() => getRandomTip());
 
   useEffect(() => {
     // Animate dots
@@ -65,6 +68,16 @@ export default function LoadingScreen() {
       <div className={styles.progressBar}>
         <div className={styles.progressFill} style={{ width: `${progress}%` }} />
       </div>
+
+      {/* Loading tip (LoadingTips bank) */}
+      {tip && (
+        <div className={styles.tip}>
+          <span className={styles.tipText}>{tip.text}</span>
+          {tip.textArabic && (
+            <span className={styles.tipArabic} dir="rtl">{tip.textArabic}</span>
+          )}
+        </div>
+      )}
     </div>
   );
 }

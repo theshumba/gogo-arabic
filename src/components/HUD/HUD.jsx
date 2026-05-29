@@ -16,6 +16,8 @@ import questsData from '../../data/quests.json';
 const AchievementPanel = lazy(() => import('../Achievements/AchievementPanel.jsx'));
 const CefrProgressReport = lazy(() => import('../CEFR/CefrProgressReport.jsx'));
 const DailyGoalsPanel = lazy(() => import('../Goals/DailyGoalsPanel.jsx'));
+const CompanionUI = lazy(() => import('../Companions/CompanionUI.jsx'));
+import CompanionCommentBubble from '../Companions/CompanionCommentBubble.jsx';
 import QuestTracker from './QuestTracker.jsx';
 import NextObjectiveIndicator from './NextObjectiveIndicator.jsx';
 import ClockHUD from './ClockHUD.jsx';
@@ -27,6 +29,7 @@ function HUD({ onMenu }) {
   const [achievementPanelOpen, setAchievementPanelOpen] = useState(false);
   const [dailyGoalsPanelOpen, setDailyGoalsPanelOpen] = useState(false);
   const [cefrReportOpen, setCefrReportOpen] = useState(false);
+  const [companionsOpen, setCompanionsOpen] = useState(false);
   const [stamina, setStamina] = useState(100);
   const [maxStamina, setMaxStamina] = useState(100);
   const [showStamina, setShowStamina] = useState(false);
@@ -129,6 +132,16 @@ function HUD({ onMenu }) {
 
   const closeCefrReport = useCallback(() => {
     setCefrReportOpen(false);
+    EventBus.emit(EVENTS.PLAYER_UNFREEZE);
+  }, []);
+
+  const openCompanions = useCallback(() => {
+    setCompanionsOpen(true);
+    EventBus.emit(EVENTS.PLAYER_FREEZE);
+  }, []);
+
+  const closeCompanions = useCallback(() => {
+    setCompanionsOpen(false);
     EventBus.emit(EVENTS.PLAYER_UNFREEZE);
   }, []);
 
@@ -298,6 +311,16 @@ function HUD({ onMenu }) {
             </motion.button>
           )}
 
+          {/* Companions button */}
+          <motion.button
+            className={styles.btn}
+            onClick={openCompanions}
+            aria-label="Companions roster"
+            {...buttonProps}
+          >
+            <span role="img" aria-label="companions">🐾</span>
+          </motion.button>
+
           {/* Achievements button */}
           <motion.button
             className={styles.btn}
@@ -348,6 +371,11 @@ function HUD({ onMenu }) {
       {/* Touch controls — self-hidden on desktop via @media (pointer: coarse) */}
       <TouchControls />
 
+      {/* Companion contextual comments — self-managing floating bubble. The
+          producer (CompanionContext via CompanionManager) already emits these
+          events in-world; this is the missing listener. */}
+      <CompanionCommentBubble />
+
       {/* Achievement Panel Overlay */}
       {achievementPanelOpen && (
         <Suspense fallback={null}>
@@ -366,6 +394,13 @@ function HUD({ onMenu }) {
       {cefrReportOpen && (
         <Suspense fallback={null}>
           <CefrProgressReport onClose={closeCefrReport} />
+        </Suspense>
+      )}
+
+      {/* Companions roster overlay */}
+      {companionsOpen && (
+        <Suspense fallback={null}>
+          <CompanionUI onClose={closeCompanions} />
         </Suspense>
       )}
     </>
