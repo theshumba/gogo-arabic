@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { createBrowserRouter, Navigate, useSearchParams } from 'react-router-dom';
 import { RouteErrorBoundary } from './components/ErrorBoundary/RouteErrorBoundary.jsx';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx';
@@ -35,6 +35,12 @@ const LearningPath = lazy(() => import('./components/LearningPath/LearningPath.j
 // Mini-games lazy imports
 const MiniGamesHub = lazy(() => import('./components/MiniGames/MiniGamesHub.jsx'));
 const WordSearch = lazy(() => import('./components/MiniGames/WordSearch.jsx'));
+// Phase 85 arcade hub + its 4 games (were complete but never rendered)
+const MiniGameHub = lazy(() => import('./components/MiniGames/MiniGameHub.jsx'));
+const CrosswordGame = lazy(() => import('./components/MiniGames/CrosswordGame.jsx'));
+const NumberChallengeGame = lazy(() => import('./components/MiniGames/NumberChallengeGame.jsx'));
+const WordSearchGame = lazy(() => import('./components/MiniGames/WordSearchGame.jsx'));
+const MemoryMatchGame = lazy(() => import('./components/MiniGames/MemoryMatchGame.jsx'));
 const ReadingExercise = lazy(() => import('./components/Reading/ReadingExercise.jsx'));
 const RootExplorer = lazy(() => import('./components/Roots/RootExplorer.jsx'));
 
@@ -235,6 +241,35 @@ function MiniGamesHubRoute() {
   );
 }
 
+// Phase 85 arcade: the hub picks a game; the chosen game mounts with onBack
+// returning to the hub. Closing the hub returns to the previous screen.
+const ARCADE_GAMES = {
+  crossword: CrosswordGame,
+  numberChallenge: NumberChallengeGame,
+  wordSearchNew: WordSearchGame,
+  memoryMatch: MemoryMatchGame,
+};
+
+function MiniGameArcadeRoute() {
+  const { goBack } = useGameNavigation();
+  const [selectedGame, setSelectedGame] = useState(null);
+  const SelectedGame = selectedGame ? ARCADE_GAMES[selectedGame] : null;
+
+  return (
+    <PageTransition>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingScreen />}>
+          {SelectedGame ? (
+            <SelectedGame onBack={() => setSelectedGame(null)} />
+          ) : (
+            <MiniGameHub onSelectGame={setSelectedGame} onBack={goBack} />
+          )}
+        </Suspense>
+      </ErrorBoundary>
+    </PageTransition>
+  );
+}
+
 function WordSearchRoute() {
   const { goBack } = useGameNavigation();
 
@@ -424,6 +459,11 @@ export const router = createBrowserRouter([
   {
     path: '/mini-games',
     element: <MiniGamesHubRoute />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: '/mini-games/arcade',
+    element: <MiniGameArcadeRoute />,
     errorElement: <RouteErrorBoundary />,
   },
   {

@@ -32,6 +32,15 @@ export default function MiniGamesHub() {
       icon: '📖',
     },
     {
+      id: 'arcade',
+      title: 'Arcade',
+      titleArabic: 'الألعاب',
+      description: 'Crossword, Number Challenge, Word Search and Memory Match — four quick Arabic puzzle games.',
+      path: '/mini-games/arcade',
+      difficulty: 'All Levels',
+      icon: '🎮',
+    },
+    {
       id: 'roots',
       title: 'Root Explorer',
       titleArabic: 'مستكشف الجذور',
