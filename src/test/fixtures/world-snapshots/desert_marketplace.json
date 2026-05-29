@@ -1202,7 +1202,19 @@
     {
       "x": 1248,
       "y": 288,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 288,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1312,
+      "y": 288,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -1214,7 +1226,19 @@
     {
       "x": 1376,
       "y": 288,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1376,
+      "y": 288,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 1440,
+      "y": 288,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -1226,13 +1250,31 @@
     {
       "x": 1504,
       "y": 288,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1504,
+      "y": 288,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 288,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1568,
+      "y": 288,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 288,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -1472,37 +1514,49 @@
     {
       "x": 1248,
       "y": 352,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 352,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 352,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 352,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 352,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 352,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 352,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 352,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -1742,37 +1796,49 @@
     {
       "x": 1248,
       "y": 416,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 416,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 416,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 416,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 416,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 416,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 416,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 416,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -2012,37 +2078,49 @@
     {
       "x": 1248,
       "y": 480,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 480,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 480,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 480,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 480,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 480,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 480,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 480,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -2282,37 +2360,49 @@
     {
       "x": 1248,
       "y": 544,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 544,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 544,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 544,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 544,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 544,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 544,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 544,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -2552,37 +2642,49 @@
     {
       "x": 1248,
       "y": 608,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 608,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 608,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 608,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 608,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 608,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 608,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 608,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -2822,37 +2924,49 @@
     {
       "x": 1248,
       "y": 672,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 672,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 672,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 672,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 672,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 672,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 672,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 672,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3092,37 +3206,49 @@
     {
       "x": 1248,
       "y": 736,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 736,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 736,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 736,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 736,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 736,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 736,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 736,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3350,7 +3476,19 @@
     {
       "x": 1120,
       "y": 800,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1120,
+      "y": 800,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1184,
+      "y": 800,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3362,37 +3500,49 @@
     {
       "x": 1248,
       "y": 800,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 800,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 800,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 800,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 800,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 800,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 800,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 800,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3404,7 +3554,19 @@
     {
       "x": 1696,
       "y": 800,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1696,
+      "y": 800,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 1760,
+      "y": 800,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3620,61 +3782,73 @@
     {
       "x": 1120,
       "y": 864,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1120,
+      "y": 864,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 1184,
       "y": 864,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1248,
       "y": 864,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 864,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 864,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 864,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 864,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 864,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1632,
       "y": 864,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1696,
       "y": 864,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1760,
+      "y": 864,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3812,7 +3986,19 @@
     {
       "x": 288,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 288,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 352,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3824,7 +4010,19 @@
     {
       "x": 416,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 416,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 480,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3836,7 +4034,19 @@
     {
       "x": 544,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 544,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 608,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3848,7 +4058,19 @@
     {
       "x": 672,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 672,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 736,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3860,7 +4082,19 @@
     {
       "x": 800,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 800,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 864,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3872,7 +4106,19 @@
     {
       "x": 928,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 928,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 992,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3884,7 +4130,19 @@
     {
       "x": 1056,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1056,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1120,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3896,55 +4154,61 @@
     {
       "x": 1184,
       "y": 928,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1248,
       "y": 928,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 928,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 928,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 928,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 928,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 928,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1632,
       "y": 928,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1696,
       "y": 928,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1760,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3956,7 +4220,19 @@
     {
       "x": 1824,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1824,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 1888,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3968,7 +4244,19 @@
     {
       "x": 1952,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1952,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 2016,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3980,7 +4268,19 @@
     {
       "x": 2080,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2080,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2144,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -3992,7 +4292,19 @@
     {
       "x": 2208,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2208,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2272,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -4004,7 +4316,19 @@
     {
       "x": 2336,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2336,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 2400,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -4016,13 +4340,31 @@
     {
       "x": 2464,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2464,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
       "frame": 0
     },
     {
       "x": 2528,
       "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2528,
+      "y": 928,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2592,
+      "y": 928,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -4082,217 +4424,229 @@
     {
       "x": 288,
       "y": 992,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 288,
+      "y": 992,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
       "frame": 0
     },
     {
       "x": 352,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 416,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 480,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 544,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 608,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 672,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 736,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 800,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 864,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 928,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 992,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1056,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1120,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1184,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1248,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1632,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1696,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1760,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1824,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1888,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1952,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2016,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2080,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2144,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2208,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2272,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2336,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2400,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2464,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2528,
       "y": 992,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2592,
+      "y": 992,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -4352,217 +4706,229 @@
     {
       "x": 288,
       "y": 1056,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 288,
+      "y": 1056,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 352,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 416,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 480,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 544,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 608,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 672,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 736,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 800,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 864,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 928,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 992,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1056,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1120,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1184,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1248,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-water-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-3-anim",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-water-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-3-anim",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-water-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-3-anim",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1632,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1696,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1760,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1824,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1888,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1952,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2016,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2080,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2144,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2208,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2272,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2336,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2400,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2464,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2528,
       "y": 1056,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2592,
+      "y": 1056,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -4622,217 +4988,229 @@
     {
       "x": 288,
       "y": 1120,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 288,
+      "y": 1120,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
       "frame": 0
     },
     {
       "x": 352,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 416,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 480,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 544,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 608,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 672,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 736,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 800,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 864,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 928,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 992,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1056,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1120,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1184,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1248,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-water-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-3-anim",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-water-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-3-anim",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-water-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-3-anim",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1632,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1696,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1760,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1824,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1888,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1952,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2016,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2080,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2144,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2208,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2272,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2336,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2400,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2464,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2528,
       "y": 1120,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2592,
+      "y": 1120,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -4892,217 +5270,229 @@
     {
       "x": 288,
       "y": 1184,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 288,
+      "y": 1184,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
       "frame": 0
     },
     {
       "x": 352,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 416,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 480,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 544,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 608,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 672,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 736,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 800,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 864,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 928,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 992,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1056,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1120,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1184,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1248,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-water-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-3-anim",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-water-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-3-anim",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-water-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-3-anim",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1632,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1696,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1760,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1824,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1888,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1952,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2016,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2080,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2144,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2208,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2272,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2336,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2400,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2464,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2528,
       "y": 1184,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2592,
+      "y": 1184,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5162,217 +5552,229 @@
     {
       "x": 288,
       "y": 1248,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 288,
+      "y": 1248,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
       "frame": 0
     },
     {
       "x": 352,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 416,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 480,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 544,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 608,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 672,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 736,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 800,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 864,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 928,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 992,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1056,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1120,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1184,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1248,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1632,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1696,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1760,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1824,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1888,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1952,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2016,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2080,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2144,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2208,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2272,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2336,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2400,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2464,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 2528,
       "y": 1248,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2592,
+      "y": 1248,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5432,7 +5834,19 @@
     {
       "x": 288,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 288,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 352,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5444,7 +5858,19 @@
     {
       "x": 416,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 416,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 480,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5456,7 +5882,19 @@
     {
       "x": 544,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 544,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 608,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5468,7 +5906,19 @@
     {
       "x": 672,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 672,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 736,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5480,7 +5930,19 @@
     {
       "x": 800,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 800,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 864,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5492,7 +5954,19 @@
     {
       "x": 928,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 928,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 992,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5504,7 +5978,19 @@
     {
       "x": 1056,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1056,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 1120,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5516,55 +6002,61 @@
     {
       "x": 1184,
       "y": 1312,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1248,
       "y": 1312,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1312,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1312,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1312,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1312,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1312,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1632,
       "y": 1312,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1696,
       "y": 1312,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1760,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5576,7 +6068,19 @@
     {
       "x": 1824,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1824,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 1888,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5588,7 +6092,19 @@
     {
       "x": 1952,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1952,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 2016,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5600,7 +6116,19 @@
     {
       "x": 2080,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2080,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2144,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5612,7 +6140,19 @@
     {
       "x": 2208,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2208,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 2272,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5624,7 +6164,19 @@
     {
       "x": 2336,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2336,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 2400,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5636,13 +6188,31 @@
     {
       "x": 2464,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2464,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 2528,
       "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 2528,
+      "y": 1312,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 2592,
+      "y": 1312,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -5780,61 +6350,73 @@
     {
       "x": 1120,
       "y": 1376,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1120,
+      "y": 1376,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1184,
       "y": 1376,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1248,
       "y": 1376,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1376,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1376,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1376,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1376,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1376,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1632,
       "y": 1376,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1696,
       "y": 1376,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1760,
+      "y": 1376,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -6050,7 +6632,19 @@
     {
       "x": 1120,
       "y": 1440,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1120,
+      "y": 1440,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 1184,
+      "y": 1440,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -6062,37 +6656,49 @@
     {
       "x": 1248,
       "y": 1440,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 1440,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1440,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1440,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1440,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1440,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1440,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 1440,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -6104,7 +6710,19 @@
     {
       "x": 1696,
       "y": 1440,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1696,
+      "y": 1440,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
+      "frame": 0
+    },
+    {
+      "x": 1760,
+      "y": 1440,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -6332,37 +6950,49 @@
     {
       "x": 1248,
       "y": 1504,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 1504,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1504,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1504,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1504,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1504,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1504,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 1504,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -6602,37 +7232,49 @@
     {
       "x": 1248,
       "y": 1568,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 1568,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1568,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1568,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1568,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1568,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1568,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 1568,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -6872,37 +7514,49 @@
     {
       "x": 1248,
       "y": 1632,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 1632,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1632,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1632,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1632,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1632,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1632,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 1632,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -7142,37 +7796,49 @@
     {
       "x": 1248,
       "y": 1696,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 1696,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1696,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1696,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1696,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1696,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1696,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 1696,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -7412,37 +8078,49 @@
     {
       "x": 1248,
       "y": 1760,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 1760,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1760,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1760,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1760,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1760,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1760,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 1760,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -7682,37 +8360,49 @@
     {
       "x": 1248,
       "y": 1824,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 1824,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1824,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1824,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1824,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1824,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1824,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 1824,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -7952,37 +8642,49 @@
     {
       "x": 1248,
       "y": 1888,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 1888,
       "key": "kenmi-desert-tiles-desert-beach-tiles-2",
       "frame": 0
     },
     {
       "x": 1312,
       "y": 1888,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1376,
       "y": 1888,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1440,
       "y": 1888,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1888,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1888,
-      "key": "kenmi-desert-tiles-desert-grass",
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 1888,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -8222,7 +8924,19 @@
     {
       "x": 1248,
       "y": 1952,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1248,
+      "y": 1952,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 1312,
+      "y": 1952,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -8234,7 +8948,19 @@
     {
       "x": 1376,
       "y": 1952,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1376,
+      "y": 1952,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 1440,
+      "y": 1952,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -8246,13 +8972,31 @@
     {
       "x": 1504,
       "y": 1952,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1504,
+      "y": 1952,
       "key": "kenmi-desert-tiles-desert-beach-tiles-3",
       "frame": 0
     },
     {
       "x": 1568,
       "y": 1952,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
+      "frame": 0
+    },
+    {
+      "x": 1568,
+      "y": 1952,
       "key": "kenmi-desert-tiles-desert-beach-tiles-1",
+      "frame": 0
+    },
+    {
+      "x": 1632,
+      "y": 1952,
+      "key": "kenmi-base-tiles-grass-grass-tiles-3",
       "frame": 0
     },
     {
@@ -9608,12 +10352,6 @@
       "collide": true
     },
     {
-      "key": "kenmi-desert-props-golden-pots",
-      "x": 22,
-      "y": 17,
-      "collide": false
-    },
-    {
       "key": "kenmi-desert-temple-desert-obelisk-small-2",
       "x": 20,
       "y": 2,
@@ -9635,6 +10373,306 @@
       "key": "kenmi-desert-props-water-sack-on-stick",
       "x": 23,
       "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 20,
+      "y": 31,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 17,
+      "y": 29,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 26,
+      "y": 29,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 23,
+      "y": 30,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 26,
+      "y": 28,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 18,
+      "y": 28,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 22,
+      "y": 32,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 15,
+      "y": 22,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 16,
+      "y": 4,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 29,
+      "y": 5,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 27,
+      "y": 3,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 30,
+      "y": 2,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-fallen-palm-leaves-dead",
+      "x": 42,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-golden-pots",
+      "x": 21,
+      "y": 6,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-sleeping-mat",
+      "x": 30,
+      "y": 4,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-water-sack-on-stick",
+      "x": 32,
+      "y": 4,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-bones",
+      "x": 37,
+      "y": 30,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-bones",
+      "x": 40,
+      "y": 30,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-bones",
+      "x": 39,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 38,
+      "y": 6,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-fern-dead",
+      "x": 43,
+      "y": 17,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-fern-dead",
+      "x": 39,
+      "y": 33,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-fern-dead",
+      "x": 32,
+      "y": 28,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 33,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 26,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 34,
+      "y": 13,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 42,
+      "y": 16,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 42,
+      "y": 19,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 43,
+      "y": 21,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 33,
+      "y": 21,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 28,
+      "y": 23,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 28,
+      "y": 27,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 17,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 13,
+      "y": 26,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 9,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 14,
+      "y": 12,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 17,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 12,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 13,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 9,
+      "y": 4,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-flies-anim",
+      "x": 22,
+      "y": 16,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-1-anim",
+      "x": 19,
+      "y": 18,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-2-anim",
+      "x": 23,
+      "y": 15,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-3-anim",
+      "x": 21,
+      "y": 20,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-water-sack-on-stick",
+      "x": 13,
+      "y": 22,
+      "collide": false
+    },
+    {
+      "key": "kenmi-military-campfire-pot-anim",
+      "x": 25,
+      "y": 17,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 26,
+      "y": 23,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 9,
+      "y": 28,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 11,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-outdoor-decor-animations-water-decor-animations-water-plants-lillypad-purple-2-anim",
+      "x": 22,
+      "y": 17,
       "collide": false
     }
   ],
