@@ -11,6 +11,21 @@ import { stripDiacritics } from '../../utils/arabicUtils.js';
 // Gathering proximity threshold: 2 tiles = 128px
 const GATHER_RANGE = 64 * 2;
 
+// World render scale for 16px Kenmi art (matches MapLoader.KENMI_SCALE).
+const KENMI_SCALE = 4;
+
+// The gathering data still references four legacy sprite keys (green-tree-small,
+// palm-small, rock1, rock2) that were never migrated to the Kenmi atlas — so every
+// resource node rendered as Phaser's __MISSING black diamond. Remap each legacy key to
+// a real Kenmi prop sheet plus the crop region to show, mirroring how MapLoader renders
+// the same sheets (setCrop + KENMI_SCALE + crop-centred origin).
+const GATHER_SPRITE_REMAP = {
+  'green-tree-small': { key: 'kenmi-desert-props-acacia-tree', region: { x: 80, y: 0, w: 80, h: 62 } },
+  'palm-small': { key: 'kenmi-desert-props-palm-tree-1', region: { x: 48, y: 0, w: 48, h: 60 } },
+  'rock1': { key: 'kenmi-desert-props-desert-rocks', region: { x: 32, y: 0, w: 32, h: 32 } },
+  'rock2': { key: 'kenmi-desert-props-desert-rocks', region: { x: 112, y: 0, w: 32, h: 32 } },
+};
+
 /**
  * GatheringSpotManager
  * Manages respawning resource nodes across the world for the crafting system.
@@ -39,9 +54,28 @@ export class GatheringSpotManager {
       const px = cfg.x * 64 + 32;
       const py = cfg.y * 64 + 32;
 
-      // Create sprite for the gathering spot
-      const sprite = this.scene.add.image(px, py, cfg.spriteKey).setOrigin(0.5, 0.8);
-      sprite.setScale(0.6);
+      // Create sprite for the gathering spot. Resolve the legacy key through the Kenmi
+      // remap; if the remapped texture is loaded in this zone, crop it to the chosen
+      // region and scale to world size. Fall back to the raw key otherwise so a missing
+      // texture degrades to the original behaviour rather than throwing.
+      const remap = GATHER_SPRITE_REMAP[cfg.spriteKey];
+      let sprite;
+      if (remap && this.scene.textures.exists(remap.key)) {
+        const { key, region } = remap;
+        const src = this.scene.textures.get(key).source[0];
+        sprite = this.scene.add.image(px, py, key);
+        sprite.setCrop(region.x, region.y, region.w, region.h);
+        sprite.setScale(KENMI_SCALE);
+        // Origin pinned to the crop's centre (as a fraction of the full frame) so the
+        // visible sprite sits on (px, py); nudged downward so the base roots to the tile.
+        sprite.setOrigin(
+          (region.x + region.w / 2) / src.width,
+          (region.y + region.h * 0.85) / src.height,
+        );
+      } else {
+        sprite = this.scene.add.image(px, py, cfg.spriteKey).setOrigin(0.5, 0.8);
+        sprite.setScale(0.6);
+      }
 
       // Determine initial state based on cooldown
       const lastGathered = cooldowns[cfg.id] || 0;

@@ -41,11 +41,18 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
     this._useKenmi = useKenmi;
 
     if (useKenmi) {
-      // Kenmi sprites are 16x16 base; scale 4x to 64x64 on screen
-      this.setScale(4);
-      // Physics body: ~20x16 at scaled size (5x4 base), centered at feet
-      this.setSize(5, 4);
-      this.setOffset(5.5, 12);
+      // Sheets vary in native frame size: Kenmi sprites are 16px, faceless NPC sheets are
+      // 128px. The old code hardcoded scale 4× (correct only for 16px → 64px on screen),
+      // which blew the 128px faceless NPCs up to 512px and clipped them off-screen.
+      // Derive scale from the real frame width so every sheet lands at ~64px on screen,
+      // and scale the feet-centred physics body by the same frame-size factor.
+      const _f0w = scene.textures.get(textureKey)?.get?.(0)?.width || 16;
+      const TARGET_DISPLAY = 64; // on-screen px — matches the original 16px × 4 sizing
+      const _k = _f0w / 16; // frame-size factor vs the 16px Kenmi baseline
+      this.setScale(TARGET_DISPLAY / _f0w);
+      // Physics body: ~20×16 on screen at feet, expressed in unscaled frame coords.
+      this.setSize(5 * _k, 4 * _k);
+      this.setOffset(5.5 * _k, 12 * _k);
     } else {
       // Legacy 128x128 hitbox
       this.setSize(40, 30);
@@ -72,10 +79,42 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       const walkLeft = `${id}-walk-left`;
       const walkRight = `${id}-walk-right`;
 
+      // Geometry-aware row mapping. Different NPC sheets ship different grids:
+      //   - 12-col Kenmi sheets   → rows at frame 0 / 12 / 24 / 36 (down/up/left/right)
+      //   - 4-col faceless sheets → only 16 frames (front/back poses, no side art)
+      // Hardcoding 24/36 threw "Frame N not found in texture" on the smaller sheets and
+      // rendered a garbled sprite. Instead derive columns from the actual texture and take
+      // the first 3 frames of each direction's row, clamped to what really exists. On a
+      // 12-col sheet this yields the original 0/12/24/36 indices, so Kenmi NPCs are
+      // unchanged; on a 4-col sheet it yields 0/4/8/12 — every frame valid.
+      const _src = texture?.source?.[0];
+      const _frame0 = texture?.get?.(0);
+      const _cols = Math.max(
+        1,
+        _src && _frame0?.width ? Math.round(_src.width / _frame0.width) : 12,
+      );
+      const _rows = Math.max(1, Math.floor(frameCount / _cols));
+      // First up to 3 frames of row `r`, dropping any index past the real frame count.
+      const rowFrames = (r) => {
+        const start = r * _cols;
+        const out = [];
+        for (let i = 0; i < Math.min(3, _cols); i++) {
+          const f = start + i;
+          if (f < frameCount) out.push(f);
+        }
+        return out.length ? out : [0];
+      };
+      // Clamp each direction to an existing row. Sheets without dedicated side-view rows
+      // fall back to the front/back rows rather than referencing a non-existent row.
+      const downFrames = rowFrames(0);
+      const upFrames = rowFrames(_rows > 1 ? 1 : 0);
+      const leftFrames = rowFrames(_rows > 2 ? 2 : 0);
+      const rightFrames = rowFrames(_rows > 3 ? 3 : _rows > 2 ? 2 : 0);
+
       if (!scene.anims.exists(walkDown)) {
         scene.anims.create({
           key: walkDown,
-          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [0, 1, 2] }),
+          frames: scene.anims.generateFrameNumbers(textureKey, { frames: downFrames }),
           frameRate: 8,
           repeat: -1,
         });
@@ -83,7 +122,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       if (!scene.anims.exists(walkUp)) {
         scene.anims.create({
           key: walkUp,
-          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [12, 13, 14] }),
+          frames: scene.anims.generateFrameNumbers(textureKey, { frames: upFrames }),
           frameRate: 8,
           repeat: -1,
         });
@@ -91,7 +130,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       if (!scene.anims.exists(walkLeft)) {
         scene.anims.create({
           key: walkLeft,
-          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [24, 25, 26] }),
+          frames: scene.anims.generateFrameNumbers(textureKey, { frames: leftFrames }),
           frameRate: 8,
           repeat: -1,
         });
@@ -99,7 +138,7 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
       if (!scene.anims.exists(walkRight)) {
         scene.anims.create({
           key: walkRight,
-          frames: scene.anims.generateFrameNumbers(textureKey, { frames: [36, 37, 38] }),
+          frames: scene.anims.generateFrameNumbers(textureKey, { frames: rightFrames }),
           frameRate: 8,
           repeat: -1,
         });
