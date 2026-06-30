@@ -67,14 +67,18 @@ export class TiledMapLoader {
     const layers = {};
     const scale = TILE / map.tileWidth; // 64 / 16 = 4
 
+    // Phaser parses tile layers into map.layers as LayerData objects — these have a
+    // `.name` but NO `.type` field (that only exists on the raw Tiled JSON). Create a
+    // TilemapLayer for each by name; filtering on `.type === 'tilelayer'` here matched
+    // nothing and left the ground unrendered.
     for (const layerData of map.layers) {
-      if (layerData.type === 'tilelayer') {
-        const layer = map.createLayer(layerData.name, tilesets);
-        if (layer) {
-          // Scale 16px tiles up to fill the 64px game grid
-          layer.setScale(scale);
-          layers[layerData.name] = layer;
-        }
+      const layer = map.createLayer(layerData.name, tilesets);
+      if (layer) {
+        // Scale 16px tiles up to fill the 64px game grid
+        layer.setScale(scale);
+        layers[layerData.name] = layer;
+      } else {
+        console.warn(`[TiledMapLoader] Failed to create tile layer "${layerData.name}".`);
       }
     }
     this.currentLayers = layers;
@@ -95,12 +99,10 @@ export class TiledMapLoader {
 
     // ---- Object layers ----
     // Tiled object layers carry NPCs, exits, spawn points, interactables, etc.
+    // Phaser parses object groups into map.objects (ObjectLayer[]), NOT map.layers.
     const objects = {};
-    for (const layerData of map.layers) {
-      if (layerData.type === 'objectgroup') {
-        const objLayer = map.getObjectLayer(layerData.name);
-        objects[layerData.name] = objLayer?.objects || [];
-      }
+    for (const objLayer of map.objects || []) {
+      objects[objLayer.name] = objLayer.objects || [];
     }
 
     // ---- Exit triggers from object layer ----
