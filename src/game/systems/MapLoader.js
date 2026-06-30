@@ -629,7 +629,7 @@ export class MapLoader {
     this.setupCollision(groundData, mapWidth, mapHeight, exits);
 
     // Place world objects
-    this.placeObjects(objects);
+    this.placeObjectsOnly(zone);
 
     // this.scatterDecorations(zone, groundData, mapWidth, mapHeight);
 
@@ -1502,6 +1502,20 @@ export class MapLoader {
   /**
    * Place world objects (trees, buildings, etc.) with Y-sorting
    */
+  /**
+   * Place a zone's buildings/props/interactable sprites WITHOUT building any
+   * procedural ground. Used by both the procedural path (via create()) and the
+   * authored-Tiled path (WorldScene.buildZone), so authored maps own ground +
+   * collision while these sprites still render at their authored coordinates.
+   * Returns the same array getObjectSprites() exposes.
+   * @param {{ objects?: Array }} zone
+   * @returns {Phaser.GameObjects.GameObject[]} placed object sprites
+   */
+  placeObjectsOnly(zone) {
+    this.placeObjects(zone.objects || []);
+    return this.objectSprites;
+  }
+
   placeObjects(objects) {
     // If any object is an animated deco prop, register its animation configs
     // so .play() will work below. Idempotent.

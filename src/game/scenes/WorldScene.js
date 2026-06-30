@@ -331,6 +331,8 @@ export class WorldScene extends Phaser.Scene {
       const worldSize = this.tiledMapLoader.getWorldSize();
       this.currentMapW = worldSize.width / TILE;
       this.currentMapH = worldSize.height / TILE;
+      // Render buildings/props/interactables on top of the authored ground.
+      objectSprites = this.mapLoader.placeObjectsOnly(zone);
     } else {
       this.usingTiledMap = false;
       this.currentCollisionLayer = null;
@@ -350,6 +352,11 @@ export class WorldScene extends Phaser.Scene {
       for (const npc of this.npcManager.getNPCs()) {
         this.physics.add.collider(npc, this.currentCollisionLayer);
       }
+    }
+    // Tiled path: placed props that opted in pushed colliders into the
+    // MapLoader's wallGroup; bind the player to it so props block movement too.
+    if (this.usingTiledMap && this.mapLoader.wallGroup) {
+      this.physics.add.collider(player, this.mapLoader.wallGroup);
     }
 
     this.interactableManager.create(zone.interactables, objectSprites);
