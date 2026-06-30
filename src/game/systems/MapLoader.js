@@ -411,10 +411,13 @@ export const PROP_CROP_REGIONS = {
 // kenmi-christmas-decorations-christmass-grass is type 'image' (NOT spritesheet) — cannot use frame indices.
 const BIOME_TILESETS = {
   desert: {
+    // Single sand sheet for a uniform tan floor. The three beach sheets are three
+    // DIFFERENT flat tans (RGB 228,166,114 / 219,140,106 / 211,159,124); picking one
+    // per tile painted the sand as a chaotic multi-tone checkerboard. One sheet =
+    // one colour, matching every other biome (all of which use a single sandKey) and
+    // the water-border branch which already uses sandKeys[0].
     sandKeys: [
       'kenmi-desert-tiles-desert-beach-tiles-1',
-      'kenmi-desert-tiles-desert-beach-tiles-2',
-      'kenmi-desert-tiles-desert-beach-tiles-3',
     ],
     sandCols: 5,
     grassKey: 'kenmi-base-tiles-grass-grass-tiles-3',
