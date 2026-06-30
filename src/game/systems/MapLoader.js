@@ -146,6 +146,24 @@ const _FOAM_KEY = 'kenmi-desert-tiles-desert-water-foam-animation';
 const _FOAM_COLS = 20;
 
 export const KENMI_SCALE = 4; // 16px tiles -> 64px game tiles
+export const TILE = 64; // on-screen px per tile (16px source * KENMI_SCALE)
+
+// Target on-screen footprint for a cropped multi-item prop, in tiles.
+const PROP_TARGET_TILES = 1;
+
+/**
+ * Normalized scale for a cropped prop region so it lands at ~PROP_TARGET_TILES tiles
+ * regardless of the region's source size — mirrors the NPC 64px normalization.
+ * A 16px crop -> 4x (unchanged, = one tile); oversized crops (rugs 48x32, rock
+ * clusters 32x32) shrink to ~one tile instead of being blindly multiplied by 4x
+ * (which made the 48x32 rug render 3 tiles wide x 2 tall, dwarfing every character).
+ * @param {{ w: number, h: number }} region - crop region in source pixels
+ * @returns {number} scale factor
+ */
+function croppedPropScale(region) {
+  const maxDim = Math.max(region.w, region.h) || 16;
+  return (PROP_TARGET_TILES * TILE) / maxDim;
+}
 
 // Props that lie flat on the ground — always rendered just above the tilemap (depth ~0.5)
 // and below all upright objects/players.
@@ -1518,8 +1536,9 @@ export class MapLoader {
           ? obj.cropIndex
           : Math.floor(Math.random() * cropRegions.length);
         const region = cropRegions[idx];
+        const scale = croppedPropScale(region);
         sprite.setCrop(region.x, region.y, region.w, region.h);
-        sprite.setScale(KENMI_SCALE);
+        sprite.setScale(scale);
         // Pin origin to the visual center of the crop region so py lands on the
         // centre of the visible sprite (not the centre of the full frame).
         const src = this.scene.textures.get(textureKey).source[0];
@@ -1531,7 +1550,7 @@ export class MapLoader {
         // Everything else uses visual-bottom Y-sort.
         depth = FLAT_GROUND_PROPS.has(textureKey)
           ? 0.5 + py * 0.0001
-          : py + (region.h / 2) * KENMI_SCALE;
+          : py + (region.h / 2) * scale;
       } else {
         sprite.setOrigin(0.5, 0.8);
         sprite.setScale(KENMI_SCALE);
@@ -1946,12 +1965,13 @@ export class MapLoader {
     const cropRegions = PROP_CROP_REGIONS[propKey];
     let displayH;
     if (cropRegions && cropRegions.length > 0) {
-      // Multi-item sheet: pick one region, crop to it, then scale 4x
+      // Multi-item sheet: pick one region, crop to it, then normalize to ~1 tile
       const regionIdx = Math.floor(hash * cropRegions.length);
       const region = cropRegions[regionIdx];
+      const scale = croppedPropScale(region);
       sprite.setCrop(region.x, region.y, region.w, region.h);
-      sprite.setScale(KENMI_SCALE);
-      displayH = region.h * KENMI_SCALE;
+      sprite.setScale(scale);
+      displayH = region.h * scale;
     } else {
       // Not in crop list — check texture source dimensions
       const tex = this.scene.textures.get(propKey);
