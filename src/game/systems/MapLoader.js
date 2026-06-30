@@ -1553,7 +1553,13 @@ export class MapLoader {
           : py + (region.h / 2) * scale;
       } else {
         sprite.setOrigin(0.5, 0.8);
-        sprite.setScale(KENMI_SCALE);
+        // No crop region: 16px images are tiles (4x -> one tile); larger native
+        // images (80-128px buildings) are already world-sized and must render at
+        // native scale, else KENMI_SCALE balloons them to 5 tiles. Mirrors the
+        // source-width guard already used in _createDecoSprite for scatter props.
+        const src = this.scene.textures.get(textureKey).source[0];
+        const srcW = src ? src.width : 16;
+        sprite.setScale(srcW <= 16 ? KENMI_SCALE : 1);
         // Foot = visual bottom with origin 0.8 → py + displayHeight * 0.2
         depth = FLAT_GROUND_PROPS.has(textureKey)
           ? 0.5 + py * 0.0001
