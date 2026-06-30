@@ -228,7 +228,7 @@ export class WorldScene extends Phaser.Scene {
     });
 
     // IMM-03: Update floating Arabic labels (FSRS-based visibility)
-    if (this.floatingLabelManager) this.floatingLabelManager.update(time);
+    if (this.floatingLabelManager) this.floatingLabelManager.update(player, time);
 
     // DOM overlays, time, weather
     if (this.domOverlay) this.domOverlay.update();
