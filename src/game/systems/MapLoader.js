@@ -146,7 +146,7 @@ const _FOAM_KEY = 'kenmi-desert-tiles-desert-water-foam-animation';
 const _FOAM_COLS = 20;
 
 export const KENMI_SCALE = 4; // 16px tiles -> 64px game tiles
-export const TILE = 64; // on-screen px per tile (16px source * KENMI_SCALE)
+// TILE (on-screen px per tile, = 64) is imported from zones.js above.
 
 // Target on-screen footprint for a cropped multi-item prop, in tiles.
 const PROP_TARGET_TILES = 1;
