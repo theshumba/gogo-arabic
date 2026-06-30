@@ -78,9 +78,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.headKey = headKey;
     this.skinTint = skinTint;
 
-    // Physics body — smaller hitbox
-    this.setSize(40, 30);
-    this.setOffset(44, 90);
+    // Normalize to ~64px on screen (one tile), exactly as NPC.js does. The faceless
+    // body sheets are 128px frames; without this the player rendered at native 128px
+    // = 2 tiles, twice every NPC/camel. Derive the scale from the real frame width so
+    // any sheet lands at TARGET_DISPLAY, and express the feet-centred physics body in
+    // unscaled frame coords scaled by the same 16px-baseline factor (mirrors NPC).
+    const _f0w = scene.textures.get(textureKey)?.get?.(0)?.width || 128;
+    const TARGET_DISPLAY = 64; // on-screen px — matches NPC/camel sizing
+    const _k = _f0w / 16; // frame-size factor vs the 16px Kenmi baseline
+    this._charScale = TARGET_DISPLAY / _f0w;
+    this.setScale(this._charScale);
+    // Physics body: feet-centred, expressed in unscaled frame coords (Phaser scales it
+    // by the sprite scale). Matches NPC.js so collision lands at the player's feet.
+    this.setSize(5 * _k, 4 * _k);
+    this.setOffset(5.5 * _k, 12 * _k);
 
     this.speed = 200;
     this.sprintSpeed = 400; // 2x normal speed
@@ -114,6 +125,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const headTextureKey = scene.textures.exists(headKey) ? headKey : null;
     if (headTextureKey) {
       this.headSprite = scene.add.sprite(x, y, headTextureKey, 0);
+      this.headSprite.setScale(this._charScale); // match the body's normalized scale
       this.headSprite.setTint(skinTint);
     } else {
       this.headSprite = null;
@@ -229,6 +241,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.headSprite.setTexture(newHeadKey);
     } else {
       this.headSprite = this.scene.add.sprite(this.x, this.y, newHeadKey, 0);
+      this.headSprite.setScale(this._charScale); // match the body's normalized scale
       this.headSprite.setTint(this.skinTint);
     }
     this._createAnims(this.scene, newHeadKey, 'head');
