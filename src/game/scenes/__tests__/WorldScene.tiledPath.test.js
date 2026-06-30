@@ -24,4 +24,16 @@ describe('MapLoader.placeObjectsOnly', () => {
     const sprites = loader.placeObjectsOnly(zone);
     expect(sprites).toHaveLength(2);
   });
+
+  it('does not crash on collide:true objects (initializes wallGroup in the Tiled path)', () => {
+    const scene = createMockScene();
+    const loader = new MapLoader(scene);
+    // create() never ran, so wallGroup is null until placeObjectsOnly sets it.
+    expect(loader.wallGroup).toBeFalsy();
+    const zone = { objects: [
+      { key: 'kenmi-desert-buildings-desert-house-1', x: 8, y: 3, collide: true },
+    ] };
+    expect(() => loader.placeObjectsOnly(zone)).not.toThrow();
+    expect(loader.wallGroup).toBeTruthy();
+  });
 });

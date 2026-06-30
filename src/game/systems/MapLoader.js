@@ -1512,6 +1512,12 @@ export class MapLoader {
    * @returns {Phaser.GameObjects.GameObject[]} placed object sprites
    */
   placeObjectsOnly(zone) {
+    // In the Tiled path create() never runs, so wallGroup (used by placeObjects for
+    // collide:true props) is still null. Initialize it here so colliding props don't
+    // crash on this.wallGroup.create(); WorldScene binds the player to it afterwards.
+    if (!this.wallGroup) {
+      this.wallGroup = this.scene.physics.add.staticGroup();
+    }
     this.placeObjects(zone.objects || []);
     return this.objectSprites;
   }
