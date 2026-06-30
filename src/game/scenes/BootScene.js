@@ -95,6 +95,11 @@ export class BootScene extends Phaser.Scene {
     // Convention: key = "map-{zone-id-with-hyphens}", path = "/assets/maps/{zone}.json"
     // Example: this.load.tilemapTiledJSON('map-oasis-village', '/assets/maps/oasis-village.json');
     this.load.tilemapTiledJSON('map-test-map', '/assets/maps/test-map.json');
+    // Authored Tiled maps (Phase: oasis-village rebuild). Tile images already
+    // loaded from KENMI_CATALOG above (e.g. kenmi-desert-tiles-desert-beach-tiles-1,
+    // kenmi-base-tiles-grass-grass-tiles-3, kenmi-base-tiles-water-water-tile-3).
+    // The map file may not exist yet — Phaser falls back gracefully until Phase 4.
+    this.load.tilemapTiledJSON('map-oasis-village', '/assets/maps/oasis-village.json');
 
     // =========================================================
     // KENMI CUTE FANTASY ASSETS — loaded from catalog
