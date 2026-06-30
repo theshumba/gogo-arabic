@@ -326,12 +326,14 @@ export class WorldScene extends Phaser.Scene {
       this.currentTiledMap = result.map;
       this.currentTiledLayers = result.layers;
       this.currentTiledExitTriggers = result.exitTriggers;
+      this.currentCollisionLayer = result.collisionLayer;
       wallGroup = result.wallGroup;
       const worldSize = this.tiledMapLoader.getWorldSize();
       this.currentMapW = worldSize.width / TILE;
       this.currentMapH = worldSize.height / TILE;
     } else {
       this.usingTiledMap = false;
+      this.currentCollisionLayer = null;
       wallGroup = this.mapLoader.create(zone, zone.mapWidth, zone.mapHeight);
       objectSprites = this.mapLoader.getObjectSprites();
     }
@@ -340,6 +342,16 @@ export class WorldScene extends Phaser.Scene {
     const player = this.playerController.create(spawnX, spawnY, wallGroup);
     this.equipmentManager = new EquipmentManager(this, player);
     this.npcManager.create(zone.npcs, player, wallGroup, this.domOverlay);
+
+    // Tiled maps express collision as a hidden tile layer, not the (empty)
+    // wallGroup. Bind the player and every NPC to it so free movement is blocked.
+    if (this.currentCollisionLayer) {
+      this.physics.add.collider(player, this.currentCollisionLayer);
+      for (const npc of this.npcManager.getNPCs()) {
+        this.physics.add.collider(npc, this.currentCollisionLayer);
+      }
+    }
+
     this.interactableManager.create(zone.interactables, objectSprites);
 
     // IMM-03: Floating Arabic labels above world objects
