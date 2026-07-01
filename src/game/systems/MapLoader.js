@@ -157,12 +157,18 @@ const PROP_TARGET_TILES = 1;
  * A 16px crop -> 4x (unchanged, = one tile); oversized crops (rugs 48x32, rock
  * clusters 32x32) shrink to ~one tile instead of being blindly multiplied by 4x
  * (which made the 48x32 rug render 3 tiles wide x 2 tall, dwarfing every character).
- * @param {{ w: number, h: number }} region - crop region in source pixels
+ * A region may declare an explicit `tiles` footprint to opt out of the 1-tile
+ * default: genuinely multi-tile STRUCTURES (military tents 80x80 = 5x5 source
+ * tiles, lookout tower 72x128) are buildings, not hand props, and the blanket
+ * normalization flattened them to NPC height. Footprints are chosen to match
+ * the NATIVE_OBJECT_SCALE policy used for no-crop buildings (~2x source art).
+ * @param {{ w: number, h: number, tiles?: number }} region - crop region in source pixels
  * @returns {number} scale factor
  */
 export function croppedPropScale(region) {
   const maxDim = Math.max(region.w, region.h) || 16;
-  return (PROP_TARGET_TILES * TILE) / maxDim;
+  const targetTiles = region.tiles || PROP_TARGET_TILES;
+  return (targetTiles * TILE) / maxDim;
 }
 
 // Scale for placed objects with no crop region (buildings, obelisks, ladders).
@@ -429,19 +435,24 @@ export const PROP_CROP_REGIONS = {
     { x: 16, y: 0, w: 48, h: 16 },
   ],
 
+  // Military structures are multi-tile Kenmi buildings (16px baseline), not
+  // hand props — `tiles` footprints land them at ~2x source, matching the
+  // NATIVE_OBJECT_SCALE band for no-crop buildings, instead of NPC height.
   'kenmi-military-military-tents': [
-    { x: 0, y: 0, w: 80, h: 80 },
-    { x: 0, y: 96, w: 80, h: 80 },
-    { x: 0, y: 192, w: 80, h: 80 },
-    { x: 0, y: 288, w: 80, h: 80 },
-    { x: 0, y: 384, w: 80, h: 80 },
+    { x: 0, y: 0, w: 80, h: 80, tiles: 2.5 },
+    { x: 0, y: 96, w: 80, h: 80, tiles: 2.5 },
+    { x: 0, y: 192, w: 80, h: 80, tiles: 2.5 },
+    { x: 0, y: 288, w: 80, h: 80, tiles: 2.5 },
+    { x: 0, y: 384, w: 80, h: 80, tiles: 2.5 },
   ],
   'kenmi-military-palisade': [
-    { x: 160, y: 0, w: 80, h: 48 },
-    { x: 160, y: 48, w: 80, h: 48 },
+    { x: 160, y: 0, w: 80, h: 48, tiles: 2.5 },
+    { x: 160, y: 48, w: 80, h: 48, tiles: 2.5 },
   ],
+  // 3 tiles (not 4): tallest structure in camp, and at its authored spot
+  // (bedouin_camp y=1) a 4-tile tower would clip past the map's top edge.
   'kenmi-military-lookout-towers': [
-    { x: 0, y: 0, w: 72, h: 128 },
+    { x: 0, y: 0, w: 72, h: 128, tiles: 3 },
   ],
   'kenmi-base-outdoor-decoration-scarecrows': [
     { x: 64, y: 0, w: 32, h: 32 },
