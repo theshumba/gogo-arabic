@@ -3,7 +3,7 @@ import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { store } from '../../store/store.js';
 import { stripDiacritics } from '../../utils/arabicUtils.js';
-import { croppedPropScale } from './MapLoader.js';
+import { croppedPropScale, FLAT_GROUND_PROPS } from './MapLoader.js';
 
 // Interactable proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
@@ -34,7 +34,10 @@ const LEGACY_INTERACTABLE_SPRITES = {
   sign: { key: 'kenmi-desert-temple-desert-obelisk-small-2', region: { x: 0, y: 0, w: 32, h: 32 } },
   bookshelf: { key: 'kenmi-desert-temple-desert-obelisk-small-1', region: { x: 0, y: 0, w: 32, h: 32 } },
   chest: { key: 'kenmi-desert-props-desert-rocks', region: { x: 112, y: 0, w: 32, h: 32 } },
-  door: { key: 'kenmi-desert-houses-desert-house-1.1', region: { x: 0, y: 0, w: 80, h: 80 } },
+  // Doors mark a building's ENTRANCE, so the marker is a doormat rug at the
+  // threshold — not a house sprite (the 80x80 desert-house crop drew a whole
+  // miniature duplicate house floating next to the real building).
+  door: { key: 'kenmi-desert-props-desert-rugs', region: { x: 0, y: 0, w: 48, h: 32 } },
 };
 
 // Set of all new world object types (behavior composition, not class-per-type)
@@ -81,13 +84,16 @@ export class InteractableManager {
         sprite.setCrop(region.x, region.y, region.w, region.h);
         sprite.setScale(croppedPropScale(region));
         // Origin pinned to the crop's centre (as a fraction of the full frame) so the
-        // visible sprite sits on (px, py); nudged downward so the base roots to the tile.
+        // visible sprite sits on (px, py); upright markers are nudged downward so the
+        // base roots to the tile, flat ones (door rugs) stay tile-centred.
+        const flat = FLAT_GROUND_PROPS.has(key);
         sprite.setOrigin(
           (region.x + region.w / 2) / src.width,
-          (region.y + region.h * 0.85) / src.height,
+          (region.y + region.h * (flat ? 0.5 : 0.85)) / src.height,
         );
-        // Y-sort with the rest of the world instead of sitting under every prop.
-        sprite.setDepth(py);
+        // Flat ground markers sit just above the tilemap (same rule as MapLoader's
+        // FLAT_GROUND_PROPS); upright ones Y-sort with the rest of the world.
+        sprite.setDepth(flat ? 0.5 + py * 0.0001 : py);
       } else {
         sprite = this.scene.add.image(px, py, mapping?.key).setOrigin(0.5, 0.8);
         sprite.setScale(0.7);
