@@ -525,12 +525,9 @@ function buildMarketplaceMap() {
     const row = [];
     for (let x = 0; x < W; x++) {
       let tile = SAND;
-      // Main market road running east-west
-      if (y >= 15 && y <= 19 && x >= 5 && x <= 39) tile = GRASS;
-      // North-south cross street
-      if (x >= 20 && x <= 24 && y >= 5 && y <= 29) tile = GRASS;
-      // Market square at intersection
-      if (x >= 18 && x <= 26 && y >= 13 && y <= 21) tile = GRASS;
+      // Small oasis pocket around the central fountain — a green accent in the
+      // sand souk (the roads/square are packed sand like Oasis Village, not grass)
+      if (x >= 19 && x <= 25 && y >= 14 && y <= 20) tile = GRASS;
       // Small fountain in center
       if (x >= 21 && x <= 23 && y >= 16 && y <= 18) tile = WATER;
       row.push(tile);
@@ -558,6 +555,12 @@ const desert_marketplace = {
     { key: 'kenmi-desert-houses-pergola', x: 10, y: 22, collide: true, collideW: 180, collideH: 80 },
     { key: 'kenmi-desert-houses-pergola', x: 30, y: 12, collide: true, collideW: 180, collideH: 80 },
     { key: 'kenmi-desert-houses-pergola', x: 30, y: 22, collide: true, collideW: 180, collideH: 80 },
+    // Stalls flanking the market square so the souk reads as a market from the
+    // square itself (the outer pergolas at x=10/x=30 sit at the frame edges)
+    { key: 'kenmi-desert-houses-pergola', x: 16, y: 13, collide: true, collideW: 180, collideH: 80 },
+    { key: 'kenmi-desert-houses-pergola', x: 28, y: 13, collide: true, collideW: 180, collideH: 80 },
+    { key: 'kenmi-desert-houses-pergola', x: 16, y: 21, collide: true, collideW: 180, collideH: 80 },
+    { key: 'kenmi-desert-houses-pergola', x: 28, y: 21, collide: true, collideW: 180, collideH: 80 },
     { key: 'kenmi-desert-houses-desert-house-3.3', x: 22, y: 4, collide: true, collideW: 240, collideH: 100 },
     { key: 'kenmi-desert-houses-desert-house-4.4', x: 22, y: 28, collide: true, collideW: 240, collideH: 100 },
     // Palms lining the road
@@ -1769,10 +1772,10 @@ function buildPalaceMap() {
   for (let y = 0; y < H; y++) {
     const row = [];
     for (let x = 0; x < W; x++) {
-      let tile = GRASS;
+      let tile = SAND; // desert surrounds the palace (this IS a desert zone)
       // Palace courtyard — stone (sand tile)
       if (x >= 15 && x <= 35 && y >= 10 && y <= 30) tile = SAND;
-      // Inner garden
+      // Inner garden — the lush palace garden stays green
       if (x >= 20 && x <= 30 && y >= 15 && y <= 25) tile = GRASS;
       // Central fountain
       if (x >= 23 && x <= 27 && y >= 18 && y <= 22) tile = WATER;
@@ -1781,8 +1784,9 @@ function buildPalaceMap() {
       // Side gardens
       if (x >= 5 && x <= 12 && y >= 12 && y <= 28) tile = GRASS;
       if (x >= 38 && x <= 45 && y >= 12 && y <= 28) tile = GRASS;
-      // Outer walls (ice grass for marble look)
-      if (y <= 3 || y >= 37 || x <= 2 || x >= 47) tile = ICE_GRASS;
+      // Outer walls — STONE renders as tan stonework in the desert biome
+      // (ICE_GRASS rendered as plain green grass here: desert has no iceGrassTint)
+      if (y <= 3 || y >= 37 || x <= 2 || x >= 47) tile = STONE;
       row.push(tile);
     }
     m.push(row);
@@ -1803,9 +1807,11 @@ const royal_palace = {
   gatheringSpots: true,
 
   objects: [
-    // Palace structures — temple structures (BLDG-02/BLDG-07)
-    { key: 'kenmi-desert-temple-desert-temple', x: 20, y: 8, collide: true, collideW: 240, collideH: 100 },
-    { key: 'kenmi-desert-temple-desert-temple', x: 30, y: 8, collide: true, collideW: 240, collideH: 100 },
+    // Palace structures — temple structures (BLDG-02/BLDG-07) flanking the head
+    // of the inner garden, keeping the x23-27 entrance corridor to the throne
+    // door (25,12) clear and standing inside the map-centre camera frame
+    { key: 'kenmi-desert-temple-desert-temple', x: 21, y: 15, collide: true, collideW: 240, collideH: 100 },
+    { key: 'kenmi-desert-temple-desert-temple', x: 29, y: 15, collide: true, collideW: 240, collideH: 100 },
     { key: 'kenmi-desert-houses-desert-house-3.4', x: 15, y: 15, collide: true, collideW: 240, collideH: 100 },
     { key: 'kenmi-desert-houses-desert-house-4.3', x: 35, y: 15, collide: true, collideW: 240, collideH: 100 },
     // Palace walls / obelisk pillars
@@ -1922,8 +1928,8 @@ const royal_palace = {
     { key: 'kenmi-desert-props-desert-rugs', x: 30, y: 18, cropIndex: 1 },
     { key: 'kenmi-desert-props-fire-pit', x: 19, y: 10, cropIndex: 5 },
     { key: 'kenmi-desert-props-fire-pit', x: 31, y: 10, cropIndex: 3 },
-    { key: 'kenmi-desert-props-fire-pit', x: 19, y: 15, cropIndex: 3 },
-    { key: 'kenmi-desert-props-fire-pit', x: 31, y: 15, cropIndex: 5 },
+    { key: 'kenmi-desert-props-fire-pit', x: 18, y: 15, cropIndex: 3 },
+    { key: 'kenmi-desert-props-fire-pit', x: 32, y: 15, cropIndex: 5 },
     { key: 'kenmi-desert-props-fire-pit', x: 31, y: 24, cropIndex: 3 },
     { key: 'kenmi-desert-props-fire-pit', x: 19, y: 24, cropIndex: 3 },
   ],
