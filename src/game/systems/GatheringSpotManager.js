@@ -7,18 +7,16 @@ import { RESOURCES } from '../../data/resources.js';
 import { addResource, recordGatheringCooldown } from '../../store/slices/craftingSlice.js';
 import { calculateGatheringQuality } from '../../utils/craftingLogic.js';
 import { stripDiacritics } from '../../utils/arabicUtils.js';
+import { croppedPropScale } from './MapLoader.js';
 
 // Gathering proximity threshold: 2 tiles = 128px
 const GATHER_RANGE = 64 * 2;
-
-// World render scale for 16px Kenmi art (matches MapLoader.KENMI_SCALE).
-const KENMI_SCALE = 4;
 
 // The gathering data still references four legacy sprite keys (green-tree-small,
 // palm-small, rock1, rock2) that were never migrated to the Kenmi atlas — so every
 // resource node rendered as Phaser's __MISSING black diamond. Remap each legacy key to
 // a real Kenmi prop sheet plus the crop region to show, mirroring how MapLoader renders
-// the same sheets (setCrop + KENMI_SCALE + crop-centred origin).
+// the same sheets (setCrop + croppedPropScale + crop-centred origin).
 const GATHER_SPRITE_REMAP = {
   'green-tree-small': { key: 'kenmi-desert-props-acacia-tree', region: { x: 80, y: 0, w: 80, h: 62 } },
   'palm-small': { key: 'kenmi-desert-props-palm-tree-1', region: { x: 48, y: 0, w: 48, h: 60 } },
@@ -65,7 +63,7 @@ export class GatheringSpotManager {
         const src = this.scene.textures.get(key).source[0];
         sprite = this.scene.add.image(px, py, key);
         sprite.setCrop(region.x, region.y, region.w, region.h);
-        sprite.setScale(KENMI_SCALE);
+        sprite.setScale(croppedPropScale(region));
         // Origin pinned to the crop's centre (as a fraction of the full frame) so the
         // visible sprite sits on (px, py); nudged downward so the base roots to the tile.
         sprite.setOrigin(
