@@ -165,6 +165,30 @@ function croppedPropScale(region) {
   return (PROP_TARGET_TILES * TILE) / maxDim;
 }
 
+// Scale for placed objects with no crop region (buildings, obelisks, ladders).
+// Kenmi art is 16px-baseline throughout, so >16px images are multi-tile SOURCE
+// art (an 80x80 house = 5x5 source tiles), not "already world-sized": scale 1
+// left houses barely bigger than an NPC, while the old blanket KENMI_SCALE (4x)
+// ballooned them to 5-9 tiles. 2x lands buildings in the 2-4-tile band relative
+// to the 64px character, and the footprint cap keeps outliers (240px inn) from
+// re-ballooning by construction.
+const NATIVE_OBJECT_SCALE = 2;          // >16px-baseline art renders at 2x
+const MAX_OBJECT_FOOTPRINT_TILES = 4;   // no placed object exceeds 4 tiles in its max dimension
+
+/**
+ * Scale for a no-crop-region object image based on its source dimensions.
+ * Uses max(w, h) — not width alone — so tall narrow props (16x48 ladder)
+ * aren't misclassified as 16px tile props and blown up to 3 tiles.
+ * @param {number} srcW - source image width in px
+ * @param {number} srcH - source image height in px
+ * @returns {number} scale factor
+ */
+function nativeObjectScale(srcW, srcH) {
+  const maxDim = Math.max(srcW || 16, srcH || 16);
+  if (maxDim <= 16) return KENMI_SCALE; // genuine 16px props stay exactly 1 tile
+  return Math.min(NATIVE_OBJECT_SCALE, (MAX_OBJECT_FOOTPRINT_TILES * TILE) / maxDim);
+}
+
 // Props that lie flat on the ground — always rendered just above the tilemap (depth ~0.5)
 // and below all upright objects/players.
 export const FLAT_GROUND_PROPS = new Set([
@@ -1574,12 +1598,10 @@ export class MapLoader {
       } else {
         sprite.setOrigin(0.5, 0.8);
         // No crop region: 16px images are tiles (4x -> one tile); larger native
-        // images (80-128px buildings) are already world-sized and must render at
-        // native scale, else KENMI_SCALE balloons them to 5 tiles. Mirrors the
-        // source-width guard already used in _createDecoSprite for scatter props.
+        // images (80-144px buildings) are multi-tile Kenmi art rendered at 2x,
+        // capped at MAX_OBJECT_FOOTPRINT_TILES. Mirrors _createDecoSprite.
         const src = this.scene.textures.get(textureKey).source[0];
-        const srcW = src ? src.width : 16;
-        sprite.setScale(srcW <= 16 ? KENMI_SCALE : 1);
+        sprite.setScale(nativeObjectScale(src && src.width, src && src.height));
         // Foot = visual bottom with origin 0.8 → py + displayHeight * 0.2
         depth = FLAT_GROUND_PROPS.has(textureKey)
           ? 0.5 + py * 0.0001
@@ -1999,18 +2021,12 @@ export class MapLoader {
       sprite.setScale(scale);
       displayH = region.h * scale;
     } else {
-      // Not in crop list — check texture source dimensions
+      // Not in crop list — scale from source dimensions: 16px props get
+      // KENMI_SCALE (one tile), larger multi-tile art gets 2x with a
+      // footprint cap. Same rule as the placeObjects no-crop branch.
       const tex = this.scene.textures.get(propKey);
       const src = tex.source[0];
-      const srcW = src ? src.width : 16;
-      if (srcW <= 16) {
-        // Small single-item: scale 4x
-        sprite.setScale(KENMI_SCALE);
-      } else {
-        // Larger single-object image (e.g. palm-tree, acacia-tree): render at native size
-        // These are already sized for the visual world (80-240px wide)
-        sprite.setScale(1);
-      }
+      sprite.setScale(nativeObjectScale(src && src.width, src && src.height));
       displayH = sprite.displayHeight;
     }
 
