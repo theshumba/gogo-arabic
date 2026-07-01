@@ -160,7 +160,7 @@ const PROP_TARGET_TILES = 1;
  * @param {{ w: number, h: number }} region - crop region in source pixels
  * @returns {number} scale factor
  */
-function croppedPropScale(region) {
+export function croppedPropScale(region) {
   const maxDim = Math.max(region.w, region.h) || 16;
   return (PROP_TARGET_TILES * TILE) / maxDim;
 }

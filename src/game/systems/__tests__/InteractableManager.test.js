@@ -31,6 +31,16 @@ vi.mock('../../../utils/arabicUtils.js', () => ({
   stripDiacritics: vi.fn((text) => text.replace(/[\u064B-\u065F]/g, ''))
 }));
 
+// Mock ReplaceColorPipeline to avoid Phaser dependency (pulled in transitively
+// via the croppedPropScale import from MapLoader)
+vi.mock('../ReplaceColorPipeline.js', () => ({
+  default: class ReplaceColorPipeline {
+    constructor(game) {
+      this.game = game;
+    }
+  },
+}));
+
 describe('InteractableManager', () => {
   let scene;
   let interactableManager;

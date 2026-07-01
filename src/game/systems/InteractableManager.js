@@ -3,21 +3,38 @@ import { EventBus } from '../../utils/eventBus.js';
 import { EVENTS } from '../../utils/eventBusTypes.js';
 import { store } from '../../store/store.js';
 import { stripDiacritics } from '../../utils/arabicUtils.js';
+import { croppedPropScale } from './MapLoader.js';
 
 // Interactable proximity threshold: 2 tiles = 128px
 const INTERACT_RANGE = 64 * 2;
+// Object name labels reveal a little before the player can interact, so they fade in
+// as you approach instead of cluttering the whole screen at once.
+const LABEL_RANGE = 64 * 3.5;
 
-// Sprite key mapping for the 8 new interactive object types + inscription — Kenmi keys
+// Sprite mapping for the 8 new interactive object types + inscription — Kenmi keys.
+// Several of these textures are multi-item sheets (desert-rocks is 14 items in one
+// 192x32 image), so each entry also picks ONE crop region (matching MapLoader's
+// PROP_CROP_REGIONS entries). Rendering the bare key drew the whole sheet as a
+// miniature strip of every item at once — same fix as GATHER_SPRITE_REMAP in
+// GatheringSpotManager.js (setCrop + normalized scale + crop-centred origin).
 const WORLD_OBJECT_SPRITES = {
-  fountain: 'kenmi-desert-props-golden-pots',
-  statue: 'kenmi-desert-temple-desert-obelisk-small-1',
-  painting: 'kenmi-desert-temple-desert-obelisk-small-2',
-  lantern: 'kenmi-desert-props-desert-rocks',
-  stall: 'kenmi-desert-houses-pergola',
-  barrel: 'kenmi-desert-props-desert-rocks',
-  crate: 'kenmi-desert-props-golden-pots',
-  pot: 'kenmi-desert-props-golden-pots',
-  inscription: 'kenmi-desert-temple-desert-obelisk-small-2',
+  fountain: { key: 'kenmi-desert-props-golden-pots', region: { x: 0, y: 0, w: 16, h: 16 } },
+  statue: { key: 'kenmi-desert-temple-desert-obelisk-small-1', region: { x: 0, y: 0, w: 32, h: 32 } },
+  painting: { key: 'kenmi-desert-temple-desert-obelisk-small-2', region: { x: 0, y: 0, w: 32, h: 32 } },
+  lantern: { key: 'kenmi-desert-props-desert-rocks', region: { x: 64, y: 0, w: 16, h: 16 } },
+  stall: { key: 'kenmi-desert-houses-pergola', region: { x: 0, y: 0, w: 32, h: 64 } },
+  barrel: { key: 'kenmi-desert-props-desert-rocks', region: { x: 32, y: 0, w: 32, h: 32 } },
+  crate: { key: 'kenmi-desert-props-golden-pots', region: { x: 16, y: 0, w: 16, h: 16 } },
+  pot: { key: 'kenmi-desert-props-golden-pots', region: { x: 32, y: 0, w: 16, h: 16 } },
+  inscription: { key: 'kenmi-desert-temple-desert-obelisk-small-2', region: { x: 0, y: 0, w: 32, h: 32 } },
+};
+
+// Legacy interactable types (sign/bookshelf/chest/door) — same key+region shape.
+const LEGACY_INTERACTABLE_SPRITES = {
+  sign: { key: 'kenmi-desert-temple-desert-obelisk-small-2', region: { x: 0, y: 0, w: 32, h: 32 } },
+  bookshelf: { key: 'kenmi-desert-temple-desert-obelisk-small-1', region: { x: 0, y: 0, w: 32, h: 32 } },
+  chest: { key: 'kenmi-desert-props-desert-rocks', region: { x: 112, y: 0, w: 32, h: 32 } },
+  door: { key: 'kenmi-desert-houses-desert-house-1.1', region: { x: 0, y: 0, w: 80, h: 80 } },
 };
 
 // Set of all new world object types (behavior composition, not class-per-type)
@@ -50,16 +67,31 @@ export class InteractableManager {
       const px = cfg.x * 64 + 32;
       const py = cfg.y * 64 + 32;
 
-      // Choose sprite based on type — Kenmi keys
-      let spriteKey;
-      if (cfg.type === 'sign') spriteKey = 'kenmi-desert-temple-desert-obelisk-small-2';
-      else if (cfg.type === 'bookshelf') spriteKey = 'kenmi-desert-temple-desert-obelisk-small-1';
-      else if (cfg.type === 'chest') spriteKey = 'kenmi-desert-props-desert-rocks';
-      else if (cfg.type === 'door') spriteKey = 'kenmi-desert-houses-desert-house-1.1';
-      else if (WORLD_OBJECT_TYPES.has(cfg.type)) spriteKey = WORLD_OBJECT_SPRITES[cfg.type];
+      // Choose sprite + crop region based on type — Kenmi keys
+      const mapping = LEGACY_INTERACTABLE_SPRITES[cfg.type] || WORLD_OBJECT_SPRITES[cfg.type];
 
-      const sprite = this.scene.add.image(px, py, spriteKey).setOrigin(0.5, 0.8);
-      sprite.setScale(0.7);
+      // Crop the sheet to one item and normalize to ~1 tile when the texture is
+      // loaded; fall back to the raw key otherwise so a missing texture degrades
+      // to the original behaviour rather than throwing (mirrors GatheringSpotManager).
+      let sprite;
+      if (mapping && this.scene.textures.exists(mapping.key)) {
+        const { key, region } = mapping;
+        const src = this.scene.textures.get(key).source[0];
+        sprite = this.scene.add.image(px, py, key);
+        sprite.setCrop(region.x, region.y, region.w, region.h);
+        sprite.setScale(croppedPropScale(region));
+        // Origin pinned to the crop's centre (as a fraction of the full frame) so the
+        // visible sprite sits on (px, py); nudged downward so the base roots to the tile.
+        sprite.setOrigin(
+          (region.x + region.w / 2) / src.width,
+          (region.y + region.h * 0.85) / src.height,
+        );
+        // Y-sort with the rest of the world instead of sitting under every prop.
+        sprite.setDepth(py);
+      } else {
+        sprite = this.scene.add.image(px, py, mapping?.key).setOrigin(0.5, 0.8);
+        sprite.setScale(0.7);
+      }
 
       // Tint already-opened chests from persisted state
       if (cfg.type === 'chest') {
@@ -112,7 +144,7 @@ export class InteractableManager {
         stroke: '#2b292c',
         strokeThickness: 3,
         align: 'center',
-      }).setOrigin(0.5).setDepth(9999);
+      }).setOrigin(0.5).setDepth(9999).setVisible(false);
 
       // Interaction hint (hidden by default)
       const hintText = this.scene.add.text(px, py + 30, '[SPACE]', {
@@ -187,6 +219,9 @@ export class InteractableManager {
       );
       const inRange = dist < INTERACT_RANGE;
       obj.hintText.setVisible(inRange);
+      // Reveal the object's Arabic name only when the player is nearby — keeps the
+      // vocabulary-learning value without blanketing the screen in labels.
+      if (obj.label) obj.label.setVisible(dist < LABEL_RANGE);
 
       if (
         inRange &&
