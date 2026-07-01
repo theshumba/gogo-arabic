@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { NPC_KEY_MAP, FEMALE_NPC_IDS, NPC_HIJAB_TINT } from '../../data/spriteKeyMap.js';
+import { NPC_KEY_MAP } from '../../data/spriteKeyMap.js';
 import { createArabicText } from '../ui/ArabicText.js';
 
 /**
@@ -164,33 +164,15 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
         });
       }
 
-      // --- Hijab overlay for female NPCs (CHAR-03) ---
+      // --- Hijab overlay for female NPCs (CHAR-03) — REMOVED ---
+      // The procedural rounded-rect overlay was drawn for 16px Kenmi frames and
+      // hardcoded to 4x scale, so on the 128px faceless NPC sheets (which render
+      // at 0.5x) it covered the whole head as a featureless cream slab. The
+      // paper-doll head sheets (head-hijab etc.) don't align with the faceless
+      // sheets' authored head positions either, so no existing asset can overlay
+      // correctly. Render the artist's authored character art as-is; all
+      // _hijabSprite references below stay null-guarded for a future real asset.
       this._hijabSprite = null;
-      if (FEMALE_NPC_IDS.has(key)) {
-        // Create a small rectangle overlay positioned over the head area of the sprite.
-        // Kenmi 16x16 sprites at 4x scale = 64x64. Head occupies roughly top 5px (20px scaled).
-        // We use a tinted Graphics-based sprite to simulate hijab covering.
-        const gfx = scene.make.graphics({ x: 0, y: 0, add: false });
-
-        // Draw a hijab shape: a rounded top + drape on the sides
-        // At 16x16 base: head is roughly x:4-12, y:0-5
-        gfx.fillStyle(0xFFFFFF, 1);
-        // Head covering: semicircle on top + drape sides
-        gfx.fillRoundedRect(3, 0, 10, 6, 2);  // top of head
-        gfx.fillRect(2, 3, 3, 5);              // left drape
-        gfx.fillRect(11, 3, 3, 5);             // right drape
-
-        // Generate a unique texture key for this NPC's hijab
-        const hijabTexKey = `hijab-overlay-${id}`;
-        gfx.generateTexture(hijabTexKey, 16, 16);
-        gfx.destroy();
-
-        this._hijabSprite = scene.add.sprite(x, y, hijabTexKey);
-        this._hijabSprite.setScale(4);  // Match NPC scale
-        this._hijabSprite.setTint(NPC_HIJAB_TINT);
-        this._hijabSprite.setDepth(this.depth + 1);
-        this._hijabSprite.setOrigin(0.5, 0.5);
-      }
     } else {
       // --- Legacy animation setup (4×4 grid, 128x128 frames) ---
       const hasEnoughFrames = frameCount >= 3;

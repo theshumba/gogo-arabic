@@ -293,7 +293,13 @@ export class WorldScene extends Phaser.Scene {
     if (this.equipmentManager) { this.equipmentManager.destroy(); this.equipmentManager = null; }
     if (this.gatheringSpotManager) { this.gatheringSpotManager.destroy(); this.gatheringSpotManager = null; }
 
-    if (this.usingTiledMap) { this.tiledMapLoader.destroy(); } else { this.mapLoader.destroy(); }
+    // Destroy BOTH loaders unconditionally. The Tiled path still places props
+    // through mapLoader.placeObjectsOnly(), so tearing down only one loader
+    // orphaned the previous zone's props (leaking oasis houses/ladder/bones
+    // into every zone visited afterwards). Both destroy() methods are no-ops
+    // when their loader holds nothing.
+    if (this.tiledMapLoader) this.tiledMapLoader.destroy();
+    if (this.mapLoader) this.mapLoader.destroy();
     this.usingTiledMap = false;
     if (this.floatingLabelManager) { this.floatingLabelManager.destroy(); this.floatingLabelManager = null; }
     if (this.npcManager) this.npcManager.destroy();

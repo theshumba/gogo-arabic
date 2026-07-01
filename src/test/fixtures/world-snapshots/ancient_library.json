@@ -7010,12 +7010,6 @@
       "collide": false
     },
     {
-      "key": "kenmi-desert-props-desert-ladder",
-      "x": 9,
-      "y": 11,
-      "collide": false
-    },
-    {
       "key": "kenmi-desert-props-desert-pots-sacks",
       "x": 11,
       "y": 9,

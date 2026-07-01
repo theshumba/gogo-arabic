@@ -21,7 +21,9 @@ const GATHER_SPRITE_REMAP = {
   'green-tree-small': { key: 'kenmi-desert-props-acacia-tree', region: { x: 80, y: 0, w: 80, h: 62 } },
   'palm-small': { key: 'kenmi-desert-props-palm-tree-1', region: { x: 48, y: 0, w: 48, h: 60 } },
   'rock1': { key: 'kenmi-desert-props-desert-rocks', region: { x: 32, y: 0, w: 32, h: 32 } },
-  'rock2': { key: 'kenmi-desert-props-desert-rocks', region: { x: 112, y: 0, w: 32, h: 32 } },
+  // (112,0) was a teal water-ring "oasis rock" frame — read as a cyan blob on
+  // dry ground. Use the grey-shadow tall rock so ore nodes sit on land cleanly.
+  'rock2': { key: 'kenmi-desert-props-desert-rocks', region: { x: 64, y: 16, w: 16, h: 16 } },
 };
 
 /**

@@ -22,15 +22,25 @@ import { reshape } from 'js-arabic-reshaper';
 const DEFAULT_FONT_FAMILY = "'PixelAE', 'Amiri', 'Noto Naskh Arabic', serif";
 
 /**
+ * Tashkeel / harakat combining marks (fathatan..sukun, hamza marks, superscript
+ * alef). Stripped before reshaping for canvas rendering: js-arabic-reshaper
+ * breaks letter joining across them (emitting isolated forms mid-word), and the
+ * PixelAE pixel font can't render the marks legibly at label sizes anyway.
+ * DOM/React surfaces shape natively and keep full tashkeel.
+ */
+const TASHKEEL_RE = /[\u064B-\u0655\u0670]/g;
+
+/**
  * Reverse a string for RTL display.
- * Uses Array.from (spread) to correctly handle multi-codepoint characters
- * and Unicode surrogate pairs.
+ * Reverses grapheme clusters (base letter + any trailing combining marks) so
+ * combining marks stay attached to their base letter, and handles surrogate
+ * pairs correctly.
  *
  * @param {string} str
  * @returns {string}
  */
 function reverseString(str) {
-  return [...str].reverse().join('');
+  return (str.match(/\P{M}\p{M}*/gu) || []).reverse().join('');
 }
 
 /**
@@ -70,8 +80,17 @@ export function prepareArabicText(text) {
   const hasArabic = [...text].some((ch) => isArabicChar(ch.codePointAt(0)));
   if (!hasArabic) return text;
 
-  // Reshape Arabic letters to their presentation (connected) forms
-  const reshaped = reshape(text);
+  // Strip tashkeel before reshaping — the reshaper breaks joining across
+  // harakat (isolated forms mid-word), and PixelAE lacks the mark glyphs.
+  // NOTE: the library's own `delete_harakat` option is broken (Python-port
+  // bug: HARAKAT_RE.match is not a function), so we strip here instead.
+  const stripped = text.replace(TASHKEEL_RE, '');
+
+  // Reshape Arabic letters to their presentation (connected) forms.
+  // `ligatures: false` keeps output in letter-level Presentation Forms-B
+  // (U+FE70–U+FEFF) only; the default emits Forms-A ligatures (e.g. U+FC42)
+  // that the pixel font lacks, rendering as tofu.
+  const reshaped = reshape(stripped, { ligatures: false });
 
   // Split into segments of Arabic vs non-Arabic to handle mixed text
   const segments = [];

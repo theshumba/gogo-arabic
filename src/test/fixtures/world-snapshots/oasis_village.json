@@ -8096,12 +8096,6 @@
       "collide": false
     },
     {
-      "key": "kenmi-desert-props-desert-ladder",
-      "x": 11,
-      "y": 15,
-      "collide": false
-    },
-    {
       "key": "kenmi-desert-props-desert-rugs",
       "x": 14,
       "y": 9,

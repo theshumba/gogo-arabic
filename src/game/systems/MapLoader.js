@@ -448,6 +448,16 @@ export const PROP_CROP_REGIONS = {
   ],
 };
 
+// Crop indexes safe for RANDOM variant selection, per prop sheet.
+// desert-rocks mixes dry grey-shadow rocks (indexes 0-3, 9-11) with teal
+// water-ring "oasis rocks" (4-8, 12-13) in one sheet; a random pick must never
+// drop a water-ring rock on dry land. Authored placements can still opt into
+// water frames with an explicit `cropIndex`. Sheets not listed here pick from
+// all their crop regions.
+export const PROP_RANDOM_CROP_INDEXES = {
+  'kenmi-desert-props-desert-rocks': [0, 1, 2, 3, 9, 10, 11],
+};
+
 // Biome-to-tileset config table.
 // NOTE: snow biome uses kenmi-base-tiles-grass-grass-tiles-1 (IS a spritesheet) with blue tints.
 // kenmi-christmas-decorations-christmass-grass is type 'image' (NOT spritesheet) — cannot use frame indices.
@@ -1574,11 +1584,16 @@ export class MapLoader {
       const cropRegions = PROP_CROP_REGIONS[textureKey];
       let depth = py;
       if (cropRegions && cropRegions.length > 0) {
+        // Random picks draw from the dry-land-safe pool (PROP_RANDOM_CROP_INDEXES)
+        // so e.g. desert-rocks never randomly land a teal water-ring frame on sand.
+        const randomPool = PROP_RANDOM_CROP_INDEXES[textureKey];
         const idx = (Number.isInteger(obj.cropIndex)
           && obj.cropIndex >= 0
           && obj.cropIndex < cropRegions.length)
           ? obj.cropIndex
-          : Math.floor(Math.random() * cropRegions.length);
+          : (randomPool
+            ? randomPool[Math.floor(Math.random() * randomPool.length)]
+            : Math.floor(Math.random() * cropRegions.length));
         const region = cropRegions[idx];
         const scale = croppedPropScale(region);
         sprite.setCrop(region.x, region.y, region.w, region.h);
@@ -2013,8 +2028,13 @@ export class MapLoader {
     const cropRegions = PROP_CROP_REGIONS[propKey];
     let displayH;
     if (cropRegions && cropRegions.length > 0) {
-      // Multi-item sheet: pick one region, crop to it, then normalize to ~1 tile
-      const regionIdx = Math.floor(hash * cropRegions.length);
+      // Multi-item sheet: pick one region, crop to it, then normalize to ~1 tile.
+      // Hash picks draw from the dry-land-safe pool where one exists (e.g.
+      // desert-rocks: never scatter a teal water-ring frame on dry ground).
+      const randomPool = PROP_RANDOM_CROP_INDEXES[propKey];
+      const regionIdx = randomPool
+        ? randomPool[Math.floor(hash * randomPool.length)]
+        : Math.floor(hash * cropRegions.length);
       const region = cropRegions[regionIdx];
       const scale = croppedPropScale(region);
       sprite.setCrop(region.x, region.y, region.w, region.h);
