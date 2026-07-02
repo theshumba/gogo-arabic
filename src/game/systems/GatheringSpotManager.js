@@ -11,6 +11,9 @@ import { croppedPropScale } from './MapLoader.js';
 
 // Gathering proximity threshold: 2 tiles = 128px
 const GATHER_RANGE = 64 * 2;
+// Resource name labels fade in as the player approaches instead of permanently
+// cluttering the screen (matches InteractableManager's LABEL_RANGE).
+const GATHER_LABEL_RANGE = 64 * 3.5;
 
 // The gathering data still references four legacy sprite keys (green-tree-small,
 // palm-small, rock1, rock2) that were never migrated to the Kenmi atlas — so every
@@ -99,7 +102,8 @@ export class GatheringSpotManager {
 
       const labelBg = this.scene.add.rectangle(px, py - 50, textWidth, textHeight, 0x1a1a2e, 0.75)
         .setOrigin(0.5)
-        .setDepth(9998);
+        .setDepth(9998)
+        .setVisible(false);
 
       const label = this.scene.add.text(px, py - 50, labelText, {
         fontFamily: "'Noto Naskh Arabic', serif",
@@ -108,7 +112,7 @@ export class GatheringSpotManager {
         stroke: '#1a1a2e',
         strokeThickness: 4,
         align: 'center',
-      }).setOrigin(0.5).setDepth(9999);
+      }).setOrigin(0.5).setDepth(9999).setVisible(false);
 
       // Interaction hint (hidden by default)
       const hintText = this.scene.add.text(px, py + 30, '[SPACE]', {
@@ -169,6 +173,11 @@ export class GatheringSpotManager {
         spot.worldY
       );
       const inRange = dist < GATHER_RANGE;
+
+      // Reveal the resource's Arabic name only as the player approaches.
+      const labelVisible = dist < GATHER_LABEL_RANGE;
+      if (spot.label) spot.label.setVisible(labelVisible);
+      if (spot.labelBg) spot.labelBg.setVisible(labelVisible);
 
       // Show/hide interaction hint based on proximity and state
       if (inRange && spot.state === 'ready') {
