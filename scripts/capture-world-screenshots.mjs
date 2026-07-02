@@ -108,6 +108,11 @@ async function switchZone(page, zoneId) {
     const s = g && g.scene.getScene('WorldScene');
     if (!s || typeof s.loadZone !== 'function') return { ok: false, reason: 'no loadZone' };
     try {
+      // Suppress the ZoneToast banner for this build. buildZone consumes AND resets the
+      // flag (WorldScene.js:380-381), so it must be re-set before EVERY loadZone call —
+      // otherwise the ~1s zone cadence stacks several 2.8s toasts into a garbled
+      // "MOROYALAPALACEGE" pile-up at the top of every shot.
+      s._suppressZoneToast = true;
       // entryX/entryY omitted → buildZone uses the zone's own spawn handling.
       s.loadZone(zone);
       return { ok: true };
@@ -175,6 +180,11 @@ async function main() {
         // to the origin) and centre on the map middle, where zone content is authored.
         await page.evaluate(() => {
           const s = window.__PHASER_GAME__.scene.getScene('WorldScene');
+          // Belt-and-braces: destroy any in-flight zone toasts from earlier navigation.
+          // ZoneToast labels are the only depth-9500 / scrollFactor-0 objects in the scene.
+          s.children.list
+            .filter((o) => o.depth === 9500 && o.scrollFactorX === 0)
+            .forEach((o) => o.destroy());
           const cam = s.cameras.main;
           if (cam.stopFollow) cam.stopFollow();
           const w = (s.currentMapW || 45) * 64;
@@ -185,9 +195,16 @@ async function main() {
       }
 
       const outPath = path.join(OUT_DIR, `${zoneId}.png`);
-      const canvas = page.locator('canvas').first();
       try {
-        await canvas.screenshot({ path: outPath });
+        // Snapshot Phaser's own framebuffer, NOT the page. Playwright's canvas.screenshot()
+        // clips the page to the canvas bbox but composites overlaying DOM into the image —
+        // so the React HUD (MiniMap stuck on OASIS VILLAGE, QuestTracker, tutorial banner,
+        // ClockHUD) polluted every zone shot. renderer.snapshot() returns only game pixels
+        // and works in WebGL without preserveDrawingBuffer.
+        const dataUrl = await page.evaluate(
+          () => new Promise((res) => window.__PHASER_GAME__.renderer.snapshot((img) => res(img.src))),
+        );
+        fs.writeFileSync(outPath, Buffer.from(dataUrl.split(',')[1], 'base64'));
       } catch (err) {
         // Fall back to a full-page shot so we still capture *something* to look at.
         await page.screenshot({ path: outPath, fullPage: false });
