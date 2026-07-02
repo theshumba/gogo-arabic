@@ -237,7 +237,7 @@ export class DialogueBox {
     this.cursor.setVisible(false);
     this.isTyping = true;
 
-    // Prepare the display text (reshape + reverse Arabic, or use as-is for English)
+    // Prepare the display text (reshape Arabic in logical order, or use as-is for English)
     const displayMsg = isArabic ? prepareArabicText(msg) : msg;
 
     let charIndex = 0;

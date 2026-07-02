@@ -1,10 +1,10 @@
 /**
  * ArabicText — Utility for rendering Arabic text in Phaser Canvas.
- * Handles reshaping (letter joining via js-arabic-reshaper) and RTL reversal.
- *
- * Phaser's Canvas text renderer does not support:
- *   1. Arabic letter joining (connected forms) — solved by reshaping to presentation forms
- *   2. Right-to-left layout — solved by reversing the character order
+ * Handles reshaping (letter joining via js-arabic-reshaper) for pixel-font
+ * glyph coverage. The string is kept in LOGICAL order: canvas fillText runs
+ * the full Unicode bidi algorithm, so it lays RTL text out right-to-left
+ * natively. (We previously also reversed the string here — fillText then
+ * re-reversed it, displaying every label backwards.)
  *
  * Usage:
  *   import { createArabicText, prepareArabicText } from '../ui/ArabicText.js';
@@ -31,19 +31,6 @@ const DEFAULT_FONT_FAMILY = "'PixelAE', 'Amiri', 'Noto Naskh Arabic', serif";
 const TASHKEEL_RE = /[\u064B-\u0655\u0670]/g;
 
 /**
- * Reverse a string for RTL display.
- * Reverses grapheme clusters (base letter + any trailing combining marks) so
- * combining marks stay attached to their base letter, and handles surrogate
- * pairs correctly.
- *
- * @param {string} str
- * @returns {string}
- */
-function reverseString(str) {
-  return (str.match(/\P{M}\p{M}*/gu) || []).reverse().join('');
-}
-
-/**
  * Check if a character is Arabic (main block + presentation forms + diacritics).
  *
  * @param {number} code - Unicode code point.
@@ -61,14 +48,15 @@ function isArabicChar(code) {
 
 /**
  * Prepare Arabic text for Phaser Canvas rendering.
- * 1. Reshape connected letters using js-arabic-reshaper (isolated -> initial/medial/final forms)
- * 2. Reverse character order for RTL display
+ * Reshapes connected letters using js-arabic-reshaper (isolated ->
+ * initial/medial/final presentation forms) so the PixelAE pixel font has
+ * glyphs to draw, and returns the result in LOGICAL order — canvas fillText
+ * applies the bidi algorithm and handles the RTL layout itself. Do NOT
+ * reverse the string here: fillText would re-reverse it and every label
+ * would render backwards.
  *
- * Non-Arabic text passes through unchanged.
- * Mixed text (Arabic + Latin) is handled segment by segment:
- *   - Arabic segments are reshaped and reversed
- *   - Latin segments are kept in original order
- *   - The overall segment order is reversed for RTL layout
+ * Non-Arabic text passes through unchanged. Mixed Arabic/Latin text is
+ * likewise handled by native bidi.
  *
  * @param {string} text - Raw Arabic (or mixed) text.
  * @returns {string} Text ready for Phaser Canvas rendering.
@@ -90,44 +78,8 @@ export function prepareArabicText(text) {
   // `ligatures: false` keeps output in letter-level Presentation Forms-B
   // (U+FE70–U+FEFF) only; the default emits Forms-A ligatures (e.g. U+FC42)
   // that the pixel font lacks, rendering as tofu.
-  const reshaped = reshape(stripped, { ligatures: false });
-
-  // Split into segments of Arabic vs non-Arabic to handle mixed text
-  const segments = [];
-  let current = '';
-  let currentIsArabic = null;
-
-  for (const ch of reshaped) {
-    const code = ch.codePointAt(0);
-    const charIsArabic = isArabicChar(code) || code === 0x20; // include spaces
-
-    // If we're starting fresh or the type hasn't changed, accumulate
-    if (currentIsArabic === null || charIsArabic === currentIsArabic) {
-      current += ch;
-      currentIsArabic = charIsArabic;
-    } else {
-      segments.push({ text: current, arabic: currentIsArabic });
-      current = ch;
-      currentIsArabic = charIsArabic;
-    }
-  }
-  if (current) {
-    segments.push({ text: current, arabic: currentIsArabic });
-  }
-
-  // For purely Arabic text (most common case), just reverse
-  if (segments.length === 1 && segments[0].arabic) {
-    return reverseString(segments[0].text);
-  }
-
-  // For mixed text: reverse Arabic segments individually,
-  // then reverse segment order for overall RTL layout
-  const processed = segments
-    .map((seg) => (seg.arabic ? reverseString(seg.text) : seg.text))
-    .reverse()
-    .join('');
-
-  return processed;
+  // Logical order — canvas bidi handles the RTL layout.
+  return reshape(stripped, { ligatures: false });
 }
 
 /**
@@ -136,7 +88,7 @@ export function prepareArabicText(text) {
  * @param {Phaser.Scene} scene - The current Phaser scene.
  * @param {number} x - X position.
  * @param {number} y - Y position.
- * @param {string} text - Raw Arabic text (will be reshaped + reversed).
+ * @param {string} text - Raw Arabic text (will be reshaped; kept in logical order).
  * @param {object} [style={}] - Phaser text style overrides.
  * @returns {Phaser.GameObjects.Text} The created text object.
  */
@@ -165,7 +117,7 @@ export function createArabicText(scene, x, y, text, style = {}) {
 
 /**
  * Update an existing Phaser Text object with new Arabic text.
- * Reshapes and reverses the new text before setting it.
+ * Reshapes the new text (logical order) before setting it.
  *
  * @param {Phaser.GameObjects.Text} textObj - Existing Phaser text object.
  * @param {string} newText - New raw Arabic text.
