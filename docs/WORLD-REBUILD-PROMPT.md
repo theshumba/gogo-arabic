@@ -14,8 +14,8 @@ You are working in `~/Documents/GitHub/gogo-arabic` (Phaser 3 Arabic-learning RP
 2. `WORLD-VS-LOGIC-CONCERN.md` — the world/logic contract above.
 3. Capabilities that already exist — audit and REUSE, don't rebuild: `src/game/scenes/InteriorScene.js` (interiors), authored Tiled maps in `public/assets/maps/` (incl. legacy .tmx interiors like house.tmx), the Tiled MCP server at `.mcp/tiled-mcp-server` (43 tools incl. AutoMapping), screenshot harness `npm run capture:world-screenshots` → `docs/world-shots/` (dev server: `npm run dev`, localhost:3000), full asset library under `public/assets/kenmi/` (base/desert/characters/dungeons/militarycamp/ui + seasonal packs).
 
-## Inputs from Melusi
-Reference screenshots live in `docs/world-references/` — he has filled it with shots from games whose worlds look and feel the way Gogo Arabic should (Pokémon towns, Stardew, Animal Crossing, etc.). View EVERY image there with the Read tool before designing anything. If the folder is missing or empty, STOP and ask him to drop the images in — do not design without references.
+## Inputs — reference library
+The curated reference library lives at `~/Desktop/Gogo-World-References/` — 11 category folders (master town maps, desert/oasis villages, bazaar, palace, camps, mountain village, port, library/temple, farmland, house interiors, detail language), each with a `manifest.md`, collected and curated by an agent swarm on 2026-07-03; see its `README.md`. Additional images Melusi adds by hand may also appear in repo `docs/world-references/`. Study the categories relevant to each zone with the Read tool before designing anything (start with `01-master-town-maps` — it is the composition masterclass set). If the Desktop folder is missing or nearly empty, STOP and tell Melusi — do not design without references.
 
 ## Phase 0 — Research + Design Bible (no map building yet)
 Deploy research agents to produce `docs/WORLD-DESIGN-BIBLE.md`:
