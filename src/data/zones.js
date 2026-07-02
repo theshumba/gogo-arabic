@@ -1849,8 +1849,8 @@ const royal_palace = {
     // DECO-04: Large obelisks at grand gate + golden pots at central fountain
     { key: 'kenmi-desert-temple-desert-obelisk-2', x: 20, y: 30, collide: true, collideW: 20, collideH: 20 },
     { key: 'kenmi-desert-temple-desert-obelisk-2', x: 30, y: 30, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-props-golden-pots', x: 23, y: 20, collide: false },
-    { key: 'kenmi-desert-props-golden-pots', x: 27, y: 20, collide: false },
+    { key: 'kenmi-desert-props-golden-pots', x: 22, y: 20, collide: false },
+    { key: 'kenmi-desert-props-golden-pots', x: 28, y: 20, collide: false },
     // DECO-05: NPC-adjacent props (Vizier Abbas 25,13; Princess Aisha 20,20; Poet Rumi 30,20)
     { key: 'kenmi-desert-props-desert-rugs', x: 26, y: 14, collide: false },
     { key: 'kenmi-desert-props-sleeping-mat', x: 19, y: 21, collide: false },
@@ -1954,7 +1954,7 @@ const royal_palace = {
     { id: 'chest-palace-garden', type: 'chest', x: 43, y: 20, minDirhams: 50, maxDirhams: 180 },
     { id: 'door-palace-throne', type: 'door', x: 25, y: 12, interiorId: 'palace_throne_interior', locked: true, lockMessage: 'The throne room requires an audience with the Vizier.', unlockFlag: 'palace_audience_granted', labelArabic: 'قاعَة العَرش', labelEnglish: 'Throne Room' },
     // --- Phase 23: Interactive Objects ---
-    { id: 'fountain-palace-1', type: 'fountain', x: 25, y: 20, labelArabic: 'نافورة', labelEnglish: 'Royal Fountain', descriptionEnglish: 'A magnificent central fountain surrounded by marble, its waters sparkling in the sunlight.', descriptionArabic: 'نافورة ملكية رائعة محاطة بالرخام.', culturalNote: 'Palace fountains in Islamic architecture represent paradise (jannah), with gardens built around four water channels.', vocabWordId: 'excuse_me_1', vocabCategory: 'phrases', repeatable: true },
+    { id: 'fountain-palace-1', type: 'fountain', x: 24, y: 23, labelArabic: 'نافورة', labelEnglish: 'Royal Fountain', descriptionEnglish: 'A magnificent central fountain surrounded by marble, its waters sparkling in the sunlight.', descriptionArabic: 'نافورة ملكية رائعة محاطة بالرخام.', culturalNote: 'Palace fountains in Islamic architecture represent paradise (jannah), with gardens built around four water channels.', vocabWordId: 'excuse_me_1', vocabCategory: 'phrases', repeatable: true },
     { id: 'fountain-palace-2', type: 'fountain', x: 8, y: 18, labelArabic: 'نافورة', labelEnglish: 'Garden Fountain', descriptionEnglish: 'A small fountain in the west garden, its gentle sound soothing visiting dignitaries.', vocabWordId: 'color_white', vocabCategory: 'colors', repeatable: true },
     { id: 'painting-palace-1', type: 'painting', x: 18, y: 11, labelArabic: 'لوحة', labelEnglish: 'Royal Portrait', descriptionEnglish: 'A grand portrait of the palace founder, adorned in gold and lapis lazuli.', culturalNote: 'Lapis lazuli was imported from Afghanistan and prized across the Islamic world for its vivid blue colour.', vocabWordId: 'color_golden', vocabCategory: 'colors', repeatable: true },
     { id: 'painting-palace-2', type: 'painting', x: 32, y: 11, labelArabic: 'لوحة', labelEnglish: 'Battle Painting', descriptionEnglish: 'A sweeping painting of a great battle with horses, banners, and desert dunes.', vocabWordId: 'brave_1', vocabCategory: 'adjectives', repeatable: true },
