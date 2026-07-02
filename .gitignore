@@ -8,3 +8,7 @@ dist/
 coverage/
 .claude/worktrees/
 scripts/output/
+# Regenerable screenshot-harness output (npm run capture:world-screenshots)
+docs/world-shots/
+# Skill-internal planning artifacts
+docs/superpowers/
