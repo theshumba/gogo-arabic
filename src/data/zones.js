@@ -527,8 +527,10 @@ function buildMarketplaceMap() {
     for (let x = 0; x < W; x++) {
       let tile = SAND;
       // Small oasis pocket around the central fountain — a green accent in the
-      // sand souk (the roads/square are packed sand like Oasis Village, not grass)
-      if (x >= 19 && x <= 25 && y >= 14 && y <= 20) tile = GRASS;
+      // sand souk (the roads/square are packed sand like Oasis Village, not grass).
+      // G3: kept to a 1-tile ring around the water so the market square stays a
+      // sand plaza rather than a lawn.
+      if (x >= 20 && x <= 24 && y >= 15 && y <= 19) tile = GRASS;
       // Small fountain in center
       if (x >= 21 && x <= 23 && y >= 16 && y <= 18) tile = WATER;
       row.push(tile);
@@ -638,6 +640,15 @@ const desert_marketplace = {
     { key: 'kenmi-desert-props-desert-rocks', x: 13, y: 10, collide: false },
     { key: 'kenmi-desert-props-desert-rocks', x: 9, y: 4, collide: false },
     { key: 'kenmi-desert-props-flies-anim', x: 22, y: 16, collide: false },
+    // G3: souk wares ringing the fountain pocket so the central square reads as
+    // a market plaza (rugs + sacks + a golden pot on the surrounding sand)
+    { key: 'kenmi-desert-props-desert-rugs', x: 19, y: 14, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 25, y: 20, collide: false, cropIndex: 3 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 18, y: 17, collide: false, cropIndex: 4 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 26, y: 17, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 25, y: 14, collide: false, cropIndex: 2 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 19, y: 20, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-golden-pots', x: 22, y: 20, collide: false, cropIndex: 1 },
     { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-1-anim', x: 19, y: 18, collide: false },
     { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-2-anim', x: 23, y: 15, collide: false },
     { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-3-anim', x: 21, y: 20, collide: false },
@@ -1063,8 +1074,8 @@ function buildBedouinMap() {
     const row = [];
     for (let x = 0; x < W; x++) {
       let tile = SAND;
-      // Central campfire area
-      if (x >= 14 && x <= 20 && y >= 10 && y <= 16) tile = GRASS;
+      // G3: the central gathering circle stays SAND — a bedouin campfire circle
+      // sits on open desert, not a lawn (the tent patches below keep their grass)
       // Tent areas (small grass patches)
       if (x >= 5 && x <= 10 && y >= 6 && y <= 10) tile = GRASS;
       if (x >= 24 && x <= 30 && y >= 6 && y <= 10) tile = GRASS;
@@ -1101,6 +1112,11 @@ const bedouin_camp = {
     // Central gathering area
     { key: 'kenmi-desert-props-desert-rocks', x: 16, y: 12, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-desert-rocks', x: 18, y: 14, collide: true, collideW: 30, collideH: 20 },
+    // G3: the actual campfire — animated, centre-front of Elder Tariq (17,13)
+    // so it is not hidden behind his name label, with rugs closing the circle
+    { key: 'kenmi-military-campfire-pot-anim', x: 17, y: 14, collide: false },
+    { key: 'kenmi-desert-props-desert-rugs', x: 15, y: 13, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 19, y: 13, collide: false, cropIndex: 4 },
     // Scattered palms
     { key: 'kenmi-desert-props-palm-tree-1', x: 2, y: 5, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-palm-tree-1', x: 32, y: 5, collide: true, collideW: 30, collideH: 20 },
@@ -1777,8 +1793,9 @@ function buildPalaceMap() {
       let tile = SAND; // desert surrounds the palace (this IS a desert zone)
       // Palace courtyard — stone (sand tile)
       if (x >= 15 && x <= 35 && y >= 10 && y <= 30) tile = SAND;
-      // Inner garden — the lush palace garden stays green
-      if (x >= 20 && x <= 30 && y >= 15 && y <= 25) tile = GRASS;
+      // Inner garden — the lush palace garden stays green (G3: shrunk one tile
+      // per side so the courtyard sand frames it and it reads formal, not lawn)
+      if (x >= 21 && x <= 29 && y >= 16 && y <= 24) tile = GRASS;
       // Central fountain
       if (x >= 23 && x <= 27 && y >= 18 && y <= 22) tile = WATER;
       // Grand entrance path
@@ -1855,6 +1872,19 @@ const royal_palace = {
     { key: 'kenmi-desert-props-desert-rugs', x: 26, y: 14, collide: false },
     { key: 'kenmi-desert-props-sleeping-mat', x: 19, y: 21, collide: false },
     { key: 'kenmi-desert-props-golden-pots', x: 31, y: 21, collide: false },
+    // G3: formal symmetric planting so the inner garden reads as a royal garden,
+    // not an empty lawn — flower beds at the corners, flanking the pond axis,
+    // and ferns beside the two garden NPCs
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 21, y: 16, cropIndex: 12 },
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 29, y: 16, cropIndex: 12 },
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 21, y: 24, cropIndex: 21 },
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 29, y: 24, cropIndex: 21 },
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 24, y: 16, cropIndex: 49 },
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 26, y: 16, cropIndex: 49 },
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 24, y: 23, cropIndex: 49 },
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 26, y: 23, cropIndex: 49 },
+    { key: 'kenmi-desert-props-desert-fern', x: 21, y: 20 },
+    { key: 'kenmi-desert-props-desert-fern', x: 29, y: 20 },
 
     { key: 'kenmi-desert-props-ambarakaman-plant', x: 18, y: 38, cropIndex: 0 },
     { key: 'kenmi-desert-props-ambarakaman-plant', x: 48, y: 27, cropIndex: 2 },
