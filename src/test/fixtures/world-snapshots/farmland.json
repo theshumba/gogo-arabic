@@ -4460,13 +4460,13 @@
     {
       "x": 1440,
       "y": 1056,
-      "key": "kenmi-base-tiles-grass-grass-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-1",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1056,
-      "key": "kenmi-base-tiles-grass-grass-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-1",
       "frame": 0
     },
     {
@@ -5270,13 +5270,13 @@
     {
       "x": 1440,
       "y": 1248,
-      "key": "kenmi-base-tiles-grass-grass-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-1",
       "frame": 0
     },
     {
       "x": 1504,
       "y": 1248,
-      "key": "kenmi-base-tiles-grass-grass-tiles-1",
+      "key": "kenmi-base-tiles-water-water-tile-1",
       "frame": 0
     },
     {
@@ -10199,6 +10199,384 @@
       "key": "kenmi-base-outdoor-decoration-scarecrows",
       "x": 15,
       "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 6,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 7,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 8,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 9,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 10,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 11,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 6,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 7,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 8,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 9,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 10,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 11,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 6,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 7,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 8,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 9,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 10,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 11,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 14,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 16,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 18,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 14,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 16,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 18,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 34,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 35,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 36,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 37,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 38,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 39,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 34,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 35,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 36,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 37,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 38,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 39,
+      "y": 8,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 34,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 35,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 36,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 37,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 38,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 39,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 34,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 35,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 36,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 37,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 38,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 39,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 17,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 18,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 19,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 17,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 18,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 19,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 17,
+      "y": 26,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 18,
+      "y": 26,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 19,
+      "y": 26,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 25,
+      "y": 21,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 26,
+      "y": 21,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 27,
+      "y": 21,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 25,
+      "y": 22,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 26,
+      "y": 22,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 27,
+      "y": 22,
       "collide": false
     }
   ],

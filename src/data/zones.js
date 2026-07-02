@@ -798,8 +798,8 @@ function buildFarmlandMap() {
       if (x >= 22 && x <= 23 && y >= 3 && y <= 32) tile = WATER;
       // Small pond
       if (x >= 36 && x <= 39 && y >= 25 && y <= 28) tile = WATER;
-      // Path
-      if (y >= 16 && y <= 19 && x >= 3 && x <= 42) tile = SAND;
+      // Path — 2 tiles wide (a 4-tile sand band read as desert intrusion, not a farm track)
+      if (y >= 17 && y <= 18 && x >= 3 && x <= 42) tile = SAND;
       row.push(tile);
     }
     m.push(row);
@@ -951,6 +951,80 @@ const farmland = {
     { key: 'kenmi-base-outdoor-decoration-barrels', x: 38, y: 3, collide: false, cropIndex: 5 },
  
     { key: 'kenmi-base-outdoor-decoration-scarecrows', x: 15, y: 25, collide: false, cropIndex: 0 },
+
+    // G4: real crop rows so the fields read as FARMLAND, not open grass.
+    // cropIndex → kenmi-base-crops-crops regions: 0 wheat, 1 tomato, 2 carrot,
+    // 3 corn (tall), 4 turnip, 5 cabbage (PROP_CROP_REGIONS in MapLoader.js).
+    // West field — wheat block (x6-11, y7-9)
+    { key: 'kenmi-base-crops-crops', x: 6, y: 7, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 7, y: 7, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 8, y: 7, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 9, y: 7, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 10, y: 7, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 11, y: 7, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 6, y: 8, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 7, y: 8, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 8, y: 8, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 9, y: 8, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 10, y: 8, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 11, y: 8, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 6, y: 9, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 7, y: 9, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 8, y: 9, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 9, y: 9, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 10, y: 9, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-crops-crops', x: 11, y: 9, collide: false, cropIndex: 0 },
+    // West field — tall corn rows (x14-18, y7/9)
+    { key: 'kenmi-base-crops-crops', x: 14, y: 7, collide: false, cropIndex: 3 },
+    { key: 'kenmi-base-crops-crops', x: 16, y: 7, collide: false, cropIndex: 3 },
+    { key: 'kenmi-base-crops-crops', x: 18, y: 7, collide: false, cropIndex: 3 },
+    { key: 'kenmi-base-crops-crops', x: 14, y: 9, collide: false, cropIndex: 3 },
+    { key: 'kenmi-base-crops-crops', x: 16, y: 9, collide: false, cropIndex: 3 },
+    { key: 'kenmi-base-crops-crops', x: 18, y: 9, collide: false, cropIndex: 3 },
+    // East field — tomato rows (x34-39, y7-8)
+    { key: 'kenmi-base-crops-crops', x: 34, y: 7, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 35, y: 7, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 36, y: 7, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 37, y: 7, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 38, y: 7, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 39, y: 7, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 34, y: 8, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 35, y: 8, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 36, y: 8, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 37, y: 8, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 38, y: 8, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-crops-crops', x: 39, y: 8, collide: false, cropIndex: 1 },
+    // East field — cabbage rows (x34-39, y10-11)
+    { key: 'kenmi-base-crops-crops', x: 34, y: 10, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 35, y: 10, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 36, y: 10, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 37, y: 10, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 38, y: 10, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 39, y: 10, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 34, y: 11, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 35, y: 11, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 36, y: 11, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 37, y: 11, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 38, y: 11, collide: false, cropIndex: 5 },
+    { key: 'kenmi-base-crops-crops', x: 39, y: 11, collide: false, cropIndex: 5 },
+    // South field — carrot rows beside the scarecrow (x17-19, y24-26)
+    { key: 'kenmi-base-crops-crops', x: 17, y: 24, collide: false, cropIndex: 2 },
+    { key: 'kenmi-base-crops-crops', x: 18, y: 24, collide: false, cropIndex: 2 },
+    { key: 'kenmi-base-crops-crops', x: 19, y: 24, collide: false, cropIndex: 2 },
+    { key: 'kenmi-base-crops-crops', x: 17, y: 25, collide: false, cropIndex: 2 },
+    { key: 'kenmi-base-crops-crops', x: 18, y: 25, collide: false, cropIndex: 2 },
+    { key: 'kenmi-base-crops-crops', x: 19, y: 25, collide: false, cropIndex: 2 },
+    { key: 'kenmi-base-crops-crops', x: 17, y: 26, collide: false, cropIndex: 2 },
+    { key: 'kenmi-base-crops-crops', x: 18, y: 26, collide: false, cropIndex: 2 },
+    { key: 'kenmi-base-crops-crops', x: 19, y: 26, collide: false, cropIndex: 2 },
+    // South field — turnip rows just below the path, east of the canal
+    // (x25-27, y21-22 — lands inside the map-centre camera frame)
+    { key: 'kenmi-base-crops-crops', x: 25, y: 21, collide: false, cropIndex: 4 },
+    { key: 'kenmi-base-crops-crops', x: 26, y: 21, collide: false, cropIndex: 4 },
+    { key: 'kenmi-base-crops-crops', x: 27, y: 21, collide: false, cropIndex: 4 },
+    { key: 'kenmi-base-crops-crops', x: 25, y: 22, collide: false, cropIndex: 4 },
+    { key: 'kenmi-base-crops-crops', x: 26, y: 22, collide: false, cropIndex: 4 },
+    { key: 'kenmi-base-crops-crops', x: 27, y: 22, collide: false, cropIndex: 4 },
 
   ],
 

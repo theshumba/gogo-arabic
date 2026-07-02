@@ -457,6 +457,18 @@ export const PROP_CROP_REGIONS = {
   'kenmi-base-outdoor-decoration-scarecrows': [
     { x: 64, y: 0, w: 32, h: 32 },
   ],
+  // Kenmi crops sheet (112x688): 7 cols per crop = sign, seed bag, growth
+  // stages 1-4, produce icon. Each crop occupies a 32px band (base row +
+  // overflow row above for tall stage-4 plants). Regions below are the
+  // MATURE stage-4 plants (col 5, x=80) used to dress farmland crop rows.
+  'kenmi-base-crops-crops': [
+    { x: 80, y: 0,   w: 16, h: 16 }, // 0 wheat (golden stalks)
+    { x: 80, y: 32,  w: 16, h: 16 }, // 1 tomato
+    { x: 80, y: 64,  w: 16, h: 16 }, // 2 carrot
+    { x: 80, y: 112, w: 16, h: 32 }, // 3 corn (tall — spans overflow row)
+    { x: 80, y: 192, w: 16, h: 16 }, // 4 turnip
+    { x: 80, y: 224, w: 16, h: 16 }, // 5 cabbage
+  ],
 };
 
 // Crop indexes safe for RANDOM variant selection, per prop sheet.
