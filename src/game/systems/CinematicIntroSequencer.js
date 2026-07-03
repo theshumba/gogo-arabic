@@ -78,8 +78,12 @@ export class CinematicIntroSequencer {
     EventBus.emit(EVENTS.PLAYER_FREEZE);
 
     // Fade in from black (camera starts black from Phaser default)
-    // Phaser signature: fadeIn(duration, red, green, blue, force, callback)
-    this.scene.cameras.main.fadeIn(1500, 0, 0, 0, false, (camera, progress) => {
+    // Phaser signature: fadeIn(duration, red, green, blue, callback, context)
+    // — NO force param (Camera.js:286). Passing `false` here put it in the
+    // callback slot and silently killed the whole beat chain: no crawl, no
+    // pan, no floating word, and the PLAYER_FREEZE above was never balanced
+    // by Beat 3's unfreeze (fresh saves booted soft-locked, 2026-07-03).
+    this.scene.cameras.main.fadeIn(1500, 0, 0, 0, (camera, progress) => {
       if (progress === 1) {
         this._applyDawnTint();
       }

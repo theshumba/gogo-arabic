@@ -178,8 +178,13 @@ export class DialogueBox {
     // Unfreeze player
     EventBus.emit(EVENTS.PLAYER_UNFREEZE);
 
-    // Signal dialogue ended (mirrors React DIALOGUE_ENDED event)
-    EventBus.emit(EVENTS.DIALOGUE_ENDED);
+    // Signal dialogue ended (mirrors React DIALOGUE_ENDED, useDialogue.js:166,
+    // which sends { npcId }). Emitting WITHOUT that payload made intro-phase
+    // listeners that destructure ({ npcId }) throw, aborting this method before
+    // the onComplete callback below — which stalled the cinematic intro right
+    // after the floating-word dialogue (2026-07-03). The in-canvas box has no
+    // NPC id, so null keeps the contract shape.
+    EventBus.emit(EVENTS.DIALOGUE_ENDED, { npcId: null });
 
     if (this.onComplete) {
       const cb = this.onComplete;

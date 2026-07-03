@@ -170,9 +170,14 @@ export default function GameLayout() {
     EventBus.emit(EVENTS.PLAYER_UNFREEZE);
   }, []);
 
-  // Welcome Back overlay — show for returning players (4+ hours since last session)
+  // Welcome Back overlay — show for returning players (4+ hours since last session).
+  // Never during onboarding: a brand-new save stamps lastPlayedDate with a
+  // date-only string (midnight-anchored), so any first session after ~4am
+  // passed the hoursSince check and this "returning player" modal popped over
+  // the cinematic intro, freezing the player under its backdrop (2026-07-03).
   useEffect(() => {
     if (welcomeBackShown) return;
+    if (!onboardingComplete) return;
     if (!lastPlayedDate) return;
     const lastPlayed = new Date(lastPlayedDate);
     const hoursSince = (Date.now() - lastPlayed.getTime()) / (1000 * 60 * 60);
