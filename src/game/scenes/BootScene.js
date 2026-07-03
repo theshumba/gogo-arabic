@@ -101,6 +101,7 @@ export class BootScene extends Phaser.Scene {
     // The map file may not exist yet — Phaser falls back gracefully until Phase 4.
     this.load.tilemapTiledJSON('map-oasis-village', '/assets/maps/oasis-village.json');
     this.load.tilemapTiledJSON('map-desert-marketplace', '/assets/maps/desert-marketplace.json');
+    this.load.tilemapTiledJSON('map-royal-palace', '/assets/maps/royal-palace.json');
 
     // =========================================================
     // KENMI CUTE FANTASY ASSETS — loaded from catalog

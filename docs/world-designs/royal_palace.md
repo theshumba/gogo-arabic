@@ -406,3 +406,53 @@ count; the entrance pair is the torch decor pair, LAW-36 satisfied there); SE gr
 loose 3-palm scatter rather than a tight 1–2-gap cluster (reads as intended quiet-corner grove);
 approach widens 3→5 rather than LAW-28's 3→4 (within the bible's ±1 tolerance); y34 x46–47 sand
 pocket is an intentional dead dune nook outside the walls.
+
+---
+
+## Review appendix — Phase 3 build notes (2026-07-03)
+
+Map authored by `scripts/generate-map-from-design.mjs royal_palace` (PROFILE engine
+extended: `water`/`cliff`/`hedge`/`mark+block` classes, per-profile tileset lists, a
+`baseAlias` so hedge cells vote 'pave' for palm-break underlays, plus parser support
+for this doc's `yNN`-prefixed grid rows and the §5 unified contract table; oasis +
+marketplace regenerated after every generator change and verified **byte-identical**)
+→ `public/assets/maps/royal-palace.json` (no pre-existing authored file — nothing to
+back up). Logic wired in `src/data/zones.js` (spawn/entry unchanged (25,37), exit
+tileRange [22,28]→[24,26], 4 NPCs, all 27 interactables, objects re-dress);
+`gatheringSpots.js` untouched (contract anomaly preserved: flag true, ZERO spots — none
+invented). No hardcoded-coord files apply (pipeline §6 is oasis-only; grep re-verified).
+Registered `map-royal-palace` in BootScene. Deliberate deviations / open items, none silent:
+
+1. **Entrance torch pair (22,36)/(28,36) ships as fire-pit braziers.** `big-torch-anim`
+   and `torch-anim` are spritesheets with no ANIMATED_DECO_PROPS entry and
+   `lanter-posts` is an uncropped 192×576 multi-item sheet — all three fail LINT-9 /
+   render rules with MapLoader closed. Brazier crops (marketplace caravan precedent)
+   carry the LAW-36 flame pair.
+2. **Camel omitted from the SW groom vignette** (no PROP_CROP_REGIONS row; oasis +
+   marketplace precedent). Ships as water-trough + rug + sacks + water-sack beside the
+   contract crate pair.
+3. **Facade `banners-anim` deferred.** The 32px pole frame reads as a floating hook at
+   ground level (marketplace souk-mouth lesson); the facade already carries pots,
+   paintings, rugs and the door marker. Screenshot-review call if wanted later.
+4. **`lantern-palace-3` wired at (28,32), not the design's (27,32).** The east gate
+   tower's obelisk art (1×2.5 tiles above its (27,33) anchor) draws in front of and
+   fully occludes tile (27,32). Still "just inside the gate, off-axis" (2 east).
+5. **Inner-gate pillars use `desert-obelisk-small-1/2`, not tall obelisks.** Tall
+   obelisk art at (22,20)/(28,20) would y-sort in front of and cover the contract
+   statue pair at (22,19)/(28,19).
+6. **Pergola placed at (41,22), one west of `bookshelf-palace-phrases` (42,22).** On
+   the shelf's own tile its canopy occluded the shelf sprite; beside it, both read.
+7. **LINT-4 density pass**: the grid's 23 contract palms + pillar pairs nearly fill the
+   LAW-31 ≤15/window budget, so optional dressing was thinned (shore rock, vista bones,
+   one flower per garden, both garden grass-anims, inner-gate flag pair, one jar
+   cluster, service barrel, SE-grove tuft removed). Worst window = exactly 15. Details
+   in `docs/world-design-research/lint-baseline-royal-palace.md` (exit 0, 12 accepted
+   LAW-44 WARNs — terrace front, hedge-room curbs, ceremonial axis, map-rim cliff).
+8. **South wall single row reads waist-high** (fencewall tiles, MISSING #11
+   approximation, marketplace precedent); the corner bastions' 2–3-deep runs + gate
+   towers carry the height read.
+9. **Water 3-sided nub at (12,2)** falls back to the open-water frame (legacy
+   generator behaviour, oasis precedent) — a one-tile cosmetic on the far shore.
+10. **Live probe green**: spawn→gate→inner-gate→plaza axis walk clean; locked
+    `door-palace-throne` correctly refuses entry, unlocking opens
+    `palace_throne_interior`, exit returns to the door front (25,11); 0 console errors.

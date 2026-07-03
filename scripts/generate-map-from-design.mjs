@@ -129,6 +129,7 @@ const ZONE_PROFILES = {
       // marks (D C s b I N x *) resolve by neighbour majority and stay walkable;
       // physical props there are collide:true zones.js objects instead of paint.
     },
+    tilesets: ['cobble', 'pave', 'wall'],
     buildingGlyphs: 'HXYV',
     buildings: [
       { contains: [5, 6], asset: 'desert-house-1.2', label: 'Home H1' },
@@ -144,6 +145,30 @@ const ZONE_PROFILES = {
     priority: ['road', 'lane', 'pave', 'trample', 'grass', 'sand'],
     decalsFromComma: false, // ',' is a real floor material here, not a decal hint
   },
+  royal_palace: {
+    classes: {
+      s: 'sand',
+      '~': 'water',          // the sea container + bay behind the palace (pool autotile)
+      g: 'grass',            // garden lawns (GroundDetail overlay on sand)
+      p: 'pave',             // ceremonial axis / plaza / terrace / garden curbs
+      W: 'wall',             // adobe perimeter wall (fencewall autotile + Collision)
+      C: 'cliff',            // east sea-cliff + south dune band (rock-face column)
+      B: 'sand+block',       // palace massing footprint (composite sprites via zones.js)
+      o: 'sand+block',       // minarets / gate towers / inner-gate obelisks (sprites)
+      h: 'hedge',            // garden hedge on its 1-tile pavement curb (LINT-10 seam law)
+      T: 'mark+block',       // palm: underlay by majority (curb in hedge runs, sand/grass
+                             // elsewhere), Collision painted, sprite via zones.js
+      f: 'grass+block',      // contract fountains in their LAW-18 grass collar
+      // D (throne door), * (spawn), x (exit cut) resolve by neighbour majority
+      // and stay walkable.
+    },
+    tilesets: ['water', 'cliff', 'pave', 'wall', 'hedge'],
+    buildingGlyphs: '',      // no tile-footprint houses — the massing is B + sprites
+    buildings: [],
+    priority: ['pave', 'grass', 'sand'],
+    baseAlias: { hedge: 'pave' }, // marks beside hedges inherit the pavement curb
+    decalsFromComma: false,
+  },
 };
 const PROFILE = ZONE_PROFILES[zoneId] || null;
 
@@ -158,7 +183,8 @@ const W = +dimM[1];
 const H = +dimM[2];
 
 // Canonical grid — first fenced block whose lines look like "<W chars> <rowIndex>"
-// (oasis format) or "<rowIndex> <W chars>" (marketplace format).
+// (oasis format), "<rowIndex> <W chars>" (marketplace format), or "yNN <W chars>"
+// (royal_palace format).
 function parseGrid() {
   const blocks = [...md.matchAll(/```\n([\s\S]*?)```/g)].map((m) => m[1]);
   for (const block of blocks) {
@@ -167,6 +193,8 @@ function parseGrid() {
       let m = line.match(/^(.*\S)\s+(\d+)\s*$/); // trailing row index
       if (m && m[1].length === W && !/^[\d\s]+$/.test(m[1])) { rows[+m[2]] = m[1]; continue; }
       m = line.match(/^\s*(\d+)\s\s*(\S.{1,}?)\s*$/); // leading row index
+      if (m && m[2].length === W && !/^[\d\s]+$/.test(m[2])) { rows[+m[1]] = m[2]; continue; }
+      m = line.match(/^y(\d+)\s+(\S.*?)\s*$/); // leading yNN row label
       if (m && m[2].length === W && !/^[\d\s]+$/.test(m[2])) rows[+m[1]] = m[2];
     }
     if (rows.filter(Boolean).length >= H) return rows.slice(0, H);
@@ -238,10 +266,47 @@ if (PROFILE) {
 }
 if (!buildings.length) warn('no buildings parsed from the Buildings table');
 
+// §5 unified contract placement table (royal_palace-style design docs):
+//   | `id` | <kind> | (x,y) | rationale |            (kind = NPC / sign / door (locked…) → …)
+//   | `exit-id` | exit | south edge yNN, tileRange **[a,b]** → zone/`entry` | … |
+//   | `entry-key` (entry) + spawnPoint | entry | (x,y) | … |
+// Parsed as a FALLBACK only: it fills collections the older per-section formats left
+// empty, so oasis/marketplace parsing (and their byte-identical output) is untouched.
+const unified = { spawn: null, npcs: [], interactables: [], exits: [], entries: [] };
+{
+  const sec = tableRows(/^## 5\. Contract placement table/m);
+  for (const m of sec.matchAll(/^\|\s*`([\w-]+)`([^|]*)\|\s*([^|]+?)\s*\|\s*([^|]*?)\s*\|/gm)) {
+    const [, id, idExtra, kind, tileText] = m;
+    if (/^exit$/i.test(kind)) {
+      const edgeM = tileText.match(/(north|south|east|west)\s+edge/);
+      const rangeM = tileText.match(/\[(\d+),(\d+)\]/);
+      if (edgeM && rangeM) unified.exits.push({ id, edge: edgeM[1], range: [+rangeM[1], +rangeM[2]] });
+      continue;
+    }
+    const xyM = tileText.match(/\((\d+),(\d+)\)/);
+    if (!xyM) continue;
+    const x = +xyM[1]; const y = +xyM[2];
+    if (/^entry$/i.test(kind)) {
+      unified.entries.push({ key: id, x, y });
+      if (/spawnPoint/.test(idExtra)) unified.spawn = { x, y };
+    } else if (/^NPC$/i.test(kind)) {
+      unified.npcs.push({ id, x, y });
+    } else {
+      const it = { id, x, y, type: id.split('-')[0] };
+      const lockM = kind.match(/locked:\s*`?([\w]+)`?/);
+      if (lockM) { it.locked = true; it.unlockFlag = lockM[1]; }
+      const intM = kind.match(/`([\w]+_interior)`/);
+      if (intM) it.interiorId = intM[1];
+      unified.interactables.push(it);
+    }
+  }
+}
+
 // spawnPoint — "spawnPoint **(x,y)**" (oasis) or "`spawnPoint: (x,y)`" (marketplace)
+// or the §5 unified entry row flagged "+ spawnPoint" (royal_palace)
 const spawnM = md.match(/spawnPoint\s*\*\*\((\d+),(\d+)\)\*\*/) || md.match(/`spawnPoint:\s*\((\d+),(\d+)\)`/);
-if (!spawnM) die('could not parse spawnPoint');
-const spawn = { x: +spawnM[1], y: +spawnM[2] };
+if (!spawnM && !unified.spawn) die('could not parse spawnPoint');
+const spawn = spawnM ? { x: +spawnM[1], y: +spawnM[2] } : unified.spawn;
 
 // Exits — oasis format "| `id` | edge=north, tileRange **[a,b]** …"
 //         market format "| `id` | west ★ | y[16,18] | … |"
@@ -266,6 +331,8 @@ for (const m of md.matchAll(/^\|\s*entry\s*`(\w+)`\s*\|\s*\*\*\((\d+),(\d+)\)\*\
     }
   }
 }
+if (!exits.length) exits.push(...unified.exits);
+if (!entries.length) entries.push(...unified.entries);
 if (!exits.length) die('no exits parsed');
 if (!entries.length) die('no entries parsed');
 
@@ -300,6 +367,7 @@ function tableRows(sectionRe) {
 const npcSec = tableRows(/^\*\*NPCs \(\d+\):\*\*/m);
 const npcs = [...npcSec.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|/gm)]
   .map((m) => ({ id: m[1], x: +m[2], y: +m[3] }));
+if (!npcs.length) npcs.push(...unified.npcs);
 
 const itSec = tableRows(/^\*\*Interactables \(\d+\):\*\*/m);
 const interactables = [];
@@ -312,6 +380,7 @@ for (const m of itSec.matchAll(/^\|\s*`([\w.-]+)`\s*(\[[^\]]*\])?\s*\|\s*\((\d+)
   if (intM) it.interiorId = intM[1];
   interactables.push(it);
 }
+if (!interactables.length) interactables.push(...unified.interactables);
 
 const spotSec = tableRows(/^\*\*Gathering spots \(\d+[^)]*\):\*\*/m);
 const spots = [...spotSec.matchAll(/^\|\s*`(spot_[\w]+)`\s*\|\s*([\w]+)\s*\/\s*([\w]+)\s*\|\s*\((\d+),(\d+)\)/gm)]
@@ -338,6 +407,9 @@ if (CENSUS) {
   }
   for (const ch of Object.keys(census).sort()) {
     if (ch === '.' || ch === ',' || ch === '=' || ch === '-' || ch === '#' || ch === 'P') continue;
+    // profile zones: skip pure terrain glyphs, keep marks + mark+block (wiring input)
+    if (PROFILE && ch in PROFILE.classes && PROFILE.classes[ch] !== null
+        && PROFILE.classes[ch] !== 'mark+block') continue;
     console.log(`  '${ch}' x${census[ch].length}: ${census[ch].join(' ')}`);
   }
 }
@@ -364,19 +436,38 @@ const addTs = (name, image, iw, ih) => {
 const TS_SAND1 = addTs('kenmi-desert-tiles-desert-beach-tiles-1', '../kenmi/desert/tiles/desert-beach-tiles-1.png', 80, 48);
 const TS_SAND2 = addTs('kenmi-desert-tiles-desert-beach-tiles-2', '../kenmi/desert/tiles/desert-beach-tiles-2.png', 80, 48);
 const TS_SAND3 = addTs('kenmi-desert-tiles-desert-beach-tiles-3', '../kenmi/desert/tiles/desert-beach-tiles-3.png', 80, 48);
-let TS_WATER = null; let TS_CLIFF = null; let TS_COBBLE = null; let TS_PAVE = null; let TS_WALL = null;
+// Profile zones declare their extra tilesets by short name (order = firstgid order,
+// appended after the always-on sand+grass sheets). Legacy oasis keeps its original
+// water-before-grass / cliff-after-grass order — byte-identical output.
+const EXTRA_TILESETS = {
+  water: ['kenmi-desert-tiles-desert-water-tiles-1', '../kenmi/desert/tiles/desert-water-tiles-1.png', 96, 48],
+  cliff: ['kenmi-desert-tiles-desert-cliff-tiles-1', '../kenmi/desert/tiles/desert-cliff-tiles-1.png', 208, 176],
+  cobble: ['kenmi-base-tiles-cobble-road-cobble-road-2', '../kenmi/base/tiles/cobble-road/cobble-road-2.png', 48, 80],
+  pave: ['kenmi-base-tiles-pavement-tiles', '../kenmi/base/tiles/pavement-tiles.png', 144, 128],
+  wall: ['kenmi-desert-props-desert-fencewall', '../kenmi/desert/props/desert-fencewall.png', 64, 64],
+  hedge: ['kenmi-base-tiles-hedge-tiles', '../kenmi/base/tiles/hedge-tiles.png', 64, 64],
+};
+let TS_WATER = null; let TS_CLIFF = null; let TS_COBBLE = null; let TS_PAVE = null; let TS_WALL = null; let TS_HEDGE = null;
 if (!PROFILE) {
-  TS_WATER = addTs('kenmi-desert-tiles-desert-water-tiles-1', '../kenmi/desert/tiles/desert-water-tiles-1.png', 96, 48);
+  TS_WATER = addTs(...EXTRA_TILESETS.water);
 }
 const TS_GRASS = addTs('kenmi-desert-tiles-desert-grass', '../kenmi/desert/tiles/desert-grass.png', 48, 80);
 if (!PROFILE) {
-  TS_CLIFF = addTs('kenmi-desert-tiles-desert-cliff-tiles-1', '../kenmi/desert/tiles/desert-cliff-tiles-1.png', 208, 176);
+  TS_CLIFF = addTs(...EXTRA_TILESETS.cliff);
 } else {
-  TS_COBBLE = addTs('kenmi-base-tiles-cobble-road-cobble-road-2', '../kenmi/base/tiles/cobble-road/cobble-road-2.png', 48, 80);
-  TS_PAVE = addTs('kenmi-base-tiles-pavement-tiles', '../kenmi/base/tiles/pavement-tiles.png', 144, 128);
-  TS_WALL = addTs('kenmi-desert-props-desert-fencewall', '../kenmi/desert/props/desert-fencewall.png', 64, 64);
+  for (const short of PROFILE.tilesets) {
+    if (!EXTRA_TILESETS[short]) die(`profile tileset "${short}" not in EXTRA_TILESETS`);
+    const ts = addTs(...EXTRA_TILESETS[short]);
+    if (short === 'water') TS_WATER = ts;
+    else if (short === 'cliff') TS_CLIFF = ts;
+    else if (short === 'cobble') TS_COBBLE = ts;
+    else if (short === 'pave') TS_PAVE = ts;
+    else if (short === 'wall') TS_WALL = ts;
+    else if (short === 'hedge') TS_HEDGE = ts;
+  }
 }
-const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL].filter(Boolean);
+const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL, TS_HEDGE]
+  .filter(Boolean).sort((a, b) => a.firstgid - b.firstgid);
 
 const SAND_SOLID = 6;                       // 5x3 beach sheets: (1,1) solid sand
 const G_SAND = TS_SAND1.firstgid + SAND_SOLID;   // base sand `.` `,`
@@ -404,6 +495,15 @@ const WALL_F = {
   VMID: 4, TL: 5, TD: 6, TR: 7,
   VBOT: 8, TE: 9, X: 10, TW: 11,
   STUB: 12, BL: 13, TU: 14, BR: 15,
+};
+// hedge-tiles (4x4, verified 6x-upscale 2026-07-03): col 0 = vertical run
+// (top cap f0 / mid f4 / bottom f8 / isolated stub f12); row 0 = horizontal run
+// (left cap f1 / mid f2 / right cap f3); f5..f15 = 3x3 solid blob whose corners
+// double as L-corners for 1-wide hedge lines (f5 TL, f7 TR, f13 BL, f15 BR,
+// f10 interior). No transparent frames in the sheet.
+const HEDGE_F = {
+  VTOP: 0, HL: 1, HM: 2, HR: 3, VMID: 4, TL: 5, TR: 7, VBOT: 8,
+  MID: 10, BL: 13, BR: 15, STUB: 12,
 };
 const COLLIDE_GID = G_SAND; // any non-zero GID marks impassable (hidden layer)
 
@@ -554,17 +654,26 @@ if (!PROFILE) {
   // ══ PROFILE path (desert_marketplace + later zones) ══
   const raw = (x, y) => (x >= 0 && x < W && y >= 0 && y < H ? grid[y][x] : null);
 
-  // 3a. classify every cell; building glyphs handled after; unknown glyphs = marks
+  // 3a. classify every cell; building glyphs handled after; unknown glyphs = marks.
+  // 'mark+block' cells (royal_palace palms) resolve their underlay like a mark but
+  // still paint Collision (sprite via zones.js).
+  const markBlockCells = [];
   terrain = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
     const ch = grid[y][x];
     if (PROFILE.buildingGlyphs.includes(ch)) return 'bldg';
     if (ch === 'D') return null; // door cells: walkable, underlay by majority
-    if (ch in PROFILE.classes) return PROFILE.classes[ch]; // may be null (mark)
+    if (ch in PROFILE.classes) {
+      if (PROFILE.classes[ch] === 'mark+block') { markBlockCells.push([x, y]); return null; }
+      return PROFILE.classes[ch]; // may be null (mark)
+    }
     return null; // contract marks (N x C s b I *) — majority underlay
   }));
 
-  // 3b. resolve marks by orthogonal-neighbour majority over the profile priority
+  // 3b. resolve marks by orthogonal-neighbour majority over the profile priority.
+  // baseAlias lets non-walkable classes vote as their ground material (royal_palace
+  // hedges vote 'pave' so palm breaks in a hedge run inherit the curb).
   const WALKABLE = new Set(PROFILE.priority);
+  const ALIAS = PROFILE.baseAlias || {};
   for (let pass = 0; pass < 3; pass++) {
     for (let y = 0; y < H; y++) {
       for (let x = 0; x < W; x++) {
@@ -572,7 +681,8 @@ if (!PROFILE) {
         const counts = {};
         for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
           const t = (y + dy >= 0 && y + dy < H && x + dx >= 0 && x + dx < W) ? terrain[y + dy][x + dx] : null;
-          const base = typeof t === 'string' ? t.replace('+block', '') : t;
+          const stripped = typeof t === 'string' ? t.replace('+block', '') : t;
+          const base = stripped ? (ALIAS[stripped] || stripped) : stripped;
           if (!base || !WALKABLE.has(base)) continue;
           counts[base] = (counts[base] || 0) + 1;
         }
@@ -599,6 +709,53 @@ if (!PROFILE) {
     return c === 'road' || c === null; // OOB counts as road so exit cuts run to the edge
   };
   const isGrass = (x, y) => base(x, y) === 'grass';
+  const isWaterP = (x, y) => {
+    if (x < 0 || x >= W || y < 0 || y >= H) return true; // sea continues off-map
+    return base(x, y) === 'water';
+  };
+  const isCliffP = (x, y) => {
+    if (x < 0 || x >= W || y < 0 || y >= H) return true; // container continues off-map
+    return base(x, y) === 'cliff';
+  };
+  const isHedge = (x, y) => cls(x, y) === 'hedge';
+
+  function waterFrameP(x, y) { // pool-in-sand blob keyed by open LAND sides (legacy math)
+    const n = !isWaterP(x, y - 1); const s = !isWaterP(x, y + 1);
+    const w = !isWaterP(x - 1, y); const e = !isWaterP(x + 1, y);
+    if (n && w && !s && !e) return WATER_F.NW;
+    if (n && e && !s && !w) return WATER_F.NE;
+    if (s && w && !n && !e) return WATER_F.SW;
+    if (s && e && !n && !w) return WATER_F.SE;
+    if (n && !s && !w && !e) return WATER_F.N;
+    if (s && !n && !w && !e) return WATER_F.S;
+    if (w && !e && !n && !s) return WATER_F.W;
+    if (e && !w && !n && !s) return WATER_F.E;
+    return WATER_F.C; // interior, straits and 3-sided nubs fall back to open water
+  }
+
+  function cliffFrameP(x, y) {
+    if (!isCliffP(x, y + 1)) return CLIFF_F.FACE_BASE; // rock base meets the ground below
+    if (!isCliffP(x, y - 1)) return CLIFF_F.FACE_TOP;
+    return CLIFF_F.FACE_MID;
+  }
+
+  function hedgeFrame(x, y) {
+    const hN = isHedge(x, y - 1); const hS = isHedge(x, y + 1);
+    const hE = isHedge(x + 1, y); const hW = isHedge(x - 1, y);
+    const count = hN + hS + hE + hW;
+    if (count >= 3) return HEDGE_F.MID;      // T/cross — blob interior
+    if (hS && hE) return HEDGE_F.TL;
+    if (hS && hW) return HEDGE_F.TR;
+    if (hN && hE) return HEDGE_F.BL;
+    if (hN && hW) return HEDGE_F.BR;
+    if (hE && hW) return HEDGE_F.HM;
+    if (hN && hS) return HEDGE_F.VMID;
+    if (hE) return HEDGE_F.HL;
+    if (hW) return HEDGE_F.HR;
+    if (hS) return HEDGE_F.VTOP;
+    if (hN) return HEDGE_F.VBOT;
+    return HEDGE_F.STUB;
+  }
 
   function cobbleFrame(x, y) {
     const n = !isRoad(x, y - 1); const s = !isRoad(x, y + 1);
@@ -670,6 +827,19 @@ if (!PROFILE) {
           detail[i] = TS_WALL.firstgid + WALL_F.STUB;
           collision[i] = COLLIDE_GID;
           break;
+        case 'water':
+          ground[i] = TS_WATER.firstgid + waterFrameP(x, y);
+          collision[i] = COLLIDE_GID; // bible §6: water is impassable
+          break;
+        case 'cliff':
+          ground[i] = TS_CLIFF.firstgid + cliffFrameP(x, y);
+          collision[i] = COLLIDE_GID;
+          break;
+        case 'hedge': // hedge overlay on its 1-tile pavement curb (LINT-10 seam law)
+          ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
+          detail[i] = TS_HEDGE.firstgid + hedgeFrame(x, y);
+          collision[i] = COLLIDE_GID;
+          break;
         case 'bldg':
           ground[i] = G_SAND;
           if (!doorCells.has(`${x},${y}`)) collision[i] = COLLIDE_GID;
@@ -696,6 +866,8 @@ if (!PROFILE) {
       if (block) collision[i] = COLLIDE_GID;
     }
   }
+  // mark+block cells (palms): underlay already resolved by majority; paint Collision
+  for (const [x, y] of markBlockCells) collision[y * W + x] = COLLIDE_GID;
   // door cells: never collision (already skipped) — but assert none got painted
   for (const key of doorCells) {
     const [x, y] = key.split(',').map(Number);
