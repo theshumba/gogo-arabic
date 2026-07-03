@@ -248,3 +248,53 @@ Every family below verified against `docs/world-design-research/asset-inventory.
 - **LAW-2 straight runs:** row y16 carries an 18-tile `=` run. Accepted: it is interior fill of a 3–4-wide band whose edges scallop and whose y-extent steps north every 4–5 tiles (y15–18 → y15–17 → y14–16); the west-gate→plaza→warehouse line is the zone's deliberate commercial axis (Slateport/Alhafra precedent), and LAW-2 is screenshot-reviewed, not machine-checked.
 - **bookshelf-market-numbers (18,12)** is not within 2 tiles of any building (LINT-7 WARN class): intentional — it anchors the plaza NW junction corner per LAW-3; it is not part of a building set.
 - **Spice shop drawn 3×3** vs `desert-house-3.1`'s true 4×3.5 footprint: ASCII approximation; Phase 2 must reserve the full footprint (flagged for the builder).
+
+---
+
+## Review appendix — Phase 3 build notes (2026-07-03)
+
+Map authored by `scripts/generate-map-from-design.mjs desert_marketplace` (new PROFILE
+engine — per-zone glyph legend + tilesets; oasis stays on the legacy path, verified
+byte-identical) → `public/assets/maps/desert-marketplace.json` (old procedural-era map
+had no authored file; nothing to back up). Logic wired in `src/data/zones.js` (spawn
+(4,17), objects re-dress, 3 NPCs, all 28 interactables, exits west[16,18]/north[19,21],
+entries (2,17)/(20,2)) and `src/data/gatheringSpots.js` (9 spots). No hardcoded-coord
+files apply to this zone (pipeline §6 lists CinematicIntroSequencer as oasis-only).
+Registered `map-desert-marketplace` in BootScene. Deliberate deviations / open items,
+none silent:
+
+1. **Camels + `desert-trader-camp` deferred.** Both are spritesheets with no
+   `PROP_CROP_REGIONS` row and MapLoader's crop machinery is closed (VISUAL-CLOSEOUT) —
+   LINT-9 would fail them. The LAW-34a caravan vignette ships as rug + hay bale +
+   campfire + bedroll + unloaded wares beside the road; the two `c` grid cells stay
+   walkable sand (no invisible collision). Same precedent as the oasis rest-stop camel
+   (oasis wiring note 2).
+2. **Bunting dropped — souk mouths ship open.** `pole-and-bunting-1/2-anim` have no
+   ANIMATED_DECO_PROPS entry (LINT-9 spritesheet rule). The `banners-anim` substitute was
+   tried and removed at the screenshot pass: its 32px pole frame rendered as a tiny
+   floating hook at the mouths (15,20)/(29,20). The mouth gaps in the stall rows + the
+   rug lines carry the LAW-37 entrance read; the sleeping mat was removed from the
+   caravan camp for the same read-as-debris reason.
+3. **Obelisk pair west member moved (34,13) → (33,13).** The warehouse art (144×128 at
+   scale 1.78 = 4 tiles) overhangs half a tile onto x34, overlapping the obelisk's
+   rendered footprint (LINT-1). The painted Collision at (34,13) is retained, and the
+   overhanging warehouse art visually occupies that gap.
+4. **Vista `v` cells (44,19–21)** render as fencewall stub tiles (short posts), not a
+   true waist-high wall — no low-wall variant exists in the sheet (MISSING #11 class).
+   The bench+jar rest spot at (42,20)/(43,21) carries the LAW-46 read; judge at
+   screenshot review.
+5. **Warehouse facade banner deferred.** A `banners-anim` at (37,13) would y-sort behind
+   the warehouse sprite (anchor y15); left to the screenshot-review phase to place (or
+   drop) once depth is visible.
+6. **North exit cut ground.** The three `E` cells at (19–21,0) resolve to lane/sand (the
+   north road is a 2-wide lane per §3), so the cut reads as packed dirt, not cobble; the
+   west cut (0,16–18) resolves to cobble continuing the caravan road. Generator
+   neighbour-majority behaviour, matches the grid's intent.
+7. **Walls are tiles, not props.** The full perimeter (`#`/`T`) + building footprints are
+   painted `desert-fencewall` autotile tiles on the GroundDetail layer (sand Ground
+   beneath, Collision painted) — the MISSING #11 "double run for height read" is
+   approximated by the grid's 1–2-deep wall rows plus the sheet's baked drop shadows.
+   Tower `T` cells additionally carry obelisk sprites (small on the top wall so art
+   never clips past the map edge).
+8. **Lint:** exit 0 with one triaged LAW-44 warning (P3-M1, road south edge at the west
+   gate) — recorded in `docs/world-design-research/lint-baseline-marketplace.md`.

@@ -184,8 +184,8 @@ export const GATHERING_SPOTS = {
   'spot_market_animal_01': {
     id: 'spot_market_animal_01',
     zoneId: 'desert_marketplace',
-    x: 8,
-    y: 12,
+    x: 4,
+    y: 22,
     resourceId: 'silk',
     spriteKey: 'rock1',
     respawnInterval: 28800000, // 8 hours (rare)
@@ -194,8 +194,8 @@ export const GATHERING_SPOTS = {
   'spot_market_animal_02': {
     id: 'spot_market_animal_02',
     zoneId: 'desert_marketplace',
-    x: 32,
-    y: 15,
+    x: 13,
+    y: 23,
     resourceId: 'wool',
     spriteKey: 'rock2',
     respawnInterval: 14400000,
@@ -204,8 +204,8 @@ export const GATHERING_SPOTS = {
   'spot_market_ore_01': {
     id: 'spot_market_ore_01',
     zoneId: 'desert_marketplace',
-    x: 18,
-    y: 8,
+    x: 41,
+    y: 7,
     resourceId: 'gold_ore',
     spriteKey: 'rock1',
     respawnInterval: 28800000, // 8 hours (rare)
@@ -214,8 +214,8 @@ export const GATHERING_SPOTS = {
   'spot_market_ore_02': {
     id: 'spot_market_ore_02',
     zoneId: 'desert_marketplace',
-    x: 25,
-    y: 20,
+    x: 40,
+    y: 29,
     resourceId: 'copper_ore',
     spriteKey: 'rock2',
     respawnInterval: 14400000,
@@ -224,8 +224,8 @@ export const GATHERING_SPOTS = {
   'spot_market_herbs_01': {
     id: 'spot_market_herbs_01',
     zoneId: 'desert_marketplace',
-    x: 12,
-    y: 18,
+    x: 8,
+    y: 13,
     resourceId: 'cumin',
     spriteKey: 'green-tree-small',
     respawnInterval: 14400000,
@@ -234,8 +234,8 @@ export const GATHERING_SPOTS = {
   'spot_market_herbs_02': {
     id: 'spot_market_herbs_02',
     zoneId: 'desert_marketplace',
-    x: 35,
-    y: 22,
+    x: 28,
+    y: 25,
     resourceId: 'cardamom',
     spriteKey: 'green-tree-small',
     respawnInterval: 14400000,
@@ -244,8 +244,8 @@ export const GATHERING_SPOTS = {
   'spot_market_water_01': {
     id: 'spot_market_water_01',
     zoneId: 'desert_marketplace',
-    x: 20,
-    y: 12,
+    x: 23,
+    y: 15,
     resourceId: 'olive_oil',
     spriteKey: 'rock2',
     respawnInterval: 14400000,
@@ -254,8 +254,8 @@ export const GATHERING_SPOTS = {
   'spot_market_papyrus_01': {
     id: 'spot_market_papyrus_01',
     zoneId: 'desert_marketplace',
-    x: 6,
-    y: 6,
+    x: 25,
+    y: 11,
     resourceId: 'papyrus',
     spriteKey: 'palm-small',
     respawnInterval: 14400000,
@@ -264,8 +264,8 @@ export const GATHERING_SPOTS = {
   'spot_market_animal_03': {
     id: 'spot_market_animal_03',
     zoneId: 'desert_marketplace',
-    x: 28,
-    y: 25,
+    x: 33,
+    y: 26,
     resourceId: 'cotton',
     spriteKey: 'rock1',
     respawnInterval: 14400000,

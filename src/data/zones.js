@@ -556,159 +556,147 @@ const desert_marketplace = {
   mapWidth: 45,
   mapHeight: 35,
   buildMap: buildMarketplaceMap,
-  spawnPoint: { x: 5, y: 17 },
+  spawnPoint: { x: 4, y: 17 },
   vocabCategories: ['trade', 'food', 'numbers'],
   gatheringSpots: true,
 
+  // Rebuilt to the approved design (docs/world-designs/desert_marketplace.md §3/§7).
+  // Ground/collision/exits live in the authored Tiled map (walls + towers painted
+  // as desert-fencewall tiles); these sprites dress it. Camels + desert-trader-camp
+  // are spritesheets with no PROP_CROP_REGIONS rows (MapLoader is closed) — the
+  // caravan vignette ships as hay + campfire + bedroll + wares, camels deferred
+  // (same precedent as the oasis rest-stop camel; see design doc appendix).
   objects: [
-    // Market stalls — pergolas (BLDG-03)
-    { key: 'kenmi-desert-houses-pergola', x: 10, y: 12, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-desert-houses-pergola', x: 10, y: 22, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-desert-houses-pergola', x: 30, y: 12, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-desert-houses-pergola', x: 30, y: 22, collide: true, collideW: 180, collideH: 80 },
-    // Stalls flanking the market square so the souk reads as a market from the
-    // square itself (the outer pergolas at x=10/x=30 sit at the frame edges)
-    { key: 'kenmi-desert-houses-pergola', x: 16, y: 13, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-desert-houses-pergola', x: 28, y: 13, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-desert-houses-pergola', x: 16, y: 21, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-desert-houses-pergola', x: 28, y: 21, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-desert-houses-desert-house-3.3', x: 22, y: 4, collide: true, collideW: 240, collideH: 100 },
-    { key: 'kenmi-desert-houses-desert-house-4.4', x: 22, y: 28, collide: true, collideW: 240, collideH: 100 },
-    // Palms lining the road
-    { key: 'kenmi-desert-props-palm-tree-1', x: 7, y: 14, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 7, y: 20, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 37, y: 14, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 37, y: 20, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-2', x: 15, y: 9, collide: true, collideW: 20, collideH: 16 },
-    { key: 'kenmi-desert-props-palm-tree-2', x: 29, y: 9, collide: true, collideW: 20, collideH: 16 },
-    // Gate at market entrance
-    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 22, y: 2, collide: true, collideW: 120, collideH: 40 },
-    // Rocks along edges
-    { key: 'kenmi-desert-props-desert-rocks', x: 3, y: 8, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 41, y: 8, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 3, y: 28, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 41, y: 28, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 15, y: 31, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 35, y: 31, collide: true, collideW: 30, collideH: 20 },
-    // Scattered palms
-    { key: 'kenmi-desert-props-palm-tree-1', x: 40, y: 5, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 4, y: 5, collide: true, collideW: 30, collideH: 20 },
-    // Fence walls along market road
-    { key: 'kenmi-desert-props-desert-fencewall', x: 8, y: 15, collide: true, collideW: 40, collideH: 10 },
-    { key: 'kenmi-desert-props-desert-fencewall', x: 14, y: 15, collide: true, collideW: 40, collideH: 10 },
-    { key: 'kenmi-desert-props-desert-fencewall', x: 28, y: 15, collide: true, collideW: 40, collideH: 10 },
-    { key: 'kenmi-desert-props-desert-fencewall', x: 34, y: 15, collide: true, collideW: 40, collideH: 10 },
-    // DECO-04: Golden pot at market fountain / small obelisk at market entrance
-    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 20, y: 2, collide: true, collideW: 20, collideH: 20 },
-    // DECO-05: NPC-adjacent props (Layla 15,17; Hassan 29,17; Guard Hamza 22,8)
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 14, y: 18, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 29, y: 18, collide: false },
-    { key: 'kenmi-desert-props-water-sack-on-stick', x: 23, y: 9, collide: false },
- 
-    { key: 'kenmi-desert-props-desert-grass-props', x: 20, y: 31, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 17, y: 29, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 26, y: 29, collide: false },
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 23, y: 30, collide: false },
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 26, y: 28, collide: false },
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 18, y: 28, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 22, y: 32, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 15, y: 22, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 16, y: 4, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 29, y: 5, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 27, y: 3, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 30, y: 2, collide: false },
-    { key: 'kenmi-desert-props-fallen-palm-leaves-dead', x: 42, y: 11, collide: false },
-    { key: 'kenmi-desert-props-golden-pots', x: 21, y: 6, collide: false },
-    { key: 'kenmi-desert-props-sleeping-mat', x: 30, y: 4, collide: false },
-    { key: 'kenmi-desert-props-water-sack-on-stick', x: 32, y: 4, collide: false },  
-
-  
-    { key: 'kenmi-desert-props-desert-bones', x: 37, y: 30, collide: false },
-    { key: 'kenmi-desert-props-desert-bones', x: 40, y: 30, collide: false },
-    { key: 'kenmi-desert-props-desert-bones', x: 39, y: 24, collide: false },
-    { key: 'kenmi-desert-props-desert-rocks', x: 38, y: 6, collide: false },
-    { key: 'kenmi-desert-props-desert-fern-dead', x: 43, y: 17, collide: false },
-    { key: 'kenmi-desert-props-desert-fern-dead', x: 39, y: 33, collide: false },
-    { key: 'kenmi-desert-props-desert-fern-dead', x: 32, y: 28, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 33, y: 7, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 26, y: 8, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 34, y: 13, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 42, y: 16, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 42, y: 19, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 43, y: 21, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 33, y: 21, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 28, y: 23, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 28, y: 27, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 17, y: 25, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 13, y: 26, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 9, y: 24, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 14, y: 12, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 17, y: 10, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 12, y: 7, collide: false },
-    { key: 'kenmi-desert-props-desert-rocks', x: 13, y: 10, collide: false },
-    { key: 'kenmi-desert-props-desert-rocks', x: 9, y: 4, collide: false },
-    { key: 'kenmi-desert-props-flies-anim', x: 22, y: 16, collide: false },
-    // G3: souk wares ringing the fountain pocket so the central square reads as
-    // a market plaza (rugs + sacks + a golden pot on the surrounding sand)
-    { key: 'kenmi-desert-props-desert-rugs', x: 19, y: 14, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-rugs', x: 25, y: 20, collide: false, cropIndex: 3 },
-    { key: 'kenmi-desert-props-desert-rugs', x: 18, y: 17, collide: false, cropIndex: 4 },
-    { key: 'kenmi-desert-props-desert-rugs', x: 26, y: 17, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 25, y: 14, collide: false, cropIndex: 2 },
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 19, y: 20, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-golden-pots', x: 22, y: 20, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-1-anim', x: 19, y: 18, collide: false },
-    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-2-anim', x: 23, y: 15, collide: false },
-    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-3-anim', x: 21, y: 20, collide: false },
-    { key: 'kenmi-desert-props-water-sack-on-stick', x: 13, y: 22, collide: false },
-    { key: 'kenmi-military-campfire-pot-anim', x: 25, y: 17, collide: false },
-    { key: 'kenmi-desert-props-desert-rocks', x: 26, y: 23, collide: false },
-    { key: 'kenmi-desert-props-desert-rocks', x: 9, y: 28, collide: false },
-    { key: 'kenmi-desert-props-desert-rocks', x: 11, y: 24, collide: false },
-  
-    { key: 'kenmi-base-outdoor-decoration-outdoor-decor-animations-water-decor-animations-water-plants-lillypad-purple-2-anim', x: 22, y: 17, collide: false },
-
-
+    // Buildings B1-B8 — assets per design §4, footprints from the grid clusters.
+    // Collider boxes are thin base strips (the Tiled Collision layer owns the
+    // real footprint); they must never cover door tiles or door-front rows.
+    { key: 'kenmi-desert-houses-desert-house-1.2', x: 5, y: 6, collide: true, collideW: 150, collideH: 24 },   // H1 (4,5)-(6,7), door (5,7)
+    { key: 'kenmi-desert-houses-desert-house-2.3', x: 10, y: 5, collide: true, collideW: 180, collideH: 24 },  // H2 (9,3)-(11,6), door (10,6)
+    { key: 'kenmi-desert-houses-desert-house-1.4', x: 6, y: 11, collide: true, collideW: 150, collideH: 24 },  // H3 (5,10)-(7,12), door (6,12)
+    { key: 'kenmi-desert-houses-desert-house-1.1', x: 32, y: 22, collide: true, collideW: 150, collideH: 24 }, // H4 (31,21)-(33,23), door (32,23)
+    { key: 'kenmi-desert-houses-desert-house-1.3', x: 39, y: 25, collide: true, collideW: 150, collideH: 24 }, // H5 (38,24)-(40,26), door (39,26)
+    { key: 'kenmi-desert-houses-desert-house-3.1', x: 11, y: 12, collide: true, collideW: 200, collideH: 24 }, // Spice shop (10,11)-(12,13), door (11,13)
+    { key: 'kenmi-desert-houses-desert-house-2.1', x: 30, y: 12, collide: true, collideW: 180, collideH: 24 }, // Textile shop (29,10)-(31,13), door (30,13)
+    { key: 'kenmi-desert-houses-desert-house-4.2', x: 36, y: 15, collide: true, collideW: 200, collideH: 24 }, // Warehouse (35,13)-(38,16), door (36,16)
+    // Wall towers on the grid's T cells (fencewall tiles carry the wall; obelisks
+    // punctuate breaks/corners per LAW-43). Small obelisks on the top wall so no
+    // art clips past the map edge; tall ones elsewhere. Keys alternate (LAW-35).
+    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 7, y: 0, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 14, y: 0, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 28, y: 0, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 36, y: 0, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 44, y: 7, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 0, y: 8, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 44, y: 13, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 44, y: 22, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 0, y: 25, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 44, y: 28, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 8, y: 34, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 16, y: 34, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 22, y: 34, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 27, y: 34, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 33, y: 34, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 37, y: 34, collide: true, collideW: 40, collideH: 20 },
+    // Obelisk pair framing the warehouse at the road's axis end (LAW-12). West one
+    // moved (34,13)->(33,13): the warehouse art's half-tile overhang overlaps the
+    // grid cell (LINT-1); the painted collision at (34,13) still guards the gap.
+    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 33, y: 13, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 39, y: 13, collide: true, collideW: 40, collideH: 20 },
+    // Palms on the grid's p cells: west-gate framing pair (LAW-28), north-gate
+    // exit cluster (LAW-42), plaza corner, lane + quiet-corner accents.
+    { key: 'kenmi-desert-props-palm-tree-1', x: 2, y: 13, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 2, y: 21, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 17, y: 2, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 33, y: 4, collide: true, collideW: 20, collideH: 16 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 15, y: 5, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 26, y: 7, collide: true, collideW: 20, collideH: 16 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 27, y: 12, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 12, y: 27, collide: true, collideW: 20, collideH: 16 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 6, y: 31, collide: true, collideW: 20, collideH: 16 },
+    // Rock outcrops on % cells (NE assayer seam + SE wall base)
+    { key: 'kenmi-desert-props-desert-rocks', x: 40, y: 7, collide: true, collideW: 30, collideH: 20, cropIndex: 2 },
+    { key: 'kenmi-desert-props-desert-rocks', x: 41, y: 8, collide: true, collideW: 30, collideH: 20, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-rocks', x: 41, y: 29, collide: true, collideW: 30, collideH: 20, cropIndex: 9 },
+    // Quiet corner (LAW-31): dead tree + jar, nothing else
+    { key: 'kenmi-desert-props-dead-tree', x: 5, y: 28, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-props-golden-pots', x: 4, y: 29, collide: false, cropIndex: 2 },
+    // LAW-34a caravan-arrival vignette inside the west gate (x4-8 y20-22):
+    // rug + fodder + campfire + unloaded wares beside (not on) the road.
+    // The kneeling camels themselves are deferred (spritesheet, no crop row).
+    { key: 'kenmi-desert-props-desert-rugs', x: 6, y: 21, collide: false, cropIndex: 4 },
+    { key: 'kenmi-base-outdoor-decoration-hay-bales', x: 5, y: 21, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-campfire', x: 4, y: 21, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 6, y: 22, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-water-sack-on-stick', x: 8, y: 21, collide: false },
+    // Rugs (LINT-3 flat): shop-door rugs, warehouse forecourt, souk stall rows
+    { key: 'kenmi-desert-props-desert-rugs', x: 11, y: 14, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 30, y: 14, collide: false, cropIndex: 3 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 36, y: 17, collide: false, cropIndex: 2 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 17, y: 22, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 25, y: 22, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 17, y: 25, collide: false, cropIndex: 5 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 25, y: 25, collide: false, cropIndex: 4 },
+    // District prop clusters on the grid's o cells (LAW-32: hug architecture)
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 17, y: 3, collide: false, cropIndex: 1 },  // north-gate jar cluster (LAW-42)
+    { key: 'kenmi-desert-props-golden-pots', x: 16, y: 8, collide: false, cropIndex: 0 },        // NW lane jar
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 27, y: 21, collide: false, cropIndex: 3 }, // stall-2 goods flank
+    { key: 'kenmi-base-outdoor-decoration-benches', x: 42, y: 20, collide: false, cropIndex: 0 },// LAW-46 vista rest spot
+    { key: 'kenmi-desert-props-golden-pots', x: 43, y: 21, collide: false, cropIndex: 1 },       // jar by the low wall
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 37, y: 6, collide: false, cropIndex: 2 },  // NE yard wares
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 31, y: 30, collide: false, cropIndex: 4 }, // SE sand
+    // Plaza planters beside the fountain (grass tufts painted in the map's
+    // GroundDetail; flowers dress them per design §7)
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 20, y: 13, collide: false, cropIndex: 6 },
+    { key: 'kenmi-base-outdoor-decoration-flowers', x: 24, y: 16, collide: false, cropIndex: 12 },
+    // LAW-33 emptiness breakers in the open sand quadrants
+    { key: 'kenmi-desert-props-desert-bones', x: 40, y: 11, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-bones', x: 23, y: 31, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-3-anim', x: 25, y: 4, collide: false },
+    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-1-anim', x: 24, y: 28, collide: false },
+    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-2-anim', x: 36, y: 30, collide: false },
+    { key: 'kenmi-desert-props-desert-grass-props', x: 13, y: 31, collide: false, cropIndex: 0 },
+    // Souk atmosphere
+    { key: 'kenmi-desert-props-flies-anim', x: 21, y: 23, collide: false },
   ],
 
   npcs: [
-    { id: 'spice-seller-layla', key: 'npc-spice-seller-layla', name: 'Spice Seller Layla', nameArabic: 'بائِعَة التَّوابِل لَيلى', x: 15, y: 17 },
-    { id: 'trader-hassan', key: 'npc-trader-hassan', name: 'Trader Hassan', nameArabic: 'التّاجِر حَسَّان', x: 29, y: 17 },
-    { id: 'guard-hamza', key: 'npc-guard-hamza', name: 'Guard Hamza', nameArabic: 'الحارِس حَمزَة', x: 22, y: 8 },
+    { id: 'spice-seller-layla', key: 'npc-spice-seller-layla', name: 'Spice Seller Layla', nameArabic: 'بائِعَة التَّوابِل لَيلى', x: 12, y: 14 },
+    { id: 'trader-hassan', key: 'npc-trader-hassan', name: 'Trader Hassan', nameArabic: 'التّاجِر حَسَّان', x: 31, y: 14 },
+    { id: 'guard-hamza', key: 'npc-guard-hamza', name: 'Guard Hamza', nameArabic: 'الحارِس حَمزَة', x: 23, y: 5 },
   ],
 
   interactables: [
-    { id: 'sign-market-main', type: 'sign', x: 22, y: 3, textArabic: 'سوق الصَّحراء', textEnglish: 'Desert Marketplace' },
-    { id: 'sign-spice-stall', type: 'sign', x: 12, y: 17, textArabic: 'التَّوابِل', textEnglish: 'Spices' },
-    { id: 'sign-trade-stall', type: 'sign', x: 32, y: 17, textArabic: 'البَضائِع', textEnglish: 'Goods' },
-    { id: 'bookshelf-market-food', type: 'bookshelf', x: 11, y: 13, category: 'food' },
-    { id: 'bookshelf-market-trade', type: 'bookshelf', x: 31, y: 13, category: 'trade' },
-    { id: 'bookshelf-market-numbers', type: 'bookshelf', x: 22, y: 6, category: 'numbers' },
-    { id: 'chest-market-hidden', type: 'chest', x: 40, y: 3, minDirhams: 25, maxDirhams: 80 },
+    { id: 'sign-market-main', type: 'sign', x: 21, y: 2, textArabic: 'سوق الصَّحراء', textEnglish: 'Desert Marketplace' },
+    { id: 'sign-spice-stall', type: 'sign', x: 9, y: 14, textArabic: 'التَّوابِل', textEnglish: 'Spices' },
+    { id: 'sign-trade-stall', type: 'sign', x: 32, y: 13, textArabic: 'البَضائِع', textEnglish: 'Goods' },
+    { id: 'bookshelf-market-food', type: 'bookshelf', x: 9, y: 12, category: 'food' },
+    { id: 'bookshelf-market-trade', type: 'bookshelf', x: 32, y: 12, category: 'trade' },
+    { id: 'bookshelf-market-numbers', type: 'bookshelf', x: 18, y: 12, category: 'numbers' },
+    { id: 'chest-market-hidden', type: 'chest', x: 41, y: 3, minDirhams: 25, maxDirhams: 80 },
     { id: 'chest-market-corner', type: 'chest', x: 3, y: 32, minDirhams: 20, maxDirhams: 65 },
-    { id: 'door-warehouse', type: 'door', x: 35, y: 12, interiorId: 'market_warehouse_interior', locked: true, unlockFlag: 'warehouse_key_obtained', lockMessage: "The merchant's warehouse is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
-    { id: 'door-spice-shop', type: 'door', x: 10, y: 14, interiorId: 'spice_shop_interior', locked: false, labelArabic: 'دُكّان البُهارات', labelEnglish: 'Spice Shop' },
-    { id: 'door-textile-shop', type: 'door', x: 30, y: 14, interiorId: 'textile_shop_interior', locked: false, labelArabic: 'دُكّان الأَقمِشَة', labelEnglish: 'Textile Shop' },
+    { id: 'door-warehouse', type: 'door', x: 36, y: 16, interiorId: 'market_warehouse_interior', locked: true, unlockFlag: 'warehouse_key_obtained', lockMessage: "The merchant's warehouse is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
+    { id: 'door-spice-shop', type: 'door', x: 11, y: 13, interiorId: 'spice_shop_interior', locked: false, labelArabic: 'دُكّان البُهارات', labelEnglish: 'Spice Shop' },
+    { id: 'door-textile-shop', type: 'door', x: 30, y: 13, interiorId: 'textile_shop_interior', locked: false, labelArabic: 'دُكّان الأَقمِشَة', labelEnglish: 'Textile Shop' },
     // --- Phase 23: Interactive Objects ---
     { id: 'fountain-market-1', type: 'fountain', x: 22, y: 14, labelArabic: 'نافورة', labelEnglish: 'Market Fountain', descriptionEnglish: 'The central market fountain where merchants gather to trade news and haggle prices.', descriptionArabic: 'نافورة السوق المركزية حيث يجتمع التجار.', culturalNote: 'Souks (markets) have been the heart of Arab commerce and social life for millennia.', vocabWordId: 'market_w31', vocabCategory: 'trade', repeatable: true },
-    { id: 'stall-market-1', type: 'stall', x: 18, y: 16, labelArabic: 'دكان', labelEnglish: 'Fruit Stall', descriptionEnglish: 'A bustling stall overflowing with dates, figs, and pomegranates.', culturalNote: 'Dates are mentioned over 20 times in the Quran and are a symbol of generosity.', vocabWordId: 'fruit_1', vocabCategory: 'food', repeatable: true },
-    { id: 'stall-market-2', type: 'stall', x: 26, y: 16, labelArabic: 'دكان', labelEnglish: 'Jewellery Stall', descriptionEnglish: 'A glittering display of silver rings, amber necklaces, and turquoise bracelets.', vocabWordId: 'gold_w32', vocabCategory: 'trade', repeatable: true },
-    { id: 'stall-market-3', type: 'stall', x: 18, y: 20, labelArabic: 'دكان', labelEnglish: 'Pottery Stall', descriptionEnglish: 'Hand-painted ceramic bowls and plates stacked in colourful towers.', culturalNote: 'Arab pottery traditions date back thousands of years, with distinctive geometric patterns.', vocabWordId: 'num_4', vocabCategory: 'numbers', repeatable: true },
-    { id: 'stall-market-4', type: 'stall', x: 26, y: 20, labelArabic: 'دكان', labelEnglish: 'Cloth Stall', descriptionEnglish: 'Bolts of silk and cotton in every colour, imported from distant lands.', vocabWordId: 'sell_w33', vocabCategory: 'trade', repeatable: true },
-    { id: 'barrel-market-1', type: 'barrel', x: 13, y: 15, labelArabic: 'برميل', labelEnglish: 'Spice Barrel', descriptionEnglish: 'A barrel brimming with saffron, the most expensive spice in the world.', culturalNote: 'Arab traders controlled the global spice trade for centuries along the Silk Road.', vocabWordId: 'salt_1', vocabCategory: 'food', loot: { type: 'dirhams', min: 5, max: 15 }, repeatable: false, stateChange: 'inspected' },
-    { id: 'barrel-market-2', type: 'barrel', x: 33, y: 15, labelArabic: 'برميل', labelEnglish: 'Oil Barrel', descriptionEnglish: 'A heavy barrel of olive oil destined for the coastal port.', vocabWordId: 'oil_1', vocabCategory: 'food', repeatable: true },
-    { id: 'barrel-market-3', type: 'barrel', x: 20, y: 10, labelArabic: 'برميل', labelEnglish: 'Grain Barrel', descriptionEnglish: 'Barley and wheat stored for the market bakers.', vocabWordId: 'bread_1', vocabCategory: 'food', repeatable: true },
-    { id: 'pot-market-1', type: 'pot', x: 9, y: 18, labelArabic: 'قِدر', labelEnglish: 'Spice Pot', descriptionEnglish: 'A clay pot of ground cumin releasing a warm, earthy fragrance.', vocabWordId: 'pepper_1', vocabCategory: 'food', repeatable: true },
-    { id: 'pot-market-2', type: 'pot', x: 35, y: 18, labelArabic: 'قِدر', labelEnglish: 'Dye Pot', descriptionEnglish: 'A pot of indigo dye used to colour the textiles sold next door.', vocabWordId: 'buy_w34', vocabCategory: 'trade', repeatable: true },
-    { id: 'crate-market-1', type: 'crate', x: 38, y: 11, labelArabic: 'صندوق', labelEnglish: 'Trade Crate', descriptionEnglish: 'A sealed shipping crate stamped with marks from the coastal port.', vocabWordId: 'merchant_w35', vocabCategory: 'trade', loot: { type: 'dirhams', min: 10, max: 25 }, repeatable: false, stateChange: 'inspected' },
-    { id: 'crate-market-2', type: 'crate', x: 6, y: 23, labelArabic: 'صندوق', labelEnglish: 'Storage Crate', descriptionEnglish: 'A wooden crate filled with dried herbs and medicinal roots.', vocabWordId: 'honey_1', vocabCategory: 'food', repeatable: true },
-    { id: 'lantern-market-1', type: 'lantern', x: 20, y: 15, labelArabic: 'فانوس', labelEnglish: 'Market Lantern', descriptionEnglish: 'A tall iron lantern marking the crossroads of the main market streets.', vocabWordId: 'num_2', vocabCategory: 'numbers', repeatable: true },
-    { id: 'lantern-market-2', type: 'lantern', x: 24, y: 19, labelArabic: 'فانوس', labelEnglish: 'Market Lantern', descriptionEnglish: 'A hanging lantern swaying gently above the south market square.', vocabWordId: 'cheap_w36', vocabCategory: 'trade', repeatable: true },
+    { id: 'stall-market-1', type: 'stall', x: 17, y: 21, labelArabic: 'دكان', labelEnglish: 'Fruit Stall', descriptionEnglish: 'A bustling stall overflowing with dates, figs, and pomegranates.', culturalNote: 'Dates are mentioned over 20 times in the Quran and are a symbol of generosity.', vocabWordId: 'fruit_1', vocabCategory: 'food', repeatable: true },
+    { id: 'stall-market-2', type: 'stall', x: 25, y: 21, labelArabic: 'دكان', labelEnglish: 'Jewellery Stall', descriptionEnglish: 'A glittering display of silver rings, amber necklaces, and turquoise bracelets.', vocabWordId: 'gold_w32', vocabCategory: 'trade', repeatable: true },
+    { id: 'stall-market-3', type: 'stall', x: 17, y: 24, labelArabic: 'دكان', labelEnglish: 'Pottery Stall', descriptionEnglish: 'Hand-painted ceramic bowls and plates stacked in colourful towers.', culturalNote: 'Arab pottery traditions date back thousands of years, with distinctive geometric patterns.', vocabWordId: 'num_4', vocabCategory: 'numbers', repeatable: true },
+    { id: 'stall-market-4', type: 'stall', x: 25, y: 24, labelArabic: 'دكان', labelEnglish: 'Cloth Stall', descriptionEnglish: 'Bolts of silk and cotton in every colour, imported from distant lands.', vocabWordId: 'sell_w33', vocabCategory: 'trade', repeatable: true },
+    { id: 'barrel-market-1', type: 'barrel', x: 15, y: 21, labelArabic: 'برميل', labelEnglish: 'Spice Barrel', descriptionEnglish: 'A barrel brimming with saffron, the most expensive spice in the world.', culturalNote: 'Arab traders controlled the global spice trade for centuries along the Silk Road.', vocabWordId: 'salt_1', vocabCategory: 'food', loot: { type: 'dirhams', min: 5, max: 15 }, repeatable: false, stateChange: 'inspected' },
+    { id: 'barrel-market-2', type: 'barrel', x: 39, y: 17, labelArabic: 'برميل', labelEnglish: 'Oil Barrel', descriptionEnglish: 'A heavy barrel of olive oil destined for the coastal port.', vocabWordId: 'oil_1', vocabCategory: 'food', repeatable: true },
+    { id: 'barrel-market-3', type: 'barrel', x: 12, y: 6, labelArabic: 'برميل', labelEnglish: 'Grain Barrel', descriptionEnglish: 'Barley and wheat stored for the market bakers.', vocabWordId: 'bread_1', vocabCategory: 'food', repeatable: true },
+    { id: 'pot-market-1', type: 'pot', x: 8, y: 20, labelArabic: 'قِدر', labelEnglish: 'Spice Pot', descriptionEnglish: 'A clay pot of ground cumin releasing a warm, earthy fragrance.', vocabWordId: 'pepper_1', vocabCategory: 'food', repeatable: true },
+    { id: 'pot-market-2', type: 'pot', x: 30, y: 22, labelArabic: 'قِدر', labelEnglish: 'Dye Pot', descriptionEnglish: 'A pot of indigo dye used to colour the textiles sold next door.', vocabWordId: 'buy_w34', vocabCategory: 'trade', repeatable: true },
+    { id: 'crate-market-1', type: 'crate', x: 39, y: 18, labelArabic: 'صندوق', labelEnglish: 'Trade Crate', descriptionEnglish: 'A sealed shipping crate stamped with marks from the coastal port.', vocabWordId: 'merchant_w35', vocabCategory: 'trade', loot: { type: 'dirhams', min: 10, max: 25 }, repeatable: false, stateChange: 'inspected' },
+    { id: 'crate-market-2', type: 'crate', x: 15, y: 24, labelArabic: 'صندوق', labelEnglish: 'Storage Crate', descriptionEnglish: 'A wooden crate filled with dried herbs and medicinal roots.', vocabWordId: 'honey_1', vocabCategory: 'food', repeatable: true },
+    { id: 'lantern-market-1', type: 'lantern', x: 2, y: 14, labelArabic: 'فانوس', labelEnglish: 'Market Lantern', descriptionEnglish: 'A tall iron lantern marking the crossroads of the main market streets.', vocabWordId: 'num_2', vocabCategory: 'numbers', repeatable: true },
+    { id: 'lantern-market-2', type: 'lantern', x: 2, y: 20, labelArabic: 'فانوس', labelEnglish: 'Market Lantern', descriptionEnglish: 'A hanging lantern swaying gently above the south market square.', vocabWordId: 'cheap_w36', vocabCategory: 'trade', repeatable: true },
     // --- Phase 45: Hidden inscription (root family discovery) ---
     {
       id: 'inscription-marketplace-1',
       type: 'inscription',
-      x: 42, y: 3,
+      x: 39, y: 3,
       labelArabic: 'نَقش',
       labelEnglish: 'Ancient Inscription',
       rootFamily: 'ت-ج-ر',
@@ -724,7 +712,7 @@ const desert_marketplace = {
     {
       id: 'inscription-marketplace-2',
       type: 'inscription',
-      x: 6, y: 6,
+      x: 3, y: 5,
       labelArabic: 'نَقش',
       labelEnglish: 'Trader Inscription',
       rootFamily: 'ب-ي-ع',
@@ -741,7 +729,7 @@ const desert_marketplace = {
     {
       id: 'inscription-marketplace-3',
       type: 'inscription',
-      x: 42, y: 30,
+      x: 41, y: 31,
       labelArabic: 'نَقش',
       labelEnglish: "Merchant's Blessing",
       rootFamily: 'ب-ر-ك',
@@ -759,7 +747,7 @@ const desert_marketplace = {
     {
       id: 'market-to-library',
       edge: 'west',
-      tileRange: [15, 19],
+      tileRange: [16, 18],
       targetZone: 'ancient_library',
       targetEntry: 'from_marketplace',
       label: 'Ancient Library',
@@ -768,7 +756,7 @@ const desert_marketplace = {
     {
       id: 'market-to-farmland',
       edge: 'north',
-      tileRange: [19, 25],
+      tileRange: [19, 21],
       targetZone: 'farmland',
       targetEntry: 'from_marketplace',
       label: 'Farmland',
@@ -782,8 +770,8 @@ const desert_marketplace = {
   battleBackground: 'bg-desert',
 
   entries: {
-    from_library: { x: 3, y: 17 },
-    from_farmland: { x: 22, y: 3 },
+    from_library: { x: 2, y: 17 },
+    from_farmland: { x: 20, y: 2 },
   },
 };
 

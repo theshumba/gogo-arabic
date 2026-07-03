@@ -4,7 +4,9 @@
  * Phase-1 design document (docs/world-designs/<zone_id>.md).
  *
  * Usage:
- *   node scripts/generate-map-from-design.mjs <zone_id>     # e.g. oasis_village
+ *   node scripts/generate-map-from-design.mjs <zone_id>            # e.g. oasis_village
+ *   node scripts/generate-map-from-design.mjs <zone_id> --census   # also dump glyph positions
+ *                                                                  # (for the zones.js dressing pass)
  *
  * Reads:
  *   - docs/world-designs/<zone_id>.md          (canonical ASCII grid + §5 placement tables)
@@ -16,20 +18,29 @@
  *
  * Output structure (contract-and-pipeline.md §2 template):
  *   - tilelayer  "Ground"        — full coverage, 16px GIDs (scaled 4x at runtime)
- *   - tilelayer  "GroundDetail"  — grass-blob overlay (desert-grass edge frames are
- *                                  partially TRANSPARENT and must render over sand)
+ *   - tilelayer  "GroundDetail"  — overlay tiles that must render ABOVE Ground: grass blobs
+ *                                  (partially transparent edges) and, on profile zones,
+ *                                  perimeter-wall tiles (desert-fencewall autotile)
  *   - tilelayer  "Collision"     — hidden; ANY non-zero GID = impassable (bible §6 doctrine:
  *                                  water + wet rim, cliffs, palm belt, building footprints,
- *                                  rock outcrops). Door tiles are never painted.
+ *                                  rock outcrops, walls/towers, focal props). Door tiles are
+ *                                  never painted.
  *   - objectgroup "Exits"        — the ONLY runtime-consumed object layer (template §2).
  *   - objectgroups "Entries", "Buildings", "NPCs", "Interactables", "GatheringSpots",
  *     "StepTriggers", "SubAreas", "Decals" — REFERENCE layers for the zones.js wiring
  *     agents (TiledMapLoader exposes them via map.objects; nothing consumes them yet).
  *
+ * Engine split (Phase 3 extension, 2026-07-03):
+ *   - LEGACY path — oasis_village ships on the original hardcoded desert glyph profile
+ *     (verified byte-identical after this refactor; never touch its GID decisions).
+ *   - PROFILE path — zones with an entry in ZONE_PROFILES get a data-driven glyph->class
+ *     map plus per-zone tilesets. desert_marketplace is the first; later desert zones add
+ *     their own profile entries instead of new scripts.
+ *
  * GID / frame decisions (verified against the PNGs pixel-by-pixel, 2026-07-03):
  *   - desert-beach-tiles-1/2/3 (5x3): frame 6 = solid sand. Hue roles: 1 = base sand,
- *     2 = plaza paving (redder packed earth), 3 = road/lane (grey-tan packed dirt).
- *     Frames 13/14 are fully transparent — never placed.
+ *     2 = plaza paving / trampled souk floor (redder packed earth), 3 = road/lane
+ *     (grey-tan packed dirt). Frames 13/14 are fully transparent — never placed.
  *   - desert-water-tiles-1 (6x3): the RIGHT 3x3 blob (3,4,5 / 9,10,11 / 15,16,17) is the
  *     pool-in-sand autotile, fully opaque, transitions live INSIDE the water tiles
  *     (f3=bank N+W ... f10=open water ... f17=bank S+E). The design's `w` wet-rim cells and
@@ -41,15 +52,22 @@
  *   - desert-cliff-tiles-1 (13x11): f41/f54/f67 = opaque dark rock-face column
  *     (top/middle/base); f98,f111,f124,f137 (+decorated f100,f113,f126,f139) = opaque
  *     plateau/rubble floor used for the ruins court `r`.
+ *   - cobble-road-2 (3x5): frames 0-8 = tan-cobble blob ON SAND — the baked background is
+ *     RGB 228,166,114 = EXACTLY beach-tiles-1's solid tan, so blob edges blend seamlessly
+ *     on base sand. f9/f12/f13 = solid variants, f10 = sand-pothole variant, f11/f14 are
+ *     fully transparent — never placed. (cobble-road-1 is the same blob in blue-grey —
+ *     rejected: fights the desert palette.)
+ *   - pavement-tiles (9x8): frames 0,1,9,10 = the flat light-brick block (RGB 202,152,119);
+ *     col 2+ of rows 0-1 transparent; the rest of the sheet is a raised-platform kit (unused).
+ *   - desert-fencewall (4x4): col 0 = vertical run (top/mid/base = f0/f4/f8) + f12 short
+ *     stub; row 0 = horizontal run (left cap/mid/right cap = f1/f2/f3); 3x3 block f5-f7/
+ *     f9-f11/f13-f15 = corner + T-junction + cross atlas. Painted on GroundDetail from a
+ *     N/S/E/W wall-neighbour mask.
  *
  * Marks (`@ A W * D ...`) replace the terrain glyph they stand on; their underlay is
  * resolved by orthogonal-neighbour majority with tie priority
  * water > road > lane > plaza > rubble > grass > decal > sand (matches the design notes:
  * "`M` on lane, `A`/`W`/`*` on grass, `@` on road", rim spot on the wet rim).
- *
- * Theme support: only `desert` glyph->tileset profiles are implemented (oasis_village,
- * ancient_library, desert_marketplace, bedouin_camp, royal_palace). Snow/grass themed
- * zones need a theme profile added here before reuse.
  */
 
 import fs from 'node:fs';
@@ -61,8 +79,9 @@ const REPO = path.resolve(__dirname, '..');
 const SRC_TILE = 16;
 
 const zoneId = process.argv[2];
+const CENSUS = process.argv.includes('--census');
 if (!zoneId) {
-  console.error('Usage: node scripts/generate-map-from-design.mjs <zone_id>');
+  console.error('Usage: node scripts/generate-map-from-design.mjs <zone_id> [--census]');
   process.exit(1);
 }
 const DESIGN_MD = path.join(REPO, 'docs', 'world-designs', `${zoneId}.md`);
@@ -78,6 +97,57 @@ const warn = (msg) => { warnings.push(msg); console.warn(`WARN: ${msg}`); };
 const die = (msg) => { console.error(`ERROR: ${msg}`); process.exit(1); };
 
 // ────────────────────────────────────────────────────────────────────────────
+// 0. Zone theme profiles (PROFILE path). Legend glyphs are PER-ZONE: the same
+//    char means different things in different design docs (oasis `P` = palm
+//    belt, marketplace `P` = plaza paving), so each zone declares its own map.
+//    class values: sand|trample|lane|road|pave|grass|wall|lowwall|
+//                  sand+block|pave+block|trample+block  ('+block' paints Collision;
+//                  the wiring pass must place a collide:true sprite there)
+//                  null = mark, underlay resolved by neighbour majority, walkable.
+// ────────────────────────────────────────────────────────────────────────────
+
+const ZONE_PROFILES = {
+  desert_marketplace: {
+    classes: {
+      '.': 'sand',
+      ',': 'trample',        // trampled souk floor / sand variation (beach-tiles-2)
+      '-': 'lane',           // secondary streets (beach-tiles-3, LAW-6 trampled read)
+      '=': 'road',           // main caravan road (cobble-road-2 blob)
+      E: null,               // exit cut — inherits road/lane from its neighbours
+      P: 'pave',             // fountain plaza (pavement-tiles brick)
+      g: 'grass',            // planter tufts by the fountain (GroundDetail overlay)
+      '#': 'wall',           // adobe perimeter wall (fencewall autotile + Collision)
+      T: 'wall',             // wall tower — wall tile below, obelisk sprite via zones.js
+      v: 'lowwall',          // waist-high vista wall (fencewall stubs + Collision, LAW-46)
+      p: 'sand+block',       // palm (sprite via zones.js)
+      t: 'sand+block',       // dead tree
+      '%': 'sand+block',     // rock outcrop
+      '!': 'sand+block',     // obelisk pair at the warehouse axis
+      F: 'pave+block',       // fountain focal (interactable sprite)
+      S: 'trample+block',    // souk stalls (interactable sprites, LAW-37 grid)
+      // o (prop clusters), r (rugs), c (camels), + (bunting) and all contract
+      // marks (D C s b I N x *) resolve by neighbour majority and stay walkable;
+      // physical props there are collide:true zones.js objects instead of paint.
+    },
+    buildingGlyphs: 'HXYV',
+    buildings: [
+      { contains: [5, 6], asset: 'desert-house-1.2', label: 'Home H1' },
+      { contains: [10, 4], asset: 'desert-house-2.3', label: 'Home H2' },
+      { contains: [6, 11], asset: 'desert-house-1.4', label: 'Home H3' },
+      { contains: [32, 21], asset: 'desert-house-1.1', label: 'Home H4' },
+      { contains: [39, 24], asset: 'desert-house-1.3', label: 'Home H5' },
+      { contains: [11, 12], asset: 'desert-house-3.1', label: 'Spice Shop', doorId: 'door-spice-shop' },
+      { contains: [30, 11], asset: 'desert-house-2.1', label: 'Textile Shop', doorId: 'door-textile-shop' },
+      { contains: [36, 14], asset: 'desert-house-4.2', label: 'Warehouse', doorId: 'door-warehouse' },
+    ],
+    // neighbour-majority priority for mark underlays (first = strongest)
+    priority: ['road', 'lane', 'pave', 'trample', 'grass', 'sand'],
+    decalsFromComma: false, // ',' is a real floor material here, not a decal hint
+  },
+};
+const PROFILE = ZONE_PROFILES[zoneId] || null;
+
+// ────────────────────────────────────────────────────────────────────────────
 // 1. Parse the design doc
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -88,13 +158,16 @@ const W = +dimM[1];
 const H = +dimM[2];
 
 // Canonical grid — first fenced block whose lines look like "<W chars> <rowIndex>"
+// (oasis format) or "<rowIndex> <W chars>" (marketplace format).
 function parseGrid() {
   const blocks = [...md.matchAll(/```\n([\s\S]*?)```/g)].map((m) => m[1]);
   for (const block of blocks) {
     const rows = [];
     for (const line of block.split('\n')) {
-      const m = line.match(/^(.*\S)\s+(\d+)\s*$/);
-      if (m && m[1].length === W && !/^[\d\s]+$/.test(m[1])) rows[+m[2]] = m[1];
+      let m = line.match(/^(.*\S)\s+(\d+)\s*$/); // trailing row index
+      if (m && m[1].length === W && !/^[\d\s]+$/.test(m[1])) { rows[+m[2]] = m[1]; continue; }
+      m = line.match(/^\s*(\d+)\s\s*(\S.{1,}?)\s*$/); // leading row index
+      if (m && m[2].length === W && !/^[\d\s]+$/.test(m[2])) rows[+m[1]] = m[2];
     }
     if (rows.filter(Boolean).length >= H) return rows.slice(0, H);
   }
@@ -105,7 +178,7 @@ if (!grid || grid.length !== H || grid.some((r) => !r || r.length !== W)) {
   die(`could not parse a ${W}x${H} canonical grid from the design doc`);
 }
 
-// Buildings table — "| B1 | name | `asset` … | (x0,y0)–(x1,y1) | door… |"
+// Buildings table — "| B1 | name | `asset` … | (x0,y0)–(x1,y1) | door… |"  (oasis format)
 const buildings = [];
 for (const m of md.matchAll(/^\|\s*B(\d+)\s*\|\s*([^|]+?)\s*\|\s*`([\w.-]+)`[^|]*\|\s*\((\d+),(\d+)\)[–-]\((\d+),(\d+)\)\s*\|\s*([^|]+?)\s*\|$/gm)) {
   const doorM = m[8].match(/`([\w-]+)`\s*\((\d+),(\d+)\)/);
@@ -115,28 +188,89 @@ for (const m of md.matchAll(/^\|\s*B(\d+)\s*\|\s*([^|]+?)\s*\|\s*`([\w.-]+)`[^|]
     door: doorM ? { id: doorM[1], x: +doorM[2], y: +doorM[3] } : null,
   });
 }
+
+// PROFILE path: derive buildings from grid glyph clusters + the profile's asset list
+// (marketplace's §4 lists assets in prose, not a table — the grid is the footprint truth).
+const fillerDoorCells = []; // decorative D cells (walkable, no interactable)
+if (PROFILE) {
+  buildings.length = 0;
+  const isBldg = (x, y) => x >= 0 && x < W && y >= 0 && y < H
+    && (PROFILE.buildingGlyphs.includes(grid[y][x]) || grid[y][x] === 'D');
+  const claimed = Array.from({ length: H }, () => new Array(W).fill(false));
+  PROFILE.buildings.forEach((def, i) => {
+    const [sx, sy] = def.contains;
+    if (!isBldg(sx, sy)) die(`building ${i + 1} anchor (${sx},${sy}) is not on a building glyph`);
+    // BFS the connected component of building glyphs
+    const cells = [];
+    const q = [[sx, sy]];
+    claimed[sy][sx] = true;
+    while (q.length) {
+      const [x, y] = q.pop();
+      cells.push([x, y]);
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = x + dx; const ny = y + dy;
+        if (isBldg(nx, ny) && !claimed[ny][nx]) { claimed[ny][nx] = true; q.push([nx, ny]); }
+      }
+    }
+    const xs = cells.map(([x]) => x); const ys = cells.map(([, y]) => y);
+    const doors = cells.filter(([x, y]) => grid[y][x] === 'D');
+    const b = {
+      id: `B${i + 1}`, label: def.label, asset: def.asset,
+      x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys),
+      door: null, cells,
+    };
+    if (def.doorId) {
+      if (doors.length !== 1) die(`building ${def.label}: expected exactly 1 door glyph, found ${doors.length}`);
+      b.door = { id: def.doorId, x: doors[0][0], y: doors[0][1] };
+    } else {
+      fillerDoorCells.push(...doors);
+    }
+    buildings.push(b);
+  });
+  // no unclaimed building glyph may remain
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      if (PROFILE.buildingGlyphs.includes(grid[y][x]) && !claimed[y][x]) {
+        die(`building glyph '${grid[y][x]}' at (${x},${y}) belongs to no profile building`);
+      }
+    }
+  }
+}
 if (!buildings.length) warn('no buildings parsed from the Buildings table');
 
-// spawnPoint — "spawnPoint **(x,y)**"
-const spawnM = md.match(/spawnPoint\s*\*\*\((\d+),(\d+)\)\*\*/);
+// spawnPoint — "spawnPoint **(x,y)**" (oasis) or "`spawnPoint: (x,y)`" (marketplace)
+const spawnM = md.match(/spawnPoint\s*\*\*\((\d+),(\d+)\)\*\*/) || md.match(/`spawnPoint:\s*\((\d+),(\d+)\)`/);
 if (!spawnM) die('could not parse spawnPoint');
 const spawn = { x: +spawnM[1], y: +spawnM[2] };
 
-// Exits — "| `id` | edge=north, tileRange **[a,b]** …" + entry rows "| entry `key` | **(x,y)** |"
+// Exits — oasis format "| `id` | edge=north, tileRange **[a,b]** …"
+//         market format "| `id` | west ★ | y[16,18] | … |"
+// Entries — oasis rows "| entry `key` | **(x,y)** |"
+//           market prose "**Entries (keys preserved):** `from_library` → (2,17) …"
 const exits = [];
 const entries = [];
 for (const m of md.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*edge=(\w+),\s*tileRange\s*\*\*\[(\d+),(\d+)\]\*\*/gm)) {
   exits.push({ id: m[1], edge: m[2], range: [+m[3], +m[4]] });
 }
+for (const m of md.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*(north|south|east|west)[^|]*\|\s*[xy]\[(\d+),(\d+)\]\s*\|/gm)) {
+  exits.push({ id: m[1], edge: m[2], range: [+m[3], +m[4]] });
+}
 for (const m of md.matchAll(/^\|\s*entry\s*`(\w+)`\s*\|\s*\*\*\((\d+),(\d+)\)\*\*/gm)) {
   entries.push({ key: m[1], x: +m[2], y: +m[3] });
 }
+{
+  const entLine = md.match(/\*\*Entries \(keys preserved\):\*\*([^\n]+)/);
+  if (entLine) {
+    for (const m of entLine[1].matchAll(/`(\w+)`\s*→\s*\((\d+),(\d+)\)/g)) {
+      entries.push({ key: m[1], x: +m[2], y: +m[3] });
+    }
+  }
+}
 if (!exits.length) die('no exits parsed');
+if (!entries.length) die('no entries parsed');
 
 // Exit targets come from the contract §1 (design doc omits targetZone/targetEntry)
 function contractExitTargets() {
-  const s1 = md.length; // placeholder to keep lints quiet
-  void s1;
   const cmd = fs.readFileSync(CONTRACT_MD, 'utf8');
   const start = cmd.search(/^## 1\./m);
   const end = cmd.search(/^## 2\./m);
@@ -169,9 +303,9 @@ const npcs = [...npcSec.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|/g
 
 const itSec = tableRows(/^\*\*Interactables \(\d+\):\*\*/m);
 const interactables = [];
-for (const m of itSec.matchAll(/^\|\s*`([\w.-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|\s*([^|]*)\|/gm)) {
-  const it = { id: m[1], x: +m[2], y: +m[3], type: m[1].split('-')[0] };
-  const rat = m[4];
+for (const m of itSec.matchAll(/^\|\s*`([\w.-]+)`\s*(\[[^\]]*\])?\s*\|\s*\((\d+),(\d+)\)\s*\|\s*([^|]*)\|/gm)) {
+  const it = { id: m[1], x: +m[3], y: +m[4], type: m[1].split('-')[0] };
+  const rat = (m[2] || '') + m[5];
   const lockM = rat.match(/\[locked:\s*`?([\w]+)`?\]/);
   if (lockM) { it.locked = true; it.unlockFlag = lockM[1]; }
   const intM = rat.match(/→\s*`?([\w]+_interior)`?/);
@@ -179,7 +313,7 @@ for (const m of itSec.matchAll(/^\|\s*`([\w.-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|\s*
   interactables.push(it);
 }
 
-const spotSec = tableRows(/^\*\*Gathering spots \(\d+\):\*\*/m);
+const spotSec = tableRows(/^\*\*Gathering spots \(\d+[^)]*\):\*\*/m);
 const spots = [...spotSec.matchAll(/^\|\s*`(spot_[\w]+)`\s*\|\s*([\w]+)\s*\/\s*([\w]+)\s*\|\s*\((\d+),(\d+)\)/gm)]
   .map((m) => ({ id: m[1], item: m[2], gatherType: m[3], x: +m[4], y: +m[5] }));
 
@@ -193,8 +327,23 @@ const subAreas = [...md.matchAll(/`([\w-]+)`\s*\((\d+),(\d+)\)\s*(\d+)[×x](\d+)
 
 console.log(`parsed: ${npcs.length} NPCs, ${interactables.length} interactables, ${spots.length} spots, ${stepTriggers.length} stepTriggers, ${exits.length} exits, ${entries.length} entries, ${buildings.length} buildings, ${subAreas.length} subAreas`);
 
+if (CENSUS) {
+  const census = {};
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const ch = grid[y][x];
+      if (!census[ch]) census[ch] = [];
+      census[ch].push(`(${x},${y})`);
+    }
+  }
+  for (const ch of Object.keys(census).sort()) {
+    if (ch === '.' || ch === ',' || ch === '=' || ch === '-' || ch === '#' || ch === 'P') continue;
+    console.log(`  '${ch}' x${census[ch].length}: ${census[ch].join(' ')}`);
+  }
+}
+
 // ────────────────────────────────────────────────────────────────────────────
-// 2. Tilesets (desert theme profile)
+// 2. Tilesets
 // ────────────────────────────────────────────────────────────────────────────
 
 function tilesetDef(name, image, imagewidth, imageheight, firstgid) {
@@ -215,15 +364,24 @@ const addTs = (name, image, iw, ih) => {
 const TS_SAND1 = addTs('kenmi-desert-tiles-desert-beach-tiles-1', '../kenmi/desert/tiles/desert-beach-tiles-1.png', 80, 48);
 const TS_SAND2 = addTs('kenmi-desert-tiles-desert-beach-tiles-2', '../kenmi/desert/tiles/desert-beach-tiles-2.png', 80, 48);
 const TS_SAND3 = addTs('kenmi-desert-tiles-desert-beach-tiles-3', '../kenmi/desert/tiles/desert-beach-tiles-3.png', 80, 48);
-const TS_WATER = addTs('kenmi-desert-tiles-desert-water-tiles-1', '../kenmi/desert/tiles/desert-water-tiles-1.png', 96, 48);
+let TS_WATER = null; let TS_CLIFF = null; let TS_COBBLE = null; let TS_PAVE = null; let TS_WALL = null;
+if (!PROFILE) {
+  TS_WATER = addTs('kenmi-desert-tiles-desert-water-tiles-1', '../kenmi/desert/tiles/desert-water-tiles-1.png', 96, 48);
+}
 const TS_GRASS = addTs('kenmi-desert-tiles-desert-grass', '../kenmi/desert/tiles/desert-grass.png', 48, 80);
-const TS_CLIFF = addTs('kenmi-desert-tiles-desert-cliff-tiles-1', '../kenmi/desert/tiles/desert-cliff-tiles-1.png', 208, 176);
-const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_CLIFF];
+if (!PROFILE) {
+  TS_CLIFF = addTs('kenmi-desert-tiles-desert-cliff-tiles-1', '../kenmi/desert/tiles/desert-cliff-tiles-1.png', 208, 176);
+} else {
+  TS_COBBLE = addTs('kenmi-base-tiles-cobble-road-cobble-road-2', '../kenmi/base/tiles/cobble-road/cobble-road-2.png', 48, 80);
+  TS_PAVE = addTs('kenmi-base-tiles-pavement-tiles', '../kenmi/base/tiles/pavement-tiles.png', 144, 128);
+  TS_WALL = addTs('kenmi-desert-props-desert-fencewall', '../kenmi/desert/props/desert-fencewall.png', 64, 64);
+}
+const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL].filter(Boolean);
 
 const SAND_SOLID = 6;                       // 5x3 beach sheets: (1,1) solid sand
 const G_SAND = TS_SAND1.firstgid + SAND_SOLID;   // base sand `.` `,`
-const G_PLAZA = TS_SAND2.firstgid + SAND_SOLID;  // plaza paving `p`
-const G_ROAD = TS_SAND3.firstgid + SAND_SOLID;   // road `=` / lane `-` / exit cut `X`
+const G_PLAZA = TS_SAND2.firstgid + SAND_SOLID;  // oasis plaza `p` / market trampled floor `,`
+const G_ROAD = TS_SAND3.firstgid + SAND_SOLID;   // oasis road/lane / market lane `-`
 // water pool-in-sand blob (right 3x3 of the 6x3 sheet), keyed by open (land) sides
 const WATER_F = { NW: 3, N: 4, NE: 5, W: 9, C: 10, E: 11, SW: 15, S: 16, SE: 17 };
 // grass overlay frames (3 cols): hole-blob edges + 2x2 patch corners + solid
@@ -235,150 +393,313 @@ const GRASS_F = {
 };
 const CLIFF_F = { FACE_TOP: 41, FACE_MID: 54, FACE_BASE: 67 };
 const RUBBLE_F = [98, 111, 124, 137, 100, 113, 126, 139]; // plain x4 + decorated x4
+// cobble-road-2 blob (3x5): 0-8 = blob-on-sand transitions (f4 = solid centre),
+// 9/12/13 solid variants, 10 sand-pothole variant, 11/14 transparent (never place)
+const COBBLE_F = { NW: 0, N: 1, NE: 2, W: 3, C: 4, E: 5, SW: 6, S: 7, SE: 8, VAR: [9, 12, 13], POTHOLE: 10 };
+// pavement-tiles: flat light-brick block = frames 0,1 / 9,10 (9-col sheet)
+const PAVE_F = [0, 1, 9, 10];
+// desert-fencewall (4x4) frame atlas by wall-neighbour mask — see header
+const WALL_F = {
+  VTOP: 0, HL: 1, HM: 2, HR: 3,
+  VMID: 4, TL: 5, TD: 6, TR: 7,
+  VBOT: 8, TE: 9, X: 10, TW: 11,
+  STUB: 12, BL: 13, TU: 14, BR: 15,
+};
 const COLLIDE_GID = G_SAND; // any non-zero GID marks impassable (hidden layer)
 
 // ────────────────────────────────────────────────────────────────────────────
 // 3. Terrain resolution
 // ────────────────────────────────────────────────────────────────────────────
 
-const TERRAIN_CHARS = new Set(['C', 'P', '.', ',', 'g', '~', 'w', '=', '-', 'p', 'r', 'o', 'X']);
-const raw = (x, y) => (x >= 0 && x < W && y >= 0 && y < H ? grid[y][x] : 'C');
-
-// terrain[y][x]: one of C P . , g ~ w = - p r o X #  (marks resolved to underlay)
-const terrain = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
-  const ch = raw(x, y);
-  if (TERRAIN_CHARS.has(ch)) return ch;
-  if (ch === '#') return '#';
-  return null; // mark — resolve below
-}));
-
-const decalCells = [];
-for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (raw(x, y) === ',') decalCells.push([x, y]);
-
-// resolve marks by orthogonal-neighbour majority (walkable terrains only)
-const PRIORITY = ['w', '=', '-', 'p', 'r', 'g', ',', '.'];   // tie-break order; '~'+'w' merge to 'w'
-const classOf = (t) => (t === '~' || t === 'w' ? 'w' : t === 'X' ? '=' : t);
-for (let pass = 0; pass < 3; pass++) {
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      if (terrain[y][x] !== null) continue;
-      const counts = {};
-      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-        const t = (y + dy >= 0 && y + dy < H && x + dx >= 0 && x + dx < W) ? terrain[y + dy][x + dx] : null;
-        if (t === null || t === 'C' || t === 'P' || t === '#' || t === 'o') continue;
-        const c = classOf(t);
-        counts[c] = (counts[c] || 0) + 1;
-      }
-      const best = PRIORITY.filter((c) => counts[c])
-        .sort((a, b) => counts[b] - counts[a] || PRIORITY.indexOf(a) - PRIORITY.indexOf(b))[0];
-      if (best) terrain[y][x] = best === 'w' ? 'w' : best;
-    }
-  }
-}
-for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (terrain[y][x] === null) terrain[y][x] = '.';
-
-// cross-check building rects against '#' cells
-for (const b of buildings) {
-  for (let y = b.y0; y <= b.y1; y++) {
-    for (let x = b.x0; x <= b.x1; x++) {
-      const ch = raw(x, y);
-      if (ch !== '#' && !/[A-Za-z@+*]/.test(ch)) warn(`building ${b.id} rect covers non-footprint glyph '${ch}' at (${x},${y})`);
-      terrain[y][x] = raw(x, y) === 'D' || (b.door && b.door.x === x && b.door.y === y) ? terrain[y][x] : '#';
-    }
-  }
-  if (b.door) terrain[b.door.y][b.door.x] = '.'; // door tile: sand underlay, never collision
-}
-
-// ────────────────────────────────────────────────────────────────────────────
-// 4. Layers
-// ────────────────────────────────────────────────────────────────────────────
-
 const ground = new Array(W * H).fill(0);
 const detail = new Array(W * H).fill(0);
 const collision = new Array(W * H).fill(0);
+const decalCells = [];
+let terrain; // class grid used by the walkability sanity block below
 
-const T = (x, y) => (x >= 0 && x < W && y >= 0 && y < H ? terrain[y][x] : 'C');
-const isWaterT = (x, y) => T(x, y) === '~' || T(x, y) === 'w';
-const isGrassT = (x, y) => T(x, y) === 'g';
-const isCliffT = (x, y) => T(x, y) === 'C';
 const hash = (x, y) => { const h = (x * 73856093) ^ (y * 19349663); return ((h % 1024) + 1024) % 1024; };
 
-function waterFrame(x, y) {
-  const n = !isWaterT(x, y - 1); const s = !isWaterT(x, y + 1);
-  const w = !isWaterT(x - 1, y); const e = !isWaterT(x + 1, y);
-  if (n && w && !s && !e) return WATER_F.NW;
-  if (n && e && !s && !w) return WATER_F.NE;
-  if (s && w && !n && !e) return WATER_F.SW;
-  if (s && e && !n && !w) return WATER_F.SE;
-  if (n && !s && !w && !e) return WATER_F.N;
-  if (s && !n && !w && !e) return WATER_F.S;
-  if (w && !e && !n && !s) return WATER_F.W;
-  if (e && !w && !n && !s) return WATER_F.E;
-  return WATER_F.C; // interior, straits and 3-sided nubs fall back to open water
-}
+if (!PROFILE) {
+  // ══ LEGACY path (oasis_village) — original glyph profile, byte-identical output ══
+  const TERRAIN_CHARS = new Set(['C', 'P', '.', ',', 'g', '~', 'w', '=', '-', 'p', 'r', 'o', 'X']);
+  const raw = (x, y) => (x >= 0 && x < W && y >= 0 && y < H ? grid[y][x] : 'C');
 
-function grassFrame(x, y) {
-  const n = !isGrassT(x, y - 1); const s = !isGrassT(x, y + 1);
-  const w = !isGrassT(x - 1, y); const e = !isGrassT(x + 1, y);
-  if (n && w) return GRASS_F.CORNER_NW;
-  if (n && e) return GRASS_F.CORNER_NE;
-  if (s && w) return GRASS_F.CORNER_SW;
-  if (s && e) return GRASS_F.CORNER_SE;
-  if (n) return GRASS_F.EDGE_N;
-  if (s) return GRASS_F.EDGE_S;
-  if (w) return GRASS_F.EDGE_W;
-  if (e) return GRASS_F.EDGE_E;
-  // interior: inner corners where sand touches diagonally
-  const nw = !isGrassT(x - 1, y - 1); const ne = !isGrassT(x + 1, y - 1);
-  const sw = !isGrassT(x - 1, y + 1); const se = !isGrassT(x + 1, y + 1);
-  if (nw && !ne && !sw && !se) return GRASS_F.INNER_NW;
-  if (ne && !nw && !sw && !se) return GRASS_F.INNER_NE;
-  if (sw && !nw && !ne && !se) return GRASS_F.INNER_SW;
-  if (se && !nw && !ne && !sw) return GRASS_F.INNER_SE;
-  return GRASS_F.SOLID;
-}
+  terrain = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
+    const ch = raw(x, y);
+    if (TERRAIN_CHARS.has(ch)) return ch;
+    if (ch === '#') return '#';
+    return null; // mark — resolve below
+  }));
 
-function cliffFrame(x, y) {
-  if (!isCliffT(x, y + 1)) return CLIFF_F.FACE_BASE; // rock base meets the ground below
-  if (!isCliffT(x, y - 1)) return CLIFF_F.FACE_TOP;
-  return CLIFF_F.FACE_MID;
-}
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (raw(x, y) === ',') decalCells.push([x, y]);
 
-for (let y = 0; y < H; y++) {
-  for (let x = 0; x < W; x++) {
-    const i = y * W + x;
-    const t = terrain[y][x];
-    switch (t) {
-      case 'C':
-        ground[i] = TS_CLIFF.firstgid + cliffFrame(x, y);
-        collision[i] = COLLIDE_GID;
-        break;
-      case 'P': // palm belt: sand ground (palm props are zones.js objects), impassable
-      case 'o': // rock outcrop: sand ground (rock prop later), impassable
-      case '#': // building footprint reservation
-        ground[i] = G_SAND;
-        collision[i] = COLLIDE_GID;
-        break;
-      case '~': case 'w':
-        ground[i] = TS_WATER.firstgid + waterFrame(x, y);
-        collision[i] = COLLIDE_GID; // bible §6: water + wet rim are impassable
-        break;
-      case 'g':
-        ground[i] = G_SAND;
-        detail[i] = TS_GRASS.firstgid + grassFrame(x, y);
-        break;
-      case '=': case 'X': case '-':
-        ground[i] = G_ROAD;
-        break;
-      case 'p':
-        ground[i] = G_PLAZA;
-        break;
-      case 'r':
-        ground[i] = TS_CLIFF.firstgid + RUBBLE_F[hash(x, y) % 4 === 0 ? 4 + (hash(x, y) % 4) : hash(x, y) % 4];
-        break;
-      default: // '.', ','
-        ground[i] = G_SAND;
+  // resolve marks by orthogonal-neighbour majority (walkable terrains only)
+  const PRIORITY = ['w', '=', '-', 'p', 'r', 'g', ',', '.'];   // tie-break order; '~'+'w' merge to 'w'
+  const classOf = (t) => (t === '~' || t === 'w' ? 'w' : t === 'X' ? '=' : t);
+  for (let pass = 0; pass < 3; pass++) {
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        if (terrain[y][x] !== null) continue;
+        const counts = {};
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const t = (y + dy >= 0 && y + dy < H && x + dx >= 0 && x + dx < W) ? terrain[y + dy][x + dx] : null;
+          if (t === null || t === 'C' || t === 'P' || t === '#' || t === 'o') continue;
+          const c = classOf(t);
+          counts[c] = (counts[c] || 0) + 1;
+        }
+        const best = PRIORITY.filter((c) => counts[c])
+          .sort((a, b) => counts[b] - counts[a] || PRIORITY.indexOf(a) - PRIORITY.indexOf(b))[0];
+        if (best) terrain[y][x] = best === 'w' ? 'w' : best;
+      }
     }
+  }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (terrain[y][x] === null) terrain[y][x] = '.';
+
+  // cross-check building rects against '#' cells
+  for (const b of buildings) {
+    for (let y = b.y0; y <= b.y1; y++) {
+      for (let x = b.x0; x <= b.x1; x++) {
+        const ch = raw(x, y);
+        if (ch !== '#' && !/[A-Za-z@+*]/.test(ch)) warn(`building ${b.id} rect covers non-footprint glyph '${ch}' at (${x},${y})`);
+        terrain[y][x] = raw(x, y) === 'D' || (b.door && b.door.x === x && b.door.y === y) ? terrain[y][x] : '#';
+      }
+    }
+    if (b.door) terrain[b.door.y][b.door.x] = '.'; // door tile: sand underlay, never collision
+  }
+
+  const T = (x, y) => (x >= 0 && x < W && y >= 0 && y < H ? terrain[y][x] : 'C');
+  const isWaterT = (x, y) => T(x, y) === '~' || T(x, y) === 'w';
+  const isGrassT = (x, y) => T(x, y) === 'g';
+  const isCliffT = (x, y) => T(x, y) === 'C';
+
+  function waterFrame(x, y) {
+    const n = !isWaterT(x, y - 1); const s = !isWaterT(x, y + 1);
+    const w = !isWaterT(x - 1, y); const e = !isWaterT(x + 1, y);
+    if (n && w && !s && !e) return WATER_F.NW;
+    if (n && e && !s && !w) return WATER_F.NE;
+    if (s && w && !n && !e) return WATER_F.SW;
+    if (s && e && !n && !w) return WATER_F.SE;
+    if (n && !s && !w && !e) return WATER_F.N;
+    if (s && !n && !w && !e) return WATER_F.S;
+    if (w && !e && !n && !s) return WATER_F.W;
+    if (e && !w && !n && !s) return WATER_F.E;
+    return WATER_F.C; // interior, straits and 3-sided nubs fall back to open water
+  }
+
+  function grassFrame(x, y) {
+    const n = !isGrassT(x, y - 1); const s = !isGrassT(x, y + 1);
+    const w = !isGrassT(x - 1, y); const e = !isGrassT(x + 1, y);
+    if (n && w) return GRASS_F.CORNER_NW;
+    if (n && e) return GRASS_F.CORNER_NE;
+    if (s && w) return GRASS_F.CORNER_SW;
+    if (s && e) return GRASS_F.CORNER_SE;
+    if (n) return GRASS_F.EDGE_N;
+    if (s) return GRASS_F.EDGE_S;
+    if (w) return GRASS_F.EDGE_W;
+    if (e) return GRASS_F.EDGE_E;
+    // interior: inner corners where sand touches diagonally
+    const nw = !isGrassT(x - 1, y - 1); const ne = !isGrassT(x + 1, y - 1);
+    const sw = !isGrassT(x - 1, y + 1); const se = !isGrassT(x + 1, y + 1);
+    if (nw && !ne && !sw && !se) return GRASS_F.INNER_NW;
+    if (ne && !nw && !sw && !se) return GRASS_F.INNER_NE;
+    if (sw && !nw && !ne && !se) return GRASS_F.INNER_SW;
+    if (se && !nw && !ne && !sw) return GRASS_F.INNER_SE;
+    return GRASS_F.SOLID;
+  }
+
+  function cliffFrame(x, y) {
+    if (!isCliffT(x, y + 1)) return CLIFF_F.FACE_BASE; // rock base meets the ground below
+    if (!isCliffT(x, y - 1)) return CLIFF_F.FACE_TOP;
+    return CLIFF_F.FACE_MID;
+  }
+
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      const t = terrain[y][x];
+      switch (t) {
+        case 'C':
+          ground[i] = TS_CLIFF.firstgid + cliffFrame(x, y);
+          collision[i] = COLLIDE_GID;
+          break;
+        case 'P': // palm belt: sand ground (palm props are zones.js objects), impassable
+        case 'o': // rock outcrop: sand ground (rock prop later), impassable
+        case '#': // building footprint reservation
+          ground[i] = G_SAND;
+          collision[i] = COLLIDE_GID;
+          break;
+        case '~': case 'w':
+          ground[i] = TS_WATER.firstgid + waterFrame(x, y);
+          collision[i] = COLLIDE_GID; // bible §6: water + wet rim are impassable
+          break;
+        case 'g':
+          ground[i] = G_SAND;
+          detail[i] = TS_GRASS.firstgid + grassFrame(x, y);
+          break;
+        case '=': case 'X': case '-':
+          ground[i] = G_ROAD;
+          break;
+        case 'p':
+          ground[i] = G_PLAZA;
+          break;
+        case 'r':
+          ground[i] = TS_CLIFF.firstgid + RUBBLE_F[hash(x, y) % 4 === 0 ? 4 + (hash(x, y) % 4) : hash(x, y) % 4];
+          break;
+        default: // '.', ','
+          ground[i] = G_SAND;
+      }
+    }
+  }
+} else {
+  // ══ PROFILE path (desert_marketplace + later zones) ══
+  const raw = (x, y) => (x >= 0 && x < W && y >= 0 && y < H ? grid[y][x] : null);
+
+  // 3a. classify every cell; building glyphs handled after; unknown glyphs = marks
+  terrain = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
+    const ch = grid[y][x];
+    if (PROFILE.buildingGlyphs.includes(ch)) return 'bldg';
+    if (ch === 'D') return null; // door cells: walkable, underlay by majority
+    if (ch in PROFILE.classes) return PROFILE.classes[ch]; // may be null (mark)
+    return null; // contract marks (N x C s b I *) — majority underlay
+  }));
+
+  // 3b. resolve marks by orthogonal-neighbour majority over the profile priority
+  const WALKABLE = new Set(PROFILE.priority);
+  for (let pass = 0; pass < 3; pass++) {
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        if (terrain[y][x] !== null) continue;
+        const counts = {};
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const t = (y + dy >= 0 && y + dy < H && x + dx >= 0 && x + dx < W) ? terrain[y + dy][x + dx] : null;
+          const base = typeof t === 'string' ? t.replace('+block', '') : t;
+          if (!base || !WALKABLE.has(base)) continue;
+          counts[base] = (counts[base] || 0) + 1;
+        }
+        const best = PROFILE.priority.filter((c) => counts[c])
+          .sort((a, b) => counts[b] - counts[a] || PROFILE.priority.indexOf(a) - PROFILE.priority.indexOf(b))[0];
+        if (best) terrain[y][x] = best;
+      }
+    }
+  }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (terrain[y][x] === null) terrain[y][x] = 'sand';
+
+  // 3c. door cells (contract + filler) stay walkable — carve them out of 'bldg'
+  const doorCells = new Set(fillerDoorCells.map(([x, y]) => `${x},${y}`));
+  for (const b of buildings) if (b.door) doorCells.add(`${b.door.x},${b.door.y}`);
+
+  const cls = (x, y) => {
+    if (x < 0 || x >= W || y < 0 || y >= H) return null;
+    return terrain[y][x];
+  };
+  const base = (x, y) => { const c = cls(x, y); return typeof c === 'string' ? c.replace('+block', '') : c; };
+  const isWall = (x, y) => cls(x, y) === 'wall';
+  const isRoad = (x, y) => {
+    const c = base(x, y);
+    return c === 'road' || c === null; // OOB counts as road so exit cuts run to the edge
+  };
+  const isGrass = (x, y) => base(x, y) === 'grass';
+
+  function cobbleFrame(x, y) {
+    const n = !isRoad(x, y - 1); const s = !isRoad(x, y + 1);
+    const w = !isRoad(x - 1, y); const e = !isRoad(x + 1, y);
+    if (n && w && !s && !e) return COBBLE_F.NW;
+    if (n && e && !s && !w) return COBBLE_F.NE;
+    if (s && w && !n && !e) return COBBLE_F.SW;
+    if (s && e && !n && !w) return COBBLE_F.SE;
+    if (n && !s && !w && !e) return COBBLE_F.N;
+    if (s && !n && !w && !e) return COBBLE_F.S;
+    if (w && !e && !n && !s) return COBBLE_F.W;
+    if (e && !w && !n && !s) return COBBLE_F.E;
+    // interior: mostly solid centre with occasional variants + rare pothole
+    if (hash(x, y) % 37 === 0) return COBBLE_F.POTHOLE;
+    if (hash(x, y) % 5 === 0) return COBBLE_F.VAR[hash(x, y) % COBBLE_F.VAR.length];
+    return COBBLE_F.C;
+  }
+
+  function grassFrameP(x, y) {
+    const n = !isGrass(x, y - 1); const s = !isGrass(x, y + 1);
+    const w = !isGrass(x - 1, y); const e = !isGrass(x + 1, y);
+    if (n && s && w && e) return GRASS_F.SOLID; // isolated planter tuft: solid, no quarter-round
+    if (n && w) return GRASS_F.CORNER_NW;
+    if (n && e) return GRASS_F.CORNER_NE;
+    if (s && w) return GRASS_F.CORNER_SW;
+    if (s && e) return GRASS_F.CORNER_SE;
+    if (n) return GRASS_F.EDGE_N;
+    if (s) return GRASS_F.EDGE_S;
+    if (w) return GRASS_F.EDGE_W;
+    if (e) return GRASS_F.EDGE_E;
+    return GRASS_F.SOLID;
+  }
+
+  function wallFrame(x, y) {
+    const n = isWall(x, y - 1); const s = isWall(x, y + 1);
+    const w = isWall(x - 1, y); const e = isWall(x + 1, y);
+    if (n && s && e && w) return WALL_F.X;
+    if (e && w && s) return WALL_F.TD;
+    if (e && w && n) return WALL_F.TU;
+    if (n && s && e) return WALL_F.TE;
+    if (n && s && w) return WALL_F.TW;
+    if (e && s) return WALL_F.TL;
+    if (w && s) return WALL_F.TR;
+    if (e && n) return WALL_F.BL;
+    if (w && n) return WALL_F.BR;
+    if (e && w) return WALL_F.HM;
+    if (e) return WALL_F.HL;
+    if (w) return WALL_F.HR;
+    if (n && s) return WALL_F.VMID;
+    if (s) return WALL_F.VTOP;
+    if (n) return WALL_F.VBOT;
+    return WALL_F.STUB;
+  }
+
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      const c = terrain[y][x];
+      const b = typeof c === 'string' ? c.replace('+block', '') : c;
+      const block = typeof c === 'string' && c.endsWith('+block');
+      switch (b) {
+        case 'wall':
+          ground[i] = G_SAND;
+          detail[i] = TS_WALL.firstgid + wallFrame(x, y);
+          collision[i] = COLLIDE_GID;
+          break;
+        case 'lowwall':
+          ground[i] = G_SAND;
+          detail[i] = TS_WALL.firstgid + WALL_F.STUB;
+          collision[i] = COLLIDE_GID;
+          break;
+        case 'bldg':
+          ground[i] = G_SAND;
+          if (!doorCells.has(`${x},${y}`)) collision[i] = COLLIDE_GID;
+          break;
+        case 'road':
+          ground[i] = TS_COBBLE.firstgid + cobbleFrame(x, y);
+          break;
+        case 'lane':
+          ground[i] = G_ROAD;
+          break;
+        case 'trample':
+          ground[i] = G_PLAZA;
+          break;
+        case 'pave':
+          ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
+          break;
+        case 'grass':
+          ground[i] = G_SAND;
+          detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
+          break;
+        default: // sand
+          ground[i] = G_SAND;
+      }
+      if (block) collision[i] = COLLIDE_GID;
+    }
+  }
+  // door cells: never collision (already skipped) — but assert none got painted
+  for (const key of doorCells) {
+    const [x, y] = key.split(',').map(Number);
+    if (collision[y * W + x] !== 0) die(`door cell (${x},${y}) has painted collision`);
   }
 }
 
@@ -448,7 +769,8 @@ const spotObjects = spots.map((s) => tileObj(s.id, s.x, s.y, [
 ], 'gathering_spot'));
 const trigObjects = stepTriggers.map((t) => obj(t.id, t.x * SRC_TILE, t.y * SRC_TILE, t.w * SRC_TILE, t.h * SRC_TILE, [], 'step_trigger'));
 const subAreaObjects = subAreas.map((s) => obj(s.id, s.x * SRC_TILE, s.y * SRC_TILE, s.w * SRC_TILE, s.h * SRC_TILE, [], 'sub_area'));
-const decalObjects = decalCells.map(([x, y]) => tileObj('decal-hint', x, y, [], 'decal'));
+const decalObjects = (PROFILE && !PROFILE.decalsFromComma ? [] : decalCells)
+  .map(([x, y]) => tileObj('decal-hint', x, y, [], 'decal'));
 
 // ────────────────────────────────────────────────────────────────────────────
 // 6. Assemble + write
@@ -494,10 +816,14 @@ map.nextobjectid = nextObjectId;
 fs.writeFileSync(OUT, JSON.stringify(map, null, 2) + '\n', 'utf8');
 
 const census = {};
-for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) census[terrain[y][x]] = (census[terrain[y][x]] || 0) + 1;
+if (!PROFILE) {
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) census[terrain[y][x]] = (census[terrain[y][x]] || 0) + 1;
+} else {
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const c = String(terrain[y][x]); census[c] = (census[c] || 0) + 1; }
+}
 const collideCount = collision.filter((g) => g !== 0).length;
 console.log(`[generate-map-from-design] wrote ${path.relative(REPO, OUT)}`);
 console.log(`  size ${W}x${H}, tilesets ${tilesets.length}, layers ${map.layers.length}, objects ${nextObjectId - 1}`);
 console.log(`  terrain census: ${Object.entries(census).map(([k, v]) => `${k}=${v}`).join(' ')}`);
-console.log(`  collision tiles: ${collideCount}, grass detail tiles: ${detail.filter(Boolean).length}`);
+console.log(`  collision tiles: ${collideCount}, grass detail tiles: ${detail.filter((g) => g !== 0 && TS_GRASS && g >= TS_GRASS.firstgid && g < TS_GRASS.firstgid + 15).length}`);
 if (warnings.length) console.log(`  ${warnings.length} warning(s) — review above`);
