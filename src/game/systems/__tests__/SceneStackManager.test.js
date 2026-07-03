@@ -25,7 +25,7 @@ describe('SceneStackManager', () => {
     const interiorScene = {
       scene: { key: 'InteriorScene', stop: vi.fn() },
     };
-    scene.sys.scene.manager.getActiveScenes.mockReturnValue([scene, interiorScene]);
+    scene.scene.manager.getScenes.mockReturnValue([scene, interiorScene]);
 
     manager.pushScene('InteriorScene');
     const result = manager.popScene();
@@ -48,7 +48,7 @@ describe('SceneStackManager', () => {
     manager.pushScene('InteriorScene');
     expect(manager.isInBuilding).toBe(true);
 
-    scene.sys.scene.manager.getActiveScenes.mockReturnValue([scene]);
+    scene.scene.manager.getScenes.mockReturnValue([scene]);
     manager.popScene();
     expect(manager.isInBuilding).toBe(false);
   });
@@ -62,13 +62,13 @@ describe('SceneStackManager', () => {
     manager.pushScene('SceneB');
     expect(manager.depth).toBe(2);
 
-    scene.sys.scene.manager.getActiveScenes.mockReturnValue([scene]);
+    scene.scene.manager.getScenes.mockReturnValue([scene]);
     manager.popScene();
     expect(manager.depth).toBe(1);
   });
 
   it('destroy pops all remaining scenes', () => {
-    scene.sys.scene.manager.getActiveScenes.mockReturnValue([scene]);
+    scene.scene.manager.getScenes.mockReturnValue([scene]);
 
     manager.pushScene('SceneA');
     manager.pushScene('SceneB');
@@ -92,13 +92,13 @@ describe('SceneStackManager', () => {
     expect(manager.depth).toBe(2);
 
     // Pop B
-    scene.sys.scene.manager.getActiveScenes.mockReturnValue([scene, interiorB]);
+    scene.scene.manager.getScenes.mockReturnValue([scene, interiorB]);
     manager.popScene();
     expect(manager.depth).toBe(1);
     expect(interiorB.scene.stop).toHaveBeenCalled();
 
     // Pop A
-    scene.sys.scene.manager.getActiveScenes.mockReturnValue([scene, interiorA]);
+    scene.scene.manager.getScenes.mockReturnValue([scene, interiorA]);
     manager.popScene();
     expect(manager.depth).toBe(0);
     expect(interiorA.scene.stop).toHaveBeenCalled();

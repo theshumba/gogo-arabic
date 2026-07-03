@@ -315,8 +315,10 @@ export function createMockScene(overrides = {}) {
       stop: vi.fn(),
       isActive: vi.fn(() => true),
       getScene: vi.fn(() => null),
+      // Real Phaser 3 SceneManager API (getScenes(isActive)); the old mock
+      // faked a nonexistent getActiveScenes() that hid a live crash.
       manager: {
-        getActiveScenes: vi.fn(() => []),
+        getScenes: vi.fn(() => []),
       },
     },
 
@@ -334,11 +336,9 @@ export function createMockScene(overrides = {}) {
           delta: 16.67 // ~60fps
         }
       },
-      scene: {
-        manager: {
-          getActiveScenes: vi.fn(() => []),
-        },
-      },
+      // In real Phaser, sys.scene is the Scene itself and has NO .manager —
+      // kept minimal here; SceneStackManager now uses scene.scene.manager.
+      scene: {},
     },
 
     // Animations

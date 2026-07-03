@@ -33,7 +33,13 @@ export class SceneStackManager {
   popScene() {
     if (this._stack.length === 0) return null;
 
-    const activeScenes = this.scene.sys.scene.manager.getActiveScenes();
+    // Phaser 3's SceneManager API is getScenes(isActive) — there is no
+    // getActiveScenes(), and a Scene has no .manager (only the ScenePlugin at
+    // scene.scene does). The old call threw "Cannot read properties of
+    // undefined (reading 'getActiveScenes')" on every live interior exit,
+    // stranding the player inside (found by the oasis_village world-rebuild
+    // door probe, 2026-07-03; the unit mocks had faked the nonexistent API).
+    const activeScenes = this.scene.scene.manager.getScenes(true);
     const interiorScene = activeScenes.find(
       (s) => s !== this.scene && s.scene.key !== this.scene.scene.key
     );
