@@ -94,7 +94,9 @@ describe('InteractableManager', () => {
       // Verify sprites created with correct keys (Kenmi)
       expect(scene.add.image).toHaveBeenCalledWith(352, 352, 'kenmi-desert-temple-desert-obelisk-small-2');
       expect(scene.add.image).toHaveBeenCalledWith(480, 480, 'kenmi-desert-temple-desert-obelisk-small-1');
-      expect(scene.add.image).toHaveBeenCalledWith(672, 672, 'kenmi-desert-props-desert-rocks');
+      // Chests render as the real Kenmi wooden chest (world-rebuild screenshot
+      // review 2026-07-03 — the old desert-rocks mapping was a teal water-ring pile).
+      expect(scene.add.image).toHaveBeenCalledWith(672, 672, 'kenmi-base-buildings-house-decor-chest-anim');
     });
 
     it('should tint already-opened chests from Redux state', async () => {

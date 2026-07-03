@@ -18,13 +18,27 @@ const LABEL_RANGE = 64 * 3.5;
 // miniature strip of every item at once — same fix as GATHER_SPRITE_REMAP in
 // GatheringSpotManager.js (setCrop + normalized scale + crop-centred origin).
 const WORLD_OBJECT_SPRITES = {
-  fountain: { key: 'kenmi-desert-props-golden-pots', region: { x: 0, y: 0, w: 16, h: 16 } },
+  // World-rebuild screenshot review (oasis_village, 2026-07-03): fountain/lantern/
+  // barrel/crate previously borrowed rock and golden-pot crops, so the plaza axis
+  // terminator read as a tiny pot and every "entrance framing lantern pair"
+  // (LAW-28/36) read as sand mounds. Remapped to the real Kenmi assets the design
+  // manifests (all keys verified in kenmiCatalog.js). Same crop mechanism as before.
+  // fountain.png (32x80) stacks two sprites: plain basin (0,0,32,32) and spouting
+  // fountain (0,32,32,48) — use the spouting one at ~2 tiles.
+  fountain: { key: 'kenmi-base-outdoor-decoration-fountain', region: { x: 0, y: 32, w: 32, h: 48, tiles: 2 } },
   statue: { key: 'kenmi-desert-temple-desert-obelisk-small-1', region: { x: 0, y: 0, w: 32, h: 32 } },
   painting: { key: 'kenmi-desert-temple-desert-obelisk-small-2', region: { x: 0, y: 0, w: 32, h: 32 } },
-  lantern: { key: 'kenmi-desert-props-desert-rocks', region: { x: 64, y: 0, w: 16, h: 16 } },
-  stall: { key: 'kenmi-desert-houses-pergola', region: { x: 0, y: 0, w: 32, h: 64 } },
-  barrel: { key: 'kenmi-desert-props-desert-rocks', region: { x: 32, y: 0, w: 32, h: 32 } },
-  crate: { key: 'kenmi-desert-props-golden-pots', region: { x: 16, y: 0, w: 16, h: 16 } },
+  lantern: { key: 'kenmi-base-outdoor-decoration-lantern', region: { x: 0, y: 0, w: 16, h: 16 } },
+  // World-rebuild screenshot review (oasis_village, 2026-07-03): the pergola crop
+  // rendered a 32x64 pole sliver, so the LAW-37 stall unit read as a tiny loom.
+  // Remapped to the design-manifested market-stalls sheet (192x48 = 4x 48px awning
+  // stalls; the blue one echoes the merchant house's blue trim) at ~2 tiles wide,
+  // per WORLD-MISSING-ASSETS #3 (wooden stall accepted as-is).
+  stall: { key: 'kenmi-base-buildings-buildings-unique-buildings-stalls-market-stalls', region: { x: 96, y: 0, w: 48, h: 48, tiles: 2 } },
+  // First barrel crop from MapLoader's PROP_CROP_REGIONS list for this sheet.
+  barrel: { key: 'kenmi-base-outdoor-decoration-barrels', region: { x: 0, y: 0, w: 16, h: 32 } },
+  // Spritesheet base frame 0 = intact crate (the crop keeps it to one frame).
+  crate: { key: 'kenmi-base-outdoor-decoration-outdoor-decor-animations-break-animations-crate-anim', region: { x: 0, y: 0, w: 16, h: 16 } },
   pot: { key: 'kenmi-desert-props-golden-pots', region: { x: 32, y: 0, w: 16, h: 16 } },
   inscription: { key: 'kenmi-desert-temple-desert-obelisk-small-2', region: { x: 0, y: 0, w: 32, h: 32 } },
 };
@@ -33,7 +47,11 @@ const WORLD_OBJECT_SPRITES = {
 const LEGACY_INTERACTABLE_SPRITES = {
   sign: { key: 'kenmi-desert-temple-desert-obelisk-small-2', region: { x: 0, y: 0, w: 32, h: 32 } },
   bookshelf: { key: 'kenmi-desert-temple-desert-obelisk-small-1', region: { x: 0, y: 0, w: 32, h: 32 } },
-  chest: { key: 'kenmi-desert-props-desert-rocks', region: { x: 112, y: 0, w: 32, h: 32 } },
+  // World-rebuild screenshot review (oasis_village, 2026-07-03): the old mapping
+  // borrowed the desert-rocks TEAL water-ring pile (region 112,0), so every chest
+  // read as a rock pile sitting in a puddle on dry land. Remapped to the real
+  // Kenmi wooden chest (chest-anim.png, 6x 16px frames; frame 0 = closed).
+  chest: { key: 'kenmi-base-buildings-house-decor-chest-anim', region: { x: 0, y: 0, w: 16, h: 16 } },
   // Doors mark a building's ENTRANCE, so the marker is a doormat rug at the
   // threshold — not a house sprite (the 80x80 desert-house crop drew a whole
   // miniature duplicate house floating next to the real building).
