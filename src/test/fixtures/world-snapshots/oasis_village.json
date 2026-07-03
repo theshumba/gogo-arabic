@@ -7736,411 +7736,309 @@
   ],
   "objects": [
     {
-      "key": "kenmi-desert-props-palm-tree-1",
-      "x": 15,
+      "key": "kenmi-desert-houses-desert-house-2.2",
+      "x": 5,
+      "y": 19,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-houses-desert-house-1.3",
+      "x": 10,
+      "y": 20,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-houses-desert-house-4.1",
+      "x": 32,
+      "y": 21,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-houses-desert-house-3.2",
+      "x": 5,
       "y": 11,
       "collide": true
     },
     {
-      "key": "kenmi-desert-props-palm-tree-1",
-      "x": 25,
-      "y": 10,
+      "key": "kenmi-desert-houses-desert-house-1.1",
+      "x": 6,
+      "y": 25,
       "collide": true
     },
     {
-      "key": "kenmi-desert-props-palm-tree-1",
-      "x": 18,
+      "key": "kenmi-base-outdoor-decoration-well",
+      "x": 16,
       "y": 17,
       "collide": true
     },
     {
       "key": "kenmi-desert-props-palm-tree-1",
-      "x": 23,
-      "y": 18,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-palm-tree-2",
-      "x": 16,
-      "y": 13,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-palm-tree-2",
-      "x": 24,
-      "y": 15,
+      "x": 4,
+      "y": 1,
       "collide": true
     },
     {
       "key": "kenmi-desert-props-palm-tree-1",
+      "x": 8,
+      "y": 1,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-2",
       "x": 5,
+      "y": 5,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-1",
+      "x": 1,
+      "y": 2,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-2",
+      "x": 0,
       "y": 8,
       "collide": true
     },
     {
       "key": "kenmi-desert-props-palm-tree-1",
-      "x": 35,
-      "y": 6,
+      "x": 2,
+      "y": 14,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-2",
+      "x": 1,
+      "y": 20,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-1",
+      "x": 0,
+      "y": 26,
       "collide": true
     },
     {
       "key": "kenmi-desert-props-palm-tree-1",
       "x": 3,
-      "y": 22,
+      "y": 28,
       "collide": true
     },
     {
-      "key": "kenmi-desert-props-palm-tree-2",
-      "x": 37,
-      "y": 20,
+      "key": "kenmi-desert-props-palm-tree-1",
+      "x": 9,
+      "y": 27,
       "collide": true
     },
     {
       "key": "kenmi-desert-props-palm-tree-1",
       "x": 12,
-      "y": 26,
+      "y": 28,
       "collide": true
     },
     {
       "key": "kenmi-desert-props-palm-tree-2",
-      "x": 28,
-      "y": 4,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-houses-desert-house-1.1",
-      "x": 8,
-      "y": 3,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-halfdead-tree",
-      "x": 5,
-      "y": 5,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-halfdead-tree",
-      "x": 12,
-      "y": 5,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-temple-desert-obelisk-small-1",
-      "x": 6,
-      "y": 3,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-temple-desert-obelisk-small-2",
-      "x": 11,
-      "y": 3,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-houses-desert-house-1.2",
-      "x": 10,
-      "y": 14,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 8,
-      "y": 16,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 13,
-      "y": 16,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-houses-desert-house-3.1",
-      "x": 32,
-      "y": 22,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-acacia-tree",
-      "x": 29,
-      "y": 24,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-temple-desert-obelisk-small-2",
-      "x": 35,
-      "y": 25,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-temple-desert-obelisk-1",
       "x": 20,
-      "y": 2,
+      "y": 27,
       "collide": true
     },
     {
-      "key": "kenmi-desert-temple-desert-obelisk-small-1",
-      "x": 17,
-      "y": 2,
+      "key": "kenmi-desert-props-palm-tree-2",
+      "x": 24,
+      "y": 28,
       "collide": true
     },
     {
-      "key": "kenmi-desert-temple-desert-obelisk-small-2",
+      "key": "kenmi-desert-props-palm-tree-1",
+      "x": 28,
+      "y": 27,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-2",
+      "x": 31,
+      "y": 28,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-1",
+      "x": 35,
+      "y": 28,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-fallen-palm-leaves",
+      "x": 4,
+      "y": 2,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-fallen-palm-leaves",
       "x": 23,
-      "y": 2,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 2,
-      "y": 14,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 36,
-      "y": 15,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 15,
-      "y": 27,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 30,
-      "y": 8,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 7,
-      "y": 20,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 38,
-      "y": 27,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-houses-desert-house-4.2",
-      "x": 34,
-      "y": 10,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-houses-desert-house-2.3",
-      "x": 2,
-      "y": 3,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-golden-pots",
-      "x": 21,
-      "y": 3,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-golden-pots",
-      "x": 19,
-      "y": 3,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-water-sack-on-stick",
-      "x": 13,
-      "y": 19,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-sleeping-mat",
-      "x": 10,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-pots-sacks",
-      "x": 11,
-      "y": 19,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-sleeping-mat",
-      "x": 34,
       "y": 26,
       "collide": false
     },
     {
-      "key": "kenmi-desert-props-desert-rugs",
-      "x": 17,
-      "y": 5,
-      "collide": false
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 35,
+      "y": 16,
+      "collide": true
     },
     {
-      "key": "kenmi-desert-props-desert-rugs",
-      "x": 20,
-      "y": 5,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-rugs",
-      "x": 23,
-      "y": 5,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-bones",
-      "x": 11,
-      "y": 23,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-bones",
-      "x": 21,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-rugs",
-      "x": 32,
-      "y": 12,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-rugs",
-      "x": 6,
-      "y": 14,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-golden-pots",
-      "x": 22,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-golden-pots",
-      "x": 18,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-grass-props",
-      "x": 21,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-grass-props",
-      "x": 16,
-      "y": 15,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-grass-props",
-      "x": 24,
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 4,
       "y": 13,
       "collide": false
     },
     {
-      "key": "kenmi-desert-props-fallen-palm-leaves",
-      "x": 33,
-      "y": 2,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-fallen-palm-leaves",
-      "x": 11,
-      "y": 4,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 19,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 20,
-      "y": 17,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-fern",
-      "x": 14,
-      "y": 22,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-fern-dead",
-      "x": 27,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-grass-props",
-      "x": 28,
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 8,
       "y": 12,
       "collide": false
     },
     {
-      "key": "kenmi-desert-props-desert-grass-props",
-      "x": 18,
-      "y": 20,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-rugs",
-      "x": 14,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-rugs",
-      "x": 9,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-rugs",
-      "x": 33,
-      "y": 26,
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 12,
+      "y": 21,
       "collide": false
     },
     {
       "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-1-anim",
-      "x": 17,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-2-anim",
-      "x": 22,
-      "y": 9,
+      "x": 12,
+      "y": 12,
       "collide": false
     },
     {
       "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-3-anim",
       "x": 13,
-      "y": 13,
+      "y": 15,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-2-anim",
+      "x": 22,
+      "y": 16,
       "collide": false
     },
     {
       "key": "kenmi-desert-props-flies-anim",
-      "x": 21,
+      "x": 19,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-fire-pit",
+      "x": 29,
+      "y": 12,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 30,
+      "y": 12,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-water-sack-on-stick",
+      "x": 28,
       "y": 13,
       "collide": false
     },
     {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor-animations-water-decor-animations-water-plants-lillypad-green-1-anim",
-      "x": 20,
-      "y": 15,
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 30,
+      "y": 13,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-acacia-tree",
+      "x": 33,
+      "y": 10,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-cactus",
+      "x": 33,
+      "y": 13,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-cactus",
+      "x": 28,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-bones",
+      "x": 31,
+      "y": 16,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 33,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-temple-desert-obelisk-small-1",
+      "x": 29,
+      "y": 2,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-temple-desert-obelisk-small-2",
+      "x": 33,
+      "y": 5,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 34,
+      "y": 2,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-bones",
+      "x": 3,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-bones",
+      "x": 17,
+      "y": 28,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-dead-bush",
+      "x": 18,
+      "y": 1,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 5,
+      "y": 3,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 27,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-dead-bush",
+      "x": 32,
+      "y": 14,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-grass-props",
+      "x": 21,
+      "y": 23,
       "collide": false
     }
   ],

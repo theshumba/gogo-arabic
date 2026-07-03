@@ -44,120 +44,128 @@ const oasis_village = {
   mapWidth: 40,
   mapHeight: 30,
   buildMap: buildOasisMap,
-  spawnPoint: { x: 14, y: 20 },
+  spawnPoint: { x: 20, y: 18 },
   vocabCategories: ['greetings', 'trade'],
   gatheringSpots: true,
 
+  // Rebuilt to the approved design (docs/world-designs/oasis_village.md §3/§7).
+  // Ground/collision/exits live in the authored Tiled map; these sprites dress it.
+  // Density note: LAW-31 caps non-flat props at 15 per 20x15 screen and the lint
+  // implements NO palm-belt exemption, so the belt is a sparse framing scatter —
+  // the map's Collision layer already walls every P cell regardless.
   objects: [
-    { key: 'kenmi-desert-props-palm-tree-1', x: 15, y: 11, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 25, y: 10, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 18, y: 17, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 23, y: 18, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-2', x: 16, y: 13, collide: true, collideW: 20, collideH: 16 },
-    { key: 'kenmi-desert-props-palm-tree-2', x: 24, y: 15, collide: true, collideW: 20, collideH: 16 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 5, y: 8, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 35, y: 6, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 3, y: 22, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-2', x: 37, y: 20, collide: true, collideW: 20, collideH: 16 },
-    { key: 'kenmi-desert-props-palm-tree-1', x: 12, y: 26, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-palm-tree-2', x: 28, y: 4, collide: true, collideW: 30, collideH: 20 },
-    // Houses — varied color variants (BLDG-01: 4 designs x 4 colors)
-    { key: 'kenmi-desert-houses-desert-house-1.1', x: 8, y: 3, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-desert-props-halfdead-tree', x: 5, y: 5, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-halfdead-tree', x: 12, y: 5, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 6, y: 3, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 11, y: 3, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-houses-desert-house-1.2', x: 10, y: 14, collide: true, collideW: 180, collideH: 80 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 8, y: 16, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 13, y: 16, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-houses-desert-house-3.1', x: 32, y: 22, collide: true, collideW: 240, collideH: 100 },
-    { key: 'kenmi-desert-props-acacia-tree', x: 29, y: 24, collide: true, collideW: 40, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 35, y: 25, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 20, y: 2, collide: true, collideW: 120, collideH: 40 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 17, y: 2, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 23, y: 2, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 2, y: 14, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 36, y: 15, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 15, y: 27, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 30, y: 8, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 7, y: 20, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 38, y: 27, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-houses-desert-house-4.2', x: 34, y: 10, collide: true, collideW: 240, collideH: 100 },
-    { key: 'kenmi-desert-houses-desert-house-2.3', x: 2, y: 3, collide: true, collideW: 180, collideH: 80 },
-    // DECO-04: Golden pots near ruins gate entrance (landmark)
-    { key: 'kenmi-desert-props-golden-pots', x: 21, y: 3, collide: false },
-    { key: 'kenmi-desert-props-golden-pots', x: 19, y: 3, collide: false },
-    // DECO-05: NPC-adjacent props
-    { key: 'kenmi-desert-props-water-sack-on-stick', x: 13, y: 19, collide: false },
-    { key: 'kenmi-desert-props-sleeping-mat', x: 10, y: 7, collide: false },
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 11, y: 19, collide: false },
-    { key: 'kenmi-desert-props-sleeping-mat', x: 34, y: 26, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 17, y: 5, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 20, y: 5, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 23, y: 5, collide: false },
-    { key: 'kenmi-desert-props-desert-bones', x: 11, y: 23, collide: false },
-    { key: 'kenmi-desert-props-desert-bones', x: 21, y: 24, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 32, y: 12, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 6, y: 14, collide: false },
-    { key: 'kenmi-desert-props-golden-pots', x: 22, y: 7, collide: false },
-    { key: 'kenmi-desert-props-golden-pots', x: 18, y: 7, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 21, y: 11, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 16, y: 15, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 24, y: 13, collide: false },
-    { key: 'kenmi-desert-props-fallen-palm-leaves', x: 33, y: 2, collide: false },
-    { key: 'kenmi-desert-props-fallen-palm-leaves', x: 11, y: 4, collide: false },
-    { key: 'kenmi-base-outdoor-decoration-outdoor-decor', x: 19, y: 11, collide: false },
-    { key: 'kenmi-base-outdoor-decoration-outdoor-decor', x: 20, y: 17, collide: false },
-    { key: 'kenmi-desert-props-desert-fern', x: 14, y: 22, collide: false },
-    { key: 'kenmi-desert-props-desert-fern-dead', x: 27, y: 7, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 28, y: 12, collide: false },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 18, y: 20, collide: false },
-    // desert-ladder removed: at 1x3 tiles it towered free-standing over the
-    // houses with nothing to lean against. Re-add once buildings can host it.
-    { key: 'kenmi-desert-props-desert-rugs', x: 14, y: 9, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 9, y: 7, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 33, y: 26, collide: false },
-
-    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-1-anim', x: 17, y: 9, collide: false },
-    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-2-anim', x: 22, y: 9, collide: false },
-    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-3-anim', x: 13, y: 13, collide: false },
-    { key: 'kenmi-desert-props-flies-anim', x: 21, y: 13, collide: false },
-  
-    { key: 'kenmi-base-outdoor-decoration-outdoor-decor-animations-water-decor-animations-water-plants-lillypad-green-1-anim', x: 20, y: 15, collide: false }
-
+    // Buildings B1-B5 — assets and footprints per design §3 building table.
+    // Collider boxes are thin base strips (the Tiled Collision layer owns the
+    // real footprint); they must never cover door tiles or door-front rows.
+    { key: 'kenmi-desert-houses-desert-house-2.2', x: 5, y: 19, collide: true, collideW: 180, collideH: 24 },   // B1 Scholar's House (4,17)-(6,20), door (5,20)
+    { key: 'kenmi-desert-houses-desert-house-1.3', x: 10, y: 20, collide: true, collideW: 150, collideH: 24 },  // B2 Merchant's House (9,19)-(11,21), door (10,21)
+    { key: 'kenmi-desert-houses-desert-house-4.1', x: 32, y: 21, collide: true, collideW: 190, collideH: 24 },  // B3 Adventurers' Guild (31,19)-(34,22), door (32,22)
+    { key: 'kenmi-desert-houses-desert-house-3.2', x: 5, y: 11, collide: true, collideW: 190, collideH: 24 },   // B4 Market storehouse (4,8)-(7,11), filler
+    { key: 'kenmi-desert-houses-desert-house-1.1', x: 6, y: 25, collide: true, collideW: 150, collideH: 24 },   // B5 Palm-grove home (5,23)-(7,25), filler
+    // Village well on the pool's far shore, beside Guide Amira (design §3 'W' at
+    // (16,16) — anchored one south so the 1x1.5-tile art stands ON that tile
+    // without its top row touching the wet rim at (16,15)).
+    { key: 'kenmi-base-outdoor-decoration-well', x: 16, y: 17, collide: true, collideW: 40, collideH: 24 },
+    // Palm belt (sparse scatter on P cells) — NW pocket
+    { key: 'kenmi-desert-props-palm-tree-1', x: 4, y: 1, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 8, y: 1, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 5, y: 5, collide: true, collideW: 20, collideH: 16 },
+    // Palm belt — west edge (screenshot review: thickened from a 5-palm scatter into
+    // loose 2-palm clusters so the edge reads as a belt; all on design-grid P cells,
+    // same-key spacing/cluster rules per LINT-4, LAW-31 window cap re-linted)
+    { key: 'kenmi-desert-props-palm-tree-1', x: 1, y: 2, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 0, y: 8, collide: true, collideW: 20, collideH: 16 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 2, y: 14, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 1, y: 20, collide: true, collideW: 20, collideH: 16 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 0, y: 26, collide: true, collideW: 30, collideH: 20 },
+    // Palm belt — south edge, framing the LAW-46 vista gap at x15-19 (thickened the
+    // same way; additions sit on design-grid P cells of rows 27-28)
+    { key: 'kenmi-desert-props-palm-tree-1', x: 3, y: 28, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 9, y: 27, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 12, y: 28, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 20, y: 27, collide: true, collideW: 20, collideH: 16 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 24, y: 28, collide: true, collideW: 20, collideH: 16 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 28, y: 27, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-palm-tree-2', x: 31, y: 28, collide: true, collideW: 20, collideH: 16 },
+    { key: 'kenmi-desert-props-palm-tree-1', x: 35, y: 28, collide: true, collideW: 30, collideH: 20 },
+    // Fallen fronds at the belt's feet
+    { key: 'kenmi-desert-props-fallen-palm-leaves', x: 4, y: 2, collide: false },
+    { key: 'kenmi-desert-props-fallen-palm-leaves', x: 23, y: 26, collide: false },
+    // Rock outcrop 'o' at (35,16) by the iron seam
+    { key: 'kenmi-desert-props-desert-rocks', x: 35, y: 16, collide: true, collideW: 30, collideH: 20 },
+    // Market corner — goods at the storehouse base and stall flank (LAW-32/37)
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 4, y: 13, collide: false },
+    // Rug under Fatima's stall (LAW-38 — flat decor beneath the pergola)
+    { key: 'kenmi-desert-props-desert-rugs', x: 8, y: 12, collide: false },
+    // Residential — merchant-house wall cluster companion
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 12, y: 21, collide: false },
+    // Oasis shore — animated scrub on the grass halo, flies over the water
+    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-1-anim', x: 12, y: 12, collide: false },
+    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-3-anim', x: 13, y: 15, collide: false },
+    { key: 'kenmi-desert-props-outdoor-decor-animations-desert-grass-2-anim', x: 22, y: 16, collide: false },
+    { key: 'kenmi-desert-props-flies-anim', x: 19, y: 11, collide: false },
+    // East-road rest-stop vignette (LAW-34): fire, carpet, water sack, goods.
+    // (Design also calls for camel-1 here — deferred, see design doc Review appendix:
+    // animal spritesheets have no correct object-placement render path.)
+    { key: 'kenmi-desert-props-fire-pit', x: 29, y: 12, collide: false },
+    { key: 'kenmi-desert-props-desert-rugs', x: 30, y: 12, collide: false },
+    { key: 'kenmi-desert-props-water-sack-on-stick', x: 28, y: 13, collide: false },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 30, y: 13, collide: false },
+    // Open-sand POIs east of the pool
+    { key: 'kenmi-desert-props-acacia-tree', x: 33, y: 10, collide: true, collideW: 40, collideH: 20 },
+    { key: 'kenmi-desert-props-cactus', x: 33, y: 13, collide: false },
+    { key: 'kenmi-desert-props-cactus', x: 28, y: 25, collide: false },
+    { key: 'kenmi-desert-props-desert-bones', x: 31, y: 16, collide: false },
+    // Guild forecourt rug beside the lantern/pot pair
+    { key: 'kenmi-desert-props-desert-rugs', x: 33, y: 24, collide: false },
+    // Ruins pocket — broken columns and rubble stones
+    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 29, y: 2, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 33, y: 5, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-props-desert-rocks', x: 34, y: 2, collide: false },
+    // Quiet corner (LAW-31) — bones near the hidden chest, nothing else
+    { key: 'kenmi-desert-props-desert-bones', x: 3, y: 24, collide: false },
+    // Vista dressing (LAW-46) — bones in the dune gap
+    { key: 'kenmi-desert-props-desert-bones', x: 17, y: 28, collide: false },
+    // Dune tufts on the design's ',' decal cells (LAW-33 — thinned from the map's
+    // 20 Decals-layer hints to respect the LAW-31 window cap)
+    { key: 'kenmi-desert-props-dead-bush', x: 18, y: 1, collide: false },
+    { key: 'kenmi-desert-props-desert-grass-props', x: 5, y: 3, collide: false },
+    { key: 'kenmi-desert-props-desert-grass-props', x: 27, y: 10, collide: false },
+    { key: 'kenmi-desert-props-dead-bush', x: 32, y: 14, collide: false },
+    { key: 'kenmi-desert-props-desert-grass-props', x: 21, y: 23, collide: false },
   ],
 
   npcs: [
-    { id: 'guide-amira', key: 'npc-guide-amira', name: 'Guide Amira', nameArabic: 'المُرشِدَة أَميرَة', x: 14, y: 18 },
-    { id: 'scholar-yusuf', key: 'npc-scholar-yusuf', name: 'Scholar Yusuf', nameArabic: 'الشَّيْخ يوسُف', x: 9, y: 6 },
-    { id: 'merchant-fatima', key: 'npc-merchant-fatima', name: 'Merchant Fatima', nameArabic: 'التّاجِرَة فاطِمَة', x: 12, y: 18 },
-    { id: 'student-khalid', key: 'npc-student-khalid', name: 'Student Khalid', nameArabic: 'الطّالِب خالِد', x: 33, y: 25 },
+    { id: 'guide-amira', key: 'npc-guide-amira', name: 'Guide Amira', nameArabic: 'المُرشِدَة أَميرَة', x: 19, y: 16 },
+    { id: 'scholar-yusuf', key: 'npc-scholar-yusuf', name: 'Scholar Yusuf', nameArabic: 'الشَّيْخ يوسُف', x: 6, y: 21 },
+    { id: 'merchant-fatima', key: 'npc-merchant-fatima', name: 'Merchant Fatima', nameArabic: 'التّاجِرَة فاطِمَة', x: 8, y: 11 },
+    { id: 'student-khalid', key: 'npc-student-khalid', name: 'Student Khalid', nameArabic: 'الطّالِب خالِد', x: 30, y: 21 },
   ],
 
   interactables: [
-    { id: 'sign-oasis', type: 'sign', x: 19, y: 5, textArabic: 'واحَة الحُروف', textEnglish: 'Oasis of Letters' },
-    { id: 'sign-market', type: 'sign', x: 9, y: 13, textArabic: 'السُّوق', textEnglish: 'The Market' },
-    { id: 'sign-study', type: 'sign', x: 7, y: 4, textArabic: 'مَكْتَبَة الشَّيْخ', textEnglish: "Scholar's Library" },
-    { id: 'bookshelf-scholar', type: 'bookshelf', x: 10, y: 4, category: 'greetings' },
-    { id: 'bookshelf-student', type: 'bookshelf', x: 31, y: 23, category: 'phrases' },
-    { id: 'chest-ruins', type: 'chest', x: 21, y: 3, minDirhams: 10, maxDirhams: 30 },
-    { id: 'chest-hidden', type: 'chest', x: 2, y: 26, minDirhams: 15, maxDirhams: 50 },
-    { id: 'door-scholar-house', type: 'door', x: 8, y: 5, interiorId: 'scholar_house_interior', locked: true, unlockFlag: 'met_scholar_yusuf', lockMessage: "Scholar Yusuf's private study. This door is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
-    { id: 'door-merchant-house', type: 'door', x: 10, y: 16, interiorId: 'merchant_house_interior', locked: false, labelArabic: 'بَيْت فاطِمَة', labelEnglish: "Fatima's House" },
-    { id: 'door-oasis-guild', type: 'door', x: 34, y: 24, interiorId: 'oasis_guild_interior', locked: false, labelArabic: 'نادي المُغامِرين', labelEnglish: "Adventurer's Guild" },
+    { id: 'sign-oasis', type: 'sign', x: 17, y: 3, textArabic: 'واحَة الحُروف', textEnglish: 'Oasis of Letters' },
+    { id: 'sign-market', type: 'sign', x: 11, y: 10, textArabic: 'السُّوق', textEnglish: 'The Market' },
+    { id: 'sign-study', type: 'sign', x: 4, y: 21, textArabic: 'مَكْتَبَة الشَّيْخ', textEnglish: "Scholar's Library" },
+    { id: 'bookshelf-scholar', type: 'bookshelf', x: 7, y: 18, category: 'greetings' },
+    { id: 'bookshelf-student', type: 'bookshelf', x: 30, y: 20, category: 'phrases' },
+    { id: 'chest-ruins', type: 'chest', x: 32, y: 4, minDirhams: 10, maxDirhams: 30 },
+    { id: 'chest-hidden', type: 'chest', x: 3, y: 26, minDirhams: 15, maxDirhams: 50 },
+    { id: 'door-scholar-house', type: 'door', x: 5, y: 20, interiorId: 'scholar_house_interior', locked: true, unlockFlag: 'met_scholar_yusuf', lockMessage: "Scholar Yusuf's private study. This door is locked.", labelArabic: '\u0628\u0627\u0628', labelEnglish: 'Door' },
+    { id: 'door-merchant-house', type: 'door', x: 10, y: 21, interiorId: 'merchant_house_interior', locked: false, labelArabic: 'بَيْت فاطِمَة', labelEnglish: "Fatima's House" },
+    { id: 'door-oasis-guild', type: 'door', x: 32, y: 22, interiorId: 'oasis_guild_interior', locked: false, labelArabic: 'نادي المُغامِرين', labelEnglish: "Adventurer's Guild" },
     // --- Phase 23: Interactive Objects ---
-    { id: 'fountain-oasis-1', type: 'fountain', x: 20, y: 9, labelArabic: 'نافورة', labelEnglish: 'Fountain', descriptionEnglish: 'A welcome fountain at the heart of the oasis. Its waters have refreshed travellers for centuries.', descriptionArabic: 'نافورة ترحيب في قلب الواحة.', culturalNote: 'Fountains in Arabian villages symbolise hospitality and the life-giving nature of water in the desert.', vocabWordId: 'ahlan', vocabCategory: 'greetings', repeatable: true },
-    { id: 'lantern-oasis-1', type: 'lantern', x: 6, y: 10, labelArabic: 'فانوس', labelEnglish: 'Lantern', descriptionEnglish: 'A brass lantern hanging from a palm, casting warm light across the village path.', culturalNote: 'Fanous lanterns are lit during Ramadan across the Arab world, symbolising guidance.', vocabWordId: 'marhaba', vocabCategory: 'greetings', repeatable: true },
-    { id: 'lantern-oasis-2', type: 'lantern', x: 34, y: 13, labelArabic: 'فانوس', labelEnglish: 'Lantern', descriptionEnglish: 'An ornate village lantern illuminating the road to the large house.', vocabWordId: 'salaam', vocabCategory: 'greetings', repeatable: true },
-    { id: 'statue-oasis-1', type: 'statue', x: 22, y: 5, labelArabic: 'تمثال', labelEnglish: 'Statue', descriptionEnglish: 'A weathered stone statue near the ancient ruins, depicting a scribe holding a scroll.', culturalNote: 'Scribes preserved knowledge across the medieval Islamic world through meticulous calligraphy.', vocabWordId: 'ustadh', vocabCategory: 'greetings', repeatable: true },
-    { id: 'stall-oasis-1', type: 'stall', x: 11, y: 12, labelArabic: 'دكان', labelEnglish: 'Market Stall', descriptionEnglish: 'A small trading stall displaying dried fruits and simple goods.', descriptionArabic: 'دكان صغير يعرض الفواكه المجففة.', vocabWordId: 'shop_w28', vocabCategory: 'trade', repeatable: true },
-    { id: 'barrel-oasis-1', type: 'barrel', x: 14, y: 15, labelArabic: 'برميل', labelEnglish: 'Barrel', descriptionEnglish: 'A wooden barrel filled with fresh oasis water for travellers.', vocabWordId: 'sadeeq', vocabCategory: 'greetings', loot: { type: 'dirhams', min: 3, max: 8 }, repeatable: false, stateChange: 'inspected' },
-    { id: 'pot-oasis-1', type: 'pot', x: 31, y: 25, labelArabic: 'قِدر', labelEnglish: 'Pot', descriptionEnglish: 'A clay cooking pot simmering with lentil stew. The smell is inviting.', culturalNote: 'Lentil stew (shorbat adas) is a staple across the Arab world, often served to welcome guests.', vocabWordId: 'price_w29', vocabCategory: 'trade', repeatable: true },
-    { id: 'crate-oasis-1', type: 'crate', x: 37, y: 22, labelArabic: 'صندوق', labelEnglish: 'Crate', descriptionEnglish: 'A wooden crate packed with traded goods from the marketplace.', vocabWordId: 'tayyib', vocabCategory: 'greetings', loot: { type: 'dirhams', min: 5, max: 12 }, repeatable: false, stateChange: 'inspected' },
-    { id: 'painting-oasis-1', type: 'painting', x: 4, y: 6, labelArabic: 'لوحة', labelEnglish: 'Painting', descriptionEnglish: 'A faded mural on the house wall showing the oasis surrounded by palm trees.', vocabWordId: 'kayf_halak', vocabCategory: 'greetings', repeatable: true },
-    { id: 'barrel-oasis-2', type: 'barrel', x: 26, y: 12, labelArabic: 'برميل', labelEnglish: 'Barrel', descriptionEnglish: 'A sealed barrel of dates stored near the oasis for trade.', vocabWordId: 'money_w30', vocabCategory: 'trade', repeatable: true },
-    { id: 'lantern-oasis-3', type: 'lantern', x: 16, y: 24, labelArabic: 'فانوس', labelEnglish: 'Lantern', descriptionEnglish: 'A ground lantern marking the southern village path.', vocabWordId: 'sabah_al_khayr', vocabCategory: 'greetings', repeatable: true },
-    { id: 'pot-oasis-2', type: 'pot', x: 9, y: 9, labelArabic: 'قِدر', labelEnglish: 'Pot', descriptionEnglish: 'A decorative clay pot filled with aromatic herbs.', vocabWordId: 'masaa_al_khayr', vocabCategory: 'greetings', repeatable: true },
+    { id: 'fountain-oasis-1', type: 'fountain', x: 20, y: 8, labelArabic: 'نافورة', labelEnglish: 'Fountain', descriptionEnglish: 'A welcome fountain at the heart of the oasis. Its waters have refreshed travellers for centuries.', descriptionArabic: 'نافورة ترحيب في قلب الواحة.', culturalNote: 'Fountains in Arabian villages symbolise hospitality and the life-giving nature of water in the desert.', vocabWordId: 'ahlan', vocabCategory: 'greetings', repeatable: true },
+    { id: 'lantern-oasis-1', type: 'lantern', x: 18, y: 3, labelArabic: 'فانوس', labelEnglish: 'Lantern', descriptionEnglish: 'A brass lantern hanging from a palm, casting warm light across the village path.', culturalNote: 'Fanous lanterns are lit during Ramadan across the Arab world, symbolising guidance.', vocabWordId: 'marhaba', vocabCategory: 'greetings', repeatable: true },
+    { id: 'lantern-oasis-2', type: 'lantern', x: 22, y: 3, labelArabic: 'فانوس', labelEnglish: 'Lantern', descriptionEnglish: 'An ornate village lantern illuminating the road to the large house.', vocabWordId: 'salaam', vocabCategory: 'greetings', repeatable: true },
+    { id: 'statue-oasis-1', type: 'statue', x: 28, y: 5, labelArabic: 'تمثال', labelEnglish: 'Statue', descriptionEnglish: 'A weathered stone statue near the ancient ruins, depicting a scribe holding a scroll.', culturalNote: 'Scribes preserved knowledge across the medieval Islamic world through meticulous calligraphy.', vocabWordId: 'ustadh', vocabCategory: 'greetings', repeatable: true },
+    { id: 'stall-oasis-1', type: 'stall', x: 8, y: 12, labelArabic: 'دكان', labelEnglish: 'Market Stall', descriptionEnglish: 'A small trading stall displaying dried fruits and simple goods.', descriptionArabic: 'دكان صغير يعرض الفواكه المجففة.', vocabWordId: 'shop_w28', vocabCategory: 'trade', repeatable: true },
+    { id: 'barrel-oasis-1', type: 'barrel', x: 7, y: 13, labelArabic: 'برميل', labelEnglish: 'Barrel', descriptionEnglish: 'A wooden barrel filled with fresh oasis water for travellers.', vocabWordId: 'sadeeq', vocabCategory: 'greetings', loot: { type: 'dirhams', min: 3, max: 8 }, repeatable: false, stateChange: 'inspected' },
+    { id: 'pot-oasis-1', type: 'pot', x: 9, y: 13, labelArabic: 'قِدر', labelEnglish: 'Pot', descriptionEnglish: 'A clay cooking pot simmering with lentil stew. The smell is inviting.', culturalNote: 'Lentil stew (shorbat adas) is a staple across the Arab world, often served to welcome guests.', vocabWordId: 'price_w29', vocabCategory: 'trade', repeatable: true },
+    { id: 'crate-oasis-1', type: 'crate', x: 35, y: 21, labelArabic: 'صندوق', labelEnglish: 'Crate', descriptionEnglish: 'A wooden crate packed with traded goods from the marketplace.', vocabWordId: 'tayyib', vocabCategory: 'greetings', loot: { type: 'dirhams', min: 5, max: 12 }, repeatable: false, stateChange: 'inspected' },
+    { id: 'painting-oasis-1', type: 'painting', x: 3, y: 20, labelArabic: 'لوحة', labelEnglish: 'Painting', descriptionEnglish: 'A faded mural on the house wall showing the oasis surrounded by palm trees.', vocabWordId: 'kayf_halak', vocabCategory: 'greetings', repeatable: true },
+    { id: 'barrel-oasis-2', type: 'barrel', x: 12, y: 20, labelArabic: 'برميل', labelEnglish: 'Barrel', descriptionEnglish: 'A sealed barrel of dates stored near the oasis for trade.', vocabWordId: 'money_w30', vocabCategory: 'trade', repeatable: true },
+    { id: 'lantern-oasis-3', type: 'lantern', x: 31, y: 24, labelArabic: 'فانوس', labelEnglish: 'Lantern', descriptionEnglish: 'A ground lantern marking the southern village path.', vocabWordId: 'sabah_al_khayr', vocabCategory: 'greetings', repeatable: true },
+    { id: 'pot-oasis-2', type: 'pot', x: 34, y: 23, labelArabic: 'قِدر', labelEnglish: 'Pot', descriptionEnglish: 'A decorative clay pot filled with aromatic herbs.', vocabWordId: 'masaa_al_khayr', vocabCategory: 'greetings', repeatable: true },
     // --- Phase 45: Hidden inscription (root family discovery) ---
     {
       id: 'inscription-oasis-1',
@@ -178,7 +186,7 @@ const oasis_village = {
     {
       id: 'inscription-oasis-2',
       type: 'inscription',
-      x: 28, y: 15,
+      x: 30, y: 3,
       labelArabic: 'نَقش',
       labelEnglish: 'Stone Inscription',
       rootFamily: 'س-ل-م',
@@ -195,7 +203,7 @@ const oasis_village = {
     {
       id: 'inscription-oasis-3',
       type: 'inscription',
-      x: 36, y: 5,
+      x: 35, y: 7,
       labelArabic: 'نَقش',
       labelEnglish: 'Market Inscription',
       rootFamily: 'أ-م-ن',
@@ -213,7 +221,7 @@ const oasis_village = {
     {
       id: 'oasis-to-library',
       edge: 'north',
-      tileRange: [17, 23],
+      tileRange: [19, 21],
       targetZone: 'ancient_library',
       targetEntry: 'from_oasis',
       label: 'Ancient Library',
@@ -224,7 +232,7 @@ const oasis_village = {
   unlock: null, // Starting zone — always unlocked
 
   entries: {
-    from_library: { x: 20, y: 3 },
+    from_library: { x: 20, y: 2 },
   },
 
   defaultWeather: 'clear',
@@ -235,7 +243,7 @@ const oasis_village = {
   stepTriggers: [
     {
       id: 'oasis-welcome',
-      x: 14, y: 19,        // tile coords just north of spawn (spawnPoint is 14,20)
+      x: 20, y: 17,        // tile coords just north of spawn (spawnPoint is 20,18)
       width: 2, height: 1, // 2-tile wide, 1-tile tall
       oneShot: true,        // fires once per session (tracked via in-memory set)
       flagOnFire: 'trigger_oasis_welcome', // flag set when this fires
@@ -251,7 +259,7 @@ const oasis_village = {
     },
     {
       id: 'marketplace-hint',
-      x: 13, y: 8,         // tile coords near the market sign / stall area
+      x: 11, y: 8,         // tile coords where the market lane leaves the plaza
       width: 3, height: 1, // 3-tile wide, 1-tile tall
       oneShot: false,
       cooldown: 30000,      // 30 seconds between fires
@@ -266,7 +274,7 @@ const oasis_village = {
     },
     {
       id: 'ruins-echo',
-      x: 20, y: 3,         // tile coords at the ruin-gate / ancient ruins entrance
+      x: 20, y: 2,         // tile coords on the from_library entry, by the ruins pocket
       width: 2, height: 1,
       oneShot: true,
       flagOnFire: 'trigger_ruins_echo',
@@ -283,10 +291,10 @@ const oasis_village = {
   ],
 
   subAreas: [
-    { id: 'market-square', name: 'Market Square', nameArabic: 'ساحة السوق', x: 12, y: 6, width: 6, height: 4 },
-    { id: 'oasis-shore', name: 'Oasis Shore', nameArabic: 'شاطئ الواحة', x: 18, y: 12, width: 5, height: 4 },
-    { id: 'residential', name: 'Residential Quarter', nameArabic: 'الحي السكني', x: 6, y: 18, width: 8, height: 6 },
-    { id: 'ruins', name: 'Ancient Ruins', nameArabic: 'الأطلال القديمة', x: 18, y: 2, width: 6, height: 5 },
+    { id: 'market-square', name: 'Market Square', nameArabic: 'ساحة السوق', x: 4, y: 8, width: 8, height: 6 },
+    { id: 'oasis-shore', name: 'Oasis Shore', nameArabic: 'شاطئ الواحة', x: 13, y: 8, width: 14, height: 9 },
+    { id: 'residential', name: 'Residential Quarter', nameArabic: 'الحي السكني', x: 3, y: 17, width: 12, height: 10 },
+    { id: 'ruins', name: 'Ancient Ruins', nameArabic: 'الأطلال القديمة', x: 26, y: 1, width: 11, height: 8 },
   ],
 };
 

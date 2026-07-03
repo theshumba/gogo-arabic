@@ -24,8 +24,8 @@ export const GATHERING_SPOTS = {
   'spot_oasis_herbs_01': {
     id: 'spot_oasis_herbs_01',
     zoneId: 'oasis_village',
-    x: 15,
-    y: 14,
+    x: 23,
+    y: 16,
     resourceId: 'chamomile',
     spriteKey: 'green-tree-small',
     respawnInterval: 14400000, // 4 hours
@@ -34,18 +34,20 @@ export const GATHERING_SPOTS = {
   'spot_oasis_herbs_02': {
     id: 'spot_oasis_herbs_02',
     zoneId: 'oasis_village',
-    x: 25,
-    y: 16,
+    x: 13,
+    y: 11,
     resourceId: 'mint',
     spriteKey: 'green-tree-small',
     respawnInterval: 14400000,
     gatherType: 'herb_patch',
   },
+  // Design tile (21,15) is the wet rim, which carries painted Collision in the
+  // authored map — placed 1 tile south on the walkable grass shore instead.
   'spot_oasis_water_01': {
     id: 'spot_oasis_water_01',
     zoneId: 'oasis_village',
-    x: 19,
-    y: 12,
+    x: 21,
+    y: 16,
     resourceId: 'rosewater',
     spriteKey: 'rock2',
     respawnInterval: 14400000,
@@ -54,8 +56,8 @@ export const GATHERING_SPOTS = {
   'spot_oasis_papyrus_01': {
     id: 'spot_oasis_papyrus_01',
     zoneId: 'oasis_village',
-    x: 21,
-    y: 18,
+    x: 13,
+    y: 13,
     resourceId: 'papyrus',
     spriteKey: 'palm-small',
     respawnInterval: 14400000,
@@ -64,8 +66,8 @@ export const GATHERING_SPOTS = {
   'spot_oasis_animal_01': {
     id: 'spot_oasis_animal_01',
     zoneId: 'oasis_village',
-    x: 8,
-    y: 23,
+    x: 11,
+    y: 24,
     resourceId: 'wool',
     spriteKey: 'rock1',
     respawnInterval: 14400000,
@@ -74,8 +76,8 @@ export const GATHERING_SPOTS = {
   'spot_oasis_ore_01': {
     id: 'spot_oasis_ore_01',
     zoneId: 'oasis_village',
-    x: 36,
-    y: 14,
+    x: 34,
+    y: 6,
     resourceId: 'copper_ore',
     spriteKey: 'rock1',
     respawnInterval: 14400000,
@@ -84,8 +86,8 @@ export const GATHERING_SPOTS = {
   'spot_oasis_herbs_03': {
     id: 'spot_oasis_herbs_03',
     zoneId: 'oasis_village',
-    x: 6,
-    y: 6,
+    x: 3,
+    y: 18,
     resourceId: 'saffron',
     spriteKey: 'green-tree-small',
     respawnInterval: 28800000, // 8 hours (rare)
@@ -94,8 +96,8 @@ export const GATHERING_SPOTS = {
   'spot_oasis_ore_02': {
     id: 'spot_oasis_ore_02',
     zoneId: 'oasis_village',
-    x: 2,
-    y: 13,
+    x: 36,
+    y: 17,
     resourceId: 'iron_ore',
     spriteKey: 'rock2',
     respawnInterval: 14400000,

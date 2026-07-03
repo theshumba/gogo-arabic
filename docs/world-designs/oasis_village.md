@@ -258,3 +258,47 @@ Screenshot-review laws honoured by design: entrance framing (LAW-28), one oversi
 7. **Building asset sizes corrected to inventory truth** — house-1.x renders 2.5×2.5 (not "3×3"), house-3.2 renders 4×3.5, house-4.1 renders 4×3.6 capped; footprint rects clarified as rounded-up placement reservations.
 
 **Verdict: FIXED** — contract coverage was already 100%; composition stands after the geometry corrections above. No rewrite of concept/districts needed.
+
+---
+
+## Review appendix — Phase 2 map-build notes (2026-07-03)
+
+Map authored by `scripts/generate-map-from-design.mjs oasis_village` → `public/assets/maps/oasis-village.json` (old map kept as untracked `oasis-village.json.pre-rebuild`). Deliberate deviations / open items, none silent:
+
+1. **`spot_oasis_water_01` (21,15) sits on painted rim collision.** §8.11 paints Collision over pool water + wet rim; lint's LINT-2 "spot on Collision tile" check is unconditional (the water_source rim allowance only covers the on-water check). Wiring agent must either nudge the spot 1 tile onto the y15 grass/sand shore or leave the single rim tile unpainted and accept the LINT-11 hit — flagged, not resolved here.
+2. **Rim tiles are water-family GIDs.** `w` + `~` form one water body autotiled with `desert-water-tiles-1` frames 3/4/5/9/10/11/15/16/17 (bank transitions live inside the water tiles — verified opaque). Lint therefore counts the rim as open water: the y8/y9 north-shore seam reads as 8 (WARN LINT-10), though the §3 open-water span is 6 as designed. *[Resolved in the Phase-2 lint pass: linter false positive — `classifyGids` now knows the 6×3 pool sheet (straight bank frames = open water, corner frames = shore run-terminators); map unchanged, WARN gone. See lint-baseline-oasis.md Phase-2 addendum P2-1.]*
+3. **`desert-water-foam-animation` not placed** — the Tiled path renders static tiles only; foam would need the animated-tile pipeline. Cosmetic, deferred to the screenshot-review phase.
+4. **`,` dune-decal cells emitted as plain sand** plus a `Decals` object layer (20 hint points) — the LAW-33 decal/tuft pass belongs to the zones.js objects agent.
+5. **Grass blobs:** `desert-grass` edge frames are partially transparent, so grass lives on a `GroundDetail` overlay tilelayer above sand (template extension; TiledMapLoader creates all tilelayers by name, lint ignores extras). 1-tile-wide strips fall back to the solid frame (hard edge) — polish candidate.
+6. **Cliff container** rendered with the opaque rock-face column (frames 41/54/67 of `desert-cliff-tiles-1`); the sheet's scalloped rim frames are transparency overlays and were skipped. Ruins floor uses plateau/rubble frames 98/111/124/137 (+decorated variants). Straight map-edge cliff↔sand boundaries trip LINT-10 LAW-44 WARNs — LAW-41 container exemption, accepted. *[Phase-2 lint pass: the 3 WARNs (16@(3,1), 11@(26,9), 20@(37,9)) are REAL-but-accepted (warn-level, exit 0), triaged as P2-2..P2-4 in lint-baseline-oasis.md; re-sculpting the container edges would change approved §3 geometry — screenshot-review call.]*
+7. **Palm belt / rock outcrop (`P`/`o`)** are sand + Collision only; palm and rock sprites are zones.js objects for the wiring agent (design §7 keys).
+8. **Pre-existing, unrelated to this map:** LINT-9 `...lillypad-green-1-anim` has no PROP_CROP_REGIONS entry and LINT-8 entry `from_library` unwalkable-at-(20,3) — both also fire against the pre-rebuild map (old zones.js data; entry moves to (20,2) with the wiring pass).
+
+All remaining lint ERRORs (21) are old zones.js/gatheringSpots.js coordinates checked against the new geometry — the Phase-2 wiring agents' queue.
+
+---
+
+## Review appendix — Phase 2 wiring notes (2026-07-03)
+
+Logic layer wired to the new map: `src/data/zones.js` (spawn, objects re-dress, NPCs, all 25 interactables, exit tileRange [19,21], entry `from_library` (20,2), stepTriggers, subAreas), `src/data/gatheringSpots.js` (8 spots), `src/game/systems/CinematicIntroSequencer.js` (WORD_SPAWN → (20,16); Beat-2 pan → spawn (20,18); Beat-5 pan → Amira (19,16)). Deliberate deviations / open items, none silent:
+
+1. **`spot_oasis_water_01` placed at (21,16), not the design's (21,15)** — resolves map-build note 1: the rim tile carries painted Collision (LINT-2 unconditional), so the spot sits 1 tile south on the walkable grass shore, still touching the rim. Design tile NOT changed in §5 (this appendix is the record).
+2. **Camel omitted from the LAW-34 rest-stop vignette.** `camel-1` is a spritesheet (480×288 of 16×16 frames); `MapLoader.placeObjects` has no correct render path for spritesheet objects without a `PROP_CROP_REGIONS` row, and the crop-origin math assumes full-image frames (would anchor ~half a tile off). Adding the row = touching MapLoader crop machinery (out of Phase-2 scope). Vignette shipped as fire-pit + rug + water-sack + pots at (29–30,12–13); camel deferred to the screenshot-review phase (options: PROP_CROP_REGIONS row + origin fix, or ambient-spawner variant).
+3. **Old lillypad object dropped** (`...lillypad-green-1-anim` at (20,15)) — not in the design; also clears the pre-existing LINT-9 (its crop region never existed).
+4. **`buildOasisMap()` (procedural fallback ground) left as-is** — the authored Tiled map always wins for oasis_village (BootScene registers `map-oasis-village`); the fallback's old pool/grass geometry is dead code for ground but still feeds WorldSnapshot fixtures, which capture objects, not authored ground.
+5. **Palm belt dressed as a SPARSE scatter (12 palms), not the grid's packed ring.** The lint enforces LAW-31's ≤15 non-flat props per 20×15 window with NO LAW-41 container exemption (lint-baseline-oasis.md finding 11 classifies the cap as REAL: "rebuild must respect the cap"), and §8.4's "palm belt exempt" claim is not implemented in the tool. A packed belt (~50+ sprites) fails LINT-4 in every window. Shipped: NW pocket 3, west edge 5, south edge 4, plus the design's decal tufts thinned 20→6 for the same budget. Collision still blankets every P cell from the map layer, so the belt walls the map even where unsprited. If the packed-ring LOOK is wanted, the exemption must first be added to lint + bible together (screenshot-review phase call).
+6. **WorldSnapshot fixture for oasis_village must be regenerated** (`CAPTURE_WORLD_SNAPSHOTS=1 npx vitest run src/test/fixtures/captureViaVitest.test.js`) after this wiring — the objects/zones change breaks the stale fixture by design (pipeline §7).
+
+---
+
+## Review appendix — Phase 2 screenshot review + live probe (2026-07-03)
+
+Live visual loop against the rendered zone (`npm run capture:world-screenshots` + zoomed/full-map probes → `docs/world-shots/oasis_village.png`, `oasis_village_fullmap.png`, `_probe_oasis_*.png`). Two fix iterations; all fixes verified by re-capture, `lint-world-map.mjs oasis_village` exit 0 (only the 3 accepted P2-2..P2-4 container WARNs), and a full green vitest run (290 files / 5793 tests) with the oasis WorldSnapshot fixture regenerated. Record, none silent:
+
+1. **LINT-4 density fix (zones.js)** — the dressed south band was 1–2 props over LAW-31's ≤15/window cap (worst window 17 at (16,14)). Removed the mid-cluster `palm-tree-1` at (26,28) and the `desert-grass-props` tuft at (19,27) (vista keeps its bones dressing), and moved the south `fallen-palm-leaves` (22,27)→(23,26). Global window max is now exactly 15. Belt collision unchanged (map layer).
+2. **Chest sprite remap (InteractableManager.js)** — the legacy `chest` mapping borrowed the desert-rocks TEAL water-ring pile (region 112,0), so `chest-ruins` (32,4) and `chest-hidden` (3,26) rendered as rocks-in-a-puddle on dry land. Remapped to the real Kenmi wooden chest (`kenmi-base-buildings-house-decor-chest-anim` frame 0). Affects chests in every zone (improvement); test expectation updated.
+3. **Stall sprite remap (InteractableManager.js)** — `stall` mapped to a 32×64 pergola sliver, so Fatima's LAW-37 stall unit read as a tiny loom. Remapped to the design-manifested `market-stalls` sheet (blue-awning stall, 48×48 crop at ~2 tiles), per WORLD-MISSING-ASSETS #3.
+4. **Interior-exit crash fix (SceneStackManager.js)** — the required door probe (spawn → road walk → `door-merchant-house` → InteriorScene → exit) found `popScene()` calling `scene.sys.scene.manager.getActiveScenes()`: Phaser 3 has no `getActiveScenes()` and `Scene` has no `.manager`, so EVERY live interior exit threw and stranded the player inside (pre-existing; unit mocks faked the nonexistent API). Fixed to `scene.scene.manager.getScenes(true)`; mocks/tests updated to the real API. Probe now green end-to-end: enter (10,21)→interior spawn (5,6)→exit back to (10,21), zero console errors.
+5. **Yusuf/Khalid absent from captures is CORRECT behaviour** — `npcSchedules.js` places scholar-yusuf in ancient_library 08:00–17:00 and student-khalid there 07:00–12:00; at the capture hour only Amira + Fatima are due in-zone. No fix.
+6. **26 `__MISSING`-texture children in the scene are invisible collider bodies** (palms/houses/well/rocks with `collide: true`) — verified `visible: false` on all; zero visible missing textures in any capture. No fix.
+7. **Accepted as-is at screenshot level**: flat-cyan pool interior (foam anim still deferred, map-build note 3); subtle road/sand contrast (authored Ground-layer tile choice, lint-clean); sparse palm belt (wiring note 5); camel still deferred (wiring note 2); merchant interior's grass-patch floor is the UNCHANGED pre-existing interior layout (contract §8 — interiors out of Phase-2 scope).

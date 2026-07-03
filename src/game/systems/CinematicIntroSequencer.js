@@ -16,9 +16,10 @@ const FIRST_WORD = {
   english: 'book',
 };
 
-// Spawn position: near oasis pool, just north of player spawn (tile 14,17 = world 896, 1088)
-const WORD_SPAWN_X = 14 * 64; // 896
-const WORD_SPAWN_Y = 17 * 64; // 1088
+// Spawn position: on the grass halo at the oasis pool, 2 tiles north of player
+// spawn (tile 20,16 = world 1280, 1024)
+const WORD_SPAWN_X = 20 * 64; // 1280
+const WORD_SPAWN_Y = 16 * 64; // 1024
 
 /**
  * CinematicIntroSequencer — Phase 47 Plan 01
@@ -316,14 +317,14 @@ export class CinematicIntroSequencer {
    * Pan the camera from an offset position to the oasis_village player spawn
    * over 2500ms. Applies the warm dawn feel already set by _applyDawnTint().
    *
-   * Spawn: tile (14, 20) × 64px = world pixel (896, 1280)
+   * Spawn: tile (20, 18) × 64px = world pixel (1280, 1152)
    */
   _startCameraPan() {
     if (!this._active) return;
 
     const TILE = 64;
-    const spawnX = 14 * TILE; // 896
-    const spawnY = 20 * TILE; // 1280
+    const spawnX = 20 * TILE; // 1280
+    const spawnY = 18 * TILE; // 1152
 
     // Start pan from a slightly offset position for cinematic effect
     this.scene.cameras.main.centerOn(spawnX - 200, spawnY - 200);
@@ -374,7 +375,7 @@ export class CinematicIntroSequencer {
   // ============================================================
 
   /**
-   * Create a FloatingWordObject near the oasis pool at world (896, 1088).
+   * Create a FloatingWordObject near the oasis pool at world (1280, 1024).
    * Register per-frame scene 'update' listener to check player proximity.
    * Unfreeze the player so they can walk to it naturally.
    */
@@ -432,7 +433,7 @@ export class CinematicIntroSequencer {
   // ============================================================
 
   /**
-   * Pan camera to Guide Amira's position (tile 14,18 → world 896, 1152),
+   * Pan camera to Guide Amira's position (tile 19,16 → world 1216, 1024),
    * then open her arrival dialogue.
    * Player remains frozen (DialogueBox.show() emits PLAYER_FREEZE again).
    */
@@ -442,9 +443,9 @@ export class CinematicIntroSequencer {
     // Freeze player while Amira speaks
     EventBus.emit(EVENTS.PLAYER_FREEZE);
 
-    // Pan camera to Amira's position (tile 14,18 → world 896, 1152)
-    const amiraWorldX = 14 * 64; // 896
-    const amiraWorldY = 18 * 64; // 1152
+    // Pan camera to Amira's position (tile 19,16 → world 1216, 1024)
+    const amiraWorldX = 19 * 64; // 1216
+    const amiraWorldY = 16 * 64; // 1024
     this.scene.cameras.main.pan(amiraWorldX, amiraWorldY, 1000, 'Power2', false, (cam, progress) => {
       if (progress === 1) {
         this._showAmiraDialogue();

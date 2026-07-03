@@ -73,3 +73,18 @@ WARN LINT-10 … 15 × straight grass/sand district boundary (LAW-44) …
 oasis_village's old layout; other 7 zones have no authored map yet, interiors all clean),
 exit code 1. **Every remaining finding is a REAL old-layout defect; a rebuilt map that follows
 the bible will lint clean.**
+
+## Phase-2 addendum — rebuilt map (feat/world-rebuild, 2026-07-03)
+
+After the world-rebuild map + wiring landed (21→0 errors), 4 WARNs remained. Triage, same rules
+as above:
+
+| # | Finding (rule @ tile) | Classification | Evidence | Action |
+|---|---|---|---|---|
+| P2-1 | WARN LINT-10 straight water-land seam 8 tiles (LAW-17) @(15,9) | **FALSE POSITIVE** (water frame model, same class as findings 6 / W2–W3) | The rebuilt pool uses `desert-water-tiles-1` (6×3 = two 3×3 pool blobs, transitions INSIDE the water tiles — see generate-map-from-design.mjs header). `classifyGids` had no branch for this sheet, so ALL 18 frames counted as open water, including the (15,9)/(22,9) **corner** bank frames whose visible waterline curves inside the tile. The design's straight hard lip is the 6-tile x16–21 span (§3: "longest straight seam = 6"); the linter added the 2 corner-wet tiles → 8 | **FIXED** — `classifyGids` now classifies the 6×3 desert pool sheets: straight N/S/E/W bank frames (waterline at the tile border) = OPEN WATER; corner frames (scallop drawn inside the tile) = SHORE, terminating a run. NOT a rule weakening — negative-tested by patching (15,9)/(22,9) to straight N-bank frames (a genuinely straight 8-tile waterline): the WARN fires; restored map passes |
+| P2-2 | WARN LINT-10 straight sand/other district boundary 16 tiles (LAW-44) @(3,1) | **REAL, accepted** | Top cliff container inner edge, y0/y1 x3–18 — drawn exactly so in the approved design grid (§3 rows 0–1) | none — accepted in the design doc "Review appendix — Phase 2 map-build notes" item 6 (LAW-41 container edge); revisit at screenshot review if the straight container edges read procedural |
+| P2-3 | WARN LINT-10 straight sand/other district boundary 11 tiles (LAW-44) @(26,9) | **REAL, accepted** | NE ruins-cliff south base, y8/y9 x26–36 — exactly per approved design grid | same as P2-2 |
+| P2-4 | WARN LINT-10 straight other/sand district boundary 20 tiles (LAW-44) @(37,9) | **REAL, accepted** | East cliff container inner edge, x36/x37 y9–28 — exactly per approved design grid. LAW-41 asks container depth to vary 1–3 tiles, so this is a real aesthetic smell, but re-sculpting it means changing approved §3 geometry that wired coordinates hug (e.g. gathering spot (36,17), prop (33,10), ruins mouth) | same as P2-2 — warn-level by design, does not block exit 0 |
+
+Final: `oasis_village: 0 error(s), 3 warning(s)`, exit 0; `--all`: 3 warnings total, all the
+accepted P2-2..P2-4 container edges, other 7 zones unchanged at 0/0.

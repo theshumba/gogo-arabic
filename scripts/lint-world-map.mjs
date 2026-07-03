@@ -275,6 +275,15 @@ function classifyGids(map) {
         // frames 9-14 are OPEN WATER; corner/edge rim frames 0-3,5-8 are SHORE transition.
         for (const f of [4, 9, 10, 11, 12, 13, 14]) water.add(first + f);
         for (const f of [0, 1, 2, 3, 5, 6, 7, 8]) shore.add(first + f);
+      } else if ((ts.tilecount || 0) === 18 && cols === 6 && /desert-water-tiles/.test(ts.name)) {
+        // desert pool blob pair (6x3 = two 3x3 blobs; see generate-map-from-design.mjs): left
+        // blob cols 0-2 (pool-in-grass), right blob cols 3-5 (pool-in-sand). Bank transitions
+        // live INSIDE the water tiles: the straight N/S/E/W bank frames put the visible
+        // waterline at the tile border, so they count as OPEN WATER for LAW-17 seam runs; the
+        // corner frames draw the scallop inside the tile, so they are SHORE and terminate a
+        // straight run. Recorded in docs/world-design-research/lint-baseline-oasis.md.
+        for (const f of [1, 4, 6, 7, 8, 9, 10, 11, 13, 16]) water.add(first + f);
+        for (const f of [0, 2, 3, 5, 12, 14, 15, 17]) shore.add(first + f);
       } else {
         for (let g = first; g <= last; g++) water.add(g);
       }
