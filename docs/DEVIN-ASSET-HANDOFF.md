@@ -5,10 +5,15 @@ Written 2026-08-11 against `theshumba/gogo-arabic` (private), branch `feat/world
 Two things this covers: what art exists and how to use it, and the full state of the visual layer,
 including what was broken, what was fixed, and what is still open.
 
+**Direction change, 2026-08-11:** Gogo Arabic is many different worlds, not one desert civilisation.
+`docs/MULTI-WORLD-REBUILD-PROMPT.md` is the governing document and overrides the Design Bible's
+identity and palette sections. Read it before building anything.
+
 ## Paste this to Devin
 
 > Everything you need to build the world is already in the repo, nothing needs uploading. Work from
-> branch `feat/world-rebuild`, not `main`. Read `docs/DEVIN-ASSET-HANDOFF.md` first, then these:
+> branch `feat/world-rebuild`, not `main`. Read `docs/MULTI-WORLD-REBUILD-PROMPT.md` first: it is the
+> current direction and it overrides parts of the Design Bible. Then this file, then these:
 >
 > 1. `src/data/kenmiCatalog.js` , auto-generated index of all 969 art assets (key, path, type, frame
 >    size). Every key in it is already preloaded by `BootScene`, so any of them works with no wiring.
