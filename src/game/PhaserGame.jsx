@@ -11,9 +11,7 @@ import { subscribeToCanvasRect } from './canvasRect.js';
 export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady, onCanvasRectChange }, ref) {
   const gameRef = useRef(null);
   const containerRef = useRef(null);
-  const onSceneReadyRef = useRef(onSceneReady);
   const onCanvasRectChangeRef = useRef(onCanvasRectChange);
-  onSceneReadyRef.current = onSceneReady;
   onCanvasRectChangeRef.current = onCanvasRectChange;
 
   useImperativeHandle(ref, () => ({
@@ -44,7 +42,7 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady, onCanva
     // When WorldScene is ready, notify parent and optionally mount the perf overlay.
     EventBus.once(EVENTS.SCENE_READY, async () => {
       const worldScene = game.scene.getScene('WorldScene');
-      if (onSceneReadyRef.current) onSceneReadyRef.current(worldScene);
+      if (onSceneReady) onSceneReady(worldScene);
 
       // Plan 102-07 (OBS-06): kick off the 10s low-end-device warmup sampler.
       // Wired here (NOT in main.jsx) because this is the only call-site where
@@ -91,11 +89,7 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady, onCanva
         delete window.__PERF_OVERLAY__;
       }
       if (gameRef.current) {
-        const canvas = gameRef.current.canvas;
         gameRef.current.destroy(true);
-        if (canvas?.parentNode === containerRef.current) {
-          canvas.remove();
-        }
         gameRef.current = null;
       }
     };

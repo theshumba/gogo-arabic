@@ -76,7 +76,6 @@
   /* Z-Index Tokens (top-level layers) */
   --z-phaser-overlay: 10;
   --z-minimap: 90;
-  --z-next-objective: 94;
   --z-quest-tracker: 95;
   --z-hud: 100;
   --z-hud-notification: 101;

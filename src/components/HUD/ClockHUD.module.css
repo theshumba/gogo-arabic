@@ -2,8 +2,11 @@
   position: relative;
   flex: 0 1 auto;
   flex-shrink: 1;
+  height: 48px;
+  min-height: 0;
+  box-sizing: border-box;
   background: rgba(22, 17, 10, 0.85);
-  padding: 8px 16px;
+  padding: 3px 10px;
   border-radius: 8px;
   border: 2px solid #e7c27d;
   display: flex;
@@ -16,22 +19,24 @@
 
 .time {
   font-family: 'Outfit', sans-serif;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   color: #fff;
-  line-height: 1;
+  line-height: 16px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .phase {
   font-family: 'Noto Naskh Arabic', serif;
-  font-size: 14px;
+  font-size: 10px;
   color: #dab068;
-  margin-top: 4px;
+  margin-top: 1px;
+  line-height: 10px;
 }
 
 .icon {
-  font-size: 16px;
-  margin-bottom: 2px;
+  font-size: 12px;
+  margin-bottom: 0;
+  line-height: 10px;
   color: #ffd700;
 }

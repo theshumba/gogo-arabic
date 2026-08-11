@@ -1,9 +1,7 @@
 @import '../../styles/variables.css';
 
 .indicator {
-  position: absolute;
-  top: calc(env(safe-area-inset-top, 0px) + var(--hud-topbar-height) + var(--hud-inset) + var(--hud-inset));
-  left: calc(env(safe-area-inset-left, 0px) + var(--hud-inset));
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -12,7 +10,6 @@
   border-top: none;
   padding: 5px 10px;
   pointer-events: none;
-  z-index: var(--z-next-objective);
   max-width: 260px;
   animation: slideIn 0.3s ease-out;
 }
@@ -56,8 +53,6 @@
 /* Responsive */
 @media (max-width: 768px) {
   .indicator {
-    top: 92px;
-    left: 8px;
     max-width: 200px;
     padding: 4px 8px;
   }
@@ -73,8 +68,6 @@
 
 @media (max-width: 480px) {
   .indicator {
-    top: 82px;
-    left: 4px;
     max-width: 170px;
     padding: 3px 6px;
   }

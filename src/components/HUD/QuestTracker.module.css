@@ -1,9 +1,7 @@
 @import '../../styles/variables.css';
 
 .tracker {
-  position: absolute;
-  top: calc(env(safe-area-inset-top, 0px) + var(--hud-topbar-height) + var(--hud-inset));
-  left: calc(env(safe-area-inset-left, 0px) + var(--hud-inset));
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -12,7 +10,6 @@
   border-top: none;
   padding: 6px 10px;
   pointer-events: none;
-  z-index: var(--z-quest-tracker);
   max-width: 280px;
 }
 
@@ -101,7 +98,6 @@
 /* Responsive */
 @media (max-width: 768px) {
   .tracker {
-    left: calc(env(safe-area-inset-left, 0px) + var(--hud-inset));
     max-width: 220px;
     padding: 5px 8px;
   }
@@ -126,7 +122,6 @@
 
 @media (max-width: 480px) {
   .tracker {
-    left: calc(env(safe-area-inset-left, 0px) + var(--hud-inset));
     max-width: 180px;
     padding: 4px 6px;
     gap: 4px;
