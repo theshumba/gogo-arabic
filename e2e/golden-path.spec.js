@@ -46,7 +46,7 @@ const SEED_KEY = 'persist:gogo-arabic';
  * origin, not about:blank — see the existing review-session.spec.js comment for the
  * rationale.
  */
-function seedSnapshot() {
+function seedSnapshot(seedKey) {
   const now = Date.now();
   const oneDayAgo = now - 24 * 60 * 60 * 1000;
   const data = {
@@ -92,7 +92,7 @@ function seedSnapshot() {
     battle: JSON.stringify({ activeBattle: null }),
     _persist: JSON.stringify({ version: -1, rehydrated: true }),
   };
-  localStorage.setItem(SEED_KEY, JSON.stringify(data));
+  localStorage.setItem(seedKey, JSON.stringify(data));
 }
 
 test('OBS-08 golden path — boot → title → new game → walk zone → NPC → FSRS review → save+reload', async ({ page, context }) => {
@@ -107,7 +107,7 @@ test('OBS-08 golden path — boot → title → new game → walk zone → NPC �
   // This mirrors what all 6 existing specs do and is the documented pattern for this app.
   // Without seeding, character-creation forms (name + outfit) would take ~10-20s of click
   // automation and balloon the spec past the 3-min budget.
-  await page.evaluate(seedSnapshot);
+  await page.evaluate(seedSnapshot, SEED_KEY);
 
   // Confirm the seed is intact on this origin before we navigate into the game.
   const seeded = await page.evaluate((k) => !!localStorage.getItem(k), SEED_KEY);

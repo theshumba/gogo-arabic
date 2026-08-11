@@ -362,11 +362,11 @@ function HUD({ onMenu }) {
         </div>
       </div>
 
-      {/* Active quest tracker - below HUD bar */}
-      <QuestTracker />
-
-      {/* Next objective indicator - below quest tracker */}
-      <NextObjectiveIndicator />
+      {/* Left-side contextual widgets stack below the HUD bar */}
+      <div className={styles.leftColumn}>
+        <QuestTracker />
+        <NextObjectiveIndicator />
+      </div>
 
       {/* Touch controls — self-hidden on desktop via @media (pointer: coarse) */}
       <TouchControls />

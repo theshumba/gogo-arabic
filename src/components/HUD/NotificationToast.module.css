@@ -5,10 +5,10 @@
 
 .wrapper {
   position: absolute;
-  top: 44px; /* just below the HUD bar */
+  top: calc(env(safe-area-inset-top, 0px) + var(--hud-topbar-height) + var(--hud-inset));
   left: 50%;
   transform: translateX(-50%);
-  z-index: 101;
+  z-index: var(--z-hud-notification);
   pointer-events: none;
   display: flex;
   justify-content: center;

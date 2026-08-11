@@ -77,12 +77,32 @@ import styles from './GameLayout.module.css';
  */
 export default function GameLayout() {
   const phaserRef = useRef(null);
+  const layoutRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { playSFX } = useAudio();
   const store = useStore();
   const spacedListeningEnabled = useSelector(selectSpacedListeningEnabled);
+
+  const handleCanvasRectChange = useCallback((canvasRect) => {
+    const layout = layoutRef.current;
+    if (!layout || !canvasRect) return;
+
+    const layoutRect = layout.getBoundingClientRect();
+    const values = {
+      '--hud-canvas-left': `${canvasRect.left - layoutRect.left}px`,
+      '--hud-canvas-top': `${canvasRect.top - layoutRect.top}px`,
+      '--hud-canvas-right': `${canvasRect.right - layoutRect.left}px`,
+      '--hud-canvas-bottom': `${canvasRect.bottom - layoutRect.top}px`,
+      '--hud-canvas-width': `${canvasRect.width}px`,
+      '--hud-canvas-height': `${canvasRect.height}px`,
+    };
+
+    Object.entries(values).forEach(([property, value]) => {
+      layout.style.setProperty(property, value);
+    });
+  }, []);
 
   // Custom hooks for EventBus, session tracking, and keyboard shortcuts
   useEventBusListeners(phaserRef, playSFX, navigate);
@@ -327,9 +347,20 @@ export default function GameLayout() {
   }, [anyOverlayOpen, showWardrobe]);
 
   return (
-    <div className={styles.container}>
+    <div
+      ref={layoutRef}
+      className={styles.container}
+      style={{
+        '--hud-canvas-left': '0px',
+        '--hud-canvas-top': '0px',
+        '--hud-canvas-right': '100%',
+        '--hud-canvas-bottom': '100%',
+        '--hud-canvas-width': '100%',
+        '--hud-canvas-height': '100%',
+      }}
+    >
       {/* Phaser canvas - full screen, lowest z-index */}
-      <PhaserGame ref={phaserRef} />
+      <PhaserGame ref={phaserRef} onCanvasRectChange={handleCanvasRectChange} />
 
       {/* Zone loading indicator -- shown during zone transition asset loading */}
       {zoneLoading && <div className={styles.zoneLoading}>Loading zone...</div>}

@@ -1,9 +1,7 @@
 @import '../../styles/variables.css';
 
 .tracker {
-  position: absolute;
-  top: 48px;
-  left: 12px;
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -12,7 +10,6 @@
   border-top: none;
   padding: 6px 10px;
   pointer-events: none;
-  z-index: 99;
   max-width: 280px;
 }
 
@@ -101,8 +98,6 @@
 /* Responsive */
 @media (max-width: 768px) {
   .tracker {
-    top: 44px;
-    left: 8px;
     max-width: 220px;
     padding: 5px 8px;
   }
@@ -127,8 +122,6 @@
 
 @media (max-width: 480px) {
   .tracker {
-    top: 40px;
-    left: 4px;
     max-width: 180px;
     padding: 4px 6px;
     gap: 4px;

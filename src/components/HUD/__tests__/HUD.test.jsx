@@ -51,6 +51,14 @@ describe('HUD Component', () => {
     expect(screen.getByText(/Lv\.5/i)).toBeInTheDocument();
   });
 
+  it('stacks contextual widgets in one left HUD column', () => {
+    renderWithProviders(<HUD onMenu={mockOnMenu} />);
+
+    const statuses = screen.getAllByRole('status');
+    expect(statuses).toHaveLength(2);
+    expect(statuses[0].parentElement).toBe(statuses[1].parentElement);
+  });
+
   it('should render XP progress bar with correct values', () => {
     const preloadedState = {
       player: {
