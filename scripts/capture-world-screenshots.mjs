@@ -23,6 +23,7 @@
  */
 
 import { chromium } from '@playwright/test';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -45,6 +46,17 @@ const CORE_ZONES = [
   'coastal_port',
   'royal_palace',
 ];
+
+const ZONE_DIMENSIONS = {
+  oasis_village: [40, 30],
+  ancient_library: [35, 30],
+  desert_marketplace: [45, 35],
+  farmland: [45, 35],
+  bedouin_camp: [35, 25],
+  mountain_village: [40, 30],
+  coastal_port: [45, 35],
+  royal_palace: [50, 40],
+};
 
 /**
  * A complete redux-persist snapshot so the app boots straight into WorldScene,
@@ -100,27 +112,94 @@ async function waitForWorldScene(page) {
   }
 }
 
+async function suppressDomOverlays(page) {
+  await page.evaluate(() => {
+    const container = document.querySelector('#phaser-container')?.parentElement;
+    if (container) {
+      for (const child of container.children) {
+        if (child.id !== 'phaser-container') child.style.visibility = 'hidden';
+      }
+    }
+
+    const perfOverlay = window.__PERF_OVERLAY__;
+    if (perfOverlay) {
+      perfOverlay.destroy();
+      delete window.__PERF_OVERLAY__;
+    }
+  });
+}
+
 async function switchZone(page, zoneId) {
-  // Drive the scene directly — WorldScene hardcodes oasis_village on boot and does not
-  // read currentZone, so programmatic loadZone() is the deterministic way to reach a zone.
-  const ok = await page.evaluate((zone) => {
+  const [expectedWidth, expectedHeight] = ZONE_DIMENSIONS[zoneId] || [];
+  if (!expectedWidth || !expectedHeight) {
+    throw new Error(`No expected dimensions registered for zone "${zoneId}"`);
+  }
+
+  // loadZone() is synchronous. Verify the live scene state instead of treating its
+  // undefined return value as evidence that a switch completed.
+  const state = await page.evaluate(([zone, width, height]) => {
     const g = window.__PHASER_GAME__;
     const s = g && g.scene.getScene('WorldScene');
-    if (!s || typeof s.loadZone !== 'function') return { ok: false, reason: 'no loadZone' };
-    try {
-      // Suppress the ZoneToast banner for this build. buildZone consumes AND resets the
-      // flag (WorldScene.js:380-381), so it must be re-set before EVERY loadZone call —
-      // otherwise the ~1s zone cadence stacks several 2.8s toasts into a garbled
-      // "MOROYALAPALACEGE" pile-up at the top of every shot.
-      s._suppressZoneToast = true;
-      // entryX/entryY omitted → buildZone uses the zone's own spawn handling.
-      s.loadZone(zone);
-      return { ok: true };
-    } catch (err) {
-      return { ok: false, reason: String(err && err.message || err) };
+    if (!s || !s.scene.isActive()) {
+      throw new Error(`Cannot switch to "${zone}": WorldScene is not active`);
     }
-  }, zoneId);
-  return ok;
+    s._suppressZoneToast = true;
+    s.loadZone(zone);
+
+    return {
+      liveZone: s.currentZone,
+      mapWidth: s.currentMapW,
+      mapHeight: s.currentMapH,
+      mapReady: s.currentZone === zone &&
+        s.currentMapW === width &&
+        s.currentMapH === height &&
+        !!s.playerController?.getPlayer?.() &&
+        (s.usingTiledMap ? !!s.currentTiledMap : !!s.mapLoader?.wallGroup),
+    };
+  }, [zoneId, expectedWidth, expectedHeight]);
+
+  if (state.liveZone !== zoneId) {
+    throw new Error(`Zone switch mismatch: requested "${zoneId}", live scene is "${state.liveZone}"`);
+  }
+  if (!state.mapReady) {
+    throw new Error(
+      `Zone map did not finish loading for "${zoneId}": ` +
+      `live="${state.liveZone}" dimensions=${state.mapWidth}x${state.mapHeight}`,
+    );
+  }
+  return state;
+}
+
+async function assertCaptureState(page, zoneId) {
+  const [expectedWidth, expectedHeight] = ZONE_DIMENSIONS[zoneId];
+  await page.evaluate(([zone, width, height]) => {
+    const s = window.__PHASER_GAME__?.scene?.getScene('WorldScene');
+    const liveZone = s?.currentZone;
+    if (liveZone !== zone) {
+      throw new Error(`Capture zone mismatch: requested "${zone}", live scene is "${liveZone}"`);
+    }
+    const mapReady = s?.currentMapW === width &&
+      s?.currentMapH === height &&
+      !!s.playerController?.getPlayer?.() &&
+      (s.usingTiledMap ? !!s.currentTiledMap : !!s.mapLoader?.wallGroup);
+    if (!mapReady) {
+      throw new Error(
+        `Capture map is not ready for "${zone}": ` +
+        `live="${liveZone}" dimensions=${s?.currentMapW}x${s?.currentMapH}`,
+      );
+    }
+  }, [zoneId, expectedWidth, expectedHeight]);
+}
+
+async function captureAfterCanvasUpdate(page, previousHash) {
+  const canvas = page.locator('canvas').first();
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    const image = await canvas.screenshot();
+    const hash = crypto.createHash('sha256').update(image).digest('hex');
+    if (!previousHash || hash !== previousHash) return { image, hash };
+    await page.waitForTimeout(200);
+  }
+  throw new Error(`Canvas did not update after zone switch; previous hash: ${previousHash}`);
 }
 
 // Give the Phaser render loop a few frames to draw the freshly-built zone before the shot.
@@ -151,6 +230,8 @@ async function main() {
   page.on('pageerror', (err) => consoleErrors.push('pageerror: ' + err.message));
 
   const results = [];
+  const hashes = new Map();
+  let previousHash = null;
 
   try {
     // Origin first so localStorage writes land on the app origin (golden-path rationale).
@@ -159,57 +240,46 @@ async function main() {
 
     await page.goto(BASE_URL + '/game', { waitUntil: 'domcontentloaded' });
     await waitForWorldScene(page);
-    await settleFrames(page, 30); // generous initial warmup for texture loads
+    await page.waitForTimeout(1_000); // allow the first rendered scene to settle
 
     for (const zoneId of CORE_ZONES) {
       const errorsBefore = consoleErrors.length;
-      let status = 'ok';
-      let reason = '';
-
-      const sw = await switchZone(page, zoneId);
-      if (!sw.ok) {
-        status = 'switch-failed';
-        reason = sw.reason || '';
-      } else {
-        await settleFrames(page, 15);
-        // Center the camera on the actual zone content before the shot. The programmatic
-        // loadZone() path leaves the camera parked at world origin (0,0) following a player
-        // sprite that is itself parked there — so every prior screenshot only captured the
-        // empty top-left corner of each 45x35 map while all the stalls/buildings/NPCs sit
-        // in the middle. We must stopFollow() (otherwise the follow re-snaps the camera back
-        // to the origin) and centre on the map middle, where zone content is authored.
-        await page.evaluate(() => {
-          const s = window.__PHASER_GAME__.scene.getScene('WorldScene');
-          // Belt-and-braces: destroy any in-flight zone toasts from earlier navigation.
-          // ZoneToast labels are the only depth-9500 / scrollFactor-0 objects in the scene.
-          s.children.list
-            .filter((o) => o.depth === 9500 && o.scrollFactorX === 0)
-            .forEach((o) => o.destroy());
-          const cam = s.cameras.main;
-          if (cam.stopFollow) cam.stopFollow();
-          const w = (s.currentMapW || 45) * 64;
-          const h = (s.currentMapH || 35) * 64;
-          cam.centerOn(w / 2, h / 2);
-        });
-        await settleFrames(page, 6);
-      }
+      await switchZone(page, zoneId);
+      await page.waitForTimeout(500);
+      await page.evaluate(() => {
+        const s = window.__PHASER_GAME__.scene.getScene('WorldScene');
+        s.children.list
+          .filter((o) => o.depth === 9500 && o.scrollFactorX === 0)
+          .forEach((o) => o.destroy());
+        const cam = s.cameras.main;
+        if (cam.stopFollow) cam.stopFollow();
+        const w = s.currentMapW * 64;
+        const h = s.currentMapH * 64;
+        cam.centerOn(w / 2, h / 2);
+      });
+      await page.waitForTimeout(250);
+      await assertCaptureState(page, zoneId);
+      await suppressDomOverlays(page);
 
       const outPath = path.join(OUT_DIR, `${zoneId}.png`);
-      try {
-        // Capture the canvas element only. Phaser's WebGL renderer.snapshot callback can
-        // stall indefinitely in headless Chromium during GPU readback; a Playwright
-        // locator screenshot reads the displayed canvas without compositing React HUD DOM.
-        await page.locator('canvas').screenshot({ path: outPath });
-      } catch (err) {
-        // Fall back to a full-page shot so we still capture *something* to look at.
-        await page.screenshot({ path: outPath, fullPage: false });
-        if (status === 'ok') { status = 'canvas-shot-failed'; reason = String(err.message); }
+      // Phaser's WebGL renderer.snapshot callback can stall indefinitely in headless
+      // Chromium during GPU readback. The canvas screenshot workaround is retained, but
+      // DOM overlays are hidden above and no full-page fallback is permitted.
+      const capture = await captureAfterCanvasUpdate(page, previousHash);
+      fs.writeFileSync(outPath, capture.image);
+      const hash = capture.hash;
+      const duplicateZone = hashes.get(hash);
+      if (duplicateZone) {
+        throw new Error(
+          `Duplicate screenshot hash for "${zoneId}" and "${duplicateZone}": ${hash}`,
+        );
       }
+      hashes.set(hash, zoneId);
+      previousHash = hash;
 
       const newErrors = consoleErrors.slice(errorsBefore);
-      results.push({ zoneId, status, reason, file: `${zoneId}.png`, errors: newErrors });
-      const tag = status === 'ok' ? 'OK ' : '!! ';
-      console.log(`${tag}${zoneId} → ${outPath}${reason ? '  (' + reason + ')' : ''}${newErrors.length ? `  [${newErrors.length} console err]` : ''}`);
+      results.push({ zoneId, status: 'ok', file: `${zoneId}.png`, errors: newErrors, hash });
+      console.log(`OK  ${zoneId} → ${outPath} [${hash}]${newErrors.length ? `  [${newErrors.length} console err]` : ''}`);
     }
   } finally {
     await browser.close();
