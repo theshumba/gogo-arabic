@@ -1,7 +1,7 @@
 .container {
-  position: absolute;
-  top: 16px;
-  right: 220px; /* Positioned left of MiniMap */
+  position: relative;
+  flex: 0 1 auto;
+  flex-shrink: 1;
   background: rgba(22, 17, 10, 0.85);
   padding: 8px 16px;
   border-radius: 8px;
@@ -12,7 +12,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   pointer-events: none;
   min-width: 80px;
-  z-index: 100;
 }
 
 .time {

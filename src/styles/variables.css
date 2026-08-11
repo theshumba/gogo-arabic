@@ -68,10 +68,18 @@
   --focus-ring-offset: 2px;
   --focus-ring-inset: 0 0 0 3px var(--color-cyan);
 
+  /* HUD Layout Tokens */
+  --hud-topbar-height: 64px;
+  --hud-inset: 12px;
+  --hud-control-gap: var(--hud-inset);
+
   /* Z-Index Tokens (top-level layers) */
   --z-phaser-overlay: 10;
   --z-minimap: 90;
+  --z-next-objective: 94;
+  --z-quest-tracker: 95;
   --z-hud: 100;
+  --z-hud-notification: 101;
   --z-toast: 150;
   --z-overlay: 200;
   --z-pause-menu: 200;

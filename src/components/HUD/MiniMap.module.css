@@ -1,9 +1,9 @@
 @import '../../styles/variables.css';
 
 .container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+  position: absolute;
+  right: calc(100% - var(--hud-canvas-right, 100%) + max(var(--hud-inset), env(safe-area-inset-right, 0px)));
+  bottom: calc(100% - var(--hud-canvas-bottom, 100%) + max(var(--hud-inset), env(safe-area-inset-bottom, 0px)));
   width: 180px;
   min-height: 120px;
   background: rgba(43, 41, 44, 0.95);
@@ -105,8 +105,6 @@
     width: 150px;
     min-height: 100px;
     padding: 10px;
-    bottom: 80px; /* Avoid overlap with mobile controls */
-    right: 10px;
   }
 
   .zoneName {
@@ -127,8 +125,6 @@
     width: 120px;
     min-height: 80px;
     padding: 8px;
-    bottom: 70px;
-    right: 8px;
   }
 
   .zoneName {

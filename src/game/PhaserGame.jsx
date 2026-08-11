@@ -5,10 +5,16 @@ import { EventBus } from '../utils/eventBus.js';
 import { EVENTS } from '../utils/eventBusTypes.js';
 import { store } from '../store/store.js';
 import { startWarmupSampler } from '../services/devicePerformance.js';
+import { isPerfOverlayEnabled } from './perfOverlayGate.js';
+import { subscribeToCanvasRect } from './canvasRect.js';
 
-export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) {
+export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady, onCanvasRectChange }, ref) {
   const gameRef = useRef(null);
   const containerRef = useRef(null);
+  const onSceneReadyRef = useRef(onSceneReady);
+  const onCanvasRectChangeRef = useRef(onCanvasRectChange);
+  onSceneReadyRef.current = onSceneReady;
+  onCanvasRectChangeRef.current = onCanvasRectChange;
 
   useImperativeHandle(ref, () => ({
     game: gameRef.current,
@@ -30,10 +36,15 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) 
       window.__PHASER_GAME__ = game;
     }
 
+    const cleanupCanvasRect = subscribeToCanvasRect(
+      game,
+      (canvasRect) => onCanvasRectChangeRef.current?.(canvasRect)
+    );
+
     // When WorldScene is ready, notify parent and optionally mount the perf overlay.
     EventBus.once(EVENTS.SCENE_READY, async () => {
       const worldScene = game.scene.getScene('WorldScene');
-      if (onSceneReady) onSceneReady(worldScene);
+      if (onSceneReadyRef.current) onSceneReadyRef.current(worldScene);
 
       // Plan 102-07 (OBS-06): kick off the 10s low-end-device warmup sampler.
       // Wired here (NOT in main.jsx) because this is the only call-site where
@@ -48,16 +59,14 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) 
       }
 
       // Plan 102-06 (OBS-05): gated dynamic import of PerfOverlay.
-      // - `?perf=1` URL flag OR `import.meta.env.DEV` → load and mount.
+      // - `?perf=1` URL flag → load and mount in dev or production.
       // - Production build without the flag → `await import` is NOT reached, so
       //   Vite tree-shakes PerfOverlay.js into its own chunk that the prod bundle
       //   never fetches. Zero runtime cost when off (T-102-19 mitigation,
       //   RESEARCH Pitfall 6).
       // - PerfOverlay is local-only debug instrumentation — no PostHog/telemetry
       //   coupling here. (TODO Plan 03: optional perf-session tag.)
-      const perfEnabled =
-        import.meta.env.DEV ||
-        new URLSearchParams(window.location.search).has('perf');
+      const perfEnabled = isPerfOverlayEnabled({ search: window.location.search });
       if (perfEnabled && worldScene) {
         try {
           const { default: PerfOverlay } = await import('./ui/PerfOverlay.js');
@@ -74,6 +83,7 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) 
     });
 
     return () => {
+      cleanupCanvasRect();
       // Tear down the perf overlay first so its timer/text don't reference a
       // destroyed scene.
       if (typeof window !== 'undefined' && window.__PERF_OVERLAY__) {
@@ -81,7 +91,11 @@ export const PhaserGame = forwardRef(function PhaserGame({ onSceneReady }, ref) 
         delete window.__PERF_OVERLAY__;
       }
       if (gameRef.current) {
+        const canvas = gameRef.current.canvas;
         gameRef.current.destroy(true);
+        if (canvas?.parentNode === containerRef.current) {
+          canvas.remove();
+        }
         gameRef.current = null;
       }
     };
