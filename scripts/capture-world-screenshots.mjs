@@ -196,15 +196,10 @@ async function main() {
 
       const outPath = path.join(OUT_DIR, `${zoneId}.png`);
       try {
-        // Snapshot Phaser's own framebuffer, NOT the page. Playwright's canvas.screenshot()
-        // clips the page to the canvas bbox but composites overlaying DOM into the image —
-        // so the React HUD (MiniMap stuck on OASIS VILLAGE, QuestTracker, tutorial banner,
-        // ClockHUD) polluted every zone shot. renderer.snapshot() returns only game pixels
-        // and works in WebGL without preserveDrawingBuffer.
-        const dataUrl = await page.evaluate(
-          () => new Promise((res) => window.__PHASER_GAME__.renderer.snapshot((img) => res(img.src))),
-        );
-        fs.writeFileSync(outPath, Buffer.from(dataUrl.split(',')[1], 'base64'));
+        // Capture the canvas element only. Phaser's WebGL renderer.snapshot callback can
+        // stall indefinitely in headless Chromium during GPU readback; a Playwright
+        // locator screenshot reads the displayed canvas without compositing React HUD DOM.
+        await page.locator('canvas').screenshot({ path: outPath });
       } catch (err) {
         // Fall back to a full-page shot so we still capture *something* to look at.
         await page.screenshot({ path: outPath, fullPage: false });
