@@ -103,6 +103,7 @@ export class BootScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('map-desert-marketplace', '/assets/maps/desert-marketplace.json');
     this.load.tilemapTiledJSON('map-farmland', '/assets/maps/farmland.json');
     this.load.tilemapTiledJSON('map-mountain-village', '/assets/maps/mountain-village.json');
+    this.load.tilemapTiledJSON('map-coastal-port', '/assets/maps/coastal-port.json');
     this.load.tilemapTiledJSON('map-royal-palace', '/assets/maps/royal-palace.json');
 
     // =========================================================
