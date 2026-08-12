@@ -300,7 +300,7 @@ const ZONE_PROFILES = {
     id: 'bedouin_camp',
     classes: {
       '.': 'sand',
-      ',': 'sand',
+      ',': 'variation',
       'd': 'camp',
       ':': 'track',
       'C': 'dune',
@@ -1324,15 +1324,22 @@ if (!PROFILE) {
         case 'trample':
           ground[i] = G_PLAZA;
           break;
+        case 'variation':
+          ground[i] = G_ROAD;
+          if (TS_GRASS && hash(x + 17, y + 29) % 7 === 0) {
+            const tuftFrames = [9, 10, 12, 13];
+            detail[i] = TS_GRASS.firstgid + tuftFrames[hash(x + 71, y + 43) % tuftFrames.length];
+          }
+          break;
         case 'camp':
-          // Camp wear is carried by the fire-circle dressing and clustered
-          // props. A flat plaza frame reads as a painted stain on desert sand.
-          ground[i] = G_SAND;
+          ground[i] = G_ROAD;
           break;
         case 'track':
-          // Caravan trails fade into their sand surroundings; do not paint
-          // them as a road slab.
-          ground[i] = G_SAND;
+          ground[i] = hash(x + 101, y + 7) % 5 === 0 ? G_SAND : G_ROAD;
+          if (TS_GRASS && hash(x + 31, y + 53) % 5 === 0) {
+            const trackTufts = [9, 10, 12, 13];
+            detail[i] = TS_GRASS.firstgid + trackTufts[hash(x + 83, y + 11) % trackTufts.length];
+          }
           break;
         case 'pave':
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
