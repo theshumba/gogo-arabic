@@ -22,14 +22,14 @@ export const ZONE_DIMENSIONS = {
   royal_palace: [50, 40],
 };
 
-export function buildSeed(zones) {
+export function buildSeed(zones, currentZone = 'oasis_village') {
   return {
     player: JSON.stringify({
       name: 'ShotTester',
       level: 5,
       xp: 500,
       dirhams: 500,
-      currentZone: 'oasis_village',
+      currentZone,
       position: { x: 100, y: 100 },
       inventory: [],
       outfit: 'simple-thobe',

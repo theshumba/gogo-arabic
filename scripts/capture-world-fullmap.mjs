@@ -40,7 +40,10 @@ function fitZoom(width, height) {
 
 async function main() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
-  const seed = buildSeed(CORE_ZONES);
+  const captureZones = process.env.GOGO_CAPTURE_ZONE
+    ? [process.env.GOGO_CAPTURE_ZONE]
+    : CORE_ZONES;
+  const seed = buildSeed(captureZones, captureZones[0]);
   const browser = await chromium.launch();
   const context = await browser.newContext({ viewport: VIEWPORT });
   const page = await context.newPage();
@@ -55,9 +58,9 @@ async function main() {
     await waitForWorldScene(page);
     await page.waitForTimeout(1_000);
 
-    for (const zoneId of CORE_ZONES) {
+    for (const zoneId of captureZones) {
       await switchZone(page, zoneId);
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(3_000);
       const state = await page.evaluate(() => {
         const s = window.__PHASER_GAME__?.scene?.getScene?.('WorldScene');
         return { width: s.currentMapW, height: s.currentMapH };
@@ -68,7 +71,16 @@ async function main() {
       await assertCaptureState(page, zoneId);
       await suppressDomOverlays(page);
 
-      const capture = await captureAfterCanvasUpdate(page, previousHash);
+      let capture;
+      try {
+        capture = await captureAfterCanvasUpdate(page, previousHash);
+      } catch (error) {
+        // A zone load can finish before Phaser presents its first settled frame.
+        // Keep the hash guard: retry only after allowing that frame to render.
+        await page.waitForTimeout(3_000);
+        await assertCaptureState(page, zoneId);
+        capture = await captureAfterCanvasUpdate(page, previousHash);
+      }
       const duplicateZone = hashes.get(capture.hash);
       if (duplicateZone) {
         throw new Error(
