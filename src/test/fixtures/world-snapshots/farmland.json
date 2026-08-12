@@ -9458,1125 +9458,195 @@
   ],
   "objects": [
     {
+      "key": "kenmi-desert-houses-desert-house-3.1",
+      "x": 4,
+      "y": 5,
+      "collide": true
+    },
+    {
       "key": "kenmi-base-buildings-buildings-unique-buildings-barn-barn-base-blue",
       "x": 10,
       "y": 3,
       "collide": true
     },
     {
-      "key": "kenmi-base-buildings-buildings-houses-wood-house-1-wood-base-blue",
-      "x": 35,
-      "y": 3,
-      "collide": true
-    },
-    {
-      "key": "kenmi-base-buildings-buildings-houses-wood-house-2-wood-base-red",
-      "x": 8,
-      "y": 22,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-acacia-tree",
-      "x": 5,
-      "y": 5,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-acacia-tree",
-      "x": 20,
-      "y": 5,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 25,
-      "y": 5,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 40,
-      "y": 5,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-halfdead-tree",
-      "x": 10,
-      "y": 15,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-halfdead-tree",
-      "x": 35,
-      "y": 15,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-acacia-tree",
-      "x": 15,
-      "y": 20,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-acacia-tree",
-      "x": 30,
-      "y": 20,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 2,
-      "y": 10,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 42,
-      "y": 10,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 2,
-      "y": 30,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 42,
-      "y": 30,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-palm-tree-1",
-      "x": 40,
-      "y": 22,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-palm-tree-1",
-      "x": 3,
-      "y": 18,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-palm-tree-2",
-      "x": 42,
-      "y": 18,
-      "collide": true
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-hay-bales",
-      "x": 11,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 34,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 13,
-      "y": 21,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 9,
-      "y": 22,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 10,
-      "y": 22,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 11,
-      "y": 22,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 4,
-      "y": 22,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 6,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-camp-decor",
+      "key": "kenmi-base-buildings-buildings-unique-buildings-silo-silo",
       "x": 14,
-      "y": 17,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-camp-decor",
-      "x": 18,
-      "y": 17,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-camp-decor",
-      "x": 19,
-      "y": 19,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 8,
-      "y": 32,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 10,
-      "y": 32,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 12,
-      "y": 32,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 6,
-      "y": 32,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 38,
-      "y": 32,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 36,
-      "y": 32,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 34,
-      "y": 32,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 32,
-      "y": 32,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 17,
-      "y": 29,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 13,
-      "y": 27,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 10,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 9,
-      "y": 29,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 13,
-      "y": 25,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 30,
-      "y": 29,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 27,
-      "y": 27,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 30,
-      "y": 25,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 26,
-      "y": 25,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 25,
-      "y": 29,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 28,
-      "y": 29,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 31,
-      "y": 6,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 30,
       "y": 9,
-      "collide": false
+      "collide": true
     },
     {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 27,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 29,
-      "y": 12,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 32,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 15,
-      "y": 17,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 19,
-      "y": 16,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 10,
-      "y": 16,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 26,
-      "y": 16,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 30,
-      "y": 18,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-flowers",
-      "x": 35,
-      "y": 17,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-hay-bales",
-      "x": 13,
-      "y": 16,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-hay-bales",
-      "x": 4,
-      "y": 16,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-hay-bales",
-      "x": 32,
-      "y": 16,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-lantern",
-      "x": 12,
-      "y": 5,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
+      "key": "kenmi-base-buildings-buildings-unique-buildings-windmill-windmill",
       "x": 17,
-      "y": 17,
-      "collide": false
+      "y": 5,
+      "collide": true
     },
     {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 33,
-      "y": 18,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 37,
-      "y": 19,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 40,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 37,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 35,
-      "y": 27,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 38,
-      "y": 29,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 40,
-      "y": 28,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-outdoor-decor",
-      "x": 35,
-      "y": 29,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-flies-anim",
-      "x": 38,
-      "y": 27,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-1-anim",
-      "x": 39,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-2-anim",
-      "x": 35,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-outdoor-decor-animations-desert-grass-3-anim",
-      "x": 37,
-      "y": 29,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 16,
-      "y": 3,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 30,
-      "y": 3,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 39,
-      "y": 14,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 31,
-      "y": 14,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 6,
-      "y": 14,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-fences",
-      "x": 14,
-      "y": 14,
-      "collide": false
+      "key": "kenmi-base-buildings-buildings-unique-buildings-coop-coop-base-blue",
+      "x": 23,
+      "y": 6,
+      "collide": true
     },
     {
       "key": "kenmi-base-outdoor-decoration-hay-bales",
-      "x": 6,
-      "y": 2,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-hay-bales",
-      "x": 5,
+      "x": 9,
       "y": 8,
       "collide": false
     },
     {
-      "key": "kenmi-base-outdoor-decoration-hay-bales",
+      "key": "kenmi-base-outdoor-decoration-water-troughs",
+      "x": 14,
+      "y": 13,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-fence-big",
+      "x": 4,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-fence-big",
+      "x": 7,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-outdoor-decor-animations-other-animations-fence-big-gate",
+      "x": 12,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-fence-big",
+      "x": 4,
+      "y": 15,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-water-sack-on-stick",
+      "x": 31,
+      "y": 9,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 40,
+      "y": 7,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 6,
+      "y": 18,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
       "x": 8,
-      "y": 5,
+      "y": 18,
       "collide": false
     },
     {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 24,
-      "y": 7,
+      "key": "kenmi-base-crops-crops",
+      "x": 10,
+      "y": 19,
       "collide": false
     },
     {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 21,
-      "y": 23,
+      "key": "kenmi-base-crops-crops",
+      "x": 23,
+      "y": 16,
       "collide": false
     },
     {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 24,
-      "y": 27,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 21,
-      "y": 27,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
+      "key": "kenmi-base-crops-crops",
       "x": 25,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 27,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 29,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 31,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 25,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 27,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 29,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 31,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 25,
-      "y": 28,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 27,
-      "y": 28,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 29,
-      "y": 28,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 31,
-      "y": 28,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 27,
-      "y": 5,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 29,
-      "y": 5,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 31,
-      "y": 5,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 25,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 27,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 29,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 31,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 27,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 29,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 31,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 13,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 16,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 13,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 13,
-      "y": 28,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 16,
-      "y": 28,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 13,
-      "y": 30,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 16,
-      "y": 30,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 25,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-ambarakaman-plant",
-      "x": 16,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 32,
-      "y": 1,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 32,
-      "y": 3,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-outdoor-decoration-barrels",
-      "x": 38,
-      "y": 3,
+      "y": 16,
       "collide": false
     },
     {
       "key": "kenmi-base-outdoor-decoration-scarecrows",
+      "x": 28,
+      "y": 15,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 6,
+      "y": 28,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops-2",
+      "x": 8,
+      "y": 29,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 11,
+      "y": 30,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops-2",
+      "x": 32,
+      "y": 17,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-stalls-market-stalls",
+      "x": 18,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 18,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-1",
+      "x": 29,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-2",
+      "x": 33,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-1",
+      "x": 29,
+      "y": 29,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-palm-tree-2",
+      "x": 33,
+      "y": 29,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-cactus",
+      "x": 41,
+      "y": 20,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
       "x": 15,
-      "y": 25,
+      "y": 30,
       "collide": false
     },
     {
-      "key": "kenmi-base-crops-crops",
-      "x": 6,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 7,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 8,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 9,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 10,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 11,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 6,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 7,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 8,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 9,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 10,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 11,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 6,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 7,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 8,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 9,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 10,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 11,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 14,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 16,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 18,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 14,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 16,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 18,
-      "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 34,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 35,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 36,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 37,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 38,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 39,
-      "y": 7,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 34,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 35,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 36,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 37,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 38,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 39,
-      "y": 8,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 34,
-      "y": 10,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 35,
-      "y": 10,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 36,
-      "y": 10,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 37,
-      "y": 10,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 38,
-      "y": 10,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 39,
-      "y": 10,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 34,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 35,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 36,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 37,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 38,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 39,
-      "y": 11,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
+      "key": "kenmi-desert-props-dead-bush",
       "x": 17,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 18,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 19,
-      "y": 24,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 17,
-      "y": 25,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 18,
-      "y": 25,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 19,
-      "y": 25,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 17,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 18,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 19,
-      "y": 26,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 25,
-      "y": 21,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 26,
-      "y": 21,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 27,
-      "y": 21,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 25,
-      "y": 22,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 26,
-      "y": 22,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-crops-crops",
-      "x": 27,
-      "y": 22,
+      "y": 31,
       "collide": false
     }
   ],

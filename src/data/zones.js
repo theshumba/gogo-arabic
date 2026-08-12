@@ -779,6 +779,55 @@ const desert_marketplace = {
 // ZONE 4: Farmland (45×35)
 // ============================================================
 
+const FARM_OBJECTS = [
+  // Homestead Row: staggered buildings with collision only on their base strips.
+  { key: 'kenmi-desert-houses-desert-house-3.1', x: 4, y: 5, collide: true, collideW: 192, collideH: 24 },
+  { key: 'kenmi-base-buildings-buildings-unique-buildings-barn-barn-base-blue', x: 10, y: 3, collide: true, collideW: 128, collideH: 24 },
+  { key: 'kenmi-base-buildings-buildings-unique-buildings-silo-silo', x: 14, y: 9, collide: true, collideW: 32, collideH: 24 },
+  { key: 'kenmi-base-buildings-buildings-unique-buildings-windmill-windmill', x: 17, y: 5, collide: true, collideW: 96, collideH: 24 },
+  { key: 'kenmi-base-buildings-buildings-unique-buildings-coop-coop-base-blue', x: 23, y: 6, collide: true, collideW: 160, collideH: 24 },
+  { key: 'kenmi-base-outdoor-decoration-hay-bales', x: 9, y: 8, collide: false, cropIndex: 0 },
+  { key: 'kenmi-base-outdoor-decoration-water-troughs', x: 14, y: 13, collide: false },
+
+  // Paddock & Quiet Corner: a broken fence line and a small, occupied pen.
+  { key: 'kenmi-base-outdoor-decoration-fence-big', x: 4, y: 11, collide: false },
+  { key: 'kenmi-base-outdoor-decoration-fence-big', x: 7, y: 11, collide: false },
+  { key: 'kenmi-base-outdoor-decoration-outdoor-decor-animations-other-animations-fence-big-gate', x: 12, y: 11, collide: false },
+  { key: 'kenmi-base-outdoor-decoration-fence-big', x: 4, y: 15, collide: false },
+
+  // Pond & Falaj Head: the waterfall surround is sparse; the water story does
+  // the visual work, with only a spring prop and two framing rocks.
+  { key: 'kenmi-desert-props-water-sack-on-stick', x: 31, y: 9, collide: false },
+  { key: 'kenmi-desert-props-desert-rocks', x: 40, y: 7, collide: false, cropIndex: 2 },
+
+  // Crop Quarters: varied crop runs, deliberately broken rather than a grid.
+  { key: 'kenmi-base-crops-crops', x: 6, y: 18, collide: false, cropIndex: 0 },
+  { key: 'kenmi-base-crops-crops', x: 8, y: 18, collide: false, cropIndex: 1 },
+  { key: 'kenmi-base-crops-crops', x: 10, y: 19, collide: false, cropIndex: 0 },
+  { key: 'kenmi-base-crops-crops', x: 23, y: 16, collide: false, cropIndex: 3 },
+  { key: 'kenmi-base-crops-crops', x: 25, y: 16, collide: false, cropIndex: 1 },
+  { key: 'kenmi-base-outdoor-decoration-scarecrows', x: 28, y: 15, collide: false },
+  { key: 'kenmi-base-crops-crops', x: 6, y: 28, collide: false, cropIndex: 2 },
+  { key: 'kenmi-base-crops-crops-2', x: 8, y: 29, collide: false, cropIndex: 4 },
+  { key: 'kenmi-base-crops-crops', x: 11, y: 30, collide: false, cropIndex: 1 },
+
+  // Herbalist's Garden and Farm Plaza: compact service clusters.
+  { key: 'kenmi-base-crops-crops-2', x: 32, y: 17, collide: false, cropIndex: 1 },
+  { key: 'kenmi-base-buildings-buildings-unique-buildings-stalls-market-stalls', x: 18, y: 24, collide: false },
+  { key: 'kenmi-desert-props-desert-rugs', x: 18, y: 25, collide: false, cropIndex: 0 },
+
+  // Date Orchard: the only intentionally regular block in the map.
+  { key: 'kenmi-desert-props-palm-tree-1', x: 29, y: 25, collide: false },
+  { key: 'kenmi-desert-props-palm-tree-2', x: 33, y: 25, collide: false },
+  { key: 'kenmi-desert-props-palm-tree-1', x: 29, y: 29, collide: false },
+  { key: 'kenmi-desert-props-palm-tree-2', x: 33, y: 29, collide: false },
+
+  // Steppe Vista and South Approach: a few asymmetrical landmarks, not filler.
+  { key: 'kenmi-desert-props-cactus', x: 41, y: 20, collide: false },
+  { key: 'kenmi-desert-props-desert-rocks', x: 15, y: 30, collide: false, cropIndex: 1 },
+  { key: 'kenmi-desert-props-dead-bush', x: 17, y: 31, collide: false },
+];
+
 function buildFarmlandMap() {
   const W = 45, H = 35;
   const m = [];
@@ -811,11 +860,11 @@ const farmland = {
   mapWidth: 45,
   mapHeight: 35,
   buildMap: buildFarmlandMap,
-  spawnPoint: { x: 22, y: 33 },
+    spawnPoint: { x: 20, y: 32 },
   vocabCategories: ['nature', 'animals', 'body', 'verbs_basic'],
   gatheringSpots: true,
 
-  objects: [
+  legacyObjects: [
     // Farm buildings — grass biome (barn + wood houses)
     { key: 'kenmi-base-buildings-buildings-unique-buildings-barn-barn-base-blue', x: 10, y: 3, collide: true, collideW: 240, collideH: 100 },
     { key: 'kenmi-base-buildings-buildings-houses-wood-house-1-wood-base-blue', x: 35, y: 3, collide: true, collideW: 180, collideH: 80 },
@@ -1024,39 +1073,43 @@ const farmland = {
 
   ],
 
+  // Authored farmland dressing is emitted by generate-map-from-design.mjs;
+  // legacy procedural props above are intentionally not part of this map.
+  objects: FARM_OBJECTS,
+
   npcs: [
-    { id: 'farmer-omar', key: 'npc-farmer-omar', name: 'Farmer Omar', nameArabic: 'المُزارِع عُمَر', x: 12, y: 10 },
-    { id: 'herbalist-maryam', key: 'npc-herbalist-maryam', name: 'Herbalist Maryam', nameArabic: 'العَشّابَة مَريَم', x: 33, y: 25 },
+    { id: 'farmer-omar', key: 'npc-farmer-omar', name: 'Farmer Omar', nameArabic: 'المُزارِع عُمَر', x: 13, y: 10 },
+    { id: 'herbalist-maryam', key: 'npc-herbalist-maryam', name: 'Herbalist Maryam', nameArabic: 'العَشّابَة مَريَم', x: 33, y: 19 },
   ],
 
   interactables: [
-    { id: 'sign-farm-entrance', type: 'sign', x: 22, y: 32, textArabic: 'الأَرض الزِّراعِيَّة', textEnglish: 'The Farmland' },
-    { id: 'sign-farm-barn', type: 'sign', x: 10, y: 4, textArabic: 'المَزرَعَة', textEnglish: 'The Farm' },
-    { id: 'bookshelf-nature', type: 'bookshelf', x: 7, y: 8, category: 'nature' },
-    { id: 'bookshelf-animals', type: 'bookshelf', x: 37, y: 8, category: 'animals' },
-    { id: 'bookshelf-body', type: 'bookshelf', x: 20, y: 25, category: 'body' },
-    { id: 'chest-farm-hidden', type: 'chest', x: 42, y: 3, minDirhams: 30, maxDirhams: 90 },
-    { id: 'chest-farm-pond', type: 'chest', x: 36, y: 30, minDirhams: 25, maxDirhams: 75 },
-    { id: 'door-barn', type: 'door', x: 15, y: 8, interiorId: 'farmhouse_interior', locked: false, labelArabic: 'بَيْت المُزارِع', labelEnglish: "Farmer's House" },
+    { id: 'sign-farm-entrance', type: 'sign', x: 22, y: 31, textArabic: 'الأَرض الزِّراعِيَّة', textEnglish: 'The Farmland' },
+    { id: 'sign-farm-barn', type: 'sign', x: 12, y: 8, textArabic: 'المَزرَعَة', textEnglish: 'The Farm' },
+    { id: 'bookshelf-nature', type: 'bookshelf', x: 8, y: 9, category: 'nature' },
+    { id: 'bookshelf-animals', type: 'bookshelf', x: 17, y: 11, category: 'animals' },
+    { id: 'bookshelf-body', type: 'bookshelf', x: 18, y: 27, category: 'body' },
+    { id: 'chest-farm-hidden', type: 'chest', x: 42, y: 4, minDirhams: 30, maxDirhams: 90 },
+    { id: 'chest-farm-pond', type: 'chest', x: 39, y: 16, minDirhams: 25, maxDirhams: 75 },
+    { id: 'door-barn', type: 'door', x: 6, y: 9, interiorId: 'farmhouse_interior', locked: false, labelArabic: 'بَيْت المُزارِع', labelEnglish: "Farmer's House" },
     // --- Phase 23: Interactive Objects ---
-    { id: 'pot-farm-1', type: 'pot', x: 8, y: 10, labelArabic: 'قِدر', labelEnglish: 'Cooking Pot', descriptionEnglish: 'A large iron pot bubbling with farm-fresh vegetable stew.', descriptionArabic: 'قدر كبير من الحساء بالخضار الطازجة.', culturalNote: 'Communal cooking pots are central to rural Arab hospitality, always ready for unexpected guests.', vocabWordId: 'flower_w26', vocabCategory: 'nature', repeatable: true },
-    { id: 'pot-farm-2', type: 'pot', x: 16, y: 12, labelArabic: 'قِدر', labelEnglish: 'Herb Pot', descriptionEnglish: 'A clay pot growing fresh mint and basil for cooking.', vocabWordId: 'earth_w22', vocabCategory: 'nature', repeatable: true },
-    { id: 'pot-farm-3', type: 'pot', x: 30, y: 23, labelArabic: 'قِدر', labelEnglish: 'Seed Pot', descriptionEnglish: 'A pot filled with seeds ready for the next planting season.', vocabWordId: 'tree_w27', vocabCategory: 'nature', repeatable: true },
-    { id: 'barrel-farm-1', type: 'barrel', x: 14, y: 7, labelArabic: 'برميل', labelEnglish: 'Crop Barrel', descriptionEnglish: 'A barrel of freshly harvested wheat, golden and fragrant.', vocabWordId: 'sun_w19', vocabCategory: 'nature', loot: { type: 'dirhams', min: 5, max: 12 }, repeatable: false, stateChange: 'inspected' },
-    { id: 'barrel-farm-2', type: 'barrel', x: 28, y: 8, labelArabic: 'برميل', labelEnglish: 'Water Barrel', descriptionEnglish: 'A barrel collecting irrigation water from the canal.', vocabWordId: 'water_w13', vocabCategory: 'nature', repeatable: true },
-    { id: 'barrel-farm-3', type: 'barrel', x: 18, y: 28, labelArabic: 'برميل', labelEnglish: 'Fruit Barrel', descriptionEnglish: 'A barrel packed with ripe pomegranates from the orchard.', culturalNote: 'Pomegranates are mentioned in the Quran and symbolise abundance and prosperity.', vocabWordId: 'rain_w14', vocabCategory: 'nature', repeatable: true },
-    { id: 'statue-farm-1', type: 'statue', x: 12, y: 22, labelArabic: 'تمثال', labelEnglish: 'Nature Statue', descriptionEnglish: 'A carved stone depicting a farmer sowing seeds under a crescent moon.', culturalNote: 'Traditional Arab farmers used the lunar calendar to determine planting seasons.', vocabWordId: 'camel_1', vocabCategory: 'animals', repeatable: true },
-    { id: 'fountain-farm-1', type: 'fountain', x: 38, y: 26, labelArabic: 'نافورة', labelEnglish: 'Pond Fountain', descriptionEnglish: 'A small stone fountain feeding the farm pond. Fish dart beneath the surface.', vocabWordId: 'river_w15', vocabCategory: 'nature', repeatable: true },
-    { id: 'lantern-farm-1', type: 'lantern', x: 8, y: 17, labelArabic: 'فانوس', labelEnglish: 'Path Lantern', descriptionEnglish: 'A lantern marking the main farm path, lit at dusk by the farmer.', vocabWordId: 'moon_w20', vocabCategory: 'nature', repeatable: true },
-    { id: 'lantern-farm-2', type: 'lantern', x: 38, y: 17, labelArabic: 'فانوس', labelEnglish: 'Path Lantern', descriptionEnglish: 'A matching lantern on the eastern stretch of the farm path.', vocabWordId: 'star_w21', vocabCategory: 'nature', repeatable: true },
-    { id: 'crate-farm-1', type: 'crate', x: 34, y: 6, labelArabic: 'صندوق', labelEnglish: 'Tool Crate', descriptionEnglish: 'A wooden crate holding farming tools: hoes, sickles, and rope.', vocabWordId: 'wind_w24', vocabCategory: 'nature', loot: { type: 'dirhams', min: 4, max: 10 }, repeatable: false, stateChange: 'inspected' },
-    { id: 'painting-farm-1', type: 'painting', x: 9, y: 24, labelArabic: 'لوحة', labelEnglish: 'Harvest Mural', descriptionEnglish: 'A cheerful mural painted on the farmhouse wall showing the autumn harvest.', vocabWordId: 'sky_w18', vocabCategory: 'nature', repeatable: true },
-    { id: 'stall-farm-1', type: 'stall', x: 25, y: 22, labelArabic: 'دكان', labelEnglish: 'Farm Stand', descriptionEnglish: 'A roadside stand selling fresh eggs, honey, and goat cheese.', vocabWordId: 'goat_1', vocabCategory: 'animals', repeatable: true },
+    { id: 'pot-farm-1', type: 'pot', x: 4, y: 9, labelArabic: 'قِدر', labelEnglish: 'Cooking Pot', descriptionEnglish: 'A large iron pot bubbling with farm-fresh vegetable stew.', descriptionArabic: 'قدر كبير من الحساء بالخضار الطازجة.', culturalNote: 'Communal cooking pots are central to rural Arab hospitality, always ready for unexpected guests.', vocabWordId: 'flower_w26', vocabCategory: 'nature', repeatable: true },
+    { id: 'pot-farm-2', type: 'pot', x: 21, y: 8, labelArabic: 'قِدر', labelEnglish: 'Herb Pot', descriptionEnglish: 'A clay pot growing fresh mint and basil for cooking.', vocabWordId: 'earth_w22', vocabCategory: 'nature', repeatable: true },
+    { id: 'pot-farm-3', type: 'pot', x: 31, y: 19, labelArabic: 'قِدر', labelEnglish: 'Seed Pot', descriptionEnglish: 'A pot filled with seeds ready for the next planting season.', vocabWordId: 'tree_w27', vocabCategory: 'nature', repeatable: true },
+    { id: 'barrel-farm-1', type: 'barrel', x: 10, y: 8, labelArabic: 'برميل', labelEnglish: 'Crop Barrel', descriptionEnglish: 'A barrel of freshly harvested wheat, golden and fragrant.', vocabWordId: 'sun_w19', vocabCategory: 'nature', loot: { type: 'dirhams', min: 5, max: 12 }, repeatable: false, stateChange: 'inspected' },
+    { id: 'barrel-farm-2', type: 'barrel', x: 24, y: 26, labelArabic: 'برميل', labelEnglish: 'Water Barrel', descriptionEnglish: 'A barrel collecting irrigation water from the canal.', vocabWordId: 'water_w13', vocabCategory: 'nature', repeatable: true },
+    { id: 'barrel-farm-3', type: 'barrel', x: 29, y: 23, labelArabic: 'برميل', labelEnglish: 'Fruit Barrel', descriptionEnglish: 'A barrel packed with ripe pomegranates from the orchard.', culturalNote: 'Pomegranates are mentioned in the Quran and symbolise abundance and prosperity.', vocabWordId: 'rain_w14', vocabCategory: 'nature', repeatable: true },
+    { id: 'statue-farm-1', type: 'statue', x: 22, y: 25, labelArabic: 'تمثال', labelEnglish: 'Nature Statue', descriptionEnglish: 'A carved stone depicting a farmer sowing seeds under a crescent moon.', culturalNote: 'Traditional Arab farmers used the lunar calendar to determine planting seasons.', vocabWordId: 'camel_1', vocabCategory: 'animals', repeatable: true },
+    { id: 'fountain-farm-1', type: 'fountain', x: 32, y: 10, labelArabic: 'نافورة', labelEnglish: 'Pond Fountain', descriptionEnglish: 'A small stone fountain feeding the farm pond. Fish dart beneath the surface.', vocabWordId: 'river_w15', vocabCategory: 'nature', repeatable: true },
+    { id: 'lantern-farm-1', type: 'lantern', x: 17, y: 32, labelArabic: 'فانوس', labelEnglish: 'Path Lantern', descriptionEnglish: 'A lantern marking the main farm path, lit at dusk by the farmer.', vocabWordId: 'moon_w20', vocabCategory: 'nature', repeatable: true },
+    { id: 'lantern-farm-2', type: 'lantern', x: 22, y: 32, labelArabic: 'فانوس', labelEnglish: 'Path Lantern', descriptionEnglish: 'A matching lantern on the eastern stretch of the farm path.', vocabWordId: 'star_w21', vocabCategory: 'nature', repeatable: true },
+    { id: 'crate-farm-1', type: 'crate', x: 18, y: 25, labelArabic: 'صندوق', labelEnglish: 'Tool Crate', descriptionEnglish: 'A wooden crate holding farming tools: hoes, sickles, and rope.', vocabWordId: 'wind_w24', vocabCategory: 'nature', loot: { type: 'dirhams', min: 4, max: 10 }, repeatable: false, stateChange: 'inspected' },
+    { id: 'painting-farm-1', type: 'painting', x: 7, y: 9, labelArabic: 'لوحة', labelEnglish: 'Harvest Mural', descriptionEnglish: 'A cheerful mural painted on the farmhouse wall showing the autumn harvest.', vocabWordId: 'sky_w18', vocabCategory: 'nature', repeatable: true },
+    { id: 'stall-farm-1', type: 'stall', x: 18, y: 24, labelArabic: 'دكان', labelEnglish: 'Farm Stand', descriptionEnglish: 'A roadside stand selling fresh eggs, honey, and goat cheese.', vocabWordId: 'goat_1', vocabCategory: 'animals', repeatable: true },
     // --- Phase 45: Hidden inscription (root family discovery) ---
     {
       id: 'inscription-farmland-1',
       type: 'inscription',
-      x: 2, y: 32,
+      x: 3, y: 14,
       labelArabic: 'نَقش',
       labelEnglish: 'Ancient Inscription',
       rootFamily: 'ز-ر-ع',
@@ -1072,7 +1125,7 @@ const farmland = {
     {
       id: 'inscription-farmland-2',
       type: 'inscription',
-      x: 42, y: 32,
+      x: 40, y: 21,
       labelArabic: 'نَقش',
       labelEnglish: 'Harvest Inscription',
       rootFamily: 'ز-ر-ع',
@@ -1087,7 +1140,7 @@ const farmland = {
     {
       id: 'inscription-farmland-3',
       type: 'inscription',
-      x: 22, y: 5,
+      x: 34, y: 3,
       labelArabic: 'نَقش',
       labelEnglish: 'Harvest Prayer',
       rootFamily: 'ح-م-د',
@@ -1105,7 +1158,7 @@ const farmland = {
     {
       id: 'farm-to-marketplace',
       edge: 'south',
-      tileRange: [19, 25],
+      tileRange: [19, 21],
       targetZone: 'desert_marketplace',
       targetEntry: 'from_farmland',
       label: 'Desert Marketplace',
@@ -1114,7 +1167,7 @@ const farmland = {
     {
       id: 'farm-to-bedouin',
       edge: 'east',
-      tileRange: [15, 19],
+      tileRange: [16, 18],
       targetZone: 'bedouin_camp',
       targetEntry: 'from_farmland',
       label: 'Bedouin Camp',
@@ -1128,8 +1181,8 @@ const farmland = {
   battleBackground: 'bg-farmland',
 
   entries: {
-    from_marketplace: { x: 22, y: 33 },
-    from_bedouin: { x: 43, y: 17 },
+      from_marketplace: { x: 20, y: 32 },
+      from_bedouin: { x: 42, y: 17 },
   },
 };
 
@@ -2158,4 +2211,3 @@ export const ZONE_ORDER = [
 ];
 
 // Tile type constants for external use
-
