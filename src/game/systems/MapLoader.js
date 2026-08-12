@@ -205,6 +205,13 @@ export const FLAT_GROUND_PROPS = new Set([
 // Maps texture key -> array of { x, y, w, h } regions in source pixels
 // Props NOT listed here are single-item or large-object images — rendered at native or scaled size.
 export const PROP_CROP_REGIONS = {
+  'kenmi-base-buildings-house-decor-bookshelves': [
+    { x: 17, y: 1, w: 30, h: 30 },
+    { x: 49, y: 1, w: 30, h: 30 },
+    { x: 81, y: 1, w: 30, h: 30 },
+    { x: 113, y: 1, w: 30, h: 30 },
+    { x: 145, y: 1, w: 30, h: 30 },
+  ],
   'kenmi-base-outdoor-decoration-ores': Array.from({ length: 64 }, (_, index) => ({
     x: (index % 8) * 16,
     y: Math.floor(index / 8) * 16,

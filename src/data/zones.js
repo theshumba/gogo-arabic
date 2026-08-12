@@ -345,10 +345,13 @@ const ancient_library = {
     // desert-ladder removed: free-standing 1x3-tile ladder leaned on nothing.
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 9, y: 10, collide: false },
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 28, y: 11, collide: false },
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 12, y: 12, collide: false },
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 25, y: 12, collide: false },
+    { key: 'kenmi-base-buildings-house-decor-bookshelves', x: 10, y: 12, collide: true, collideW: 24, collideH: 20, cropIndex: 0 },
+    { key: 'kenmi-base-buildings-house-decor-bookshelves', x: 22, y: 12, collide: true, collideW: 24, collideH: 20, cropIndex: 2 },
     { key: 'kenmi-desert-props-desert-rugs', x: 24, y: 13, collide: false },
     { key: 'kenmi-desert-props-desert-rugs', x: 20, y: 17, collide: false },
+    { key: 'kenmi-desert-props-desert-rugs', x: 13, y: 16, collide: false },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 10, y: 16, collide: false, cropIndex: 2 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 13, y: 17, collide: false, cropIndex: 4 },
     { key: 'kenmi-desert-props-fire-pit', x: 13, y: 7, collide: false },
     { key: 'kenmi-desert-props-cactus', x: 26, y: 2, collide: false },
   
