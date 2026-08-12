@@ -787,14 +787,21 @@ const FARM_OBJECTS = [
   { key: 'kenmi-base-buildings-buildings-unique-buildings-windmill-windmill', x: 17, y: 5, collide: true, collideW: 96, collideH: 24 },
   { key: 'kenmi-base-buildings-buildings-unique-buildings-coop-coop-base-blue', x: 23, y: 6, collide: true, collideW: 160, collideH: 24 },
   { key: 'kenmi-base-outdoor-decoration-hay-bales', x: 9, y: 8, collide: false, cropIndex: 0 },
-  { key: 'kenmi-base-outdoor-decoration-water-troughs', x: 14, y: 13, collide: false },
+  { key: 'kenmi-base-outdoor-decoration-well', x: 19, y: 8, collide: true, collideW: 40, collideH: 24 },
+  // Coop yard: a small flock clustered around the feed and shade.
+  { key: 'kenmi-base-animals-chicken-chicken-01', x: 27, y: 11, collide: false, cropIndex: 0 },
+  { key: 'kenmi-base-animals-chicken-chicken-02', x: 29, y: 11, collide: false, cropIndex: 1 },
+  { key: 'kenmi-base-animals-chicken-chicken-01', x: 28, y: 13, collide: false, cropIndex: 1 },
+  { key: 'kenmi-base-animals-chicken-rooster', x: 31, y: 13, collide: false, cropIndex: 0 },
 
   // Paddock & Quiet Corner: a broken fence line and a small, occupied pen.
   { key: 'kenmi-base-outdoor-decoration-fence-big', x: 4, y: 11, collide: false },
-  { key: 'kenmi-base-outdoor-decoration-fence-big', x: 7, y: 11, collide: false },
   { key: 'kenmi-base-outdoor-decoration-outdoor-decor-animations-other-animations-fence-big-gate', x: 12, y: 11, collide: false },
-  { key: 'kenmi-base-outdoor-decoration-fence-big', x: 4, y: 15, collide: false },
   { key: 'kenmi-base-outdoor-decoration-water-troughs', x: 8, y: 14, collide: false },
+  { key: 'kenmi-base-animals-cow-cow-01', x: 5, y: 16, collide: false, cropIndex: 0 },
+  { key: 'kenmi-base-animals-cow-cow-04', x: 9, y: 16, collide: false, cropIndex: 1 },
+  { key: 'kenmi-base-animals-sheep-sheep-01', x: 6, y: 16, collide: false, cropIndex: 1 },
+  { key: 'kenmi-base-animals-sheep-sheep-04', x: 10, y: 16, collide: false, cropIndex: 0 },
 
   // Pond & Falaj Head: the waterfall surround is sparse; the water story does
   // the visual work, with only a spring prop and two framing rocks.
@@ -806,7 +813,7 @@ const FARM_OBJECTS = [
   { key: 'kenmi-base-crops-crops', x: 8, y: 18, collide: false, cropIndex: 1 },
   { key: 'kenmi-base-crops-crops', x: 6, y: 20, collide: false, cropIndex: 2 },
   { key: 'kenmi-base-crops-crops', x: 12, y: 20, collide: false, cropIndex: 3 },
-  { key: 'kenmi-base-crops-crops', x: 23, y: 16, collide: false, cropIndex: 3 },
+  { key: 'kenmi-base-crops-crops', x: 26, y: 16, collide: false, cropIndex: 3 },
   { key: 'kenmi-base-crops-crops', x: 25, y: 16, collide: false, cropIndex: 1 },
   { key: 'kenmi-base-crops-berries', x: 26, y: 19, collide: false, cropIndex: 0 },
   { key: 'kenmi-base-outdoor-decoration-scarecrows', x: 28, y: 15, collide: false },

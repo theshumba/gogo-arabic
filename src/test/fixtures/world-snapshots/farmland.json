@@ -9494,8 +9494,32 @@
       "collide": false
     },
     {
-      "key": "kenmi-base-outdoor-decoration-water-troughs",
-      "x": 14,
+      "key": "kenmi-base-outdoor-decoration-well",
+      "x": 19,
+      "y": 8,
+      "collide": true
+    },
+    {
+      "key": "kenmi-base-animals-chicken-chicken-01",
+      "x": 27,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-animals-chicken-chicken-02",
+      "x": 29,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-animals-chicken-chicken-01",
+      "x": 28,
+      "y": 13,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-animals-chicken-rooster",
+      "x": 31,
       "y": 13,
       "collide": false
     },
@@ -9506,27 +9530,39 @@
       "collide": false
     },
     {
-      "key": "kenmi-base-outdoor-decoration-fence-big",
-      "x": 7,
-      "y": 11,
-      "collide": false
-    },
-    {
       "key": "kenmi-base-outdoor-decoration-outdoor-decor-animations-other-animations-fence-big-gate",
       "x": 12,
       "y": 11,
       "collide": false
     },
     {
-      "key": "kenmi-base-outdoor-decoration-fence-big",
-      "x": 4,
-      "y": 15,
-      "collide": false
-    },
-    {
       "key": "kenmi-base-outdoor-decoration-water-troughs",
       "x": 8,
       "y": 14,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-animals-cow-cow-01",
+      "x": 5,
+      "y": 16,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-animals-cow-cow-04",
+      "x": 9,
+      "y": 16,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-animals-sheep-sheep-01",
+      "x": 6,
+      "y": 16,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-animals-sheep-sheep-04",
+      "x": 10,
+      "y": 16,
       "collide": false
     },
     {
@@ -9567,7 +9603,7 @@
     },
     {
       "key": "kenmi-base-crops-crops",
-      "x": 23,
+      "x": 26,
       "y": 16,
       "collide": false
     },
