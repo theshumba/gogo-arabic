@@ -256,6 +256,7 @@ const ZONE_PROFILES = {
       'C': 'cliff',
       'r': 'stone',
       '=': 'road',
+      P: 'pave',
       ':': 'lane',
       'p': 'pave',
       'g': 'grass',
