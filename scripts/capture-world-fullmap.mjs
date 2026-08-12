@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* global localStorage, window */
 /**
  * Capture one fitted whole-map image for each core outdoor zone.
  *
@@ -74,7 +75,7 @@ async function main() {
       let capture;
       try {
         capture = await captureAfterCanvasUpdate(page, previousHash);
-      } catch (error) {
+      } catch {
         // A zone load can finish before Phaser presents its first settled frame.
         // Keep the hash guard: retry only after allowing that frame to render.
         await page.waitForTimeout(3_000);

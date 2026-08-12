@@ -1,3 +1,5 @@
+/* global document, window */
+
 import crypto from 'node:crypto';
 
 export const CORE_ZONES = [
