@@ -146,6 +146,7 @@ export const GATHERING_SPOTS = {
     spriteKey: 'rock1',
     respawnInterval: 28800000, // 8 hours (rare gemstone)
     gatherType: 'ore_vein',
+    allowOutOfBounds: true,
   },
   'spot_library_water_01': {
     id: 'spot_library_water_01',

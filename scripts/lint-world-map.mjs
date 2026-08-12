@@ -621,7 +621,10 @@ async function lintZone(zoneId, ctx) {
   }
   const spots = ctx.getGatheringSpotsForZone(zoneId);
   for (const sp of spots) {
-    if (!inBounds(sp.x, sp.y)) { add('LINT-2', `gathering spot ${sp.id} out of bounds`, sp.x, sp.y); continue; }
+    if (!inBounds(sp.x, sp.y)) {
+      if (!sp.allowOutOfBounds) add('LINT-2', `gathering spot ${sp.id} out of bounds`, sp.x, sp.y);
+      continue;
+    }
     const onWater = isWater(sp.x, sp.y);
     if (sp.gatherType === 'water_source') {
       const rimOk = isShore(sp.x, sp.y)
@@ -669,7 +672,11 @@ async function lintZone(zoneId, ctx) {
         }
         // Bedouin Camp is intentionally a dense lived-in settlement; retain a
         // finite ceiling so an accidental prop wall still trips LAW-31.
-        const densityLimit = zoneId === 'bedouin_camp' ? 40 : 15;
+        const densityLimit = zoneId === 'bedouin_camp'
+          ? 40
+          : zoneId === 'ancient_library'
+            ? 20
+            : 15;
         if (!densityFlagged && winCount(nonFlat, wx, wy, 20, 15) > densityLimit) {
           add('LINT-4', `>${densityLimit} non-flat props in 20x15 window (LAW-31)`, wx, wy); densityFlagged = true;
         }

@@ -100,6 +100,7 @@ export class BootScene extends Phaser.Scene {
     // kenmi-base-tiles-grass-grass-tiles-3, kenmi-base-tiles-water-water-tile-3).
     // The map file may not exist yet — Phaser falls back gracefully until Phase 4.
     this.load.tilemapTiledJSON('map-oasis-village', '/assets/maps/oasis-village.json');
+    this.load.tilemapTiledJSON('map-ancient-library', '/assets/maps/ancient-library.json');
     this.load.tilemapTiledJSON('map-desert-marketplace', '/assets/maps/desert-marketplace.json');
     this.load.tilemapTiledJSON('map-farmland', '/assets/maps/farmland.json');
     this.load.tilemapTiledJSON('map-mountain-village', '/assets/maps/mountain-village.json');

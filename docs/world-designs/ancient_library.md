@@ -37,95 +37,71 @@ must stay equal to zones.js dims). Map-north = screen-top. spawnPoint **(17,27)*
 
 ## 3. Tile-grid sketch
 
-Legend: `C` dune-cliff container · `w` adobe fencewall (dais rim / gate stubs) · `.` sand ·
-`d` trampled dark-sand track+road (LAW-6) · `S` stone paving (ceremonial axis, plaza, dais) ·
-`=` dais steps · `T` temple facade (4×4) · `H` study annexe (2.5×2.5) · `b` bookshelf bank
-(outdoor architecture) · `o` obelisk · `F` fountain · `g` scrub grass (desert-grass blob) ·
-`P` palm · `t` big-torch (decor) · `L` lantern (contract) · `u` statue (contract) · `a` painting
-(contract) · `p` pot (contract) · `n` sign · `i` inscription · `x` chest · `k` crate · `B` barrel ·
-`r` rug (flat) · `z` bones/rocks decor · `M` camel vignette · `A` NPC (librarian / scribe) · `D` door ·
-`*` gathering spot · `E` exit cut
+Legend: `.` plain desert sand · `=` tan cobble-road-2 roads and approach · `P` pavement for
+deliberate built rooms and axis · `g` irregular desert scrubgrass garden · `#` desert wall · `T`
+single temple · `H` study annexe · `D` door · `i` inscription · `z` ruin/rock dressing · `*`
+gathering spot or contract mark · `E` exit cut.
 
 ```
       x0        x10       x20       x30
-y0    CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-y1    CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-y2    CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-y3    CCCCCCCCCCCwCSSSSCSSSSCwCCCCCCCCCCC
-y4    CCCCCCCCCCCwSSSTTTTSSSSwCCCCCCCCCCC
-y5    CCCCCCCCCCCwSoSTTTTSSoSwCCCCCCCCCCC
-y6    CCCCCCCCCCCwSbSTTTTSSSSwCCCCCCCCCCC
-y7    CCCCCCCCCCCwSSaTTTTSaSSwCCCCCCCCCCC
-y8    CCCCCCCCCCCwSSSSSDSSSSSwCCCCCCCCCCC
-y9    CCCCCCCCCCCwwwwwSrSwwwwwCCCCCCCCCCC
-y10   CC.x..CC.......t===t........CC*.CCC
-y11   CCi..bbb.bb.....ASS....bbb.bb...CCC
-y12   CC...........SSuSSSuSS...*..b...CCC
-y13   CC....r....nggSSSSSSSS..r..Bb....CC
-y14   CCC........gggFSSSSSSS...d.......CC
-y15   CCC........gg*gSSSSSSSdddddd...dddE
-y16   CCC..bb.bbb*gggSSSSSSSddddddddddddE
-y17   CC......*..gggSSSSSSSS.....idddP..E
-y18   CC............p.SSS.p...........PCC
-y19   CC.......HHH....SSS..............CC
-y20   CCC.....kHHHwwwLSSSLwww.........CCC
-y21   CCC......HDHL...ddd..M..........CCC
-y22   CCC.......ddddddddd...r.........CCC
-y23   CC.........*Ar.nddd..*...........CC
-y24   CC....P........ddd...........x...CC
-y25   CC.............ddd.........z....CCC
-y26   CCC......z......ddd.i...........CCC
-y27   CCC...........P.ddd.P...........CCC
-y28   CC.............dddd..............CC
-y29   CCCCCCCCCCCCCCCCEEECCCCCCCCCCCCCCCC
+y0    ...................................
+y1    ..............###########..........
+y2    ..............#PPPPPPPPP#........i.
+y3    ...............PTTTTTTPP...........
+y4    ...............PTTTTTTPP...........
+y5    ..i............PTTTTTTPP...........
+y6    .......*.......*TTTTTTPP...........
+y7    ...............PTTTTTTPP...........
+y8    ......HHH...*..PP*PPDPPP...........
+y9    ......HHHPPP*PPPPPPPPP*PPPPP.......
+y10   ......HHH*PPPPP.PPP.PPPPP*PP*......
+y11   ......HHHPP*PP*.PPP.PPP*PPPP.......
+y12   ......HHDPPPPPP.PPP.PPPPPPPP.......
+y13   .......#.PPPPPPPPFPPPPPPPPP#.......
+y14   .....i.#....PPPPPPPPPPP....#=======
+y15   .......#....PPP*PPP*PPP....========
+y16   .......#....PPPPPPPPPPP....#=======
+y17   .......#...*PPPPPPPPPPP*...#.......
+y18   .....*.#........PPP........#.......
+y19   .......#........PPP........#.......
+y20   .......#........PPP........#.......
+y21   .......#........PPP........#.......
+y22   .......#########PPP#########.......
+y23   ................=*=................
+y24   ................===................
+y25   ................===.*.........*....
+y26   ................=*=................
+y27   ................===................
+y28   ................===................
+y29   ................===................
 ```
 
 Composition notes (the walk):
-- **South entrance ★** (cut x16–18, fraction 0.486 ✓ ledger 0.50±0.10): track widens to 4 at
-  y28 (LAW-28), palm pair frames it at (14,27)/(20,27), then scallops west 1 tile at y24–25 and
-  back (LAW-2) — a dune track, not a corridor. Decision point = the street T at (16,22), 7 tiles
-  in (LAW-28's 6–10).
-- **Threshold stack** (LAW-29): gate stubs + lantern pair (y20) → statue pair + forecourt (y12) →
-  torch-flanked steps (y10) → rug runner (17,9) at the archive door (LAW-38 carpet under the
-  veneration point) → facade arch + archive door (y8). Straight stone axis x16–18, y10–20 — the
-  zone's one ceremonial straight run; the facade terminates it. Dais sits 1–2 steps up behind a
-  fencewall rim, entered only by the 3-wide stair (ceremonial width, LAW-49).
-- **Fountain off-centre** (14,14) on the plaza's west edge (LAW-27), the zone's ONE water
-  feature; the reading-garden scrub blob (`g`) hugs it — the only grass in the zone ("grass
-  exists only near water").
-- **Shelf courts** = bookshelf banks as outdoor walls (Eastern Palace "outdoor rooms"): west
-  court opens east onto the forecourt; east court opens south onto the scholars' road via a
-  1-wide garden path (T at (25,15)). Bank runs skip a tile mid-run — (8,11), (7,16), (26,11) —
-  per LAW-35; the skips double as slip-gaps into the cliff-base pockets behind the banks.
-- **East road** (secondary exit, plain): 2-wide trampled sand from the plaza's SE corner —
-  y15–16 for x22–27, jogging south to y16–17 for x28–30 (LAW-2 scallop, kills the straight
-  12-tile run), back to y15–16 for x31–33 at the cut; broken mid-run by the court-path T, the
-  roadside stele (27,17) anchoring the jog corner, and the palm signpost cluster (31,17)/(32,18)
-  at the cut (LAW-42).
-- **Cliff jogs** (LAW-48/41): the container's inner faces tooth in and out — dais back-wall
-  teeth (12,3)/(17,3)/(22,3), west face teeth (6,10)–(7,10), east face teeth (28,10)–(29,10) —
-  so no straight cliff run exceeds 6 tiles and the band depth varies along its run.
-- **Diagonal sweep** (LAW-30): facade (17,6) → fountain (14,14) → east gate (34,16) → south gate
-  (17,29) — the eye zigzags, never one axis.
-- **Vista** (LAW-46): the west container from y23 down is drawn as a LOW dune ridge — standing
-  at the map edge the player sees the sand sea rolling back toward the oasis.
-- **Vignettes** (LAW-34): pilgrim's camel + rug + wool-trace at the gate (20–22, 21–23); scribe
-  Amina mid-task at her papyrus stand + rug outside her study (11–13, 22–23).
-- **Quiet corner** (LAW-31): SE dunes — 0 buildings, 3 props (hidden chest, bones, rock decal),
-  0 NPCs.
+- **South pilgrim approach:** a three-tile cobble road rises from spawn `(17,27)` to the single
+  wall opening at x16–18, widening into the threshold; the gate sign is `(17,23)`.
+- **North axis:** one temple occupies the north precinct, with archive door `(20,8)` and
+  phrases shelf `(17,8)` at the steps. Ruined pillars, arches and obelisks keep it from reading
+  as an isolated sprite.
+- **Reading courts:** west and east courts use separate pavement rooms as contained outdoor
+  rooms, with varied shelf, obelisk, lantern, and manuscript-bundle dressing.
+- **Central court and garden:** the fountain `(17,13)` anchors the paved central court; sparse,
+  separated scrub planting sits on sand south of it, with the axis kept clear.
+- **East scholars' road:** a cobble approach runs from the east edge entry `(33,15)` to the
+  precinct side, while the southeast remains a sparse ruin pocket around the hidden chest.
 
 ## 4. Districts
 
 | District | Tile rect (x,y,w,h) | Purpose |
 |---|---|---|
-| Dais of Wisdom | (11,3) 13×8 | Raised stone platform: temple facade, archive door, obelisk + painting pairs, phrases shelf. The LAW-12 landmark. |
-| Fountain Forecourt & Reading Garden | (11,11) 12×8 | 8×6 stone plaza (LAW-27), fountain + rosewater spot, statue/pot/torch pairs on the axis, scrub-grass garden with lavender. |
-| West Shelf Court & Ruins Nook | (2,10) 11×8 | Open-air reading yard between two bookshelf banks (numbers shelf, rug, paper spot); toppled-pillar nook NW with chest + stele. |
-| East Shelf Court & Lapis Cliff | (23,10) 10×5 | Second reading yard (colors shelf, vellum, barrel, rug); lapis ore vein at the north cliff base. |
-| Scribe Corner | (2,19) 14×5 | Study annexe (door-library-study), scroll crate, street lantern, scribe + papyrus-stand vignette. |
-| Pilgrim Approach | (13,19) 10×11 | Gate stubs, lantern pair, camel vignette (incl. its rug at (22,22)), winding dune track to the ★ south exit, waymarker stele, framing palms. |
-| Scholars' Road (east) | (22,14) 13×5 | 2-wide road to the marketplace: court-path junction, roadside stele, palm signpost cluster at the cut. |
-| Quiet Dunes (SE) | (23,19) 10×10 | LAW-31 quiet corner: hidden chest, bones, lone rock decal. Nothing else. |
+| North Temple Precinct | (15,2) 9×7 | Single monumental temple, archive steps, phrases shelf, ruined pillars, arches and obelisks. |
+| West Reading Court | (6,8) 9×5 | Open-air shelf room with numbers shelf, sign, crate, painting and papyrus stand. |
+| East Reading Court | (20,8) 9×8 | Distinct shelf room with colors shelf, barrel, painting and vellum stand. |
+| Central Court | (12,13) 11×6 | Paved central court, fountain, statues and scribe work corner. |
+| Reading Garden | (12,19) 11×3 | Sparse desert scrub planting on sand south of the court, with pots and lantern edges. |
+| South Threshold | (7,1) 21×22 perimeter | Desert wall perimeter around the precinct, with only the x16–18 threshold and east side gate openings. |
+| Pilgrim Approach | (16,23) 3×7 | Cobble path from spawn to the gate, with lantern and basin. |
+| Scholars' Road (east) | (22,15) 13×3 | Cobble road from the east entry to a side entrance in the precinct wall. |
+| Quiet Ruins (SE) | (28,24) 5×5 | Sparse rocks and ruins around the hidden chest. |
 
 (Contract defines no `subAreas` for this zone — none invented.)
 
@@ -137,48 +113,46 @@ Every ID from contract-and-pipeline.md §1 for ancient_library — placed exactl
 
 | ID | Tile | Rationale |
 |---|---|---|
-| `librarian-ibrahim` | (16,11) | Foot of the dais steps, on the axis — the Lama Temple monk posted on the approach, gatekeeper of the archive. |
-| `scribe-amina` | (12,23) | Outside her study at the papyrus stand, mid-task (DQ3 desert-shrine scholar-at-work vignette). |
+| `librarian-ibrahim` | (17,11) | Between the two reading courts on the central axis, gatekeeper of the archive. |
+| `scribe-amina` | (12,16) | At a working corner on the west side of the central court. |
 
 **Exits (2)** — edges per world-connection-map ledger
 
 | ID | Edge / tileRange | Target | Rationale |
 |---|---|---|---|
-| `library-to-oasis` | south, [16,18] (fraction 0.486 ✓ 0.50) | oasis_village / `from_library` | ★ dressed main entrance: widened track, palm pair, waymarker stele. |
-| `library-to-marketplace` | east, [15,17] (fraction 0.533 ✓ 0.55) | desert_marketplace / `from_library` | Plain 2-tile road cut with palm signpost cluster; off the sacred axis. |
+| `library-to-oasis` | edge=south, tileRange **[15,19]** | oasis_village / `from_library` | Main threshold and pilgrim approach. |
+| `library-to-marketplace` | edge=east, tileRange **[12,18]** | desert_marketplace / `from_library` | Scholars' road and side entrance. |
 
-**Entries (2, keys preserved)**: `from_oasis` → **(17,27)** (2 tiles inside the south cut, on the
-track — also the spawnPoint); `from_marketplace` → **(32,16)** (2 tiles inside the east cut, on
-the road). Neither sits in another exit's trigger range.
+**Entries (keys preserved):** `from_oasis` → (17,27) (also the spawnPoint); `from_marketplace` → (33,15). Neither sits in another exit's trigger range.
 
 **Interactables (24)**
 
 | ID | Type | Tile | Rationale |
 |---|---|---|---|
-| `sign-library-gate` | sign | (15,23) | 1 tile off the track, west approach side, before the gate (LAW-7). |
-| `sign-reading-room` | sign | (11,13) | At the forecourt↔west-court mouth, pointing into the shelf courts. |
-| `bookshelf-numbers` | bookshelf | (7,11) | Set into the west court's north bank — a working shelf in the yard wall. |
-| `bookshelf-colors` | bookshelf | (24,11) | Set into the east court's north bank, mirror-role of numbers. |
-| `bookshelf-phrases` | bookshelf | (13,6) | On the dais, the facade's west wing (FF5 wing massing) — highest knowledge closest to the archive. |
-| `chest-library` | chest | (3,10) | NW ruins nook among toppled pillars at the cliff base — reward for poking off-axis. |
-| `chest-library-hidden` | chest | (29,24) | SE quiet dunes behind a dune knuckle + bones — the buried cache. |
-| `door-archive` | door → `library_archive_interior` [locked: `library_access_granted`] | (17,8) | The facade door terminating the ceremonial axis; faces south; 2 clear tiles (17,9)+(17,10). |
-| `door-library-study` | door → `library_study_interior` | (10,21) | Study annexe facade, faces south onto the scribe street; street terminates at the door (LAW-4/5). |
-| `fountain-library-1` | fountain | (14,14) | Secondary focal, plaza west edge, off-centre 2 tiles (LAW-27); anchors the reading garden. |
-| `statue-library-1` | statue | (15,12) | Guardian pair flanking the axis at the forecourt threshold (LAW-29 mirrored pairs ON axis). |
-| `statue-library-2` | statue | (19,12) | Mirror of statue-library-1 about axis centre x17. |
-| `painting-library-1` | painting | (14,7) | Calligraphy panel on the facade's west face (within 2 tiles of building, LAW-16). |
-| `painting-library-2` | painting | (20,7) | Mirror panel on the east face. |
-| `lantern-library-1` | lantern | (15,20) | Gate pair, west side (LAW-36: lamps in pairs at entrances). |
-| `lantern-library-2` | lantern | (19,20) | Gate pair, east side. |
-| `lantern-library-3` | lantern | (12,21) | Anchors the street-T junction corner by the study (LAW-3). |
-| `crate-library-1` | crate | (8,20) | Scroll crate hugging the study's west wall (LAW-32 props hug architecture). |
-| `barrel-library-1` | barrel | (27,13) | East court corner — the scribes' water barrel. |
-| `pot-library-1` | pot | (14,18) | Mirrored pot pair where the plaza narrows back to the gate axis. |
-| `pot-library-2` | pot | (20,18) | Mirror about x17. |
-| `inscription-library-1` | inscription | (2,11) | Stele in the NW ruins nook — oldest writing at the oldest corner. |
-| `inscription-library-2` | inscription | (27,17) | Roadside stele on the scholars' road, 1 off path (LAW-7 rhythm). |
-| `inscription-library-3` | inscription | (20,26) | Waymarker on the pilgrim track, 2 tiles off the trampled strip, announcing the library. |
+| `sign-library-gate` | sign | (17,23) | At the central opening in the south precinct wall. |
+| `sign-reading-room` | sign | (14,11) | At the west reading court mouth. |
+| `bookshelf-numbers` | bookshelf | (11,11) | West reading court anchor. |
+| `bookshelf-colors` | bookshelf | (23,11) | Set into the east court's north bank, mirror-role of numbers. |
+| `bookshelf-phrases` | bookshelf | (17,8) | At the top of the temple steps. |
+| `chest-library` | chest | (7,6) | NW ruin cluster among fallen pillars and rubble. |
+| `chest-library-hidden` | chest | (30,25) | SE ruin pocket among rocks. |
+| `door-archive` | door → `library_archive_interior` [locked: `library_access_granted`] | (20,8) | The temple door terminating the axis. |
+| `door-library-study` | door → `library_study_interior` | (8,12) | Study annexe threshold west of the reading courts. |
+| `fountain-library-1` | fountain | (17,13) | Central court focal point and garden water source. |
+| `statue-library-1` | statue | (15,15) | West statue facing the axis. |
+| `statue-library-2` | statue | (19,15) | East statue facing the axis. |
+| `painting-library-1` | painting | (12,9) | West court architectural dressing. |
+| `painting-library-2` | painting | (22,9) | East court architectural dressing. |
+| `lantern-library-1` | lantern | (11,17) | West edge of the garden. |
+| `lantern-library-2` | lantern | (23,17) | East edge of the garden. |
+| `lantern-library-3` | lantern | (17,26) | Pilgrim approach marker. |
+| `crate-library-1` | crate | (9,10) | Manuscript crate in the west reading court. |
+| `barrel-library-1` | barrel | (25,10) | East court scholars' clutter. |
+| `pot-library-1` | pot | (14,19) | Garden dressing. |
+| `pot-library-2` | pot | (20,19) | Garden dressing. |
+| `inscription-library-1` | inscription | (33,2) | Isolated weathered stone in the far north-east. |
+| `inscription-library-2` | inscription | (5,14) | Weathered stone outside the west precinct wall. |
+| `inscription-library-3` | inscription | (2,5) | Remote north-west ruin inscription. |
 
 Locked-door contract carried: `door-archive` keeps `library_access_granted`; interiorIds unchanged.
 
@@ -186,13 +160,13 @@ Locked-door contract carried: `door-archive` keeps `library_access_granted`; int
 
 | ID | Resource/type | Tile | Rationale |
 |---|---|---|---|
-| `spot_library_papyrus_01` | papyrus / papyrus_stand | (11,23) | Scribe Amina's working stand on the street — she's harvesting it. |
-| `spot_library_papyrus_02` | vellum / papyrus_stand | (25,12) | Inside the east shelf court — vellum stored among the shelves. |
-| `spot_library_papyrus_03` | paper / papyrus_stand | (8,17) | Drying racks between west court and scribe corner. |
-| `spot_library_herbs_01` | lavender / herb_patch | (11,16) | In the reading-garden scrub blob — herbs grow only by the water. |
-| `spot_library_ore_01` | lapis_lazuli / ore_vein | (30,10) | North cliff base above the road — lapis for the illuminators' ink. |
-| `spot_library_water_01` | rosewater / water_source | (13,15) | On the fountain's SW rim (water_source may touch the rim). |
-| `spot_library_animal_01` | wool / animal_trace | (21,23) | At the camel line by the gate — shed wool where mounts are hitched. |
+| `spot_library_papyrus_01` | papyrus / papyrus_stand | (12,8) | Papyrus stand beside the west reading court. |
+| `spot_library_papyrus_02` | vellum / papyrus_stand | (28,10) | Vellum stand in the east reading court. |
+| `spot_library_papyrus_03` | paper / papyrus_stand | (15,6) | Papyrus stand beside the temple steps. |
+| `spot_library_herbs_01` | lavender / herb_patch | (5,18) | Herbs outside the west garden wall. |
+| `spot_library_ore_01` | lapis_lazuli / ore_vein | (35,22) | Frozen out-of-bounds contract coordinate; runtime handling is documented below. |
+| `spot_library_water_01` | rosewater / water_source | (20,25) | Basin or well beside the pilgrim approach. |
+| `spot_library_animal_01` | wool / animal_trace | (8,12) | Traffic trace at the study-annexe threshold. |
 
 No stepTriggers exist for this zone in the contract; none added.
 
@@ -203,8 +177,8 @@ this phase; only the exterior door tiles move (return-point wiring is automatic,
 
 | Exterior door (new tile) | interiorId | Existing layout kept |
 |---|---|---|
-| `door-archive` (17,8), locked `library_access_granted` | `library_archive_interior` | Archives, 16×12 buildLibraryRoom, `librarian-interior` + 8 interactables incl. `exit-door` |
-| `door-library-study` (10,21) | `library_study_interior` | Study Room, 10×8 buildSmallHouse, 5 interactables incl. `exit-door` |
+| `door-archive` (20,8), locked `library_access_granted` | `library_archive_interior` | Archives, 16×12 buildLibraryRoom, `librarian-interior` + 8 interactables incl. `exit-door` |
+| `door-library-study` (8,12) | `library_study_interior` | Study Room, 10×8 buildSmallHouse, 5 interactables incl. `exit-door` |
 
 No new enterable filler houses added (the study annexe is the only other building and it IS the
 study door's building). The dais district stays roomy enough for a future letter-school hall

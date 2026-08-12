@@ -365,7 +365,7 @@ export class WorldScene extends Phaser.Scene {
       this.physics.add.collider(player, this.mapLoader.wallGroup);
     }
 
-    this.interactableManager.create(zone.interactables, objectSprites);
+    this.interactableManager.create(zone.interactables, objectSprites, zone.id);
 
     // IMM-03: Floating Arabic labels above world objects
     this.floatingLabelManager = new FloatingArabicLabelManager(this);
