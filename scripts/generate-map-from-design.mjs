@@ -333,14 +333,13 @@ const ZONE_PROFILES = {
       '.': 'sand',
       '=': 'road',
       P: 'pave',
-      'g': 'scrub',
       '#': 'wall',
       T: 'bldg',
       H: 'bldg',
       D: null,
       E: null,
     },
-    tilesets: ['cobble', 'pave', 'wall', 'grass3'],
+  tilesets: ['cobble', 'pave', 'wall'],
     buildingGlyphs: 'TH',
     buildings: [
       {

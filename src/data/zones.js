@@ -326,10 +326,6 @@ const ancient_library = {
     // Obelisks are grouped at the temple steps, court corners, gate, and NW ruins.
     { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 15, y: 8, collide: true, collideW: 20, collideH: 20 },
     { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 22, y: 8, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 9, y: 9, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 13, y: 13, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 21, y: 9, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 26, y: 13, collide: true, collideW: 20, collideH: 20 },
     { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 14, y: 22, collide: true, collideW: 20, collideH: 20 },
     { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 20, y: 22, collide: true, collideW: 20, collideH: 20 },
     { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 5, y: 5, collide: true, collideW: 20, collideH: 20 },
@@ -338,6 +334,10 @@ const ancient_library = {
     { key: 'kenmi-desert-props-halfdead-tree', x: 27, y: 28, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-palm-tree-1', x: 12, y: 19, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-palm-tree-2', x: 21, y: 20, collide: true, collideW: 30, collideH: 20 },
+    { key: 'kenmi-desert-props-ambarakaman-plant', x: 14, y: 20, collide: false },
+    { key: 'kenmi-desert-props-ambarakaman-plant', x: 19, y: 21, collide: false },
+    { key: 'kenmi-desert-props-desert-grass-props', x: 13, y: 18, collide: false },
+    { key: 'kenmi-desert-props-desert-grass-props', x: 22, y: 19, collide: false },
     // Rocks
     { key: 'kenmi-desert-props-desert-rocks', x: 30, y: 25, collide: true, collideW: 30, collideH: 20 },
     // Court work surfaces and manuscript bundles.
