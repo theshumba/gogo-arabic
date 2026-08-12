@@ -1039,7 +1039,7 @@ const bedouin_camp = {
     { key: 'kenmi-military-military-tents', x: 7, y: 17, cropIndex: 3, collide: true, collideW: 150, collideH: 50 },
     { key: 'kenmi-military-military-tents', x: 24, y: 16, cropIndex: 4, collide: true, collideW: 150, collideH: 50 },
     { key: 'kenmi-military-banners-anim', x: 4, y: 6, collide: false },
-    { key: 'kenmi-military-flags-anim', x: 3, y: 21, collide: false },
+    { key: 'kenmi-military-flags-anim', x: 3, y: 18, collide: false },
     // Central gathering area
     { key: 'kenmi-desert-props-desert-rocks', x: 20, y: 22, collide: true, collideW: 30, collideH: 20 },
     // G3: the actual campfire — animated, centre-front of Elder Tariq (17,13)
@@ -1056,11 +1056,10 @@ const bedouin_camp = {
     { key: 'kenmi-desert-props-desert-rocks', x: 25, y: 22, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-desert-rocks', x: 30, y: 15, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-animals-camel-camel-1', x: 28, y: 20, cropIndex: 0, collide: true, collideW: 28, collideH: 18 },
-    { key: 'kenmi-desert-animals-camel-camel-1', x: 30, y: 20, cropIndex: 1, collide: true, collideW: 28, collideH: 18 },
+    { key: 'kenmi-desert-animals-camel-camel-1', x: 30, y: 21, cropIndex: 1, collide: true, collideW: 28, collideH: 18 },
     { key: 'kenmi-base-animals-sheep-sheep-01', x: 6, y: 19, cropIndex: 0, collide: true, collideW: 20, collideH: 16 },
     { key: 'kenmi-base-animals-sheep-sheep-04', x: 8, y: 19, cropIndex: 1, collide: true, collideW: 20, collideH: 16 },
     // DECO-05: NPC-adjacent props (Tariq 17,13; Noor 8,8; Ali 27,8)
-    { key: 'kenmi-desert-props-sleeping-mat', x: 12, y: 16, collide: false },
     // Moved off (18,14): it clipped straight through the rock pile authored there.
     { key: 'kenmi-desert-props-desert-rugs', x: 9, y: 9, collide: false },
 
@@ -1078,16 +1077,16 @@ const bedouin_camp = {
     { key: 'kenmi-desert-props-desert-rugs', x: 21, y: 10, collide: false, cropIndex: 3 },
     { key: 'kenmi-desert-props-sleeping-mat', x: 21, y: 18, collide: false },
     { key: 'kenmi-desert-props-sleeping-mat', x: 30, y: 14, collide: false },
-    { key: 'kenmi-desert-props-desert-rocks', x: 28, y: 2, collide: false, cropIndex: 10 },
-    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 32, y: 21, collide: false, cropIndex: 1 },
     { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 4, y: 19, collide: false, cropIndex: 1 },
     { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 23, y: 23, collide: false, cropIndex: 0 },
     { key: 'kenmi-military-campfire-pot-anim', x: 23, y: 21, collide: false },
     { key: 'kenmi-desert-props-desert-grass-props', x: 19, y: 22, collide: false, cropIndex: 1 },
     { key: 'kenmi-desert-props-desert-grass-props', x: 4, y: 23, collide: false, cropIndex: 0 },
     { key: 'kenmi-desert-props-desert-grass-props', x: 8, y: 23, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-fern', x: 33, y: 2, collide: false },
     { key: 'kenmi-desert-props-desert-fern', x: 4, y: 18, collide: false },
+    // Perimeter clumps keep the open approaches inhabited without adding
+    // another ground material.
+    { key: 'kenmi-desert-props-desert-rocks', x: 33, y: 12, collide: false, cropIndex: 1 },
 
   ],
 
