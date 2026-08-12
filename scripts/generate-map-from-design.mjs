@@ -849,6 +849,11 @@ if (!PROFILE) {
     if (x < 0 || x >= W || y < 0 || y >= H) return true; // sea continues off-map
     return base(x, y) === 'water';
   };
+  const isWaterLikeP = (x, y) => {
+    if (x < 0 || x >= W || y < 0 || y >= H) return true;
+    const c = base(x, y);
+    return c === 'water' || c === 'farmland-wet';
+  };
   const isCliffP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return true; // container continues off-map
     return base(x, y) === 'cliff';
@@ -867,6 +872,20 @@ if (!PROFILE) {
     if (w && !e && !n && !s) return WATER_F.W;
     if (e && !w && !n && !s) return WATER_F.E;
     return WATER_F.C; // interior, straits and 3-sided nubs fall back to open water
+  }
+
+  function channelWaterFrameP(x, y) {
+    const n = !isWaterLikeP(x, y - 1); const s = !isWaterLikeP(x, y + 1);
+    const w = !isWaterLikeP(x - 1, y); const e = !isWaterLikeP(x + 1, y);
+    if (n && w && !s && !e) return WATER_F.NW;
+    if (n && e && !s && !w) return WATER_F.NE;
+    if (s && w && !n && !e) return WATER_F.SW;
+    if (s && e && !n && !w) return WATER_F.SE;
+    if (n && !s && !w && !e) return WATER_F.N;
+    if (s && !n && !w && !e) return WATER_F.S;
+    if (w && !e && !n && !s) return WATER_F.W;
+    if (e && !w && !n && !s) return WATER_F.E;
+    return WATER_F.C;
   }
 
   function cliffFrameP(x, y) {
@@ -996,7 +1015,8 @@ if (!PROFILE) {
           ground[i] = TS_FARMLAND.firstgid + farmlandFrameP(x, y);
           break;
         case 'farmland-wet':
-          ground[i] = TS_FARMLAND_WET.firstgid + farmlandFrameP(x, y);
+          ground[i] = TS_WATER.firstgid + channelWaterFrameP(x, y);
+          collision[i] = COLLIDE_GID;
           break;
         case 'scrub':
           ground[i] = G_SAND;

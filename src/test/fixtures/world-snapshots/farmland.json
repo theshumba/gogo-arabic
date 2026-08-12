@@ -9524,6 +9524,12 @@
       "collide": false
     },
     {
+      "key": "kenmi-base-outdoor-decoration-water-troughs",
+      "x": 8,
+      "y": 14,
+      "collide": false
+    },
+    {
       "key": "kenmi-desert-props-water-sack-on-stick",
       "x": 31,
       "y": 9,
@@ -9549,8 +9555,14 @@
     },
     {
       "key": "kenmi-base-crops-crops",
-      "x": 10,
-      "y": 19,
+      "x": 6,
+      "y": 20,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-crops",
+      "x": 12,
+      "y": 20,
       "collide": false
     },
     {
@@ -9563,6 +9575,12 @@
       "key": "kenmi-base-crops-crops",
       "x": 25,
       "y": 16,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-berries",
+      "x": 26,
+      "y": 19,
       "collide": false
     },
     {
@@ -9590,9 +9608,27 @@
       "collide": false
     },
     {
+      "key": "kenmi-base-crops-berries",
+      "x": 12,
+      "y": 27,
+      "collide": false
+    },
+    {
       "key": "kenmi-base-crops-crops-2",
       "x": 32,
       "y": 17,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-grapes-bower",
+      "x": 38,
+      "y": 29,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-crops-berries",
+      "x": 31,
+      "y": 22,
       "collide": false
     },
     {
