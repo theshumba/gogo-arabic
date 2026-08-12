@@ -1217,13 +1217,9 @@ function buildMountainMap() {
     const row = [];
     for (let x = 0; x < W; x++) {
       let tile = ICE_GRASS;
-      // Rocky mountain paths
       if ((y >= 13 && y <= 16) || (x >= 18 && x <= 21)) tile = SAND;
-      // Village clearing
       if (x >= 12 && x <= 28 && y >= 8 && y <= 22) tile = GRASS;
-      // Mountain stream
       if (x >= 30 && x <= 31 && y >= 3 && y <= 27) tile = WATER;
-      // Small pond
       if (x >= 20 && x <= 23 && y >= 18 && y <= 20) tile = WATER;
       row.push(tile);
     }
@@ -1239,94 +1235,27 @@ const mountain_village = {
   nameArabic: 'قَرية الجَبَل',
   mapWidth: 40,
   mapHeight: 30,
-  buildMap: buildMountainMap,
   spawnPoint: { x: 20, y: 27 },
   vocabCategories: ['clothing', 'animals', 'adjectives'],
   gatheringSpots: true,
+  buildMap: buildMountainMap,
 
   objects: [
-    // Village buildings — snow biome (limestone/stone dark-variant houses)
-    { key: 'kenmi-base-buildings-buildings-houses-limestone-house-3-limestone-base-black', x: 15, y: 9, collide: true, collideW: 240, collideH: 100 },
-    { key: 'kenmi-base-buildings-buildings-houses-limestone-house-4-limestone-base-black', x: 25, y: 9, collide: true, collideW: 240, collideH: 100 },
-    { key: 'kenmi-base-buildings-buildings-houses-stone-house-1-stone-base-black', x: 14, y: 18, collide: true, collideW: 180, collideH: 80 },
-    // Phase 97 Plan 06: KENMI_CATALOG has a typo-suffixed key 'stone-house-2-stone-base-blackpng'
-    // (auto-generator leaked .png into key name). Use stone-house-3-stone-base-blue as a working variant
-    // until scripts/generate-kenmi-catalog.js is fixed. Preserves visual intent (dark stone village).
-    { key: 'kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue', x: 26, y: 18, collide: true, collideW: 180, collideH: 80 },
-    // Mountain trees (dead/sparse trees fitting cold climate)
-    { key: 'kenmi-desert-props-dead-tree', x: 4, y: 6, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-dead-tree', x: 8, y: 4, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-dead-tree', x: 35, y: 6, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-dead-tree', x: 37, y: 4, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-acacia-tree', x: 12, y: 14, collide: true, collideW: 40, collideH: 20 },
-    { key: 'kenmi-desert-props-acacia-tree', x: 28, y: 14, collide: true, collideW: 40, collideH: 20 },
-    { key: 'kenmi-desert-props-ambarakaman-plant', x: 6, y: 20, collide: true, collideW: 40, collideH: 20 },
-    { key: 'kenmi-desert-props-ambarakaman-plant', x: 34, y: 20, collide: true, collideW: 40, collideH: 20 },
-    // Rocks and obelisks
-    { key: 'kenmi-desert-props-desert-rocks', x: 3, y: 14, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 37, y: 14, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 8, y: 26, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 33, y: 26, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 18, y: 8, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 22, y: 8, collide: true, collideW: 20, collideH: 20 },
-    // DECO-05: NPC-adjacent props (Salim 20,13; Zahra 15,20; Khadija 27,20)
-    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 19, y: 14, collide: false },
-    { key: 'kenmi-base-outdoor-decoration-barrels', x: 16, y: 21, collide: false },
-    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 28, y: 21, collide: false },
-    
-    { key: 'kenmi-base-outdoor-decoration-barrels', x: 14, y: 9, collide: false, cropIndex: 3 },
-    { key: 'kenmi-base-outdoor-decoration-barrels', x: 13, y: 9, collide: false, cropIndex: 3 },
-    { key: 'kenmi-base-outdoor-decoration-barrels', x: 28, y: 8, collide: false, cropIndex: 3 },
-    { key: 'kenmi-base-outdoor-decoration-barrels', x: 28, y: 9, collide: false, cropIndex: 3 },
-    { key: 'kenmi-base-outdoor-decoration-barrels', x: 25, y: 18, collide: false, cropIndex: 4 },
-    { key: 'kenmi-base-outdoor-decoration-barrels', x: 12, y: 19, collide: false, cropIndex: 4 },
-    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 18, y: 24, collide: false, cropIndex: 0 },
-    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 20, y: 5, collide: false, cropIndex: 0 },
-    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 34, y: 13, collide: false, cropIndex: 0 },
-    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 9, y: 14, collide: false, cropIndex: 0 },
-    { key: 'kenmi-base-outdoor-decoration-lantern', x: 26, y: 10, collide: false },
-    { key: 'kenmi-base-outdoor-decoration-outdoor-decor-animations-water-decor-animations-water-plants-lillypad-brown-2-anim', x: 22, y: 19, collide: false },
-    { key: 'kenmi-desert-props-desert-rocks', x: 25, y: 3, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 34, y: 2, collide: false, cropIndex: 3 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 36, y: 9, collide: false, cropIndex: 10 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 8, y: 6, collide: false, cropIndex: 11 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 5, y: 8, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 9, y: 10, collide: false, cropIndex: 10 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 9, y: 21, collide: false, cropIndex: 11 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 13, y: 27, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 26, y: 25, collide: false, cropIndex: 3 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 35, y: 23, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-pots-sacks', x: 18, y: 10, collide: false, cropIndex: 4 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 13, y: 11, collide: false, cropIndex: 2 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 23, y: 11, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 21, y: 17, collide: false, cropIndex: 2 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 21, y: 6, collide: false, cropIndex: 2 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 18, y: 3, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 20, y: 2, collide: false, cropIndex: 2 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 6, y: 13, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 8, y: 16, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 11, y: 16, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 18, y: 27, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 21, y: 24, collide: false, cropIndex: 2 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 19, y: 23, collide: false, cropIndex: 2 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 34, y: 16, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 36, y: 13, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 33, y: 13, collide: false, cropIndex: 2 },
-    { key: 'kenmi-desert-props-dead-bush', x: 12, y: 2, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-dead-bush', x: 7, y: 5, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-dead-bush', x: 6, y: 1, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-dead-bush', x: 11, y: 26, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-dead-bush', x: 9, y: 24, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-dead-bush', x: 10, y: 28, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-dead-bush', x: 36, y: 22, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-dead-bush', x: 36, y: 26, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-dead-bush', x: 27, y: 27, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-dead-bush', x: 26, y: 2, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-dead-bush', x: 38, y: 7, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-dead-bush', x: 33, y: 9, collide: false, cropIndex: 1 },
-    { key: 'kenmi-base-outdoor-decoration-outdoor-decor', x: 16, y: 12, collide: false, cropIndex: 0 },
-    { key: 'kenmi-base-outdoor-decoration-outdoor-decor', x: 22, y: 11, collide: false, cropIndex: 4 },
-    { key: 'kenmi-base-outdoor-decoration-outdoor-decor', x: 18, y: 16, collide: false, cropIndex: 5 },
+    { key: 'kenmi-desert-temple-desert-temple', x: 25, y: 18, collide: true, collideW: 96, collideH: 32 },
+    { key: 'kenmi-base-buildings-buildings-houses-stone-house-1-stone-base-black', x: 15, y: 14, collide: true, collideW: 180, collideH: 90 },
+    { key: 'kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue', x: 34, y: 24, collide: true, collideW: 140, collideH: 70 },
+    { key: 'kenmi-base-buildings-buildings-houses-limestone-house-4-limestone-base-black', x: 11, y: 23, collide: true, collideW: 150, collideH: 80 },
+    { key: 'kenmi-base-outdoor-decoration-lantern', x: 19, y: 22, collide: false },
+    { key: 'kenmi-base-outdoor-decoration-lantern', x: 21, y: 22, collide: false },
+    { key: 'kenmi-base-outdoor-decoration-minecrats', x: 28, y: 14, collide: false },
+    { key: 'kenmi-base-trees-medium-spruce-tree', x: 7, y: 4, collide: true, collideW: 45, collideH: 25 },
+    { key: 'kenmi-base-trees-small-spruce-tree', x: 34, y: 5, collide: true, collideW: 35, collideH: 20 },
+    { key: 'kenmi-base-outdoor-decoration-ores', x: 10, y: 8, collide: false },
+    { key: 'kenmi-dungeons-dungeon-1-dungeon-1-stairs', x: 9, y: 17, collide: false },
+    { key: 'kenmi-dungeons-dungeon-2-dungeon-2-stairs', x: 4, y: 7, collide: false },
+    { key: 'kenmi-base-animals-sheep-sheep-01', x: 6, y: 15, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-animals-sheep-sheep-04', x: 10, y: 15, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-animals-sheep-sheep-04', x: 14, y: 22, collide: false, cropIndex: 0 },
   ],
 
   npcs: [
