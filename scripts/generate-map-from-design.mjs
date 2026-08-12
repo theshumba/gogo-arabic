@@ -267,6 +267,8 @@ const ZONE_PROFILES = {
     tilesets: ['water', 'beach', 'deck', 'quay', 'foam', 'cliff-stone', 'stone', 'cobble', 'grass3', 'pave'],
     cliffFrames: { FACE_TOP: 22, FACE_MID: 36, FACE_BASE: 50 },
     openWaterFrame: 10,
+    seaEdges: ['east'],
+    foamOnShoreline: true,
     buildingGlyphs: 'H',
     buildings: [
       { contains: [15, 21], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-inn-inn-blue', label: 'Port Tavern', doorId: 'door-port-tavern' },
@@ -991,16 +993,21 @@ if (!PROFILE) {
     return c === 'farmland' || c === 'farmland-wet';
   };
   const usesFarmlandWet = Boolean(PROFILE?.classes && Object.values(PROFILE.classes).includes('farmland-wet'));
+  const offMapSea = (x, y) => {
+    if (!PROFILE?.seaEdges) return x < 0 || x >= W || y < 0 || y >= H;
+    return (PROFILE.seaEdges.includes('west') && x < 0)
+      || (PROFILE.seaEdges.includes('east') && x >= W)
+      || (PROFILE.seaEdges.includes('north') && y < 0)
+      || (PROFILE.seaEdges.includes('south') && y >= H);
+  };
   const isWaterP = (x, y) => {
-    if (PROFILE?.id !== 'coastal_port' && (x < 0 || x >= W || y < 0 || y >= H)) return true;
-    if (PROFILE?.id === 'coastal_port' && x >= W) return true;
+    if (offMapSea(x, y)) return true;
     if (x < 0 || y < 0 || y >= H) return false;
     const c = base(x, y);
     return c === 'water' || (usesFarmlandWet && c === 'farmland-wet');
   };
   const isWaterLikeP = (x, y) => {
-    if (PROFILE?.id !== 'coastal_port' && (x < 0 || x >= W || y < 0 || y >= H)) return true;
-    if (PROFILE?.id === 'coastal_port' && x >= W) return true;
+    if (offMapSea(x, y)) return true;
     if (x < 0 || y < 0 || y >= H) return false;
     const c = base(x, y);
     return c === 'water' || c === 'farmland-wet';
@@ -1175,7 +1182,7 @@ if (!PROFILE) {
           break;
         case 'water':
           ground[i] = TS_WATER.firstgid + waterFrameP(x, y);
-          if (PROFILE?.id === 'coastal_port'
+          if (PROFILE?.foamOnShoreline
             && (!isWaterP(x, y - 1) || !isWaterP(x, y + 1)
               || !isWaterP(x - 1, y) || !isWaterP(x + 1, y))) {
             detail[i] = TS_FOAM.firstgid;
