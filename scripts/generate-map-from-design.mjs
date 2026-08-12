@@ -268,7 +268,7 @@ const ZONE_PROFILES = {
     cliffFrames: { FACE_TOP: 22, FACE_MID: 36, FACE_BASE: 50 },
     openWaterFrame: 10,
     seaEdges: ['east'],
-    foamOnShoreline: true,
+    waterRipples: true,
     buildingGlyphs: 'H',
     buildings: [
       { contains: [15, 21], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-inn-inn-blue', label: 'Port Tavern', doorId: 'door-port-tavern' },
@@ -319,7 +319,7 @@ const ZONE_PROFILES = {
     },
     tilesets: ['water', 'foam', 'cliff', 'stone'],
     cliffFrames: { FACE_TOP: 41, FACE_MID: 54, FACE_BASE: 67 },
-    foamOnShoreline: true,
+    waterRipples: true,
     buildingGlyphs: '',
     buildings: [],
     priority: ['water', 'track', 'camp', 'stone', 'grass', 'sand'],
@@ -724,7 +724,7 @@ const EXTRA_TILESETS = {
   beach: ['kenmi-desert-tiles-desert-beach-tiles-1', '../kenmi/desert/tiles/desert-beach-tiles-1.png', 80, 48],
   deck: ['kenmi-base-tiles-wooden-deck-tiles', '../kenmi/base/tiles/wooden-deck-tiles.png', 80, 96],
   quay: ['kenmi-base-tiles-water-water-stone-tile-3', '../kenmi/base/tiles/water/water-stone-tile-3.png', 48, 80],
-  foam: ['kenmi-base-tiles-water-water-foam-animation', '../kenmi/base/tiles/water/water-foam-animation.png', 320, 48],
+  foam: ['kenmi-desert-tiles-desert-water-foam-animation', '../kenmi/desert/tiles/desert-water-foam-animation.png', 320, 48],
 };
 let TS_WATER = null; let TS_CLIFF = null; let TS_WATERFALL = null; let TS_FARMLAND = null;
 let TS_FARMLAND_WET = null; let TS_GRASS3 = null; let TS_COBBLE = null; let TS_PAVE = null;
@@ -769,12 +769,12 @@ const G_PLAZA = TS_SAND2.firstgid + SAND_SOLID;  // oasis plaza `p` / market tra
 const G_ROAD = TS_SAND3.firstgid + SAND_SOLID;   // oasis road/lane / market lane `-`
 // water pool-in-sand blob (right 3x3 of the 6x3 sheet), keyed by open (land) sides
 const WATER_F = { NW: 3, N: 4, NE: 5, W: 9, C: 10, E: 11, SW: 15, S: 16, SE: 17 };
+const WATER_ALT_F = { NW: 0, N: 1, NE: 2, W: 6, C: 7, E: 8, SW: 12, S: 13, SE: 14 };
 // grass overlay frames (3 cols): hole-blob edges + 2x2 patch corners + solid
 const GRASS_F = {
   SOLID: 11,
   EDGE_N: 7, EDGE_S: 1, EDGE_W: 5, EDGE_E: 3,           // sand on that side
-  CORNER_NW: 9, CORNER_NE: 10, CORNER_SW: 12, CORNER_SE: 13, // sand on both sides
-  INNER_NW: 8, INNER_NE: 6, INNER_SW: 2, INNER_SE: 0,   // sand on that diagonal only
+  CORNER_NW: 6, CORNER_NE: 8, CORNER_SW: 2, CORNER_SE: 0, // sand on both sides
 };
 const FARMLAND_F = {
   CORNER_TL: 0,
@@ -908,13 +908,6 @@ if (!PROFILE) {
     if (s) return GRASS_F.EDGE_S;
     if (w) return GRASS_F.EDGE_W;
     if (e) return GRASS_F.EDGE_E;
-    // interior: inner corners where sand touches diagonally
-    const nw = !isGrassT(x - 1, y - 1); const ne = !isGrassT(x + 1, y - 1);
-    const sw = !isGrassT(x - 1, y + 1); const se = !isGrassT(x + 1, y + 1);
-    if (nw && !ne && !sw && !se) return GRASS_F.INNER_NW;
-    if (ne && !nw && !sw && !se) return GRASS_F.INNER_NE;
-    if (sw && !nw && !ne && !se) return GRASS_F.INNER_SW;
-    if (se && !nw && !ne && !sw) return GRASS_F.INNER_SE;
     return GRASS_F.SOLID;
   }
 
@@ -1056,14 +1049,15 @@ if (!PROFILE) {
   function waterFrameP(x, y) { // pool-in-sand blob keyed by open LAND sides (legacy math)
     const n = !isWaterP(x, y - 1); const s = !isWaterP(x, y + 1);
     const w = !isWaterP(x - 1, y); const e = !isWaterP(x + 1, y);
-    if (n && w && !s && !e) return WATER_F.NW;
-    if (n && e && !s && !w) return WATER_F.NE;
-    if (s && w && !n && !e) return WATER_F.SW;
-    if (s && e && !n && !w) return WATER_F.SE;
-    if (n && !s && !w && !e) return WATER_F.N;
-    if (s && !n && !w && !e) return WATER_F.S;
-    if (w && !e && !n && !s) return WATER_F.W;
-    if (e && !w && !n && !s) return WATER_F.E;
+    const variant = hash(x, y) % 2 ? WATER_ALT_F : WATER_F;
+    if (n && w && !s && !e) return variant.NW;
+    if (n && e && !s && !w) return variant.NE;
+    if (s && w && !n && !e) return variant.SW;
+    if (s && e && !n && !w) return variant.SE;
+    if (n && !s && !w && !e) return variant.N;
+    if (s && !n && !w && !e) return variant.S;
+    if (w && !e && !n && !s) return variant.W;
+    if (e && !w && !n && !s) return variant.E;
     return WATER_F.C; // interior, straits and 3-sided nubs fall back to open water
   }
 
@@ -1212,10 +1206,12 @@ if (!PROFILE) {
           break;
         case 'water':
           ground[i] = TS_WATER.firstgid + waterFrameP(x, y);
-          if (PROFILE?.foamOnShoreline
-            && (!isWaterP(x, y - 1) || !isWaterP(x, y + 1)
-              || !isWaterP(x - 1, y) || !isWaterP(x + 1, y))) {
-            detail[i] = TS_FOAM.firstgid;
+          if (PROFILE?.waterRipples
+            && isWaterP(x, y - 1) && isWaterP(x, y + 1)
+            && isWaterP(x - 1, y) && isWaterP(x + 1, y)
+            && hash(x + 41, y + 67) % 5 === 0) {
+            const rippleFrames = [3, 8, 13, 18, 23];
+            detail[i] = TS_FOAM.firstgid + rippleFrames[hash(x + 73, y + 19) % rippleFrames.length];
           }
           collision[i] = COLLIDE_GID; // bible §6: water is impassable
           break;
