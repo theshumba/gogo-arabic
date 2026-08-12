@@ -68,6 +68,17 @@ export async function suppressDomOverlays(page) {
   });
 }
 
+export async function suppressWorldWeather(page) {
+  return page.evaluate(() => {
+    const scene = window.__PHASER_GAME__?.scene?.getScene?.('WorldScene');
+    const weather = scene?.weatherSystem;
+    if (!weather) return { present: false, weather: null };
+    const activeWeather = weather.currentWeather;
+    weather.stopAllEffects();
+    return { present: true, weather: activeWeather };
+  });
+}
+
 export async function switchZone(page, zoneId) {
   const [expectedWidth, expectedHeight] = ZONE_DIMENSIONS[zoneId] || [];
   if (!expectedWidth || !expectedHeight) {

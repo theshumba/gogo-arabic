@@ -18,6 +18,7 @@ import {
   captureAfterCanvasUpdate,
   settleMapCamera,
   suppressDomOverlays,
+  suppressWorldWeather,
   switchZone,
   waitForWorldScene,
 } from './world-capture-helpers.mjs';
@@ -71,6 +72,7 @@ async function main() {
       await page.waitForTimeout(250);
       await assertCaptureState(page, zoneId);
       await suppressDomOverlays(page);
+      await suppressWorldWeather(page);
 
       let capture;
       try {
