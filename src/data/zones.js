@@ -1097,7 +1097,6 @@ const bedouin_camp = {
     { key: 'kenmi-desert-props-sleeping-mat', x: 21, y: 18, collide: false },
     { key: 'kenmi-desert-props-sleeping-mat', x: 30, y: 14, collide: false },
     { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 23, y: 23, collide: false, cropIndex: 0 },
-    { key: 'kenmi-desert-props-desert-grass-props', x: 19, y: 22, collide: false, cropIndex: 1 },
     // Perimeter clumps keep the open approaches inhabited without adding
     // another ground material.
     { key: 'kenmi-desert-props-desert-rocks', x: 33, y: 12, collide: false, cropIndex: 1 },
@@ -1128,7 +1127,6 @@ const bedouin_camp = {
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 19, y: 16, collide: false, cropIndex: 2 },
     { key: 'kenmi-desert-props-desert-rocks', x: 1, y: 8, collide: false, cropIndex: 0 },
     { key: 'kenmi-desert-props-desert-bones', x: 2, y: 9, collide: false },
-    { key: 'kenmi-desert-props-desert-fern', x: 3, y: 10, collide: false },
     { key: 'kenmi-desert-props-desert-rocks', x: 33, y: 5, collide: false, cropIndex: 1 },
     { key: 'kenmi-desert-props-desert-bones', x: 32, y: 6, collide: false },
     { key: 'kenmi-desert-props-desert-rocks', x: 30, y: 22, collide: false, cropIndex: 0 },

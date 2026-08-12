@@ -5768,12 +5768,6 @@
       "collide": false
     },
     {
-      "key": "kenmi-desert-props-desert-grass-props",
-      "x": 19,
-      "y": 22,
-      "collide": false
-    },
-    {
       "key": "kenmi-desert-props-desert-rocks",
       "x": 33,
       "y": 12,
@@ -5927,12 +5921,6 @@
       "key": "kenmi-desert-props-desert-bones",
       "x": 2,
       "y": 9,
-      "collide": false
-    },
-    {
-      "key": "kenmi-desert-props-desert-fern",
-      "x": 3,
-      "y": 10,
       "collide": false
     },
     {
