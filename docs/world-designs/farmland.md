@@ -24,7 +24,7 @@ Studied from `/Users/theshumba/Desktop/Gogo-World-References/` (8 images looked 
 
 ## 1. Concept
 
-Farmland is **green fields wrested from the desert by wadi water** — a seasonal stream falls off the northern cliffs into a pond, and from that pond hand-dug falaj channels walk the water west along the plot edges, so every green tile is visibly *earned*. The zone's focal anchor is the **homestead row on the top edge** (farmhouse, barn + silo touching, turning windmill, coop — the HM-MFOMT building line under the cliffs), with the **waterfall-fed pond and falaj head** as the secondary signature in the north-east. It channels Harvest Moon's top-edge farm row, Roots of Pacha's edge-running channels and plaza, and Kenmi's own cliff-waterfall-oasis scene; one sentence: *"a wadi farm — one barn row under the cliffs, and every channel leads back to the water."*
+Farmland is **green fields wrested from the desert by wadi water** — a seasonal stream falls off the northern cliffs into a pond, and from that pond hand-dug falaj channels walk the water west along the plot edges, so every green tile is visibly *earned*. The zone's focal anchor is the **packed homestead yard beneath the northern cliffs** (farmhouse, barn + silo, turning windmill, coop, shade trees, fencing and work props), with the **waterfall-fed pond and falaj head** as the secondary signature in the north-east. It channels Harvest Moon's farmyard hierarchy, Roots of Pacha's edge-running channels and plaza, and Kenmi's own cliff-waterfall-oasis scene; one sentence: *"a wadi farm — a working yard under the cliffs, and every channel leads back to the water."*
 
 ## 2. Dimensions
 
@@ -78,15 +78,15 @@ TTTTTTTTTTTTTTTTTTT...TTTTTTTTTTTTTTTTTTTTTTT  y34
 ```
 y0:  36×C, WW(36-37), 7×C
 y1:  36×C, WW(36-37), 7×C
-y2:  C(0-2) s(3-9) C(10-24) s(25-35) ww(36-37) ,(38-40) C(41-44)
+y2:  C(0-2) s(3-5) #(6) s(7-9) C(10-24) s(25-28) #(29) s(30-35) ww(36-37) ,(38-40) C(41-44)
 y3:  T(0-1) ,(2-3) P(4-26) ,(27-35) ww(36-37) ,(38-40) ,(41-42) C(43-44)
 y4:  T(0-1) ,(2-3) P(4-9) B(10-13) P(14-16) B(17-20) P(21-22) B(23-26) P(27-35) ww(36-37) ,(38-42) C(43-44)
 y5:  T(0-2) ,(3) B(4-7) P(8-9) B(10-14) P(15-16) B(17-20) P(21-22) B(23-26) P(27-34) w(35-36) ,(37-38) #(39-40) ,(41) C(42-44)
 y6:  T(0-2) ,(3) B(4-7) P(8-9) B(10-14) P(15-16) B(17-20) P(21-22) B(23-26) P(27-34) w(35-36) ,(37-38) #(39-40) ,(41) C(42-44)
 y7:  T(0-2) ,(3) B(4-7) P(8-9) B(10-14) P(15-16) B(17-20) P(21-22) B(23-26) P(27-34) w(35-36) ,(37-41) C(42-44)
 y8:  T(0-2) ,(3) B(4-7) P(8-16) B(17-20) P(21-34) w(35-36) ,(37-41) C(42-44)
-y9:  T(0-1) s(2) .(3-5) D(6) .(7-27) s(28-31) g(32-34) w(35-38) g(39-40) s(41-42) C(43-44)
-y10: T(0-1) s(2) .(3-31) g(32-33) w(34-39) g(40) s(41-42) C(43-44)
+y9:  T(0-1) s(2) .(3-5) D(6) .(7-12) P(13-27) s(28-31) g(32-34) w(35-38) g(39-40) s(41-42) C(43-44)
+y10: T(0-1) s(2) .(3-12) P(13-31) g(32-33) w(34-39) g(40) s(41-42) C(43-44)
 y11: T(0-1) s(2-8) f(9-11) .(12) f(13-16) g(17-18) .(19-20) g(21-32) w(33-40) s(41-42) C(43-44)
 y12: T(0-1) s(2-8) f(9) g(10-15) f(16) c(17-18) b(19-20) c(21-32) w(33-40) s(41-42) C(43-44)
 y13: T(0-1) s(2-8) f(9) g(10-15) f(16) c(17) g(18) .(19-20) g(21-32) w(33-40) s(41) C(42-44)
@@ -94,11 +94,11 @@ y14: T(0-1) s(2) ,(3-4) s(5-8) f(9) g(10-15) f(16) c(17) g(18) .(19-20) f(21-30)
 y15: T(0-1) s(2-8) f(9-16) c(17) .(18-19) g(20) f(21) F(22-29) f(30) g(31-34) w(35-38) g(39-40) s(41) C(42-44)
 y16: T(0-1) s(2-8) ,(9-16) c(17) .(18-19) g(20) f(21) F(22-29) f(30) g(31-35) c(36) g(37-40) s(41-42) s(43-44=exit cut)
 y17: T(0-1) s(2-3) f(4-11) g(12-16) c(17) .(18-19) g(20) .(21=B gate) F(22-28) f(29) g(30-31) F(32-35) c(36) g(37-40) .(41-44=to E exit)
-y18: T(0-1) s(2-3) f(4) F(5-10) g(11-12) f(13) g(14-16) c(17) .(18-19) g(20) f(21) F(22-28) f(29) g(30-31) F(32-35) c(36) g(37-39) .(40-41) ,(42) s(43-44)
-y19: T(0-1) s(2-3) f(4) F(5-10) g(11-12) f(13) g(14-16) c(17) .(18-19) g(20) f(21) F(22-28) f(29) g(30-35) c(36) g(37-38) .(39-40) ,(41-42) C(43-44)
-y20: T(0-1) s(2-3) f(4) F(5-10) g(11-12) .(13=A gate) g(14-16) c(17) g(18) .(19-20) f(21-29) g(30-35) c(36) g(37) .(38-39) ,(40) g(41) ,(42) C(43-44)
-y21: T(0-1) s(2-3) f(4) F(5-10) g(11-12) f(13) g(14-16) c(17) g(18) .(19-20) g(21-27) .(28-35) b(36) .(37-38) ,(39) g(40) ,(41) g(42) C(43-44)
-y22: T(0-1) s(2-3) f(4) F(5-10) g(11-12) f(13) g(14-16) c(17) g(18) .(19-20) g(21-23) .(24-35) b(36) g(37-40) ,(41-42) C(43-44)
+y18: T(0-1) s(2-3) f(4) F(5-8) g(9-12) f(13) g(14-16) c(17) .(18-19) g(20) f(21) F(22-26) g(27-28) f(29) g(30-31) F(32-34) c(35) g(36-39) .(40-41) ,(42) s(43-44)
+y19: T(0-1) s(2-3) f(4) F(5-8) g(9-12) f(13) g(14-16) c(17) .(18-19) g(20) f(21) F(22-28) f(29) g(30-35) c(36) g(37-38) .(39-40) ,(41-42) C(43-44)
+y20: T(0-1) s(2-3) f(4) F(5-8) g(9-12) .(13=A gate) g(14-16) c(17) g(18) .(19-20) f(21-29) g(30-35) c(36) g(37) .(38-39) ,(40) g(41) ,(42) C(43-44)
+y21: T(0-1) s(2-3) f(4) F(5-8) g(9-12) f(13) g(14-16) c(17) g(18) .(19-20) g(21-27) .(28-35) b(36) .(37-38) ,(39) g(40) ,(41) g(42) C(43-44)
+y22: T(0-1) s(2-3) f(4) F(5-8) g(9-12) f(13) g(14-16) c(17) g(18) .(19-20) g(21-23) .(24-35) b(36) g(37-40) ,(41-42) C(43-44)
 y23: T(0-2) s(3) f(4-13) g(14-16) c(17) P(18-24) g(25-35) c(36) g(37-38) ,(39-40) s(41) C(42-44)
 y24: T(0-2) s(3) g(4-16) c(17) P(18-24) g(25-26) f(27-29) .(30=orchard gate) f(31-36) g(37-38) ,(39-40) s(41) C(42-44)
 y25: T(0-2) s(3) g(4-15) w(16-17=basin) P(18-24) g(25-26) f(27) O(28-35) f(36) g(37-38) ,(39-40) s(41) C(42-44)
@@ -223,7 +223,7 @@ All verified against `asset-inventory.md` (existing kenmiCatalog keys only):
 |---|---|
 | Farmhouse | `desert-house-3.x` (wide adobe, 4×3.5) — keeps the Arabian material family |
 | Barn / silo / coop / windmill | `barn`, `silo`, `coop`, `windmill` + `windmill-sail-anim` |
-| Crop plots | `farmland-tile` (+ `farmland-wet-tile`), `crops`, `crops-2`, `scarecrows` |
+| Crop plots | `farmland-tile`, `crops`, `crops-2`, `scarecrows` |
 | Fences + gates | `fence-big` + gates, `fences` (pen, plots, orchard) |
 | Orchard | `palm-tree-1/2` rows + `grapes-bower` trellis + `bee hive/nest` (dates per MISSING #8 workaround) |
 | Water | `desert-water-tiles-1..3` + `desert-water-foam-animation` (pond/basin), `desert-cliff-waterfall-1..3` (wadi head) |
@@ -236,7 +236,7 @@ All verified against `asset-inventory.md` (existing kenmiCatalog keys only):
 | Interest props | `cactus`, `desert-rocks`, `dead-tree`, `dead-bush`, `desert-bones` (east vista), `acacia-tree` (1-2, pond halo), `flower-grass-*-anim` tufts near water |
 
 **Missing / worked around (rows added to `docs/WORLD-MISSING-ASSETS.md`):**
-- **#15 — 1-tile falaj channel water:** no 1-wide water autotile exists (the 5×3 desert-water blob can't render a 1-tile strip with banks on both sides). Workaround: render all `c` tiles as 1-wide **`farmland-wet-tile` strips** (reads as a wet irrigation furrow) with grass edging; real water autotile only for the pond, wadi (2-wide), and the 2×2 basin. Skipped: true stone-lined channel art.
+- **#15 — 1-tile falaj channel water:** no dedicated 1-wide water autotile exists. Workaround: render all `c` tiles as narrow frames from the same desert-water family used by the pond, with grass edging; this keeps channels visually continuous with the pond and wadi. The declared `farmland-wet-tile` sheet is not shipped for this map because it has no usable channel frame. Skipped: true stone-lined channel art.
 - **#16 — waterwheel / shaduf at the falaj head:** none exists (Roots of Pacha reference). Workaround: `water-sack-on-stick` prop at the basin + `fountain-anim` as the spring house. Skipped: rotating wheel.
 - **#17 — farm cart / hay wagon (market-day vignette):** no cart asset exists (`minecrats` are mine carts — wrong read). Workaround: compose the loading vignette from `hay-bales` + crates + `water-troughs` + a standing `camel-1`. Skipped: the cart itself.
 - Already-ledgered gaps relied on: #5 (scrub band mediates every sand↔grass seam), #7 (sheep as goats), #8 (palms + grapes-bower as the date orchard).

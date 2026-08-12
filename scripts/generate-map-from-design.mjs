@@ -164,7 +164,7 @@ const ZONE_PROFILES = {
       B: 'bldg',
       '#': 'sand+block',
     },
-    tilesets: ['farmland', 'farmland-wet', 'water', 'waterfall', 'grass3', 'cliff'],
+    tilesets: ['farmland', 'water', 'waterfall', 'grass3', 'cliff'],
     buildingGlyphs: 'B',
     buildings: [
       {
@@ -845,9 +845,11 @@ if (!PROFILE) {
     const c = base(x, y);
     return c === 'farmland' || c === 'farmland-wet';
   };
+  const usesFarmlandWet = Boolean(PROFILE?.classes && Object.values(PROFILE.classes).includes('farmland-wet'));
   const isWaterP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return true; // sea continues off-map
-    return base(x, y) === 'water';
+    const c = base(x, y);
+    return c === 'water' || (usesFarmlandWet && c === 'farmland-wet');
   };
   const isWaterLikeP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return true;
@@ -857,6 +859,10 @@ if (!PROFILE) {
   const isCliffP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return true; // container continues off-map
     return base(x, y) === 'cliff';
+  };
+  const isWaterfallP = (x, y) => {
+    if (x < 0 || x >= W || y < 0 || y >= H) return false;
+    return base(x, y) === 'waterfall';
   };
   const isHedge = (x, y) => cls(x, y) === 'hedge';
 
@@ -1000,13 +1006,19 @@ if (!PROFILE) {
           ground[i] = TS_WATER.firstgid + waterFrameP(x, y);
           collision[i] = COLLIDE_GID; // bible §6: water is impassable
           break;
-        case 'waterfall':
+        case 'waterfall': {
           ground[i] = G_SAND;
+          const waterfallFrame = !isWaterfallP(x, y - 1)
+            ? WATERFALL_F.TOP
+            : !isWaterfallP(x, y + 1)
+              ? WATERFALL_F.BOTTOM
+              : WATERFALL_F.MID;
           detail[i] = TS_WATERFALL.firstgid
-            + (y <= 1 ? WATERFALL_F.TOP : y >= H - 2 ? WATERFALL_F.BOTTOM : WATERFALL_F.MID)
+            + waterfallFrame
             + (x % 2);
           collision[i] = COLLIDE_GID;
           break;
+        }
         case 'cliff':
           ground[i] = TS_CLIFF.firstgid + cliffFrameP(x, y);
           collision[i] = COLLIDE_GID;
@@ -1044,8 +1056,12 @@ if (!PROFILE) {
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
           break;
         case 'grass':
-          ground[i] = G_SAND;
-          detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
+          if (PROFILE.id === 'farmland' && TS_GRASS3) {
+            ground[i] = TS_GRASS3.firstgid + 151;
+          } else {
+            ground[i] = G_SAND;
+            detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
+          }
           break;
         default: // sand
           ground[i] = G_SAND;
