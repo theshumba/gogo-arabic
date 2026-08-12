@@ -30,55 +30,56 @@ The player climbs in from the bedouin steppe through a cliff pinch at the south,
 
 Legend:
 ```
-#  cliff / rock container (impassable)     =  stairs (walkable climb)
+#  cliff / rock container (impassable)     d  packed earth / village ground
 v  waterfall (on cliff face, impassable)   ~  water (pool / stream)
 B  plank bridge (walkable, over stream)    M  mosque footprint (desert-temple)
 O  obelisk minaret (impassable prop)       H  house footprint (impassable)
 D  door tile (on building facade)          C  cave-dwelling mouth (decor, impassable)
 T  acacia / dead tree                      r  rock outcrop (ore host)
 g  scrub grass (walkable)                  f  fence (sheep pen)
-.  terrace ground (walkable stone/dirt)    :  packed-dirt/cobble path
+.  terrace ground (walkable rock/gravel)   :  packed-dirt/cobble path
 E  exit cut
 ```
 
 ```
     0         1         2         3
     0123456789012345678901234567890123456789
- 00 ########################################
- 01 ########################################
- 02 ##........T......MMMM............T....##
- 03 ##...rr..........MMMM......g~~~.......##
- 04 ##.............O.MMMM.O....~~~~~g.....##
- 05 ##.............O.MDMM.O.....~~~.......##
- 06 ##..............:::::::......~........##
- 07 ##......T........:::.........~....T...##
- 08 #################===#########v##########
- 09 #################===#########v##########
- 10 ####...##..HHH...:::....##g~~~~~.###..##
- 11 ###........HHH...:::.HHH..~~~~~~g.....##
- 12 ###...r....HDH...:::.HHH..g~~~~........E
- 13 ###.......:::::::::::HDH:::::B:::::::::E
- 14 ###.......:::::::::::::::::g.B...::::::E
- 15 ###......................::g.~g.......##
- 16 ###........T.............::..~....r...##
- 17 ###......................::..~........##
- 18 #########################==##v##########
- 19 #######################C#==##v##########
- 20 #########################==##v##########
- 21 ####......##.....##......::g~~~~~..##.##
- 22 ###..fffff.HHH..........::g.~~~~~...T.##
- 23 ###..f...f.HHH..HHH....:::...~~~g.....##
- 24 ###..f...:.HDH..HHH..:::..............##
- 25 ###..fffff::::::HDH:::............r...##
- 26 ###.T............:::::.........T......##
- 27 ######......##.....:::.........#####..##
- 28 ###################:::##################
- 29 ###################EEE##################
+ 00 ........................................
+ 01 ........................................
+ 02 ........................................
+ 03 ...........................~~~~~~.......
+ 04 ............................~~~~........
+ 05 .............................vv.........
+ 06 .######...#####...#######....vv...#####.
+ 07 .###.#####..#######...######.vv...######
+ 08 ..########.....#######..####.vv...####..
+ 09 ....#####.......#####........vv....#####
+ 10 ...ggg.....................~~.~~~.......
+ 11 ............H.......C:H::::~~~~~........
+ 12 ........rr...........::::::~~~~~.......E
+ 13 ...........:::::::::::::::::..~~.......E
+ 14 ...........:::::::::::::::::..BB.......E
+ 15 ....gggg......................~~.......E
+ 16 ..............................~~.......E
+ 17 .#####..#..#...###.####..###.vv...#####E
+ 18 .#######....#####..####C###..vv...#####E
+ 19 ...####.......####....###....vv....####.
+ 20 dd...ddddddd.ddddddddddd.ddddd.~~ddddddd
+ 21 ddddd..dddggggd.dddMMMMMdd.d~~~~dddddddd
+ 22 dddd.dddddddd.d:::::M::::::d~~BBdddddddd
+ 23 ddddd.dddd.dddd::H:MMMMM:::gg~~~dddddddd
+ 24 dddddddd.dddddd::::HHH:::::.dd~~dddddddd
+ 25 dd.ddggggdd.ddd::::::::::::ddd~~dddddddd
+ 26 ddddd.dggggddd.ddd::::::dddddd~~dddddddd
+ 27 ddddddddd.dddddddd::::::.ddddd~~dddddddd
+ 28 dddd.ddddddddddddd::::::ddd.dd~~dddddddd
+ 29 .................EEEEEEE................
 ```
 
 **Reading the composition:**
-- **Path language:** one main road, drawn a true 2 tiles wide on the mid band (rows 13–14, x10–26 — LAW-1), that never runs straight past ~8–9 tiles — south corridor (x19–21, 3-wide dressed entrance) → lower plaza → curls west past the two house doors (y24–25, 1-wide side street per LAW-1 alley rule) and east to the stair base (y23→y21, the diagonal legs overlap for ~2-wide effect), climbs the 2-wide stairs (x25–26, offset), runs the mid band and crosses the stream on the 2-tile plank crossing **B**(29,13)–(29,14) (LAW-20/23 mini-focal), then leaves 2-wide on the east ledge (rows 13–14, x33–38). The 3-wide ceremonial stair (x17–19) is the ONLY 3-wide climb and serves the mosque axis via the matching 3-wide connector at (17–19,12) (LAW-29/49).
-- **Water:** spring source pool on the top band (x27–31, y3–5) → fall **v**(29, y8–9) → mid pool (x26–31, y10–12, fountain at its SW lip) → stream (x29, y15–17, planked at y13–14) → fall **v**(29, y18–20) → lower pool (x28–32, y21–23). Every shoreline scallops in 2–4-tile arcs (LAW-17); scrub-grass `g` tufts sit ONLY as a partial halo on the pool/stream shores — (27,3), (32,4), (26,10), (32,11), (26,12), (27,14), (27,15), (30,15), (27,21), (26,22), (32,23) — the desert-highland reading of LAW-18 (MISSING #5).
+- **Path language:** one main road climbs from the south arrival into the lower plaza, then crosses the mid terrace and the east stream on the 2-tile plank crossing **B** at (30,14)–(31,14) before leaving through the port ledge. The upper and lower cliff bands use staggered 2–3-row faces with several walkable gaps rather than one continuous wall.
+- **Water:** spring source pool on the top band → two-tile waterfall → scalloped mid pool → two-tile stream and bridge → second waterfall → scalloped lower pool and east-side outflow. The stream is deliberately two tiles wide so the existing shoreline autotiling supplies both banks.
+- **Focal hierarchy:** the waterfall is the first strong visual anchor from the fullmap, with the mosque as the lower-village landmark and the bridge as the crossing detail.
 - **Focal hierarchy:** primary = mosque + twin obelisk minarets terminating the x18 axis on the top band (LAW-12/50); secondary = the double waterfall thread; tertiary = the bridge. From spawn (20,26) the walk-in axis (x19–21 north) is 1 tile off the mosque-door axis (x18) — the landmark sits on the entry sightline (LAW-25) with both waterfalls animating on the way up.
 - **Entrance framing (LAW-28):** south cut x19–21 through a 2-row cliff pinch, lantern pair at (18,27)/(22,27), sign 1 tile off-path at (22,25), plaza reached within 5 tiles of the cut.
 - **Diagonal sweep (LAW-30):** gate (20,29) → lower plaza (20,25) → stairs (25,19) → bridge (29,13) → mosque (18,4) — the eye zigzags across the whole map.
@@ -103,65 +104,65 @@ Every contract ID for mountain_village (contract-and-pipeline.md §1), placed ex
 
 | Key | Tile | Rationale |
 |---|---|---|
-| `spawnPoint` | (20,26) | On the entrance corridor, 3 tiles inside the south cut. |
-| `entries.from_bedouin` | (20,26) | 2–3 tiles inside the south exit cut (= spawn, as today). |
-| `entries.from_port` | (37,14) | 2 tiles inside the east cut, on the ledge road; outside the exit trigger. |
+| `spawnPoint` | (20,27) | Frozen runtime spawn on the entrance corridor. |
+| `entries.from_bedouin` | (20,27) | Frozen runtime entry from the south cut (= spawn). |
+| `entries.from_port` | (38,15) | Frozen runtime entry from the east cut. |
 
 **Exits** (edges match world-connection-map ledger exactly):
 
 | Exit id | Edge | tileRange | Fraction | Target |
 |---|---|---|---|---|
-| `mountain-to-bedouin` ★ dressed | south | [19,21] | 0.50 (= ledger 0.50) | bedouin_camp / `from_mountain` |
-| `mountain-to-port` (plain) | east | [12,14] | 0.43 (ledger 0.40 ± 0.10 ✓) | coastal_port / `from_mountain` |
+| `mountain-to-bedouin` ★ dressed | south | [17,23] | frozen runtime range | bedouin_camp / `from_mountain` |
+| `mountain-to-port` (plain) | east | [12,18] | frozen runtime range | coastal_port / `from_mountain` |
 
 **NPCs (3):**
 
 | ID | Tile | Rationale |
 |---|---|---|
-| `guide-salim` | (18,11) | On the stair-landing plaza between the two homes — greets climbers at the village crossroads; his own front door (12,12) is 6 tiles west. |
-| `weaver-zahra` | (14,12) | Working outside Salim's home beside her loom vignette (rug + crates), on the house-front where `sign-weaver` points. |
-| `healer-khadija` | (24,15) | In her herb pocket between her house and the stream — herbs grow where the water runs. |
+| `guide-salim` | (20,13) | Frozen runtime position on the mid terrace. |
+| `weaver-zahra` | (15,20) | Frozen runtime position beside the lower village home. |
+| `healer-khadija` | (27,20) | Frozen runtime position beside the lower village home. |
 
 **Interactables (23):**
 
 | ID | Type | Tile | Rationale |
 |---|---|---|---|
-| `sign-mountain` | sign | (22,25) | 1 tile off the corridor at the plaza junction, approach side (LAW-7) — names the village on arrival. |
-| `sign-weaver` | sign | (10,12) | 2 tiles from the home door, flags the weaver's house from the road. |
-| `bookshelf-clothing` | bookshelf | (14,11) | Weaver's pattern-books against her house's east flank (clothing vocab at the clothing workshop). |
-| `bookshelf-animals-mt` | bookshelf | (25,12) | Healer's husbandry ledgers by her east wall, beside the fountain. |
-| `bookshelf-adj-mt` | bookshelf | (20,16) | Reading nook on the mid-band's quiet south pocket, off the road. |
-| `chest-mountain-stream` | chest | (33,22) | On the lower pool's east shore — the "stream" chest keeps its watery hiding place. |
-| `chest-mountain-peak` | chest | (3,3) | NW corner of the top band — the peak payoff for full exploration (LAW-50). |
-| `door-mountain-home` | door → `mountain_home_interior` | (12,12) | Salim's home facade, south-facing onto the mid road (LAW-5). |
-| `door-mountain-mosque` | door → `mountain_mosque_interior` | (18,5) | Mosque facade, dead-centre of the ceremonial axis (LAW-29). |
-| `statue-mountain-1` | statue | (16,6) | West flank of the mosque forecourt — symmetric pair ON the axis only. |
-| `statue-mountain-2` | statue | (20,6) | East flank, mirroring statue-1 across the x18 axis. |
-| `painting-mountain-1` | painting | (10,11) | Hung on the home's west wall (weaver's tapestry). |
-| `painting-mountain-2` | painting | (20,11) | Hung on the healer's west wall. |
-| `pot-mountain-1` | pot | (15,12) | Corner pot cluster at the home's SE corner (props hug architecture, LAW-32). |
-| `pot-mountain-2` | pot | (20,12) | Pot at the healer's SW corner, closing the gap between the houses. |
-| `lantern-mountain-1` | lantern | (18,27) | West of the entrance corridor — the LAW-28/36 framing pair. |
-| `lantern-mountain-2` | lantern | (22,27) | East twin of the pair. |
-| `fountain-mountain-1` | fountain | (24,12) | Hard stone lip at the mid pool's SW corner (LAW-18 one hard shore), off-centre of the pool plaza. |
-| `barrel-mountain-1` | barrel | (10,24) | House-A corner barrel by the pen — feed store. |
-| `crate-mountain-1` | crate | (26,22) | Porter's cache at the stair base — goods staged for the climb. |
-| `inscription-mountain-1` | inscription | (4,3) | Beside the peak chest — old words at the summit. |
-| `inscription-mountain-2` | inscription | (36,15) | On the east ledge vista point — reading the sea (LAW-46 marker). |
-| `inscription-mountain-3` | inscription | (5,26) | In the SW quiet corner by the dead tree. |
+| `sign-mountain` | sign | (20,26) | Frozen runtime position. |
+| `sign-weaver` | sign | (13,18) | Frozen runtime position. |
+| `bookshelf-clothing` | bookshelf | (16,10) | Frozen runtime position. |
+| `bookshelf-animals-mt` | bookshelf | (24,10) | Frozen runtime position. |
+| `bookshelf-adj-mt` | bookshelf | (20,16) | Frozen runtime position. |
+| `chest-mountain-stream` | chest | (32,15) | Frozen runtime position beside the stream. |
+| `chest-mountain-peak` | chest | (5,3) | Frozen runtime peak position. |
+| `door-mountain-home` | door → `mountain_home_interior` | (15,20) | Frozen runtime home door. |
+| `door-mountain-mosque` | door → `mountain_mosque_interior` | (25,20) | Frozen runtime mosque door. |
+| `statue-mountain-1` | statue | (20,10) | Frozen runtime position. |
+| `statue-mountain-2` | statue | (16,14) | Frozen runtime position. |
+| `painting-mountain-1` | painting | (17,19) | Frozen runtime position. |
+| `painting-mountain-2` | painting | (24,19) | Frozen runtime position. |
+| `pot-mountain-1` | pot | (14,12) | Frozen runtime position. |
+| `pot-mountain-2` | pot | (26,12) | Frozen runtime position. |
+| `lantern-mountain-1` | lantern | (19,22) | Frozen runtime position. |
+| `lantern-mountain-2` | lantern | (21,22) | Frozen runtime position. |
+| `fountain-mountain-1` | fountain | (29,10) | Frozen runtime spring position. |
+| `barrel-mountain-1` | barrel | (13,21) | Frozen runtime position. |
+| `crate-mountain-1` | crate | (27,21) | Frozen runtime position. |
+| `inscription-mountain-1` | inscription | (2,3) | Frozen runtime peak position. |
+| `inscription-mountain-2` | inscription | (37,27) | Frozen runtime position. |
+| `inscription-mountain-3` | inscription | (6,27) | Frozen runtime position. |
 
 **Gathering spots (8, `gatheringSpots: true` preserved — ore-heavy per brief, all veins on rock):**
 
 | ID | Resource / type | Tile | Rationale |
 |---|---|---|---|
-| `spot_mountain_ore_01` | iron_ore / ore_vein | (34,16) | Rock outcrop on the east ledge — ore in the exposed face. |
-| `spot_mountain_ore_02` | silver_ore / ore_vein | (6,12) | Rock outcrop on the mid band's west pocket. |
-| `spot_mountain_ore_03` | silver_ore / ore_vein | (5,3) | Rock pair on the top band — the richest vein highest up (climb pays, LAW-50). |
-| `spot_mountain_herbs_01` | thyme / herb_patch | (27,15) | Scrub tuft on the stream bank beside the healer — herbs where water is. |
-| `spot_mountain_water_01` | olive_oil / water_source | (28,23) | Lower-pool shore rim (water_source may sit on the 1-tile rim, LINT-2). |
-| `spot_mountain_animal_01` | wool / animal_trace | (7,23) | Inside the sheep pen — wool at the source. |
-| `spot_mountain_herbs_02` | fenugreek / herb_patch | (26,4) | Beside the spring source pool on the top band. |
-| `spot_mountain_papyrus_01` | vellum / papyrus_stand | (23,6) | Mosque forecourt — the scribes' vellum by the house of learning. |
+| `spot_mountain_ore_01` | iron_ore / ore_vein | (10,8) | Frozen runtime position. |
+| `spot_mountain_ore_02` | silver_ore / ore_vein | (25,12) | Frozen runtime position. |
+| `spot_mountain_ore_03` | silver_ore / ore_vein | (18,18) | Frozen runtime position. |
+| `spot_mountain_herbs_01` | thyme / herb_patch | (6,15) | Frozen runtime position. |
+| `spot_mountain_water_01` | olive_oil / water_source | (30,20) | Frozen runtime position. |
+| `spot_mountain_animal_01` | wool / animal_trace | (12,22) | Frozen runtime position. |
+| `spot_mountain_herbs_02` | fenugreek / herb_patch | (28,6) | Frozen runtime position. |
+| `spot_mountain_papyrus_01` | vellum / papyrus_stand | (35,15) | Frozen runtime position. |
 
 Step triggers / sub-areas: none in the mountain_village contract — none added.
 
@@ -182,9 +183,10 @@ No locked doors in this zone. The two lower stone houses, the healer's house, an
 |---|---|---|
 | `#` cliffs, container | `kenmi-desert-tiles-desert-cliff-tiles-1..3` (primary), `kenmi-base-tiles-cliff-stone-cliff-1..4-tile` (accents) | ✓ §1 |
 | `C` cave dwelling | `stone-cliff-*-cave-entrance` | ✓ §1 |
-| `v` waterfalls | `kenmi-desert-tiles-desert-cliff-waterfall-1..3` | ✓ §1 |
+| `d` lower village ground | packed earth base under the lower shelf | ✓ §1 |
+| `.` mid/peak ground | stone/gravel base under working terrace and peak | ✓ §1 |
+| `v` waterfalls | `kenmi-base-tiles-waterfall-waterfall-1..8` | ✓ §1 |
 | `~` pools/stream | `desert-water-tiles-1..3` + `desert-water-foam-animation`; `water-stone-tile-*` for the hard fountain lip | ✓ §1 |
-| `.` terrace ground | `desert-beach-tiles-1/2/3` (3 sand/dirt hues for LAW-33 ground variation) | ✓ §1 |
 | `:` paths | `cobble-road-1/2` (stone village paving; contrasts base ground per LAW-6) | ✓ §1 |
 | `g` scrub grass | `desert-tiles-desert-grass` blob (the sand↔green intermediary, MISSING #5) | ✓ §1 |
 | `M` mosque | `desert-temple` facade — MISSING-ASSETS **#1 composite** | ✓ §2 |
