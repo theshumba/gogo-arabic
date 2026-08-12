@@ -332,6 +332,7 @@ const ZONE_PROFILES = {
     classes: {
       '.': 'sand',
       '=': 'road',
+      P: 'pave',
       'g': 'scrub',
       '#': 'wall',
       T: 'bldg',
@@ -349,7 +350,7 @@ const ZONE_PROFILES = {
       },
       {
         contains: [7, 10],
-        assetKey: 'kenmi-desert-houses-desert-house-1.1',
+      assetKey: 'kenmi-desert-houses-desert-house-2.1',
         label: 'Library Study Annexe',
         doorId: 'door-library-study',
       },

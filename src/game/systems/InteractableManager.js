@@ -81,7 +81,7 @@ export class InteractableManager {
   /**
    * Create interactable objects from zone config
    */
-  create(interactableConfigs, objectSprites) {
+  create(interactableConfigs, objectSprites, zoneId = null) {
     this.interactables = [];
 
     interactableConfigs.forEach((cfg) => {
@@ -89,7 +89,9 @@ export class InteractableManager {
       const py = cfg.y * 64 + 32;
 
       // Choose sprite + crop region based on type — Kenmi keys
-      const mapping = LEGACY_INTERACTABLE_SPRITES[cfg.type] || WORLD_OBJECT_SPRITES[cfg.type];
+      const mapping = cfg.type === 'bookshelf' && zoneId === 'ancient_library'
+        ? { key: 'kenmi-base-buildings-house-decor-bookshelves', region: { x: 17, y: 1, w: 30, h: 30 } }
+        : LEGACY_INTERACTABLE_SPRITES[cfg.type] || WORLD_OBJECT_SPRITES[cfg.type];
 
       // Crop the sheet to one item and normalize to ~1 tile when the texture is
       // loaded; fall back to the raw key otherwise so a missing texture degrades

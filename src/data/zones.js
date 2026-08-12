@@ -322,7 +322,7 @@ const ancient_library = {
   objects: [
     // Library building structures — temple structures (BLDG-02)
     { key: 'kenmi-desert-temple-desert-temple', x: 17, y: 3, collide: true, collideW: 240, collideH: 100 },
-    { key: 'kenmi-desert-houses-desert-house-1.1', x: 6, y: 9, collide: true, collideW: 180, collideH: 80 },
+    { key: 'kenmi-desert-houses-desert-house-2.1', x: 6, y: 9, collide: true, collideW: 180, collideH: 80 },
     // Obelisk pillars lining courtyard
     { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 10, y: 8, collide: true, collideW: 20, collideH: 20 },
     { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 10, y: 20, collide: true, collideW: 20, collideH: 20 },
@@ -337,14 +337,7 @@ const ancient_library = {
     { key: 'kenmi-desert-props-palm-tree-1', x: 12, y: 19, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-palm-tree-2', x: 21, y: 20, collide: true, collideW: 30, collideH: 20 },
     // Rocks
-    { key: 'kenmi-desert-props-desert-rocks', x: 7, y: 6, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-desert-rocks', x: 30, y: 25, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 5, y: 14, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 29, y: 24, collide: true, collideW: 30, collideH: 20 },
-    { key: 'kenmi-dungeons-dungeon-1-dungeon-1-pillars', x: 10, y: 5, collide: true, collideW: 40, collideH: 40 },
-    { key: 'kenmi-dungeons-dungeon-2-dungeon-2-arch-open', x: 13, y: 5, collide: true, collideW: 40, collideH: 40 },
-    { key: 'kenmi-dungeons-dungeon-2-dungeon-2-arch', x: 25, y: 5, collide: true, collideW: 40, collideH: 40 },
-    { key: 'kenmi-dungeons-dungeon-1-dungeon-1-pillars', x: 29, y: 6, collide: true, collideW: 40, collideH: 40 },
     // Gate entrance
     { key: 'kenmi-desert-temple-desert-obelisk-1', x: 17, y: 22, collide: true, collideW: 120, collideH: 40 },
     // DECO-04: Obelisks flanking the library gate + golden pot in reading garden

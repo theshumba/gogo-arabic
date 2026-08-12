@@ -6314,7 +6314,7 @@
       "collide": true
     },
     {
-      "key": "kenmi-desert-houses-desert-house-1.1",
+      "key": "kenmi-desert-houses-desert-house-2.1",
       "x": 6,
       "y": 9,
       "collide": true
@@ -6381,50 +6381,8 @@
     },
     {
       "key": "kenmi-desert-props-desert-rocks",
-      "x": 7,
-      "y": 6,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
       "x": 30,
       "y": 25,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 5,
-      "y": 14,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-props-desert-rocks",
-      "x": 29,
-      "y": 24,
-      "collide": true
-    },
-    {
-      "key": "kenmi-dungeons-dungeon-1-dungeon-1-pillars",
-      "x": 10,
-      "y": 5,
-      "collide": true
-    },
-    {
-      "key": "kenmi-dungeons-dungeon-2-dungeon-2-arch-open",
-      "x": 13,
-      "y": 5,
-      "collide": true
-    },
-    {
-      "key": "kenmi-dungeons-dungeon-2-dungeon-2-arch",
-      "x": 25,
-      "y": 5,
-      "collide": true
-    },
-    {
-      "key": "kenmi-dungeons-dungeon-1-dungeon-1-pillars",
-      "x": 29,
-      "y": 6,
       "collide": true
     },
     {
