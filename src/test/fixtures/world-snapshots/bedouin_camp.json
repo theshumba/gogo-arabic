@@ -5457,8 +5457,8 @@
     },
     {
       "key": "kenmi-military-military-tents",
-      "x": 11,
-      "y": 9,
+      "x": 10,
+      "y": 8,
       "collide": true
     },
     {
@@ -5469,7 +5469,7 @@
     },
     {
       "key": "kenmi-base-buildings-buildings-tent-tent-small",
-      "x": 25,
+      "x": 26,
       "y": 10,
       "collide": true
     },
@@ -5523,8 +5523,8 @@
     },
     {
       "key": "kenmi-desert-props-sleeping-mat",
-      "x": 11,
-      "y": 11,
+      "x": 10,
+      "y": 10,
       "collide": false
     },
     {
@@ -5661,6 +5661,12 @@
     },
     {
       "key": "kenmi-desert-animals-camel-camel-1",
+      "x": 24,
+      "y": 13,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-animals-camel-camel-1",
       "x": 18,
       "y": 19,
       "collide": true
@@ -5699,6 +5705,24 @@
       "key": "kenmi-desert-props-desert-rugs",
       "x": 25,
       "y": 13,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 23,
+      "y": 14,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 25,
+      "y": 14,
+      "collide": false
+    },
+    {
+      "key": "npc-wanderer-ali",
+      "x": 24,
+      "y": 12,
       "collide": false
     },
     {
@@ -5795,6 +5819,30 @@
       "key": "kenmi-base-outdoor-decoration-hay-bales",
       "x": 10,
       "y": 21,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-water-troughs",
+      "x": 12,
+      "y": 23,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 11,
+      "y": 18,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 14,
+      "y": 20,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 10,
+      "y": 23,
       "collide": false
     },
     {
@@ -5908,6 +5956,18 @@
     {
       "key": "kenmi-desert-props-desert-bones",
       "x": 29,
+      "y": 23,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-dead-bush",
+      "x": 31,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rocks",
+      "x": 33,
       "y": 23,
       "collide": false
     }

@@ -1036,9 +1036,9 @@ const bedouin_camp = {
     // warm, blue, green, and red canvas crops read as civilian tents here.
     { key: 'kenmi-military-military-tents', x: 7, y: 6, cropIndex: 0, collide: true, collideW: 150, collideH: 50 },
     { key: 'kenmi-base-buildings-buildings-tent-tent-small', x: 4, y: 5, collide: true, collideW: 110, collideH: 36 },
-    { key: 'kenmi-military-military-tents', x: 11, y: 9, cropIndex: 1, collide: true, collideW: 150, collideH: 50 },
+    { key: 'kenmi-military-military-tents', x: 10, y: 8, cropIndex: 1, collide: true, collideW: 150, collideH: 50 },
     { key: 'kenmi-military-military-tents', x: 27, y: 6, cropIndex: 2, collide: true, collideW: 150, collideH: 50 },
-    { key: 'kenmi-base-buildings-buildings-tent-tent-small', x: 25, y: 10, collide: true, collideW: 110, collideH: 36 },
+    { key: 'kenmi-base-buildings-buildings-tent-tent-small', x: 26, y: 10, collide: true, collideW: 110, collideH: 36 },
     { key: 'kenmi-military-military-tents', x: 7, y: 17, cropIndex: 3, collide: true, collideW: 150, collideH: 50 },
     { key: 'kenmi-base-buildings-buildings-tent-tent-small', x: 8, y: 22, collide: true, collideW: 110, collideH: 36 },
     { key: 'kenmi-military-military-tents', x: 13, y: 17, cropIndex: 4, collide: true, collideW: 150, collideH: 50 },
@@ -1048,7 +1048,7 @@ const bedouin_camp = {
     // Every tent has a threshold vignette so none sits on bare sand.
     { key: 'kenmi-desert-props-desert-rugs', x: 7, y: 9, collide: false, cropIndex: 0 },
     { key: 'kenmi-desert-props-desert-rugs', x: 4, y: 7, collide: false, cropIndex: 1 },
-    { key: 'kenmi-desert-props-sleeping-mat', x: 11, y: 11, collide: false },
+    { key: 'kenmi-desert-props-sleeping-mat', x: 10, y: 10, collide: false },
     { key: 'kenmi-desert-props-desert-rugs', x: 27, y: 8, collide: false, cropIndex: 2 },
     { key: 'kenmi-desert-props-desert-rugs', x: 25, y: 12, collide: false, cropIndex: 3 },
     { key: 'kenmi-desert-props-sleeping-mat', x: 7, y: 19, collide: false },
@@ -1076,6 +1076,7 @@ const bedouin_camp = {
     { key: 'kenmi-desert-props-desert-rocks', x: 25, y: 22, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-desert-rocks', x: 30, y: 15, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-animals-camel-camel-1', x: 23, y: 11, cropIndex: 0, collide: true, collideW: 28, collideH: 18 },
+    { key: 'kenmi-desert-animals-camel-camel-1', x: 24, y: 13, cropIndex: 1, collide: true, collideW: 28, collideH: 18 },
     { key: 'kenmi-desert-animals-camel-camel-1', x: 18, y: 19, cropIndex: 1, collide: true, collideW: 28, collideH: 18 },
     { key: 'kenmi-desert-animals-camel-camel-1', x: 28, y: 20, cropIndex: 0, collide: true, collideW: 28, collideH: 18 },
     { key: 'kenmi-base-animals-sheep-sheep-01', x: 6, y: 19, cropIndex: 0, collide: true, collideW: 20, collideH: 16 },
@@ -1086,6 +1087,9 @@ const bedouin_camp = {
     // Moved off (18,14): it clipped straight through the rock pile authored there.
 
     { key: 'kenmi-desert-props-desert-rugs', x: 25, y: 13, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 23, y: 14, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 25, y: 14, collide: false, cropIndex: 1 },
+    { key: 'npc-wanderer-ali', x: 24, y: 12, collide: false },
     { key: 'kenmi-desert-props-sleeping-mat', x: 4, y: 22, collide: false },
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 2, y: 12, collide: false, cropIndex: 3 },
     { key: 'kenmi-desert-props-sleeping-mat', x: 24, y: 10, collide: false },
@@ -1105,6 +1109,10 @@ const bedouin_camp = {
     { key: 'kenmi-desert-props-desert-bones', x: 13, y: 19, collide: false },
     { key: 'kenmi-base-outdoor-decoration-hay-bales', x: 5, y: 20, collide: false, cropIndex: 0 },
     { key: 'kenmi-base-outdoor-decoration-hay-bales', x: 10, y: 21, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-outdoor-decoration-water-troughs', x: 12, y: 23, collide: false },
+    { key: 'kenmi-desert-props-desert-rocks', x: 11, y: 18, collide: false, cropIndex: 2 },
+    { key: 'kenmi-desert-props-desert-rocks', x: 14, y: 20, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-rocks', x: 10, y: 23, collide: false, cropIndex: 1 },
     { key: 'kenmi-desert-props-desert-rugs', x: 14, y: 15, collide: false, cropIndex: 3 },
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 16, y: 16, collide: false, cropIndex: 3 },
     { key: 'kenmi-desert-props-desert-rugs', x: 18, y: 16, collide: false, cropIndex: 1 },
@@ -1125,6 +1133,8 @@ const bedouin_camp = {
     { key: 'kenmi-desert-props-desert-bones', x: 32, y: 6, collide: false },
     { key: 'kenmi-desert-props-desert-rocks', x: 30, y: 22, collide: false, cropIndex: 0 },
     { key: 'kenmi-desert-props-desert-bones', x: 29, y: 23, collide: false },
+    { key: 'kenmi-desert-props-dead-bush', x: 31, y: 24, collide: false },
+    { key: 'kenmi-desert-props-desert-rocks', x: 33, y: 23, collide: false, cropIndex: 1 },
 
   ],
 

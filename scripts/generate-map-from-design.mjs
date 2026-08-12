@@ -300,7 +300,7 @@ const ZONE_PROFILES = {
     id: 'bedouin_camp',
     classes: {
       '.': 'sand',
-      ',': 'variation',
+      ',': 'sand',
       'd': 'camp',
       ':': 'track',
       'C': 'dune',
@@ -1325,21 +1325,11 @@ if (!PROFILE) {
           ground[i] = G_PLAZA;
           break;
         case 'variation':
-          ground[i] = G_ROAD;
-          if (TS_GRASS && hash(x + 17, y + 29) % 7 === 0) {
-            const tuftFrames = [9, 10, 12, 13];
-            detail[i] = TS_GRASS.firstgid + tuftFrames[hash(x + 71, y + 43) % tuftFrames.length];
-          }
-          break;
         case 'camp':
-          ground[i] = G_ROAD;
+          ground[i] = G_SAND;
           break;
         case 'track':
-          ground[i] = hash(x + 101, y + 7) % 5 === 0 ? G_SAND : G_ROAD;
-          if (TS_GRASS && hash(x + 31, y + 53) % 5 === 0) {
-            const trackTufts = [9, 10, 12, 13];
-            detail[i] = TS_GRASS.firstgid + trackTufts[hash(x + 83, y + 11) % trackTufts.length];
-          }
+          ground[i] = G_SAND;
           break;
         case 'pave':
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
