@@ -79,6 +79,28 @@ export async function suppressWorldWeather(page) {
   });
 }
 
+export async function suppressDayNightLighting(page) {
+  return page.evaluate(() => {
+    const scene = window.__PHASER_GAME__?.scene?.getScene?.('WorldScene');
+    const overlay = scene?.dayNightCycle?.overlay;
+    if (!overlay) return { present: false };
+    const state = {
+      x: overlay.x,
+      y: overlay.y,
+      width: overlay.displayWidth,
+      height: overlay.displayHeight,
+      depth: overlay.depth,
+      alpha: overlay.alpha,
+      scrollFactorX: overlay.scrollFactorX,
+      scrollFactorY: overlay.scrollFactorY,
+      fillColor: overlay.fillColor,
+      blendMode: overlay.blendMode,
+    };
+    overlay.setAlpha(0);
+    return { present: true, state };
+  });
+}
+
 export async function switchZone(page, zoneId) {
   const [expectedWidth, expectedHeight] = ZONE_DIMENSIONS[zoneId] || [];
   if (!expectedWidth || !expectedHeight) {

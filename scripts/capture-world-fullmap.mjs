@@ -18,6 +18,7 @@ import {
   captureAfterCanvasUpdate,
   settleMapCamera,
   suppressDomOverlays,
+  suppressDayNightLighting,
   suppressWorldWeather,
   switchZone,
   waitForWorldScene,
@@ -73,6 +74,7 @@ async function main() {
       await assertCaptureState(page, zoneId);
       await suppressDomOverlays(page);
       await suppressWorldWeather(page);
+      await suppressDayNightLighting(page);
 
       let capture;
       try {
