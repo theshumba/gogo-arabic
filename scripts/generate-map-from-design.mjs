@@ -789,6 +789,11 @@ const FARMLAND_F = {
 };
 const WATERFALL_F = { TOP: 0, MID: 18, BOTTOM: 36 };
 const CLIFF_F = { FACE_TOP: 41, FACE_MID: 54, FACE_BASE: 67 };
+const PLATEAU_TOP_F = [98, 99, 100, 101, 111, 112, 113, 114, 124, 125, 126, 127];
+const PLATEAU_FACE_F = [20, 22, 23, 24, 33, 35, 36, 37, 46, 48, 49, 50];
+const PLATEAU_OUTLINE_F = [15, 16, 27, 29, 42, 43, 44, 55, 56, 57, 95, 96, 108, 109];
+const PLATEAU_LIP_F = [69, 70, 71, 80, 81, 92, 93, 94, 106, 107];
+const PLATEAU_CRACK_F = [76, 77, 89, 90, 102, 103, 115, 116];
 const RUBBLE_F = [98, 111, 124, 137, 100, 113, 126, 139]; // plain x4 + decorated x4
 // cobble-road-2 blob (3x5): 0-8 = blob-on-sand transitions (f4 = solid centre),
 // 9/12/13 solid variants, 10 sand-pothole variant, 11/14 transparent (never place)
@@ -1102,6 +1107,26 @@ if (!PROFILE) {
     return frames.FACE_MID;
   }
 
+  function plateauTopFrame(x, y) {
+    return PLATEAU_TOP_F[hash(x + 13, y + 29) % PLATEAU_TOP_F.length];
+  }
+
+  function plateauFaceFrame(x, y) {
+    return PLATEAU_FACE_F[hash(x + 31, y + 47) % PLATEAU_FACE_F.length];
+  }
+
+  function plateauDetailFrame(x, y) {
+    const n = isCliffP(x, y - 1);
+    const s = isCliffP(x, y + 1);
+    const w = isCliffP(x - 1, y);
+    const e = isCliffP(x + 1, y);
+    if (!s && (w || e)) return PLATEAU_LIP_F[hash(x + 5, y + 11) % PLATEAU_LIP_F.length];
+    if (!n && !s && (w || e)) return PLATEAU_OUTLINE_F[hash(x + 7, y + 17) % PLATEAU_OUTLINE_F.length];
+    if (!n || !s || !w || !e) return PLATEAU_OUTLINE_F[hash(x + 19, y + 23) % PLATEAU_OUTLINE_F.length];
+    if (hash(x + 41, y + 53) % 17 === 0) return PLATEAU_CRACK_F[hash(x + 61, y + 71) % PLATEAU_CRACK_F.length];
+    return 0;
+  }
+
   function hedgeFrame(x, y) {
     const hN = isHedge(x, y - 1); const hS = isHedge(x, y + 1);
     const hE = isHedge(x + 1, y); const hW = isHedge(x - 1, y);
@@ -1250,8 +1275,9 @@ if (!PROFILE) {
           collision[i] = COLLIDE_GID;
           break;
         case 'dune':
-          ground[i] = TS_CLIFF.firstgid + cliffFrameP(x, y);
-          collision[i] = COLLIDE_GID;
+          ground[i] = TS_CLIFF.firstgid + (isCliffP(x, y + 1) ? plateauTopFrame(x, y) : plateauFaceFrame(x, y));
+          detail[i] = TS_CLIFF.firstgid + plateauDetailFrame(x, y);
+          if (!isCliffP(x, y + 1)) collision[i] = COLLIDE_GID;
           break;
         case 'cave':
           ground[i] = TS_STONE.firstgid + STONE_F.C;
