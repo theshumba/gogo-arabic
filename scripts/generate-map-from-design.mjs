@@ -786,8 +786,6 @@ if (!PROFILE) {
   }
 } else {
   // ══ PROFILE path (desert_marketplace + later zones) ══
-  const raw = (x, y) => (x >= 0 && x < W && y >= 0 && y < H ? grid[y][x] : null);
-
   // 3a. classify every cell; building glyphs handled after; unknown glyphs = marks.
   // 'mark+block' cells (royal_palace palms) resolve their underlay like a mark but
   // still paint Collision (sprite via zones.js).
