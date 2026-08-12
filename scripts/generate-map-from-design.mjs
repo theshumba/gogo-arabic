@@ -268,7 +268,7 @@ const ZONE_PROFILES = {
     cliffFrames: { FACE_TOP: 22, FACE_MID: 36, FACE_BASE: 50 },
     openWaterFrame: 10,
     seaEdges: ['east'],
-    foamOnShoreline: true,
+    waterRipples: true,
     buildingGlyphs: 'H',
     buildings: [
       { contains: [15, 21], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-inn-inn-blue', label: 'Port Tavern', doorId: 'door-port-tavern' },
@@ -294,6 +294,36 @@ const ZONE_PROFILES = {
     priority: ['deck', 'quay', 'pave', 'road', 'lane', 'beach', 'grass', 'stone', 'sand', 'water'],
     baseAlias: { cliff: 'stone', deck: 'quay' },
     detailDensity: { beach: 5, stone: 4, sand: 3, grass: 18 },
+    decalsFromComma: false,
+  },
+  bedouin_camp: {
+    id: 'bedouin_camp',
+    classes: {
+      '.': 'sand',
+      ',': 'sand',
+      'd': 'camp',
+      ':': 'track',
+      'C': 'dune',
+      'w': 'water',
+      'g': 'grass',
+      'r': 'stone',
+      'D': null,
+      'E': null,
+      'T': null,
+      'F': 'camp',
+      'f': 'camp',
+      'b': 'camp',
+      'B': 'sand',
+      '=': 'sand',
+      'G': 'sand',
+    },
+    tilesets: ['water', 'foam-desert', 'cliff', 'stone'],
+    cliffFrames: { FACE_TOP: 41, FACE_MID: 54, FACE_BASE: 67 },
+    waterRipples: true,
+    buildingGlyphs: '',
+    buildings: [],
+    priority: ['water', 'track', 'camp', 'stone', 'grass', 'sand'],
+    detailDensity: { sand: 0, camp: 0, track: 0 },
     decalsFromComma: false,
   },
   royal_palace: {
@@ -695,6 +725,7 @@ const EXTRA_TILESETS = {
   deck: ['kenmi-base-tiles-wooden-deck-tiles', '../kenmi/base/tiles/wooden-deck-tiles.png', 80, 96],
   quay: ['kenmi-base-tiles-water-water-stone-tile-3', '../kenmi/base/tiles/water/water-stone-tile-3.png', 48, 80],
   foam: ['kenmi-base-tiles-water-water-foam-animation', '../kenmi/base/tiles/water/water-foam-animation.png', 320, 48],
+  'foam-desert': ['kenmi-desert-tiles-desert-water-foam-animation', '../kenmi/desert/tiles/desert-water-foam-animation.png', 320, 48],
 };
 let TS_WATER = null; let TS_CLIFF = null; let TS_WATERFALL = null; let TS_FARMLAND = null;
 let TS_FARMLAND_WET = null; let TS_GRASS3 = null; let TS_COBBLE = null; let TS_PAVE = null;
@@ -727,7 +758,7 @@ if (!PROFILE) {
     else if (short === 'beach') TS_BEACH = ts;
     else if (short === 'deck') TS_DECK = ts;
     else if (short === 'quay') TS_QUAY = ts;
-    else if (short === 'foam') TS_FOAM = ts;
+    else if (short === 'foam' || short === 'foam-desert') TS_FOAM = ts;
   }
 }
 const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_GRASS3, TS_FARMLAND, TS_FARMLAND_WET, TS_WATERFALL, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL, TS_HEDGE, TS_STONE, TS_CAVE, TS_BRIDGE, TS_BEACH, TS_DECK, TS_QUAY, TS_FOAM]
@@ -739,13 +770,20 @@ const G_PLAZA = TS_SAND2.firstgid + SAND_SOLID;  // oasis plaza `p` / market tra
 const G_ROAD = TS_SAND3.firstgid + SAND_SOLID;   // oasis road/lane / market lane `-`
 // water pool-in-sand blob (right 3x3 of the 6x3 sheet), keyed by open (land) sides
 const WATER_F = { NW: 3, N: 4, NE: 5, W: 9, C: 10, E: 11, SW: 15, S: 16, SE: 17 };
+const WATER_ALT_F = { NW: 0, N: 1, NE: 2, W: 6, C: 7, E: 8, SW: 12, S: 13, SE: 14 };
 // grass overlay frames (3 cols): hole-blob edges + 2x2 patch corners + solid
 const GRASS_F = {
   SOLID: 11,
   EDGE_N: 7, EDGE_S: 1, EDGE_W: 5, EDGE_E: 3,           // sand on that side
-  CORNER_NW: 9, CORNER_NE: 10, CORNER_SW: 12, CORNER_SE: 13, // sand on both sides
-  INNER_NW: 8, INNER_NE: 6, INNER_SW: 2, INNER_SE: 0,   // sand on that diagonal only
+  CORNER_NW: 6, CORNER_NE: 8, CORNER_SW: 2, CORNER_SE: 0, // sand on both sides
 };
+const LEGACY_GRASS_F = {
+  SOLID: 11,
+  EDGE_N: 7, EDGE_S: 1, EDGE_W: 5, EDGE_E: 3,
+  CORNER_NW: 9, CORNER_NE: 10, CORNER_SW: 12, CORNER_SE: 13,
+  INNER_NW: 8, INNER_NE: 6, INNER_SW: 2, INNER_SE: 0,
+};
+const PROFILE_GRASS_F = PROFILE?.id === 'bedouin_camp' ? GRASS_F : LEGACY_GRASS_F;
 const FARMLAND_F = {
   CORNER_TL: 0,
   EDGE_TOP: 1,
@@ -759,6 +797,11 @@ const FARMLAND_F = {
 };
 const WATERFALL_F = { TOP: 0, MID: 18, BOTTOM: 36 };
 const CLIFF_F = { FACE_TOP: 41, FACE_MID: 54, FACE_BASE: 67 };
+const PLATEAU_TOP_F = [98, 99, 100, 101, 111, 112, 113, 114, 124, 125, 126, 127];
+const PLATEAU_FACE_F = [20, 22, 23, 24, 33, 35, 36, 37, 46, 48, 49, 50];
+const PLATEAU_OUTLINE_F = [15, 16, 27, 29, 42, 43, 44, 55, 56, 57, 95, 96, 108, 109];
+const PLATEAU_LIP_F = [69, 70, 71, 80, 81, 92, 93, 94, 106, 107];
+const PLATEAU_CRACK_F = [76, 77, 89, 90, 102, 103, 115, 116];
 const RUBBLE_F = [98, 111, 124, 137, 100, 113, 126, 139]; // plain x4 + decorated x4
 // cobble-road-2 blob (3x5): 0-8 = blob-on-sand transitions (f4 = solid centre),
 // 9/12/13 solid variants, 10 sand-pothole variant, 11/14 transparent (never place)
@@ -870,21 +913,20 @@ if (!PROFILE) {
   function grassFrame(x, y) {
     const n = !isGrassT(x, y - 1); const s = !isGrassT(x, y + 1);
     const w = !isGrassT(x - 1, y); const e = !isGrassT(x + 1, y);
-    if (n && w) return GRASS_F.CORNER_NW;
-    if (n && e) return GRASS_F.CORNER_NE;
-    if (s && w) return GRASS_F.CORNER_SW;
-    if (s && e) return GRASS_F.CORNER_SE;
+    if (n && w) return LEGACY_GRASS_F.CORNER_NW;
+    if (n && e) return LEGACY_GRASS_F.CORNER_NE;
+    if (s && w) return LEGACY_GRASS_F.CORNER_SW;
+    if (s && e) return LEGACY_GRASS_F.CORNER_SE;
     if (n) return GRASS_F.EDGE_N;
     if (s) return GRASS_F.EDGE_S;
     if (w) return GRASS_F.EDGE_W;
     if (e) return GRASS_F.EDGE_E;
-    // interior: inner corners where sand touches diagonally
     const nw = !isGrassT(x - 1, y - 1); const ne = !isGrassT(x + 1, y - 1);
     const sw = !isGrassT(x - 1, y + 1); const se = !isGrassT(x + 1, y + 1);
-    if (nw && !ne && !sw && !se) return GRASS_F.INNER_NW;
-    if (ne && !nw && !sw && !se) return GRASS_F.INNER_NE;
-    if (sw && !nw && !ne && !se) return GRASS_F.INNER_SW;
-    if (se && !nw && !ne && !sw) return GRASS_F.INNER_SE;
+    if (nw && !ne && !sw && !se) return LEGACY_GRASS_F.INNER_NW;
+    if (ne && !nw && !sw && !se) return LEGACY_GRASS_F.INNER_NE;
+    if (sw && !nw && !ne && !se) return LEGACY_GRASS_F.INNER_SW;
+    if (se && !nw && !ne && !sw) return LEGACY_GRASS_F.INNER_SE;
     return GRASS_F.SOLID;
   }
 
@@ -1015,7 +1057,7 @@ if (!PROFILE) {
   const isDeckP = (x, y) => base(x, y) === 'deck';
   const isCliffP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return true; // container continues off-map
-    return base(x, y) === 'cliff';
+    return base(x, y) === 'cliff' || base(x, y) === 'dune';
   };
   const isWaterfallP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return false;
@@ -1026,14 +1068,15 @@ if (!PROFILE) {
   function waterFrameP(x, y) { // pool-in-sand blob keyed by open LAND sides (legacy math)
     const n = !isWaterP(x, y - 1); const s = !isWaterP(x, y + 1);
     const w = !isWaterP(x - 1, y); const e = !isWaterP(x + 1, y);
-    if (n && w && !s && !e) return WATER_F.NW;
-    if (n && e && !s && !w) return WATER_F.NE;
-    if (s && w && !n && !e) return WATER_F.SW;
-    if (s && e && !n && !w) return WATER_F.SE;
-    if (n && !s && !w && !e) return WATER_F.N;
-    if (s && !n && !w && !e) return WATER_F.S;
-    if (w && !e && !n && !s) return WATER_F.W;
-    if (e && !w && !n && !s) return WATER_F.E;
+    const variant = hash(x, y) % 2 ? WATER_ALT_F : WATER_F;
+    if (n && w && !s && !e) return variant.NW;
+    if (n && e && !s && !w) return variant.NE;
+    if (s && w && !n && !e) return variant.SW;
+    if (s && e && !n && !w) return variant.SE;
+    if (n && !s && !w && !e) return variant.N;
+    if (s && !n && !w && !e) return variant.S;
+    if (w && !e && !n && !s) return variant.W;
+    if (e && !w && !n && !s) return variant.E;
     return WATER_F.C; // interior, straits and 3-sided nubs fall back to open water
   }
 
@@ -1078,6 +1121,26 @@ if (!PROFILE) {
     return frames.FACE_MID;
   }
 
+  function plateauTopFrame(x, y) {
+    return PLATEAU_TOP_F[hash(x + 13, y + 29) % PLATEAU_TOP_F.length];
+  }
+
+  function plateauFaceFrame(x, y) {
+    return PLATEAU_FACE_F[hash(x + 31, y + 47) % PLATEAU_FACE_F.length];
+  }
+
+  function plateauDetailFrame(x, y) {
+    const n = isCliffP(x, y - 1);
+    const s = isCliffP(x, y + 1);
+    const w = isCliffP(x - 1, y);
+    const e = isCliffP(x + 1, y);
+    if (!s && (w || e)) return PLATEAU_LIP_F[hash(x + 5, y + 11) % PLATEAU_LIP_F.length];
+    if (!n && !s && (w || e)) return PLATEAU_OUTLINE_F[hash(x + 7, y + 17) % PLATEAU_OUTLINE_F.length];
+    if (!n || !s || !w || !e) return PLATEAU_OUTLINE_F[hash(x + 19, y + 23) % PLATEAU_OUTLINE_F.length];
+    if (hash(x + 41, y + 53) % 17 === 0) return PLATEAU_CRACK_F[hash(x + 61, y + 71) % PLATEAU_CRACK_F.length];
+    return null;
+  }
+
   function hedgeFrame(x, y) {
     const hN = isHedge(x, y - 1); const hS = isHedge(x, y + 1);
     const hE = isHedge(x + 1, y); const hW = isHedge(x - 1, y);
@@ -1117,15 +1180,15 @@ if (!PROFILE) {
     const n = !isGrass(x, y - 1); const s = !isGrass(x, y + 1);
     const w = !isGrass(x - 1, y); const e = !isGrass(x + 1, y);
     if (n && s && w && e) return GRASS_F.SOLID; // isolated planter tuft: solid, no quarter-round
-    if (n && w) return GRASS_F.CORNER_NW;
-    if (n && e) return GRASS_F.CORNER_NE;
-    if (s && w) return GRASS_F.CORNER_SW;
-    if (s && e) return GRASS_F.CORNER_SE;
-    if (n) return GRASS_F.EDGE_N;
-    if (s) return GRASS_F.EDGE_S;
-    if (w) return GRASS_F.EDGE_W;
-    if (e) return GRASS_F.EDGE_E;
-    return GRASS_F.SOLID;
+    if (n && w) return PROFILE_GRASS_F.CORNER_NW;
+    if (n && e) return PROFILE_GRASS_F.CORNER_NE;
+    if (s && w) return PROFILE_GRASS_F.CORNER_SW;
+    if (s && e) return PROFILE_GRASS_F.CORNER_SE;
+    if (n) return PROFILE_GRASS_F.EDGE_N;
+    if (s) return PROFILE_GRASS_F.EDGE_S;
+    if (w) return PROFILE_GRASS_F.EDGE_W;
+    if (e) return PROFILE_GRASS_F.EDGE_E;
+    return PROFILE_GRASS_F.SOLID;
   }
 
   function farmlandFrameP(x, y) {
@@ -1182,10 +1245,12 @@ if (!PROFILE) {
           break;
         case 'water':
           ground[i] = TS_WATER.firstgid + waterFrameP(x, y);
-          if (PROFILE?.foamOnShoreline
-            && (!isWaterP(x, y - 1) || !isWaterP(x, y + 1)
-              || !isWaterP(x - 1, y) || !isWaterP(x + 1, y))) {
-            detail[i] = TS_FOAM.firstgid;
+          if (PROFILE?.waterRipples
+            && isWaterP(x, y - 1) && isWaterP(x, y + 1)
+            && isWaterP(x - 1, y) && isWaterP(x + 1, y)
+            && hash(x + 41, y + 67) % 5 === 0) {
+            const rippleFrames = [3, 8, 13, 18, 23];
+            detail[i] = TS_FOAM.firstgid + rippleFrames[hash(x + 73, y + 19) % rippleFrames.length];
           }
           collision[i] = COLLIDE_GID; // bible §6: water is impassable
           break;
@@ -1223,6 +1288,14 @@ if (!PROFILE) {
           ground[i] = TS_CLIFF.firstgid + cliffFrameP(x, y);
           collision[i] = COLLIDE_GID;
           break;
+        case 'dune': {
+          const face = y > 0 && isCliffP(x, y - 1);
+          ground[i] = TS_CLIFF.firstgid + (face ? plateauFaceFrame(x, y) : plateauTopFrame(x, y));
+          const detailFrame = plateauDetailFrame(x, y);
+          if (detailFrame != null) detail[i] = TS_CLIFF.firstgid + detailFrame;
+          if (face) collision[i] = COLLIDE_GID;
+          break;
+        }
         case 'cave':
           ground[i] = TS_STONE.firstgid + STONE_F.C;
           detail[i] = TS_CAVE.firstgid + CAVE_F.MOUTH;
@@ -1266,10 +1339,16 @@ if (!PROFILE) {
         case 'trample':
           ground[i] = G_PLAZA;
           break;
+        case 'camp':
+          ground[i] = G_SAND;
+          break;
+        case 'track':
+          ground[i] = G_SAND;
+          break;
         case 'pave':
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
           break;
-        case 'grass':
+        case 'grass': {
           if (PROFILE.id === 'coastal_port') {
             ground[i] = TS_GRASS3.firstgid + 151;
             break;
@@ -1278,9 +1357,16 @@ if (!PROFILE) {
             ground[i] = TS_GRASS3.firstgid + 151;
           } else {
             ground[i] = G_SAND;
-            detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
+            const touchesWater = isWaterP(x, y - 1) || isWaterP(x, y + 1)
+              || isWaterP(x - 1, y) || isWaterP(x + 1, y);
+            if (touchesWater) {
+              detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
+            } else if (hash(x + 23, y + 37) % 2 === 0) {
+              detail[i] = TS_GRASS.firstgid + [9, 10, 12, 13][hash(x + 41, y + 53) % 4];
+            }
           }
           break;
+        }
       default: // sand
           ground[i] = G_SAND;
       }
@@ -1288,7 +1374,7 @@ if (!PROFILE) {
       const coastalShore = PROFILE?.id === 'coastal_port'
         && (isWaterP(x, y - 1) || isWaterP(x, y + 1) || isWaterP(x - 1, y) || isWaterP(x + 1, y));
       if (density > 0 && !coastalShore && detail[i] === 0 && hash(x, y) % 100 < density) {
-        const decalFrames = [0, 2, 6, 8];
+        const decalFrames = [9, 10, 12, 13];
         detail[i] = TS_GRASS.firstgid + decalFrames[hash(x + 17, y + 31) % decalFrames.length];
       }
       if (block) collision[i] = COLLIDE_GID;

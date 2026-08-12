@@ -1,3 +1,5 @@
+/* global document, window */
+
 import crypto from 'node:crypto';
 
 export const CORE_ZONES = [
@@ -22,14 +24,14 @@ export const ZONE_DIMENSIONS = {
   royal_palace: [50, 40],
 };
 
-export function buildSeed(zones) {
+export function buildSeed(zones, currentZone = 'oasis_village') {
   return {
     player: JSON.stringify({
       name: 'ShotTester',
       level: 5,
       xp: 500,
       dirhams: 500,
-      currentZone: 'oasis_village',
+      currentZone,
       position: { x: 100, y: 100 },
       inventory: [],
       outfit: 'simple-thobe',
@@ -63,6 +65,39 @@ export async function suppressDomOverlays(page) {
       perfOverlay.destroy();
       delete window.__PERF_OVERLAY__;
     }
+  });
+}
+
+export async function suppressWorldWeather(page) {
+  return page.evaluate(() => {
+    const scene = window.__PHASER_GAME__?.scene?.getScene?.('WorldScene');
+    const weather = scene?.weatherSystem;
+    if (!weather) return { present: false, weather: null };
+    const activeWeather = weather.currentWeather;
+    weather.stopAllEffects();
+    return { present: true, weather: activeWeather };
+  });
+}
+
+export async function suppressDayNightLighting(page) {
+  return page.evaluate(() => {
+    const scene = window.__PHASER_GAME__?.scene?.getScene?.('WorldScene');
+    const overlay = scene?.dayNightCycle?.overlay;
+    if (!overlay) return { present: false };
+    const state = {
+      x: overlay.x,
+      y: overlay.y,
+      width: overlay.displayWidth,
+      height: overlay.displayHeight,
+      depth: overlay.depth,
+      alpha: overlay.alpha,
+      scrollFactorX: overlay.scrollFactorX,
+      scrollFactorY: overlay.scrollFactorY,
+      fillColor: overlay.fillColor,
+      blendMode: overlay.blendMode,
+    };
+    overlay.setAlpha(0);
+    return { present: true, state };
   });
 }
 
