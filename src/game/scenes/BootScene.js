@@ -105,6 +105,7 @@ export class BootScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('map-mountain-village', '/assets/maps/mountain-village.json');
     this.load.tilemapTiledJSON('map-coastal-port', '/assets/maps/coastal-port.json');
     this.load.tilemapTiledJSON('map-royal-palace', '/assets/maps/royal-palace.json');
+    this.load.tilemapTiledJSON('map-bedouin-camp', '/assets/maps/bedouin-camp.json');
 
     // =========================================================
     // KENMI CUTE FANTASY ASSETS — loaded from catalog

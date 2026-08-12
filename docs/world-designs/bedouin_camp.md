@@ -39,30 +39,30 @@ Studied from `/Users/theshumba/Desktop/Gogo-World-References/` (manifests + 8 im
 ```
           1111111111222222222233333
 01234567890123456789012345678901234
-CCCCCCCCCCCCCCCCxxxCCCCCCCCCCCCCCCC  0
-CCCCCCCCC....kCC:::CCCCCCCC.....CCC  1
-CC......ddd...k.::::::..........CCC  2
-C...................::....ddd....CC  3
-C....o.....5*...EEE.::o.*........CC  4
-C..............BEEEB::...........CC  5
-C..ddd........ooEEE.::.....k.....CC  6
-C......TT......o.D.o::...TT......CC  7
-C.....oTTo.....s.r..::...TTo....CCC  8
-C........Nf......:..::..........CCC  9
-C.........b.1dddd:dd::.....r.o..CCC 10
-C.o.Bs.......ddbdddbdd..ooN.AA..CCC 11
-x:::::....:::ddddFdddd:::gwwwwg.CCC 12
-x::S:::::::::dddNddddd..gwwwwww8CCC 13
-x:::::::::...dbdddoddd...6wwwwk.CCC 14
-C.o.B...::oTT......::....ggkkgg..CC 15
-CC......::.TTo.....::..TTo.gg....CC 16
-CCC.....::..ddd....::.2TT...4.*..CC 17
-CCC.====G==........::..........CCCC 18
-CCC7=.A.A.=3.......::........k..CCC 19
-CCC.=.A..A=...o....::.........o.CCC 20
-CCC.=======.......ob.o......ko..CCC 21
-CCCC..........ddd..dkddd........CCC 22
-CCCCCCCCCCCCCCCCCCCdddddCCCCCCCCCCC 23
+CCCCCCCCCCCCCCCxxxxxCCCCCCCCCCCCCCC  0
+CCCCC.............................C  1
+C.....CCC....................CCCC.C  2
+C................x................C  3
+C................:..o.............C  4
+C................:................C  5
+C.....TTT........:.......TTTT.....C  6
+C....oTTTo.......:........oTT.....C  7
+C.....TDNT.......:....8....N.o....C  8
+C................:....o.....o.....C  9
+C.............s.ddd...............C 10
+x.........::::.odddo.:::..........C 11
+x........:::..ddddddd...:.....6...C 12
+x..S:::::::::ddddNdddd..:.........C 13
+x.............ddddddd...:.......CCC 14
+C..............ddodd....:......C..C 15
+C...............ddd...TT:gggggg.C.C 16
+C.....oTT.............TT:ggwwwg...C 17
+CCCC..TT:o:::::::::::::::8gwwwgCC.C 18
+C.CC......o.............gggwwwg...C 19
+C.CC..7.................ggggggCC..C 20
+C.................................C 21
+C..............3...............oo.C 22
+C..........CCCCCCC................C 23
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 24
 ```
 
@@ -99,67 +99,67 @@ Complete ID list from contract-and-pipeline.md §1 (bedouin_camp): 3 NPCs, 2 exi
 | Item | Value | Rationale |
 |---|---|---|
 | spawnPoint | (3,13) | 3 tiles inside the west entrance cut, on the trampled strip (1 tile past the `from_farmland` entry). |
-| entry `from_farmland` | (2,13) | 2 tiles inside the west exit cut (connection-map rule: 1–2 tiles inside). |
-| entry `from_mountain` | (17,2) | 2 tiles inside the north cliff pinch, on the path. |
+| entry `from_farmland` | (3,13) | 2 tiles inside the west exit cut (connection-map rule: 1–2 tiles inside). |
+| entry `from_mountain` | (17,3) | 2 tiles inside the north cliff pinch, on the path. |
 
 **Exits** (match world-connection-map ledger: W ★ @0.50, N @0.50)
 
 | Exit id | Edge | tileRange | Fraction | Target | Rationale |
 |---|---|---|---|---|---|
-| `bedouin-to-farmland` | west ★ | y=[12,14] | 13/25 = 0.52 ✓ | farmland/`from_bedouin` | Dressed main entrance (banner pair + sign); pairs with farmland's east exit @0.50. |
-| `bedouin-to-mountain` | north | x=[16,18] | 17/35 = 0.49 ✓ | mountain_village/`from_bedouin` | Plain 3-tile cliff pinch; the trail bends twice (zigzag climb feel) before the cut. Pairs with mountain's south ★ @0.50. |
+| `bedouin-to-farmland` | west ★ | y[11,15] | 13/25 = 0.52 ✓ | farmland/`from_bedouin` | Dressed main entrance (banner pair + sign); pairs with farmland's east exit. |
+| `bedouin-to-mountain` | north | x[15,19] | 17/35 = 0.49 ✓ | mountain_village/`from_bedouin` | Rocky mountain approach; pairs with mountain's south exit. |
 
 **NPCs (3)**
 
 | ID | Tile | Rationale (analogous point of interest) |
 |---|---|---|
-| `elder-tariq` | (16,13) | Beside the main fire pit, at the foot of his tent's axis — the Burning Heroes chief presiding over the circle. Focal earns 2–3 NPCs (LAW-26). |
-| `storyteller-noor` | (9,9) | At her own small hearth by T1 — Seliel campfire vignette; one pit per 2–3 tents (LAW-40). |
-| `wanderer-ali` | (26,11) | Resting at the waterhole camel rest — the Ys V trail merchant; a wanderer arrives where the water is. |
+| `elder-tariq` | (17,13) | Beside the main fire pit, at the foot of his tent's axis — the Burning Heroes chief presiding over the circle. Focal earns 2–3 NPCs (LAW-26). |
+| `storyteller-noor` | (8,8) | At her own small hearth by T1 — Seliel campfire vignette; one pit per 2–3 tents (LAW-40). |
+| `wanderer-ali` | (27,8) | Resting at the waterhole camel rest — the Ys V trail merchant; a wanderer arrives where the water is. |
 
 **Interactables (20)**
 
 | ID | Tile | Rationale |
 |---|---|---|
-| `sign-camp` | (5,11) | 1 tile off the entrance path, approach side (LAW-7), inside the banner-framed gate. |
-| `sign-elder-tent` | (15,8) | Within 2 tiles of the elder door (LAW-16), off the door stub. |
-| `door-bedouin-tent` → `bedouin_tent_interior` | (17,7) | On the elder tent's south facade, facing the fire down the axis; rug (17,8) + clear path stub (17,8–9) in front (LAW-5). |
-| `bookshelf-time` | (6,8) | Story-scroll rack against T1's west flank — Noor's tales of time (moves as a set with T1, LAW-16). |
-| `bookshelf-adjectives` | (27,8) | Scroll rack on T2's east flank, by the traveler's rest. |
-| `chest-camp-tent` | (14,6) | Elder-court supply cluster hugging the tent's west flank (props cluster on architecture, LAW-32). |
-| `chest-camp-hidden` | (29,21) | Deep in the quiet-dune corner behind the bones — exploration payoff. |
-| `lantern-camp-1` | (15,7) | Pair flanking the elder door (LAW-36: pairs at entrances only). |
-| `lantern-camp-2` | (19,7) | Second of the door pair. |
-| `lantern-camp-3` | (24,11) | Lights the waterhole camel rest at dusk — single lamp at the secondary focal. |
-| `painting-camp-1` | (9,8) | Hung weaving on T1's east face — the storyteller's tapestry. |
-| `painting-camp-2` | (25,16) | Weaving on T4's east face — repeat with variation across the ring (LAW-35). |
-| `crate-camp-1` | (15,6) | Elder-court supply cluster (with chest-camp-tent — cluster of 2), 1 tile off the tent footprint (LAW-16 ≤2). |
-| `crate-camp-2` | (13,16) | T3's supply crate, hugging its east side. |
-| `pot-camp-1` | (18,14) | Cooking pot at the fire circle's SE rim — every hearth needs its pot. |
-| `barrel-camp-1` | (29,10) | Water barrel in the camel-rest cluster (rug + camels + trough + barrel vignette). |
-| `statue-camp-1` | (22,4) | Old stone waymark 1 tile off the north-road bend — marks the mountain pass (junction anchor, LAW-3). |
-| `inscription-bedouin-1` | (30,20) | Lore stone in the quiet dunes, beside the bones. |
-| `inscription-camp-2` | (5,4) | Lore stone as the NW open-sand POI (LAW-33 8–15-tile rhythm). |
-| `inscription-camp-3` | (14,20) | Lore stone in the south sand between pen and vista stub. |
+| `sign-camp` | (3,12) | 1 tile off the entrance path, approach side (LAW-7), inside the banner-framed gate. |
+| `sign-elder-tent` | (14,10) | Within 2 tiles of the elder door (LAW-16), off the door stub. |
+| `door-bedouin-tent` → `bedouin_tent_interior` | (7,8) | On the elder tent's south facade, facing the fire down the axis. |
+| `bookshelf-time` | (9,18) | Story-scroll rack in the livestock/work cluster. |
+| `bookshelf-adjectives` | (29,8) | Scroll rack on the traders' side. |
+| `chest-camp-tent` | (5,7) | Elder-tent supply cluster. |
+| `chest-camp-hidden` | (31,22) | Deep in the quiet-dune corner behind the rocks — exploration payoff. |
+| `lantern-camp-1` | (15,11) | Flanking the central court. |
+| `lantern-camp-2` | (19,11) | Flanking the central court. |
+| `lantern-camp-3` | (6,17) | Lights the livestock/work cluster. |
+| `painting-camp-1` | (9,7) | Hung weaving in the elder tent cluster. |
+| `painting-camp-2` | (26,7) | Traders' side tapestry. |
+| `crate-camp-1` | (22,9) | Traders' supply cluster. |
+| `crate-camp-2` | (10,19) | Livestock/work supply cluster. |
+| `pot-camp-1` | (17,15) | Cooking pot at the fire circle's south rim. |
+| `barrel-camp-1` | (28,9) | Water barrel in the traders' cluster. |
+| `statue-camp-1` | (20,4) | Stone waymark on the mountain approach. |
+| `inscription-bedouin-1` | (32,22) | Lore stone in the hidden southeast corner. |
+| `inscription-camp-2` | (3,3) | Lore stone on the northwest approach. |
+| `inscription-camp-3` | (14,22) | Lore stone in the southern sand. |
 
-**Gathering spots (8)** — grid digits 1–8
+**Gathering spots (8):** grid digits 1–8
 
-| # | ID | Resource/type | Tile | Rationale |
+| ID | Resource/type | Tile | Rationale |
 |---|---|---|---|---|
-| 1 | `spot_bedouin_animal_01` | hemp / animal_trace | (12,10) | Trampled ground between T1 and the fire circle — fibres where people and beasts pass. |
-| 2 | `spot_bedouin_animal_02` | linen / animal_trace | (22,17) | Beside T4 — weaving fibres at a tent flank. |
-| 3 | `spot_bedouin_animal_03` | wool / animal_trace | (11,19) | Just outside the pen rail — wool caught on the fence (reachable, not locked inside). |
-| 4 | `spot_bedouin_herbs_01` | aloe_vera / herb_patch | (28,17) | Below the detached grass blob south of the pool — aloe grows where water seeps. |
-| 5 | `spot_bedouin_herbs_02` | sage / herb_patch | (11,4) | NW open steppe beside the acacia — wild sage POI. |
-| 6 | `spot_bedouin_water_01` | olive_oil / water_source | (25,14) | On the pool's 1-tile shore rim (water_source rim allowance, LINT-2). |
-| 7 | `spot_bedouin_ore_01` | copper_ore / ore_vein | (3,19) | Against the SW cliff outcrop — ore belongs on rock. |
-| 8 | `spot_bedouin_papyrus_01` | papyrus / papyrus_stand | (31,13) | On the grass halo at the pool's east shore, beside the cattails — reeds by water (NOT on the rim, so no allowlist needed). |
+| `spot_bedouin_animal_01` | hemp / animal_trace | (8,10) | Trampled ground by the elder-tent cluster. |
+| `spot_bedouin_animal_02` | linen / animal_trace | (18,14) | Beside the central court. |
+| `spot_bedouin_animal_03` | wool / animal_trace | (15,22) | Southern trail outside the livestock/work cluster. |
+| `spot_bedouin_herbs_01` | aloe_vera / herb_patch | (12,6) | North-west camp edge. |
+| `spot_bedouin_herbs_02` | sage / herb_patch | (30,12) | East camp edge. |
+| `spot_bedouin_water_01` | olive_oil / water_source | (25,18) | Walkable oasis approach beside the pool. |
+| `spot_bedouin_ore_01` | copper_ore / ore_vein | (6,20) | Southwest rocky edge. |
+| `spot_bedouin_papyrus_01` | papyrus / papyrus_stand | (22,8) | Traders' side. |
 
 ## 6. Enterable interiors
 
 | Building | Door interactable | interiorId | Notes |
 |---|---|---|---|
-| Elder tent (the oversized landmark, 16–18 × 4–6) | `door-bedouin-tent` @(17,7) | `bedouin_tent_interior` — "Elder's Tent (خَيْمَة الشَّيْخ)", 12×10 buildSmallHouse, NPC `bedouin-elder-interior`, 5 interactables incl. `exit-door` | The contract's ONE bedouin door now sits on the elder tent itself — matching the interior's name/occupant. Interior keeps its existing hand-crafted layout this phase (contract §8). No locked flag. |
+| Elder tent (north-west cluster) | `door-bedouin-tent` @(7,8) | `bedouin_tent_interior` — "Elder's Tent (خَيْمَة الشَّيْخ)", 12×10 buildSmallHouse, NPC `bedouin-elder-interior`, 5 interactables incl. `exit-door` | The contract's bedouin door sits in the largest tent cluster. |
 
 The 4 ring tents are non-enterable dressing (no contract doors; no new interiorIds invented).
 
@@ -191,11 +191,11 @@ All families verified present in `docs/world-design-research/asset-inventory.md`
 ## 8. Lint self-check (LINT-1..11)
 
 - **LINT-1 (no overlaps):** every placed ID in §5 occupies a unique tile; rugs (17,8)/(27,10) are FLAT_GROUND (lower layer) and only the walking player crosses them; no non-flat footprints intersect (tents 2×2, elder 3×3, all gaps ≥3).
-- **LINT-2 (nothing on water/collision):** no object/NPC/spot on `w` or `C`. `spot_bedouin_water_01` sits on the 1-tile shore rim — explicitly allowed for water_source. Papyrus spot moved onto the grass halo (31,13), NOT the rim, so no allowlist needed. Cattails on the rim are amphibious-allowlisted deco.
+- **LINT-2 (nothing on water/collision):** no object/NPC/spot on `w` or `C`; the water source spot remains on walkable oasis approach ground.
 - **LINT-3 (rugs on plausible ground):** both rugs sit fully on flat sand — not on water, cliff, shoreline, or a material seam.
 - **LINT-4 (density/spacing):** (a) animals: 6 explicit (4 sheep + 2 camels), ≤4 per 20×15 window (sheep SW, camels E — different windows), ≤10/zone ✓. (b) Seat classification is explicit: (10,10), (15,11), (19,11) are `sleeping-mat` (FLAT_GROUND — exempt from footprint counts); (14,14) and the vista seat (19,21) are `split-log-benches` (non-flat). Non-flat DECO props in the worst-case core 20×15 window (cols 8–27, rows 3–17): banners (15,5)/(19,5), storyteller campfire (10,9), main fire pit (17,12), bench (14,14), trough (25,11), acacia (12,4), cactus (24,4), rocks (27,6)+(27–28,15), pen-junction jar (10,15) ≈ 12 ✓ ≤15 (LAW-31 core budget); quiet corner has 3. Contract interactables (12 of the 20 fall in that same window — unavoidable at 35×25 with a 20-interactable contract) render on/against architecture and are audited by LINT-7, not the LAW-31 deco budget; if the built linter counts interactables toward LINT-4(b), flag the cap for renegotiation rather than thinning below contract density. (c) Same-key pairs: lantern door pair 4 apart; entrance jars (2,11)/(2,15) a declared marker pair, jar (10,15) ≥6 from them; exit rocks (13,1)/(14,2) a declared cluster ≤4; sheep/camel pairs are declared pen/vignette clusters ≤4; no 3+ same-key straight line at even spacing. (d) No empty 20×20: every quadrant carries POIs (inscriptions, acacia, cactus, bones, `d` blobs every ≤8 tiles of bare sand, LAW-33).
-- **LINT-5 (reachability):** flood-fill from spawn (3,13): elder door (17,7) has walkable rug (17,8) + stub (17,9) = ≥2 clear tiles on its south face; both exits, both entries, all 3 NPCs, all 8 spots reachable (wool sits OUTSIDE the pen rail; pen interior reachable via gate (8,18); ore reachable via open sand col 3; papyrus via the pool's north-east shore path). No orphaned islands.
-- **LINT-6 (exits):** exit id set = contract's exactly ({bedouin-to-farmland, bedouin-to-mountain}); west rect on col 0 rows 12–14, north rect on row 0 cols 16–18 — ON their declared edges, in bounds; fractions 0.52/0.49 within ±0.10 of the ledger; `farmland.entries.from_bedouin` and `mountain_village.entries.from_bedouin` both exist; entry tiles (2,13)/(17,2) walkable and not inside another exit's trigger range.
+- **LINT-5 (reachability):** flood-fill from spawn (3,13) must reach both exits, both entries, all 3 NPCs, all 8 spots, including wool (15,22), ore (6,20), and the hidden southeast corner.
+- **LINT-6 (exits):** exit id set equals the contract; west range is rows 11–15 and north range is columns 15–19, both on their declared edges; entries `(3,13)` and `(17,3)` are walkable and outside other triggers.
 - **LINT-7 (contract completeness):** 3 NPCs + 20 interactables + 8 spots + 2 entries placed exactly once each (§5 counts: 2 signs, 2 bookshelves, 2 chests, 1 door, 3 lanterns, 2 paintings, 2 crates, 1 pot, 1 barrel, 1 statue, 3 inscriptions = 20 ✓). `door-bedouin-tent.interiorId = bedouin_tent_interior` resolves in INTERIORS and contains `exit-door` isExit:true; every building-set interactable within 2 tiles of its tent.
 - **LINT-8 (dims/template):** 35×25 matches zones.js mapWidth/mapHeight; Tiled JSON will copy the oasis-village template (Ground/Collision/Exits, uncompressed, catalog-named tilesets); spawn + entries on walkable tiles.
 - **LINT-9 (asset legality):** every family in §7 exists in kenmiCatalog; no cultural excludes (no pigs — sheep only); new crops from `military-tents`/`desert-bones` sheets need PROP_CROP_REGIONS rows at build time (data-only).

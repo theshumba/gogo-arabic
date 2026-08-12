@@ -296,6 +296,35 @@ const ZONE_PROFILES = {
     detailDensity: { beach: 5, stone: 4, sand: 3, grass: 18 },
     decalsFromComma: false,
   },
+  bedouin_camp: {
+    id: 'bedouin_camp',
+    classes: {
+      '.': 'sand',
+      ',': 'sand',
+      'd': 'camp',
+      ':': 'track',
+      'C': 'dune',
+      'w': 'water',
+      'g': 'grass',
+      'r': 'stone',
+      'D': null,
+      'E': null,
+      'T': null,
+      'F': 'camp',
+      'f': 'camp',
+      'b': 'camp',
+      'B': 'sand',
+      '=': 'sand',
+      'G': 'sand',
+    },
+    tilesets: ['water', 'cliff', 'stone'],
+    cliffFrames: { FACE_TOP: 41, FACE_MID: 54, FACE_BASE: 67 },
+    buildingGlyphs: '',
+    buildings: [],
+    priority: ['water', 'track', 'camp', 'stone', 'grass', 'sand'],
+    detailDensity: { sand: 3, camp: 2, track: 1 },
+    decalsFromComma: false,
+  },
   royal_palace: {
     classes: {
       s: 'sand',
@@ -1223,6 +1252,10 @@ if (!PROFILE) {
           ground[i] = TS_CLIFF.firstgid + cliffFrameP(x, y);
           collision[i] = COLLIDE_GID;
           break;
+        case 'dune':
+          ground[i] = TS_CLIFF.firstgid + cliffFrameP(x, y);
+          collision[i] = COLLIDE_GID;
+          break;
         case 'cave':
           ground[i] = TS_STONE.firstgid + STONE_F.C;
           detail[i] = TS_CAVE.firstgid + CAVE_F.MOUTH;
@@ -1265,6 +1298,12 @@ if (!PROFILE) {
           break;
         case 'trample':
           ground[i] = G_PLAZA;
+          break;
+        case 'camp':
+          ground[i] = G_PLAZA;
+          break;
+        case 'track':
+          ground[i] = G_ROAD;
           break;
         case 'pave':
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
