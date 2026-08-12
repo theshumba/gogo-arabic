@@ -317,13 +317,13 @@ const ZONE_PROFILES = {
       '=': 'sand',
       'G': 'sand',
     },
-    tilesets: ['water', 'foam', 'cliff', 'stone'],
+    tilesets: ['water', 'foam-desert', 'cliff', 'stone'],
     cliffFrames: { FACE_TOP: 41, FACE_MID: 54, FACE_BASE: 67 },
     waterRipples: true,
     buildingGlyphs: '',
     buildings: [],
     priority: ['water', 'track', 'camp', 'stone', 'grass', 'sand'],
-  detailDensity: { sand: 0, camp: 0, track: 0 },
+    detailDensity: { sand: 0, camp: 0, track: 0 },
     decalsFromComma: false,
   },
   royal_palace: {
@@ -724,7 +724,8 @@ const EXTRA_TILESETS = {
   beach: ['kenmi-desert-tiles-desert-beach-tiles-1', '../kenmi/desert/tiles/desert-beach-tiles-1.png', 80, 48],
   deck: ['kenmi-base-tiles-wooden-deck-tiles', '../kenmi/base/tiles/wooden-deck-tiles.png', 80, 96],
   quay: ['kenmi-base-tiles-water-water-stone-tile-3', '../kenmi/base/tiles/water/water-stone-tile-3.png', 48, 80],
-  foam: ['kenmi-desert-tiles-desert-water-foam-animation', '../kenmi/desert/tiles/desert-water-foam-animation.png', 320, 48],
+  foam: ['kenmi-base-tiles-water-water-foam-animation', '../kenmi/base/tiles/water/water-foam-animation.png', 320, 48],
+  'foam-desert': ['kenmi-desert-tiles-desert-water-foam-animation', '../kenmi/desert/tiles/desert-water-foam-animation.png', 320, 48],
 };
 let TS_WATER = null; let TS_CLIFF = null; let TS_WATERFALL = null; let TS_FARMLAND = null;
 let TS_FARMLAND_WET = null; let TS_GRASS3 = null; let TS_COBBLE = null; let TS_PAVE = null;
@@ -757,7 +758,7 @@ if (!PROFILE) {
     else if (short === 'beach') TS_BEACH = ts;
     else if (short === 'deck') TS_DECK = ts;
     else if (short === 'quay') TS_QUAY = ts;
-    else if (short === 'foam') TS_FOAM = ts;
+    else if (short === 'foam' || short === 'foam-desert') TS_FOAM = ts;
   }
 }
 const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_GRASS3, TS_FARMLAND, TS_FARMLAND_WET, TS_WATERFALL, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL, TS_HEDGE, TS_STONE, TS_CAVE, TS_BRIDGE, TS_BEACH, TS_DECK, TS_QUAY, TS_FOAM]
@@ -776,6 +777,13 @@ const GRASS_F = {
   EDGE_N: 7, EDGE_S: 1, EDGE_W: 5, EDGE_E: 3,           // sand on that side
   CORNER_NW: 6, CORNER_NE: 8, CORNER_SW: 2, CORNER_SE: 0, // sand on both sides
 };
+const LEGACY_GRASS_F = {
+  SOLID: 11,
+  EDGE_N: 7, EDGE_S: 1, EDGE_W: 5, EDGE_E: 3,
+  CORNER_NW: 9, CORNER_NE: 10, CORNER_SW: 12, CORNER_SE: 13,
+  INNER_NW: 8, INNER_NE: 6, INNER_SW: 2, INNER_SE: 0,
+};
+const PROFILE_GRASS_F = PROFILE?.id === 'bedouin_camp' ? GRASS_F : LEGACY_GRASS_F;
 const FARMLAND_F = {
   CORNER_TL: 0,
   EDGE_TOP: 1,
@@ -905,14 +913,20 @@ if (!PROFILE) {
   function grassFrame(x, y) {
     const n = !isGrassT(x, y - 1); const s = !isGrassT(x, y + 1);
     const w = !isGrassT(x - 1, y); const e = !isGrassT(x + 1, y);
-    if (n && w) return GRASS_F.CORNER_NW;
-    if (n && e) return GRASS_F.CORNER_NE;
-    if (s && w) return GRASS_F.CORNER_SW;
-    if (s && e) return GRASS_F.CORNER_SE;
+    if (n && w) return LEGACY_GRASS_F.CORNER_NW;
+    if (n && e) return LEGACY_GRASS_F.CORNER_NE;
+    if (s && w) return LEGACY_GRASS_F.CORNER_SW;
+    if (s && e) return LEGACY_GRASS_F.CORNER_SE;
     if (n) return GRASS_F.EDGE_N;
     if (s) return GRASS_F.EDGE_S;
     if (w) return GRASS_F.EDGE_W;
     if (e) return GRASS_F.EDGE_E;
+    const nw = !isGrassT(x - 1, y - 1); const ne = !isGrassT(x + 1, y - 1);
+    const sw = !isGrassT(x - 1, y + 1); const se = !isGrassT(x + 1, y + 1);
+    if (nw && !ne && !sw && !se) return LEGACY_GRASS_F.INNER_NW;
+    if (ne && !nw && !sw && !se) return LEGACY_GRASS_F.INNER_NE;
+    if (sw && !nw && !ne && !se) return LEGACY_GRASS_F.INNER_SW;
+    if (se && !nw && !ne && !sw) return LEGACY_GRASS_F.INNER_SE;
     return GRASS_F.SOLID;
   }
 
@@ -1124,7 +1138,7 @@ if (!PROFILE) {
     if (!n && !s && (w || e)) return PLATEAU_OUTLINE_F[hash(x + 7, y + 17) % PLATEAU_OUTLINE_F.length];
     if (!n || !s || !w || !e) return PLATEAU_OUTLINE_F[hash(x + 19, y + 23) % PLATEAU_OUTLINE_F.length];
     if (hash(x + 41, y + 53) % 17 === 0) return PLATEAU_CRACK_F[hash(x + 61, y + 71) % PLATEAU_CRACK_F.length];
-    return 0;
+    return null;
   }
 
   function hedgeFrame(x, y) {
@@ -1166,15 +1180,15 @@ if (!PROFILE) {
     const n = !isGrass(x, y - 1); const s = !isGrass(x, y + 1);
     const w = !isGrass(x - 1, y); const e = !isGrass(x + 1, y);
     if (n && s && w && e) return GRASS_F.SOLID; // isolated planter tuft: solid, no quarter-round
-    if (n && w) return GRASS_F.CORNER_NW;
-    if (n && e) return GRASS_F.CORNER_NE;
-    if (s && w) return GRASS_F.CORNER_SW;
-    if (s && e) return GRASS_F.CORNER_SE;
-    if (n) return GRASS_F.EDGE_N;
-    if (s) return GRASS_F.EDGE_S;
-    if (w) return GRASS_F.EDGE_W;
-    if (e) return GRASS_F.EDGE_E;
-    return GRASS_F.SOLID;
+    if (n && w) return PROFILE_GRASS_F.CORNER_NW;
+    if (n && e) return PROFILE_GRASS_F.CORNER_NE;
+    if (s && w) return PROFILE_GRASS_F.CORNER_SW;
+    if (s && e) return PROFILE_GRASS_F.CORNER_SE;
+    if (n) return PROFILE_GRASS_F.EDGE_N;
+    if (s) return PROFILE_GRASS_F.EDGE_S;
+    if (w) return PROFILE_GRASS_F.EDGE_W;
+    if (e) return PROFILE_GRASS_F.EDGE_E;
+    return PROFILE_GRASS_F.SOLID;
   }
 
   function farmlandFrameP(x, y) {
@@ -1277,7 +1291,8 @@ if (!PROFILE) {
         case 'dune': {
           const face = y > 0 && isCliffP(x, y - 1);
           ground[i] = TS_CLIFF.firstgid + (face ? plateauFaceFrame(x, y) : plateauTopFrame(x, y));
-          detail[i] = TS_CLIFF.firstgid + plateauDetailFrame(x, y);
+          const detailFrame = plateauDetailFrame(x, y);
+          if (detailFrame != null) detail[i] = TS_CLIFF.firstgid + detailFrame;
           if (face) collision[i] = COLLIDE_GID;
           break;
         }
@@ -1324,7 +1339,6 @@ if (!PROFILE) {
         case 'trample':
           ground[i] = G_PLAZA;
           break;
-        case 'variation':
         case 'camp':
           ground[i] = G_SAND;
           break;

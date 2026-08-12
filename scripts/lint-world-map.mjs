@@ -662,14 +662,14 @@ async function lintZone(zoneId, ctx) {
     for (let wy = 0; wy <= H - 15 && (!animalFlagged || !densityFlagged); wy += 1) {
       for (let wx = 0; wx <= W - 20; wx += 1) {
         // Bedouin Camp intentionally concentrates herd life around its pen and
-        // court; the scattered-world animal cap does not apply to this zone.
-        const animalLimit = zoneId === 'bedouin_camp' ? Infinity : 4;
+        // court; allow its authored herd headroom without disabling the cap.
+        const animalLimit = zoneId === 'bedouin_camp' ? 10 : 4;
         if (!animalFlagged && winCount(animalObjs, wx, wy, 20, 15) > animalLimit) {
           add('LINT-4', `>4 ambient animals in 20x15 window`, wx, wy); animalFlagged = true;
         }
-        // Bedouin Camp is intentionally a dense lived-in settlement; LAW-31
-        // protects open-world zones from prop walls, but is not applicable here.
-        const densityLimit = zoneId === 'bedouin_camp' ? Infinity : 15;
+        // Bedouin Camp is intentionally a dense lived-in settlement; retain a
+        // finite ceiling so an accidental prop wall still trips LAW-31.
+        const densityLimit = zoneId === 'bedouin_camp' ? 40 : 15;
         if (!densityFlagged && winCount(nonFlat, wx, wy, 20, 15) > densityLimit) {
           add('LINT-4', `>15 non-flat props in 20x15 window (LAW-31)`, wx, wy); densityFlagged = true;
         }
