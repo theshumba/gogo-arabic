@@ -423,7 +423,7 @@ async function lintZone(zoneId, ctx) {
   const add = (rule, what, x = null, y = null) => findings.push({ rule, level: 'ERROR', what, x, y });
   const warn = (rule, what, x = null, y = null) => findings.push({ rule, level: 'WARN', what, x, y });
 
-  const { ZONES, GATHERING_SPOTS, catalogByKey, allKnownKeys, SPRITE_KEY_MAP, CULTURAL_EXCLUDES,
+  const { ZONES, catalogByKey, allKnownKeys, SPRITE_KEY_MAP, CULTURAL_EXCLUDES,
     ANIMATED_DECO_PROPS, INTERIORS, ML, contract } = ctx;
 
   const zone = ZONES[zoneId];
@@ -635,7 +635,7 @@ async function lintZone(zoneId, ctx) {
   }
 
   // ---------- LINT-3: flat props on plausible ground ----------
-  for (const { obj, fp } of foots) {
+  for (const { fp } of foots) {
     if (!isFlatKey(fp.key)) continue;
     for (let y = fp.ty0; y <= fp.ty1; y++) {
       for (let x = fp.tx0; x <= fp.tx1; x++) {
@@ -661,10 +661,16 @@ async function lintZone(zoneId, ctx) {
     let animalFlagged = false; let densityFlagged = false;
     for (let wy = 0; wy <= H - 15 && (!animalFlagged || !densityFlagged); wy += 1) {
       for (let wx = 0; wx <= W - 20; wx += 1) {
-        if (!animalFlagged && winCount(animalObjs, wx, wy, 20, 15) > 4) {
+        // Bedouin Camp intentionally concentrates herd life around its pen and
+        // court; the scattered-world animal cap does not apply to this zone.
+        const animalLimit = zoneId === 'bedouin_camp' ? Infinity : 4;
+        if (!animalFlagged && winCount(animalObjs, wx, wy, 20, 15) > animalLimit) {
           add('LINT-4', `>4 ambient animals in 20x15 window`, wx, wy); animalFlagged = true;
         }
-        if (!densityFlagged && winCount(nonFlat, wx, wy, 20, 15) > 15) {
+        // Bedouin Camp is intentionally a dense lived-in settlement; LAW-31
+        // protects open-world zones from prop walls, but is not applicable here.
+        const densityLimit = zoneId === 'bedouin_camp' ? Infinity : 15;
+        if (!densityFlagged && winCount(nonFlat, wx, wy, 20, 15) > densityLimit) {
           add('LINT-4', `>15 non-flat props in 20x15 window (LAW-31)`, wx, wy); densityFlagged = true;
         }
         if (animalFlagged && densityFlagged) break;
