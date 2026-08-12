@@ -205,6 +205,7 @@ const ZONE_PROFILES = {
       C: 'cave',
       M: 'bldg',
       H: 'bldg',
+      D: null,
       O: 'stone+block',
       r: 'stone+block',
       T: 'stone+block',
@@ -242,6 +243,55 @@ const ZONE_PROFILES = {
     priority: ['water', 'waterfall', 'bridge', 'road', 'stone', 'grass', 'cliff'],
     baseAlias: { bridge: 'stone', cave: 'stone' },
     detailDensity: { stone: 8, trample: 4 },
+    decalsFromComma: false,
+  },
+  coastal_port: {
+    id: 'coastal_port',
+    classes: {
+      '~': 'water',
+      'b': 'beach',
+      'd': 'deck',
+      'Q': 'quay',
+      'q': 'quay+block',
+      'C': 'cliff',
+      'r': 'stone',
+      '=': 'road',
+      ':': 'lane',
+      'p': 'pave',
+      'g': 'grass',
+      's': 'sand',
+      H: 'bldg',
+      o: 'stone+block',
+      E: null,
+    },
+    tilesets: ['water', 'beach', 'deck', 'quay', 'foam', 'cliff-stone', 'stone', 'cobble', 'grass3', 'pave'],
+    cliffFrames: { FACE_TOP: 22, FACE_MID: 36, FACE_BASE: 50 },
+    openWaterFrame: 10,
+    buildingGlyphs: 'H',
+    buildings: [
+      { contains: [15, 21], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-inn-inn-blue', label: 'Port Tavern', doorId: 'door-port-tavern' },
+      { contains: [22, 21], assetKey: 'kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue', label: 'Port Warehouse', doorId: 'door-port-warehouse' },
+      { contains: [12, 23], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-blacksmith-house-blacksmith-house-blue', label: 'Port Smithy' },
+      { contains: [4, 6], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-blue', label: 'Fisherman House 1' },
+      { contains: [11, 5], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-red', label: 'Fisherman House 2' },
+      { contains: [16, 5], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-green-blue', label: 'Fisherman House 3' },
+      { contains: [3, 5], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-red', label: 'Fisherman House 4' },
+      { contains: [9, 5], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-blue', label: 'Fisherman House 5' },
+      { contains: [20, 5], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-green-blue', label: 'Fisherman House 6' },
+      { contains: [25, 6], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-red', label: 'Fisherman House 7' },
+      { contains: [7, 10], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-blue', label: 'Fisherman House 8' },
+      { contains: [11, 20], assetKey: 'kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue', label: 'South House 1' },
+      { contains: [21, 20], assetKey: 'kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue', label: 'South House 2' },
+      { contains: [10, 22], assetKey: 'kenmi-base-buildings-buildings-unique-buildings-blacksmith-house-blacksmith-house-blue', label: 'South House 3' },
+    ],
+    extraObjects: [
+      { id: 'harbour-lighthouse', assetKey: 'kenmi-volcano-buildings-volcano-tower', x: 39, y: 27, w: 6, h: 9 },
+      { id: 'port-boat-north', assetKey: 'kenmi-base-outdoor-decoration-boat', x: 36, y: 11, w: 3, h: 3 },
+      { id: 'port-boat-south', assetKey: 'kenmi-base-outdoor-decoration-boat', x: 36, y: 22, w: 3, h: 3 },
+    ],
+    priority: ['deck', 'quay', 'pave', 'road', 'lane', 'beach', 'grass', 'stone', 'sand', 'water'],
+    baseAlias: { cliff: 'stone', deck: 'quay' },
+    detailDensity: { beach: 5, stone: 4, sand: 3, grass: 18 },
     decalsFromComma: false,
   },
   royal_palace: {
@@ -328,7 +378,7 @@ function parseGrid() {
       if (m2 && m2[1].length === W && !/^[\d\s]+$/.test(m2[1])) { rows[+m2[2]] = m2[1]; continue; }
       m2 = line.match(/^\s*(\d+)\s\s*(\S.{1,}?)\s*$/); // leading row index
       if (m2 && m2[2].length === W && !/^[\d\s]+$/.test(m2[2])) { rows[+m2[1]] = m2[2]; continue; }
-      m2 = line.match(/^y(\d+)\s+(\S.*?)\s*$/); // leading yNN row label
+      m2 = line.match(/^\s*y(\d+)\s+(\S.*?)\s*$/); // leading yNN row label
       if (m2 && m2[2].length === W && !/^[\d\s]+$/.test(m2[2])) rows[+m2[1]] = m2[2];
     }
     if (rows.filter(Boolean).length >= H) return rows.slice(0, H);
@@ -639,11 +689,16 @@ const EXTRA_TILESETS = {
   stone: ['kenmi-base-tiles-cobble-road-cobble-road-1', '../kenmi/base/tiles/cobble-road/cobble-road-1.png', 48, 80],
   cave: ['kenmi-base-tiles-cliff-stone-cliff-1-cave-entrance', '../kenmi/base/tiles/cliff/stone-cliff-1-cave-entrance.png', 48, 48],
   bridge: ['kenmi-base-tiles-bridge-bridge-stone-horizontal', '../kenmi/base/tiles/bridge/bridge-stone-horizontal.png', 192, 112],
+  beach: ['kenmi-desert-tiles-desert-beach-tiles-1', '../kenmi/desert/tiles/desert-beach-tiles-1.png', 80, 48],
+  deck: ['kenmi-base-tiles-wooden-deck-tiles', '../kenmi/base/tiles/wooden-deck-tiles.png', 80, 96],
+  quay: ['kenmi-base-tiles-water-water-stone-tile-3', '../kenmi/base/tiles/water/water-stone-tile-3.png', 48, 80],
+  foam: ['kenmi-base-tiles-water-water-foam-animation', '../kenmi/base/tiles/water/water-foam-animation.png', 320, 48],
 };
 let TS_WATER = null; let TS_CLIFF = null; let TS_WATERFALL = null; let TS_FARMLAND = null;
 let TS_FARMLAND_WET = null; let TS_GRASS3 = null; let TS_COBBLE = null; let TS_PAVE = null;
 let TS_WALL = null; let TS_HEDGE = null;
 let TS_STONE = null; let TS_CAVE = null; let TS_BRIDGE = null;
+let TS_BEACH = null; let TS_DECK = null; let TS_QUAY = null; let TS_FOAM = null;
 if (!PROFILE) {
   TS_WATER = addTs(...EXTRA_TILESETS.water);
 }
@@ -667,9 +722,13 @@ if (!PROFILE) {
     else if (short === 'stone') TS_STONE = ts;
     else if (short === 'cave') TS_CAVE = ts;
     else if (short === 'bridge') TS_BRIDGE = ts;
+    else if (short === 'beach') TS_BEACH = ts;
+    else if (short === 'deck') TS_DECK = ts;
+    else if (short === 'quay') TS_QUAY = ts;
+    else if (short === 'foam') TS_FOAM = ts;
   }
 }
-const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_GRASS3, TS_FARMLAND, TS_FARMLAND_WET, TS_WATERFALL, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL, TS_HEDGE, TS_STONE, TS_CAVE, TS_BRIDGE]
+const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_GRASS3, TS_FARMLAND, TS_FARMLAND_WET, TS_WATERFALL, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL, TS_HEDGE, TS_STONE, TS_CAVE, TS_BRIDGE, TS_BEACH, TS_DECK, TS_QUAY, TS_FOAM]
   .filter(Boolean).sort((a, b) => a.firstgid - b.firstgid);
 
 const SAND_SOLID = 6;                       // 5x3 beach sheets: (1,1) solid sand
@@ -705,6 +764,8 @@ const COBBLE_F = { NW: 0, N: 1, NE: 2, W: 3, C: 4, E: 5, SW: 6, S: 7, SE: 8, VAR
 const STONE_F = { ...COBBLE_F };
 const CAVE_F = { MOUTH: 4 };
 const BRIDGE_F = { SOLID: 13 };
+const DECK_F = { HORIZONTAL: 0, VERTICAL: 5, END: 10 };
+const BEACH_F = { SAND: 6, NORTH: 4, EAST: 5, SOUTH: 8, WEST: 3, CORNER: 6 };
 // pavement-tiles: flat light-brick block = frames 0,1 / 9,10 (9-col sheet)
 const PAVE_F = [0, 1, 9, 10];
 // desert-fencewall (4x4) frame atlas by wall-neighbour mask — see header
@@ -931,15 +992,20 @@ if (!PROFILE) {
   };
   const usesFarmlandWet = Boolean(PROFILE?.classes && Object.values(PROFILE.classes).includes('farmland-wet'));
   const isWaterP = (x, y) => {
-    if (x < 0 || x >= W || y < 0 || y >= H) return true; // sea continues off-map
+    if (PROFILE?.id !== 'coastal_port' && (x < 0 || x >= W || y < 0 || y >= H)) return true;
+    if (PROFILE?.id === 'coastal_port' && x >= W) return true;
+    if (x < 0 || y < 0 || y >= H) return false;
     const c = base(x, y);
     return c === 'water' || (usesFarmlandWet && c === 'farmland-wet');
   };
   const isWaterLikeP = (x, y) => {
-    if (x < 0 || x >= W || y < 0 || y >= H) return true;
+    if (PROFILE?.id !== 'coastal_port' && (x < 0 || x >= W || y < 0 || y >= H)) return true;
+    if (PROFILE?.id === 'coastal_port' && x >= W) return true;
+    if (x < 0 || y < 0 || y >= H) return false;
     const c = base(x, y);
     return c === 'water' || c === 'farmland-wet';
   };
+  const isDeckP = (x, y) => base(x, y) === 'deck';
   const isCliffP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return true; // container continues off-map
     return base(x, y) === 'cliff';
@@ -962,6 +1028,26 @@ if (!PROFILE) {
     if (w && !e && !n && !s) return WATER_F.W;
     if (e && !w && !n && !s) return WATER_F.E;
     return WATER_F.C; // interior, straits and 3-sided nubs fall back to open water
+  }
+
+  function beachFrameP(x, y) {
+    const n = isWaterP(x, y - 1); const s = isWaterP(x, y + 1);
+    const w = isWaterP(x - 1, y); const e = isWaterP(x + 1, y);
+    if (n && !s && !w && !e) return BEACH_F.NORTH;
+    if (e && !w && !n && !s) return BEACH_F.EAST;
+    if (s && !n && !w && !e) return BEACH_F.SOUTH;
+    if (w && !e && !n && !s) return BEACH_F.WEST;
+    if ((n || s) && (w || e)) return BEACH_F.CORNER;
+    return BEACH_F.SAND;
+  }
+
+  function deckFrame(x, y) {
+    const horizontal = isDeckP(x - 1, y) || isDeckP(x + 1, y);
+    const vertical = isDeckP(x, y - 1) || isDeckP(x, y + 1);
+    if (horizontal && !vertical) return DECK_F.HORIZONTAL;
+    if (vertical && !horizontal) return DECK_F.VERTICAL;
+    if (!horizontal && !vertical) return DECK_F.END;
+    return horizontal ? DECK_F.HORIZONTAL : DECK_F.VERTICAL;
   }
 
   function channelWaterFrameP(x, y) {
@@ -1089,7 +1175,28 @@ if (!PROFILE) {
           break;
         case 'water':
           ground[i] = TS_WATER.firstgid + waterFrameP(x, y);
+          if (PROFILE?.id === 'coastal_port'
+            && (!isWaterP(x, y - 1) || !isWaterP(x, y + 1)
+              || !isWaterP(x - 1, y) || !isWaterP(x + 1, y))) {
+            detail[i] = TS_FOAM.firstgid;
+          }
           collision[i] = COLLIDE_GID; // bible §6: water is impassable
+          break;
+        case 'beach':
+          ground[i] = G_SAND;
+          if (isWaterP(x, y - 1) || isWaterP(x, y + 1) || isWaterP(x - 1, y) || isWaterP(x + 1, y)) {
+            detail[i] = TS_BEACH.firstgid + beachFrameP(x, y);
+          }
+          break;
+        case 'deck':
+          ground[i] = TS_DECK.firstgid + deckFrame(x, y);
+          break;
+        case 'quay':
+          ground[i] = TS_STONE.firstgid + STONE_F.C;
+          break;
+        case 'quay+block':
+          ground[i] = TS_STONE.firstgid + STONE_F.C;
+          collision[i] = COLLIDE_GID;
           break;
         case 'waterfall': {
           ground[i] = G_SAND;
@@ -1135,7 +1242,9 @@ if (!PROFILE) {
           collision[i] = COLLIDE_GID;
           break;
         case 'bldg':
-          ground[i] = G_SAND;
+          ground[i] = PROFILE.id === 'coastal_port'
+            ? TS_GRASS3.firstgid + 151
+            : G_SAND;
           if (!doorCells.has(`${x},${y}`)) collision[i] = COLLIDE_GID;
           break;
         case 'road':
@@ -1154,6 +1263,10 @@ if (!PROFILE) {
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
           break;
         case 'grass':
+          if (PROFILE.id === 'coastal_port') {
+            ground[i] = TS_GRASS3.firstgid + 151;
+            break;
+          }
           if (PROFILE.id === 'farmland' && TS_GRASS3) {
             ground[i] = TS_GRASS3.firstgid + 151;
           } else {
@@ -1165,7 +1278,9 @@ if (!PROFILE) {
           ground[i] = G_SAND;
       }
       const density = PROFILE?.detailDensity?.[b] || 0;
-      if (density > 0 && detail[i] === 0 && hash(x, y) % 100 < density) {
+      const coastalShore = PROFILE?.id === 'coastal_port'
+        && (isWaterP(x, y - 1) || isWaterP(x, y + 1) || isWaterP(x - 1, y) || isWaterP(x + 1, y));
+      if (density > 0 && !coastalShore && detail[i] === 0 && hash(x, y) % 100 < density) {
         const decalFrames = [0, 2, 6, 8];
         detail[i] = TS_GRASS.firstgid + decalFrames[hash(x + 17, y + 31) % decalFrames.length];
       }
@@ -1231,8 +1346,14 @@ const buildingObjects = buildings.map((b) => obj(b.id, b.x0 * SRC_TILE, b.y0 * S
   (b.x1 - b.x0 + 1) * SRC_TILE, (b.y1 - b.y0 + 1) * SRC_TILE, [
     P('assetKey', 'string', b.assetKey || `kenmi-desert-houses-${b.asset}`),
     P('label', 'string', b.label),
+    ...(PROFILE?.id === 'coastal_port' ? [P('collide', 'bool', true)] : []),
     ...(b.door ? [P('doorId', 'string', b.door.id)] : [P('enterable', 'bool', false)]),
   ], 'building'));
+const extraObjects = (PROFILE?.extraObjects || []).map((extra) => obj(extra.id,
+  extra.x * SRC_TILE, extra.y * SRC_TILE, extra.w * SRC_TILE, extra.h * SRC_TILE, [
+    P('assetKey', 'string', extra.assetKey),
+    P('enterable', 'bool', false),
+  ], 'prop'));
 for (const b of buildingObjects) {
   const key = b.properties.find((p) => p.name === 'assetKey').value;
   if (!catalogKeys.has(key)) warn(`building assetKey "${key}" not in kenmiCatalog`);
@@ -1279,7 +1400,7 @@ const map = {
     tileLayer('Collision', collision, false),
     objLayer('Exits', exitObjects),
     objLayer('Entries', entryObjects),
-    objLayer('Buildings', buildingObjects),
+    objLayer('Buildings', [...buildingObjects, ...extraObjects]),
     objLayer('NPCs', npcObjects),
     objLayer('Interactables', itObjects),
     objLayer('GatheringSpots', spotObjects),

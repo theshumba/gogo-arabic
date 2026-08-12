@@ -25,46 +25,46 @@ Obeys: `docs/WORLD-DESIGN-BIBLE.md` (§2 LAWs, §3.7 brief, §7 LINT), `docs/wor
 
 ## 3. Tile-grid sketch
 
-Legend: `~` deep water · `,` shallow/wet rim · `g` grass · `s` sand · `.` packed-dirt path · `P` stone paving (plaza/quay/spit) · `D` wooden pier deck · `#` building footprint · `T` harbour tower footprint · `C` cliff face / rock container · `S` stone-steps cut (cliff gap ramp, MISSING #13) · `r` rock outcrop · `t` palm/tree · `m` market stall · `B` boat · `=` gangplank · `E` exit cut · `F` fountain · `*` ground decal
+Legend: `~` open sea · `b` beach shoreline · `g` grass · `s` sand · `.` quiet path · `:` lane · `=` main road · `p` paved square/palace road · `d` wooden pier deck · `Q` walkable quay top · `q` blocked quay face · `H` building footprint · `C` cliff face / headland lip · `r` rock outcrop · `o` blocked rock outcrop · `E` exit cut
 
 ```
      0        1         2         3         4
      012345678901234567890123456789012345678901234
- y0  CCCCCCCCCCCCCCCCCCCCCEEECCCCCCCCCCCCC,~~~~~~~
- y1  CCCCCCCgggggggCCCCCCC..gCCCCCCCCCCttg,~~~~~~~
- y2  CCggggggggggggggggggg..gttggggggggggg,~~~~~~~
- y3  CCggggggggggggggggggg..ggrgggggggggg,~~~~~~~~
- y4  CCgg*gggggggggggg###gg..gggggggggggg,~~~~~~~~
- y5  CCggggggggggggggg###gg..g###gggggggg,~~~~~~~~
- y6  CCggggtgggggggggg###gg..g###ggggggggg,~~~~~~~
- y7  CCgggggggggggggggg......g###ggggggggg,~~~~~~~
- y8  CCgggggggggggggggggggg.....gggggggggg,~~~~~~~
- y9  CCgg####ggggggggggggg..ggggggggggggg,~~~~~~~~
- y10 CCgg####ggg####ggPPPg..####ggggggggg,~~~~~~~~
- y11 CCgg####ggg####ggPFPg..####gggggggggg,~~~~~~~
- y12 CCtgg.ggggg####ggPPPg..####ggggggggTTT,~~~~~~
- y13 EE.......ggggggggPPPg..gggggPPPPPPPTTT,~~~~~~
- y14 EE................ggg..g.gggPPPPPPPTTT,~~~~~~
- y15 EE..........................PPPPPPPPPP,~~~~~~
- y16 CCtgggggg...................PPPPPPPPPPP,~~~~~
- y17 CCggggggggg..ggggg..........PPPPPPPPPPP,~~~~~
- y18 Cgggggggggg..mmmggmmmggg..ggPPPPPPPPPP,~~~~~~
- y19 Cgggggg####..ggggggggggg..ggPPPPPPPPPP,~~~~~~
- y20 Cgggggg####..ggggggggggg..gg,DD~~~DD~PPP,~~~~
- y21 Cgggggg####..ggggggggggg..gg,DD~~~DD~PPP,~~~~
- y22 CCgggggg.....ggggggggggg..gg,DD~~~DD~PPP,~~~~
- y23 CCgggrrggCCCCCCggggggggg..gg,DD~~~DD~PPP,~~~~
- y24 CCgggggggCCCCCCCCCCCggggSSCC,DD~~~DD~PPP,~~~~
- y25 CCCCCCCCCssssssCCCCCCCCCSSCC,DD~~~DD~rrr,~~~~
- y26 CCCCCCCCCsssssssssssCCCCsssssDD~~~DD~,~~~~~~~
- y27 CCss####sssssssssssssssssssssDD~~~B~~~~~~~~~~
- y28 CCss####ssssssssssssssssssssDDDD=BB~~~~~~~~~~
- y29 CCss####ssssBBssssssssssssssDDDD~BB~~~~~~~~~~
- y30 CCsss.sssssssssssssssrssssssDDDD~~~~~~~~~~~~~
- y31 CsssssssssssssssssssssssssssDDDD~~~~~~~~~~~~~
- y32 ,,,,,sssss,,,ss,,,sssss,,,,,~~~~~~~~~~~~~~~~~
- y33 ~~~~~,,,,,~~~,,~~~,,,,,~~~~~~~~~~~~~~~~~~~~~~
- y34 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ y0  ggggggggggggggggggggggggggggggggggggggCCCCCCC
+ y1  ggggggggggggggggggggggggggggggggggggggCCCCCCC
+ y2  ggggggggggggggggggggggggggggggggggggggCCCCCCC
+ y3  gggggggggggggggggggggpggggggggggggggggCCCCrCC
+ y4  gggggggggggggggggggggpgggggggggggggggbCCCCCCC
+ y5  gggHHHgggHHHggHHHgggHHHgggggggggggggbbCCCCCCC
+ y6  gggHHH:::HHHggHHHgggHHHggHHHgggggggbb~CCCCCCC
+ y7  gggHHHgg:HHHggHHHgggHHHggHHHggggggbb~~CCCCCCC
+ y8  gggggggg:gggggggggggggpggHHHgggggQQ~~~~~~~~~~
+ y9  gggggggg:gggggggggggggpggggggggggQQ~~~~~~~~~~
+ y10 gggggggH:HggggggggggggpggggggggggQQ~~~~~~~~~~
+ y11 gggggggHHHggggggggggggpggggggggggQQ~~~~~~~~~~
+ y12 gggggggHHHggggggggggggpggggggggggQQddddd~~~~~
+ y13 gggggggggggggpppppppppppgggggggQQddddd~~~~~~~
+ y14 gggggggggggggpppppppppppgggggggQQbb~~~~~~~~~~
+ y15 gggggggggggggpppppppppppgggggggQQbb~~~~~~~~~~
+ y16 E================================QQbb~~~~~~~~
+ y17 =================================QQbb~~~~~~~~
+ y18 =================================QQb~~~~~~~~~
+ y19 gggggggggggggggggggggggggggggggggQQ~~~~~~~~~~
+ y20 gggggggggggHHHHHHHgggHHHHggggggggQQ~~~~~~~~~~
+ y21 gggggggggggHHHDHHHgggHHHHggggggggQQ~~~~~~~~~~
+ y22 ggggggggggHH:gg=:::ggg=DgggggggggQQ~~~~~~~~~~
+ y23 ggggggggggHHH:::gggggggggggggggggQQddddd~~~~~
+ y24 ggggggggggHHggggggggggggggggggggQQddddd~~~~~~
+ y25 gggggggggggggggggggggggggggggggggQQb~~~~~~~~~
+ y26 gggggggggggggggggggggggggggggggggQQb~~~~~~~~~
+ y27 gggggggggggggggggggggggggggggggbbQQbb~~~~~~~~
+ y28 ggggggggggggggggggggggggggggggggggbb~~~~~~~~~
+ y29 ggggggggggggggggggggggggggggggggQQQQQQQQQQQgg
+ y30 ggggggggggggggggggggggggggggggggQQQQQQQQrQQgg
+ y31 ggggggggggggggggggggggggggggggggQQQQQQQQQQQgg
+ y32 ggggggggggggggggggggggggggggggggggbb~~~~~~~~~
+ y33 gggggggggggggggggggggggggggggggggggb~~~~~~~~~
+ y34 gggggggggggggggggggggggggggggggggggb~~~~~~~~~
 ```
 
 (y24 detail: x2–8 g · x9–19 upper cliff faces of the jogged lip · x20–23 g · x24–25 `SS` steps · x26–27 C · x28 rim · piers/spit as drawn. All 35 rows are exactly 45 chars — machine-checked.)
@@ -92,64 +92,64 @@ Every contract ID for coastal_port (contract-and-pipeline.md §1 — 3 NPCs, 2 e
 
 | ID | Placement | Rationale |
 |---|---|---|
-| `port-to-mountain` | edge=**west**, tileRange=[13,15] | centre y14 → 14/35 = **0.40** ✓ ledger; ★ dressed main entrance, road continues the mountain ledge descent |
-| `port-to-palace` | edge=**north**, tileRange=[21,23] | centre 22 → 22/45 = **0.49** ✓ ledger 0.50; plain 2–3 tile gap, palm+rock signpost cluster (24–25,2–3) (LAW-42) |
-| entry `from_mountain` | (2,14) | 2 tiles inside the west cut, on the road |
-| entry `from_palace` | (22,2) | 2 tiles inside the north cut, on the coast road |
-| spawnPoint | (3,14) | on the entrance road, beside sign-port |
+| `port-to-mountain` | edge=**west**, tileRange=[15,19] | centre y17; the main street runs directly from the mountain gate to the quay |
+| `port-to-palace` | edge=**north**, tileRange=[19,25] | centre x22; formal palace road enters the town square |
+| entry `from_mountain` | (3,17) | west arrival on the main street |
+| entry `from_palace` | (22,3) | north arrival on the palace road |
+| spawnPoint | (3,17) | west gate arrival, beside sign-port |
 
 **NPCs (3):**
 
 | ID | Tile | Rationale |
 |---|---|---|
-| `captain-rashid` | (32,16) | harbourmaster on the quay plaza between tower and cargo — Olivine lighthouse-keeper / Freedom quay analog |
-| `fishmonger-hana` | (17,19) | behind the fish-stall counters, facing the road — Slateport market vendor analog |
-| `blacksmith-daud` | (10,22) | on the lane before his forge door — Yallam smithy-focal analog |
+| `captain-rashid` | (33,17) | harbourmaster at the centre of the quay furniture column |
+| `fishmonger-hana` | (18,17) | fish trade on the main street beside the town square |
+| `blacksmith-daud` | (12,24) | smithy yard beside the forge |
 
 **Interactables (26):**
 
 | ID | Tile | Rationale |
 |---|---|---|
-| `sign-port` | (3,12) | 1 tile off the entrance road, approach side (LAW-7) — town sign at the ★ gate |
-| `sign-dock` | (28,14) | quay plaza west mouth, 1 off the road — points down the piers |
-| `sign-smithy` | (10,18) | 1 NE of the smithy building corner, on the spur approach (within 2 of building, LAW-16) |
-| `bookshelf-directions` | (33,14) | harbour records beside the tower — "directions" vocab lives at the navigation landmark |
-| `bookshelf-port-trade` | (27,12) | ledger shelf on the warehouse east wall — trade vocab at the trade building |
-| `bookshelf-port-food` | (15,12) | menu shelf on the tavern east wall — food vocab at the tavern |
-| `chest-port-dock` | (29,30) | on the pier-A end platform — reward for walking the longest finger (Slateport lighthouse-platform analog) |
-| `chest-port-alley` | (7,7) | NW quiet corner behind house R1 — the tucked-away alley find |
-| `door-port-tavern` | (12,12) | tavern facade base (bldg x11–14,y10–12) → `port_tavern_interior`; fronts (12,13)+(12,14) clear onto the road |
-| `door-port-warehouse` | (24,12) | warehouse facade base (bldg x23–26,y10–12) → `port_warehouse_interior`; stub (24,14) to road |
-| `lantern-port-1` | (37,15) | quay NE corner by the tower — harbour light pair #1 |
-| `lantern-port-2` | (28,19) | pier-A head — harbour light pair #2 (marks the descent onto the decks) |
-| `lantern-port-3` | (10,12) | tavern west-corner cluster with barrel-port-1 (props hug architecture, LAW-32) |
-| `crate-port-1` | (31,17) | quay cargo-staging cluster core (Freedom steal) |
-| `crate-port-2` | (28,29) | stacked on the pier-A platform (Kalay steal: cargo on the deck) |
-| `crate-port-3` | (30,18) | second tier of the quay staging cluster |
-| `barrel-port-1` | (10,11) | tavern west flank (barrels at the inn corner — Palo steal) |
-| `barrel-port-2` | (6,22) | smithy yard, beside the lane — quench barrels |
-| `barrel-port-3` | (34,18) | quay, at pier-B head — cargo cluster echo |
-| `painting-port-1` | (15,11) | harbour mural on the tavern east wall |
-| `painting-port-2` | (27,11) | shipping chart on the warehouse east wall |
-| `fountain-port-1` | (18,11) | centre of the paved fountain court — freshwater point off the road (LAW-19 off-centre, secondary focal; Nikeah green-plaza analog) |
-| `statue-port-1` | (30,13) | navigator statue on the plaza, off-centre 1–2 from the tower axis (LAW-27) |
-| `inscription-port-1` | (38,22) | on the breakwater spit — lore tablet at the sea vista |
-| `inscription-port-2` | (3,3) | NW quiet corner — lore at the map's still edge |
-| `inscription-port-3` | (26,30) | half-buried tablet on the beach near the inlet mouth |
+| `sign-port` | (5,17) | main street furniture at the west gate |
+| `sign-dock` | (32,6) | north coast path before the quay |
+| `sign-smithy` | (11,23) | smithy-yard approach |
+| `bookshelf-directions` | (16,11) | navigation records beside the square |
+| `bookshelf-port-trade` | (23,11) | trade records north of the warehouse |
+| `bookshelf-port-food` | (18,23) | food records by the tavern |
+| `chest-port-dock` | (34,28) | where the quay meets the south beach |
+| `chest-port-alley` | (8,8) | quiet north-west lane |
+| `door-port-tavern` | (15,22) | tavern south frontage → `port_tavern_interior` |
+| `door-port-warehouse` | (22,22) | warehouse south frontage → `port_warehouse_interior` |
+| `lantern-port-1` | (33,10) | north quay lantern |
+| `lantern-port-2` | (33,22) | south quay lantern |
+| `lantern-port-3` | (15,16) | main street lantern |
+| `crate-port-1` | (33,12) | north quay cargo |
+| `crate-port-2` | (33,18) | south quay cargo |
+| `crate-port-3` | (20,12) | square-side supply cargo |
+| `barrel-port-1` | (33,24) | southern quay cargo |
+| `barrel-port-2` | (12,17) | main street cargo |
+| `barrel-port-3` | (27,17) | quay approach cargo |
+| `painting-port-1` | (16,21) | tavern wall |
+| `painting-port-2` | (23,21) | warehouse wall |
+| `fountain-port-1` | (18,14) | town square fountain |
+| `statue-port-1` | (22,14) | town square navigator statue |
+| `inscription-port-1` | (42,3) | north-east headland lookout |
+| `inscription-port-2` | (7,3) | quiet north-west quarter |
+| `inscription-port-3` | (42,30) | south-east breakwater lighthouse end |
 
 **Gathering spots (9):**
 
 | ID | Tile | Rationale |
 |---|---|---|
-| `spot_port_water_01` blessed_water/water_source | (17,12) | beside the fountain — the town's freshwater source |
-| `spot_port_animal_01` silk/animal_trace | (22,18) | silk bales at the stall pocket flank (goods at flanks, LAW-37) |
-| `spot_port_herbs_01` cinnamon/herb_patch | (27,13) | spilled spice sacks between warehouse and plaza — import cargo |
-| `spot_port_animal_02` silk/animal_trace | (32,18) | silk bales in the quay staging cluster awaiting shipment |
-| `spot_port_ore_01` copper_ore/ore_vein | (5,22) | beside the smithy ore-rock outcrop (5–6,23) — vein on rock |
-| `spot_port_papyrus_01` papyrus/papyrus_stand | (35,15) | harbour manifests at the tower base |
-| `spot_port_herbs_02` ginger_root/herb_patch | (19,9) | garden bed behind the fountain court |
-| `spot_port_water_02` olive_oil/water_source | (37,18) | amphora offload on the quay's 1-tile shore rim (water_source rim allowance, LINT-2) |
-| `spot_port_ore_02` tin_ore/ore_vein | (21,29) | beach rock outcrop (21,30) — tin washed from the cliffs |
+| `spot_port_water_01` | blessed_water / water_source | (8,10) | well in the quiet north-west quarter |
+| `spot_port_animal_01` | silk / animal_trace | (15,14) | market goods beside the town square |
+| `spot_port_herbs_01` | cinnamon / herb_patch | (22,8) | imported spice goods on the palace road |
+| `spot_port_animal_02` | silk / animal_trace | (30,18) | cargo staging before the quay |
+| `spot_port_ore_01` | copper_ore / ore_vein | (12,22) | ore beside the smithy yard |
+| `spot_port_papyrus_01` | papyrus / papyrus_stand | (6,6) | papyrus stand in the quiet quarter |
+| `spot_port_herbs_02` | ginger_root / herb_patch | (28,12) | market edge near the quay |
+| `spot_port_water_02` | olive_oil / water_source | (35,24) | water spot on the southern pier deck |
+| `spot_port_ore_02` | tin_ore / ore_vein | (18,20) | lower street rock outcrop |
 
 Step triggers: none in the port contract. Sub-areas: none in the port contract. Pre-existing weather `rain` and vocabCategories unchanged (data, not layout).
 
@@ -157,8 +157,8 @@ Step triggers: none in the port contract. Sub-areas: none in the port contract. 
 
 | Door (world) | interiorId | Interior kept as-is |
 |---|---|---|
-| `door-port-tavern` (12,12) | `port_tavern_interior` | Tavern (حانَة البَحّارَة), 14×10 buildLargeHouse, `tavern-keeper-interior` + 6 interactables — **unchanged this phase** |
-| `door-port-warehouse` (24,12) | `port_warehouse_interior` | Port Warehouse (مَخْزَن المِيناء), 14×10 buildLargeHouse, 5 interactables incl. 2 chests — **unchanged this phase** |
+| `door-port-tavern` (15,22) | `port_tavern_interior` | Tavern (حانَة البَحّارَة), 14×10 buildLargeHouse, `tavern-keeper-interior` + 6 interactables — **unchanged this phase** |
+| `door-port-warehouse` (22,22) | `port_warehouse_interior` | Port Warehouse (مَخْزَن المِيناء), 14×10 buildLargeHouse, 5 interactables incl. 2 chests — **unchanged this phase** |
 
 No locked doors in this zone. The other 5 buildings (R1, F1, F2, smithy, beach hut) are **not enterable** in this phase; if filler interiors are wanted later they reuse procedural `house_coastal_port_<n>` ids per bible §5 — no new ids invented here.
 
