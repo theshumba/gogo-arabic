@@ -9602,12 +9602,6 @@
       "collide": false
     },
     {
-      "key": "kenmi-base-crops-crops",
-      "x": 11,
-      "y": 30,
-      "collide": false
-    },
-    {
       "key": "kenmi-base-crops-berries",
       "x": 12,
       "y": 27,

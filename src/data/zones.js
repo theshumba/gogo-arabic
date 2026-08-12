@@ -812,7 +812,6 @@ const FARM_OBJECTS = [
   { key: 'kenmi-base-outdoor-decoration-scarecrows', x: 28, y: 15, collide: false },
   { key: 'kenmi-base-crops-crops', x: 6, y: 28, collide: false, cropIndex: 2 },
   { key: 'kenmi-base-crops-crops-2', x: 8, y: 29, collide: false, cropIndex: 4 },
-  { key: 'kenmi-base-crops-crops', x: 11, y: 30, collide: false, cropIndex: 1 },
   { key: 'kenmi-base-crops-berries', x: 12, y: 27, collide: false, cropIndex: 1 },
 
   // Herbalist's Garden and Farm Plaza: compact service clusters.

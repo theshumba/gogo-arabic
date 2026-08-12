@@ -39,12 +39,12 @@ Legend: `C` cliff (container) · `W` waterfall face · `w` water (wadi/pond/basi
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCWWCCCCCCC  y0   cliff container; waterfall x36-37
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCWWCCCCCCC  y1
 CCCsssssssCCCCCCCCCCCCCCCsssssssssssww,,,CCCC  y2   cliff jogs; wadi emerges
-TTssssssss,,ssssssssssssssss,,sssssswwsss,,CC  y3   sand strip under cliff
-TTssssssssBBBBsssssssssssssssssssssswwsssssCC  y4   barn starts (x10-13)
-TTTsBBBBssBBBBBssBBBBsssssssssssssswwss##sCCC  y5   farmhouse | barn+silo | windmill; wadi jogs W; belt+cliff deepen
-TTTsBBBBssBBBBBssBBBBssBBBBsssssssswwss##sCCC  y6   + coop (x23-26); outcrop
-TTTsBBBBssBBBBBssBBBBssBBBBsssssssswwsssssCCC  y7
-TTTsBBBBsssssssssBBBBsssssssssssssswwsssssCCC  y8   facade/prop line
+TT,,,PPPPPPPPPPPPPPPPPPPPPPP,,,ww,,,,,CC  y3   scrub edge and packed farmyard under the north cliff
+TT,,PPPPPPBBBBPPBBBBPPBBBBPPPPPPww,,,CC  y4   yard wraps the barn, windmill, and coop
+TTT,BBBBPPBBBBBPPBBBBPPBBBBPPPPww,,##CCC  y5   farmhouse | barn+silo | windmill; yard edge and outcrop
+TTT,BBBBPPBBBBBPPBBBBPPBBBBPPPPww,,##CCC  y6   coop at the back of the yard; shade/rock pocket
+TTT,BBBBPPBBBBBPPBBBBPPBBBBPPPPww,,,CCC  y7   working-yard facade and open approach
+TTT,BBBBPPPPPPPPBBBBPPPPPPPPPPww,,,CCC  y8   yard road and service edge
 TTs...D.....................ssssgggwwwwggssCC  y9   yard road; door-barn (6,9); pond top
 TTs.............................ggwwwwwwgssCC  y10  yard road → garden path → fountain (32,10)
 TTsssssssfff.ffffgg..ggggggggggggwwwwwwwwssCC  y11  pen ring (gate x12); pond widest
@@ -79,12 +79,12 @@ TTTTTTTTTTTTTTTTTTT...TTTTTTTTTTTTTTTTTTTTTTT  y34
 y0:  36×C, WW(36-37), 7×C
 y1:  36×C, WW(36-37), 7×C
 y2:  C(0-2) s(3-9) C(10-24) s(25-35) ww(36-37) ,(38-40) C(41-44)
-y3:  T(0-1) s(2-9) ,(10-11) s(12-27) ,(28-29) s(30-35) ww(36-37) s(38-40) ,(41-42) C(43-44)
-y4:  T(0-1) s(2-9) B(10-13) s(14-35) ww(36-37) s(38-42) C(43-44)
-y5:  T(0-2) s(3) B(4-7) s(8-9) B(10-14) s(15-16) B(17-20) s(21-34) w(35-36) s(37-38) #(39-40) s(41) C(42-44)
-y6:  T(0-2) s(3) B(4-7) s(8-9) B(10-14) s(15-16) B(17-20) s(21-22) B(23-26) s(27-34) w(35-36) s(37-38) #(39-40) s(41) C(42-44)
-y7:  T(0-2) s(3) B(4-7) s(8-9) B(10-14) s(15-16) B(17-20) s(21-22) B(23-26) s(27-34) w(35-36) s(37-41) C(42-44)
-y8:  T(0-2) s(3) B(4-7) s(8-16) B(17-20) s(21-34) w(35-36) s(37-41) C(42-44)
+y3:  T(0-1) ,(2-3) P(4-26) ,(27-35) ww(36-37) ,(38-40) ,(41-42) C(43-44)
+y4:  T(0-1) ,(2-3) P(4-9) B(10-13) P(14-16) B(17-20) P(21-22) B(23-26) P(27-35) ww(36-37) ,(38-42) C(43-44)
+y5:  T(0-2) ,(3) B(4-7) P(8-9) B(10-14) P(15-16) B(17-20) P(21-22) B(23-26) P(27-34) w(35-36) ,(37-38) #(39-40) ,(41) C(42-44)
+y6:  T(0-2) ,(3) B(4-7) P(8-9) B(10-14) P(15-16) B(17-20) P(21-22) B(23-26) P(27-34) w(35-36) ,(37-38) #(39-40) ,(41) C(42-44)
+y7:  T(0-2) ,(3) B(4-7) P(8-9) B(10-14) P(15-16) B(17-20) P(21-22) B(23-26) P(27-34) w(35-36) ,(37-41) C(42-44)
+y8:  T(0-2) ,(3) B(4-7) P(8-16) B(17-20) P(21-34) w(35-36) ,(37-41) C(42-44)
 y9:  T(0-1) s(2) .(3-5) D(6) .(7-27) s(28-31) g(32-34) w(35-38) g(39-40) s(41-42) C(43-44)
 y10: T(0-1) s(2) .(3-31) g(32-33) w(34-39) g(40) s(41-42) C(43-44)
 y11: T(0-1) s(2-8) f(9-11) .(12) f(13-16) g(17-18) .(19-20) g(21-32) w(33-40) s(41-42) C(43-44)
@@ -93,20 +93,20 @@ y13: T(0-1) s(2-8) f(9) g(10-15) f(16) c(17) g(18) .(19-20) g(21-32) w(33-40) s(
 y14: T(0-1) s(2) ,(3-4) s(5-8) f(9) g(10-15) f(16) c(17) g(18) .(19-20) f(21-30) g(31-33) w(34-39) g(40) s(41) C(42-44)
 y15: T(0-1) s(2-8) f(9-16) c(17) .(18-19) g(20) f(21) F(22-29) f(30) g(31-34) w(35-38) g(39-40) s(41) C(42-44)
 y16: T(0-1) s(2-8) ,(9-16) c(17) .(18-19) g(20) f(21) F(22-29) f(30) g(31-35) c(36) g(37-40) s(41-42) s(43-44=exit cut)
-y17: T(0-1) s(2-3) f(4-13) g(14-16) c(17) .(18-19) g(20) .(21=B gate) F(22-29) f(30) g(31) F(32-35) c(36) g(37-40) .(41-44=to E exit)
-y18: T(0-1) s(2-3) f(4) F(5-12) f(13) g(14-16) c(17) .(18-19) g(20) f(21) F(22-29) f(30) g(31) F(32-35) c(36) g(37-39) .(40-41) ,(42) s(43-44)
-y19: T(0-1) s(2-3) f(4) F(5-12) f(13) g(14-16) c(17) .(18-19) g(20) f(21) F(22-29) f(30) g(31-35) c(36) g(37-38) .(39-40) ,(41-42) C(43-44)
-y20: T(0-1) s(2-3) f(4) F(5-12) .(13=A gate) g(14-16) c(17) g(18) .(19-20) f(21-30) g(31-35) c(36) g(37) .(38-39) ,(40) g(41) ,(42) C(43-44)
-y21: T(0-1) s(2-3) f(4) F(5-12) f(13) g(14-16) c(17) g(18) .(19-20) g(21-27) .(28-35) b(36) .(37-38) ,(39) g(40) ,(41) g(42) C(43-44)
-y22: T(0-1) s(2-3) f(4) F(5-12) f(13) g(14-16) c(17) g(18) .(19-20) g(21-23) .(24-35) b(36) g(37-40) ,(41-42) C(43-44)
+y17: T(0-1) s(2-3) f(4-11) g(12-16) c(17) .(18-19) g(20) .(21=B gate) F(22-28) f(29) g(30-31) F(32-35) c(36) g(37-40) .(41-44=to E exit)
+y18: T(0-1) s(2-3) f(4) F(5-10) g(11-12) f(13) g(14-16) c(17) .(18-19) g(20) f(21) F(22-28) f(29) g(30-31) F(32-35) c(36) g(37-39) .(40-41) ,(42) s(43-44)
+y19: T(0-1) s(2-3) f(4) F(5-10) g(11-12) f(13) g(14-16) c(17) .(18-19) g(20) f(21) F(22-28) f(29) g(30-35) c(36) g(37-38) .(39-40) ,(41-42) C(43-44)
+y20: T(0-1) s(2-3) f(4) F(5-10) g(11-12) .(13=A gate) g(14-16) c(17) g(18) .(19-20) f(21-29) g(30-35) c(36) g(37) .(38-39) ,(40) g(41) ,(42) C(43-44)
+y21: T(0-1) s(2-3) f(4) F(5-10) g(11-12) f(13) g(14-16) c(17) g(18) .(19-20) g(21-27) .(28-35) b(36) .(37-38) ,(39) g(40) ,(41) g(42) C(43-44)
+y22: T(0-1) s(2-3) f(4) F(5-10) g(11-12) f(13) g(14-16) c(17) g(18) .(19-20) g(21-23) .(24-35) b(36) g(37-40) ,(41-42) C(43-44)
 y23: T(0-2) s(3) f(4-13) g(14-16) c(17) P(18-24) g(25-35) c(36) g(37-38) ,(39-40) s(41) C(42-44)
 y24: T(0-2) s(3) g(4-16) c(17) P(18-24) g(25-26) f(27-29) .(30=orchard gate) f(31-36) g(37-38) ,(39-40) s(41) C(42-44)
 y25: T(0-2) s(3) g(4-15) w(16-17=basin) P(18-24) g(25-26) f(27) O(28-35) f(36) g(37-38) ,(39-40) s(41) C(42-44)
 y26: T(0-2) s(3) f(4-13) g(14-15) w(16-17) P(18-24) g(25-26) f(27) O(28-35) f(36) g(37-38) ,(39-40) s(41) C(42-44)
-y27: T(0-1) s(2-3) f(4) F(5-12) f(13) g(14-17) P(18-24) g(25-26) f(27) O(28-35) f(36) g(37-38) ,(39-40) s(41-42) C(43-44)
-y28: T(0-1) s(2-3) f(4) F(5-12) f(13) s(14-18) .(19-21) s(22-26) f(27) O(28-35) f(36) g(37-38) ,(39-40) s(41-42) C(43-44)
-y29: T(0-1) s(2-3) f(4) F(5-12) .(13=C gate) s(14-18) .(19-21) s(22-26) f(27) O(28-35) f(36) g(37-38) ,(39-40) s(41-42) C(43-44)
-y30: T(0-1) s(2-3) f(4) F(5-12) f(13) s(14-18) .(19-21) s(22-26) f(27) O(28-35) f(36) ,(37-38) s(39-42) C(43-44)
+y27: T(0-1) s(2-3) f(4) F(5-10) g(11-17) P(18-24) g(25-26) f(27) O(28-35) f(36) g(37-38) ,(39-40) s(41-42) C(43-44)
+y28: T(0-1) s(2-3) f(4) F(5-10) s(11-18) .(19-21) s(22-26) f(27) O(28-35) f(36) g(37-38) ,(39-40) s(41-42) C(43-44)
+y29: T(0-1) s(2-3) f(4) F(5-10) .(11-13=C gate) s(14-18) .(19-21) s(22-26) f(27) O(28-35) f(36) g(37-38) ,(39-40) s(41-42) C(43-44)
+y30: T(0-1) s(2-3) f(4) F(5-10) f(11) s(12-18) .(19-21) s(22-26) f(27) O(28-35) f(36) ,(37-38) s(39-42) C(43-44)
 y31: T(0-1) s(2-3) f(4) F(5-12) f(13) s(14-18) .(19-21) s(22-26) f(27-36) ,(37-38) s(39-41) C(42-44)
 y32: T(0-1) s(2-3) f(4-13) s(14-17) .(18-21=widened) s(22-26) T(27-29) s(30-35) T(36-38) s(39-41) C(42-44)
 y33: T(0-18) .(19-21=gate cut) T(22-44)
@@ -114,13 +114,13 @@ y34: T(0-18) .(19-21) T(22-44)
 ```
 
 **Composition notes (the LAWs at work):**
-- **Path language:** main south road 3 tiles (`x19-21`), widening to 4 at `y32` and framed by the palm-belt cut + lantern pair (LAW-28 ★ dressed entrance); yard road 2 tiles (`y9-10`); north path 2 tiles with a jog at `y15` (LAW-2); east road 2 tiles thinning to a 1-wide frayed climb into the steppe (LAW-6 soft language toward bedouin). Every run terminates at a door, gate, exit, fountain, or plaza (LAW-4).
+- **Path language:** main south road 3 tiles (`x19-21`), widening to 4 at `y32` and framed by the palm-belt cut + lantern pair (LAW-28 ★ dressed entrance); yard road 2 tiles (`y9-10`) enters the new packed farmyard; north path 2 tiles with a jog at `y15` (LAW-2); east road 2 tiles thinning to a 1-wide frayed climb into the steppe (LAW-6 soft language toward bedouin). Every run terminates at a door, gate, exit, fountain, or plaza (LAW-4).
 - **Bridges (exactly 2, LAW-23):** plank crossing where the north path crosses the falaj main leg at (19-20,12); plank where the east road crosses the orchard branch at (36,21-22). Both sit ON main paths — mini-focals.
 - **Water story:** waterfall (36-37,y0-1) → wadi (y2-8, 2-wide, **jogging 1 tile west at y5** so no straight water seam exceeds 4 — LAW-17) → pond (x33-40,y9-15, scalloped, 1-tile rim, grass halo + detached blobs) → falaj main leg west along y12 → south leg down x17 → 2×2 basin (16-17,y25-26) at the plaza junction; branch x36 (y16-23) waters herb beds + orchard. Channels run along plot EDGES per LAW-20; the composition bends toward the pond.
-- **Diagonal (LAW-30):** south gate (20,34) → plaza focal (22,25) → homestead landmark (12,5) sweep one diagonal; the pond (36,12) pulls the eye the other way.
-- **Focals:** primary = barn+silo+windmill row (tall + animated sails, LAW-26); secondary per district = waterfall/pond, plaza statue, basin, grapes-bower. Vertical punctuation every 8–12 tiles: silo, windmill, waterfall, palms, statue, bower.
+- **Diagonal (LAW-30):** south gate (20,34) → plaza focal (22,25) → packed homestead yard (12,5) sweep one diagonal; the pond (36,12) pulls the eye the other way.
+- **Focals:** primary = the packed homestead yard framing the barn, farmhouse, silo, and windmill (tall + animated sails, LAW-26); secondary per district = waterfall/pond, plaza statue, basin, grapes-bower. Vertical punctuation every 8–12 tiles: silo, windmill, waterfall, palms, statue, bower.
 - **Vignettes (LAW-34):** (1) "market-day loading" — hay bales ×3 (L-shape) + crates + a water trough + a standing camel in the farmhouse–barn gap (8-9, y5-8), spilling onto the facade line at (8,8) — beside, not ON, the yard road (no cart asset exists; see MISSING #17); (2) beehive + grapes-bower honey corner east of the orchard (37-38, y25-27).
-- **Quiet corner (LAW-31):** NW pocket x2-8, y11-16 — no buildings, dead bush + rocks + `inscription-farmland-1`, zero NPCs.
+- **Quiet corner (LAW-31):** NW pocket x2-8, y11-16 — no buildings, dead bush + rocks + `inscription-farmland-1`, zero NPCs; the paddock edge now rises into the northern scrub instead of leaving the top third empty.
 - **Vista (LAW-46):** the NE road climb (y17-21, x38-42) crests a low dune lip where the container is only scrub — the player looks east over open steppe toward the bedouin camp (inscription-farmland-2 marks it).
 - **Container (LAW-41/48):** N = desert cliff band (depth 2-3, jogging, waterfall break). E = cliff, depth 2 jogging to 3 (C at x42) on y5-8, y13-15, y23-26 and y31-32, so no straight cliff-edge run exceeds ~4 (LAW-48), with the 3-tile exit cut (y16-18). W = palm belt, depth 2 bulging to 3 (T at x2) on y5-8 and y23-26. S = palm belt with depth-3 palm bumps at x27-29 and x36-38 on y32 — no container run is constant-width. LAW-42 signposts: south exit framed by the palm belt itself + lanterns; east exit gets a palm pair at (40,14)+(41,15) and a camel-bones cluster at (42,18)-(42,19) (decor, no IDs — kept OFF the y17-19 road tiles).
 - **Fence rhythm (LAW-43/35):** the 10-tile plot fence runs each get a break element at mid-run — scarecrows just inside the crops at (8,18) (plot A top y17), (25,15) (plot B top y14), (8,31) (plot C bottom y32-adjacent); jar/rock clusters just outside at (9,24) (plot A bottom y23), (26,21) (plot B bottom y20), (8,25) (plot C top y26), (32,32) (orchard bottom y31). Gates + corner posts break every other run at ≤8.
@@ -130,9 +130,9 @@ y34: T(0-18) .(19-21) T(22-44)
 
 | District | Tile rect (x,y,w,h) | Purpose |
 |---|---|---|
-| Homestead Row | (2,3)-(27,10) | Farmhouse + barn/silo + windmill + coop in a staggered top-edge line; yard road; the zone landmark |
-| Paddock & Quiet Corner | (2,11)-(16,16) | Fenced livestock pen (cow, sheep; gate north to yard); NW quiet corner |
-| Crop Quarters | (4,14)-(30,32) | Plot A wheat (5-12,18-22), Plot B barley (22-29,15-19), Plot C cotton/vegetables (5-12,27-31); falaj legs + service lanes |
+| Homestead Row | (2,3)-(27,10) | Packed farmyard around the farmhouse + barn/silo + windmill + coop; yard road, open gate, and the zone landmark |
+| Paddock & Quiet Corner | (2,8)-(16,16) | Fenced livestock pen rising into the northern scrub; NW quiet corner |
+| Crop Quarters | (4,14)-(30,32) | Smaller irregular Plot A wheat (5-10,18-22), Plot B barley (22-28,15-19), Plot C cotton/vegetables (5-10,27-30); fallow gaps, orchard, falaj legs + service lanes |
 | Pond & Falaj Head | (28,2)-(42,16) | Waterfall, wadi, pond, spring fountain, NE rock-outcrop pocket (chest + ore) |
 | Herbalist's Garden | (31,15)-(36,19) | Maryam's herb beds + flax-drying racks, watered by the branch channel |
 | Farm Plaza | (18,23)-(24,27) | Packed-earth plaza where all paths meet: harvest-shrine statue, produce stall, learning shelf |

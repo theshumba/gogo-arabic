@@ -160,7 +160,7 @@ const ZONE_PROFILES = {
       O: 'farmland',
       f: 'farmland+block',
       '.': 'lane',
-      P: 'farmland',
+      P: 'lane',
       B: 'bldg',
       '#': 'sand+block',
     },
