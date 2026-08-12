@@ -205,6 +205,12 @@ export const FLAT_GROUND_PROPS = new Set([
 // Maps texture key -> array of { x, y, w, h } regions in source pixels
 // Props NOT listed here are single-item or large-object images — rendered at native or scaled size.
 export const PROP_CROP_REGIONS = {
+  'kenmi-base-outdoor-decoration-ores': Array.from({ length: 64 }, (_, index) => ({
+    x: (index % 8) * 16,
+    y: Math.floor(index / 8) * 16,
+    w: 16,
+    h: 16,
+  })),
   'kenmi-desert-props-desert-rocks': [
     { x: 0,   y: 0,  w: 16, h: 16 },
     { x: 16,  y: 0,  w: 16, h: 16 },
@@ -1630,8 +1636,24 @@ export class MapLoader {
       const kenmiKey = SPRITE_KEY_MAP[obj.key];
       const textureKey = kenmiKey && this.scene.textures.exists(kenmiKey) ? kenmiKey : obj.key;
       const animName = ANIMATED_DECO_PROPS[textureKey];
-      const sprite = animName
-        ? this.scene.add.sprite(px, py, textureKey, 0)
+      const cropRegions = PROP_CROP_REGIONS[textureKey];
+      const initialRegion = cropRegions && cropRegions.length > 0
+        ? cropRegions[Number.isInteger(obj.cropIndex) && obj.cropIndex >= 0 && obj.cropIndex < cropRegions.length
+          ? obj.cropIndex
+          : 0]
+        : null;
+      const isFrameCrop = initialRegion
+        && initialRegion.w === 16
+        && initialRegion.h === 16
+        && initialRegion.x % 16 === 0
+        && initialRegion.y % 16 === 0
+        && KENMI_CATALOG.some((entry) => entry.key === textureKey && entry.type === 'spritesheet');
+      const frameColumns = isFrameCrop ? this.scene.textures.get(textureKey).source[0].width / 16 : 0;
+      const initialFrame = isFrameCrop
+        ? (initialRegion.y / 16) * frameColumns + initialRegion.x / 16
+        : 0;
+      const sprite = animName || isFrameCrop
+        ? this.scene.add.sprite(px, py, textureKey, initialFrame)
         : this.scene.add.image(px, py, textureKey);
       if (animName && this.scene.anims.exists(animName)) sprite.play(animName);
 
@@ -1639,9 +1661,8 @@ export class MapLoader {
       // If the object specifies a `cropIndex` (set by ObjectPlacerEditor) use
       // that exact variant so saved placements render identically to what the
       // editor showed; otherwise pick a random variant for procedural scatters.
-      const cropRegions = PROP_CROP_REGIONS[textureKey];
       let depth = py;
-      if (cropRegions && cropRegions.length > 0) {
+      if (cropRegions && cropRegions.length > 0 && !isFrameCrop) {
         // Random picks draw from the dry-land-safe pool (PROP_RANDOM_CROP_INDEXES)
         // so e.g. desert-rocks never randomly land a teal water-ring frame on sand.
         const randomPool = PROP_RANDOM_CROP_INDEXES[textureKey];
@@ -1668,6 +1689,10 @@ export class MapLoader {
         depth = FLAT_GROUND_PROPS.has(textureKey)
           ? 0.5 + py * 0.0001
           : py + (region.h / 2) * scale;
+      } else if (isFrameCrop) {
+        sprite.setOrigin(0.5, 0.5);
+        sprite.setScale(KENMI_SCALE);
+        depth = py + TILE * 0.5;
       } else {
         sprite.setOrigin(0.5, 0.8);
         // No crop region: 16px images are tiles (4x -> one tile); larger native
@@ -2081,19 +2106,35 @@ export class MapLoader {
   _createDecoSprite(px, py, propKey, hash) {
     if (!this.scene.textures.exists(propKey)) return null;
 
-    const sprite = this.scene.add.image(px, py, propKey);
-
     const cropRegions = PROP_CROP_REGIONS[propKey];
+    const randomPool = PROP_RANDOM_CROP_INDEXES[propKey];
+    const regionIdx = randomPool
+      ? randomPool[Math.floor(hash * randomPool.length)]
+      : Math.floor(hash * (cropRegions?.length || 1));
+    const region = cropRegions?.[regionIdx];
+    const isFrameCrop = region
+      && region.w === 16
+      && region.h === 16
+      && region.x % 16 === 0
+      && region.y % 16 === 0
+      && KENMI_CATALOG.some((entry) => entry.key === propKey && entry.type === 'spritesheet');
+    const frameColumns = isFrameCrop ? this.scene.textures.get(propKey).source[0].width / 16 : 0;
+    const frame = isFrameCrop
+      ? (region.y / 16) * frameColumns + region.x / 16
+      : 0;
+    const sprite = isFrameCrop
+      ? this.scene.add.sprite(px, py, propKey, frame)
+      : this.scene.add.image(px, py, propKey);
+
     let displayH;
-    if (cropRegions && cropRegions.length > 0) {
+    if (isFrameCrop) {
+      sprite.setOrigin(0.5, 0.5);
+      sprite.setScale(KENMI_SCALE);
+      displayH = TILE;
+    } else if (cropRegions && cropRegions.length > 0) {
       // Multi-item sheet: pick one region, crop to it, then normalize to ~1 tile.
       // Hash picks draw from the dry-land-safe pool where one exists (e.g.
       // desert-rocks: never scatter a teal water-ring frame on dry ground).
-      const randomPool = PROP_RANDOM_CROP_INDEXES[propKey];
-      const regionIdx = randomPool
-        ? randomPool[Math.floor(hash * randomPool.length)]
-        : Math.floor(hash * cropRegions.length);
-      const region = cropRegions[regionIdx];
       const scale = croppedPropScale(region);
       sprite.setCrop(region.x, region.y, region.w, region.h);
       sprite.setScale(scale);

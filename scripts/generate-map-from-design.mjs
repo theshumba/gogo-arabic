@@ -192,6 +192,58 @@ const ZONE_PROFILES = {
     priority: ['water', 'farmland-wet', 'farmland', 'lane', 'grass', 'scrub', 'sand'],
     decalsFromComma: false,
   },
+  mountain_village: {
+    id: 'mountain_village',
+    classes: {
+      '#': 'cliff',
+      '=': 'stone',
+      ':': 'road',
+      '.': 'stone',
+      'v': 'waterfall',
+      '~': 'water',
+      B: 'bridge',
+      C: 'cave',
+      M: 'bldg',
+      H: 'bldg',
+      O: 'stone+block',
+      r: 'stone+block',
+      T: 'stone+block',
+      f: 'stone+block',
+      g: 'grass',
+      d: 'trample',
+      E: null,
+    },
+    tilesets: ['stone', 'water', 'waterfall-base', 'cliff-stone', 'cave', 'bridge'],
+  cliffFrames: { FACE_TOP: 22, FACE_MID: 36, FACE_BASE: 50 },
+    waterfallFrames: { TOP: 0, MID: 18, BOTTOM: 36 },
+    buildingGlyphs: 'MH',
+    buildings: [
+      {
+        contains: [23, 21],
+        assetKey: 'kenmi-desert-temple-desert-temple',
+        label: 'Mountain Mosque',
+      },
+      {
+        contains: [12, 11],
+        assetKey: 'kenmi-base-buildings-buildings-houses-stone-house-1-stone-base-black',
+        label: 'Mountain Home',
+      },
+      {
+        contains: [22, 11],
+        assetKey: 'kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue',
+        label: 'Healer House',
+      },
+      {
+        contains: [17, 23],
+        assetKey: 'kenmi-base-buildings-buildings-houses-limestone-house-4-limestone-base-black',
+        label: 'Lower House',
+      },
+    ],
+    priority: ['water', 'waterfall', 'bridge', 'road', 'stone', 'grass', 'cliff'],
+    baseAlias: { bridge: 'stone', cave: 'stone' },
+    detailDensity: { stone: 8, trample: 4 },
+    decalsFromComma: false,
+  },
   royal_palace: {
     classes: {
       s: 'sand',
@@ -357,9 +409,12 @@ if (!buildings.length) warn('no buildings parsed from the Buildings table');
 const unified = { spawn: null, npcs: [], interactables: [], exits: [], entries: [] };
 {
   const sec = tableRows(/^## 5\. Contract placement table/m);
-  const spawnRow = md.match(/^\|\s*spawnPoint\s*\|\s*\((\d+),(\d+)\)\s*\|/m);
+  const spawnRow = md.match(/^\|\s*`?spawnPoint`?\s*\|\s*\((\d+),(\d+)\)\s*\|/m);
   if (spawnRow) unified.spawn = { x: +spawnRow[1], y: +spawnRow[2] };
   for (const m of md.matchAll(/^\|\s*entry\s+`([\w-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|/gm)) {
+    unified.entries.push({ key: m[1], x: +m[2], y: +m[3] });
+  }
+  for (const m of md.matchAll(/^\|\s*`entries\.([\w-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|/gm)) {
     unified.entries.push({ key: m[1], x: +m[2], y: +m[3] });
   }
   for (const m of sec.matchAll(/^\|\s*`([\w-]+)`([^|]*)\|\s*([^|]+?)\s*\|\s*([^|]*?)\s*\|/gm)) {
@@ -387,6 +442,9 @@ const unified = { spawn: null, npcs: [], interactables: [], exits: [], entries: 
       unified.interactables.push(it);
     }
   }
+  for (const m of sec.matchAll(/^\|\s*`([\w-]+)`[^|]*\|\s*(north|south|east|west)\s*\|\s*\[(\d+),(\d+)\]\s*\|/gm)) {
+    unified.exits.push({ id: m[1], edge: m[2], range: [+m[3], +m[4]] });
+  }
 }
 
 // spawnPoint — "spawnPoint **(x,y)**" (oasis) or "`spawnPoint: (x,y)`" (marketplace)
@@ -405,6 +463,9 @@ for (const m of md.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*edge=(\w+),\s*tileRange\s*\
   exits.push({ id: m[1], edge: m[2], range: [+m[3], +m[4]] });
 }
 for (const m of md.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*(north|south|east|west)[^|]*\|\s*[xy]\[(\d+),(\d+)\]\s*\|/gm)) {
+  exits.push({ id: m[1], edge: m[2], range: [+m[3], +m[4]] });
+}
+for (const m of md.matchAll(/^\|\s*`([\w-]+)`[^|]*\|\s*(north|south|east|west)\s*\|\s*\[(\d+),(\d+)\]\s*\|/gm)) {
   exits.push({ id: m[1], edge: m[2], range: [+m[3], +m[4]] });
 }
 for (const m of md.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*edge=\*\*(north|south|east|west)\*\*,\s*tileRange=\**\[(\d+),(\d+)\]\**/gm)) {
@@ -488,6 +549,17 @@ if (!interactables.length) {
     });
   }
 }
+if (!interactables.length) {
+  for (const m of md.matchAll(/^\|\s*`([\w.-]+)`\s*\|\s*([^|]+?)\s*\|\s*\((\d+),(\d+)\)\s*\|/gm)) {
+    const [, id, kind, x, y] = m;
+    if (/^(sign|bookshelf|chest|door|statue|painting|pot|lantern|fountain|barrel|crate|inscription)/i.test(kind)) {
+      const it = { id, x: +x, y: +y, type: kind.split(/\s|→/)[0] };
+      const intM = kind.match(/`([\w]+_interior)`/);
+      if (intM) it.interiorId = intM[1];
+      interactables.push(it);
+    }
+  }
+}
 
 const spotSec = tableRows(/^\*\*Gathering spots \(\d+[^)]*\):\*\*/m);
 const spots = [...spotSec.matchAll(/^\|\s*`(spot_[\w]+)`\s*\|\s*([\w]+)\s*\/\s*([\w]+)\s*\|\s*\((\d+),(\d+)\)/gm)]
@@ -555,6 +627,8 @@ const EXTRA_TILESETS = {
   water: ['kenmi-desert-tiles-desert-water-tiles-1', '../kenmi/desert/tiles/desert-water-tiles-1.png', 96, 48],
   cliff: ['kenmi-desert-tiles-desert-cliff-tiles-1', '../kenmi/desert/tiles/desert-cliff-tiles-1.png', 208, 176],
   waterfall: ['kenmi-desert-tiles-desert-cliff-waterfall-1', '../kenmi/desert/tiles/desert-cliff-waterfall-1.png', 288, 96],
+  'waterfall-base': ['kenmi-base-tiles-waterfall-waterfall-1', '../kenmi/base/tiles/waterfall/waterfall-1.png', 288, 80],
+  'cliff-stone': ['kenmi-base-tiles-cliff-stone-cliff-1-tile', '../kenmi/base/tiles/cliff/stone-cliff-1-tile.png', 224, 96],
   farmland: ['kenmi-base-tiles-farmland-farmland-tile', '../kenmi/base/tiles/farmland/farmland-tile.png', 112, 128],
   'farmland-wet': ['kenmi-base-tiles-farmland-farmland-wet-tile', '../kenmi/base/tiles/farmland/farmland-wet-tile.png', 112, 128],
   grass3: ['kenmi-base-tiles-grass-grass-tiles-3', '../kenmi/base/tiles/grass/grass-tiles-3.png', 256, 160],
@@ -562,10 +636,14 @@ const EXTRA_TILESETS = {
   pave: ['kenmi-base-tiles-pavement-tiles', '../kenmi/base/tiles/pavement-tiles.png', 144, 128],
   wall: ['kenmi-desert-props-desert-fencewall', '../kenmi/desert/props/desert-fencewall.png', 64, 64],
   hedge: ['kenmi-base-tiles-hedge-tiles', '../kenmi/base/tiles/hedge-tiles.png', 64, 64],
+  stone: ['kenmi-base-tiles-cobble-road-cobble-road-1', '../kenmi/base/tiles/cobble-road/cobble-road-1.png', 48, 80],
+  cave: ['kenmi-base-tiles-cliff-stone-cliff-1-cave-entrance', '../kenmi/base/tiles/cliff/stone-cliff-1-cave-entrance.png', 48, 48],
+  bridge: ['kenmi-base-tiles-bridge-bridge-stone-horizontal', '../kenmi/base/tiles/bridge/bridge-stone-horizontal.png', 192, 112],
 };
 let TS_WATER = null; let TS_CLIFF = null; let TS_WATERFALL = null; let TS_FARMLAND = null;
 let TS_FARMLAND_WET = null; let TS_GRASS3 = null; let TS_COBBLE = null; let TS_PAVE = null;
 let TS_WALL = null; let TS_HEDGE = null;
+let TS_STONE = null; let TS_CAVE = null; let TS_BRIDGE = null;
 if (!PROFILE) {
   TS_WATER = addTs(...EXTRA_TILESETS.water);
 }
@@ -577,8 +655,8 @@ if (!PROFILE) {
     if (!EXTRA_TILESETS[short]) die(`profile tileset "${short}" not in EXTRA_TILESETS`);
     const ts = addTs(...EXTRA_TILESETS[short]);
     if (short === 'water') TS_WATER = ts;
-    else if (short === 'cliff') TS_CLIFF = ts;
-    else if (short === 'waterfall') TS_WATERFALL = ts;
+    else if (short === 'cliff' || short === 'cliff-stone') TS_CLIFF = ts;
+    else if (short === 'waterfall' || short === 'waterfall-base') TS_WATERFALL = ts;
     else if (short === 'farmland') TS_FARMLAND = ts;
     else if (short === 'farmland-wet') TS_FARMLAND_WET = ts;
     else if (short === 'grass3') TS_GRASS3 = ts;
@@ -586,9 +664,12 @@ if (!PROFILE) {
     else if (short === 'pave') TS_PAVE = ts;
     else if (short === 'wall') TS_WALL = ts;
     else if (short === 'hedge') TS_HEDGE = ts;
+    else if (short === 'stone') TS_STONE = ts;
+    else if (short === 'cave') TS_CAVE = ts;
+    else if (short === 'bridge') TS_BRIDGE = ts;
   }
 }
-const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_GRASS3, TS_FARMLAND, TS_FARMLAND_WET, TS_WATERFALL, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL, TS_HEDGE]
+const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_GRASS3, TS_FARMLAND, TS_FARMLAND_WET, TS_WATERFALL, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL, TS_HEDGE, TS_STONE, TS_CAVE, TS_BRIDGE]
   .filter(Boolean).sort((a, b) => a.firstgid - b.firstgid);
 
 const SAND_SOLID = 6;                       // 5x3 beach sheets: (1,1) solid sand
@@ -621,6 +702,9 @@ const RUBBLE_F = [98, 111, 124, 137, 100, 113, 126, 139]; // plain x4 + decorate
 // cobble-road-2 blob (3x5): 0-8 = blob-on-sand transitions (f4 = solid centre),
 // 9/12/13 solid variants, 10 sand-pothole variant, 11/14 transparent (never place)
 const COBBLE_F = { NW: 0, N: 1, NE: 2, W: 3, C: 4, E: 5, SW: 6, S: 7, SE: 8, VAR: [9, 12, 13], POTHOLE: 10 };
+const STONE_F = { ...COBBLE_F };
+const CAVE_F = { MOUTH: 4 };
+const BRIDGE_F = { SOLID: 13 };
 // pavement-tiles: flat light-brick block = frames 0,1 / 9,10 (9-col sheet)
 const PAVE_F = [0, 1, 9, 10];
 // desert-fencewall (4x4) frame atlas by wall-neighbour mask — see header
@@ -895,9 +979,10 @@ if (!PROFILE) {
   }
 
   function cliffFrameP(x, y) {
-    if (!isCliffP(x, y + 1)) return CLIFF_F.FACE_BASE; // rock base meets the ground below
-    if (!isCliffP(x, y - 1)) return CLIFF_F.FACE_TOP;
-    return CLIFF_F.FACE_MID;
+    const frames = PROFILE?.cliffFrames || CLIFF_F;
+    if (!isCliffP(x, y + 1)) return frames.FACE_BASE; // rock base meets the ground below
+    if (!isCliffP(x, y - 1)) return frames.FACE_TOP;
+    return frames.FACE_MID;
   }
 
   function hedgeFrame(x, y) {
@@ -1008,11 +1093,12 @@ if (!PROFILE) {
           break;
         case 'waterfall': {
           ground[i] = G_SAND;
+          const waterfallFrames = PROFILE?.waterfallFrames || WATERFALL_F;
           const waterfallFrame = !isWaterfallP(x, y - 1)
-            ? WATERFALL_F.TOP
+            ? waterfallFrames.TOP
             : !isWaterfallP(x, y + 1)
-              ? WATERFALL_F.BOTTOM
-              : WATERFALL_F.MID;
+              ? waterfallFrames.BOTTOM
+              : waterfallFrames.MID;
           detail[i] = TS_WATERFALL.firstgid
             + waterfallFrame
             + (x % 2);
@@ -1022,6 +1108,15 @@ if (!PROFILE) {
         case 'cliff':
           ground[i] = TS_CLIFF.firstgid + cliffFrameP(x, y);
           collision[i] = COLLIDE_GID;
+          break;
+        case 'cave':
+          ground[i] = TS_STONE.firstgid + STONE_F.C;
+          detail[i] = TS_CAVE.firstgid + CAVE_F.MOUTH;
+          collision[i] = COLLIDE_GID;
+          break;
+        case 'bridge':
+          ground[i] = TS_STONE.firstgid + STONE_F.C;
+          detail[i] = TS_BRIDGE.firstgid + BRIDGE_F.SOLID;
           break;
         case 'farmland':
           ground[i] = TS_FARMLAND.firstgid + farmlandFrameP(x, y);
@@ -1044,7 +1139,10 @@ if (!PROFILE) {
           if (!doorCells.has(`${x},${y}`)) collision[i] = COLLIDE_GID;
           break;
         case 'road':
-          ground[i] = TS_COBBLE.firstgid + cobbleFrame(x, y);
+          ground[i] = (TS_COBBLE || TS_STONE).firstgid + cobbleFrame(x, y);
+          break;
+        case 'stone':
+          ground[i] = TS_STONE.firstgid + STONE_F.C;
           break;
         case 'lane':
           ground[i] = G_ROAD;
@@ -1063,8 +1161,13 @@ if (!PROFILE) {
             detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
           }
           break;
-        default: // sand
+      default: // sand
           ground[i] = G_SAND;
+      }
+      const density = PROFILE?.detailDensity?.[b] || 0;
+      if (density > 0 && detail[i] === 0 && hash(x, y) % 100 < density) {
+        const decalFrames = [0, 2, 6, 8];
+        detail[i] = TS_GRASS.firstgid + decalFrames[hash(x + 17, y + 31) % decalFrames.length];
       }
       if (block) collision[i] = COLLIDE_GID;
     }
