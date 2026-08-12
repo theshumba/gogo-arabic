@@ -9492,6 +9492,132 @@
       "x": 24,
       "y": 6,
       "collide": true
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-red",
+      "x": 4,
+      "y": 14,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-blue",
+      "x": 24,
+      "y": 14,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-green-blue",
+      "x": 4,
+      "y": 21,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-red",
+      "x": 28,
+      "y": 14,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-blue",
+      "x": 28,
+      "y": 21,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-green-blue",
+      "x": 4,
+      "y": 31,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-red",
+      "x": 24,
+      "y": 31,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-fisherman-house-fisherman-house-base-blue",
+      "x": 32,
+      "y": 14,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue",
+      "x": 12,
+      "y": 31,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue",
+      "x": 28,
+      "y": 27,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-blacksmith-house-blacksmith-house-blue",
+      "x": 17,
+      "y": 31,
+      "collide": false
+    },
+    {
+      "key": "kenmi-volcano-buildings-volcano-tower",
+      "x": 42,
+      "y": 29,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-boat",
+      "x": 36,
+      "y": 11,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-boat",
+      "x": 36,
+      "y": 22,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-boat",
+      "x": 33,
+      "y": 33,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-stalls-market-stalls",
+      "x": 13,
+      "y": 12,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-stalls-market-stalls",
+      "x": 18,
+      "y": 10,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 18,
+      "y": 18,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 18,
+      "y": 20,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-barrels",
+      "x": 29,
+      "y": 17,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-barrels",
+      "x": 31,
+      "y": 23,
+      "collide": false
     }
   ],
   "decoCount": 0,
