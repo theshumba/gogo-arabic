@@ -1676,7 +1676,7 @@ export class MapLoader {
         const region = cropRegions[idx];
         const scale = croppedPropScale(region);
         sprite.setCrop(region.x, region.y, region.w, region.h);
-        sprite.setDisplaySize(region.w * scale, region.h * scale);
+        sprite.setScale(scale);
         // Pin origin to the visual center of the crop region so py lands on the
         // centre of the visible sprite (not the centre of the full frame).
         const src = this.scene.textures.get(textureKey).source[0];
@@ -2137,7 +2137,7 @@ export class MapLoader {
       // desert-rocks: never scatter a teal water-ring frame on dry ground).
       const scale = croppedPropScale(region);
       sprite.setCrop(region.x, region.y, region.w, region.h);
-      sprite.setDisplaySize(region.w * scale, region.h * scale);
+      sprite.setScale(scale);
       displayH = region.h * scale;
     } else {
       // Not in crop list — scale from source dimensions: 16px props get
