@@ -323,32 +323,31 @@ const ancient_library = {
     // Library building structures — temple structures (BLDG-02)
     { key: 'kenmi-desert-temple-desert-temple', x: 17, y: 3, collide: true, collideW: 240, collideH: 100 },
     { key: 'kenmi-desert-houses-desert-house-2.1', x: 6, y: 9, collide: true, collideW: 180, collideH: 80 },
-    // Obelisk pillars lining courtyard
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 10, y: 8, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 10, y: 20, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 24, y: 8, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 24, y: 14, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 24, y: 20, collide: true, collideW: 20, collideH: 20 },
-    // Broken obelisks for ruins atmosphere
-    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 6, y: 4, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 28, y: 4, collide: true, collideW: 20, collideH: 20 },
+    // Obelisks are grouped at the temple steps, court corners, gate, and NW ruins.
+    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 15, y: 8, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 22, y: 8, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 9, y: 9, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 13, y: 13, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 21, y: 9, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 26, y: 13, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 14, y: 22, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 20, y: 22, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-2', x: 5, y: 5, collide: true, collideW: 20, collideH: 20 },
+    { key: 'kenmi-desert-temple-desert-obelisk-small-1', x: 8, y: 5, collide: true, collideW: 20, collideH: 20 },
     // Sparse desert texture outside the precinct; palms stay with the garden and approach.
     { key: 'kenmi-desert-props-halfdead-tree', x: 27, y: 28, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-palm-tree-1', x: 12, y: 19, collide: true, collideW: 30, collideH: 20 },
     { key: 'kenmi-desert-props-palm-tree-2', x: 21, y: 20, collide: true, collideW: 30, collideH: 20 },
     // Rocks
     { key: 'kenmi-desert-props-desert-rocks', x: 30, y: 25, collide: true, collideW: 30, collideH: 20 },
-    // Gate entrance
-    { key: 'kenmi-desert-temple-desert-obelisk-1', x: 17, y: 22, collide: true, collideW: 120, collideH: 40 },
-    // DECO-04: Obelisks flanking the library gate + golden pot in reading garden
-    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 12, y: 22, collide: true, collideW: 20, collideH: 20 },
-    { key: 'kenmi-desert-temple-desert-obelisk-2', x: 22, y: 22, collide: true, collideW: 20, collideH: 20 },
-    // DECO-05: NPC-adjacent props
+    // Court work surfaces and manuscript bundles.
     { key: 'kenmi-desert-props-water-sack-on-stick', x: 11, y: 17, collide: false },
     // desert-ladder removed: free-standing 1x3-tile ladder leaned on nothing.
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 9, y: 10, collide: false },
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 28, y: 11, collide: false },
-    { key: 'kenmi-desert-props-desert-rugs', x: 27, y: 13, collide: false },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 12, y: 12, collide: false },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 25, y: 12, collide: false },
+    { key: 'kenmi-desert-props-desert-rugs', x: 24, y: 13, collide: false },
     { key: 'kenmi-desert-props-desert-rugs', x: 20, y: 17, collide: false },
     { key: 'kenmi-desert-props-fire-pit', x: 13, y: 7, collide: false },
     { key: 'kenmi-desert-props-cactus', x: 26, y: 2, collide: false },

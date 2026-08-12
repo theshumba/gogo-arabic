@@ -6321,44 +6321,62 @@
     },
     {
       "key": "kenmi-desert-temple-desert-obelisk-small-1",
-      "x": 10,
+      "x": 15,
+      "y": 8,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-temple-desert-obelisk-small-2",
+      "x": 22,
       "y": 8,
       "collide": true
     },
     {
       "key": "kenmi-desert-temple-desert-obelisk-small-1",
-      "x": 10,
-      "y": 20,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-temple-desert-obelisk-small-1",
-      "x": 24,
-      "y": 8,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-temple-desert-obelisk-small-1",
-      "x": 24,
-      "y": 14,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-temple-desert-obelisk-small-1",
-      "x": 24,
-      "y": 20,
+      "x": 9,
+      "y": 9,
       "collide": true
     },
     {
       "key": "kenmi-desert-temple-desert-obelisk-small-2",
-      "x": 6,
-      "y": 4,
+      "x": 13,
+      "y": 13,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-temple-desert-obelisk-small-1",
+      "x": 21,
+      "y": 9,
       "collide": true
     },
     {
       "key": "kenmi-desert-temple-desert-obelisk-small-2",
-      "x": 28,
-      "y": 4,
+      "x": 26,
+      "y": 13,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-temple-desert-obelisk-small-1",
+      "x": 14,
+      "y": 22,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-temple-desert-obelisk-small-2",
+      "x": 20,
+      "y": 22,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-temple-desert-obelisk-small-2",
+      "x": 5,
+      "y": 5,
+      "collide": true
+    },
+    {
+      "key": "kenmi-desert-temple-desert-obelisk-small-1",
+      "x": 8,
+      "y": 5,
       "collide": true
     },
     {
@@ -6386,24 +6404,6 @@
       "collide": true
     },
     {
-      "key": "kenmi-desert-temple-desert-obelisk-1",
-      "x": 17,
-      "y": 22,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-temple-desert-obelisk-2",
-      "x": 12,
-      "y": 22,
-      "collide": true
-    },
-    {
-      "key": "kenmi-desert-temple-desert-obelisk-2",
-      "x": 22,
-      "y": 22,
-      "collide": true
-    },
-    {
       "key": "kenmi-desert-props-water-sack-on-stick",
       "x": 11,
       "y": 17,
@@ -6422,8 +6422,20 @@
       "collide": false
     },
     {
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 12,
+      "y": 12,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-pots-sacks",
+      "x": 25,
+      "y": 12,
+      "collide": false
+    },
+    {
       "key": "kenmi-desert-props-desert-rugs",
-      "x": 27,
+      "x": 24,
       "y": 13,
       "collide": false
     },
