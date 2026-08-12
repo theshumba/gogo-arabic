@@ -317,12 +317,13 @@ const ZONE_PROFILES = {
       '=': 'sand',
       'G': 'sand',
     },
-    tilesets: ['water', 'cliff', 'stone'],
+    tilesets: ['water', 'foam', 'cliff', 'stone'],
     cliffFrames: { FACE_TOP: 41, FACE_MID: 54, FACE_BASE: 67 },
+    foamOnShoreline: true,
     buildingGlyphs: '',
     buildings: [],
     priority: ['water', 'track', 'camp', 'stone', 'grass', 'sand'],
-    detailDensity: { sand: 3, camp: 2, track: 1 },
+  detailDensity: { sand: 0, camp: 0, track: 0 },
     decalsFromComma: false,
   },
   royal_palace: {
@@ -1300,10 +1301,14 @@ if (!PROFILE) {
           ground[i] = G_PLAZA;
           break;
         case 'camp':
-          ground[i] = G_PLAZA;
+          // Camp wear is carried by the fire-circle dressing and clustered
+          // props. A flat plaza frame reads as a painted stain on desert sand.
+          ground[i] = G_SAND;
           break;
         case 'track':
-          ground[i] = G_ROAD;
+          // Caravan trails fade into their sand surroundings; do not paint
+          // them as a road slab.
+          ground[i] = G_SAND;
           break;
         case 'pave':
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];

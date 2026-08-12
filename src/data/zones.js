@@ -993,13 +993,25 @@ const farmland = {
 
 function buildBedouinMap() {
   const W = 35, H = 25;
+  const water = new Set([
+    '27,17', '28,17', '29,17',
+    '27,18', '28,18', '29,18',
+    '28,19', '29,19', '30,19',
+  ]);
+  const oasis = new Set([
+    '24,16', '25,16', '26,16', '27,16', '28,16', '29,16',
+    '23,17', '24,17', '25,17', '26,17', '29,17', '30,17',
+    '23,18', '24,18', '25,18', '26,18', '30,18',
+    '24,19', '25,19', '26,19', '27,19', '30,19',
+    '25,20', '26,20', '27,20', '28,20', '29,20',
+  ]);
   const m = [];
   for (let y = 0; y < H; y++) {
     const row = [];
     for (let x = 0; x < W; x++) {
       let tile = SAND;
-      if (x >= 24 && x <= 27 && y >= 17 && y <= 19) tile = WATER;
-      if (x >= 23 && x <= 28 && y >= 16 && y <= 20 && tile !== WATER) tile = GRASS;
+      if (water.has(`${x},${y}`)) tile = WATER;
+      else if (oasis.has(`${x},${y}`)) tile = GRASS;
       row.push(tile);
     }
     m.push(row);
@@ -1060,7 +1072,12 @@ const bedouin_camp = {
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 5, y: 9, collide: false, cropIndex: 3 },
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 3, y: 7, collide: false, cropIndex: 0 },
     { key: 'kenmi-desert-props-desert-pots-sacks', x: 4, y: 9, collide: false, cropIndex: 2 },
-    { key: 'kenmi-desert-props-desert-rocks', x: 33, y: 8, collide: false, cropIndex: 2 },
+    { key: 'kenmi-desert-props-sleeping-mat', x: 10, y: 8, collide: false },
+    { key: 'kenmi-desert-props-desert-rugs', x: 11, y: 7, collide: false, cropIndex: 2 },
+    { key: 'kenmi-desert-props-sleeping-mat', x: 24, y: 10, collide: false },
+    { key: 'kenmi-desert-props-desert-rugs', x: 21, y: 10, collide: false, cropIndex: 3 },
+    { key: 'kenmi-desert-props-sleeping-mat', x: 21, y: 18, collide: false },
+    { key: 'kenmi-desert-props-sleeping-mat', x: 30, y: 14, collide: false },
     { key: 'kenmi-desert-props-desert-rocks', x: 28, y: 2, collide: false, cropIndex: 10 },
     { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 32, y: 21, collide: false, cropIndex: 1 },
     { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 4, y: 19, collide: false, cropIndex: 1 },
