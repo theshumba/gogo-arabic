@@ -1087,6 +1087,33 @@ const bedouin_camp = {
     // Perimeter clumps keep the open approaches inhabited without adding
     // another ground material.
     { key: 'kenmi-desert-props-desert-rocks', x: 33, y: 12, collide: false, cropIndex: 1 },
+    // Camp clusters and loose desert dressing.
+    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 12, y: 8, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 13, y: 9, collide: false, cropIndex: 2 },
+    { key: 'kenmi-desert-props-desert-rocks', x: 11, y: 10, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 13, y: 11, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 25, y: 7, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 29, y: 7, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 30, y: 10, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-rocks', x: 26, y: 10, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-bones', x: 23, y: 8, collide: false },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 5, y: 16, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 8, y: 16, collide: false, cropIndex: 2 },
+    { key: 'kenmi-base-outdoor-decoration-camp-decor', x: 10, y: 17, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-rocks', x: 11, y: 18, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-bones', x: 13, y: 19, collide: false },
+    { key: 'kenmi-base-outdoor-decoration-hay-bales', x: 5, y: 20, collide: false, cropIndex: 0 },
+    { key: 'kenmi-base-outdoor-decoration-hay-bales', x: 9, y: 20, collide: false, cropIndex: 1 },
+    { key: 'kenmi-base-outdoor-decoration-water-troughs', x: 7, y: 20, collide: false },
+    { key: 'kenmi-desert-props-desert-rugs', x: 14, y: 15, collide: false, cropIndex: 3 },
+    { key: 'kenmi-desert-props-desert-pots-sacks', x: 16, y: 16, collide: false, cropIndex: 3 },
+    { key: 'kenmi-desert-props-desert-rugs', x: 18, y: 16, collide: false, cropIndex: 1 },
+    { key: 'kenmi-desert-props-desert-rocks', x: 21, y: 17, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-bones', x: 22, y: 18, collide: false },
+    { key: 'kenmi-desert-props-desert-rocks', x: 32, y: 12, collide: false, cropIndex: 0 },
+    { key: 'kenmi-desert-props-desert-fern', x: 33, y: 18, collide: false },
+    { key: 'kenmi-desert-props-desert-bones', x: 25, y: 23, collide: false },
+    { key: 'kenmi-desert-props-desert-rocks', x: 27, y: 23, collide: false, cropIndex: 1 },
 
   ],
 
