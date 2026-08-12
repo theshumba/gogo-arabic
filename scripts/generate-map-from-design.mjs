@@ -1043,7 +1043,7 @@ if (!PROFILE) {
   const isDeckP = (x, y) => base(x, y) === 'deck';
   const isCliffP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return true; // container continues off-map
-    return base(x, y) === 'cliff';
+    return base(x, y) === 'cliff' || base(x, y) === 'dune';
   };
   const isWaterfallP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return false;
@@ -1274,11 +1274,13 @@ if (!PROFILE) {
           ground[i] = TS_CLIFF.firstgid + cliffFrameP(x, y);
           collision[i] = COLLIDE_GID;
           break;
-        case 'dune':
-          ground[i] = TS_CLIFF.firstgid + (isCliffP(x, y + 1) ? plateauTopFrame(x, y) : plateauFaceFrame(x, y));
+        case 'dune': {
+          const face = y > 0 && isCliffP(x, y - 1);
+          ground[i] = TS_CLIFF.firstgid + (face ? plateauFaceFrame(x, y) : plateauTopFrame(x, y));
           detail[i] = TS_CLIFF.firstgid + plateauDetailFrame(x, y);
-          if (!isCliffP(x, y + 1)) collision[i] = COLLIDE_GID;
+          if (face) collision[i] = COLLIDE_GID;
           break;
+        }
         case 'cave':
           ground[i] = TS_STONE.firstgid + STONE_F.C;
           detail[i] = TS_CAVE.firstgid + CAVE_F.MOUTH;
@@ -1335,7 +1337,7 @@ if (!PROFILE) {
         case 'pave':
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
           break;
-        case 'grass':
+        case 'grass': {
           if (PROFILE.id === 'coastal_port') {
             ground[i] = TS_GRASS3.firstgid + 151;
             break;
@@ -1344,9 +1346,16 @@ if (!PROFILE) {
             ground[i] = TS_GRASS3.firstgid + 151;
           } else {
             ground[i] = G_SAND;
-            detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
+            const touchesWater = isWaterP(x, y - 1) || isWaterP(x, y + 1)
+              || isWaterP(x - 1, y) || isWaterP(x + 1, y);
+            if (touchesWater) {
+              detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
+            } else if (hash(x + 23, y + 37) % 2 === 0) {
+              detail[i] = TS_GRASS.firstgid + [9, 10, 12, 13][hash(x + 41, y + 53) % 4];
+            }
           }
           break;
+        }
       default: // sand
           ground[i] = G_SAND;
       }
@@ -1354,7 +1363,7 @@ if (!PROFILE) {
       const coastalShore = PROFILE?.id === 'coastal_port'
         && (isWaterP(x, y - 1) || isWaterP(x, y + 1) || isWaterP(x - 1, y) || isWaterP(x + 1, y));
       if (density > 0 && !coastalShore && detail[i] === 0 && hash(x, y) % 100 < density) {
-        const decalFrames = [0, 2, 6, 8];
+        const decalFrames = [9, 10, 12, 13];
         detail[i] = TS_GRASS.firstgid + decalFrames[hash(x + 17, y + 31) % decalFrames.length];
       }
       if (block) collision[i] = COLLIDE_GID;
