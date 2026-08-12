@@ -39,9 +39,9 @@ Studied from `/Users/theshumba/Desktop/Gogo-World-References/` (manifests + 8 im
 ```
           1111111111222222222233333
 01234567890123456789012345678901234
-CCCCCCCCCCCCCCCxxxxx..CCCCCCCCCCCCC  0
-CCCCCCCCCCCCCCC......CCCCCCCCCCCCCC  1
-CCCCCCCCCCCCCCC......CCCCCCCCCCCCCC  2
+....CCCCCCCCCCCCCCCCCCCCCCCCCCC....  0
+....CCCCCCCCCCCCCCCCCCCCCCCCCCC....  1
+....CCCCCCCCCCCCCCCCCCCCCCCCCCC....  2
 ...................................  3
 ...................................  4
 ...................................  5
