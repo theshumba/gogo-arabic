@@ -145,6 +145,53 @@ const ZONE_PROFILES = {
     priority: ['road', 'lane', 'pave', 'trample', 'grass', 'sand'],
     decalsFromComma: false, // ',' is a real floor material here, not a decal hint
   },
+  farmland: {
+    classes: {
+      C: 'cliff',
+      W: 'waterfall',
+      w: 'water',
+      c: 'farmland-wet',
+      b: null,
+      T: 'sand+block',
+      s: 'sand',
+      ',': 'scrub',
+      g: 'grass',
+      F: 'farmland',
+      O: 'farmland',
+      f: 'farmland+block',
+      '.': 'lane',
+      P: 'lane',
+      B: 'bldg',
+      '#': 'sand+block',
+    },
+    tilesets: ['farmland', 'water', 'waterfall', 'grass3', 'cliff'],
+    buildingGlyphs: 'B',
+    buildings: [
+      {
+        contains: [4, 5],
+        assetKey: 'kenmi-desert-houses-desert-house-3.1',
+        label: 'Farmhouse',
+        doorId: 'door-barn',
+      },
+      {
+        contains: [10, 4],
+        assetKey: 'kenmi-base-buildings-buildings-unique-buildings-barn-barn-base-blue',
+        label: 'Barn and Silo',
+      },
+      {
+        contains: [17, 5],
+        assetKey: 'kenmi-base-buildings-buildings-unique-buildings-windmill-windmill',
+        label: 'Windmill',
+      },
+      {
+        contains: [23, 6],
+        assetKey: 'kenmi-base-buildings-buildings-unique-buildings-coop-coop-base-blue',
+        label: 'Coop',
+      },
+    ],
+    priority: ['water', 'farmland-wet', 'farmland', 'lane', 'grass', 'scrub', 'sand'],
+    decalsFromComma: false,
+  },
   royal_palace: {
     classes: {
       s: 'sand',
@@ -190,12 +237,47 @@ function parseGrid() {
   for (const block of blocks) {
     const rows = [];
     for (const line of block.split('\n')) {
-      let m = line.match(/^(.*\S)\s+(\d+)\s*$/); // trailing row index
-      if (m && m[1].length === W && !/^[\d\s]+$/.test(m[1])) { rows[+m[2]] = m[1]; continue; }
-      m = line.match(/^\s*(\d+)\s\s*(\S.{1,}?)\s*$/); // leading row index
-      if (m && m[2].length === W && !/^[\d\s]+$/.test(m[2])) { rows[+m[1]] = m[2]; continue; }
-      m = line.match(/^y(\d+)\s+(\S.*?)\s*$/); // leading yNN row label
-      if (m && m[2].length === W && !/^[\d\s]+$/.test(m[2])) rows[+m[1]] = m[2];
+      // Farmland's canonical rows are compact run declarations, for example
+      // "y5: T(0-2) s(3) B(4-7) ...". Expand those declarations into the
+      // same single-cell grid consumed by every other profile.
+      let m = line.match(/^\s*y(\d+):\s*(.+)$/);
+      if (m) {
+        const row = Array(W).fill(null);
+        const body = m[2]
+          .replace(/=[^)]*/g, '')
+          .split(/\s+/)
+          .filter(Boolean)
+          .map((token) => token.replace(/,$/, ''));
+        for (const token of body) {
+          let run = token.match(/^(\d+)×([A-Za-z#.,]+)$/);
+          if (run) {
+            const count = +run[1];
+            const chars = [...run[2]];
+            if (chars.length !== 1) continue;
+            const start = row.findIndex((cell) => cell === null);
+            for (let i = 0; i < count && start + i < W; i++) row[start + i] = chars[0];
+            continue;
+          }
+          run = token.match(/^([A-Za-z#.,]+)\((\d+)(?:-(\d+))?(?:=[^)]*)?\)$/);
+          if (!run) continue;
+          const chars = [...run[1]];
+          const x0 = +run[2];
+          const x1 = run[3] == null ? x0 : +run[3];
+          const width = x1 - x0 + 1;
+          if (chars.length !== 1 && chars.length !== width) continue;
+          for (let x = x0; x <= x1 && x < W; x++) {
+            row[x] = chars.length === 1 ? chars[0] : chars[x - x0];
+          }
+        }
+        if (row.every((cell) => cell !== null)) rows[+m[1]] = row.join('');
+        continue;
+      }
+      let m2 = line.match(/^(.*\S)\s+(\d+)\s*$/); // trailing row index
+      if (m2 && m2[1].length === W && !/^[\d\s]+$/.test(m2[1])) { rows[+m2[2]] = m2[1]; continue; }
+      m2 = line.match(/^\s*(\d+)\s\s*(\S.{1,}?)\s*$/); // leading row index
+      if (m2 && m2[2].length === W && !/^[\d\s]+$/.test(m2[2])) { rows[+m2[1]] = m2[2]; continue; }
+      m2 = line.match(/^y(\d+)\s+(\S.*?)\s*$/); // leading yNN row label
+      if (m2 && m2[2].length === W && !/^[\d\s]+$/.test(m2[2])) rows[+m2[1]] = m2[2];
     }
     if (rows.filter(Boolean).length >= H) return rows.slice(0, H);
   }
@@ -243,7 +325,7 @@ if (PROFILE) {
     const xs = cells.map(([x]) => x); const ys = cells.map(([, y]) => y);
     const doors = cells.filter(([x, y]) => grid[y][x] === 'D');
     const b = {
-      id: `B${i + 1}`, label: def.label, asset: def.asset,
+      id: `B${i + 1}`, label: def.label, asset: def.asset, assetKey: def.assetKey,
       x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys),
       door: null, cells,
     };
@@ -275,6 +357,11 @@ if (!buildings.length) warn('no buildings parsed from the Buildings table');
 const unified = { spawn: null, npcs: [], interactables: [], exits: [], entries: [] };
 {
   const sec = tableRows(/^## 5\. Contract placement table/m);
+  const spawnRow = md.match(/^\|\s*spawnPoint\s*\|\s*\((\d+),(\d+)\)\s*\|/m);
+  if (spawnRow) unified.spawn = { x: +spawnRow[1], y: +spawnRow[2] };
+  for (const m of md.matchAll(/^\|\s*entry\s+`([\w-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|/gm)) {
+    unified.entries.push({ key: m[1], x: +m[2], y: +m[3] });
+  }
   for (const m of sec.matchAll(/^\|\s*`([\w-]+)`([^|]*)\|\s*([^|]+?)\s*\|\s*([^|]*?)\s*\|/gm)) {
     const [, id, idExtra, kind, tileText] = m;
     if (/^exit$/i.test(kind)) {
@@ -320,7 +407,13 @@ for (const m of md.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*edge=(\w+),\s*tileRange\s*\
 for (const m of md.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*(north|south|east|west)[^|]*\|\s*[xy]\[(\d+),(\d+)\]\s*\|/gm)) {
   exits.push({ id: m[1], edge: m[2], range: [+m[3], +m[4]] });
 }
+for (const m of md.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*edge=\*\*(north|south|east|west)\*\*,\s*tileRange=\**\[(\d+),(\d+)\]\**/gm)) {
+  exits.push({ id: m[1], edge: m[2], range: [+m[3], +m[4]] });
+}
 for (const m of md.matchAll(/^\|\s*entry\s*`(\w+)`\s*\|\s*\*\*\((\d+),(\d+)\)\*\*/gm)) {
+  entries.push({ key: m[1], x: +m[2], y: +m[3] });
+}
+for (const m of md.matchAll(/^\|\s*entry\s+`([\w-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|/gm)) {
   entries.push({ key: m[1], x: +m[2], y: +m[3] });
 }
 {
@@ -367,6 +460,11 @@ function tableRows(sectionRe) {
 const npcSec = tableRows(/^\*\*NPCs \(\d+\):\*\*/m);
 const npcs = [...npcSec.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|/gm)]
   .map((m) => ({ id: m[1], x: +m[2], y: +m[3] }));
+if (!npcs.length) {
+  const sec = md.match(/\*\*NPCs(?: \(\d+\))?(?::)?\*\*([\s\S]*?)(?=\n\*\*)/)?.[1] || '';
+  npcs.push(...[...sec.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*\((\d+),(\d+)\)\s*\|/gm)]
+    .map((m) => ({ id: m[1], x: +m[2], y: +m[3] })));
+}
 if (!npcs.length) npcs.push(...unified.npcs);
 
 const itSec = tableRows(/^\*\*Interactables \(\d+\):\*\*/m);
@@ -381,10 +479,24 @@ for (const m of itSec.matchAll(/^\|\s*`([\w.-]+)`\s*(\[[^\]]*\])?\s*\|\s*\((\d+)
   interactables.push(it);
 }
 if (!interactables.length) interactables.push(...unified.interactables);
+if (!interactables.length) {
+  const sec = md.match(/\*\*Interactables \(\d+\)\*\*([\s\S]*?)(?=\n\*\*)/)?.[1] || '';
+  for (const m of sec.matchAll(/^\|\s*`([\w.-]+)`(?:\s*→\s*`?([\w]+_interior)`?)?\s*\|\s*\((\d+),(\d+)\)\s*\|/gm)) {
+    interactables.push({
+      id: m[1], x: +m[3], y: +m[4], type: m[1].split('-')[0],
+      ...(m[2] ? { interiorId: m[2] } : {}),
+    });
+  }
+}
 
 const spotSec = tableRows(/^\*\*Gathering spots \(\d+[^)]*\):\*\*/m);
 const spots = [...spotSec.matchAll(/^\|\s*`(spot_[\w]+)`\s*\|\s*([\w]+)\s*\/\s*([\w]+)\s*\|\s*\((\d+),(\d+)\)/gm)]
   .map((m) => ({ id: m[1], item: m[2], gatherType: m[3], x: +m[4], y: +m[5] }));
+if (!spots.length) {
+  const sec = md.match(/\*\*Gathering spots \(\d+[^)]*\)\*\*([\s\S]*?)(?=\n\*\*)/)?.[1] || '';
+  spots.push(...[...sec.matchAll(/^\|\s*`(spot_[\w]+)`\s*\|\s*([\w]+)\s*\/\s*([\w]+)\s*\|\s*\((\d+),(\d+)\)/gm)]
+    .map((m) => ({ id: m[1], item: m[2], gatherType: m[3], x: +m[4], y: +m[5] })));
+}
 
 const trigSec = tableRows(/^\*\*Step triggers \(\d+\):\*\*/m);
 const stepTriggers = [...trigSec.matchAll(/^\|\s*`([\w-]+)`\s*\|\s*\((\d+),(\d+)\)\s*(\d+)[×x](\d+)/gm)]
@@ -442,12 +554,18 @@ const TS_SAND3 = addTs('kenmi-desert-tiles-desert-beach-tiles-3', '../kenmi/dese
 const EXTRA_TILESETS = {
   water: ['kenmi-desert-tiles-desert-water-tiles-1', '../kenmi/desert/tiles/desert-water-tiles-1.png', 96, 48],
   cliff: ['kenmi-desert-tiles-desert-cliff-tiles-1', '../kenmi/desert/tiles/desert-cliff-tiles-1.png', 208, 176],
+  waterfall: ['kenmi-desert-tiles-desert-cliff-waterfall-1', '../kenmi/desert/tiles/desert-cliff-waterfall-1.png', 288, 96],
+  farmland: ['kenmi-base-tiles-farmland-farmland-tile', '../kenmi/base/tiles/farmland/farmland-tile.png', 112, 128],
+  'farmland-wet': ['kenmi-base-tiles-farmland-farmland-wet-tile', '../kenmi/base/tiles/farmland/farmland-wet-tile.png', 112, 128],
+  grass3: ['kenmi-base-tiles-grass-grass-tiles-3', '../kenmi/base/tiles/grass/grass-tiles-3.png', 256, 160],
   cobble: ['kenmi-base-tiles-cobble-road-cobble-road-2', '../kenmi/base/tiles/cobble-road/cobble-road-2.png', 48, 80],
   pave: ['kenmi-base-tiles-pavement-tiles', '../kenmi/base/tiles/pavement-tiles.png', 144, 128],
   wall: ['kenmi-desert-props-desert-fencewall', '../kenmi/desert/props/desert-fencewall.png', 64, 64],
   hedge: ['kenmi-base-tiles-hedge-tiles', '../kenmi/base/tiles/hedge-tiles.png', 64, 64],
 };
-let TS_WATER = null; let TS_CLIFF = null; let TS_COBBLE = null; let TS_PAVE = null; let TS_WALL = null; let TS_HEDGE = null;
+let TS_WATER = null; let TS_CLIFF = null; let TS_WATERFALL = null; let TS_FARMLAND = null;
+let TS_FARMLAND_WET = null; let TS_GRASS3 = null; let TS_COBBLE = null; let TS_PAVE = null;
+let TS_WALL = null; let TS_HEDGE = null;
 if (!PROFILE) {
   TS_WATER = addTs(...EXTRA_TILESETS.water);
 }
@@ -460,13 +578,17 @@ if (!PROFILE) {
     const ts = addTs(...EXTRA_TILESETS[short]);
     if (short === 'water') TS_WATER = ts;
     else if (short === 'cliff') TS_CLIFF = ts;
+    else if (short === 'waterfall') TS_WATERFALL = ts;
+    else if (short === 'farmland') TS_FARMLAND = ts;
+    else if (short === 'farmland-wet') TS_FARMLAND_WET = ts;
+    else if (short === 'grass3') TS_GRASS3 = ts;
     else if (short === 'cobble') TS_COBBLE = ts;
     else if (short === 'pave') TS_PAVE = ts;
     else if (short === 'wall') TS_WALL = ts;
     else if (short === 'hedge') TS_HEDGE = ts;
   }
 }
-const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL, TS_HEDGE]
+const tilesets = [TS_SAND1, TS_SAND2, TS_SAND3, TS_WATER, TS_GRASS, TS_GRASS3, TS_FARMLAND, TS_FARMLAND_WET, TS_WATERFALL, TS_CLIFF, TS_COBBLE, TS_PAVE, TS_WALL, TS_HEDGE]
   .filter(Boolean).sort((a, b) => a.firstgid - b.firstgid);
 
 const SAND_SOLID = 6;                       // 5x3 beach sheets: (1,1) solid sand
@@ -482,6 +604,18 @@ const GRASS_F = {
   CORNER_NW: 9, CORNER_NE: 10, CORNER_SW: 12, CORNER_SE: 13, // sand on both sides
   INNER_NW: 8, INNER_NE: 6, INNER_SW: 2, INNER_SE: 0,   // sand on that diagonal only
 };
+const FARMLAND_F = {
+  CORNER_TL: 0,
+  EDGE_TOP: 1,
+  CORNER_TR: 2,
+  EDGE_LEFT: 7,
+  SOLID: 8,
+  EDGE_RIGHT: 9,
+  CORNER_BL: 14,
+  EDGE_BOTTOM: 15,
+  CORNER_BR: 16,
+};
+const WATERFALL_F = { TOP: 0, MID: 18, BOTTOM: 36 };
 const CLIFF_F = { FACE_TOP: 41, FACE_MID: 54, FACE_BASE: 67 };
 const RUBBLE_F = [98, 111, 124, 137, 100, 113, 126, 139]; // plain x4 + decorated x4
 // cobble-road-2 blob (3x5): 0-8 = blob-on-sand transitions (f4 = solid centre),
@@ -652,8 +786,6 @@ if (!PROFILE) {
   }
 } else {
   // ══ PROFILE path (desert_marketplace + later zones) ══
-  const raw = (x, y) => (x >= 0 && x < W && y >= 0 && y < H ? grid[y][x] : null);
-
   // 3a. classify every cell; building glyphs handled after; unknown glyphs = marks.
   // 'mark+block' cells (royal_palace palms) resolve their underlay like a mark but
   // still paint Collision (sprite via zones.js).
@@ -709,13 +841,28 @@ if (!PROFILE) {
     return c === 'road' || c === null; // OOB counts as road so exit cuts run to the edge
   };
   const isGrass = (x, y) => base(x, y) === 'grass';
+  const isFarmland = (x, y) => {
+    const c = base(x, y);
+    return c === 'farmland' || c === 'farmland-wet';
+  };
+  const usesFarmlandWet = Boolean(PROFILE?.classes && Object.values(PROFILE.classes).includes('farmland-wet'));
   const isWaterP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return true; // sea continues off-map
-    return base(x, y) === 'water';
+    const c = base(x, y);
+    return c === 'water' || (usesFarmlandWet && c === 'farmland-wet');
+  };
+  const isWaterLikeP = (x, y) => {
+    if (x < 0 || x >= W || y < 0 || y >= H) return true;
+    const c = base(x, y);
+    return c === 'water' || c === 'farmland-wet';
   };
   const isCliffP = (x, y) => {
     if (x < 0 || x >= W || y < 0 || y >= H) return true; // container continues off-map
     return base(x, y) === 'cliff';
+  };
+  const isWaterfallP = (x, y) => {
+    if (x < 0 || x >= W || y < 0 || y >= H) return false;
+    return base(x, y) === 'waterfall';
   };
   const isHedge = (x, y) => cls(x, y) === 'hedge';
 
@@ -731,6 +878,20 @@ if (!PROFILE) {
     if (w && !e && !n && !s) return WATER_F.W;
     if (e && !w && !n && !s) return WATER_F.E;
     return WATER_F.C; // interior, straits and 3-sided nubs fall back to open water
+  }
+
+  function channelWaterFrameP(x, y) {
+    const n = !isWaterLikeP(x, y - 1); const s = !isWaterLikeP(x, y + 1);
+    const w = !isWaterLikeP(x - 1, y); const e = !isWaterLikeP(x + 1, y);
+    if (n && w && !s && !e) return WATER_F.NW;
+    if (n && e && !s && !w) return WATER_F.NE;
+    if (s && w && !n && !e) return WATER_F.SW;
+    if (s && e && !n && !w) return WATER_F.SE;
+    if (n && !s && !w && !e) return WATER_F.N;
+    if (s && !n && !w && !e) return WATER_F.S;
+    if (w && !e && !n && !s) return WATER_F.W;
+    if (e && !w && !n && !s) return WATER_F.E;
+    return WATER_F.C;
   }
 
   function cliffFrameP(x, y) {
@@ -789,6 +950,20 @@ if (!PROFILE) {
     return GRASS_F.SOLID;
   }
 
+  function farmlandFrameP(x, y) {
+    const n = !isFarmland(x, y - 1); const s = !isFarmland(x, y + 1);
+    const w = !isFarmland(x - 1, y); const e = !isFarmland(x + 1, y);
+    if (n && w) return FARMLAND_F.CORNER_TL;
+    if (n && e) return FARMLAND_F.CORNER_TR;
+    if (s && w) return FARMLAND_F.CORNER_BL;
+    if (s && e) return FARMLAND_F.CORNER_BR;
+    if (n) return FARMLAND_F.EDGE_TOP;
+    if (s) return FARMLAND_F.EDGE_BOTTOM;
+    if (w) return FARMLAND_F.EDGE_LEFT;
+    if (e) return FARMLAND_F.EDGE_RIGHT;
+    return FARMLAND_F.SOLID;
+  }
+
   function wallFrame(x, y) {
     const n = isWall(x, y - 1); const s = isWall(x, y + 1);
     const w = isWall(x - 1, y); const e = isWall(x + 1, y);
@@ -831,9 +1006,33 @@ if (!PROFILE) {
           ground[i] = TS_WATER.firstgid + waterFrameP(x, y);
           collision[i] = COLLIDE_GID; // bible §6: water is impassable
           break;
+        case 'waterfall': {
+          ground[i] = G_SAND;
+          const waterfallFrame = !isWaterfallP(x, y - 1)
+            ? WATERFALL_F.TOP
+            : !isWaterfallP(x, y + 1)
+              ? WATERFALL_F.BOTTOM
+              : WATERFALL_F.MID;
+          detail[i] = TS_WATERFALL.firstgid
+            + waterfallFrame
+            + (x % 2);
+          collision[i] = COLLIDE_GID;
+          break;
+        }
         case 'cliff':
           ground[i] = TS_CLIFF.firstgid + cliffFrameP(x, y);
           collision[i] = COLLIDE_GID;
+          break;
+        case 'farmland':
+          ground[i] = TS_FARMLAND.firstgid + farmlandFrameP(x, y);
+          break;
+        case 'farmland-wet':
+          ground[i] = TS_WATER.firstgid + channelWaterFrameP(x, y);
+          collision[i] = COLLIDE_GID;
+          break;
+        case 'scrub':
+          ground[i] = G_SAND;
+          detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
           break;
         case 'hedge': // hedge overlay on its 1-tile pavement curb (LINT-10 seam law)
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
@@ -857,8 +1056,12 @@ if (!PROFILE) {
           ground[i] = TS_PAVE.firstgid + PAVE_F[hash(x, y) % PAVE_F.length];
           break;
         case 'grass':
-          ground[i] = G_SAND;
-          detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
+          if (PROFILE.id === 'farmland' && TS_GRASS3) {
+            ground[i] = TS_GRASS3.firstgid + 151;
+          } else {
+            ground[i] = G_SAND;
+            detail[i] = TS_GRASS.firstgid + grassFrameP(x, y);
+          }
           break;
         default: // sand
           ground[i] = G_SAND;
@@ -923,7 +1126,7 @@ const entryObjects = [
 ];
 const buildingObjects = buildings.map((b) => obj(b.id, b.x0 * SRC_TILE, b.y0 * SRC_TILE,
   (b.x1 - b.x0 + 1) * SRC_TILE, (b.y1 - b.y0 + 1) * SRC_TILE, [
-    P('assetKey', 'string', `kenmi-desert-houses-${b.asset}`),
+    P('assetKey', 'string', b.assetKey || `kenmi-desert-houses-${b.asset}`),
     P('label', 'string', b.label),
     ...(b.door ? [P('doorId', 'string', b.door.id)] : [P('enterable', 'bool', false)]),
   ], 'building'));

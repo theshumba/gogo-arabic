@@ -435,6 +435,41 @@ export const PROP_CROP_REGIONS = {
     { x: 16, y: 0, w: 48, h: 16 },
   ],
 
+  // Animal sheets are 16px-grid sprite atlases. These representative idle
+  // cells keep authored placement from rendering the whole atlas.
+  'kenmi-base-animals-chicken-chicken-01': [
+    { x: 0, y: 0, w: 16, h: 16 },
+    { x: 0, y: 16, w: 16, h: 16 },
+  ],
+  'kenmi-base-animals-chicken-chicken-02': [
+    { x: 0, y: 0, w: 16, h: 16 },
+    { x: 0, y: 16, w: 16, h: 16 },
+  ],
+  'kenmi-base-animals-chicken-rooster': [
+    { x: 0, y: 0, w: 16, h: 16 },
+    { x: 0, y: 16, w: 16, h: 16 },
+  ],
+  'kenmi-base-animals-cow-cow-01': [
+    { x: 0, y: 0, w: 16, h: 16 },
+    { x: 0, y: 16, w: 16, h: 16 },
+  ],
+  'kenmi-base-animals-cow-cow-04': [
+    { x: 0, y: 0, w: 16, h: 16 },
+    { x: 0, y: 16, w: 16, h: 16 },
+  ],
+  'kenmi-base-animals-sheep-sheep-01': [
+    { x: 0, y: 0, w: 16, h: 16 },
+    { x: 0, y: 16, w: 16, h: 16 },
+  ],
+  'kenmi-base-animals-sheep-sheep-04': [
+    { x: 0, y: 0, w: 16, h: 16 },
+    { x: 0, y: 16, w: 16, h: 16 },
+  ],
+  'kenmi-desert-animals-camel-camel-1': [
+    { x: 0, y: 0, w: 16, h: 16 },
+    { x: 16, y: 0, w: 16, h: 16 },
+  ],
+
   // Military structures are multi-tile Kenmi buildings (16px baseline), not
   // hand props — `tiles` footprints land them at ~2x source, matching the
   // NATIVE_OBJECT_SCALE band for no-crop buildings, instead of NPC height.
