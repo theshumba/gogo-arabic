@@ -621,7 +621,10 @@ async function lintZone(zoneId, ctx) {
   }
   const spots = ctx.getGatheringSpotsForZone(zoneId);
   for (const sp of spots) {
-    if (!inBounds(sp.x, sp.y)) { add('LINT-2', `gathering spot ${sp.id} out of bounds`, sp.x, sp.y); continue; }
+    if (!inBounds(sp.x, sp.y)) {
+      if (!sp.allowOutOfBounds) add('LINT-2', `gathering spot ${sp.id} out of bounds`, sp.x, sp.y);
+      continue;
+    }
     const onWater = isWater(sp.x, sp.y);
     if (sp.gatherType === 'water_source') {
       const rimOk = isShore(sp.x, sp.y)

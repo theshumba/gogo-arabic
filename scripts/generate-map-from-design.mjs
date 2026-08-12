@@ -326,6 +326,37 @@ const ZONE_PROFILES = {
     detailDensity: { sand: 0, camp: 0, track: 0 },
     decalsFromComma: false,
   },
+  ancient_library: {
+    id: 'ancient_library',
+    classes: {
+      '.': 'sand',
+      '=': 'road',
+      'g': 'scrub',
+      '#': 'wall',
+      T: 'bldg',
+      H: 'bldg',
+      D: null,
+      E: null,
+    },
+    tilesets: ['cobble', 'pave', 'wall', 'grass3'],
+    buildingGlyphs: 'TH',
+    buildings: [
+      {
+        contains: [19, 5],
+        assetKey: 'kenmi-desert-temple-desert-temple',
+        label: 'Ancient Library Temple',
+      },
+      {
+        contains: [7, 10],
+        assetKey: 'kenmi-desert-houses-desert-house-1.1',
+        label: 'Library Study Annexe',
+        doorId: 'door-library-study',
+      },
+    ],
+    priority: ['road', 'scrub', 'sand'],
+    detailDensity: { scrub: 0 },
+    decalsFromComma: false,
+  },
   royal_palace: {
     classes: {
       s: 'sand',
