@@ -7220,15 +7220,45 @@
       "collide": true
     },
     {
-      "key": "kenmi-base-buildings-buildings-houses-stone-house-3-stone-base-blue",
-      "x": 34,
+      "key": "kenmi-base-buildings-buildings-houses-limestone-house-4-limestone-base-black",
+      "x": 11,
+      "y": 23,
+      "collide": true
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-houses-limestone-house-2-limestone-base-red",
+      "x": 1,
       "y": 24,
       "collide": true
     },
     {
-      "key": "kenmi-base-buildings-buildings-houses-limestone-house-4-limestone-base-black",
-      "x": 11,
-      "y": 23,
+      "key": "kenmi-base-buildings-buildings-houses-stone-house-2-stone-base-blue",
+      "x": 6,
+      "y": 28,
+      "collide": true
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-houses-limestone-house-3-limestone-base-blue",
+      "x": 15,
+      "y": 28,
+      "collide": true
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-houses-stone-house-4-stone-base-red",
+      "x": 27,
+      "y": 28,
+      "collide": true
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-houses-limestone-house-5-limestone-base-black",
+      "x": 36,
+      "y": 28,
+      "collide": true
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-houses-stone-house-5-stone-green-blue",
+      "x": 20,
+      "y": 28,
       "collide": true
     },
     {
@@ -7244,8 +7274,50 @@
       "collide": false
     },
     {
+      "key": "kenmi-base-outdoor-decoration-well",
+      "x": 20,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-stalls-market-stalls",
+      "x": 16,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-buildings-buildings-unique-buildings-stalls-market-stalls",
+      "x": 25,
+      "y": 24,
+      "collide": false
+    },
+    {
+      "key": "kenmi-desert-props-desert-rugs",
+      "x": 16,
+      "y": 25,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-stone-fence-small",
+      "x": 34,
+      "y": 20,
+      "collide": false
+    },
+    {
       "key": "kenmi-base-outdoor-decoration-minecrats",
       "x": 28,
+      "y": 14,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-ores",
+      "x": 25,
+      "y": 13,
+      "collide": false
+    },
+    {
+      "key": "kenmi-base-outdoor-decoration-ores",
+      "x": 25,
       "y": 14,
       "collide": false
     },
@@ -7289,12 +7361,6 @@
       "key": "kenmi-base-animals-sheep-sheep-04",
       "x": 10,
       "y": 15,
-      "collide": false
-    },
-    {
-      "key": "kenmi-base-animals-sheep-sheep-04",
-      "x": 14,
-      "y": 22,
       "collide": false
     }
   ],
