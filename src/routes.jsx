@@ -536,4 +536,8 @@ export const router = createBrowserRouter([
     path: '*',
     element: <Navigate to="/404" replace />,
   },
-]);
+], {
+  // Strip the deploy path prefix ('/gogo-arabic/' on GitHub Pages, '/' locally)
+  // so routes resolve correctly regardless of where the app is hosted.
+  basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/',
+});

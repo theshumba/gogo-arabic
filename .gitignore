@@ -12,3 +12,9 @@ scripts/output/
 docs/world-shots/
 # Skill-internal planning artifacts
 docs/superpowers/
+# Local probes, browser output and before-rebuild snapshots
+test-results/
+scripts/.*.tmp.mjs
+public/assets/maps/*.pre-rebuild
+# Agreements and private contractor material stay off the public repository
+contracts/

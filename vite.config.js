@@ -25,7 +25,13 @@ function validateDialoguePlugin() {
   };
 }
 
+// GitHub Pages serves project sites from /<repo>/, so hashed asset URLs must be
+// prefixed with the repo path. The deploy workflow sets GH_PAGES=true; local dev
+// and tests keep the root base so nothing else has to change.
+const base = process.env.GH_PAGES ? '/gogo-arabic/' : '/';
+
 export default defineConfig({
+  base,
   plugins: [
     react({ jsxRuntime: 'automatic' }),
     validateDialoguePlugin(),
@@ -134,21 +140,26 @@ export default defineConfig({
             if (id.includes('node_modules/ts-fsrs')) {
               return 'fsrs-vendor';
             }
-            // React ecosystem (~400KB) - check scheduler separately to avoid circular deps
+            // React + Redux + Router ecosystem. These packages are tightly
+            // coupled and reference each other (and shared transitive deps like
+            // react-is / use-sync-external-store) at module-init time. Splitting
+            // them across separate chunks created a cross-chunk CIRCULAR import
+            // between react-vendor and misc-vendor — React's export namespace was
+            // half-initialised in one chunk while the other ran `nt.Activity=…`
+            // against an undefined object, crashing the production build to a
+            // blank screen. Keeping the whole ecosystem in ONE chunk lets Rollup
+            // order intra-chunk init correctly. Leaf libs that only *consume*
+            // React (recharts, posthog, etc.) stay in their own one-way chunks.
             if (id.includes('node_modules/react/') ||
               id.includes('node_modules/react-dom') ||
-              id.includes('node_modules/framer-motion')) {
-              return 'react-vendor';
-            }
-            // Redux ecosystem (~200KB)
-            if (id.includes('node_modules/redux') ||
+              id.includes('node_modules/react-is') ||
+              id.includes('node_modules/use-sync-external-store') ||
+              id.includes('node_modules/framer-motion') ||
+              id.includes('node_modules/redux') ||
               id.includes('node_modules/@reduxjs') ||
-              id.includes('node_modules/react-redux')) {
-              return 'redux-vendor';
-            }
-            // React Router (~100KB)
-            if (id.includes('node_modules/react-router')) {
-              return 'router-vendor';
+              id.includes('node_modules/react-redux') ||
+              id.includes('node_modules/react-router')) {
+              return 'react-vendor';
             }
             // PostHog product analytics SDK + React adapter — isolate so the
             // initial app chunk hash doesn't churn on SDK upgrades (RESEARCH Pitfall 2).
@@ -166,8 +177,13 @@ export default defineConfig({
                 id.includes('node_modules/d3-')) {
               return 'charts-vendor';
             }
-            // All other node_modules
-            return 'misc-vendor';
+            // All other node_modules fold into react-vendor. The heavy,
+            // genuinely-independent libs (phaser, inkjs, ts-fsrs, recharts,
+            // posthog) are already matched above into their own one-way chunks;
+            // everything left is a shared utility that React/Redux pull in at
+            // init time, so it must live alongside them to avoid re-introducing
+            // the cross-chunk circular dependency.
+            return 'react-vendor';
           }
         },
       },

@@ -1,0 +1,17 @@
+# Netlify config. Used if the GitHub repo is connected for auto-deploys.
+# (A manual "Netlify Drop" of the dist/ folder ignores this and just serves the
+# folder, which is fine — the _redirects file inside dist/ handles SPA routing.)
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Single-page-app fallback: serve index.html for any path so client-side routes
+# (and refreshes on a deep link) don't 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

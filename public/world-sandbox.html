@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gogo Arabic — World Sandbox (pro map)</title>
+  <style>
+    html, body { margin: 0; padding: 0; background: #0e1410; height: 100%; overflow: hidden; }
+    #game { width: 100vw; height: 100vh; }
+    #hint { position: fixed; left: 12px; bottom: 12px; z-index: 10;
+      font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #f4e9d0;
+      background: rgba(20,16,17,.72); padding: 6px 10px; border-radius: 6px; pointer-events: none; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+</head>
+<body>
+  <div id="game"></div>
+  <div id="hint">Arrow keys / WASD to walk</div>
+  <script>
+  const S = '/assets/sandbox/';
+
+  class World extends Phaser.Scene {
+    preload() {
+      this.load.image('tiles', S + 'tuxmon-sample-32px-extruded.png');
+      this.load.tilemapTiledJSON('map', S + 'tuxemon-town.json');
+      this.load.atlas('atlas', S + 'atlas.png', S + 'atlas.json');
+      this.load.on('loaderror', f => console.error('ASSET FAILED:', f.src));
+    }
+
+    create() {
+      const map = this.make.tilemap({ key: 'map' });
+      // extruded tileset: 32px tiles, margin 1, spacing 2 (prevents seams when zoomed)
+      const tileset = map.addTilesetImage('tuxmon-sample-32px-extruded', 'tiles', 32, 32, 1, 2);
+
+      map.createLayer('Below Player', tileset, 0, 0);
+      const worldLayer = map.createLayer('World', tileset, 0, 0);
+      const aboveLayer = map.createLayer('Above Player', tileset, 0, 0);
+      worldLayer.setCollisionByProperty({ collides: true });
+      aboveLayer.setDepth(10); // tree-tops / roofs draw above the player
+
+      const spawn = map.findObject('Objects', o => o.name === 'Spawn Point') || { x: 352, y: 1216 };
+      this.player = this.physics.add.sprite(spawn.x, spawn.y, 'atlas', 'misa-front')
+        .setSize(30, 40).setOffset(0, 24);
+      this.physics.add.collider(this.player, worldLayer);
+
+      const af = this.anims;
+      [['left','misa-left-walk'],['right','misa-right-walk'],['front','misa-front-walk'],['back','misa-back-walk']]
+        .forEach(([dir, key]) => {
+          if (af.exists(key)) return;
+          af.create({ key, frameRate: 10, repeat: -1,
+            frames: af.generateFrameNames('atlas', { prefix: key + '.', start: 0, end: 3, zeroPad: 3 }) });
+        });
+      this.facing = 'front';
+
+      const cam = this.cameras.main;
+      cam.startFollow(this.player, true);
+      cam.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+      cam.setZoom(2);
+
+      this.cursors = this.input.keyboard.createCursorKeys();
+      this.wasd = this.input.keyboard.addKeys({ up: 'W', down: 'S', left: 'A', right: 'D' });
+    }
+
+    update() {
+      const speed = 200, p = this.player, c = this.cursors, w = this.wasd;
+      p.body.setVelocity(0);
+      const L = c.left.isDown || w.left.isDown, R = c.right.isDown || w.right.isDown;
+      const U = c.up.isDown || w.up.isDown, D = c.down.isDown || w.down.isDown;
+      if (L) p.body.setVelocityX(-speed); else if (R) p.body.setVelocityX(speed);
+      if (U) p.body.setVelocityY(-speed); else if (D) p.body.setVelocityY(speed);
+      p.body.velocity.normalize().scale(speed);
+
+      if (L) { p.anims.play('misa-left-walk', true); this.facing = 'left'; }
+      else if (R) { p.anims.play('misa-right-walk', true); this.facing = 'right'; }
+      else if (U) { p.anims.play('misa-back-walk', true); this.facing = 'back'; }
+      else if (D) { p.anims.play('misa-front-walk', true); this.facing = 'front'; }
+      else { p.anims.stop(); p.setTexture('atlas', 'misa-' + this.facing); }
+    }
+  }
+
+  new Phaser.Game({
+    type: Phaser.AUTO, parent: 'game',
+    width: window.innerWidth, height: window.innerHeight,
+    pixelArt: true, roundPixels: true,
+    physics: { default: 'arcade', arcade: { gravity: { y: 0 }, debug: false } },
+    scene: World, scale: { mode: Phaser.Scale.RESIZE },
+  });
+  </script>
+</body>
+</html>

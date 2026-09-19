@@ -32,7 +32,11 @@ export function registerSW(onUpdate) {
 
   window.addEventListener('load', async () => {
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
+      // BASE_URL is '/' locally and '/gogo-arabic/' on GitHub Pages, so the SW
+      // is registered at the correct scope on both.
+      const registration = await navigator.serviceWorker.register(
+        `${import.meta.env.BASE_URL}sw.js`
+      );
       swRegistration = registration;
 
       registration.addEventListener('updatefound', () => {

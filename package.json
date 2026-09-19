@@ -26,6 +26,7 @@
     "report:kenmi-coverage": "node scripts/report-kenmi-coverage.js",
     "generate:kenmi-frame-tables": "node scripts/generate-kenmi-frame-tables.js",
     "capture:world-snapshots": "node scripts/capture-world-snapshots.js",
+    "capture:world-screenshots": "node scripts/capture-world-screenshots.mjs",
     "format": "prettier --write \"src/**/*.{js,jsx,json,css}\" \"server/**/*.{js,json}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,json,css}\" \"server/**/*.{js,json}\""
   },

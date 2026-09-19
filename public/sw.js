@@ -24,9 +24,11 @@ const STATIC_EXTENSIONS = [
 const API_PREFIX = '/api/';
 
 // Assets to precache on install
+// Relative to the SW scope so they resolve correctly under both a root deploy
+// ('/') and a GitHub Pages project path ('/gogo-arabic/').
 const PRECACHE_URLS = [
-  '/',
-  '/index.html',
+  './',
+  './index.html',
 ];
 
 // ─── INSTALL ───────────────────────────────────────────────────────────────────
@@ -84,7 +86,7 @@ self.addEventListener('fetch', (event) => {
   // Navigation requests: network-first (SPA fallback to index.html)
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match('/index.html'))
+      fetch(request).catch(() => caches.match('./index.html'))
     );
     return;
   }
